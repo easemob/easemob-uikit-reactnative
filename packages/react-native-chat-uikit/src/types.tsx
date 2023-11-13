@@ -1,12 +1,5 @@
-import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
-
-import type { ActionMenuItem } from './components/ActionMenu';
-import type { AlertItem } from './components/Alert';
-import type { BottomSheetItem } from './components/BottomSheet';
-import type { PromptItem } from './components/Prompt';
-import type { darkPalette, lightPalette } from './utils/defaultColorPalette';
-
 export type Keyof<T extends {}> = Extract<keyof T, string>;
+export type ValueOf<T> = T[keyof T];
 export type Nullable<T> = T | null;
 export type Undefinable<T> = T | undefined;
 export type PartialNullable<T> = {
@@ -14,6 +7,13 @@ export type PartialNullable<T> = {
 };
 export type PromiseType<T> = (...args: any[]) => Promise<T>;
 export type UnPromisify<T> = T extends PromiseType<infer U> ? U : never;
+export type KeyValue<K, V> = {
+  key: K;
+  value: V;
+};
+export type KV<K extends string | number | symbol, V> = {
+  [k in K]: V;
+};
 
 export type PartialDeep<T> = T extends object
   ? T extends Function
@@ -30,84 +30,24 @@ export type RequiredDeep<T> = T extends object
         [P in keyof T]-?: RequiredDeep<T[P]>;
       }
   : T;
+export type ArrayOneOrMore<T> = {
+  0: T;
+} & Array<T>;
 
-export type ScaleFactor = (dp: number) => number;
-export type ScaleFactorS = (dp: string | number) => string | number;
+export type ArrayTwoOrMore<T> = {
+  0: T;
+  1: T;
+} & Array<T>;
 
-export type ColorPaletteType = typeof lightPalette | typeof darkPalette;
+export type KnownKeys<T> = {
+  [K in keyof T]: string extends K ? never : number extends K ? never : K;
+} extends { [_ in keyof T]: infer U }
+  ? U
+  : never;
 
-export type FontAttributes = Pick<
-  TextStyle,
-  'fontFamily' | 'fontSize' | 'lineHeight' | 'letterSpacing' | 'fontWeight'
->;
+export type RequireAtLeastOne<T> = {
+  [K in keyof T]-?: Required<Pick<T, K>> &
+    Partial<Pick<T, Exclude<keyof T, K>>>;
+}[keyof T];
 
-export type ItemColor = {
-  background: string;
-  content: string;
-};
-
-export type InputColor = {
-  background: string;
-  text: string;
-  highlight: string;
-  placeholder: string;
-};
-
-export type ButtonStateColor = {
-  disabled: ItemColor;
-  enabled: ItemColor;
-  pressed: ItemColor;
-};
-
-export type InputStateColor = {
-  enabled: InputColor;
-  disabled: InputColor;
-};
-
-export type ToastType = 'normal' | 'error' | 'success';
-
-export type UIKitStringSet = {
-  xxx: {
-    yyy: string;
-    zzz: (a: Date) => string;
-  };
-  ttt: {
-    yyy: string;
-  };
-};
-
-export type ExtensionStringSet<T extends {} | undefined> = Omit<
-  T,
-  keyof UIKitStringSet
->;
-
-export type StringSet<T extends {} | undefined> = UIKitStringSet &
-  ExtensionStringSet<T>;
-
-export type DialogTask =
-  | {
-      type: 'ActionMenu';
-      props: ActionMenuItem;
-    }
-  | {
-      type: 'Alert';
-      props: AlertItem;
-    }
-  | {
-      type: 'Prompt';
-      props: PromptItem;
-    }
-  | {
-      type: 'BottomSheet';
-      props: BottomSheetItem;
-    };
-
-export type DialogPropsT<
-  T extends DialogTask['type'],
-  U extends DialogTask = DialogTask
-> = U extends { type: T; props: infer P } ? P : never;
-
-export type ContentStateProps = React.PropsWithChildren<{
-  container?: StyleProp<ViewStyle>;
-  pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto' | undefined;
-}>;
+export type UnknownType = Record<string, unknown>;

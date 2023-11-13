@@ -82,9 +82,15 @@ arr.forEach((obj) => {
   } else {
     throw new Error('impossible');
   }
-  icons[
-    key
-  ] = `$$start(size: string) => { if (size === '3x') { return require('./icons/${rel}/${key}${d3}${ext}'); } else if (size === '2x') { return require('./icons/${rel}/${key}${d2}${ext}'); } else { return require('./icons/${rel}/${key}${d1}${ext}'); }}$$end`;
+  if (rel === '') {
+    icons[
+      key
+    ] = `$$start(size: string) => { if (size === '3x') { return require('./icons/${key}${d3}${ext}'); } else if (size === '2x') { return require('./icons/${key}${d2}${ext}'); } else { return require('./icons/${key}${d1}${ext}'); }}$$end`;
+  } else {
+    icons[
+      key
+    ] = `$$start(size: string) => { if (size === '3x') { return require('./icons/${rel}/${key}${d3}${ext}'); } else if (size === '2x') { return require('./icons/${rel}/${key}${d2}${ext}'); } else { return require('./icons/${rel}/${key}${d1}${ext}'); }}$$end`;
+  }
 });
 
 const serializedIcons = JSON.stringify(icons, null, 4).replace(
