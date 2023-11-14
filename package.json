@@ -39,6 +39,7 @@
     "clean-module": "lerna run clean-module  --verbose",
     "bootstrap": "lerna run bootstrap --verbose",
     "sdk-version": "node scripts/generate-version.js",
+    "sdk-config": "yarn workspace react-native-chat-uikit gen-config",
     "example-env": "lerna run gen-env --verbose",
     "doctor": "lerna run doctor --verbose",
     "postinstall": "patch-package"

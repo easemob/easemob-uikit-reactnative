@@ -359,3 +359,4 @@ env.ts
 version.ts
 google-services.json
 GoogleService-Info.plist
+config.local.ts

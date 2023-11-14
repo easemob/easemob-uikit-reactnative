@@ -6,7 +6,7 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 
 const ignorePatterns = /@2x|@3x|U\+|-|'/g;
-const iconDir = path.join(root, 'assets', 'icons');
+const iconDir = path.join(root, 'src', 'assets', 'icons');
 
 const changeNames = (_iconDir) => {
   // console.log('iconDir:', iconDir);

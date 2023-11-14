@@ -10,8 +10,8 @@ const root = path.resolve(__dirname, '..');
 const matchBigger = /_2x/;
 const matchMax = /_3x/;
 const ignorePatterns = /\.DS_Store|index\.ts/;
-const iconDir = path.join(root, 'assets', 'icons');
-const indexDir = path.join(root, 'assets');
+const iconDir = path.join(root, 'src', 'assets', 'icons');
+const indexDir = path.join(root, 'src', 'assets');
 const icons = {};
 
 // const arr = [{xx:['', '.png' '', '2x', '3x']}, ...];

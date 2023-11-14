@@ -38,6 +38,7 @@
     "clean-module": "del-cli node_modules",
     "generate-bundle": "node scripts/bundle-icons.js",
     "change-icon-name": "node scripts/change-icons-name.js",
+    "gen-config": "",
     "doctor": "yarn expo-doctor"
   },
   "keywords": [

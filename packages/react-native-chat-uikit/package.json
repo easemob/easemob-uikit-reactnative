@@ -40,6 +40,7 @@
     "generate-bundle": "node scripts/bundle-icons.js",
     "change-icon-name": "node scripts/change-icons-name.js",
     "generate-face-name": "node scripts/generate-faces-name.js",
+    "gen-config": "node ./scripts/generate-config.js",
     "doctor": "yarn expo-doctor"
   },
   "keywords": [
