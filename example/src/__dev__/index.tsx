@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import DevApp from './test_alert';
+import DevApp from './test_slide_list_item';
 
 export default function dev(): JSX.Element {
   return (
