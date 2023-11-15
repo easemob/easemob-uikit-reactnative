@@ -16,7 +16,7 @@ import {
   type TabPageHeaderRef,
 } from './TabPageHeader';
 
-type OmitTabPageHeaderProps = Omit<
+export type OmitTabPageHeaderProps = Omit<
   TabPageHeaderProps,
   'propRef' | 'onClicked' | 'width' | 'initIndex'
 >;
@@ -107,6 +107,7 @@ const _TabPage = (props: TabPageProps) => {
   const getHeader = () => {
     return (
       <_TabPageHeader
+        {...HeaderProps}
         propRef={headerRef}
         onClicked={(index: number) => {
           bodyRef.current?.scrollTo(index);
@@ -116,7 +117,6 @@ const _TabPage = (props: TabPageProps) => {
         }}
         width={width}
         initIndex={initIndex}
-        {...HeaderProps}
       />
     );
   };

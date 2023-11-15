@@ -183,3 +183,5 @@ export function TabPageHeader(props: TabPageHeaderProps) {
     </View>
   );
 }
+
+export type TabPageHeaderComponent = typeof TabPageHeader;
