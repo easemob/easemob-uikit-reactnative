@@ -127,6 +127,7 @@ const _TabPage = (props: TabPageProps) => {
         // flex: 1,
         flexGrow: 1,
         width: width,
+        height: height ? height : '100%',
       }}
     >
       {headerPosition === 'up' ? getHeader() : null}
