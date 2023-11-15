@@ -4,6 +4,7 @@ export * from './biz/BottomSheetMenu';
 export * from './biz/BottomTabBar';
 export * from './biz/EmojiList';
 export * from './biz/GiftIcon';
+export * from './biz/NavigationBar';
 export * from './biz/Placeholder';
 export * from './biz/SlideListItem';
 export * from './biz/types';

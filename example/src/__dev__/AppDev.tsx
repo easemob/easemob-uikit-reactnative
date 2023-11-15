@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { default as Test } from './test_tab2';
+import { default as Test } from './test_navigation_bar';
 
 // if (
 //   Platform.OS === 'android' &&

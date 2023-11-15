@@ -1,3 +1,4 @@
+export * from './getElement';
 export * from './useCheckType';
 export * from './useColors';
 export * from './useCompare';

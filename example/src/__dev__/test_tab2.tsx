@@ -2,15 +2,12 @@ import * as React from 'react';
 import { View } from 'react-native';
 import {
   BottomTabBar,
-  BottomTabBarProps,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   PaletteContextProvider,
   TabPage,
   TabPageBodyItem,
-  TabPageHeaderComponent,
-  TabPageHeaderProps,
   ThemeContextProvider,
 } from 'react-native-chat-uikit';
 
