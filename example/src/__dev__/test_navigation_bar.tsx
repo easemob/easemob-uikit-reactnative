@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import * as React from 'react';
 import { StyleProp, Text, View, ViewStyle } from 'react-native';
-import { getElement, NavigationBar } from 'react-native-chat-uikit';
+import { getElement, TopNavigationBar } from 'react-native-chat-uikit';
 
 type MyNavigationBarProps = {
   Title?: React.ReactElement;
@@ -54,7 +54,7 @@ export default function TestNavigationBar() {
           );
         }}
       />
-      <NavigationBar
+      <TopNavigationBar
         containerStyle={{ marginHorizontal: 20 }}
         Title={
           <View style={{ height: 40, width: 40, backgroundColor: 'yellow' }}>

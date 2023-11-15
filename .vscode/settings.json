@@ -21,6 +21,8 @@
         "RNFS",
         "tabbar",
         "uikit",
-        "Usecase"
+        "Usecase",
+        "viewability",
+        "zuoyu"
     ]
 }
