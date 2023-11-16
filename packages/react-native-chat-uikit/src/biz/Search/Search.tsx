@@ -8,7 +8,7 @@ import { Icon } from '../../ui/Image';
 import { TextInput } from '../../ui/TextInput';
 
 export type SearchProps = {
-  onCancel: () => void;
+  onCancel?: () => void;
   onChangeText?: ((text: string) => void) | undefined;
   value?: string | undefined;
   onBack?: () => void;
@@ -54,7 +54,6 @@ export function Search(props: SearchProps) {
           <IconButton
             iconName={'chevron_left'}
             style={{
-              position: 'absolute',
               width: 24,
               height: 24,
               tintColor: getColor('color'),
@@ -95,13 +94,15 @@ export function Search(props: SearchProps) {
             }}
           />
         </View>
-        <Text1Button
-          sizesType={'middle'}
-          radiusType={'large'}
-          contentType={'only-text'}
-          text={'Cancel'}
-          onPress={onCancel}
-        />
+        {onCancel ? (
+          <Text1Button
+            sizesType={'middle'}
+            radiusType={'large'}
+            contentType={'only-text'}
+            text={'Cancel'}
+            onPress={onCancel}
+          />
+        ) : null}
       </View>
     </View>
   );

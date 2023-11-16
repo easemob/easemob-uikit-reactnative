@@ -1,7 +1,10 @@
+import type * as React from 'react';
+
 import type { UIKitError } from '../error';
 
 export type PropsWithTest = { testMode?: 'only-ui' | undefined };
 export type PropsWithError = { onError?: (error: UIKitError) => void };
+export type PropsWithChildren = React.PropsWithChildren<{}>;
 
 export type ListState = 'loading' | 'normal' | 'error' | 'empty';
 
