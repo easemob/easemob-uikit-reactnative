@@ -1,15 +1,15 @@
 import * as React from 'react';
 import {
-  FlatList as RNFlatList,
-  FlatListProps as RNFlatListProps,
+  SectionList as RNSectionList,
+  SectionListProps as RNSectionListProps,
   View,
 } from 'react-native';
 
 import { getElement } from '../../hook';
 
-export type FlatListRef<ItemT> = RNFlatList<ItemT>;
+export type SectionListRef<ItemT> = RNSectionList<ItemT>;
 
-export type FlatListProps<ItemT> = RNFlatListProps<ItemT> & {
+export type SectionListProps<ItemT> = RNSectionListProps<ItemT> & {
   /**
    * Rendered when the list is error. Can be a React Component Class, a render function, or
    * a rendered element.
@@ -30,15 +30,15 @@ export type FlatListProps<ItemT> = RNFlatListProps<ItemT> & {
     | undefined;
 };
 
-export const _FlatList = <ItemT,>(
-  props: FlatListProps<ItemT>,
-  ref?: React.ForwardedRef<FlatListRef<ItemT>>
+export const _SectionList = <ItemT,>(
+  props: SectionListProps<ItemT>,
+  ref?: React.ForwardedRef<SectionListRef<ItemT>>
 ) => {
   const { ListErrorComponent, ListLoadingComponent } = props;
 
   return (
     <View style={{ flexGrow: 1 }}>
-      <RNFlatList ref={ref} {...props} />
+      <RNSectionList ref={ref} {...props} />
       {getElement(ListErrorComponent)}
       {getElement(ListLoadingComponent)}
     </View>
@@ -48,14 +48,15 @@ export const _FlatList = <ItemT,>(
 /**
  * @example
  *
- * export const FlatList = FlatListFactory<{ id: string }>();
- * export function FlatList() {}
- * @returns
+ * export const SectionList = SectionListFactory<{ id: string }>();
+ * export function SectionList() {}
  */
-export function FlatListFactory<ItemT = any>() {
-  return React.forwardRef<FlatListRef<ItemT>, FlatListProps<ItemT>>(_FlatList);
+export function SectionListFactory<ItemT = any>() {
+  return React.forwardRef<SectionListRef<ItemT>, SectionListProps<ItemT>>(
+    _SectionList
+  );
 }
 
-export type FlatListFactoryReturn<ItemT> = ReturnType<
-  typeof FlatListFactory<ItemT>
+export type SectionListFactoryReturn<ItemT> = ReturnType<
+  typeof SectionListFactory<ItemT>
 >;
