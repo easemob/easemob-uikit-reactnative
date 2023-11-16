@@ -7,7 +7,12 @@ import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 
-export function SearchStyle({ onPress }: { onPress: () => void }) {
+export type SearchStyleProps = {
+  title: string;
+  onPress: () => void;
+};
+export function SearchStyle(props: SearchStyleProps) {
+  const { title, onPress } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     backgroundColor: {
@@ -57,7 +62,7 @@ export function SearchStyle({ onPress }: { onPress: () => void }) {
               color: getColor('color'),
             }}
           >
-            {tr('Search')}
+            {tr(title)}
           </Text>
         </View>
       </Pressable>

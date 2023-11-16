@@ -8,7 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Container, useDelayExecTask } from 'react-native-chat-uikit';
+import {
+  Container,
+  ListIndex,
+  useDelayExecTask,
+} from 'react-native-chat-uikit';
 
 const DATA = [
   {
@@ -196,7 +200,16 @@ const SL = () => {
           );
         }}
       />
-      <IndexList2 sections={DATA} onIndexSelect={onIndexSelect} />
+      {/* <IndexList2 sections={DATA} onIndexSelect={onIndexSelect} /> */}
+      <ListIndex
+        indexTitles={DATA.map((v) => {
+          return v.title;
+        })}
+        onIndexSelected={(index: number) => {
+          onIndexSelect(index);
+        }}
+        indexContainerStyle={{ top: 100 }}
+      />
     </SafeAreaView>
   );
 };

@@ -105,6 +105,7 @@ export function ConversationList<DataT = any>(
         containerStyle={{ marginHorizontal: 12 }}
       />
       <SearchStyle
+        title={'Search'}
         onPress={() => {
           // todo: search
         }}

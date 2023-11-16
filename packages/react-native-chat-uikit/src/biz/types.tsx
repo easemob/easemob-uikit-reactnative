@@ -16,6 +16,12 @@ export type ListItemType =
 export type ListItemProps = {
   id: string;
 };
+export type DataModelType = 'user' | 'group';
+export type DataModel = {
+  id: string;
+  name: string;
+  avatar: string;
+};
 export type ListItemRequestProps<DataT> = {
   /**
    * Single request, supports asynchronous. If you need to get it over the network instead of locally, it is recommended to use `` to complete the provided data.
@@ -39,5 +45,15 @@ export type ListRequestProps<DataT> = {
   onRequestData?: (params: {
     ids: string[];
     result: (data?: DataT[], error?: UIKitError) => void;
+  }) => void;
+  /**
+   * @description Get data information in batches. If it cannot be obtained, a single acquisition will be attempted during rendering. {@link ListItemRequestProps.onRequestData}
+   * @params params -
+   * - ids: The id of the item.
+   * - result: The callback function of the result.
+   */
+  onRequestMultiData?: (params: {
+    ids: Map<DataModelType, string[]>;
+    result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
   }) => void;
 };

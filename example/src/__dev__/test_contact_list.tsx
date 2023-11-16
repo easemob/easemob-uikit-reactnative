@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
   BottomTabBar,
+  ContactList,
   Container,
-  ConversationList,
   DataModelType,
   SearchConversation,
   TabPage,
@@ -13,10 +13,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export function CL() {
   return (
     <SafeAreaView>
-      <ConversationList
+      <ContactList
         containerStyle={{
           height: '100%',
-          backgroundColor: 'red',
+          // backgroundColor: 'yellow',
         }}
         onRequestData={(params: {
           ids: string[];
@@ -88,7 +88,7 @@ export function BodyPagesT({
   //   return [];
   // };
   return (
-    <ConversationList
+    <ContactList
       containerStyle={{
         // height: '100%',
         backgroundColor: 'green',
@@ -104,7 +104,7 @@ export function BodyPagesT({
   //       // flexGrow: 1,
   //     }}
   //   >
-  //     <ConversationList />
+  //     <ContactList />
   //   </TabPageBodyItem>
   // );
 }
@@ -169,10 +169,10 @@ export function CL2() {
   );
 }
 
-export default function TestConversationList() {
+export default function TestContactList() {
   return (
     <Container appKey={''}>
-      <CL3 />
+      <CL />
     </Container>
   );
 }
