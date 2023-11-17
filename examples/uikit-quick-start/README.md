@@ -8,7 +8,7 @@ This page shows a sample code to add peer-to-peer messaging into your app by usi
 
 The following figure shows the workflow of how clients send and receive peer-to-peer messages:
 
-![agora_chat](https://docs.agora.io/en/assets/images/get-started-sdk-understand-009486abec0cc276183ab535456cf889.png)
+<div align=center> <img src="https://docs.agora.io/en/assets/images/get-started-sdk-understand-009486abec0cc276183ab535456cf889.png" width = "300" /></div>
 
 1. Clients retrieve a token from your app server.
 2. Client A and Client B log in to Agora Chat.

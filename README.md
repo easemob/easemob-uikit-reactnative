@@ -42,7 +42,7 @@ The general structure of the repository is as follows:
 
 ## Try the example app
 
-**Download repository [from here](https://github.com/AgoraIO-Usecase/AgoraChat-rn).**
+**Download repository [from here](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn).**
 
 **Project initialization.**
 
@@ -74,7 +74,7 @@ More detailed development help can be found here.
 
 ## UIKit Detail
 
-Find out more about Agora Chat UIKit for React-Native please see the link below. If you need any help in resolving any issues or have questions, [visit our community](https://github.com/AgoraIO-Usecase/AgoraChat-rn).
+Find out more about Agora Chat UIKit for React-Native please see the link below. If you need any help in resolving any issues or have questions, [visit our community](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn).
 
 - [UIKit detail](./packages/react-native-chat-uikit/README.md)
 - [UIKit example detail](./example/README.md)
@@ -85,7 +85,7 @@ If you want to experience the fastest and easiest integration, please take a loo
 
 ## CallKit Detail
 
-Find out more about Agora Chat Callkit for React-Native please see the link below. If you need any help in resolving any issues or have questions, [visit our community](https://github.com/AgoraIO-Usecase/AgoraChat-rn).
+Find out more about Agora Chat Callkit for React-Native please see the link below. If you need any help in resolving any issues or have questions, [visit our community](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn).
 
 - [callkit detail](./packages/react-native-chat-callkit/README.md)
 - [callkit example detail](./examples/callkit-example/README.md)

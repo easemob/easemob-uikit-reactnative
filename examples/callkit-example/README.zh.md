@@ -26,7 +26,7 @@ _中文 | [English](./README.md)_
 
 ## 源码下载
 
-[下载地址](https://github.com/AgoraIO-Usecase/AgoraChat-rn)
+[下载地址](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn)
 
 ```sh
 git clone git@github.com:AgoraIO-Usecase/AgoraChat-rn.git

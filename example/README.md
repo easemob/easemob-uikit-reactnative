@@ -107,11 +107,7 @@ export default function App() {
 
 The chat page consists of several components. It mainly includes: message bubble list component and input component. The input component is composed of emoji component, voice component and extension component.
 
-<img src=https://github.com/AgoraIO-Usecase/AgoraChat-rntree/dev/docs/typical/ui_chat_struct_1.jpg width="50%">
-
-<!-- <img src=https://img-blog.csdnimg.cn/20200822014538211.png width=60% /> -->
-
-![img](./docs/typical/ui_chat_struct_1.jpg){: width="100px" height="100px"}
+<img src="https://github.com/AgoraIO-Usecase/AgoraChat-rntree/dev/docs/typical/ui_chat_struct_1.jpg" width="50%">
 
 ## The Easiest Way To Integrate
 

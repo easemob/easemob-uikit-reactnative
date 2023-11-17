@@ -128,7 +128,7 @@ type UikitModalPlaceholderProps = React.PropsWithChildren<
  *
  * Users can implement their own version.
  *
- * Reference usage example: {@url https://github.com/AgoraIO-Usecase/AgoraChat-rn/blob/b5ce51840190a8b36bf109c3f49510cf99a8737b/example/src/events/Modals.tsx}
+ * Reference usage example: {@url https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/b5ce51840190a8b36bf109c3f49510cf99a8737b/example/src/events/Modals.tsx}
  */
 export function UikitModalPlaceholder(
   props: UikitModalPlaceholderProps

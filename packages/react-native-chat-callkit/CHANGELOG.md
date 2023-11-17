@@ -1,6 +1,6 @@
 # Change Log
 
-## [1.0.1](https://github.com/AgoraIO-Usecase/AgoraChat-rn/compare/callkit@1.0.0...callkit@1.0.1) (2023-07-07)
+## [1.0.1](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/compare/callkit@1.0.0...callkit@1.0.1) (2023-07-07)
 
 ### Bug Fixes
 
@@ -22,7 +22,7 @@
 - a2b987b: docs: callkit: update
 - 9a7120a: docs: callkit: update
 
-## [1.0.0](https://github.com/AgoraIO-Usecase/AgoraChat-rn/releases/tag/callkit@1.0.0) (2023-07-04)
+## [1.0.0](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/releases/tag/callkit@1.0.0) (2023-07-04)
 
 ### Features
 

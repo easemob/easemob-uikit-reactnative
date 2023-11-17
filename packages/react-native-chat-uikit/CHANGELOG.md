@@ -1,6 +1,6 @@
 # Change Log
 
-## [1.0.1](https://github.com/AgoraIO-Usecase/AgoraChat-rn/compare/uikit@1.0.0...uikit@1.0.1) (2023-07-14)
+## [1.0.1](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/compare/uikit@1.0.0...uikit@1.0.1) (2023-07-14)
 
 ### Bug Fixes
 
@@ -13,7 +13,7 @@
 - 2ce2cdd: fix: example: add react-native-create-thumbnail patch
 - 82ca214: fix: uikit: avatar
 
-## [1.0.0](https://github.com/AgoraIO-Usecase/AgoraChat-rn/releases/tag/uikit@1.0.0) (2023-07-04)
+## [1.0.0](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/releases/tag/uikit@1.0.0) (2023-07-04)
 
 ### Features
 

@@ -45,13 +45,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/AgoraIO-Usecase/AgoraChat-rn",
+  "repository": "https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn",
   "author": "Asterisk <zuoyu@agora.io> (https://github.com/asteriskzuo)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/AgoraIO-Usecase/AgoraChat-rn/issues"
+    "url": "https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/issues"
   },
-  "homepage": "https://github.com/AgoraIO-Usecase/AgoraChat-rn#readme",
+  "homepage": "https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

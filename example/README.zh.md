@@ -26,7 +26,7 @@ _中文 | [English](./README.md)_
 
 ## 源码下载
 
-[下载地址](https://github.com/AgoraIO-Usecase/AgoraChat-rn)
+[下载地址](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn)
 
 ```sh
 git clone git@github.com:AgoraIO-Usecase/AgoraChat-rn.git
@@ -129,11 +129,7 @@ export default function App() {
 
 聊天页面由多个组件组成。主要包括：消息气泡列表组件、输入组件。 输入组件由表情组件、语音组件、扩展组件组成。
 
-<img src=https://github.com/AgoraIO-Usecase/AgoraChat-rntree/dev/docs/typical/ui_chat_struct_1.jpg width="50%">
-
-<!-- <img src=https://img-blog.csdnimg.cn/20200822014538211.png width=60% /> -->
-
-![img](./docs/typical/ui_chat_struct_1.jpg){: width="100px" height="100px"}
+<img src="https://github.com/AgoraIO-Usecase/AgoraChat-rntree/dev/docs/typical/ui_chat_struct_1.jpg" width="50%">
 
 ## 最简单的集成方式
 

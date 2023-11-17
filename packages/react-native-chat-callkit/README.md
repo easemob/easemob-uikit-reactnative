@@ -101,11 +101,11 @@ For group audio and video calls, the Agora Chat CallKit SDK supports up to 18 vi
 
 ## Example Demo
 
-[Reference](https://github.com/AgoraIO-Usecase/AgoraChat-rn/blob/dev/examples/callkit-example/README.md)
+[Reference](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/dev/examples/callkit-example/README.md)
 
 ## Contributing
 
-See the [contributing guide](https://github.com/AgoraIO-Usecase/AgoraChat-rn/blob/dev/packages/react-native-chat-callkit/CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+See the [contributing guide](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/dev/packages/react-native-chat-callkit/CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
 ## License
 

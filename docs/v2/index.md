@@ -80,7 +80,7 @@ UIKit SDK mainly includes the following fragment components:
 
 We'll take the easiest way to build the chat app you want. The chat application page can be built mainly using the components `UikitContainer` and `ChatFragment`.
 
-![img](../../res/6b599bfbdc165de390eab379845e4fc6.png)
+<div align=center> <img src="https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/main/res/6b599bfbdc165de390eab379845e4fc6.jpg" width = "300" /></div>
 
 ## Environment Requirements
 
@@ -300,7 +300,7 @@ Other components are in the experimental stage. If you are interested, you can t
 
 ## Others
 
-If you are interested in the source code, you can view it here. [portal](https://github.com/AgoraIO-Usecase/AgoraChat-rn/tree/dev/packages/react-native-chat-uikit)
+If you are interested in the source code, you can view it here. [portal](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/tree/dev/packages/react-native-chat-uikit)
 
 If there is a better improvement, you are welcome to submit a pull request.
 

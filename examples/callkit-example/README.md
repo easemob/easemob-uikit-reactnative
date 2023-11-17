@@ -26,7 +26,7 @@ Take you to quickly complete the compilation and operation of the project.
 
 ## Source code download
 
-[Download URL](https://github.com/AgoraIO-Usecase/AgoraChat-rn)
+[Download URL](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn)
 
 ```sh
 git clone git@github.com:AgoraIO-Usecase/AgoraChat-rn.git
