@@ -155,7 +155,7 @@ export default function App() {
 }
 ```
 
-<img src="https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/main/res/6b599bfbdc165de390eab379845e4fc6.jpg" width="50%">
+<img src="https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/main/res/6b599bfbdc165de390eab379845e4fc6.jpg" width="25%">
 
 If you want to experience it quickly, you can refer to this project.
 [UIKit Quick Start Demo](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn)

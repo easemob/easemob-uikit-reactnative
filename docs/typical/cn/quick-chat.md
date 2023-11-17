@@ -6,7 +6,7 @@
 
 聊天页面由多个组件组成。主要包括：消息气泡列表组件、输入组件。 输入组件由表情组件、语音组件、扩展组件组成。
 
-<img src="https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/main/docs/typical/ui_chat_struct_1.jpg" width="50%">
+<img src="https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/main/docs/typical/ui_chat_struct_1.jpg" width="25%">
 
 ## 最简单的集成方式
 
