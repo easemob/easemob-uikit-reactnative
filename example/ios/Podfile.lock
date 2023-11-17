@@ -663,7 +663,7 @@ DEPENDENCIES:
   - react-native-chat-callkit (from `../../packages/react-native-chat-callkit`)
   - react-native-chat-sdk (from `../../node_modules/react-native-chat-sdk`)
   - react-native-chat-uikit (from `../../packages/react-native-chat-uikit`)
-  - react-native-create-thumbnail (from `../../node_modules/react-native-create-thumbnail`)
+  - "react-native-create-thumbnail (from `../../node_modules/@easemob/react-native-create-thumbnail`)"
   - react-native-document-picker (from `../../node_modules/react-native-document-picker`)
   - react-native-get-random-values (from `../../node_modules/react-native-get-random-values`)
   - react-native-image-picker (from `../../node_modules/react-native-image-picker`)
@@ -831,7 +831,7 @@ EXTERNAL SOURCES:
   react-native-chat-uikit:
     :path: "../../packages/react-native-chat-uikit"
   react-native-create-thumbnail:
-    :path: "../../node_modules/react-native-create-thumbnail"
+    :path: "../../node_modules/@easemob/react-native-create-thumbnail"
   react-native-document-picker:
     :path: "../../node_modules/react-native-document-picker"
   react-native-get-random-values:
@@ -968,9 +968,9 @@ SPEC CHECKSUMS:
   React-jsinspector: b6ed4cb3ffa27a041cd440300503dc512b761450
   React-logger: 186dd536128ae5924bc38ed70932c00aa740cd5b
   react-native-cameraroll: 755bcc628148a90a7c9cf3f817a252be3a601bc5
-  react-native-chat-callkit: f3c26620cbfd756a184eb61cfb9fe5660067ebef
+  react-native-chat-callkit: 7fd09500b8dabf1279517aab08c846073a201888
   react-native-chat-sdk: 06f9401ef05b0e9cfe3ac659cfe83904baa50b75
-  react-native-chat-uikit: b04dfa6686a3c506d0f0d91441974c40aa837a47
+  react-native-chat-uikit: 5fda806034ed3bfc53a9cb2b7c4f9a5640613959
   react-native-create-thumbnail: e022bcdcba8a0b4529a50d3fa1a832ec921be39d
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
@@ -1011,4 +1011,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: fe60f304c70641ba240fdd5ebb04c155982cb143
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.14.2

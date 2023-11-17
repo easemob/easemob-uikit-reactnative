@@ -1,8 +1,8 @@
+import type CreateThumbnail from '@easemob/react-native-create-thumbnail';
 import type { CameraRoll as MediaLibrary } from '@react-native-camera-roll/camera-roll';
 import type Clipboard from '@react-native-clipboard/clipboard';
 import type FirebaseMessage from '@react-native-firebase/messaging';
 import type * as Audio from 'react-native-audio-recorder-player';
-import type CreateThumbnail from 'react-native-create-thumbnail';
 import type * as DocumentPicker from 'react-native-document-picker';
 import type FileAccess from 'react-native-file-access';
 import type ImagePicker from 'react-native-image-picker';

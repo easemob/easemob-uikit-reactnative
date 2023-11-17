@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
+import CreateThumbnail from '@easemob/react-native-create-thumbnail';
 import { CameraRoll as MediaLibrary } from '@react-native-camera-roll/camera-roll';
 import Clipboard from '@react-native-clipboard/clipboard';
 import FirebaseMessage from '@react-native-firebase/messaging';
@@ -7,7 +8,6 @@ import * as React from 'react';
 import { Text } from 'react-native';
 import * as Audio from 'react-native-audio-recorder-player';
 import { ChatClient, ChatOptions, ChatPushConfig } from 'react-native-chat-sdk';
-import CreateThumbnail from 'react-native-create-thumbnail';
 import * as DocumentPicker from 'react-native-document-picker';
 import * as FileAccess from 'react-native-file-access';
 import * as ImagePicker from 'react-native-image-picker';

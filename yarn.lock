@@ -1389,6 +1389,11 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@easemob/react-native-create-thumbnail@^1.6.4":
+  version "1.6.4"
+  resolved "https://registry.npmjs.org/@easemob/react-native-create-thumbnail/-/react-native-create-thumbnail-1.6.4.tgz#463798075d0fd245c4782aa87e59a72076eb06b4"
+  integrity sha512-4rqBxmGA9VJtLdJ4NbcTjVtqiqMHZgUwlABuwEmNN2KGEjOBjEaNxwoeKBvmQ+WiMlYhLKRvTNtKMD23Ouo3Vw==
+
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
   resolved "https://registry.npmmirror.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
@@ -1792,11 +1797,6 @@
   version "1.2.1"
   resolved "https://registry.npmmirror.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
-
-"@humanz/react-native-create-thumbnail@^1.6.4":
-  version "1.6.4"
-  resolved "https://registry.npmmirror.com/@humanz/react-native-create-thumbnail/-/react-native-create-thumbnail-1.6.4.tgz#f7f6f371c0dcd3d76f4bf7e62c0ab3c69ad3f666"
-  integrity sha512-M3SVVZPC72awvAX1EHlpruXU1Il2zESLUXsHKmTjbdmR4rmPI+a4kvQGPN6jkQA4z1BznalI7ozeqZJkJ56A1A==
 
 "@hutson/parse-repository-url@^3.0.0":
   version "3.0.2"
