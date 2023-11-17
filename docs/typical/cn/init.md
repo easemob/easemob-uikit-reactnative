@@ -75,4 +75,4 @@ export const ps = ''; // default password or token
 export const accountType = 'agora'; // 'easemob' or 'agora'
 ```
 
-[sample code](https://github.com/AgoraIO-Usecase/AgoraChat-rntree/dev/example/src/App.tsx)
+[sample code](https://github.com/AgoraIO-Usecase/AgoraChat-rn/tree/dev/example/src/App.tsx)

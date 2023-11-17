@@ -129,7 +129,7 @@ export default function App() {
 
 聊天页面由多个组件组成。主要包括：消息气泡列表组件、输入组件。 输入组件由表情组件、语音组件、扩展组件组成。
 
-<img src="https://github.com/AgoraIO-Usecase/AgoraChat-rntree/dev/docs/typical/ui_chat_struct_1.jpg" width="50%">
+<img src="https://github.com/AgoraIO-Usecase/AgoraChat-rn/tree/dev/docs/typical/ui_chat_struct_1.jpg" width="50%">
 
 ## 最简单的集成方式
 
@@ -391,7 +391,7 @@ export default function ChatScreen(): JSX.Element {
 }
 ```
 
-**说明** 由于 `MessageBubbleList` 实现源码太多，如有需要请参考 [here](https://github.com/AgoraIO-Usecase/AgoraChat-rntree/dev/example/src/components/CustomMessageBubble.tsx)
+**说明** 由于 `MessageBubbleList` 实现源码太多，如有需要请参考 [here](https://github.com/AgoraIO-Usecase/AgoraChat-rn/tree/dev/example/src/components/CustomMessageBubble.tsx)
 
 #### 聊天属性：未读数通知
 

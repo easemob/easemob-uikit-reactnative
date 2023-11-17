@@ -61,4 +61,4 @@ autoLogin({
 
 登录页面没有复杂交互逻辑，仅包括 id 或者 password 输入组件，登录按钮组件等。
 组件样式和写法都是通用 `react-native`, 对于刚入门的开发者请多参考，对于有经验的开发者可以忽略不计。
-[sample code](https://github.com/AgoraIO-Usecase/AgoraChat-rntree/dev/example/src/screens/SignIn.tsx)
+[sample code](https://github.com/AgoraIO-Usecase/AgoraChat-rn/tree/dev/example/src/screens/SignIn.tsx)
