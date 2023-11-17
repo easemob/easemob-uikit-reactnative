@@ -82,4 +82,4 @@ type ChatFragmentProps = {
 
 为了解决代码重用和减少数据加载，添加多了个子组件。例如： `ChatContent` `ChatInput`。
 
-[sample code](https://github.com/AgoraIO-Usecase/AgoraChat-rn/tree/dev/example/src/fragments/Chat.tsx)
+[sample code](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/main/example/src/fragments/Chat.tsx)

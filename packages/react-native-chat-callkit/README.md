@@ -10,7 +10,7 @@ AgoraChatCallKit is an open-source audio and video UI library developed based on
 ## download link
 
 ```
-git clone git@github.com:AgoraIO-Usecase/AgoraChat-rn.git
+git clone git@github.com:AgoraIO-Usecase/AgoraChat-UIKit-rn.git
 ```
 
 ## Initialization

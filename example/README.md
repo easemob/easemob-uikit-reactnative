@@ -107,7 +107,7 @@ export default function App() {
 
 The chat page consists of several components. It mainly includes: message bubble list component and input component. The input component is composed of emoji component, voice component and extension component.
 
-<img src="https://github.com/AgoraIO-Usecase/AgoraChat-rn/tree/dev/docs/typical/ui_chat_struct_1.jpg" width="50%">
+<img src="https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/main/docs/typical/ui_chat_struct_1.jpg" width="50%">
 
 ## The Easiest Way To Integrate
 
@@ -369,7 +369,7 @@ export default function ChatScreen(): JSX.Element {
 }
 ```
 
-**Description** Since `MessageBubbleList` implements too many source codes, please refer to it if necessary [here](https://github.com/AgoraIO-Usecase/AgoraChat-rn/tree/dev/example/src/components/CustomMessageBubble.tsx)
+**Description** Since `MessageBubbleList` implements too many source codes, please refer to it if necessary [here](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/main/example/src/components/CustomMessageBubble.tsx)
 
 #### Chat Properties: Unread Count Notifications
 

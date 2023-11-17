@@ -181,7 +181,7 @@ If you need to view the complete code or run it, you can download the project an
 ## Download UIKit SDK && Examples
 
 ```sh
-git clone git@github.com:AgoraIO-Usecase/AgoraChat-rn.git
+git clone git@github.com:AgoraIO-Usecase/AgoraChat-UIKit-rn.git
 ```
 
 ## Repo Environment Requirements

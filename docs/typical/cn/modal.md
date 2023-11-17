@@ -105,4 +105,4 @@ toast.showToast(content);
 
 ## 示例源码
 
-[sample code](https://github.com/AgoraIO-Usecase/AgoraChat-rn/tree/dev/example/src/screens/ContactInfo.tsx)
+[sample code](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/main/example/src/screens/ContactInfo.tsx)

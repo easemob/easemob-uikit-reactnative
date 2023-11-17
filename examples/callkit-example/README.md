@@ -29,7 +29,7 @@ Take you to quickly complete the compilation and operation of the project.
 [Download URL](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn)
 
 ```sh
-git clone git@github.com:AgoraIO-Usecase/AgoraChat-rn.git
+git clone git@github.com:AgoraIO-Usecase/AgoraChat-UIKit-rn.git
 ```
 
 ## Project initialization

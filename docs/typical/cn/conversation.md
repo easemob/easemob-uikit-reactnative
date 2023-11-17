@@ -109,4 +109,4 @@ export type ItemDataType = EqualHeightListItemData & {
 
 用户可以根据需要进行 `对应组件` 修改和使用。
 
-[sample code](https://github.com/AgoraIO-Usecase/AgoraChat-rn/tree/dev/example/src/screens/ConversationList.tsx)
+[sample code](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/blob/main/example/src/screens/ConversationList.tsx)
