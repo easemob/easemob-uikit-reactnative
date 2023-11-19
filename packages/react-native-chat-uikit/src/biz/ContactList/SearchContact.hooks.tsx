@@ -3,15 +3,15 @@ import type { ViewabilityConfig, ViewToken } from 'react-native';
 
 import { useDelayExecTask } from '../../hook';
 import type { ListState, UseFlatListReturn, UseListReturn } from '../types';
-import type { SearchConversationItemProps } from './SearchConversation.item';
+import type { SearchContactItemProps } from './SearchContact.item';
 
-export type useSearchConversationApiProps = {};
-export function useSearchConversationApi(
-  props: useSearchConversationApiProps
-): UseFlatListReturn<SearchConversationItemProps> & UseListReturn {
+export type useSearchContactApiProps = {};
+export function useSearchContactApi(
+  props: useSearchContactApiProps
+): UseFlatListReturn<SearchContactItemProps> & UseListReturn {
   const {} = props;
   const [data, _setData] = React.useState<
-    ReadonlyArray<SearchConversationItemProps>
+    ReadonlyArray<SearchContactItemProps>
   >([{ id: '1' }]);
   const listType = React.useRef<'FlatList' | 'SectionList'>('FlatList').current;
   const loadType = React.useRef<'once' | 'multiple'>('once').current;
@@ -24,7 +24,7 @@ export function useSearchConversationApi(
   const enableRefresh = React.useRef(false).current;
   const enableMore = React.useRef(false).current;
   const [refreshing, setRefreshing] = React.useState(false);
-  const ListItem: React.ComponentType<SearchConversationItemProps> = () => null;
+  const ListItem: React.ComponentType<SearchContactItemProps> = () => null;
 
   const viewabilityConfigRef = React.useRef<ViewabilityConfig>({
     // minimumViewTime: 1000,
@@ -60,8 +60,8 @@ export function useSearchConversationApi(
   const onMore = () => {};
 
   const sort: (
-    prevProps: SearchConversationItemProps,
-    nextProps: SearchConversationItemProps
+    prevProps: SearchContactItemProps,
+    nextProps: SearchContactItemProps
   ) => boolean = () => true;
 
   return {

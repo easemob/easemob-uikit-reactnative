@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  DefaultSectionT,
   SectionList as RNSectionList,
   SectionListProps as RNSectionListProps,
   View,
@@ -7,9 +8,12 @@ import {
 
 import { getElement } from '../../hook';
 
-export type SectionListRef<ItemT> = RNSectionList<ItemT>;
+export type SectionListRef<ItemT, SectionT> = RNSectionList<ItemT, SectionT>;
 
-export type SectionListProps<ItemT> = RNSectionListProps<ItemT> & {
+export type SectionListProps<ItemT, SectionT> = RNSectionListProps<
+  ItemT,
+  SectionT
+> & {
   /**
    * Rendered when the list is error. Can be a React Component Class, a render function, or
    * a rendered element.
@@ -30,9 +34,9 @@ export type SectionListProps<ItemT> = RNSectionListProps<ItemT> & {
     | undefined;
 };
 
-export const _SectionList = <ItemT,>(
-  props: SectionListProps<ItemT>,
-  ref?: React.ForwardedRef<SectionListRef<ItemT>>
+export const _SectionList = <ItemT, SectionT>(
+  props: SectionListProps<ItemT, SectionT>,
+  ref?: React.ForwardedRef<SectionListRef<ItemT, SectionT>>
 ) => {
   const { ListErrorComponent, ListLoadingComponent } = props;
 
@@ -51,12 +55,17 @@ export const _SectionList = <ItemT,>(
  * export const SectionList = SectionListFactory<{ id: string }>();
  * export function SectionList() {}
  */
-export function SectionListFactory<ItemT = any>() {
-  return React.forwardRef<SectionListRef<ItemT>, SectionListProps<ItemT>>(
-    _SectionList
-  );
+export function SectionListFactory<
+  ItemT = any,
+  SectionT extends DefaultSectionT = DefaultSectionT
+>() {
+  return React.forwardRef<
+    SectionListRef<ItemT, SectionT>,
+    SectionListProps<ItemT, SectionT>
+  >(_SectionList);
 }
 
-export type SectionListFactoryReturn<ItemT> = ReturnType<
-  typeof SectionListFactory<ItemT>
->;
+export type SectionListFactoryReturn<
+  ItemT,
+  SectionT extends DefaultSectionT = DefaultSectionT
+> = ReturnType<typeof SectionListFactory<ItemT, SectionT>>;

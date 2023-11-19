@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { ListRenderItemInfo, View, ViewToken } from 'react-native';
+import { ListRenderItemInfo, View } from 'react-native';
 
 import { g_not_existed_url } from '../../const';
-import type { UIKitError } from '../../error';
-import { useDelayExecTask } from '../../hook';
-import { FlatListFactory, FlatListRef } from '../../ui/FlatList';
+import { FlatListFactory } from '../../ui/FlatList';
 import { Avatar } from '../Avatar';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
@@ -20,67 +18,20 @@ import {
 } from './ConversationList.item';
 import type { ConversationListProps } from './types';
 
-const FlatList = FlatListFactory();
+const FlatList = FlatListFactory<ConversationListItemProps>();
 
-export function ConversationList<DataT = any>(
-  props: ConversationListProps<DataT>
-) {
-  const { onRequestData, containerStyle } = props;
-  const ref = React.useRef<FlatListRef<ConversationListItemProps<DataT>>>(
-    {} as any
-  );
-
-  const [refreshing, setRefreshing] = React.useState(false);
-  const viewabilityConfigRef = React.useRef({
-    // minimumViewTime: 1000,
-    viewAreaCoveragePercentThreshold: 50,
-    viewablePercentThreshold: 50,
-    waitForInteraction: false,
-  });
+export function ConversationList(props: ConversationListProps) {
+  const { containerStyle } = props;
   const {
     data,
-    pageState,
-    onRefresh: _onRefresh,
-    onData,
+    refreshing,
+    onRefresh,
+    ref,
     onMore,
-  } = useConversationListApi<DataT>(props);
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      _onRefresh();
-      setRefreshing(false);
-    }, 1000);
-  };
-  const onEndReached = () => {
-    onMore();
-  };
-  const { delayExecTask: onViewableItemsChanged } = useDelayExecTask(
-    500,
-    React.useCallback(
-      (info: {
-        viewableItems: Array<ViewToken>;
-        changed: Array<ViewToken>;
-      }) => {
-        const ids = info.viewableItems.map((v) => {
-          return (v.item as ConversationListItemProps<DataT>).id;
-        });
-        onRequestData?.({
-          ids,
-          result: (
-            data?: DataT[] | undefined,
-            error?: UIKitError | undefined
-          ) => {
-            if (data) {
-              onData(data);
-            } else if (error) {
-              console.warn(error);
-            }
-          },
-        });
-      },
-      [onData, onRequestData]
-    )
-  );
+    viewabilityConfig,
+    onViewableItemsChanged,
+    listState,
+  } = useConversationListApi({});
 
   return (
     <View
@@ -121,24 +72,22 @@ export function ConversationList<DataT = any>(
         data={data}
         refreshing={refreshing}
         onRefresh={onRefresh}
-        renderItem={(
-          info: ListRenderItemInfo<ConversationListItemProps<DataT>>
-        ) => {
+        renderItem={(info: ListRenderItemInfo<ConversationListItemProps>) => {
           const { item } = info;
           return <ConversationListItemMemo {...item} />;
         }}
-        keyExtractor={(item: ConversationListItemProps<DataT>) => {
+        keyExtractor={(item: ConversationListItemProps) => {
           return item.id;
         }}
-        onEndReached={onEndReached}
-        viewabilityConfig={viewabilityConfigRef.current}
+        onEndReached={onMore}
+        viewabilityConfig={viewabilityConfig}
         onViewableItemsChanged={onViewableItemsChanged}
         ListEmptyComponent={EmptyPlaceholder}
         ListErrorComponent={
-          pageState === 'error' ? (
+          listState === 'error' ? (
             <ErrorPlaceholder
               onClicked={() => {
-                onRefresh();
+                onRefresh?.();
               }}
             />
           ) : null

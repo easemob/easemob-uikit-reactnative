@@ -3,6 +3,7 @@ import {
   BottomTabBar,
   Container,
   ConversationList,
+  DataModel,
   DataModelType,
   SearchConversation,
   TabPage,
@@ -20,29 +21,23 @@ export function CL() {
         }}
         onRequestData={(params: {
           ids: string[];
-          result: (data?: { name: string }[], error?: UIKitError) => void;
+          result: (data?: DataModel[], error?: UIKitError) => void;
         }) => {
           console.log('test:zuoyu:onRequestData', params);
-          params?.result([{ name: 'test' }]);
+          params?.result([{ id: 'xx', name: 'test', avatar: '' }]);
         }}
         onRequestMultiData={(params: {
           ids: Map<DataModelType, string[]>;
           result: (
-            data?: Map<DataModelType, { name: string }[]>,
+            data?: Map<DataModelType, DataModel[]>,
             error?: UIKitError
           ) => void;
         }) => {
           console.log('test:zuoyu:onRequestMultiData', params);
           params?.result(
             new Map([
-              [
-                'user',
-                [
-                  {
-                    name: 'test',
-                  },
-                ],
-              ],
+              ['user', [{ id: 'xx', name: 'xx', avatar: '' }]],
+              ['group', [{ id: 'yy', name: 'yy', avatar: '' }]],
             ])
           );
         }}
@@ -172,7 +167,7 @@ export function CL2() {
 export default function TestConversationList() {
   return (
     <Container appKey={''}>
-      <CL3 />
+      <CL2 />
     </Container>
   );
 }

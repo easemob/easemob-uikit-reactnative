@@ -6,9 +6,9 @@ import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { DataModel, ListItemProps, ListItemRequestProps } from '../types';
 
-export type SearchConversationItemProps = ListItemProps &
+export type SearchContactItemProps = ListItemProps &
   ListItemRequestProps<DataModel> & {};
-export function SearchConversationItem(props: SearchConversationItemProps) {
+export function SearchContactItem(props: SearchContactItemProps) {
   const {} = props;
   return (
     <View
@@ -40,4 +40,4 @@ export function SearchConversationItem(props: SearchConversationItemProps) {
     </View>
   );
 }
-export const SearchConversationItemMemo = React.memo(SearchConversationItem);
+export const SearchContactItemMemo = React.memo(SearchContactItem);

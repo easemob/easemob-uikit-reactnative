@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { DefaultSectionT, SectionListData, View } from 'react-native';
+import { SectionListData, View } from 'react-native';
 
 import { g_not_existed_url } from '../../const';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
-import type { ListItemProps, ListItemRequestProps } from '../types';
+import { ListItem } from '../ListItem';
+import type { DataModel, ListItemProps, ListItemRequestProps } from '../types';
 
-export type ContactListItemProps<DataT> = ListItemProps &
-  ListItemRequestProps<DataT> & {};
-export function ContactListItem<DataT = any>(
-  props: ContactListItemProps<DataT>
-) {
+export type ContactListItemProps = ListItemProps &
+  ListItemRequestProps<DataModel> & {};
+export function ContactListItem(props: ContactListItemProps) {
   const {} = props;
   return (
     <View
@@ -37,8 +36,8 @@ export function ContactListItem<DataT = any>(
 }
 export const ContactListItemMemo = React.memo(ContactListItem);
 
-export function ContactListItemHeader<DataT = any>(
-  props: SectionListData<ContactListItemProps<DataT>, DefaultSectionT>
+export function ContactListItemHeader(
+  props: SectionListData<ContactListItemProps, { indexTitle: string }>
 ) {
   const { indexTitle } = props;
   return (
@@ -60,26 +59,22 @@ export type ContactItemProps = {
 export function ContactItem(props: ContactItemProps) {
   const { name, count, hasArrow, onClicked } = props;
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: 16,
-        paddingRight: 16,
-        height: 53.5,
-        borderColor: 'grey',
-        borderBottomWidth: 0.5,
+    <ListItem
+      LeftName={
+        <Text paletteType={'title'} textType={'medium'}>
+          {name}
+        </Text>
+      }
+      RightText={count}
+      RightIcon={
+        hasArrow ? (
+          <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+        ) : undefined
+      }
+      onClicked={onClicked}
+      containerStyle={{
+        marginHorizontal: 16,
       }}
-      onTouchEnd={onClicked}
-    >
-      <Text paletteType={'title'} textType={'medium'}>
-        {name}
-      </Text>
-      <View style={{ flexGrow: 1 }} />
-      {count}
-      {hasArrow ? (
-        <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
-      ) : null}
-    </View>
+    />
   );
 }

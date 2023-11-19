@@ -1,8 +1,17 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
-import type { ListRequestProps, PropsWithError, PropsWithTest } from '../types';
-
-export type ConversationListProps<DataT> = ListRequestProps<DataT> &
+import type {
+  DataModel,
+  ListRequestProps,
+  PropsWithError,
+  PropsWithTest,
+} from '../types';
+export type ConversationListPageProps = ListRequestProps<DataModel> &
+  PropsWithTest &
+  PropsWithError & {
+    containerStyle?: StyleProp<ViewStyle>;
+  };
+export type ConversationListProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError & {
     containerStyle?: StyleProp<ViewStyle>;

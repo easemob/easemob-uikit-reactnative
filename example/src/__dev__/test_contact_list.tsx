@@ -3,8 +3,9 @@ import {
   BottomTabBar,
   ContactList,
   Container,
+  DataModel,
   DataModelType,
-  SearchConversation,
+  SearchContact,
   TabPage,
   UIKitError,
 } from 'react-native-chat-uikit';
@@ -16,33 +17,27 @@ export function CL() {
       <ContactList
         containerStyle={{
           height: '100%',
-          // backgroundColor: 'yellow',
+          backgroundColor: 'yellow',
         }}
         onRequestData={(params: {
           ids: string[];
-          result: (data?: { name: string }[], error?: UIKitError) => void;
+          result: (data?: DataModel[], error?: UIKitError) => void;
         }) => {
           console.log('test:zuoyu:onRequestData', params);
-          params?.result([{ name: 'test' }]);
+          params?.result([{ id: 'xx', name: 'test', avatar: '' }]);
         }}
         onRequestMultiData={(params: {
           ids: Map<DataModelType, string[]>;
           result: (
-            data?: Map<DataModelType, { name: string }[]>,
+            data?: Map<DataModelType, DataModel[]>,
             error?: UIKitError
           ) => void;
         }) => {
           console.log('test:zuoyu:onRequestMultiData', params);
           params?.result(
             new Map([
-              [
-                'user',
-                [
-                  {
-                    name: 'test',
-                  },
-                ],
-              ],
+              ['user', [{ id: 'xx', name: 'xx', avatar: '' }]],
+              ['group', [{ id: 'yy', name: 'yy', avatar: '' }]],
             ])
           );
         }}
@@ -54,13 +49,13 @@ export function CL() {
 export function CL3() {
   return (
     <SafeAreaView>
-      <SearchConversation
+      <SearchContact
         onCancel={() => {
           console.log('test:zuoyu:cancel');
         }}
         containerStyle={{
           height: '100%',
-          backgroundColor: 'red',
+          backgroundColor: 'yellow',
         }}
       />
     </SafeAreaView>

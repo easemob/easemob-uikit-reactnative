@@ -4,21 +4,21 @@ import { ListRenderItemInfo, View } from 'react-native';
 import { FlatListFactory } from '../../ui/FlatList';
 import { EmptyPlaceholder } from '../Placeholder';
 import { Search } from '../Search';
-import { useSearchConversationApi } from './SearchConversation.hooks';
+import { useSearchContactApi } from './SearchContact.hooks';
 import {
-  SearchConversationItemMemo,
-  SearchConversationItemProps,
-} from './SearchConversation.item';
-import type { SearchConversationProps } from './types';
+  SearchContactItemMemo,
+  SearchContactItemProps,
+} from './SearchContact.item';
+import type { SearchContactProps } from './types';
 
-const FlatList = FlatListFactory<SearchConversationItemProps>();
+const FlatList = FlatListFactory<SearchContactItemProps>();
 
-export function SearchConversation<DataT extends {} = any>(
-  props: SearchConversationProps<DataT>
+export function SearchContact<DataT extends {} = any>(
+  props: SearchContactProps<DataT>
 ) {
   const { onCancel, containerStyle } = props;
   const [value, setValue] = React.useState('');
-  const { ref, data, deferSearch } = useSearchConversationApi(props);
+  const { ref, data, deferSearch } = useSearchContactApi(props);
 
   return (
     <View
@@ -44,11 +44,11 @@ export function SearchConversation<DataT extends {} = any>(
           flexGrow: 1,
         }}
         data={data}
-        renderItem={(info: ListRenderItemInfo<SearchConversationItemProps>) => {
+        renderItem={(info: ListRenderItemInfo<SearchContactItemProps>) => {
           const { item } = info;
-          return <SearchConversationItemMemo {...item} />;
+          return <SearchContactItemMemo {...item} />;
         }}
-        keyExtractor={(item: SearchConversationItemProps) => {
+        keyExtractor={(item: SearchContactItemProps) => {
           return item.id;
         }}
         ListEmptyComponent={EmptyPlaceholder}

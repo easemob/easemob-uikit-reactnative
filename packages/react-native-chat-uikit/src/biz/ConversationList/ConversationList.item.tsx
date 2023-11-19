@@ -5,13 +5,11 @@ import { g_not_existed_url } from '../../const';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { Badges } from '../Badges';
-import type { ListItemProps, ListItemRequestProps } from '../types';
+import type { DataModel, ListItemProps, ListItemRequestProps } from '../types';
 
-export type ConversationListItemProps<DataT> = ListItemProps &
-  ListItemRequestProps<DataT> & {};
-export function ConversationListItem<DataT = any>(
-  props: ConversationListItemProps<DataT>
-) {
+export type ConversationListItemProps = ListItemProps &
+  ListItemRequestProps<DataModel> & {};
+export function ConversationListItem(props: ConversationListItemProps) {
   const {} = props;
   return (
     <View
