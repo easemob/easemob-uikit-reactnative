@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { SectionListData, View } from 'react-native';
+import type { IconNameType } from 'src/assets';
 
 import { g_not_existed_url } from '../../const';
 import { Icon } from '../../ui/Image';
@@ -51,19 +52,34 @@ export function ContactListItemHeader(
 export const ContactListItemHeaderMemo = React.memo(ContactListItemHeader);
 
 export type ContactItemProps = {
+  icon?: IconNameType;
   name: string;
   count?: React.ReactElement;
   hasArrow?: boolean;
   onClicked?: () => void;
 };
 export function ContactItem(props: ContactItemProps) {
-  const { name, count, hasArrow, onClicked } = props;
+  const { icon, name, count, hasArrow, onClicked } = props;
   return (
     <ListItem
       LeftName={
-        <Text paletteType={'title'} textType={'medium'}>
-          {name}
-        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          {icon ? (
+            <>
+              <Icon name={icon} style={{ height: 18, width: 18 }} />
+              <View style={{ width: 13 }} />
+            </>
+          ) : null}
+
+          <Text paletteType={'title'} textType={'medium'}>
+            {name}
+          </Text>
+        </View>
       }
       RightText={count}
       RightIcon={

@@ -11,15 +11,12 @@ export type ContactListProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError & {
     containerStyle?: StyleProp<ViewStyle>;
-  };
-export type ContactListPageProps = ListRequestProps<DataModel> &
-  PropsWithTest &
-  PropsWithError & {
-    containerStyle?: StyleProp<ViewStyle>;
+    type: 'contact-list' | 'new-contact-list';
   };
 export type SearchContactProps<DataT> = ListRequestProps<DataT> &
   PropsWithTest &
   PropsWithError & {
     containerStyle?: StyleProp<ViewStyle>;
     onCancel?: () => void;
+    type: 'contact-list' | 'new-contact-list';
   };

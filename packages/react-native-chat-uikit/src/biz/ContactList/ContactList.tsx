@@ -35,7 +35,7 @@ const SectionList = SectionListFactory<
 >();
 
 export function ContactList(props: ContactListProps) {
-  const { containerStyle } = props;
+  const { containerStyle, type } = props;
   const {
     ref,
     sections,
@@ -47,6 +47,76 @@ export function ContactList(props: ContactListProps) {
     listState,
     AlphabeticIndex,
   } = useContactListApi2(props);
+
+  const items = () => {
+    if (type === 'contact-list') {
+      return (
+        <>
+          <ContactItem
+            name={'new invite'}
+            count={<Badges count={0} />}
+            hasArrow={true}
+            onClicked={() => {
+              // todo: new invite
+            }}
+          />
+          <ContactItem
+            name={'group'}
+            count={
+              <Text paletteType={'label'} textType={'medium'}>
+                {'0'}
+              </Text>
+            }
+            hasArrow={true}
+            onClicked={() => {
+              // todo: new invite
+            }}
+          />
+          <ContactItem
+            name={'balcklist'}
+            count={
+              <Text paletteType={'label'} textType={'medium'}>
+                {'9'}
+              </Text>
+            }
+            hasArrow={true}
+            onClicked={() => {
+              // todo: new black list
+            }}
+          />
+        </>
+      );
+    } else if (type === 'new-contact-list') {
+      return (
+        <>
+          <ContactItem
+            icon={'person_add_fill'}
+            name={'add contact'}
+            hasArrow={true}
+            onClicked={() => {
+              // todo: add invite
+            }}
+          />
+          <ContactItem
+            icon={'person_double_fill'}
+            name={'create group'}
+            count={
+              <Text paletteType={'label'} textType={'medium'}>
+                {'0'}
+              </Text>
+            }
+            hasArrow={true}
+            onClicked={() => {
+              // todo: new invite
+            }}
+          />
+        </>
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
     <View
       style={[
@@ -86,38 +156,9 @@ export function ContactList(props: ContactListProps) {
           // todo: search
         }}
       />
-      <ContactItem
-        name={'new invite'}
-        count={<Badges count={0} />}
-        hasArrow={true}
-        onClicked={() => {
-          // todo: new invite
-        }}
-      />
-      <ContactItem
-        name={'group'}
-        count={
-          <Text paletteType={'label'} textType={'medium'}>
-            {'0'}
-          </Text>
-        }
-        hasArrow={true}
-        onClicked={() => {
-          // todo: new invite
-        }}
-      />
-      <ContactItem
-        name={'balcklist'}
-        count={
-          <Text paletteType={'label'} textType={'medium'}>
-            {'9'}
-          </Text>
-        }
-        hasArrow={true}
-        onClicked={() => {
-          // todo: new black list
-        }}
-      />
+
+      {items()}
+
       <View style={{ flexGrow: 1 }}>
         <SectionList
           ref={ref}
