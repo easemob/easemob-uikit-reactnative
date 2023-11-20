@@ -8,6 +8,7 @@ export * from './biz/ConversationList';
 export * from './biz/EmojiList';
 export * from './biz/GiftIcon';
 export * from './biz/GroupList';
+export * from './biz/GroupParticipantList';
 export * from './biz/ListIndex';
 export * from './biz/Placeholder';
 export * from './biz/SlideListItem';
