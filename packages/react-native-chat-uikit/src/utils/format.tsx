@@ -106,20 +106,31 @@ export function messageTimestamp(date: Date | number, locale?: Locale): string {
  * @returns Formatted time.
  */
 export function messageTime(date: Date | number, locale?: Locale): string {
-  let _date: Date;
+  let _date: number;
   if (typeof date === 'number') {
-    _date = new Date(date);
-  } else {
     _date = date;
+  } else {
+    _date = new Date(date).getTime();
   }
   const r = getDateTimePoint();
-  if (_date < r.yesterYear) {
+  if (_date < r.yesterYear.getTime()) {
     return format(date, 'yyyy', { locale });
-  } else if (r.yesterYear <= _date && _date < r.yesterMonth) {
+  } else if (
+    r.yesterYear.getTime() <= _date &&
+    _date < r.yesterMonth.getTime()
+  ) {
     return format(date, 'MM/dd', { locale });
-  } else if (r.yesterMonth <= _date && _date < r.yesterday) {
+  } else if (
+    r.yesterMonth.getTime() <= _date &&
+    _date < r.yesterday.getTime() - 24 * 60 * 60 * 1000
+  ) {
+    return format(date, 'MM/dd', { locale });
+  } else if (
+    r.yesterday.getTime() - 24 * 60 * 60 * 1000 <= _date &&
+    _date < r.yesterday.getTime()
+  ) {
     return `yesterday`;
-  } else if (r.yesterday <= _date && _date < r.now) {
+  } else if (r.yesterday.getTime() <= _date && _date < r.now.getTime()) {
     return format(date, 'HH:mm', { locale });
   } else {
     return format(date, 'p', { locale });
@@ -138,21 +149,32 @@ export function messageTimeForChat(
   date: Date | number,
   locale?: Locale
 ): string {
-  let _date: Date;
+  let _date: number;
   if (typeof date === 'number') {
-    _date = new Date(date);
-  } else {
     _date = date;
+  } else {
+    _date = new Date(date).getTime();
   }
   const r = getDateTimePoint();
-  if (_date < r.yesterYear) {
+  if (_date < r.yesterYear.getTime()) {
     return format(date, 'yyyy MM/dd HH:mm', { locale });
-  } else if (r.yesterYear <= _date && _date < r.yesterMonth) {
+  } else if (
+    r.yesterYear.getTime() <= _date &&
+    _date < r.yesterMonth.getTime()
+  ) {
     return format(date, 'MM/dd HH:mm', { locale });
-  } else if (r.yesterMonth <= _date && _date < r.yesterday) {
+  } else if (
+    r.yesterMonth.getTime() <= _date &&
+    _date < r.yesterday.getTime() - 24 * 60 * 60 * 1000
+  ) {
+    return format(date, 'MM/dd HH:mm', { locale });
+  } else if (
+    r.yesterday.getTime() - 24 * 60 * 60 * 1000 <= _date &&
+    _date < r.yesterday.getTime()
+  ) {
     const ret = format(date, 'HH:mm', { locale });
     return `yesterday ${ret}`;
-  } else if (r.yesterday <= _date && _date < r.now) {
+  } else if (r.yesterday.getTime() <= _date && _date < r.now.getTime()) {
     return format(date, 'kk:mm', { locale });
   } else {
     return format(date, 'p', { locale });
