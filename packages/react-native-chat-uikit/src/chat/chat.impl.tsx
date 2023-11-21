@@ -1,21 +1,63 @@
-import { ChatClient, ChatOptions } from 'react-native-chat-sdk';
+import {
+  ChatClient,
+  ChatConversation,
+  ChatConversationType,
+  ChatGroup,
+  ChatGroupMessageAck,
+  ChatMessage,
+  ChatMessageReactionEvent,
+  ChatMessageThreadEvent,
+  ChatMultiDeviceEvent,
+  ChatOptions,
+  ChatPresence,
+  ChatPushRemindType,
+  ChatSilentModeParamType,
+} from 'react-native-chat-sdk';
 
+import { ConversationStorage } from '../db/storage';
 import { ErrorCode, UIKitError } from '../error';
 import { asyncTask } from '../utils';
 import {
   ChatEventType,
   ChatService,
   ChatServiceListener,
+  ConversationModel,
+  ConversationServices,
+  DataModel,
+  DataModelType,
   DisconnectReasonType,
+  ResultCallback,
   UserServiceData,
 } from './types';
 
-export abstract class ChatServiceImpl implements ChatService {
+export abstract class ChatServiceImpl
+  implements ChatService, ConversationServices
+{
   _listeners: Set<ChatServiceListener>;
   _user?: UserServiceData;
+  _convStorage?: ConversationStorage;
+  _convList: Map<string, ConversationModel>;
+  _convDataRequestCallback?: (params: {
+    ids: Map<DataModelType, string[]>;
+    result: (
+      data?: Map<DataModelType, any[]> | undefined,
+      error?: UIKitError
+    ) => void;
+  }) => void;
 
   constructor() {
     this._listeners = new Set();
+    this._convList = new Map();
+  }
+
+  destructor() {
+    this._convStorage?.destructor();
+    this.clearListener();
+    this._reset();
+  }
+
+  _reset(): void {
+    this._convList.clear();
   }
 
   async init(params: {
@@ -25,6 +67,7 @@ export abstract class ChatServiceImpl implements ChatService {
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     const { appKey, debugMode, autoLogin } = params;
+    this._convStorage = new ConversationStorage({ appKey: '' });
     const options = new ChatOptions({
       appKey,
       debugModel: debugMode,
@@ -57,8 +100,6 @@ export abstract class ChatServiceImpl implements ChatService {
 
   abstract _fromChatError(error: any): string | undefined;
 
-  abstract _reset(): void;
-
   get client(): ChatClient {
     return ChatClient.getInstance();
   }
@@ -70,6 +111,7 @@ export abstract class ChatServiceImpl implements ChatService {
     userAvatarURL?: string | undefined;
     gender?: number;
     identify?: string;
+    usePassword?: boolean;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     const {
@@ -80,13 +122,16 @@ export abstract class ChatServiceImpl implements ChatService {
       gender,
       identify,
       result,
+      usePassword,
     } = params;
     try {
       if (userToken.startsWith('00')) {
         await this.client.loginWithAgoraToken(userId, userToken);
       } else {
-        await this.client.login(userId, userToken, false);
+        await this.client.login(userId, userToken, usePassword ?? false);
       }
+
+      this._convStorage?.setCurrentId(userId);
 
       // !!! hot-reload no pass, into catch codes
       this._user = {
@@ -102,6 +147,7 @@ export abstract class ChatServiceImpl implements ChatService {
       result?.({ isOk: true });
     } catch (error: any) {
       if (error?.code === 200) {
+        this._convStorage?.setCurrentId(userId);
         // !!! for dev hot-reload
         this._user = {
           nickName: userNickname,
@@ -144,15 +190,19 @@ export abstract class ChatServiceImpl implements ChatService {
     token: string;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
-    try {
-      await this.client.renewAgoraToken(params.token);
-      params?.result?.({ isOk: true });
-    } catch (error) {
-      params.result?.({
-        isOk: false,
-        error: new UIKitError({ code: ErrorCode.refresh_token_error }),
-      });
-    }
+    this.tryCatch({
+      promise: this.client.renewAgoraToken(params.token),
+      event: 'renewAgoraToken',
+      onFinished: () => {
+        params?.result?.({ isOk: true });
+      },
+      onError: () => {
+        params.result?.({
+          isOk: false,
+          error: new UIKitError({ code: ErrorCode.refresh_token_error }),
+        });
+      },
+    });
   }
 
   get userId(): string | undefined {
@@ -169,18 +219,423 @@ export abstract class ChatServiceImpl implements ChatService {
       asyncTask(() => v.onFinished?.(params));
     });
   }
-  // destructor() {}
+
+  tryCatch<T>(params: {
+    promise: Promise<T>;
+    event: string;
+    onFinished?: (value: T) => void;
+    onError?: (e: any) => void;
+  }): void {
+    const { promise, event, onFinished, onError } = params;
+    promise
+      .then((value: T) => {
+        if (onFinished) {
+          onFinished(value);
+        } else {
+          this.sendFinished({ event: event });
+        }
+      })
+      .catch((e) => {
+        if (onError) {
+          onError(e);
+        } else {
+          this.sendError({
+            error: new UIKitError({
+              code: ErrorCode.common,
+              desc: event,
+              extra: this._fromChatError(e),
+            }),
+            from: event,
+          });
+        }
+      });
+  }
+  async tryCatchSync<T>(params: {
+    promise: Promise<T>;
+    event: string;
+  }): Promise<T> {
+    const { promise, event } = params;
+    try {
+      return await promise;
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.common,
+        desc: event,
+        extra: this._fromChatError(error),
+      });
+    }
+  }
+
+  async toUIConversation(conv: ChatConversation): Promise<ConversationModel> {
+    const getDoNotDisturb = async () => {
+      if (conv.ext?.doNotDisturb !== undefined) {
+        return conv.ext.doNotDisturb as boolean;
+      } else {
+        const ret =
+          await this.client.pushManager.fetchSilentModeForConversation({
+            convId: conv.convId,
+            convType: conv.convType,
+          });
+        if (ret) {
+          return (
+            ret?.remindType === ChatPushRemindType.MENTION_ONLY ||
+            ret?.remindType === ChatPushRemindType.NONE
+          );
+        }
+        return false;
+      }
+    };
+    return {
+      convId: conv.convId,
+      convType: conv.convType,
+      isChatThread: conv.isChatThread,
+      ext: conv.ext,
+      isPinned: conv.isPinned,
+      pinnedTime: conv.pinnedTime,
+      unreadMessageCount: await conv.getMessageCount(),
+      lastMessage: await conv.getLatestMessage(),
+      doNotDisturb: await getDoNotDisturb(),
+    } as ConversationModel;
+  }
+
+  setOnRequestMultiData<DataT>(
+    callback: (params: {
+      ids: Map<DataModelType, string[]>;
+      result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
+    }) => void
+  ): void {
+    this._convDataRequestCallback = callback;
+  }
+
+  /**
+   * @description Get the current user all conversation list.
+   * @params params
+   * - onResult: The callback function of the result.
+   */
+  async getAllConversations(params: {
+    onResult: ResultCallback<ConversationModel[]>;
+  }): Promise<void> {
+    const { onResult } = params;
+    try {
+      // 1. 获取拉取标记，如果没有或者失败，则从服务器拉取
+      // 2. 本地获取或者服务器获取，服务器获取分页，完成之后，标记为完成, 同时拉取免打扰。
+      // 3. 加载以上数据到内存。
+      // 4. 后续增删改查，都是在内存中进行。必要时同步到本地。
+      const map = new Map<string, ChatConversation>();
+      const isFinished = await this._convStorage?.isFinishedForFetchList();
+      if (isFinished === true) {
+        const list = await this.client.chatManager.getAllConversations();
+        list.forEach(async (v) => {
+          this._convList.set(v.convId, await this.toUIConversation(v));
+        });
+      } else {
+        let cursor = '';
+        const pageSize = 50;
+        const pinList =
+          await this.client.chatManager.fetchPinnedConversationsFromServerWithCursor(
+            cursor,
+            pageSize
+          );
+        pinList.list?.forEach((v) => {
+          map.set(v.convId, v);
+        });
+        cursor = '';
+        for (;;) {
+          const list =
+            await this.client.chatManager.fetchConversationsFromServerWithCursor(
+              cursor,
+              pageSize
+            );
+          list.list?.forEach((v) => {
+            map.set(v.convId, v);
+          });
+
+          if (list.list && list.cursor.length > 0) {
+            const silentList =
+              await this.client.pushManager.fetchSilentModeForConversations(
+                list.list.map((v) => {
+                  return {
+                    convId: v.convId,
+                    convType: v.convType,
+                  } as any;
+                })
+              );
+            silentList.forEach((v) => {
+              const conv = map.get(v.conversationId);
+              if (conv) {
+                conv.ext.doNotDisturb =
+                  v.remindType === ChatPushRemindType.MENTION_ONLY ||
+                  v.remindType === ChatPushRemindType.NONE;
+              }
+            });
+          }
+
+          if (
+            list.cursor.length === 0 ||
+            (list.list && list.list?.length < pageSize) ||
+            list.list === undefined
+          ) {
+            break;
+          }
+        }
+        await this._convStorage?.setFinishedForFetchList(true);
+
+        const ret = Array.from(map.values()).map(async (v) => {
+          const conv = await this.toUIConversation(v);
+          this._convList.set(conv.convId, conv);
+          return conv;
+        });
+        Promise.all(ret);
+      }
+
+      if (this._convDataRequestCallback) {
+        this._convDataRequestCallback({
+          ids: new Map([
+            [
+              'user',
+              Array.from(this._convList.values())
+                .filter((v) => v.convType === ChatConversationType.PeerChat)
+                .map((v) => v.convId),
+            ],
+            [
+              'group',
+              Array.from(this._convList.values())
+                .filter((v) => v.convType === ChatConversationType.GroupChat)
+                .map((v) => v.convId),
+            ],
+          ]),
+          result: (data, error) => {
+            if (data) {
+              data.forEach((values: DataModel[]) => {
+                values.map((value) => {
+                  const conv = this._convList.get(value.id);
+                  if (conv) {
+                    conv.convName = value.name;
+                    conv.convAvatar = value.avatar;
+                  }
+                });
+              });
+            }
+            onResult({
+              isOk: true,
+              value: Array.from(this._convList.values()),
+              error,
+            });
+          },
+        });
+      } else {
+        onResult({
+          isOk: true,
+          value: Array.from(this._convList.values()),
+        });
+      }
+    } catch (e) {
+      onResult({
+        isOk: false,
+        error: new UIKitError({
+          code: ErrorCode.get_all_conversations_error,
+          extra: this._fromChatError(e),
+        }),
+      });
+    }
+  }
+  async getConversation(params: {
+    convId: string;
+    convType: ChatConversationType;
+    createIfNotExist?: boolean;
+  }): Promise<ConversationModel | undefined> {
+    if (params.createIfNotExist === true) {
+      const conv = this._convList.get(params.convId);
+      if (conv === undefined) {
+        const ret = await this.tryCatchSync({
+          promise: this.client.chatManager.getConversation(
+            params.convId,
+            params.convType,
+            true
+          ),
+          event: 'createConversation',
+        });
+        if (ret) {
+          const c = await this.toUIConversation(ret);
+          this._convList.set(c.convId, c);
+          return c;
+        }
+      } else {
+        return conv;
+      }
+    } else {
+      return this._convList.get(params.convId);
+    }
+    return undefined;
+  }
+  async removeConversation(params: { convId: string }): Promise<void> {
+    const { convId } = params;
+    const ret = await this.tryCatchSync({
+      promise: this.client.chatManager.deleteConversation(convId, true),
+      event: 'deleteConversation',
+    });
+    this._convList.delete(convId);
+    return ret;
+  }
+  async clearAllConversations(): Promise<void> {
+    const ret = Array.from(this._convList.values()).map(async (v) => {
+      await this.tryCatchSync({
+        promise: this.client.chatManager.deleteConversation(v.convId, true),
+        event: 'deleteConversation',
+      });
+    });
+    await Promise.all(ret);
+    this._convList.clear();
+  }
+  async setConversationPin(params: {
+    convId: string;
+    convType: ChatConversationType;
+    isPin: boolean;
+  }): Promise<void> {
+    const ret = await this.tryCatchSync({
+      promise: this.client.chatManager.pinConversation(
+        params.convId,
+        params.isPin
+      ),
+      event: 'pinConversation',
+    });
+    const conv = this._convList.get(params.convId);
+    if (conv) {
+      conv.isPinned = params.isPin;
+    }
+    return ret;
+  }
+  async setConversationSilentMode(params: {
+    convId: string;
+    convType: ChatConversationType;
+    doNotDisturb: boolean;
+  }): Promise<void> {
+    const ret = await this.tryCatchSync({
+      promise: this.client.pushManager.setSilentModeForConversation({
+        convId: params.convId,
+        convType: params.convType,
+        option: {
+          remindType:
+            params.doNotDisturb === true
+              ? ChatPushRemindType.NONE
+              : ChatPushRemindType.ALL,
+          paramType: ChatSilentModeParamType.REMIND_TYPE,
+        },
+      }),
+      event: 'setSilentModeForConversation',
+    });
+    const conv = this._convList.get(params.convId);
+    if (conv) {
+      conv.doNotDisturb = params.doNotDisturb;
+    }
+    return ret;
+  }
+  async setConversationRead(params: {
+    convId: string;
+    convType: ChatConversationType;
+  }): Promise<void> {
+    const ret = await this.tryCatchSync({
+      promise: this.client.chatManager.markAllMessagesAsRead(
+        params.convId,
+        params.convType
+      ),
+      event: 'markAllMessagesAsRead',
+    });
+    const conv = this._convList.get(params.convId);
+    if (conv) {
+      conv.unreadMessageCount = 0;
+    }
+    return ret;
+  }
+  async setConversationExt(params: {
+    convId: string;
+    convType: ChatConversationType;
+    ext: Record<string, string | number | boolean>;
+  }): Promise<void> {
+    const ret = await this.tryCatchSync({
+      promise: this.client.chatManager.setConversationExtension(
+        params.convId,
+        params.convType,
+        params.ext
+      ),
+      event: 'setConversationExtension',
+    });
+    const conv = this._convList.get(params.convId);
+    if (conv) {
+      conv.ext = params.ext;
+    }
+    return ret;
+  }
+  async setConversationMsg(params: {
+    convId: string;
+    convType: ChatConversationType;
+    lastMessage: ChatMessage;
+  }): Promise<void> {
+    const conv = this._convList.get(params.convId);
+    if (conv) {
+      conv.lastMessage = params.lastMessage;
+    }
+  }
+  async updateConversation(params: { conv: ConversationModel }): Promise<void> {
+    const _conv = this._convList.get(params.conv.convId);
+    if (_conv) {
+      if (_conv.isPinned !== params.conv.isPinned && params.conv.isPinned) {
+        this.setConversationPin({
+          convId: params.conv.convId,
+          convType: params.conv.convType,
+          isPin: params.conv.isPinned,
+        });
+      }
+      if (_conv.unreadMessageCount !== params.conv.unreadMessageCount) {
+        this.setConversationRead({
+          convId: params.conv.convId,
+          convType: params.conv.convType,
+        });
+      }
+      if (
+        _conv.doNotDisturb !== params.conv.doNotDisturb &&
+        params.conv.doNotDisturb
+      ) {
+        this.setConversationSilentMode({
+          convId: params.conv.convId,
+          convType: params.conv.convType,
+          doNotDisturb: params.conv.doNotDisturb,
+        });
+      }
+      if (
+        _conv.lastMessage !== params.conv.lastMessage &&
+        params.conv.lastMessage
+      ) {
+        this.setConversationMsg({
+          convId: params.conv.convId,
+          convType: params.conv.convType,
+          lastMessage: params.conv.lastMessage,
+        });
+      }
+      if (_conv.ext !== params.conv.ext && params.conv.ext) {
+        this.client.chatManager.setConversationExtension(
+          params.conv.convId,
+          params.conv.convType,
+          params.conv.ext
+        );
+      }
+    }
+  }
 }
 
 export class ChatServicePrivateImpl extends ChatServiceImpl {
   constructor() {
     super();
-    this._initListener();
   }
 
   _initListener() {
     this._initConnectListener();
     this._initMessageListener();
+    this._initGroupListener();
+    this._initMultiDeviceListener();
+    this._initCustomListener();
+    this._initContactListener();
+    this._initPresenceListener();
   }
   _initConnectListener() {
     this.client.removeAllConnectionListener();
@@ -212,68 +667,430 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
           );
         });
       },
-      // onUserDidLoginFromOtherDevice: () => {
-      //   this._listeners.forEach((v) => {
-      //     v.onDisconnected?.(
-      //       DisconnectReasonType.user_did_login_from_other_device
-      //     );
-      //   });
-      // },
-      // onUserDidRemoveFromServer: () => {
-      //   this._listeners.forEach((v) => {
-      //     v.onDisconnected?.(DisconnectReasonType.user_did_remove_from_server);
-      //   });
-      // },
-      // onUserDidForbidByServer: () => {
-      //   this._listeners.forEach((v) => {
-      //     v.onDisconnected?.(DisconnectReasonType.user_did_forbid_by_server);
-      //   });
-      // },
-      // onUserDidChangePassword: () => {
-      //   this._listeners.forEach((v) => {
-      //     v.onDisconnected?.(DisconnectReasonType.user_did_change_password);
-      //   });
-      // },
-      // onUserDidLoginTooManyDevice: () => {
-      //   this._listeners.forEach((v) => {
-      //     v.onDisconnected?.(
-      //       DisconnectReasonType.user_did_login_too_many_device
-      //     );
-      //   });
-      // },
-      // onUserKickedByOtherDevice: () => {
-      //   this._listeners.forEach((v) => {
-      //     v.onDisconnected?.(DisconnectReasonType.user_kicked_by_other_device);
-      //   });
-      // },
-      // onUserAuthenticationFailed: () => {
-      //   this._listeners.forEach((v) => {
-      //     v.onDisconnected?.(DisconnectReasonType.user_authentication_failed);
-      //   });
-      // },
+      onUserDidLoginFromOtherDevice: () => {
+        this._listeners.forEach((v) => {
+          v.onDisconnected?.(
+            DisconnectReasonType.user_did_login_from_other_device
+          );
+        });
+      },
+      onUserDidRemoveFromServer: () => {
+        this._listeners.forEach((v) => {
+          v.onDisconnected?.(DisconnectReasonType.user_did_remove_from_server);
+        });
+      },
+      onUserDidForbidByServer: () => {
+        this._listeners.forEach((v) => {
+          v.onDisconnected?.(DisconnectReasonType.user_did_forbid_by_server);
+        });
+      },
+      onUserDidChangePassword: () => {
+        this._listeners.forEach((v) => {
+          v.onDisconnected?.(DisconnectReasonType.user_did_change_password);
+        });
+      },
+      onUserDidLoginTooManyDevice: () => {
+        this._listeners.forEach((v) => {
+          v.onDisconnected?.(
+            DisconnectReasonType.user_did_login_too_many_device
+          );
+        });
+      },
+      onUserKickedByOtherDevice: () => {
+        this._listeners.forEach((v) => {
+          v.onDisconnected?.(DisconnectReasonType.user_kicked_by_other_device);
+        });
+      },
+      onUserAuthenticationFailed: () => {
+        this._listeners.forEach((v) => {
+          v.onDisconnected?.(DisconnectReasonType.user_authentication_failed);
+        });
+      },
     });
   }
+
   _initMessageListener() {
     this.client.chatManager.removeAllMessageListener();
     this.client.chatManager.addMessageListener({
-      onMessagesRecalled: (messages) => {
+      onMessagesReceived: (messages: Array<ChatMessage>): void => {
         this._listeners.forEach((v) => {
-          for (const message of messages) {
-            v.onMessageRecalled?.(message);
-          }
+          v.onMessagesReceived?.(messages);
         });
       },
-      // onMessagesReceived: (messages) => {
-      //   this._listeners.forEach((v) => {
-      //     for (const message of messages) {
-      //       if (message.isBroadcast === true) {
-      //         v.onGlobalNotifyReceived?.(message);
-      //       } else {
-      //         v.onMessageReceived?.(message);
-      //       }
-      //     }
-      //   });
-      // },
+      onCmdMessagesReceived: (messages: Array<ChatMessage>): void => {
+        this._listeners.forEach((v) => {
+          v.onCmdMessagesReceived?.(messages);
+        });
+      },
+      onMessagesRead: (messages: Array<ChatMessage>): void => {
+        this._listeners.forEach((v) => {
+          v.onMessagesRead?.(messages);
+        });
+      },
+      onGroupMessageRead: (
+        groupMessageAcks: Array<ChatGroupMessageAck>
+      ): void => {
+        this._listeners.forEach((v) => {
+          v.onGroupMessageRead?.(groupMessageAcks);
+        });
+      },
+      onMessagesDelivered: (messages: Array<ChatMessage>): void => {
+        this._listeners.forEach((v) => {
+          v.onMessagesDelivered?.(messages);
+        });
+      },
+      onMessagesRecalled: (messages: Array<ChatMessage>): void => {
+        this._listeners.forEach((v) => {
+          v.onMessagesRecalled?.(messages);
+        });
+      },
+      onConversationsUpdate: (): void => {
+        this._listeners.forEach((v) => {
+          v.onConversationsUpdate?.();
+        });
+      },
+      onConversationRead: (from: string, to?: string): void => {
+        this._listeners.forEach((v) => {
+          v.onConversationRead?.(from, to);
+        });
+      },
+      onMessageReactionDidChange: (
+        list: Array<ChatMessageReactionEvent>
+      ): void => {
+        this._listeners.forEach((v) => {
+          v.onMessageReactionDidChange?.(list);
+        });
+      },
+      onChatMessageThreadCreated: (event: ChatMessageThreadEvent): void => {
+        this._listeners.forEach((v) => {
+          v.onChatMessageThreadCreated?.(event);
+        });
+      },
+      onChatMessageThreadUpdated: (event: ChatMessageThreadEvent): void => {
+        this._listeners.forEach((v) => {
+          v.onChatMessageThreadUpdated?.(event);
+        });
+      },
+      onChatMessageThreadDestroyed: (event: ChatMessageThreadEvent): void => {
+        this._listeners.forEach((v) => {
+          v.onChatMessageThreadDestroyed?.(event);
+        });
+      },
+      onChatMessageThreadUserRemoved: (event: ChatMessageThreadEvent): void => {
+        this._listeners.forEach((v) => {
+          v.onChatMessageThreadUserRemoved?.(event);
+        });
+      },
+      onMessageContentChanged: (
+        message: ChatMessage,
+        lastModifyOperatorId: string,
+        lastModifyTime: number
+      ): void => {
+        this._listeners.forEach((v) => {
+          v.onMessageContentChanged?.(
+            message,
+            lastModifyOperatorId,
+            lastModifyTime
+          );
+        });
+      },
+    });
+  }
+
+  _initGroupListener() {
+    this.client.groupManager.removeAllGroupListener();
+    this.client.groupManager.addGroupListener({
+      onInvitationReceived: (params: {
+        groupId: string;
+        inviter: string;
+        groupName: string;
+        reason?: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onInvitationReceived?.(params);
+        });
+      },
+      onRequestToJoinReceived: (params: {
+        groupId: string;
+        applicant: string;
+        groupName?: string;
+        reason?: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onRequestToJoinReceived?.(params);
+        });
+      },
+      onRequestToJoinAccepted: (params: {
+        groupId: string;
+        accepter: string;
+        groupName?: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onRequestToJoinAccepted?.(params);
+        });
+      },
+      onRequestToJoinDeclined: (params: {
+        groupId: string;
+        decliner: string;
+        groupName?: string;
+        applicant?: string;
+        reason?: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onRequestToJoinDeclined?.(params);
+        });
+      },
+      onInvitationAccepted: (params: {
+        groupId: string;
+        invitee: string;
+        reason?: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onInvitationAccepted?.(params);
+        });
+      },
+      onInvitationDeclined: (params: {
+        groupId: string;
+        invitee: string;
+        reason?: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onInvitationDeclined?.(params);
+        });
+      },
+      onMemberRemoved: (params: {
+        groupId: string;
+        groupName?: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onMemberRemoved?.(params);
+        });
+      },
+      onDestroyed: (params: { groupId: string; groupName?: string }): void => {
+        this._listeners.forEach((v) => {
+          v.onDestroyed?.(params);
+        });
+      },
+      onAutoAcceptInvitation: (params: {
+        groupId: string;
+        inviter: string;
+        inviteMessage?: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onAutoAcceptInvitation?.(params);
+        });
+      },
+      onMuteListAdded: (params: {
+        groupId: string;
+        mutes: Array<string>;
+        muteExpire?: number;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onMuteListAdded?.(params);
+        });
+      },
+      onMuteListRemoved: (params: {
+        groupId: string;
+        mutes: Array<string>;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onMuteListRemoved?.(params);
+        });
+      },
+      onAdminAdded: (params: { groupId: string; admin: string }): void => {
+        this._listeners.forEach((v) => {
+          v.onAdminAdded?.(params);
+        });
+      },
+      onAdminRemoved: (params: { groupId: string; admin: string }): void => {
+        this._listeners.forEach((v) => {
+          v.onAdminRemoved?.(params);
+        });
+      },
+      onOwnerChanged: (params: {
+        groupId: string;
+        newOwner: string;
+        oldOwner: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onOwnerChanged?.(params);
+        });
+      },
+      onMemberJoined: (params: { groupId: string; member: string }): void => {
+        this._listeners.forEach((v) => {
+          v.onMemberJoined?.(params);
+        });
+      },
+      onMemberExited: (params: { groupId: string; member: string }): void => {
+        this._listeners.forEach((v) => {
+          v.onMemberExited?.(params);
+        });
+      },
+      onAnnouncementChanged: (params: {
+        groupId: string;
+        announcement: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onAnnouncementChanged?.(params);
+        });
+      },
+      onSharedFileAdded: (params: {
+        groupId: string;
+        sharedFile: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onSharedFileAdded?.(params);
+        });
+      },
+      onSharedFileDeleted: (params: {
+        groupId: string;
+        fileId: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onSharedFileDeleted?.(params);
+        });
+      },
+      onAllowListAdded: (params: {
+        groupId: string;
+        members: Array<string>;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onAllowListAdded?.(params);
+        });
+      },
+      onAllowListRemoved: (params: {
+        groupId: string;
+        members: Array<string>;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onAllowListRemoved?.(params);
+        });
+      },
+      onAllGroupMemberMuteStateChanged: (params: {
+        groupId: string;
+        isAllMuted: boolean;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onAllGroupMemberMuteStateChanged?.(params);
+        });
+      },
+      onDetailChanged: (group: ChatGroup): void => {
+        this._listeners.forEach((v) => {
+          v.onDetailChanged?.(group);
+        });
+      },
+      onStateChanged: (group: ChatGroup): void => {
+        this._listeners.forEach((v) => {
+          v.onStateChanged?.(group);
+        });
+      },
+      onMemberAttributesChanged: (params: {
+        groupId: string;
+        member: string;
+        attributes: any;
+        operator: string;
+      }): void => {
+        this._listeners.forEach((v) => {
+          v.onMemberAttributesChanged?.(params);
+        });
+      },
+    });
+  }
+
+  _initMultiDeviceListener() {
+    this.client.removeAllMultiDeviceListener();
+    this.client.addMultiDeviceListener({
+      onContactEvent: (
+        event?: ChatMultiDeviceEvent,
+        target?: string,
+        ext?: string
+      ): void => {
+        this._listeners.forEach((v) => {
+          v.onContactEvent?.(event, target, ext);
+        });
+      },
+      onGroupEvent: (
+        event?: ChatMultiDeviceEvent,
+        target?: string,
+        usernames?: Array<string>
+      ): void => {
+        this._listeners.forEach((v) => {
+          v.onGroupEvent?.(event, target, usernames);
+        });
+      },
+      onThreadEvent: (
+        event?: ChatMultiDeviceEvent,
+        target?: string,
+        usernames?: Array<string>
+      ): void => {
+        this._listeners.forEach((v) => {
+          v.onThreadEvent?.(event, target, usernames);
+        });
+      },
+      onMessageRemoved: (convId?: string, deviceId?: string): void => {
+        this._listeners.forEach((v) => {
+          v.onMessageRemoved?.(convId, deviceId);
+        });
+      },
+      onConversationEvent: (
+        event?: ChatMultiDeviceEvent,
+        convId?: string,
+        convType?: ChatConversationType
+      ): void => {
+        this._listeners.forEach((v) => {
+          v.onConversationEvent?.(event, convId, convType);
+        });
+      },
+    });
+  }
+  _initCustomListener() {
+    this.client.removeAllCustomListener();
+    this.client.addCustomListener({
+      onDataReceived: (params: any): void => {
+        this._listeners.forEach((v) => {
+          v.onDataReceived?.(params);
+        });
+      },
+    });
+  }
+  _initContactListener() {
+    this.client.contactManager.removeAllContactListener();
+    this.client.contactManager.addContactListener({
+      onContactAdded: (userName: string): void => {
+        this._listeners.forEach((v) => {
+          v.onContactAdded?.(userName);
+        });
+      },
+      onContactDeleted: (userName: string): void => {
+        this._listeners.forEach((v) => {
+          v.onContactDeleted?.(userName);
+        });
+      },
+      onContactInvited: (userName: string, reason?: string): void => {
+        this._listeners.forEach((v) => {
+          v.onContactInvited?.(userName, reason);
+        });
+      },
+      onFriendRequestAccepted: (userName: string): void => {
+        this._listeners.forEach((v) => {
+          v.onFriendRequestAccepted?.(userName);
+        });
+      },
+      onFriendRequestDeclined: (userName: string): void => {
+        this._listeners.forEach((v) => {
+          v.onFriendRequestDeclined?.(userName);
+        });
+      },
+    });
+  }
+  _initPresenceListener() {
+    this.client.presenceManager.removeAllPresenceListener();
+    this.client.presenceManager.addPresenceListener({
+      onPresenceStatusChanged: (list: Array<ChatPresence>): void => {
+        this._listeners.forEach((v) => {
+          v.onPresenceStatusChanged?.(list);
+        });
+      },
     });
   }
 
@@ -290,8 +1107,6 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
     }
     return e;
   }
-
-  _reset(): void {}
 }
 
 let gIMService: ChatService;

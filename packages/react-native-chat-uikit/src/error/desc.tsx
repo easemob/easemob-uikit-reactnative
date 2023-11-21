@@ -21,6 +21,7 @@ export enum ErrorDescription {
   msg_recall_error = 'message recall failed.',
   msg_translate_error = 'message translate failed.',
   msg_report_error = 'message report failed.',
+  get_all_conversations_error = 'get all conversations failed.',
 
   room_join_error = 'join chatroom failed.',
   room_leave_error = 'leave chatroom failed.',

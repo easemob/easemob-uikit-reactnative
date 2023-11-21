@@ -22,6 +22,7 @@ export * from './error';
 export * from './hook';
 export * from './i18n';
 export * from './theme';
+export * from './types';
 export * from './ui/Alert';
 export * from './ui/Button';
 export * from './ui/FlatList';

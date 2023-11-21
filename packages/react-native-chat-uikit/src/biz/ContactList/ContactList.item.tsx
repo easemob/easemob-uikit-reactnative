@@ -2,12 +2,13 @@ import * as React from 'react';
 import { SectionListData, View } from 'react-native';
 import type { IconNameType } from 'src/assets';
 
+import type { DataModel } from '../../chat';
 import { g_not_existed_url } from '../../const';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { ListItem } from '../ListItem';
-import type { DataModel, ListItemProps, ListItemRequestProps } from '../types';
+import type { ListItemProps, ListItemRequestProps } from '../types';
 
 export type ContactListItemProps = ListItemProps &
   ListItemRequestProps<DataModel> & {};

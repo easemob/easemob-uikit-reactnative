@@ -56,6 +56,9 @@ export function getDescription(code: ErrorCode): ErrorDescription {
     case ErrorCode.msg_report_error:
       ret = ErrorDescription.msg_report_error;
       break;
+    case ErrorCode.get_all_conversations_error:
+      ret = ErrorDescription.get_all_conversations_error;
+      break;
 
     case ErrorCode.room_join_error:
       ret = ErrorDescription.room_join_error;

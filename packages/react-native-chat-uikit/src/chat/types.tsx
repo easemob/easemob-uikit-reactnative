@@ -1,8 +1,18 @@
-import type { ChatClient, ChatMessage } from 'react-native-chat-sdk';
+import type {
+  ChatClient,
+  ChatContactEventListener,
+  ChatConversationType,
+  ChatCustomEventListener,
+  ChatGroupEventListener,
+  ChatMessage,
+  ChatMessageEventListener,
+  ChatMultiDeviceEventListener,
+  ChatPresenceEventListener,
+} from 'react-native-chat-sdk';
 
 import type { UIKitError } from '../error';
 
-export type ChatEventType = 'undefined';
+export type ChatEventType = 'undefined' | string;
 
 /**
  * The type of disconnect reason.
@@ -20,6 +30,19 @@ export enum DisconnectReasonType {
   user_authentication_failed = 'user_authentication_failed',
   others = 'others',
 }
+
+export type ResultCallback<T> = (params: {
+  isOk: boolean;
+  value?: T;
+  error?: UIKitError;
+}) => void;
+
+export type DataModelType = 'user' | 'group';
+export type DataModel = {
+  id: string;
+  name: string;
+  avatar: string;
+};
 
 /**
  * The type of user data.
@@ -65,33 +88,17 @@ export interface ConnectServiceListener {
   onDisconnected?(reason: DisconnectReasonType): void;
 }
 
-/**
- * The type of message listener.
- */
-export interface MessageServiceListener {
-  /**
-   * When a message is received, you will receive this notification.
-   *
-   * The message will carry user information to facilitate updating the message status.
-   *
-   * @param message The message object.
-   */
-  onMessageReceived?(message: ChatMessage): void;
-  /**
-   * When a message is recall, other people will receive a notification.
-   *
-   * @param message the message object.
-   */
-  onMessageRecalled?(message: ChatMessage): void;
-  /**
-   * This notification will be received when the backend pushes a globally important message.
-   *
-   * The GlobalBroadcast component will pay attention to it.
-   *
-   * @param notifyMessage the message object.
-   */
-  onGlobalNotifyReceived?(notifyMessage: ChatMessage): void;
-}
+export type MessageServiceListener = ChatMessageEventListener;
+
+export type GroupServiceListener = ChatGroupEventListener;
+
+export type ContactServiceListener = ChatContactEventListener;
+
+export type PresenceServiceListener = ChatPresenceEventListener;
+
+export type CustomServiceListener = ChatCustomEventListener;
+
+export type MultiDeviceStateListener = ChatMultiDeviceEventListener;
 
 export interface ErrorServiceListener {
   onError?(params: { error: UIKitError; from?: string; extra?: any }): void;
@@ -102,8 +109,113 @@ export interface ResultServiceListener {
 
 export type ChatServiceListener = ConnectServiceListener &
   MessageServiceListener &
+  GroupServiceListener &
+  ContactServiceListener &
+  PresenceServiceListener &
+  CustomServiceListener &
+  MultiDeviceStateListener &
   ErrorServiceListener &
   ResultServiceListener;
+
+export type ConversationModel = {
+  /**
+   * The conversation ID.
+   */
+  convId: string;
+  /**
+   * The conversation type.
+   */
+  convType: ChatConversationType;
+  /**
+ * Whether the current conversation is a thread conversation.
+ * 
+ * - `true`: Yes.
+ * - `false`: No.
+ *
+ * **Note**
+
+ * This parameter is valid only for group chat.
+ */
+  isChatThread?: boolean;
+  /**
+   * The conversation extension.
+   */
+  ext?: Record<string, string | number | boolean>;
+  /**
+   * Whether the conversation is pinned:
+   *
+   * - `true`: Yes.
+   * - (Default) `false`: No.
+   */
+  isPinned?: boolean;
+  /**
+   * The UNIX timestamp when the conversation is pinned. The unit is millisecond. This value is `0` when the conversation is not pinned.
+   */
+  pinnedTime?: number;
+  /**
+   * The message unread count.
+   */
+  unreadMessageCount?: number;
+  /**
+   * The conversation name.
+   */
+  convName?: string;
+  /**
+   * The conversation avatar URL.
+   */
+  convAvatar?: string;
+  /**
+   * Whether the conversation is silent.
+   */
+  doNotDisturb?: boolean;
+  /**
+   * The last message.
+   */
+  lastMessage?: ChatMessage;
+};
+export interface ConversationServices {
+  setOnRequestMultiData<DataT>(
+    callback: (params: {
+      ids: Map<DataModelType, string[]>;
+      result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
+    }) => void
+  ): void;
+  getAllConversations(params: {
+    onResult: ResultCallback<ConversationModel[]>;
+  }): Promise<void>;
+  getConversation(params: {
+    convId: string;
+    convType: ChatConversationType;
+    createIfNotExist?: boolean;
+  }): Promise<ConversationModel | undefined>;
+  removeConversation(params: { convId: string }): Promise<void>;
+  clearAllConversations(): Promise<void>;
+  setConversationPin(params: {
+    convId: string;
+    convType: ChatConversationType;
+    isPin: boolean;
+  }): Promise<void>;
+  setConversationSilentMode(params: {
+    convId: string;
+    convType: ChatConversationType;
+    doNotDisturb: boolean;
+  }): Promise<void>;
+  setConversationRead(params: {
+    convId: string;
+    convType: ChatConversationType;
+  }): Promise<void>;
+  setConversationExt(params: {
+    convId: string;
+    convType: ChatConversationType;
+    ext: Record<string, string | number | boolean>;
+  }): Promise<void>;
+  setConversationMsg(params: {
+    convId: string;
+    convType: ChatConversationType;
+    lastMessage: ChatMessage;
+  }): Promise<void>;
+  updateConversation(params: { conv: ConversationModel }): Promise<void>;
+}
 
 export interface ChatService {
   /**

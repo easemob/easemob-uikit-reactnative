@@ -6,6 +6,7 @@ import type {
   ViewToken,
 } from 'react-native';
 
+import type { DataModelType } from '../chat';
 import type { UIKitError } from '../error';
 import type { FlatListRef } from '../ui/FlatList';
 import type { SectionListRef } from '../ui/SectionList';
@@ -24,12 +25,7 @@ export type ListItemType =
 export type ListItemProps = {
   id: string;
 };
-export type DataModelType = 'user' | 'group';
-export type DataModel = {
-  id: string;
-  name: string;
-  avatar: string;
-};
+
 export type ListItemRequestProps<DataT> = {
   /**
    * Single request, supports asynchronous. If you need to get it over the network instead of locally, it is recommended to use `` to complete the provided data.
