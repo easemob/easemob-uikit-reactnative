@@ -217,7 +217,7 @@ export interface ConversationServices {
   updateConversation(params: { conv: ConversationModel }): Promise<void>;
 }
 
-export interface ChatService {
+export interface ChatService extends ConversationServices {
   /**
    * Add listener.
    * @param listener {@link ChatServiceListener}

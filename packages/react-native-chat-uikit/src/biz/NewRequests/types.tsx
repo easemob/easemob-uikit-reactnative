@@ -1,11 +1,7 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
-import type {
-  DataModel,
-  ListRequestProps,
-  PropsWithError,
-  PropsWithTest,
-} from '../types';
+import type { DataModel } from '../../chat';
+import type { ListRequestProps, PropsWithError, PropsWithTest } from '../types';
 export type NewRequestsPageProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError & {

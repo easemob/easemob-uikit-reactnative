@@ -1,27 +1,23 @@
 import * as React from 'react';
-import { AlertButton, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
-import { BorderButton, CmnButton } from '../Button';
 import { Modal, ModalRef } from '../Modal';
 import { Text } from '../Text';
 import { TextInput } from '../TextInput';
+import { useAlert } from './Alert.hooks';
+import type { AlertProps } from './types';
 
 export type AlertRef = {
   alert: () => void;
+  alertWithInit: (props: AlertProps) => void;
   close: (onFinished?: () => void) => void;
 };
-export type AlertProps = {
-  title: string;
-  message?: string;
-  buttons?: Omit<AlertButton, 'isPreferred'>[];
-  supportInput?: boolean;
-};
+
 export const Alert = React.forwardRef<AlertRef, AlertProps>(
   (props: AlertProps, ref?: React.ForwardedRef<AlertRef>) => {
-    const { title, message, buttons, supportInput = false } = props;
-    const count = buttons?.length ?? 1;
+    const { supportInput = false } = props;
     const [value, onChangeText] = React.useState('');
     const modalRef = React.useRef<ModalRef>({} as any);
     const { style: themeStyle } = useThemeContext();
@@ -40,92 +36,44 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
         dark: colors.neutral[98],
       },
     });
-    const getButton = () => {
-      if (buttons) {
-        const list = buttons.map((v, i) => {
-          if (i < count - 1) {
-            return (
-              <BorderButton
-                key={i}
-                sizesType={'large'}
-                radiusType={'large'}
-                contentType={'only-text'}
-                onPress={() => v.onPress?.(v.text)}
-                text={v.text}
-                style={{
-                  height: 48,
-                  width: count < 3 ? undefined : 308,
-                }}
-              />
-            );
-          }
-          return (
-            <CmnButton
-              key={i}
-              sizesType={'large'}
-              radiusType={'large'}
-              contentType={'only-text'}
-              onPress={() => v.onPress?.(v.text)}
-              text={v.text}
-              style={{ height: 48 }}
-            />
-          );
-        });
-        const ret = [] as JSX.Element[];
-        if (count < 3) {
-          for (let index = 0; index < list.length; index++) {
-            const element = list[index];
-            if (element) {
-              ret.push(element);
-              if (index < list.length - 1) {
-                ret.push(<View key={count + index} style={{ width: 16 }} />);
-              }
-            }
-          }
-        } else {
-          for (let index = 0; index < list.length; index++) {
-            const element = list[index];
-            if (element) {
-              ret.push(element);
-              if (index < list.length - 1) {
-                ret.push(<View key={count + index} style={{ height: 16 }} />);
-              }
-            }
-          }
-        }
-
-        return ret;
-      }
-
-      return [
-        <CmnButton
-          key={99}
-          sizesType={'large'}
-          radiusType={'large'}
-          contentType={'only-text'}
-          onPress={onRequestModalClose}
-          text={'Confirm'}
-          style={{ height: 48 }}
-        />,
-      ];
-    };
+    const isShow = React.useRef(false);
     const onRequestModalClose = React.useCallback(() => {
       modalRef?.current?.startHide?.();
     }, []);
+    const {
+      props: { title, message, buttons },
+      getButton,
+      onUpdate,
+    } = useAlert(props);
+    const count = buttons?.length ?? 1;
+
     React.useImperativeHandle(
       ref,
       () => {
         return {
           alert: () => {
+            isShow.current = true;
             modalRef?.current?.startShow?.();
           },
+          alertWithInit: (props: AlertProps) => {
+            isShow.current = true;
+            onUpdate(props);
+          },
           close: (onFinished) => {
+            isShow.current = false;
             modalRef?.current?.startHide?.(onFinished);
           },
         };
       },
-      []
+      [onUpdate]
     );
+
+    React.useEffect(() => {
+      if (isShow.current === true) {
+        modalRef?.current?.startShow?.();
+      }
+    }, []);
+
     return (
       <Modal
         propsRef={modalRef}
@@ -197,7 +145,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 // justifyContent: 'space-evenly',
               }}
             >
-              {getButton()}
+              {getButton(buttons, onRequestModalClose)}
             </View>
           </View>
         </View>

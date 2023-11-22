@@ -31,6 +31,7 @@ export function SearchStyle(props: SearchStyleProps) {
         justifyContent: 'center',
         paddingHorizontal: 16,
         paddingVertical: 4,
+        height: 44,
       }}
     >
       <Pressable onPress={onPress}>

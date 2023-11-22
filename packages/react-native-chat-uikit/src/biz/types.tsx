@@ -84,6 +84,10 @@ export type UseFlatListReturn<ItemT> = {
    */
   onMore?: () => void;
   /**
+   * Whether to load.
+   */
+  isAutoLoad?: boolean;
+  /**
    * Whether to load all.
    */
   isLoadAll?: boolean;
@@ -147,6 +151,10 @@ export type UseSectionListReturn<
    */
   onMore?: () => void;
   /**
+   * Whether to load.
+   */
+  isAutoLoad?: boolean;
+  /**
    * Whether to load all.
    */
   isLoadAll?: boolean;
@@ -200,4 +208,11 @@ export type UseListReturn = {
     changed: Array<ViewToken>;
   }) => void;
   deferSearch?: (key: string) => void;
+};
+
+export type ListItemActions<DataT> = {
+  onClicked?: (data?: DataT) => void;
+  onLongPressed?: (data?: DataT) => void;
+  onToRightSlide?: (data?: DataT) => void;
+  onToLeftSlide?: (data?: DataT) => void;
 };

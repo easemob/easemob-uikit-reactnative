@@ -8,7 +8,13 @@ import { Text } from '../../ui/Text';
 export const gMaxCount = 99;
 
 export type BadgesProps = {
-  count: number;
+  /**
+   * @description unread count.
+   * - `undefined` means is disturb.
+   * - `0` means no unread count.
+   * - `others` means unread count.
+   */
+  count?: number;
   maxCount?: number;
   textStyle?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
@@ -27,10 +33,21 @@ export function Badges(props: BadgesProps) {
     },
   });
   const getCount = () => {
+    if (count === undefined || count === 0) {
+      return null;
+    }
     return count > maxCount ? `${maxCount}+` : count;
   };
-  const isUnitsDigit = () => {
-    return count < 10;
+  const getSize = (type: 'width' | 'height') => {
+    if (count === 0) {
+      return 0;
+    } else if (count === undefined) {
+      return 8;
+    } else if (count < 10) {
+      return 18;
+    } else {
+      return type === 'width' ? undefined : 18;
+    }
   };
   return (
     <View
@@ -40,8 +57,8 @@ export function Badges(props: BadgesProps) {
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: getColor('backgroundColor'),
-          height: isUnitsDigit() ? 18 : 18,
-          width: isUnitsDigit() ? 18 : undefined,
+          height: getSize('height'),
+          width: getSize('width'),
         },
         containerStyle,
       ]}

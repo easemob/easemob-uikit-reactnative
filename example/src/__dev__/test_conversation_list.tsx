@@ -13,11 +13,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function CL() {
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={{
+        // backgroundColor: 'green',
+        flex: 1,
+      }}
+    >
       <ConversationList
+        testMode={'only-ui'}
         containerStyle={{
-          height: '100%',
-          backgroundColor: 'red',
+          flexGrow: 1,
+          // backgroundColor: 'red',
         }}
         onRequestData={(params: {
           ids: string[];
@@ -50,6 +56,7 @@ export function CL3() {
   return (
     <SafeAreaView>
       <SearchConversation
+        testMode={'only-ui'}
         onCancel={() => {
           console.log('test:zuoyu:cancel');
         }}
@@ -70,50 +77,21 @@ export function BodyPagesT({
   currentIndex: number;
 }) {
   console.log('test:BodyPagesT:', index, currentIndex);
-  // const color = (i: number) => {
-  //   if (i === 0) {
-  //     return ['blue', 'red'];
-  //   } else if (i === 1) {
-  //     return ['orange', 'yellow'];
-  //   } else if (i === 2) {
-  //     return ['yellow', 'gray'];
-  //   } else if (i === 3) {
-  //     return ['red', 'yellow'];
-  //   }
-  //   return [];
-  // };
   return (
     <ConversationList
+      testMode={'only-ui'}
       containerStyle={{
-        // height: '100%',
+        flexGrow: 1,
         backgroundColor: 'green',
       }}
     />
   );
-  // return (
-  //   <TabPageBodyItem
-  //     key={index}
-  //     style={{
-  //       backgroundColor: color(index)[0],
-  //       // height: 100,
-  //       // flexGrow: 1,
-  //     }}
-  //   >
-  //     <ConversationList />
-  //   </TabPageBodyItem>
-  // );
 }
 
 export function CL2() {
   return (
     <SafeAreaView>
       <TabPage
-        // header={{
-        //   // Header: TabPage.DefaultHeader,
-        //   HeaderProps: {
-        //     titles: ['1', '2', '3', '4'],
-        //   },
-        // }}
         header={{
           Header: BottomTabBar as any,
           HeaderProps: {
@@ -134,13 +112,6 @@ export function CL2() {
             ],
           } as any,
         }}
-        // body={{
-        //   type: 'TabPageBody',
-        //   // Body: TabPage.DefaultBody,
-        //   BodyProps: {
-        //     children: BodyPages(),
-        //   },
-        // }}
         body={{
           type: 'TabPageBodyT',
           BodyProps: {
@@ -151,9 +122,6 @@ export function CL2() {
             },
           },
         }}
-        // height={300}
-        // height={undefined}
-        // width={300}
         headerPosition="down"
         initIndex={2}
         onCurrentIndex={(index) => {
@@ -167,7 +135,7 @@ export function CL2() {
 export default function TestConversationList() {
   return (
     <Container appKey={''}>
-      <CL2 />
+      <CL />
     </Container>
   );
 }

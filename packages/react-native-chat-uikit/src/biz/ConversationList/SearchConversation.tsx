@@ -13,9 +13,7 @@ import type { SearchConversationProps } from './types';
 
 const FlatList = FlatListFactory<SearchConversationItemProps>();
 
-export function SearchConversation<DataT extends {} = any>(
-  props: SearchConversationProps<DataT>
-) {
+export function SearchConversation(props: SearchConversationProps) {
   const { onCancel, containerStyle } = props;
   const [value, setValue] = React.useState('');
   const { ref, data, deferSearch } = useSearchConversationApi(props);

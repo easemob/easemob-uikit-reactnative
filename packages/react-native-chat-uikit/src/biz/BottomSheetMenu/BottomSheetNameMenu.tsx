@@ -42,7 +42,7 @@ export type BottomSheetNameMenuProps = {
   /**
    * The maximum number should not exceed 6.
    */
-  initItems: InitMenuItemsType[];
+  initItems?: InitMenuItemsType[];
 };
 
 /**
@@ -145,6 +145,9 @@ function useGetListItems(onGetData?: () => any) {
   const getItems = React.useCallback(
     (props: BottomSheetNameMenuProps) => {
       const { initItems, onRequestModalClose } = props;
+      if (!initItems) {
+        return [];
+      }
       const d = initItems
         .map((v, i) => {
           if (v.isHigh !== true) {
