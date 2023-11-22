@@ -80,7 +80,7 @@ export function useAlert(props: AlertProps) {
     ];
   };
   const onUpdate = (props: AlertProps) => {
-    setProps(props);
+    setProps({ ...props });
   };
   return {
     getButton,

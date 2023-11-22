@@ -40,11 +40,8 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
     const onRequestModalClose = React.useCallback(() => {
       modalRef?.current?.startHide?.();
     }, []);
-    const {
-      props: { title, message, buttons },
-      getButton,
-      onUpdate,
-    } = useAlert(props);
+    const { props: updatedProps, getButton, onUpdate } = useAlert(props);
+    const { buttons, message, title } = updatedProps;
     const count = buttons?.length ?? 1;
 
     React.useImperativeHandle(
@@ -72,7 +69,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
       if (isShow.current === true) {
         modalRef?.current?.startShow?.();
       }
-    }, []);
+    }, [updatedProps]);
 
     return (
       <Modal
