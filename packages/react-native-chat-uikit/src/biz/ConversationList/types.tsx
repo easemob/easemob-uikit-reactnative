@@ -3,6 +3,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 import type { ConversationModel, DataModel } from '../../chat';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import type { DefaultComponentModel } from '../ListSearch';
 import type {
   ListItemActions,
   ListItemProps,
@@ -17,14 +18,6 @@ export type ConversationListItemProps = ListItemProps &
   Omit<
     ListItemActions<ConversationModel>,
     'onToRightSlide' | 'onToLeftSlide'
-  > & {
-    data: ConversationModel;
-  };
-export type SearchConversationItemProps = ListItemProps &
-  ListItemRequestProps<DataModel> &
-  Omit<
-    ListItemActions<ConversationModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     data: ConversationModel;
   };
@@ -63,3 +56,4 @@ export type UseConversationListReturn = {
 };
 export type useConversationListProps = ConversationListProps;
 export type useSearchConversationProps = SearchConversationProps;
+export type ConversationSearchModel = ConversationModel & DefaultComponentModel;

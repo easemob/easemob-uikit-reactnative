@@ -38,7 +38,6 @@ export function HighText(props: HighTextProps) {
 export function useHighText(props: HighTextProps) {
   const { keyword, content, style, highColors, textColors, ...others } = props;
   const list = content.split(keyword);
-  console.log('test:zuoyu:text:', keyword, list);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     high: {

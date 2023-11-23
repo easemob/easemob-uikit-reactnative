@@ -6,7 +6,7 @@ import { ConversationModel, useChatContext } from '../../chat';
 import { useDelayExecTask, useLifecycle } from '../../hook';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
-import type { ListState, UseFlatListReturn, UseListReturn } from '../types';
+import type { ListState, UseFlatListReturn } from '../types';
 import type {
   ConversationListItemProps,
   useConversationListProps,
@@ -15,9 +15,7 @@ import type {
 
 export function useConversationList(
   props: useConversationListProps
-): UseFlatListReturn<ConversationListItemProps> &
-  UseListReturn &
-  UseConversationListReturn {
+): UseFlatListReturn<ConversationListItemProps> & UseConversationListReturn {
   const {
     onClicked,
     onLongPressed,

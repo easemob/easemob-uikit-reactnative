@@ -62,11 +62,7 @@ export type ListRequestProps<DataT> = {
   }) => void;
 };
 
-export type UseFlatListReturn<ItemT> = {
-  /**
-   * @description The data source of the list.
-   */
-  data: ArrayLike<ItemT>;
+export type UseListBasicReturn<ItemT> = {
   /**
    * @description The type of list.
    */
@@ -92,10 +88,6 @@ export type UseFlatListReturn<ItemT> = {
    */
   isLoadAll?: boolean;
   /**
-   * Whether to sort.
-   */
-  isSort?: boolean;
-  /**
    * Whether to display after loading.
    */
   isShowAfterLoaded?: boolean;
@@ -116,13 +108,32 @@ export type UseFlatListReturn<ItemT> = {
    */
   isEventUpdate?: boolean;
   /**
-   * The list item component.
+   * Whether to sort.
    */
-  ListItem?: React.ComponentType<ItemT>;
+  isSort?: boolean;
   /**
    * Sorting strategy callback.
    */
   onSort?: (prevProps: ItemT, nextProps: ItemT) => number;
+
+  refreshing?: boolean;
+  viewabilityConfig?: ViewabilityConfig;
+  onViewableItemsChanged?: (info: {
+    viewableItems: Array<ViewToken>;
+    changed: Array<ViewToken>;
+  }) => void;
+  deferSearch?: (key: string) => void;
+};
+
+export type UseFlatListReturn<ItemT> = UseListBasicReturn<ItemT> & {
+  /**
+   * @description The data source of the list.
+   */
+  data: ReadonlyArray<ItemT>;
+  /**
+   * The list item component.
+   */
+  ListItem?: React.ComponentType<ItemT>;
   /**
    * The list component reference.
    */
@@ -133,59 +144,11 @@ export type UseSectionListReturn<
   ItemT,
   SectionT extends DefaultSectionT,
   ListIndexPropsT extends {}
-> = {
+> = UseListBasicReturn<ItemT> & {
   /**
    * @description The data source of the list.
    */
   sections: ReadonlyArray<SectionListData<ItemT, SectionT>>;
-  /**
-   * @description The type of list.
-   */
-  listType: 'FlatList' | 'SectionList';
-  /**
-   * @description The state of the list.
-   */
-  listState?: 'loading' | 'empty' | 'error' | 'normal';
-  /**
-   * Refresh callback.
-   */
-  onRefresh?: () => void;
-  /**
-   * Load more callback.
-   */
-  onMore?: () => void;
-  /**
-   * Whether to load.
-   */
-  isAutoLoad?: boolean;
-  /**
-   * Whether to load all.
-   */
-  isLoadAll?: boolean;
-  /**
-   * Whether to sort.
-   */
-  isSort?: boolean;
-  /**
-   * Whether to display after loading.
-   */
-  isShowAfterLoaded?: boolean;
-  /**
-   * Load data once or multiple times.
-   */
-  loadType?: 'once' | 'multiple';
-  /**
-   * Whether to update when the list is visible.
-   */
-  isVisibleUpdate?: boolean;
-  /**
-   * Whether to update automatically.
-   */
-  isAutoUpdate?: boolean;
-  /**
-   * Whether to update when the event occurs.
-   */
-  isEventUpdate?: boolean;
   /**
    * The list item component.
    */
@@ -195,10 +158,6 @@ export type UseSectionListReturn<
    */
   ListItemHeader?: React.ComponentType<SectionListData<ItemT, SectionT>>;
   /**
-   * Sorting strategy callback.
-   */
-  onSort?: (prevProps: ItemT, nextProps: ItemT) => number;
-  /**
    * The list index component.
    */
   AlphabeticIndex?: React.ComponentType<ListIndexPropsT>;
@@ -206,16 +165,6 @@ export type UseSectionListReturn<
    * The list component reference.
    */
   ref?: React.MutableRefObject<SectionListRef<ItemT, SectionT>>;
-};
-
-export type UseListReturn = {
-  refreshing?: boolean;
-  viewabilityConfig?: ViewabilityConfig;
-  onViewableItemsChanged?: (info: {
-    viewableItems: Array<ViewToken>;
-    changed: Array<ViewToken>;
-  }) => void;
-  deferSearch?: (key: string) => void;
 };
 
 export type ListItemActions<DataT> = {

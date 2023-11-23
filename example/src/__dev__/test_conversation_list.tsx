@@ -82,14 +82,21 @@ export function CL() {
 
 export function CL3() {
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={{
+        // backgroundColor: 'green',
+        flex: 1,
+      }}
+    >
       <SearchConversation
         testMode={'only-ui'}
         onCancel={() => {
           console.log('test:zuoyu:cancel');
         }}
+        onClicked={(data) => {
+          console.log('test:zuoyu:clicked:', data);
+        }}
         containerStyle={{
-          height: '100%',
           backgroundColor: 'red',
         }}
       />
@@ -163,7 +170,7 @@ export function CL2() {
 export default function TestConversationList() {
   return (
     <Container appKey={''}>
-      <CL />
+      <CL3 />
     </Container>
   );
 }

@@ -1,21 +1,23 @@
 import * as React from 'react';
 import type { ViewabilityConfig, ViewToken } from 'react-native';
 
-import { ConversationModel, useChatContext } from '../../chat';
+import { useChatContext } from '../../chat';
 import { useDelayExecTask, useLifecycle } from '../../hook';
-import type { ListState, UseFlatListReturn, UseListReturn } from '../types';
+import type { UseSearchReturn } from '../ListSearch';
+import type { ListState, UseFlatListReturn } from '../types';
 import type {
-  SearchConversationItemProps,
+  ConversationSearchModel,
   useSearchConversationProps,
 } from './types';
 
 export function useSearchConversation(
   props: useSearchConversationProps
-): UseFlatListReturn<SearchConversationItemProps> & UseListReturn {
+): UseFlatListReturn<ConversationSearchModel> &
+  UseSearchReturn<ConversationSearchModel> {
   const { onClicked, testMode } = props;
-  const dataRef = React.useRef<SearchConversationItemProps[]>([]);
+  const dataRef = React.useRef<ConversationSearchModel[]>([]);
   const [data, setData] = React.useState<
-    ReadonlyArray<SearchConversationItemProps>
+    ReadonlyArray<ConversationSearchModel>
   >([]);
   const listType = React.useRef<'FlatList' | 'SectionList'>('FlatList').current;
   const loadType = React.useRef<'once' | 'multiple'>('once').current;
@@ -30,7 +32,7 @@ export function useSearchConversation(
   const enableRefresh = React.useRef(false).current;
   const enableMore = React.useRef(false).current;
   const [refreshing, setRefreshing] = React.useState(false);
-  const ListItem: React.ComponentType<SearchConversationItemProps> = () => null;
+  const ListItem: React.ComponentType<ConversationSearchModel> = () => null;
 
   const viewabilityConfigRef = React.useRef<ViewabilityConfig>({
     // minimumViewTime: 1000,
@@ -51,7 +53,7 @@ export function useSearchConversation(
 
   const onSearch = (key: string) => {
     setData([
-      ...dataRef.current.filter((item) => item.data.convName?.includes(key)),
+      ...dataRef.current.filter((item) => item.convName?.includes(key)),
     ]);
   };
   const { delayExecTask: deferSearch } = useDelayExecTask(
@@ -70,21 +72,30 @@ export function useSearchConversation(
   const onMore = () => {};
 
   const onSort: (
-    prevProps: SearchConversationItemProps,
-    nextProps: SearchConversationItemProps
+    prevProps: ConversationSearchModel,
+    nextProps: ConversationSearchModel
   ) => number = () => 0;
-
-  const onClickedRef = React.useRef((data?: ConversationModel | undefined) => {
-    if (data) {
-      if (onClicked) {
-        onClicked(data);
-      }
-    }
-  });
 
   const im = useChatContext();
   const init = async () => {
     if (testMode === 'only-ui') {
+      const array = Array.from({ length: 10 }, (_, index) => ({
+        id: index.toString(),
+      }));
+      const testList = array.map((item, i) => {
+        return {
+          convId: item.id,
+          convType: i % 2 === 0 ? 0 : 1,
+          convAvatar:
+            'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+          convName: 'user',
+          unreadMessageCount: 1,
+          isPinned: i % 2 === 0,
+          id: item.id,
+          name: item.id + 'name',
+        } as ConversationSearchModel;
+      });
+      setData(testList);
       return;
     }
     if (isAutoLoad === true) {
@@ -95,9 +106,9 @@ export function useSearchConversation(
             if (list) {
               for (const conv of list) {
                 dataRef.current.push({
+                  ...conv,
                   id: conv.convId,
-                  data: conv,
-                  onClicked: onClickedRef.current,
+                  name: conv.convName ?? conv.convId,
                 });
               }
               if (isShowAfterLoaded === false) {
@@ -139,6 +150,7 @@ export function useSearchConversation(
     isEventUpdate,
     ListItem,
     onSort,
+    onClicked,
     refreshing: enableRefresh === true ? refreshing : undefined,
     viewabilityConfig:
       isVisibleUpdate === true ? viewabilityConfigRef.current : undefined,

@@ -68,9 +68,8 @@ export function ConversationList(props: ConversationListProps) {
       >
         <FlatList
           ref={ref}
-          style={{
-            flexGrow: 1,
-          }}
+          style={{ flexGrow: 1 }}
+          contentContainerStyle={{ flexGrow: 1 }}
           data={data}
           refreshing={refreshing}
           onRefresh={onRefresh}
