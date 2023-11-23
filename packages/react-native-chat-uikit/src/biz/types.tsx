@@ -92,6 +92,10 @@ export type UseFlatListReturn<ItemT> = {
    */
   isLoadAll?: boolean;
   /**
+   * Whether to sort.
+   */
+  isSort?: boolean;
+  /**
    * Whether to display after loading.
    */
   isShowAfterLoaded?: boolean;
@@ -118,7 +122,7 @@ export type UseFlatListReturn<ItemT> = {
   /**
    * Sorting strategy callback.
    */
-  sort?: (prevProps: ItemT, nextProps: ItemT) => boolean;
+  onSort?: (prevProps: ItemT, nextProps: ItemT) => number;
   /**
    * The list component reference.
    */
@@ -159,6 +163,10 @@ export type UseSectionListReturn<
    */
   isLoadAll?: boolean;
   /**
+   * Whether to sort.
+   */
+  isSort?: boolean;
+  /**
    * Whether to display after loading.
    */
   isShowAfterLoaded?: boolean;
@@ -189,7 +197,7 @@ export type UseSectionListReturn<
   /**
    * Sorting strategy callback.
    */
-  sort?: (prevProps: ItemT, nextProps: ItemT) => boolean;
+  onSort?: (prevProps: ItemT, nextProps: ItemT) => number;
   /**
    * The list index component.
    */

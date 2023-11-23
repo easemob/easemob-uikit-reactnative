@@ -30,7 +30,16 @@ export function CL() {
           result: (data?: DataModel[], error?: UIKitError) => void;
         }) => {
           console.log('test:zuoyu:onRequestData', params);
-          params?.result([{ id: 'xx', name: 'test', avatar: '' }]);
+          const users = params.ids?.map<DataModel>((id) => {
+            return {
+              id,
+              name: id + 'name',
+              // avatar: 'https://i.pravatar.cc/300',
+              avatar:
+                'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+            };
+          });
+          params?.result(users ?? []);
         }}
         onRequestMultiData={(params: {
           ids: Map<DataModelType, string[]>;
@@ -40,10 +49,29 @@ export function CL() {
           ) => void;
         }) => {
           console.log('test:zuoyu:onRequestMultiData', params);
+          const userIds = params.ids.get('user');
+          const users = userIds?.map<DataModel>((id) => {
+            return {
+              id,
+              name: id + 'name',
+              // avatar: 'https://i.pravatar.cc/300',
+              avatar:
+                'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+            };
+          });
+          const groupIds = params.ids.get('group');
+          const groups = groupIds?.map<DataModel>((id) => {
+            return {
+              id,
+              name: id + 'name',
+              avatar:
+                'https://cdn0.iconfinder.com/data/icons/user-pictures/100/maturewoman-2-512.png',
+            };
+          });
           params?.result(
             new Map([
-              ['user', [{ id: 'xx', name: 'xx', avatar: '' }]],
-              ['group', [{ id: 'yy', name: 'yy', avatar: '' }]],
+              ['user', users ?? []],
+              ['group', groups ?? []],
             ])
           );
         }}

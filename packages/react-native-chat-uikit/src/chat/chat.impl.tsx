@@ -299,7 +299,7 @@ export abstract class ChatServiceImpl
   }
 
   setOnRequestMultiData<DataT>(
-    callback: (params: {
+    callback?: (params: {
       ids: Map<DataModelType, string[]>;
       result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
     }) => void
@@ -323,6 +323,7 @@ export abstract class ChatServiceImpl
       // 4. 后续增删改查，都是在内存中进行。必要时同步到本地。
       const map = new Map<string, ChatConversation>();
       const isFinished = await this._convStorage?.isFinishedForFetchList();
+      console.log('test:zuoyu:', isFinished);
       if (isFinished === true) {
         const list = await this.client.chatManager.getAllConversations();
         list.forEach(async (v) => {
@@ -336,6 +337,7 @@ export abstract class ChatServiceImpl
             cursor,
             pageSize
           );
+        console.log('test:zuoyu:2:', pinList);
         pinList.list?.forEach((v) => {
           map.set(v.convId, v);
         });
@@ -349,8 +351,9 @@ export abstract class ChatServiceImpl
           list.list?.forEach((v) => {
             map.set(v.convId, v);
           });
+          console.log('test:zuoyu:3:', list);
 
-          if (list.list && list.cursor.length > 0) {
+          if (list.list && list.list.length > 0) {
             const silentList =
               await this.client.pushManager.fetchSilentModeForConversations(
                 list.list.map((v) => {
@@ -368,6 +371,7 @@ export abstract class ChatServiceImpl
                   v.remindType === ChatPushRemindType.NONE;
               }
             });
+            console.log('test:zuoyu:4:', silentList);
           }
 
           if (
@@ -375,17 +379,20 @@ export abstract class ChatServiceImpl
             (list.list && list.list?.length < pageSize) ||
             list.list === undefined
           ) {
+            console.log('test:zuoyu:5:');
             break;
           }
         }
         await this._convStorage?.setFinishedForFetchList(true);
+        console.log('test:zuoyu:6:');
 
         const ret = Array.from(map.values()).map(async (v) => {
           const conv = await this.toUIConversation(v);
           this._convList.set(conv.convId, conv);
           return conv;
         });
-        Promise.all(ret);
+        await Promise.all(ret);
+        console.log('test:zuoyu:7:', this._convList);
       }
 
       if (this._convDataRequestCallback) {
@@ -394,13 +401,23 @@ export abstract class ChatServiceImpl
             [
               'user',
               Array.from(this._convList.values())
-                .filter((v) => v.convType === ChatConversationType.PeerChat)
+                .filter(
+                  (v) =>
+                    v.convType === ChatConversationType.PeerChat &&
+                    (v.convId === v.convName || v.convName === undefined) &&
+                    v.convAvatar === undefined
+                )
                 .map((v) => v.convId),
             ],
             [
               'group',
               Array.from(this._convList.values())
-                .filter((v) => v.convType === ChatConversationType.GroupChat)
+                .filter(
+                  (v) =>
+                    v.convType === ChatConversationType.GroupChat &&
+                    (v.convId === v.convName || v.convName === undefined) &&
+                    v.convAvatar === undefined
+                )
                 .map((v) => v.convId),
             ],
           ]),
@@ -416,6 +433,8 @@ export abstract class ChatServiceImpl
                 });
               });
             }
+            console.log('test:zuoyu:8:', data, this._convList);
+
             onResult({
               isOk: true,
               value: Array.from(this._convList.values()),
@@ -424,6 +443,7 @@ export abstract class ChatServiceImpl
           },
         });
       } else {
+        console.log('test:zuoyu:9:');
         onResult({
           isOk: true,
           value: Array.from(this._convList.values()),

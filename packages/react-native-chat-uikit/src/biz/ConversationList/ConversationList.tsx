@@ -6,7 +6,11 @@ import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Avatar } from '../Avatar';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
-import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
+import {
+  EmptyPlaceholder,
+  ErrorPlaceholder,
+  LoadingPlaceholder,
+} from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
 import {
   TopNavigationBar,
@@ -47,12 +51,14 @@ export function ConversationList(props: ConversationListProps) {
           iconName: 'plus_in_circle',
         }}
         Title={TopNavigationBarTitle({ text: 'Chat' })}
-        containerStyle={{ marginHorizontal: 12 }}
+        containerStyle={{ paddingHorizontal: 12 }}
       />
       <SearchStyle
         title={'Search'}
         onPress={() => {
-          // todo: search
+          if (listState === 'normal') {
+            // todo: search
+          }
         }}
       />
       <View
@@ -64,9 +70,6 @@ export function ConversationList(props: ConversationListProps) {
           ref={ref}
           style={{
             flexGrow: 1,
-          }}
-          onLayout={(e) => {
-            console.log('test:zuoyu:onLayout:3', e.nativeEvent.layout);
           }}
           data={data}
           refreshing={refreshing}
@@ -90,6 +93,9 @@ export function ConversationList(props: ConversationListProps) {
                 }}
               />
             ) : null
+          }
+          ListLoadingComponent={
+            listState === 'loading' ? <LoadingPlaceholder /> : null
           }
         />
       </View>

@@ -4,19 +4,19 @@ import { ListRenderItemInfo, View } from 'react-native';
 import { FlatListFactory } from '../../ui/FlatList';
 import { EmptyPlaceholder } from '../Placeholder';
 import { Search } from '../Search';
-import { useSearchConversationApi } from './SearchConversation.hooks';
-import {
-  SearchConversationItemMemo,
+import { useSearchConversation } from './SearchConversation.hooks';
+import { SearchConversationItemMemo } from './SearchConversation.item';
+import type {
   SearchConversationItemProps,
-} from './SearchConversation.item';
-import type { SearchConversationProps } from './types';
+  SearchConversationProps,
+} from './types';
 
 const FlatList = FlatListFactory<SearchConversationItemProps>();
 
 export function SearchConversation(props: SearchConversationProps) {
   const { onCancel, containerStyle } = props;
   const [value, setValue] = React.useState('');
-  const { ref, data, deferSearch } = useSearchConversationApi(props);
+  const { ref, data, deferSearch } = useSearchConversation(props);
 
   return (
     <View

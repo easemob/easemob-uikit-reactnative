@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { ViewabilityConfig, ViewToken } from 'react-native';
+import { ChatMessageType } from 'react-native-chat-sdk';
 
 import { ConversationModel, useChatContext } from '../../chat';
 import { useDelayExecTask, useLifecycle } from '../../hook';
@@ -17,15 +18,24 @@ export function useConversationList(
 ): UseFlatListReturn<ConversationListItemProps> &
   UseListReturn &
   UseConversationListReturn {
-  const { onClicked, onLongPressed, testMode } = props;
+  const {
+    onClicked,
+    onLongPressed,
+    testMode,
+    onRequestMultiData,
+    onSort: propsOnSort,
+  } = props;
   const dataRef = React.useRef<ConversationListItemProps[]>([]);
   const [data, setData] = React.useState<
     ReadonlyArray<ConversationListItemProps>
   >(dataRef.current);
   const listType = React.useRef<'FlatList' | 'SectionList'>('FlatList').current;
   const loadType = React.useRef<'once' | 'multiple'>('once').current;
-  const [listState, _setListState] = React.useState<ListState>('normal');
+  const [listState, setListState] = React.useState<ListState>(
+    testMode === 'only-ui' ? 'normal' : 'loading'
+  );
   const isAutoLoad = React.useRef(true).current;
+  const isSort = React.useRef(true).current;
   const isLoadAll = React.useRef(true).current;
   const isShowAfterLoaded = React.useRef(true).current;
   const isVisibleUpdate = React.useRef(false).current;
@@ -60,13 +70,18 @@ export function useConversationList(
     }, 1000);
   };
   const onMore = () => {};
-  const sort: (
+  const onSort = (
     prevProps: ConversationListItemProps,
     nextProps: ConversationListItemProps
-  ) => boolean = () => true;
+  ): number => {
+    if (propsOnSort) {
+      return propsOnSort(prevProps, nextProps);
+    } else {
+      return sortConversations(prevProps, nextProps);
+    }
+  };
 
   const im = useChatContext();
-  console.log('test:zuoyu:', testMode);
 
   const onLongPressedRef = React.useRef(
     (data?: ConversationModel | undefined) => {
@@ -87,48 +102,73 @@ export function useConversationList(
     }
   });
 
+  const onSetData = (list: ConversationListItemProps[]) => {
+    if (isSort === true) {
+      list.sort(onSort);
+    }
+    console.log('test:zuoyu:onSetData', JSON.stringify(list));
+    setData([...list]);
+  };
+
   const init = async () => {
     if (testMode === 'only-ui') {
-      const array = Array.from({ length: 1 }, (_, index) => ({
+      const array = Array.from({ length: 10 }, (_, index) => ({
         id: index.toString(),
       }));
-      const testList = array.map((item) => {
+      const testList = array.map((item, i) => {
         return {
           id: item.id,
           data: {
             convId: item.id,
-            convType: 0,
-            convAvatar: 'https://i.pravatar.cc/300',
+            convType: i % 2 === 0 ? 0 : 1,
+            convAvatar:
+              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
             convName: 'user',
             unreadMessageCount: 1,
+            isPinned: i % 2 === 0,
+            lastMessage:
+              i % 4 === 0
+                ? undefined
+                : {
+                    localTime: new Date().getTime() + i * 1000 * 60,
+                    body: { type: ChatMessageType.TXT, content: 'hello' },
+                  },
           },
           onLongPressed: onLongPressedRef.current,
           onClicked: onClickedRef.current,
         } as ConversationListItemProps;
       });
-      setData(testList);
+      onSetData(testList);
       return;
     }
     if (isAutoLoad === true) {
+      im.setOnRequestMultiData(onRequestMultiData);
       const s = await im.loginState();
       if (s === 'logged') {
         im.getAllConversations({
           onResult: (result) => {
             const { isOk, value: list, error } = result;
             if (isOk && list) {
-              for (const conv of list) {
-                dataRef.current.push({
-                  id: conv.convId,
-                  data: conv,
-                  onLongPressed: onLongPressedRef.current,
-                  onClicked: onClickedRef.current,
-                });
+              if (list) {
+                for (const conv of list) {
+                  dataRef.current.push({
+                    id: conv.convId,
+                    data: conv,
+                    onLongPressed: onLongPressedRef.current,
+                    onClicked: onClickedRef.current,
+                  });
+                }
+                if (isShowAfterLoaded === true) {
+                  onSetData(dataRef.current);
+                }
               }
-              if (isShowAfterLoaded === true) {
-                setData([...dataRef.current]);
-              }
+              setListState('normal');
+              im.sendFinished({ event: 'getAllConversations' });
             } else {
-              console.log('error', error);
+              setListState('error');
+              if (error) {
+                im.sendError({ error });
+              }
             }
           },
         });
@@ -139,7 +179,6 @@ export function useConversationList(
 
   useLifecycle(
     React.useCallback(async (state: any) => {
-      console.log('test:zuoyu:', state);
       if (state === 'load') {
         init();
       } else if (state === 'unload') {
@@ -152,7 +191,7 @@ export function useConversationList(
   const onRemove = async (conv: ConversationModel) => {
     await im.removeConversation({ convId: conv.convId });
     dataRef.current = dataRef.current.filter((item) => item.id !== conv.convId);
-    setData([...dataRef.current]);
+    onSetData(dataRef.current);
   };
   const onPin = async (conv: ConversationModel) => {
     await im.setConversationPin({
@@ -160,25 +199,22 @@ export function useConversationList(
       convType: conv.convType,
       isPin: !conv.isPinned,
     });
-    setData([...dataRef.current]);
+    onSetData(dataRef.current);
   };
-  const onDisturb = React.useCallback(
-    async (conv: ConversationModel) => {
-      await im.setConversationSilentMode({
-        convId: conv.convId,
-        convType: conv.convType,
-        doNotDisturb: !conv.doNotDisturb,
-      });
-      setData([...dataRef.current]);
-    },
-    [im]
-  );
+  const onDisturb = async (conv: ConversationModel) => {
+    await im.setConversationSilentMode({
+      convId: conv.convId,
+      convType: conv.convType,
+      doNotDisturb: !conv.doNotDisturb,
+    });
+    onSetData(dataRef.current);
+  };
   const onRead = (conv: ConversationModel) => {
     im.setConversationRead({
       convId: conv.convId,
       convType: conv.convType,
     });
-    setData([...dataRef.current]);
+    onSetData(dataRef.current);
   };
 
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
@@ -254,6 +290,7 @@ export function useConversationList(
     onRefresh: enableRefresh === true ? onRefresh : undefined,
     onMore: enableMore === true ? onMore : undefined,
     isAutoLoad,
+    isSort,
     isLoadAll,
     isShowAfterLoaded,
     loadType,
@@ -261,7 +298,7 @@ export function useConversationList(
     isAutoUpdate,
     isEventUpdate,
     ListItem,
-    sort,
+    onSort,
     refreshing: enableRefresh === true ? refreshing : undefined,
     viewabilityConfig:
       isVisibleUpdate === true ? viewabilityConfigRef.current : undefined,
@@ -276,3 +313,38 @@ export function useConversationList(
     alertRef,
   };
 }
+
+export const sortConversations = (
+  prevProps: ConversationListItemProps,
+  nextProps: ConversationListItemProps
+): number => {
+  if (prevProps.data.isPinned !== nextProps.data.isPinned) {
+    return prevProps.data.isPinned ? -1 : 1;
+  }
+
+  if (
+    prevProps.data.lastMessage?.localTime &&
+    nextProps.data.lastMessage?.localTime
+  ) {
+    if (
+      prevProps.data.lastMessage.localTime ===
+      nextProps.data.lastMessage.localTime
+    ) {
+      return 0;
+    } else if (
+      prevProps.data.lastMessage.localTime >
+      nextProps.data.lastMessage.localTime
+    ) {
+      return -1;
+    } else {
+      return 1;
+    }
+  } else if (
+    prevProps.data.lastMessage?.localTime ||
+    nextProps.data.lastMessage?.localTime
+  ) {
+    return prevProps.data.lastMessage?.localTime ? 1 : -1;
+  }
+
+  return 0;
+};

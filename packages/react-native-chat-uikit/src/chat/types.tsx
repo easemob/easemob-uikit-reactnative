@@ -11,6 +11,7 @@ import type {
 } from 'react-native-chat-sdk';
 
 import type { UIKitError } from '../error';
+import type { PartialNullable } from '../types';
 
 export type ChatEventType = 'undefined' | string;
 
@@ -88,17 +89,19 @@ export interface ConnectServiceListener {
   onDisconnected?(reason: DisconnectReasonType): void;
 }
 
-export type MessageServiceListener = ChatMessageEventListener;
+export type MessageServiceListener = PartialNullable<ChatMessageEventListener>;
 
-export type GroupServiceListener = ChatGroupEventListener;
+export type GroupServiceListener = PartialNullable<ChatGroupEventListener>;
 
-export type ContactServiceListener = ChatContactEventListener;
+export type ContactServiceListener = PartialNullable<ChatContactEventListener>;
 
-export type PresenceServiceListener = ChatPresenceEventListener;
+export type PresenceServiceListener =
+  PartialNullable<ChatPresenceEventListener>;
 
-export type CustomServiceListener = ChatCustomEventListener;
+export type CustomServiceListener = PartialNullable<ChatCustomEventListener>;
 
-export type MultiDeviceStateListener = ChatMultiDeviceEventListener;
+export type MultiDeviceStateListener =
+  PartialNullable<ChatMultiDeviceEventListener>;
 
 export interface ErrorServiceListener {
   onError?(params: { error: UIKitError; from?: string; extra?: any }): void;
@@ -175,7 +178,7 @@ export type ConversationModel = {
 };
 export interface ConversationServices {
   setOnRequestMultiData<DataT>(
-    callback: (params: {
+    callback?: (params: {
       ids: Map<DataModelType, string[]>;
       result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
     }) => void

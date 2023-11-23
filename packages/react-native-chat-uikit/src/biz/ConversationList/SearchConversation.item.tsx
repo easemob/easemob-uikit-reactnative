@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import type { DataModel } from '../../chat';
 import { g_not_existed_url } from '../../const';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
-import type { ListItemProps, ListItemRequestProps } from '../types';
+import type { SearchConversationItemProps } from './types';
 
-export type SearchConversationItemProps = ListItemProps &
-  ListItemRequestProps<DataModel> & {};
 export function SearchConversationItem(props: SearchConversationItemProps) {
   const {} = props;
   return (

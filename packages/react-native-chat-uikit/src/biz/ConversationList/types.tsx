@@ -20,8 +20,16 @@ export type ConversationListItemProps = ListItemProps &
   > & {
     data: ConversationModel;
   };
+export type SearchConversationItemProps = ListItemProps &
+  ListItemRequestProps<DataModel> &
+  Omit<
+    ListItemActions<ConversationModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > & {
+    data: ConversationModel;
+  };
 
-export type ConversationListPageProps = ListRequestProps<DataModel> &
+export type ConversationListProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
   Omit<
@@ -29,19 +37,18 @@ export type ConversationListPageProps = ListRequestProps<DataModel> &
     'onToRightSlide' | 'onToLeftSlide'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
-    sort?: (
+    onSort?: (
       prevProps: ConversationListItemProps,
       nextProps: ConversationListItemProps
-    ) => boolean;
-  };
-export type ConversationListProps = ListRequestProps<DataModel> &
-  PropsWithTest &
-  PropsWithError & {
-    containerStyle?: StyleProp<ViewStyle>;
+    ) => number;
   };
 export type SearchConversationProps = ListRequestProps<DataModel> &
   PropsWithTest &
-  PropsWithError & {
+  PropsWithError &
+  Omit<
+    ListItemActions<ConversationModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > & {
     containerStyle?: StyleProp<ViewStyle>;
     onCancel?: () => void;
   };
@@ -54,4 +61,5 @@ export type UseConversationListReturn = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
 };
-export type useConversationListProps = ConversationListPageProps;
+export type useConversationListProps = ConversationListProps;
+export type useSearchConversationProps = SearchConversationProps;

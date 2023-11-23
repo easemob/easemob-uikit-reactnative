@@ -24,6 +24,13 @@ export function TopNavigationBar<LeftProps = any, RightProps = any>(
   props: TopNavigationBarProps<LeftProps, RightProps>
 ) {
   const { containerStyle, Title, Left, Right, LeftProps, RightProps } = props;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
 
   return (
     <View
@@ -33,6 +40,7 @@ export function TopNavigationBar<LeftProps = any, RightProps = any>(
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
+          backgroundColor: getColor('bg'),
         },
         containerStyle,
       ]}
@@ -51,12 +59,19 @@ export function TopNavigationBarRight({
   onClicked: () => void;
   iconName: IconNameType;
 }) {
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
+  });
   return (
     <View>
       <IconButton
         iconName={iconName}
         onPress={onClicked}
-        style={{ height: 24, width: 24 }}
+        style={{ height: 24, width: 24, tintColor: getColor('bg') }}
       />
     </View>
   );
