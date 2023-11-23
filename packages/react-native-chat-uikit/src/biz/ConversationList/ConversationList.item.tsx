@@ -12,7 +12,6 @@ import type { ConversationListItemProps } from './types';
 
 export function ConversationListItem(props: ConversationListItemProps) {
   const { onClicked, onLongPressed, data } = props;
-  console.log('test:zuoyu:ConversationListItem', props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -47,7 +46,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
       <View
         style={{
           width: '100%',
-          height: 76,
+          height: 75.5,
           flexDirection: 'row',
           alignItems: 'center',
           paddingHorizontal: 16,

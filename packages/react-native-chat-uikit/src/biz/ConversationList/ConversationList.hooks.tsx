@@ -9,12 +9,12 @@ import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import type { ListState, UseFlatListReturn } from '../types';
 import type {
   ConversationListItemProps,
-  useConversationListProps,
+  UseConversationListProps,
   UseConversationListReturn,
 } from './types';
 
 export function useConversationList(
-  props: useConversationListProps
+  props: UseConversationListProps
 ): UseFlatListReturn<ConversationListItemProps> & UseConversationListReturn {
   const {
     onClicked,

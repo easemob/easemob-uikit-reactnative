@@ -44,6 +44,12 @@ export abstract class ChatServiceImpl
       error?: UIKitError
     ) => void;
   }) => void;
+  _contactDataRequestCallback:
+    | ((params: {
+        ids: string[];
+        result: (data?: any[], error?: UIKitError) => void;
+      }) => void)
+    | undefined;
 
   constructor() {
     this._listeners = new Set();
@@ -296,6 +302,15 @@ export abstract class ChatServiceImpl
       lastMessage: await conv.getLatestMessage(),
       doNotDisturb: await getDoNotDisturb(),
     } as ConversationModel;
+  }
+
+  setContactOnRequestData<DataT>(
+    callback?: (params: {
+      ids: string[];
+      result: (data?: DataT[], error?: UIKitError) => void;
+    }) => void
+  ): void {
+    this._contactDataRequestCallback = callback;
   }
 
   setOnRequestMultiData<DataT>(

@@ -54,6 +54,6 @@ export type UseConversationListReturn = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
 };
-export type useConversationListProps = ConversationListProps;
-export type useSearchConversationProps = SearchConversationProps;
+export type UseConversationListProps = ConversationListProps;
+export type UseSearchConversationProps = SearchConversationProps;
 export type ConversationSearchModel = ConversationModel & DefaultComponentModel;

@@ -13,6 +13,7 @@ import { SectionListFactory } from '../../ui/SectionList';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { Badges } from '../Badges';
+import type { IndexModel } from '../ListIndex';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
 import {
@@ -20,25 +21,23 @@ import {
   TopNavigationBarRight,
   TopNavigationBarTitle,
 } from '../TopNavigationBar';
-import { useContactListApi2 } from './ContactList.hooks';
+import { useContactList } from './ContactList.hooks';
 import {
   ContactListItemHeaderMemo,
   ContactListItemMemo,
-  ContactListItemProps,
 } from './ContactList.item';
 import { ContactItem } from './ContactList.item';
-import type { ContactListProps } from './types';
+import type { ContactListItemProps, ContactListProps } from './types';
 
-const SectionList = SectionListFactory<
-  ContactListItemProps,
-  { indexTitle: string }
->();
+const SectionList = SectionListFactory<ContactListItemProps, IndexModel>();
 
 export function ContactList(props: ContactListProps) {
-  const { containerStyle, type } = props;
+  const { containerStyle, type, isHasGroupList, isHasNewRequest, moreActions } =
+    props;
   const {
     ref,
     sections,
+    indexTitles,
     onRefresh,
     refreshing,
     onMore,
@@ -46,44 +45,38 @@ export function ContactList(props: ContactListProps) {
     onViewableItemsChanged,
     listState,
     AlphabeticIndex,
-  } = useContactListApi2(props);
+    onIndexSelected,
+  } = useContactList(props);
 
   const items = () => {
     if (type === 'contact-list') {
       return (
         <>
-          <ContactItem
-            name={'new invite'}
-            count={<Badges count={0} />}
-            hasArrow={true}
-            onClicked={() => {
-              // todo: new invite
-            }}
-          />
-          <ContactItem
-            name={'group'}
-            count={
-              <Text paletteType={'label'} textType={'medium'}>
-                {'0'}
-              </Text>
-            }
-            hasArrow={true}
-            onClicked={() => {
-              // todo: new invite
-            }}
-          />
-          <ContactItem
-            name={'balcklist'}
-            count={
-              <Text paletteType={'label'} textType={'medium'}>
-                {'9'}
-              </Text>
-            }
-            hasArrow={true}
-            onClicked={() => {
-              // todo: new black list
-            }}
-          />
+          {isHasNewRequest === true ? (
+            <ContactItem
+              name={'new invite'}
+              count={<Badges count={0} />}
+              hasArrow={true}
+              onClicked={() => {
+                // todo: new invite
+              }}
+            />
+          ) : null}
+          {isHasGroupList === true ? (
+            <ContactItem
+              name={'group'}
+              count={
+                <Text paletteType={'label'} textType={'medium'}>
+                  {'0'}
+                </Text>
+              }
+              hasArrow={true}
+              onClicked={() => {
+                // todo: new invite
+              }}
+            />
+          ) : null}
+          {moreActions}
         </>
       );
     } else if (type === 'new-contact-list') {
@@ -147,8 +140,8 @@ export function ContactList(props: ContactListProps) {
           },
           iconName: 'person_add',
         }}
-        Title={TopNavigationBarTitle({ text: 'Chat' })}
-        containerStyle={{ marginHorizontal: 12 }}
+        Title={TopNavigationBarTitle({ text: 'Contacts' })}
+        containerStyle={{ paddingHorizontal: 12 }}
       />
       <SearchStyle
         title={'Search'}
@@ -159,12 +152,14 @@ export function ContactList(props: ContactListProps) {
 
       {items()}
 
-      <View style={{ flexGrow: 1 }}>
+      <View style={{ flex: 1 }}>
         <SectionList
           ref={ref}
+          style={{
+            flexGrow: 1,
+          }}
           contentContainerStyle={{
             flexGrow: 1,
-            // backgroundColor: 'red',
           }}
           sections={sections}
           refreshing={refreshing}
@@ -182,10 +177,7 @@ export function ContactList(props: ContactListProps) {
             return item.id;
           }}
           renderSectionHeader={(info: {
-            section: SectionListData<
-              ContactListItemProps,
-              { indexTitle: string }
-            >;
+            section: SectionListData<ContactListItemProps, IndexModel>;
           }) => {
             const { section } = info;
             return <ContactListItemHeaderMemo {...section} />;
@@ -206,10 +198,8 @@ export function ContactList(props: ContactListProps) {
         />
         {AlphabeticIndex ? (
           <AlphabeticIndex
-            indexTitles={['A', 'B', 'C']}
-            onIndexSelected={(_index: number) => {
-              // todo: index
-            }}
+            indexTitles={indexTitles}
+            onIndexSelected={onIndexSelected}
           />
         ) : null}
       </View>

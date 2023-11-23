@@ -1,64 +1,124 @@
 import * as React from 'react';
 import { SectionListData, View } from 'react-native';
-import type { IconNameType } from 'src/assets';
 
-import type { DataModel } from '../../chat';
-import { g_not_existed_url } from '../../const';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
+import type { IndexModel } from '../ListIndex';
 import { ListItem } from '../ListItem';
-import type { ListItemProps, ListItemRequestProps } from '../types';
+import type { ContactItemProps, ContactListItemProps } from './types';
 
-export type ContactListItemProps = ListItemProps &
-  ListItemRequestProps<DataModel> & {};
 export function ContactListItem(props: ContactListItemProps) {
-  const {} = props;
+  const { section } = props;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    t1: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    t2: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+    divider: {
+      light: colors.neutral[9],
+      dark: colors.neutral[2],
+    },
+  });
   return (
     <View
       style={{
-        width: '100%',
-        height: 59.5,
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: 16,
-        paddingRight: 16,
-        borderColor: 'grey',
-        borderBottomWidth: 0.5,
+        backgroundColor: getColor('bg'),
       }}
     >
-      <Avatar url={g_not_existed_url} size={40} />
-      <View style={{ flexGrow: 1, paddingLeft: 12 }}>
-        <Text paletteType={'title'} textType={'medium'}>
-          {'用户昵称'}
-        </Text>
+      <View
+        style={{
+          width: '100%',
+          height: 59.5,
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 16,
+        }}
+      >
+        <Avatar url={section.avatar} size={40} />
+        <View style={{ flexGrow: 1, paddingLeft: 12 }}>
+          <Text
+            paletteType={'title'}
+            textType={'medium'}
+            style={{ color: getColor('t1') }}
+          >
+            {section.nickName}
+          </Text>
+        </View>
       </View>
+      <View
+        style={{
+          height: 0.5,
+          width: '100%',
+          backgroundColor: getColor('divider'),
+          marginLeft: 68,
+        }}
+      />
     </View>
   );
 }
 export const ContactListItemMemo = React.memo(ContactListItem);
 
 export function ContactListItemHeader(
-  props: SectionListData<ContactListItemProps, { indexTitle: string }>
+  props: SectionListData<ContactListItemProps, IndexModel>
 ) {
   const { indexTitle } = props;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    t1: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    t2: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+    divider: {
+      light: colors.neutral[9],
+      dark: colors.neutral[2],
+    },
+  });
   return (
-    <View style={[{ height: 32, justifyContent: 'center', paddingLeft: 16 }]}>
-      <Text paletteType={'title'} textType={'small'}>
-        {indexTitle}
-      </Text>
+    <View
+      style={[
+        {
+          backgroundColor: getColor('bg'),
+        },
+      ]}
+    >
+      <View
+        style={[
+          {
+            height: 32,
+            justifyContent: 'center',
+            paddingLeft: 16,
+          },
+        ]}
+      >
+        <Text paletteType={'title'} textType={'small'}>
+          {indexTitle}
+        </Text>
+      </View>
     </View>
   );
 }
 export const ContactListItemHeaderMemo = React.memo(ContactListItemHeader);
 
-export type ContactItemProps = {
-  icon?: IconNameType;
-  name: string;
-  count?: React.ReactElement;
-  hasArrow?: boolean;
-  onClicked?: () => void;
-};
 export function ContactItem(props: ContactItemProps) {
   const { icon, name, count, hasArrow, onClicked } = props;
   return (

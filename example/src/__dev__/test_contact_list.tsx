@@ -15,10 +15,11 @@ export function CL() {
   return (
     <SafeAreaView>
       <ContactList
+        testMode={'only-ui'}
         type={'new-contact-list'}
         containerStyle={{
           height: '100%',
-          backgroundColor: 'yellow',
+          // backgroundColor: 'yellow',
         }}
         onRequestData={(params: {
           ids: string[];
@@ -41,6 +42,9 @@ export function CL() {
               ['group', [{ id: 'yy', name: 'yy', avatar: '' }]],
             ])
           );
+        }}
+        onClicked={(data) => {
+          console.log('test:zuoyu:onClicked', data);
         }}
       />
     </SafeAreaView>

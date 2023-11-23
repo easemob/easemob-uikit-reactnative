@@ -7,11 +7,11 @@ import type { UseSearchReturn } from '../ListSearch';
 import type { ListState, UseFlatListReturn } from '../types';
 import type {
   ConversationSearchModel,
-  useSearchConversationProps,
+  UseSearchConversationProps,
 } from './types';
 
 export function useSearchConversation(
-  props: useSearchConversationProps
+  props: UseSearchConversationProps
 ): UseFlatListReturn<ConversationSearchModel> &
   UseSearchReturn<ConversationSearchModel> {
   const { onClicked, testMode } = props;

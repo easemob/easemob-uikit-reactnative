@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useDelayExecTask } from '../../hook';
 import { Text } from '../../ui/Text';
@@ -7,13 +7,8 @@ import {
   g_index_alphabet_size,
   g_thumb_alphabet_size,
 } from './ListIndex.const';
+import type { ListIndexProps } from './types';
 
-export type ListIndexProps = {
-  indexTitles: string[];
-  onIndexSelected: (index: number) => void;
-  indexContainerStyle?: StyleProp<ViewStyle>;
-  fontContainerStyle?: StyleProp<ViewStyle>;
-};
 export const ListIndex = (props: ListIndexProps) => {
   const {
     indexTitles,
@@ -21,6 +16,7 @@ export const ListIndex = (props: ListIndexProps) => {
     indexContainerStyle,
     fontContainerStyle,
   } = props;
+  const ref = React.useRef<View>(null);
   const offsetRef = React.useRef(0);
   const maxIndex = indexTitles.length - 1;
   const [currentIndex, setCurrentIndex] = React.useState<number | undefined>();
@@ -34,7 +30,7 @@ export const ListIndex = (props: ListIndexProps) => {
     }
     setCurrentIndex(_index);
     setCurrentTitle(indexTitles[_index]?.[0]);
-    onIndexSelected(_index);
+    onIndexSelected?.(_index);
   };
   const { delayExecTask } = useDelayExecTask(500, () => {
     setCurrentIndex(undefined);
@@ -43,6 +39,7 @@ export const ListIndex = (props: ListIndexProps) => {
   return (
     <>
       <View
+        ref={ref}
         style={[
           {
             position: 'absolute',
@@ -50,8 +47,20 @@ export const ListIndex = (props: ListIndexProps) => {
           },
           indexContainerStyle,
         ]}
-        onLayout={(e) => {
-          offsetRef.current = e.nativeEvent.layout.y;
+        onLayout={(_e) => {
+          // offsetRef.current = e.nativeEvent.layout.y;
+          ref.current?.measure(
+            (
+              _x: number,
+              _y: number,
+              _width: number,
+              _height: number,
+              _pageX: number,
+              pageY: number
+            ) => {
+              offsetRef.current = pageY;
+            }
+          );
         }}
         onTouchMove={(e) => {
           const y = e.nativeEvent.pageY;

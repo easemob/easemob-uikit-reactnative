@@ -150,6 +150,10 @@ export type UseSectionListReturn<
    */
   sections: ReadonlyArray<SectionListData<ItemT, SectionT>>;
   /**
+   * @description The index titles of the list.
+   */
+  indexTitles: ReadonlyArray<string>;
+  /**
    * The list item component.
    */
   ListItem?: React.ComponentType<ItemT>;
@@ -165,6 +169,10 @@ export type UseSectionListReturn<
    * The list component reference.
    */
   ref?: React.MutableRefObject<SectionListRef<ItemT, SectionT>>;
+  /**
+   * @description The callback function when the index is selected.
+   */
+  onIndexSelected?: (index: number) => void;
 };
 
 export type ListItemActions<DataT> = {

@@ -1,5 +1,6 @@
 import type {
   ChatClient,
+  ChatContact,
   ChatContactEventListener,
   ChatConversationType,
   ChatCustomEventListener,
@@ -176,6 +177,9 @@ export type ConversationModel = {
    */
   lastMessage?: ChatMessage;
 };
+
+export type ContactModel = ChatContact & { nickName: string; avatar?: string };
+
 export interface ConversationServices {
   setOnRequestMultiData<DataT>(
     callback?: (params: {
@@ -220,7 +224,16 @@ export interface ConversationServices {
   updateConversation(params: { conv: ConversationModel }): Promise<void>;
 }
 
-export interface ChatService extends ConversationServices {
+export interface ContactServices {
+  setContactOnRequestData<DataT>(
+    callback?: (params: {
+      ids: string[];
+      result: (data?: DataT[], error?: UIKitError) => void;
+    }) => void
+  ): void;
+}
+
+export interface ChatService extends ConversationServices, ContactServices {
   /**
    * Add listener.
    * @param listener {@link ChatServiceListener}
