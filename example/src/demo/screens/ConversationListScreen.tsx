@@ -12,7 +12,7 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ConversationListScreen(props: Props) {
-  const {} = props;
+  const { navigation } = props;
   return (
     <SafeAreaView
       style={{
@@ -65,6 +65,9 @@ export function ConversationListScreen(props: Props) {
               ['group', groups ?? []],
             ])
           );
+        }}
+        onSearch={() => {
+          navigation.push('SearchConversation', {});
         }}
       />
     </SafeAreaView>

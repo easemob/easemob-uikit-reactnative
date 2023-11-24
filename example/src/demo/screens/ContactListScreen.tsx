@@ -7,7 +7,7 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ContactListScreen(props: Props) {
-  const {} = props;
+  const { navigation } = props;
   return (
     <SafeAreaView
       style={{
@@ -35,6 +35,9 @@ export function ContactListScreen(props: Props) {
             };
           });
           params.result(users ?? []);
+        }}
+        onSearch={() => {
+          navigation.navigate('SearchContact', {});
         }}
         type={'contact-list'}
       />

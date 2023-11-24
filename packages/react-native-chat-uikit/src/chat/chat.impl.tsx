@@ -302,8 +302,14 @@ export abstract class ChatServiceImpl
       ext: conv.ext,
       isPinned: conv.isPinned,
       pinnedTime: conv.pinnedTime,
-      unreadMessageCount: await conv.getMessageCount(),
-      lastMessage: await conv.getLatestMessage(),
+      unreadMessageCount: await this.getConversationMessageCount(
+        conv.convId,
+        conv.convType
+      ),
+      lastMessage: await this.getConversationLatestMessage(
+        conv.convId,
+        conv.convType
+      ),
       doNotDisturb: await getDoNotDisturb(),
     } as ConversationModel;
   }
@@ -348,10 +354,6 @@ export abstract class ChatServiceImpl
   }): Promise<void> {
     const { onResult } = params;
     try {
-      // 1. 获取拉取标记，如果没有或者失败，则从服务器拉取
-      // 2. 本地获取或者服务器获取，服务器获取分页，完成之后，标记为完成, 同时拉取免打扰。
-      // 3. 加载以上数据到内存。
-      // 4. 后续增删改查，都是在内存中进行。必要时同步到本地。
       const map = new Map<string, ChatConversation>();
       const isFinished = await this._convStorage?.isFinishedForFetchList();
       console.log('test:zuoyu:', isFinished);
@@ -370,7 +372,10 @@ export abstract class ChatServiceImpl
           );
         console.log('test:zuoyu:2:', pinList);
         pinList.list?.forEach((v) => {
-          map.set(v.convId, v);
+          map.set(v.convId, {
+            ...v,
+            ext: v.ext ?? { doNotDisturb: false },
+          } as ChatConversation);
         });
         cursor = '';
         for (;;) {
@@ -380,7 +385,10 @@ export abstract class ChatServiceImpl
               pageSize
             );
           list.list?.forEach((v) => {
-            map.set(v.convId, v);
+            map.set(v.convId, {
+              ...v,
+              ext: v.ext ?? { doNotDisturb: false },
+            } as ChatConversation);
           });
           console.log('test:zuoyu:3:', list);
 
@@ -415,6 +423,7 @@ export abstract class ChatServiceImpl
           }
         }
         await this._convStorage?.setFinishedForFetchList(true);
+        await this._convStorage?.setAllConversation(Array.from(map.values()));
         console.log('test:zuoyu:6:');
 
         const ret = Array.from(map.values()).map(async (v) => {
@@ -481,6 +490,7 @@ export abstract class ChatServiceImpl
         });
       }
     } catch (e) {
+      console.log('test:zuoyu:10:error:', e);
       onResult({
         isOk: false,
         error: new UIKitError({
@@ -671,6 +681,27 @@ export abstract class ChatServiceImpl
         );
       }
     }
+  }
+  getConversationMessageCount(
+    convId: string,
+    convType: ChatConversationType
+  ): Promise<number> {
+    return this.tryCatchSync({
+      promise: this.client.chatManager.getConversationUnreadCount(
+        convId,
+        convType
+      ),
+      event: 'getUnreadCount',
+    });
+  }
+  getConversationLatestMessage(
+    convId: string,
+    convType: ChatConversationType
+  ): Promise<ChatMessage | undefined> {
+    return this.tryCatchSync({
+      promise: this.client.chatManager.getLatestMessage(convId, convType),
+      event: 'getLastMessage',
+    });
   }
 
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void {

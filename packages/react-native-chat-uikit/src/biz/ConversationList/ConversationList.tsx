@@ -24,7 +24,7 @@ import type { ConversationListItemProps, ConversationListProps } from './types';
 const FlatList = FlatListFactory<ConversationListItemProps>();
 
 export function ConversationList(props: ConversationListProps) {
-  const { containerStyle } = props;
+  const { containerStyle, onSearch } = props;
   const {
     data,
     refreshing,
@@ -57,7 +57,7 @@ export function ConversationList(props: ConversationListProps) {
         title={'Search'}
         onPress={() => {
           if (listState === 'normal') {
-            // todo: search
+            onSearch?.();
           }
         }}
       />

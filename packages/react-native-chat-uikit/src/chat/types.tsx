@@ -178,7 +178,10 @@ export type ConversationModel = {
   lastMessage?: ChatMessage;
 };
 
-export type ContactModel = ChatContact & { nickName: string; avatar?: string };
+export type ContactModel = ChatContact & {
+  nickName: string;
+  avatar?: string;
+};
 
 export interface ConversationServices {
   setOnRequestMultiData<DataT>(
@@ -222,6 +225,14 @@ export interface ConversationServices {
     lastMessage: ChatMessage;
   }): Promise<void>;
   updateConversation(params: { conv: ConversationModel }): Promise<void>;
+  getConversationMessageCount(
+    convId: string,
+    convType: ChatConversationType
+  ): Promise<number>;
+  getConversationLatestMessage(
+    convId: string,
+    convType: ChatConversationType
+  ): Promise<ChatMessage | undefined>;
 }
 
 export interface ContactServices {

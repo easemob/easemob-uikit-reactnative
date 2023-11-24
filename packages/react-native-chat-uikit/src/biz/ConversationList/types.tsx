@@ -34,6 +34,7 @@ export type ConversationListProps = ListRequestProps<DataModel> &
       prevProps: ConversationListItemProps,
       nextProps: ConversationListItemProps
     ) => number;
+    onSearch?: () => void;
   };
 export type SearchConversationProps = ListRequestProps<DataModel> &
   PropsWithTest &

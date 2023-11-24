@@ -115,13 +115,24 @@ export type UseListBasicReturn<ItemT> = {
    * Sorting strategy callback.
    */
   onSort?: (prevProps: ItemT, nextProps: ItemT) => number;
-
+  /**
+   * Whether it is refreshing.
+   */
   refreshing?: boolean;
+  /**
+   * Visibility configuration.
+   */
   viewabilityConfig?: ViewabilityConfig;
+  /**
+   * Visible item callback notification.
+   */
   onViewableItemsChanged?: (info: {
     viewableItems: Array<ViewToken>;
     changed: Array<ViewToken>;
   }) => void;
+  /**
+   * Delayed search callback notification.
+   */
   deferSearch?: (key: string) => void;
 };
 

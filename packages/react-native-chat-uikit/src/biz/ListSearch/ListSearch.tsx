@@ -49,7 +49,7 @@ export function ListSearch<
         value={value}
       />
       <View
-        style={{ flex: 1, backgroundColor: 'yellow' }}
+        style={{ flex: 1 }}
         onLayout={(e) => {
           console.log('test:zuoyu:onlayout:', e.nativeEvent.layout);
         }}

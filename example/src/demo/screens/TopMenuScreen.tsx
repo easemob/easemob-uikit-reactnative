@@ -43,6 +43,10 @@ export function TopMenuScreen(props: Props) {
                   navigation.push('ConversationList', {});
                 } else if (v === 'ContactList') {
                   navigation.push('ContactList', {});
+                } else if (v === 'SearchConversation') {
+                  navigation.push('SearchConversation', {});
+                } else if (v === 'SearchContact') {
+                  navigation.push('SearchContact', {});
                 }
               }}
             >

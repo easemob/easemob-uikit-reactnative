@@ -32,8 +32,14 @@ import type { ContactListItemProps, ContactListProps } from './types';
 const SectionList = SectionListFactory<ContactListItemProps, IndexModel>();
 
 export function ContactList(props: ContactListProps) {
-  const { containerStyle, type, isHasGroupList, isHasNewRequest, moreActions } =
-    props;
+  const {
+    containerStyle,
+    type,
+    isHasGroupList,
+    isHasNewRequest,
+    moreActions,
+    onSearch,
+  } = props;
   const {
     ref,
     sections,
@@ -146,7 +152,7 @@ export function ContactList(props: ContactListProps) {
       <SearchStyle
         title={'Search'}
         onPress={() => {
-          // todo: search
+          onSearch?.();
         }}
       />
 

@@ -111,9 +111,7 @@ export function useSearchConversation(
                   name: conv.convName ?? conv.convId,
                 });
               }
-              if (isShowAfterLoaded === false) {
-                setData([]);
-              }
+              setData([...dataRef.current]);
             }
           }
         },

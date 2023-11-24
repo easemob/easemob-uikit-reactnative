@@ -2,6 +2,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 
 import type { IconNameType } from '../../assets';
 import type { ContactModel, DataModel } from '../../chat';
+import type { DefaultComponentModel } from '../ListSearch';
 import type {
   ListItemActions,
   ListItemProps,
@@ -18,6 +19,9 @@ export type ContactItemProps = {
   hasArrow?: boolean;
   onClicked?: () => void;
 };
+
+export type ContactType = 'contact-list' | 'new-contact-list';
+export type ContactSearchType = ContactType;
 
 export type ContactListItemProps = ListItemProps &
   ListItemRequestProps<DataModel> &
@@ -36,7 +40,7 @@ export type ContactListProps = ListRequestProps<DataModel> &
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
-    type: 'contact-list' | 'new-contact-list';
+    type: ContactType;
     isHasNewRequest?: boolean;
     isHasGroupList?: boolean;
     moreActions?: React.ReactElement<ContactItemProps>[];
@@ -44,11 +48,20 @@ export type ContactListProps = ListRequestProps<DataModel> &
       prevProps: ContactListItemProps,
       nextProps: ContactListItemProps
     ) => number;
+    onSearch?: () => void;
   };
-export type SearchContactProps<DataT> = ListRequestProps<DataT> &
+
+export type SearchContactProps = ListRequestProps<DataModel> &
   PropsWithTest &
-  PropsWithError & {
+  PropsWithError &
+  Omit<
+    ListItemActions<ContactModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > & {
     containerStyle?: StyleProp<ViewStyle>;
     onCancel?: () => void;
-    type: 'contact-list' | 'new-contact-list';
+    type: ContactSearchType;
   };
+
+export type ContactSearchModel = ContactModel & DefaultComponentModel;
+export type UseSearchContactProps = SearchContactProps;

@@ -85,6 +85,7 @@ export function useListSearch<
     500,
     React.useCallback(
       (keyword: string) => {
+        console.log('test:zuoyu:deferSearch:', keyword);
         onSearch(keyword);
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps

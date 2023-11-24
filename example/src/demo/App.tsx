@@ -21,6 +21,8 @@ import {
   ConversationListScreen,
   LoginListScreen,
   LoginScreen,
+  SearchContactScreen,
+  SearchConversationScreen,
   TopMenuScreen,
 } from './screens';
 
@@ -188,6 +190,20 @@ export function App() {
                 headerShown: false,
               }}
               component={ContactListScreen}
+            />
+            <Root.Screen
+              name={'SearchConversation'}
+              options={{
+                headerShown: false,
+              }}
+              component={SearchConversationScreen}
+            />
+            <Root.Screen
+              name={'SearchContact'}
+              options={{
+                headerShown: false,
+              }}
+              component={SearchContactScreen}
             />
           </Root.Navigator>
         </NavigationContainer>
