@@ -41,6 +41,8 @@ export function TopMenuScreen(props: Props) {
                   navigation.push('Login', {});
                 } else if (v === 'ConversationList') {
                   navigation.push('ConversationList', {});
+                } else if (v === 'ContactList') {
+                  navigation.push('ContactList', {});
                 }
               }}
             >

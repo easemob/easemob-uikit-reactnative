@@ -17,6 +17,7 @@ import {
 
 import type { RootParamsList, RootParamsName } from './routes';
 import {
+  ContactListScreen,
   ConversationListScreen,
   LoginListScreen,
   LoginScreen,
@@ -180,6 +181,13 @@ export function App() {
                 headerShown: false,
               }}
               component={ConversationListScreen}
+            />
+            <Root.Screen
+              name={'ContactList'}
+              options={{
+                headerShown: false,
+              }}
+              component={ContactListScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

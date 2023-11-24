@@ -15,6 +15,18 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  SearchConversation: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  ContactList: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  SearchContact: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
 };
 export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
@@ -39,6 +51,18 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   ConversationList: {
+    option: undefined,
+    params: undefined,
+  },
+  SearchConversation: {
+    option: undefined,
+    params: undefined,
+  },
+  ContactList: {
+    option: undefined,
+    params: undefined,
+  },
+  SearchContact: {
     option: undefined,
     params: undefined,
   },

@@ -1,5 +1,6 @@
 import {
   ChatClient,
+  ChatContact,
   ChatConversation,
   ChatConversationType,
   ChatGroup,
@@ -21,6 +22,7 @@ import {
   ChatEventType,
   ChatService,
   ChatServiceListener,
+  ContactModel,
   ConversationModel,
   ConversationServices,
   DataModel,
@@ -37,6 +39,7 @@ export abstract class ChatServiceImpl
   _user?: UserServiceData;
   _convStorage?: ConversationStorage;
   _convList: Map<string, ConversationModel>;
+  _contactList: Map<string, ContactModel>;
   _convDataRequestCallback?: (params: {
     ids: Map<DataModelType, string[]>;
     result: (
@@ -54,6 +57,7 @@ export abstract class ChatServiceImpl
   constructor() {
     this._listeners = new Set();
     this._convList = new Map();
+    this._contactList = new Map();
   }
 
   destructor() {
@@ -302,6 +306,18 @@ export abstract class ChatServiceImpl
       lastMessage: await conv.getLatestMessage(),
       doNotDisturb: await getDoNotDisturb(),
     } as ConversationModel;
+  }
+
+  async toUIContact(contact: ChatContact): Promise<ContactModel> {
+    return {
+      userId: contact.userId,
+      remark: contact.remark,
+      nickName:
+        this._contactList.get(contact.userId)?.nickName ??
+        contact.remark ??
+        contact.userId,
+      avatar: this._contactList.get(contact.userId)?.avatar,
+    };
   }
 
   setContactOnRequestData<DataT>(
@@ -655,6 +671,66 @@ export abstract class ChatServiceImpl
         );
       }
     }
+  }
+
+  getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void {
+    if (this._contactList.size > 0) {
+      params.onResult({
+        isOk: true,
+        value: Array.from(this._contactList.values()),
+      });
+      return;
+    }
+    this.tryCatch({
+      promise: this.client.contactManager.getAllContacts(),
+      event: 'getAllContacts',
+      onFinished: async (value) => {
+        value.forEach(async (v) => {
+          this._contactList.set(v.userId, {
+            ...v,
+            nickName:
+              v.remark === undefined || v.remark.length === 0
+                ? v.userId
+                : v.remark,
+          });
+        });
+
+        if (this._contactDataRequestCallback) {
+          this._contactDataRequestCallback({
+            ids: Array.from(this._contactList.values())
+              .filter(
+                (v) => v.nickName === undefined || v.nickName === v.userId
+              )
+              .map((v) => v.userId),
+            result: async (data?: DataModel[], error?: UIKitError) => {
+              if (data) {
+                data.forEach((value) => {
+                  const contact = this._contactList.get(value.id);
+                  if (contact) {
+                    contact.nickName = value.name;
+                    contact.avatar = value.avatar;
+                  }
+                });
+              }
+
+              params.onResult({
+                isOk: true,
+                value: Array.from(this._contactList.values()).map((v) => v),
+                error,
+              });
+            },
+          });
+        } else {
+          params.onResult({
+            isOk: true,
+            value: Array.from(this._contactList.values()).map((v) => v),
+          });
+        }
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
+    });
   }
 }
 

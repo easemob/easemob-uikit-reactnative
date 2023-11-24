@@ -218,7 +218,29 @@ export function useContactList(
       im.setContactOnRequestData(onRequestData);
       const s = await im.loginState();
       if (s === 'logged') {
-        // todo: load all contact list.
+        im.getAllContacts({
+          onResult: (result) => {
+            const { isOk, value, error } = result;
+            if (isOk === true) {
+              if (value) {
+                const list = value.map((item) => {
+                  return {
+                    id: item.userId,
+                    section: item,
+                    onClicked: onClickedRef.current,
+                  } as ContactListItemProps;
+                });
+                console.log('test:zuoyu:getAllContacts:list', list);
+                onSetData(list);
+              }
+            } else {
+              console.log('test:zuoyu:getAllContacts:error', error);
+              if (error) {
+                im.sendError({ error });
+              }
+            }
+          },
+        });
       }
     }
   };

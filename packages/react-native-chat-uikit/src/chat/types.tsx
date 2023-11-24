@@ -231,6 +231,7 @@ export interface ContactServices {
       result: (data?: DataT[], error?: UIKitError) => void;
     }) => void
   ): void;
+  getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void;
 }
 
 export interface ChatService extends ConversationServices, ContactServices {
