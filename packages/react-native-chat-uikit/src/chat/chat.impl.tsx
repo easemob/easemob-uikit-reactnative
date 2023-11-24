@@ -359,9 +359,10 @@ export abstract class ChatServiceImpl
       console.log('test:zuoyu:', isFinished);
       if (isFinished === true) {
         const list = await this.client.chatManager.getAllConversations();
-        list.forEach(async (v) => {
+        const ret = list.map(async (v) => {
           this._convList.set(v.convId, await this.toUIConversation(v));
         });
+        await Promise.all(ret);
       } else {
         let cursor = '';
         const pageSize = 50;
