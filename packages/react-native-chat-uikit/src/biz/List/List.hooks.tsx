@@ -9,7 +9,9 @@ import type {
 import { useDelayExecTask, useLifecycle } from '../../hook';
 import type { FlatListRef } from '../../ui/FlatList';
 import type { SectionListRef } from '../../ui/SectionList';
+import { ListIndex } from '../ListIndex';
 import type {
+  DefaultListIndexPropsT,
   ListState,
   UseFlatListReturn,
   UseListBasicReturn,
@@ -125,7 +127,7 @@ export function useListBasic<ItemT>(
   };
 }
 export function useFlatList<ItemT>(
-  props: UseListBasicProps<ItemT>
+  props: Omit<UseListBasicProps<ItemT>, 'listType'>
 ): UseFlatListReturn<ItemT> &
   UseListBasicInternalReturn & {
     /**
@@ -155,9 +157,9 @@ export function useFlatList<ItemT>(
 export function useSectionList<
   ItemT,
   SectionT extends DefaultSectionT,
-  ListIndexPropsT extends {}
+  ListIndexPropsT extends DefaultListIndexPropsT
 >(
-  props: UseListBasicProps<ItemT>
+  props: Omit<UseListBasicProps<ItemT>, 'listType'>
 ): UseSectionListReturn<ItemT, SectionT, ListIndexPropsT> &
   UseListBasicInternalReturn & {
     /**
@@ -186,6 +188,7 @@ export function useSectionList<
   >([]);
   const [indexTitles, setIndexTitles] = React.useState<string[]>([]);
   const ref = React.useRef<SectionListRef<ItemT, SectionT>>({} as any);
+  const AlphabeticIndex: React.FC<ListIndexPropsT> = ListIndex;
 
   return {
     ...basics,
@@ -194,6 +197,7 @@ export function useSectionList<
     setSection,
     indexTitles,
     setIndexTitles,
+    AlphabeticIndex,
     ref,
   };
 }

@@ -154,7 +154,7 @@ export type UseFlatListReturn<ItemT> = UseListBasicReturn<ItemT> & {
 export type UseSectionListReturn<
   ItemT,
   SectionT extends DefaultSectionT,
-  ListIndexPropsT extends {}
+  ListIndexPropsT extends DefaultListIndexPropsT
 > = UseListBasicReturn<ItemT> & {
   /**
    * @description The data source of the list.
@@ -191,4 +191,9 @@ export type ListItemActions<DataT> = {
   onLongPressed?: (data?: DataT) => void;
   onToRightSlide?: (data?: DataT) => void;
   onToLeftSlide?: (data?: DataT) => void;
+};
+
+export type DefaultListIndexPropsT = {
+  indexTitles: ReadonlyArray<string>;
+  onIndexSelected?: (index: number) => void;
 };

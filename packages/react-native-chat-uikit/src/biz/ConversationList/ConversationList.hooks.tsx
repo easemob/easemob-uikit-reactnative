@@ -1,12 +1,11 @@
 import * as React from 'react';
-import type { ViewabilityConfig, ViewToken } from 'react-native';
 import { ChatMessageType } from 'react-native-chat-sdk';
 
 import { ConversationModel, useChatContext } from '../../chat';
-import { useDelayExecTask, useLifecycle } from '../../hook';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
-import type { ListState, UseFlatListReturn } from '../types';
+import { useFlatList } from '../List';
+import type { UseFlatListReturn } from '../types';
 import type {
   ConversationListItemProps,
   UseConversationListProps,
@@ -23,51 +22,22 @@ export function useConversationList(
     onRequestMultiData,
     onSort: propsOnSort,
   } = props;
-  const dataRef = React.useRef<ConversationListItemProps[]>([]);
-  const [data, setData] = React.useState<
-    ReadonlyArray<ConversationListItemProps>
-  >(dataRef.current);
-  const listType = React.useRef<'FlatList' | 'SectionList'>('FlatList').current;
-  const loadType = React.useRef<'once' | 'multiple'>('once').current;
-  const [listState, setListState] = React.useState<ListState>(
-    testMode === 'only-ui' ? 'normal' : 'loading'
-  );
-  const isAutoLoad = React.useRef(true).current;
-  const isSort = React.useRef(true).current;
-  const isLoadAll = React.useRef(true).current;
-  const isShowAfterLoaded = React.useRef(true).current;
-  const isVisibleUpdate = React.useRef(false).current;
-  const isAutoUpdate = React.useRef(false).current;
-  const isEventUpdate = React.useRef(true).current;
-  const enableRefresh = React.useRef(false).current;
-  const enableMore = React.useRef(false).current;
-  const [refreshing, setRefreshing] = React.useState(false);
-  const ListItem: React.ComponentType<ConversationListItemProps> = () => null;
-
-  const viewabilityConfigRef = React.useRef<ViewabilityConfig>({
-    // minimumViewTime: 1000,
-    viewAreaCoveragePercentThreshold: 50,
-    itemVisiblePercentThreshold: 50,
-    waitForInteraction: false,
+  const flatListProps = useFlatList<ConversationListItemProps>({
+    listState: testMode === 'only-ui' ? 'normal' : 'loading',
+    onInit: () => init(),
   });
-  const { delayExecTask: onViewableItemsChanged } = useDelayExecTask(
-    500,
-    React.useCallback(
-      (_info: {
-        viewableItems: Array<ViewToken>;
-        changed: Array<ViewToken>;
-      }) => {},
-      []
-    )
-  );
+  const {
+    data,
+    setData,
+    dataRef,
+    isSort,
+    isAutoLoad,
+    setListState,
+    listState,
+    isShowAfterLoaded,
+    listType,
+  } = flatListProps;
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1000);
-  };
-  const onMore = () => {};
   const onSort = (
     prevProps: ConversationListItemProps,
     nextProps: ConversationListItemProps
@@ -104,7 +74,6 @@ export function useConversationList(
     if (isSort === true) {
       list.sort(onSort);
     }
-    console.log('test:zuoyu:onSetData', JSON.stringify(list));
     setData([...list]);
   };
 
@@ -160,10 +129,10 @@ export function useConversationList(
                   onSetData(dataRef.current);
                 }
               }
-              setListState('normal');
+              setListState?.('normal');
               im.sendFinished({ event: 'getAllConversations' });
             } else {
-              setListState('error');
+              setListState?.('error');
               if (error) {
                 im.sendError({ error });
               }
@@ -173,18 +142,6 @@ export function useConversationList(
       }
     }
   };
-  const unInit = () => {};
-
-  useLifecycle(
-    React.useCallback(async (state: any) => {
-      if (state === 'load') {
-        init();
-      } else if (state === 'unload') {
-        unInit();
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-  );
 
   const onRemove = async (conv: ConversationModel) => {
     await im.removeConversation({ convId: conv.convId });
@@ -282,26 +239,9 @@ export function useConversationList(
   };
 
   return {
-    data,
-    listState,
     listType,
-    onRefresh: enableRefresh === true ? onRefresh : undefined,
-    onMore: enableMore === true ? onMore : undefined,
-    isAutoLoad,
-    isSort,
-    isLoadAll,
-    isShowAfterLoaded,
-    loadType,
-    isVisibleUpdate,
-    isAutoUpdate,
-    isEventUpdate,
-    ListItem,
-    onSort,
-    refreshing: enableRefresh === true ? refreshing : undefined,
-    viewabilityConfig:
-      isVisibleUpdate === true ? viewabilityConfigRef.current : undefined,
-    onViewableItemsChanged:
-      isVisibleUpdate === true ? onViewableItemsChanged : undefined,
+    listState,
+    data,
     onRemove,
     onPin,
     onDisturb,
