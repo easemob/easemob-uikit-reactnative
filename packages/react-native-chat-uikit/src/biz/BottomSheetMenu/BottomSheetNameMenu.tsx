@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+import type { IconNameType } from 'src/assets';
 
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -17,6 +18,10 @@ export type InitMenuItemsType = {
    */
   isHigh: boolean;
   /**
+   * The icon to be displayed.
+   */
+  icon?: IconNameType;
+  /**
    * The callback function when the text is clicked.
    *
    * @param name The text to be displayed.
@@ -29,6 +34,7 @@ export type BottomSheetNameMenuRef = Omit<
   'startShowWithInit'
 > & {
   startShowWithInit: (initItems: InitMenuItemsType[], others?: any) => void;
+  startShowWithProps: (props: BottomSheetNameMenuProps) => void;
 };
 export type BottomSheetNameMenuProps = {
   /**
@@ -43,6 +49,14 @@ export type BottomSheetNameMenuProps = {
    * The maximum number should not exceed 6.
    */
   initItems?: InitMenuItemsType[];
+  /**
+   * The layout type of the component.
+   */
+  layoutType?: 'left' | 'center';
+  /**
+   * Whether to display the cancel button.
+   */
+  hasCancel?: boolean;
 };
 
 /**
@@ -116,6 +130,10 @@ export const BottomSheetNameMenu = React.forwardRef<
           const items = getItems({ initItems, onRequestModalClose });
           menuRef?.current?.startShowWithInit?.(items, others);
         },
+        startShowWithProps: (props: BottomSheetNameMenuProps) => {
+          const items = getItems({ ...props, onRequestModalClose });
+          menuRef?.current?.startShowWithInit?.(items);
+        },
         getData: () => {
           return menuRef?.current?.getData?.();
         },
@@ -144,7 +162,12 @@ function useGetListItems(onGetData?: () => any) {
   const { tr } = useI18nContext();
   const getItems = React.useCallback(
     (props: BottomSheetNameMenuProps) => {
-      const { initItems, onRequestModalClose } = props;
+      const {
+        initItems,
+        onRequestModalClose,
+        hasCancel = true,
+        layoutType,
+      } = props;
       if (!initItems) {
         return [];
       }
@@ -160,6 +183,10 @@ function useGetListItems(onGetData?: () => any) {
                 onPress={() => {
                   v.onClicked?.(v.name, onGetData?.());
                 }}
+                iconName={v.icon}
+                containerStyle={{
+                  alignItems: layoutType !== 'left' ? 'center' : 'flex-start',
+                }}
               />
             );
           } else {
@@ -172,31 +199,50 @@ function useGetListItems(onGetData?: () => any) {
                 onPress={() => {
                   v.onClicked?.(v.name, onGetData?.());
                 }}
+                iconName={v.icon}
+                containerStyle={{
+                  alignItems: layoutType !== 'left' ? 'center' : 'flex-start',
+                }}
               />
             );
           }
         })
         .filter((v) => v !== null) as JSX.Element[];
 
-      const data = [
-        ...d,
-        <View
-          key={99}
-          style={{
-            height: 8,
-            width: '100%',
-            backgroundColor: getColor('divider'),
-          }}
-        />,
-        <BottomSheetMenuItem
-          key={100}
-          id={'100'}
-          initState={'enabled'}
-          text={tr('Cancel')}
-          onPress={onRequestModalClose}
-        />,
-      ];
-      return data;
+      if (hasCancel === false) {
+        const data = [
+          ...d,
+          <View
+            key={99}
+            style={{
+              height: 8,
+              width: '100%',
+              backgroundColor: getColor('divider'),
+            }}
+          />,
+        ];
+        return data;
+      } else {
+        const data = [
+          ...d,
+          <View
+            key={99}
+            style={{
+              height: 8,
+              width: '100%',
+              backgroundColor: getColor('divider'),
+            }}
+          />,
+          <BottomSheetMenuItem
+            key={100}
+            id={'100'}
+            initState={'enabled'}
+            text={tr('Cancel')}
+            onPress={onRequestModalClose}
+          />,
+        ];
+        return data;
+      }
     },
     [getColor, onGetData, tr]
   );

@@ -13,6 +13,7 @@ import { SectionListFactory } from '../../ui/SectionList';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { Badges } from '../Badges';
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import type { IndexModel } from '../ListIndex';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
@@ -37,8 +38,9 @@ export function ContactList(props: ContactListProps) {
     type,
     isHasGroupList,
     isHasNewRequest,
-    moreActions,
+    onContextMenuMoreActions,
     onSearch,
+    onNavigationBarMoreActions,
   } = props;
   const {
     ref,
@@ -52,7 +54,61 @@ export function ContactList(props: ContactListProps) {
     listState,
     AlphabeticIndex,
     onIndexSelected,
+    onRequestModalClose,
+    menuRef,
+    onShowMenu,
   } = useContactList(props);
+
+  const navigationBar = () => {
+    if (type === 'contact-list') {
+      return (
+        <TopNavigationBar
+          Left={
+            <View style={{ flexDirection: 'row' }}>
+              <IconButton
+                iconName={'chevron_left'}
+                style={{ width: 24, height: 24 }}
+                onPress={() => {
+                  // todo: left
+                }}
+              />
+              <Avatar url={g_not_existed_url} size={24} />
+            </View>
+          }
+          Right={TopNavigationBarRight}
+          RightProps={{
+            onClicked: () => {
+              if (onNavigationBarMoreActions) {
+                onNavigationBarMoreActions();
+              } else {
+                onShowMenu?.();
+              }
+            },
+            iconName: 'person_add',
+          }}
+          Title={TopNavigationBarTitle({ text: 'Contacts' })}
+          containerStyle={{ paddingHorizontal: 12 }}
+        />
+      );
+    } else if (type === 'new-contact-list') {
+      return (
+        <TopNavigationBar
+          Left={
+            <View style={{ flexDirection: 'row' }}>
+              <Text paletteType={'label'} textType={'medium'}>
+                {'Cancel'}
+              </Text>
+            </View>
+          }
+          Right={<View />}
+          Title={TopNavigationBarTitle({ text: 'New Conversation' })}
+          containerStyle={{ paddingHorizontal: 12 }}
+        />
+      );
+    } else {
+      return null;
+    }
+  };
 
   const items = () => {
     if (type === 'contact-list') {
@@ -82,35 +138,11 @@ export function ContactList(props: ContactListProps) {
               }}
             />
           ) : null}
-          {moreActions}
+          {onContextMenuMoreActions}
         </>
       );
     } else if (type === 'new-contact-list') {
-      return (
-        <>
-          <ContactItem
-            icon={'person_add_fill'}
-            name={'add contact'}
-            hasArrow={true}
-            onClicked={() => {
-              // todo: add invite
-            }}
-          />
-          <ContactItem
-            icon={'person_double_fill'}
-            name={'create group'}
-            count={
-              <Text paletteType={'label'} textType={'medium'}>
-                {'0'}
-              </Text>
-            }
-            hasArrow={true}
-            onClicked={() => {
-              // todo: new invite
-            }}
-          />
-        </>
-      );
+      return null;
     } else {
       return null;
     }
@@ -126,29 +158,8 @@ export function ContactList(props: ContactListProps) {
         containerStyle,
       ]}
     >
-      <TopNavigationBar
-        Left={
-          <View style={{ flexDirection: 'row' }}>
-            <IconButton
-              iconName={'chevron_left'}
-              style={{ width: 24, height: 24 }}
-              onPress={() => {
-                // todo: left
-              }}
-            />
-            <Avatar url={g_not_existed_url} size={24} />
-          </View>
-        }
-        Right={TopNavigationBarRight}
-        RightProps={{
-          onClicked: () => {
-            // todo: right
-          },
-          iconName: 'person_add',
-        }}
-        Title={TopNavigationBarTitle({ text: 'Contacts' })}
-        containerStyle={{ paddingHorizontal: 12 }}
-      />
+      {navigationBar()}
+
       <SearchStyle
         title={'Search'}
         onPress={() => {
@@ -209,6 +220,11 @@ export function ContactList(props: ContactListProps) {
           />
         ) : null}
       </View>
+
+      <BottomSheetNameMenu
+        ref={menuRef}
+        onRequestModalClose={onRequestModalClose}
+      />
     </View>
   );
 }

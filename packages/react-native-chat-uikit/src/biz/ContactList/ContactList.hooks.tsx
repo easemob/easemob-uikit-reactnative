@@ -1,15 +1,21 @@
 import * as React from 'react';
 
 import { ContactModel, useChatContext } from '../../chat';
+import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
 import type { UseSectionListReturn } from '../types';
 import { g_index_alphabet_range } from './const';
-import type { ContactListItemProps, ContactListProps } from './types';
+import type {
+  ContactListItemProps,
+  ContactListProps,
+  UseContactListReturn,
+} from './types';
 
 export function useContactList(
   props: ContactListProps
-): UseSectionListReturn<ContactListItemProps, IndexModel, ListIndexProps> {
+): UseSectionListReturn<ContactListItemProps, IndexModel, ListIndexProps> &
+  UseContactListReturn {
   const { onClicked, testMode, onRequestData, onSort: propsOnSort } = props;
   const sectionProps = useSectionList<
     ContactListItemProps,
@@ -187,8 +193,52 @@ export function useContactList(
     }
   };
 
+  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const onRequestModalClose = () => {
+    menuRef.current?.startHide?.();
+  };
+  const onShowMenu = () => {
+    menuRef.current?.startShowWithProps?.({
+      initItems: [
+        {
+          name: 'Create New Request',
+          isHigh: false,
+          icon: 'bubble_fill',
+          onClicked: () => {
+            // todo: create new request
+            menuRef.current?.startHide?.();
+          },
+        },
+        {
+          name: 'Add Contact',
+          isHigh: false,
+          icon: 'person_add_fill',
+          onClicked: () => {
+            // todo: add contact
+            menuRef.current?.startHide?.();
+          },
+        },
+        {
+          name: 'Create Group',
+          isHigh: false,
+          icon: 'person_double_fill',
+          onClicked: () => {
+            // todo: create group
+            menuRef.current?.startHide?.();
+          },
+        },
+      ],
+      onRequestModalClose: onRequestModalClose,
+      layoutType: 'left',
+      hasCancel: false,
+    });
+  };
+
   return {
     ...sectionProps,
     onIndexSelected,
+    onRequestModalClose,
+    menuRef,
+    onShowMenu,
   };
 }
