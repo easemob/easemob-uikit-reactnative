@@ -8,6 +8,7 @@ import {
 } from './generate.color';
 import {
   generateExtraSmallCornerRadius,
+  generateLargeCornerRadius,
   generateMediumCornerRadius,
   generateSmallCornerRadius,
 } from './generate.cr';
@@ -104,6 +105,7 @@ export function createPalette(params: createPaletteParams): Palette {
       extraSmall: generateExtraSmallCornerRadius(),
       small: generateSmallCornerRadius(),
       medium: generateMediumCornerRadius(),
+      large: generateLargeCornerRadius(),
     } as CornerRadiusPalette,
   } as Palette;
 }

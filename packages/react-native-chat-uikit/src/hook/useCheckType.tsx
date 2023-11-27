@@ -15,8 +15,8 @@ const ExpectedType = typeof {};
  *  }: {
  *    containerStyle?: StyleProp<ViewStyle> | undefined;
  *  }) {
- *    const { getViewStyleSize } = useGetStyleSize();
- *    const size = getViewStyleSize(containerStyle);
+ *    const { getStyleSize } = useGetStyleProps();
+ *    const size = getStyleSize(containerStyle);
  *    const { checkType } = useCheckType();
  *    checkType(size.width, 'string');
  *    return (

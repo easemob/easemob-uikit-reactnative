@@ -1,11 +1,17 @@
 import * as React from 'react';
 import { AlertButton, View } from 'react-native';
 
+import { useGetStyleProps } from '../../hook';
+import { usePaletteContext, useThemeContext } from '../../theme';
 import { BorderButton, CmnButton } from '../Button';
 import type { AlertProps } from './types';
 
 export function useAlert(props: AlertProps) {
+  const { containerStyle } = props;
   const [_props, setProps] = React.useState(props);
+  const { cornerRadius: corner } = useThemeContext();
+  const { cornerRadius } = usePaletteContext();
+  const { getBorderRadius } = useGetStyleProps();
   const getButton = (
     buttons: Omit<AlertButton, 'isPreferred'>[] | undefined,
     onRequestModalClose: () => void
@@ -25,6 +31,12 @@ export function useAlert(props: AlertProps) {
               style={{
                 height: 48,
                 width: count === 2 ? '48%' : '100%',
+                borderRadius: getBorderRadius({
+                  height: 48,
+                  crt: corner.input,
+                  cr: cornerRadius,
+                  style: containerStyle,
+                }),
               }}
             />
           );
@@ -40,6 +52,12 @@ export function useAlert(props: AlertProps) {
             style={{
               height: 48,
               width: count === 2 ? '48%' : '100%',
+              borderRadius: getBorderRadius({
+                height: 48,
+                crt: corner.input,
+                cr: cornerRadius,
+                style: containerStyle,
+              }),
             }}
           />
         );
@@ -81,6 +99,12 @@ export function useAlert(props: AlertProps) {
         style={{
           height: 48,
           width: count === 2 ? '48%' : '100%',
+          borderRadius: getBorderRadius({
+            height: 48,
+            crt: corner.input,
+            cr: cornerRadius,
+            style: containerStyle,
+          }),
         }}
       />,
     ];

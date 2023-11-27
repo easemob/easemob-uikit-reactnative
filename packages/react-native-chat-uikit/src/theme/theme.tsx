@@ -45,7 +45,7 @@ export function useThemeContext(): Theme {
  * @returns The Theme.
  */
 export function createTheme(params: createThemeParams): Theme {
-  const { palette, themeType } = params;
+  const { palette, themeType, releaseArea } = params;
   return {
     style: themeType,
     button: generateButton({
@@ -56,6 +56,11 @@ export function createTheme(params: createThemeParams): Theme {
       palette: palette,
       themeType: themeType,
     }),
+    cornerRadius: {
+      avatar: releaseArea === 'china' ? 'small' : 'extraLarge',
+      alert: releaseArea === 'china' ? 'small' : 'large',
+      input: releaseArea === 'china' ? 'small' : 'extraLarge',
+    },
   };
 }
 

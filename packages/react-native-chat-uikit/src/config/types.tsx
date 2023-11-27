@@ -1,5 +1,4 @@
 import type { LanguageCode } from '../i18n';
-import type { CornerRadiusPaletteType } from '../theme';
 
 /**
  * Config types
@@ -22,14 +21,6 @@ export type Config = {
    */
   languageCode: LanguageCode;
 
-  /**
-   * Avatar option.
-   *
-   * Invalid for `GiftMessageList`.
-   */
-  avatar: {
-    borderRadiusStyle: CornerRadiusPaletteType;
-  };
   /**
    * The font family name.
    */

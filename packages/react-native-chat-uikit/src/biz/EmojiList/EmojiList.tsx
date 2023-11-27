@@ -16,7 +16,7 @@ import {
   useCheckType,
   useColors,
   useCompare,
-  useGetStyleSize,
+  useGetStyleProps,
 } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
@@ -64,8 +64,8 @@ export function EmojiList(props: EmojiListProps) {
     countPerRow = gCountPerRow,
     emojiList,
   } = props;
-  const { getViewStyleSize } = useGetStyleSize();
-  const { width: propsWidth } = getViewStyleSize(containerStyle);
+  const { getStyleSize } = useGetStyleProps();
+  const { width: propsWidth } = getStyleSize(containerStyle);
   const { checkType } = useCheckType();
   const { fontFamily } = useConfigContext();
   if (propsWidth) {

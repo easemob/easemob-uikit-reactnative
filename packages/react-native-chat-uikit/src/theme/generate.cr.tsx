@@ -13,9 +13,12 @@ export function generateCornerRadius(
       ret = 8;
       break;
     case 'medium':
-      ret = 16;
+      ret = 12;
       break;
     case 'large':
+      ret = 16;
+      break;
+    case 'extraLarge':
       ret = height ? height / 2 : 16;
       break;
   }
@@ -36,4 +39,7 @@ export function generateMediumCornerRadius(): number {
 
 export function generateLargeCornerRadius(): number {
   return generateCornerRadius('large');
+}
+export function generateExtraLargeCornerRadius(): number {
+  return generateCornerRadius('extraLarge');
 }

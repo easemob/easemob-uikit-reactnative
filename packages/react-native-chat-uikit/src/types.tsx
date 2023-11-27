@@ -51,3 +51,5 @@ export type RequireAtLeastOne<T> = {
 }[keyof T];
 
 export type UnknownType = Record<string, unknown>;
+
+export type ReleaseArea = 'china' | 'global';

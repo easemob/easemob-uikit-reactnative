@@ -7,16 +7,19 @@ import { DispatchContextProvider } from '../dispatch';
 import { CreateStringSet, I18nContextProvider, LanguageCode } from '../i18n';
 import { createStringSet } from '../i18n/StringSet';
 import {
-  CornerRadiusPaletteType,
   Palette,
   PaletteContextProvider,
   Theme,
   ThemeContextProvider,
-  useLightTheme,
   usePresetPalette,
 } from '../theme';
-import { mergeObjects } from '../utils';
-import { getI18nLanguage, getTranslateLanguage } from './Container.hook';
+import type { ReleaseArea } from '../types';
+import {
+  getI18nLanguage,
+  getReleaseArea,
+  getTranslateLanguage,
+  useGetTheme,
+} from './Container.hook';
 
 /**
  * Properties of the Container.
@@ -55,17 +58,13 @@ export type ContainerProps = React.PropsWithChildren<{
    */
   theme?: Theme;
   /**
-   * Avatar option.
-   *
-   * Invalid for `GiftMessageList`.
-   */
-  avatar?: {
-    borderRadiusStyle?: CornerRadiusPaletteType;
-  };
-  /**
    * The font family name.
    */
   fontFamily?: string;
+  /**
+   * The release area.
+   */
+  releaseArea?: ReleaseArea;
   /**
    * IM initialization is completed.
    */
@@ -90,20 +89,26 @@ export function Container(props: ContainerProps) {
     isDevMode = false,
     palette,
     theme,
-    avatar,
     fontFamily,
+    releaseArea,
     onInitialized,
   } = props;
   const _palette = usePresetPalette();
-  const light = useLightTheme(palette ?? _palette);
 
   const _languageBuiltInFactory = languageBuiltInFactory ?? createStringSet;
   const _guessLanguage = getI18nLanguage(language, languageBuiltInFactory);
+  const _releaseArea = getReleaseArea(releaseArea);
+  const _theme = useGetTheme({
+    theme: theme,
+    palette: palette ?? _palette,
+    releaseArea: _releaseArea,
+  });
+  console.log('test:zuoyu:t:', _theme === undefined, _palette === undefined);
 
   return (
     <DispatchContextProvider>
       <PaletteContextProvider value={palette ?? _palette}>
-        <ThemeContextProvider value={theme ?? light}>
+        <ThemeContextProvider value={_theme}>
           <I18nContextProvider
             value={{
               languageCode: _guessLanguage,
@@ -124,13 +129,6 @@ export function Container(props: ContainerProps) {
                   enableCompare: false,
                   enableCheckType: false,
                   languageCode: getTranslateLanguage(language),
-                  avatar: mergeObjects(
-                    avatar ??
-                      ({} as { borderRadiusStyle: CornerRadiusPaletteType }),
-                    {
-                      borderRadiusStyle: 'large',
-                    }
-                  ),
                   fontFamily: fontFamily,
                 }}
               >

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
-import { useColors } from '../../hook';
+import { useColors, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { Modal, ModalRef } from '../Modal';
 import { Text } from '../Text';
@@ -22,8 +22,9 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
     const [value, onChangeText] = React.useState('');
     const modalRef = React.useRef<ModalRef>({} as any);
     const { width: winWidth } = useWindowDimensions();
-    const { style: themeStyle } = useThemeContext();
-    const { colors } = usePaletteContext();
+    const { style: themeStyle, cornerRadius: corner } = useThemeContext();
+    const { colors, cornerRadius } = usePaletteContext();
+    const { getBorderRadius } = useGetStyleProps();
     const { getColor } = useColors({
       bg: {
         light: colors.neutral[98],
@@ -93,7 +94,12 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
               paddingHorizontal: 16,
               paddingTop: 24,
               paddingBottom: 16,
-              borderRadius: 16,
+              borderRadius: getBorderRadius({
+                height: 32,
+                crt: corner.alert,
+                cr: cornerRadius,
+                style: containerStyle,
+              }),
               width: winWidth - 50,
               alignItems: 'center',
             },
@@ -137,7 +143,12 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 containerStyle={{
                   backgroundColor: getColor('bg2'),
                   justifyContent: 'center',
-                  borderRadius: 48,
+                  borderRadius: getBorderRadius({
+                    height: 48,
+                    crt: corner.input,
+                    cr: cornerRadius,
+                    style: containerStyle,
+                  }),
                   height: 48,
                   width: '100%',
                 }}

@@ -1,6 +1,6 @@
 import type { ColorValue, TextStyle, ViewStyle } from 'react-native';
 
-import type { Keyof } from '../types';
+import type { Keyof, ReleaseArea } from '../types';
 
 /**
  * The color enum value.
@@ -116,14 +116,15 @@ export type CornerRadiusPalette = {
   extraSmall: number;
   small: number;
   medium: number;
+  large: number;
   /**
-   * The large corner radius.
+   * The extra large corner radius.
    *
    * It is dynamic. It is calculated by the following formula:
    *
-   * Half the minimum width or height.
+   * Half the maximum width or height.
    */
-  large: number;
+  extraLarge: number;
 };
 
 /**
@@ -247,6 +248,11 @@ export interface Theme {
   shadow: {
     style: ShadowStyle;
   };
+  cornerRadius: {
+    avatar: CornerRadiusPaletteType;
+    alert: CornerRadiusPaletteType;
+    input: CornerRadiusPaletteType;
+  };
 }
 
 /**
@@ -270,4 +276,5 @@ export type ThemeType = 'light' | 'dark';
 export type createThemeParams = {
   palette: Palette;
   themeType: ThemeType;
+  releaseArea?: ReleaseArea;
 };

@@ -1,4 +1,6 @@
 import { CreateStringSet, LanguageCode, languageCodes } from '../i18n';
+import { Palette, Theme, useLightTheme } from '../theme';
+import type { ReleaseArea } from '../types';
 import { getSystemLanguage } from '../utils';
 
 const getDefaultLanguage = (): LanguageCode => {
@@ -46,4 +48,30 @@ export const getTranslateLanguage = (language?: LanguageCode): LanguageCode => {
 
   console.log('dev:language:', ret);
   return ret;
+};
+
+export const getReleaseArea = (releaseArea?: ReleaseArea): ReleaseArea => {
+  if (releaseArea) {
+    return releaseArea;
+  }
+  let ret = require('../config.local').releaseArea as ReleaseArea;
+  if (ret !== 'global' && ret !== 'china') {
+    ret = 'global';
+  }
+  console.log('dev:releaseArea:', ret);
+  return ret;
+};
+
+export const useGetTheme = (params: {
+  palette: Palette;
+  theme?: Theme;
+  releaseArea?: ReleaseArea;
+}) => {
+  const { palette, theme, releaseArea } = params;
+  const light = useLightTheme(palette, releaseArea);
+  if (theme) {
+    return theme;
+  } else {
+    return light;
+  }
 };

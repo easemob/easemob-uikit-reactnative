@@ -5,7 +5,7 @@ export * from './useCompare';
 export * from './useDelayExecTask';
 export * from './useForceUpdate';
 export * from './useGetObjectName';
-export * from './useGetStyleSize';
+export * from './useGetStyleProps';
 export * from './useKeyboardHeight';
 export * from './useLifecycle';
 
@@ -19,7 +19,7 @@ export * from './useLifecycle';
  * 4. `useDelayExecTask`: delayed call. If multiple identical calls are made in a short period of time, they will be merged into one call.
  * 5. `useForceUpdate`: Force component update.
  * 6. `useGetObjectName`: Try to get the name of the component. If it is of other types, it will be parsed accordingly.
- * 7. `useGetStyleSize`: Parse the size in the component properties.
+ * 7. `useGetStyleProps`: Parse the size in the component properties.
  * 8. `useKeyboardHeight`: Get the keyboard height. Need to be obtained dynamically.
  * 9. `useLifecycle`: Function component life cycle calling tool.
  */
