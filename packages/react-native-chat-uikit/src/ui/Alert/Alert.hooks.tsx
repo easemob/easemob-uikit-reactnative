@@ -24,7 +24,7 @@ export function useAlert(props: AlertProps) {
               text={v.text}
               style={{
                 height: 48,
-                width: count < 3 ? undefined : 308,
+                width: count === 2 ? '48%' : '100%',
               }}
             />
           );
@@ -37,7 +37,10 @@ export function useAlert(props: AlertProps) {
             contentType={'only-text'}
             onPress={() => v.onPress?.(v.text)}
             text={v.text}
-            style={{ height: 48 }}
+            style={{
+              height: 48,
+              width: count === 2 ? '48%' : '100%',
+            }}
           />
         );
       });
@@ -47,9 +50,9 @@ export function useAlert(props: AlertProps) {
           const element = list[index];
           if (element) {
             ret.push(element);
-            if (index < list.length - 1) {
-              ret.push(<View key={count + index} style={{ width: 16 }} />);
-            }
+            // if (index < list.length - 1) {
+            //   ret.push(<View key={count + index} style={{ width: 16 }} />);
+            // }
           }
         }
       } else {
@@ -75,7 +78,10 @@ export function useAlert(props: AlertProps) {
         contentType={'only-text'}
         onPress={onRequestModalClose}
         text={'Confirm'}
-        style={{ height: 48 }}
+        style={{
+          height: 48,
+          width: count === 2 ? '48%' : '100%',
+        }}
       />,
     ];
   };
