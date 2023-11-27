@@ -5,6 +5,8 @@ import type {
   ChatConversationType,
   ChatCustomEventListener,
   ChatGroupEventListener,
+  ChatGroupOptions,
+  ChatGroupPermissionType,
   ChatMessage,
   ChatMessageEventListener,
   ChatMultiDeviceEventListener,
@@ -12,7 +14,7 @@ import type {
 } from 'react-native-chat-sdk';
 
 import type { UIKitError } from '../error';
-import type { PartialNullable } from '../types';
+import type { Keyof, PartialNullable } from '../types';
 
 export type ChatEventType = 'undefined' | string;
 
@@ -178,8 +180,65 @@ export type ConversationModel = {
   lastMessage?: ChatMessage;
 };
 
-export type ContactModel = ChatContact & {
+export type ContactModel = Record<Keyof<ChatContact>, string> & {
   nickName: string;
+  avatar?: string;
+};
+
+export type GroupModel = {
+  /**
+   * The group ID.
+   */
+  groupId: string;
+  /**
+   * The group name.
+   */
+  groupName?: string;
+  /**
+   * The group description.
+   */
+  description?: string;
+  /**
+   * The user ID of the group owner.
+   */
+  owner: string;
+  /**
+   * The content of the group announcement.
+   */
+  announcement?: string;
+  /**
+   * The member count of the group.
+   */
+  memberCount?: number;
+  /**
+   * Whether group messages are blocked.
+   * - `true`: Yes.
+   * - `false`: No.
+   */
+  messageBlocked?: boolean;
+  /**
+   * Whether all group members are muted.
+   * - `true`: Yes.
+   * - `false`: No.
+   */
+  isAllMemberMuted?: boolean;
+  /**
+   * The role of the current user in the group.
+   */
+  permissionType: ChatGroupPermissionType;
+  /**
+   * The group options.
+   */
+  options?: ChatGroupOptions;
+  /**
+   * The group avatar url.
+   */
+  groupAvatar?: string;
+};
+
+export type GroupParticipantModel = {
+  id: string;
+  name?: string;
   avatar?: string;
 };
 
@@ -245,7 +304,24 @@ export interface ContactServices {
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void;
 }
 
-export interface ChatService extends ConversationServices, ContactServices {
+export interface GroupServices {
+  setGroupOnRequestData<DataT>(
+    callback?: (params: {
+      ids: string[];
+      result: (data?: DataT[], error?: UIKitError) => void;
+    }) => void
+  ): void;
+  getAllGroups(params: { onResult: ResultCallback<GroupModel[]> }): void;
+  getAllGroupMembers(params: {
+    groupId: string;
+    onResult: ResultCallback<GroupParticipantModel[]>;
+  }): void;
+}
+
+export interface ChatService
+  extends ConversationServices,
+    ContactServices,
+    GroupServices {
   /**
    * Add listener.
    * @param listener {@link ChatServiceListener}

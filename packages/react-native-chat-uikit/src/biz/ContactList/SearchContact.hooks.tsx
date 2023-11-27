@@ -26,14 +26,6 @@ export function useSearchContact(
           if (isOk === true) {
             if (value) {
               const list = value.map((item) => {
-                console.log(
-                  'test:zuoyu:getAllContacts:item',
-                  item,
-                  item.nickName ??
-                    (item.remark.length === 0 || item.remark === undefined)
-                    ? item.userId
-                    : item.remark
-                );
                 return {
                   ...item,
                   id: item.userId,
@@ -44,7 +36,6 @@ export function useSearchContact(
                     : item.remark,
                 } as ContactSearchModel;
               });
-              console.log('test:zuoyu:getAllContacts:list', list);
               setData(list);
             }
           } else {

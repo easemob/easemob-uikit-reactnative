@@ -76,22 +76,23 @@ export function useListBasic<ItemT>(
     500,
     React.useCallback(
       (keyword: string) => {
+        console.log('test:zuoyu:search:', keyword, propsOnSearch === undefined);
         propsOnSearch?.(keyword);
       },
       [propsOnSearch]
     )
   );
 
-  const onRefresh = () => {
+  const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       propsOnRefresh?.();
       setRefreshing(false);
     }, 1000);
-  };
-  const onMore = () => {
+  }, [propsOnRefresh]);
+  const onMore = React.useCallback(() => {
     propsOnLoadMore?.();
-  };
+  }, [propsOnLoadMore]);
 
   useLifecycle(
     React.useCallback(async (state: any) => {

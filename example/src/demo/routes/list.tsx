@@ -27,6 +27,22 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  GroupList: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  SearchGroup: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  GroupParticipantList: {
+    option?: {} | undefined;
+    params?: { groupId: string } | undefined;
+  };
+  SearchGroupParticipant: {
+    option?: {} | undefined;
+    params?: { groupId: string } | undefined;
+  };
 };
 export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
@@ -63,6 +79,22 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   SearchContact: {
+    option: undefined,
+    params: undefined,
+  },
+  GroupList: {
+    option: undefined,
+    params: undefined,
+  },
+  SearchGroup: {
+    option: undefined,
+    params: undefined,
+  },
+  GroupParticipantList: {
+    option: undefined,
+    params: undefined,
+  },
+  SearchGroupParticipant: {
     option: undefined,
     params: undefined,
   },

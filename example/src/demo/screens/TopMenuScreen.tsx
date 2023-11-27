@@ -47,6 +47,18 @@ export function TopMenuScreen(props: Props) {
                   navigation.push('SearchConversation', {});
                 } else if (v === 'SearchContact') {
                   navigation.push('SearchContact', {});
+                } else if (v === 'GroupList') {
+                  navigation.push('GroupList', {});
+                } else if (v === 'SearchGroup') {
+                  navigation.push('SearchGroup', {});
+                } else if (v === 'GroupParticipantList') {
+                  navigation.push('GroupParticipantList', {
+                    params: { groupId: 'xx' },
+                  });
+                } else if (v === 'SearchGroupParticipant') {
+                  navigation.push('SearchGroupParticipant', {
+                    params: { groupId: 'xx' },
+                  });
                 }
               }}
             >

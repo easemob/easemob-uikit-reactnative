@@ -1,89 +1,54 @@
-import * as React from 'react';
-import type { ViewabilityConfig, ViewToken } from 'react-native';
+import { useChatContext } from 'src/chat';
 
-import { useDelayExecTask } from '../../hook';
-import type { ListState, UseFlatListReturn, UseListReturn } from '../types';
-import type { SearchGroupParticipantItemProps } from './SearchGroupParticipant.item';
+import { useFlatList } from '../List';
+import type { ListItemActions, UseFlatListReturn } from '../types';
+import type {
+  GroupParticipantSearchModel,
+  UseSearchGroupParticipantProps,
+} from './types';
 
-export type useSearchGroupParticipantApiProps = {};
-export function useSearchGroupParticipantApi(
-  props: useSearchGroupParticipantApiProps
-): UseFlatListReturn<SearchGroupParticipantItemProps> & UseListReturn {
-  const {} = props;
-  const [data, _setData] = React.useState<
-    ReadonlyArray<SearchGroupParticipantItemProps>
-  >([{ id: '1' }]);
-  const listType = React.useRef<'FlatList' | 'SectionList'>('FlatList').current;
-  const loadType = React.useRef<'once' | 'multiple'>('once').current;
-  const [listState, _setListState] = React.useState<ListState>('normal');
-  const isLoadAll = React.useRef(true).current;
-  const isShowAfterLoaded = React.useRef(true).current;
-  const isVisibleUpdate = React.useRef(false).current;
-  const isAutoUpdate = React.useRef(false).current;
-  const isEventUpdate = React.useRef(true).current;
-  const enableRefresh = React.useRef(false).current;
-  const enableMore = React.useRef(false).current;
-  const [refreshing, setRefreshing] = React.useState(false);
-  const ListItem: React.ComponentType<SearchGroupParticipantItemProps> = () =>
-    null;
-
-  const viewabilityConfigRef = React.useRef<ViewabilityConfig>({
-    // minimumViewTime: 1000,
-    viewAreaCoveragePercentThreshold: 50,
-    itemVisiblePercentThreshold: 50,
-    waitForInteraction: false,
+export function UseSearchGroupParticipant(
+  props: UseSearchGroupParticipantProps
+): UseFlatListReturn<GroupParticipantSearchModel> &
+  Omit<
+    ListItemActions<GroupParticipantSearchModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > {
+  const { groupId, onClicked, testMode } = props;
+  const flatListProps = useFlatList<GroupParticipantSearchModel>({
+    onInit: () => init(),
   });
-  const { delayExecTask: onViewableItemsChanged } = useDelayExecTask(
-    500,
-    React.useCallback(
-      (_info: {
-        viewableItems: Array<ViewToken>;
-        changed: Array<ViewToken>;
-      }) => {},
-      []
-    )
-  );
+  const { dataRef } = flatListProps;
 
-  const onSearch = (_key: string) => {};
-  const { delayExecTask: deferSearch } = useDelayExecTask(
-    500,
-    React.useCallback((key: string) => {
-      onSearch(key);
-    }, [])
-  );
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1000);
+  const im = useChatContext();
+  const init = () => {
+    if (testMode === 'only-ui') {
+    } else {
+      im.getAllGroupMembers({
+        groupId: groupId,
+        onResult: (result) => {
+          const { isOk, value, error } = result;
+          if (isOk === true && value) {
+            dataRef.current = value.map((item) => {
+              return {
+                ...item,
+                id: item.id,
+                name: item.name ?? item.id,
+              } as GroupParticipantSearchModel;
+            });
+          } else {
+            if (error) {
+              console.log('test:zuoyu:getAllGroupMembers:error', error);
+              im.sendError({ error });
+            }
+          }
+        },
+      });
+    }
   };
-  const onMore = () => {};
-
-  const sort: (
-    prevProps: SearchGroupParticipantItemProps,
-    nextProps: SearchGroupParticipantItemProps
-  ) => boolean = () => true;
 
   return {
-    data,
-    listState,
-    listType,
-    onRefresh: enableRefresh === true ? onRefresh : undefined,
-    onMore: enableMore === true ? onMore : undefined,
-    deferSearch,
-    isLoadAll,
-    isShowAfterLoaded,
-    loadType,
-    isVisibleUpdate,
-    isAutoUpdate,
-    isEventUpdate,
-    ListItem,
-    sort,
-    refreshing: enableRefresh === true ? refreshing : undefined,
-    viewabilityConfig:
-      isVisibleUpdate === true ? viewabilityConfigRef.current : undefined,
-    onViewableItemsChanged:
-      isVisibleUpdate === true ? onViewableItemsChanged : undefined,
+    ...flatListProps,
+    onClicked,
   };
 }

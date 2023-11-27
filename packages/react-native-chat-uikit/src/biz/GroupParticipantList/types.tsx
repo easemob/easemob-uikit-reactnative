@@ -1,20 +1,50 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
-import type { DataModel } from '../../chat';
-import type { ListRequestProps, PropsWithError, PropsWithTest } from '../types';
-export type GroupParticipantListPageProps = ListRequestProps<DataModel> &
-  PropsWithTest &
-  PropsWithError & {
-    containerStyle?: StyleProp<ViewStyle>;
-  };
+import type { DataModel, GroupParticipantModel } from '../../chat';
+import type { DefaultComponentModel } from '../ListSearch';
+import type {
+  ListItemActions,
+  ListItemProps,
+  ListItemRequestProps,
+  ListRequestProps,
+  PropsWithError,
+  PropsWithTest,
+} from '../types';
+
 export type GroupParticipantListProps = ListRequestProps<DataModel> &
   PropsWithTest &
-  PropsWithError & {
+  PropsWithError &
+  Omit<
+    ListItemActions<GroupParticipantModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > & {
+    groupId: string;
     containerStyle?: StyleProp<ViewStyle>;
+    onBack?: () => void;
+    onSearch?: () => void;
   };
-export type SearchGroupParticipantProps<DataT> = ListRequestProps<DataT> &
+
+export type GroupParticipantListItemProps = ListItemProps &
+  ListItemRequestProps<DataModel> &
+  Omit<
+    ListItemActions<GroupParticipantModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > & {
+    data: GroupParticipantModel;
+  };
+
+export type SearchGroupParticipantProps = ListRequestProps<DataModel> &
   PropsWithTest &
-  PropsWithError & {
+  PropsWithError &
+  Omit<
+    ListItemActions<GroupParticipantModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > & {
+    groupId: string;
     containerStyle?: StyleProp<ViewStyle>;
     onCancel?: () => void;
   };
+export type UseGroupParticipantListProps = GroupParticipantListProps;
+export type UseSearchGroupParticipantProps = SearchGroupParticipantProps;
+export type GroupParticipantSearchModel = GroupParticipantModel &
+  DefaultComponentModel;

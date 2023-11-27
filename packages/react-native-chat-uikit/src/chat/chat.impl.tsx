@@ -28,6 +28,8 @@ import {
   DataModel,
   DataModelType,
   DisconnectReasonType,
+  GroupModel,
+  GroupParticipantModel,
   ResultCallback,
   UserServiceData,
 } from './types';
@@ -40,6 +42,8 @@ export abstract class ChatServiceImpl
   _convStorage?: ConversationStorage;
   _convList: Map<string, ConversationModel>;
   _contactList: Map<string, ContactModel>;
+  _groupList: Map<string, GroupModel>;
+  _groupMemberList: Map<string, Map<string, GroupParticipantModel>>;
   _convDataRequestCallback?: (params: {
     ids: Map<DataModelType, string[]>;
     result: (
@@ -53,21 +57,32 @@ export abstract class ChatServiceImpl
         result: (data?: any[], error?: UIKitError) => void;
       }) => void)
     | undefined;
+  _groupDataRequestCallback:
+    | ((params: {
+        ids: string[];
+        result: (data?: any[], error?: UIKitError) => void;
+      }) => void)
+    | undefined;
 
   constructor() {
     this._listeners = new Set();
     this._convList = new Map();
     this._contactList = new Map();
+    this._groupList = new Map();
+    this._groupMemberList = new Map();
   }
 
   destructor() {
     this._convStorage?.destructor();
-    this.clearListener();
     this._reset();
   }
 
   _reset(): void {
+    this.clearListener();
     this._convList.clear();
+    this._contactList.clear();
+    this._groupList.clear();
+    this._groupMemberList.clear();
   }
 
   async init(params: {
@@ -234,7 +249,7 @@ export abstract class ChatServiceImpl
     promise: Promise<T>;
     event: string;
     onFinished?: (value: T) => void;
-    onError?: (e: any) => void;
+    onError?: (e: UIKitError) => void;
   }): void {
     const { promise, event, onFinished, onError } = params;
     promise
@@ -246,15 +261,16 @@ export abstract class ChatServiceImpl
         }
       })
       .catch((e) => {
+        const _e = new UIKitError({
+          code: ErrorCode.common,
+          desc: event,
+          extra: this._fromChatError(e),
+        });
         if (onError) {
-          onError(e);
+          onError(_e);
         } else {
           this.sendError({
-            error: new UIKitError({
-              code: ErrorCode.common,
-              desc: event,
-              extra: this._fromChatError(e),
-            }),
+            error: _e,
             from: event,
           });
         }
@@ -326,6 +342,17 @@ export abstract class ChatServiceImpl
     };
   }
 
+  async toUIGroup(group: ChatGroup): Promise<GroupModel> {
+    return {
+      ...group,
+      groupId: group.groupId,
+      groupName: group.groupName,
+      permissionType: group.permissionType,
+      owner: group.owner,
+      groupAvatar: this._groupList.get(group.groupId)?.groupAvatar,
+    };
+  }
+
   setContactOnRequestData<DataT>(
     callback?: (params: {
       ids: string[];
@@ -333,6 +360,15 @@ export abstract class ChatServiceImpl
     }) => void
   ): void {
     this._contactDataRequestCallback = callback;
+  }
+
+  setGroupOnRequestData<DataT>(
+    callback?: (params: {
+      ids: string[];
+      result: (data?: DataT[], error?: UIKitError) => void;
+    }) => void
+  ): void {
+    this._groupDataRequestCallback = callback;
   }
 
   setOnRequestMultiData<DataT>(
@@ -763,6 +799,137 @@ export abstract class ChatServiceImpl
         params.onResult({ isOk: false, error: e });
       },
     });
+  }
+
+  getAllGroups(params: { onResult: ResultCallback<GroupModel[]> }): void {
+    if (this._groupList.size > 0) {
+      params.onResult({
+        isOk: true,
+        value: Array.from(this._groupList.values()),
+      });
+      return;
+    } else {
+      this.client.groupManager.getJoinedGroups();
+      this.tryCatch({
+        promise: this.client.groupManager.fetchJoinedGroupsFromServer(0, 20),
+        event: 'getJoinedGroups',
+        onFinished: async (value) => {
+          value.forEach(async (v) => {
+            this._groupList.set(v.groupId, {
+              ...v,
+              groupName:
+                v.groupName === undefined || v.groupName.length === 0
+                  ? v.groupId
+                  : v.groupName,
+            });
+          });
+
+          if (this._groupDataRequestCallback) {
+            this._groupDataRequestCallback({
+              ids: Array.from(this._groupList.values())
+                .filter(
+                  (v) => v.groupName === undefined || v.groupName === v.groupId
+                )
+                .map((v) => v.groupId),
+              result: async (data?: DataModel[], error?: UIKitError) => {
+                if (data) {
+                  data.forEach((value) => {
+                    const group = this._groupList.get(value.id);
+                    if (group) {
+                      group.groupName = value.name;
+                      group.groupAvatar = value.avatar;
+                    }
+                  });
+                }
+
+                params.onResult({
+                  isOk: true,
+                  value: Array.from(this._groupList.values()).map((v) => v),
+                  error,
+                });
+              },
+            });
+          } else {
+            params.onResult({
+              isOk: true,
+              value: Array.from(this._groupList.values()).map((v) => v),
+            });
+          }
+        },
+        onError: (e) => {
+          params.onResult({ isOk: false, error: e });
+        },
+      });
+    }
+  }
+
+  getAllGroupMembers(params: {
+    groupId: string;
+    onResult: ResultCallback<GroupParticipantModel[]>;
+  }): void {
+    const memberList = this._groupMemberList.get(params.groupId);
+    if (memberList && memberList.size > 0) {
+      params.onResult({
+        isOk: true,
+        value: Array.from(memberList.values()),
+      });
+      return;
+    } else {
+      let cursor = '';
+      const pageSize = 200;
+      this.tryCatch({
+        promise: this.client.groupManager.fetchMemberListFromServer(
+          params.groupId,
+          pageSize,
+          cursor
+        ),
+        event: 'getGroupMemberList',
+        onFinished: async (value) => {
+          const memberList = new Map();
+          value.list?.forEach(async (v) => {
+            memberList.set(v, { id: v });
+          });
+          this._groupMemberList.set(params.groupId, memberList);
+          cursor = value.cursor;
+          if (
+            cursor.length === 0 ||
+            (value.list && value.list.length < pageSize) ||
+            value.list === undefined
+          ) {
+          } else {
+            for (;;) {
+              const list =
+                await this.client.groupManager.fetchMemberListFromServer(
+                  params.groupId,
+                  pageSize,
+                  cursor
+                );
+              list.list?.forEach((v) => {
+                memberList.set(v, { id: v });
+              });
+
+              cursor = value.cursor;
+              if (
+                cursor.length === 0 ||
+                (value.list && value.list.length < pageSize) ||
+                value.list === undefined
+              ) {
+                break;
+              }
+            }
+          }
+
+          params.onResult({
+            isOk: true,
+            value: Array.from(memberList.values()),
+          });
+        },
+        onError: (e) => {
+          console.log('test:zuoyu:getmember:error:', e);
+          params.onResult({ isOk: false, error: e });
+        },
+      });
+    }
   }
 }
 

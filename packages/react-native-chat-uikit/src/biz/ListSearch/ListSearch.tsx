@@ -28,7 +28,7 @@ export function ListSearch<
     [ItemRender]
   );
   const [value, setValue] = React.useState('');
-  const { ref, data, deferSearch } = useListSearch(props);
+  const { ref, data, deferSearch, onClicked } = useListSearch(props);
 
   return (
     <View
@@ -48,12 +48,7 @@ export function ListSearch<
         }}
         value={value}
       />
-      <View
-        style={{ flex: 1 }}
-        onLayout={(e) => {
-          console.log('test:zuoyu:onlayout:', e.nativeEvent.layout);
-        }}
-      >
+      <View style={{ flex: 1 }}>
         <FlatList
           ref={ref}
           style={{ flexGrow: 1 }}
@@ -63,7 +58,7 @@ export function ListSearch<
             info: ListRenderItemInfo<ListSearchItemProps<ComponentModel>>
           ) => {
             const { item } = info;
-            return <ListSearchItemMemo {...item} />;
+            return <ListSearchItemMemo {...item} onClicked={onClicked} />;
           }}
           keyExtractor={(item: ListSearchItemProps<ComponentModel>) => {
             return item.id;

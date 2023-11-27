@@ -1,78 +1,70 @@
 import * as React from 'react';
-import type { ViewabilityConfig, ViewToken } from 'react-native';
 
-import { useDelayExecTask } from '../../hook';
-import type { ListState, UseFlatListReturn, UseListReturn } from '../types';
-import type { GroupListItemProps } from './GroupList.item';
+import { GroupModel, useChatContext } from '../../chat';
+import { useFlatList } from '../List';
+import type { ListItemActions, UseFlatListReturn } from '../types';
+import type { GroupListItemProps, UseGroupListProps } from './types';
 
-export type useGroupListApiProps = {};
-export function useGroupListApi(
-  props: useGroupListApiProps
-): UseFlatListReturn<GroupListItemProps> & UseListReturn {
-  const {} = props;
-  const [data, _setData] = React.useState<ReadonlyArray<GroupListItemProps>>([
-    { id: '1' },
-  ]);
-  const listType = React.useRef<'FlatList' | 'SectionList'>('FlatList').current;
-  const loadType = React.useRef<'once' | 'multiple'>('once').current;
-  const [listState, _setListState] = React.useState<ListState>('normal');
-  const isLoadAll = React.useRef(true).current;
-  const isShowAfterLoaded = React.useRef(true).current;
-  const isVisibleUpdate = React.useRef(false).current;
-  const isAutoUpdate = React.useRef(false).current;
-  const isEventUpdate = React.useRef(true).current;
-  const enableRefresh = React.useRef(false).current;
-  const enableMore = React.useRef(false).current;
-  const [refreshing, setRefreshing] = React.useState(false);
-  const ListItem: React.ComponentType<GroupListItemProps> = () => null;
-
-  const viewabilityConfigRef = React.useRef<ViewabilityConfig>({
-    // minimumViewTime: 1000,
-    viewAreaCoveragePercentThreshold: 50,
-    itemVisiblePercentThreshold: 50,
-    waitForInteraction: false,
+export function useGroupList(
+  props: UseGroupListProps
+): UseFlatListReturn<GroupListItemProps> &
+  Omit<
+    ListItemActions<GroupModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > {
+  const { testMode, onClicked } = props;
+  const flatListProps = useFlatList<GroupListItemProps>({
+    listState: testMode === 'only-ui' ? 'normal' : 'loading',
+    onInit: () => init(),
+    onMore: () => onMore(),
+    onVisibleItems: (items: GroupListItemProps[]) => onVisibleItems(items),
   });
-  const { delayExecTask: onViewableItemsChanged } = useDelayExecTask(
-    500,
-    React.useCallback(
-      (_info: {
-        viewableItems: Array<ViewToken>;
-        changed: Array<ViewToken>;
-      }) => {},
-      []
-    )
+  const { setData, dataRef } = flatListProps;
+  const im = useChatContext();
+
+  const onClickedCallback = React.useCallback(
+    (data?: GroupModel | undefined) => {
+      if (onClicked) {
+        onClicked(data);
+      }
+    },
+    [onClicked]
   );
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1000);
+  const init = () => {
+    if (testMode === 'only-ui') {
+    } else {
+      im.getAllGroups({
+        onResult: (result) => {
+          const { isOk, value, error } = result;
+          if (isOk === true) {
+            if (value) {
+              dataRef.current = value.map((item) => {
+                return {
+                  id: item.groupId,
+                  data: item,
+                } as GroupListItemProps;
+              });
+              setData([...dataRef.current]);
+            }
+          } else {
+            if (error) {
+              console.log('test:zuoyu:getAllGroups:error', error);
+              im.sendError({ error });
+            }
+          }
+        },
+      });
+    }
   };
   const onMore = () => {};
-  const sort: (
-    prevProps: GroupListItemProps,
-    nextProps: GroupListItemProps
-  ) => boolean = () => true;
+  const onVisibleItems = (items: GroupListItemProps[]) => {
+    console.log('test:zuoyu:onVisibleItems', items);
+  };
 
   return {
-    data,
-    listState,
-    listType,
-    onRefresh: enableRefresh === true ? onRefresh : undefined,
-    onMore: enableMore === true ? onMore : undefined,
-    isLoadAll,
-    isShowAfterLoaded,
-    loadType,
-    isVisibleUpdate,
-    isAutoUpdate,
-    isEventUpdate,
-    ListItem,
-    sort,
-    refreshing: enableRefresh === true ? refreshing : undefined,
-    viewabilityConfig:
-      isVisibleUpdate === true ? viewabilityConfigRef.current : undefined,
-    onViewableItemsChanged:
-      isVisibleUpdate === true ? onViewableItemsChanged : undefined,
+    ...flatListProps,
+    onMore,
+    onClicked: onClickedCallback,
   };
 }

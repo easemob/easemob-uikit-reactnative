@@ -13,12 +13,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function CL() {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flexGrow: 1 }}>
       <GroupList
-        containerStyle={{
-          height: '100%',
-          backgroundColor: 'red',
-        }}
+        containerStyle={
+          {
+            // height: '100%',
+            // flexGrow: 1,
+            // backgroundColor: 'red',
+          }
+        }
         onRequestData={(params: {
           ids: string[];
           result: (data?: DataModel[], error?: UIKitError) => void;
@@ -40,6 +43,12 @@ export function CL() {
               ['group', [{ id: 'yy', name: 'yy', avatar: '' }]],
             ])
           );
+        }}
+        onSearch={() => {
+          console.log('test:zuoyu:onSearch');
+        }}
+        onClicked={() => {
+          console.log('test:zuoyu:onClicked:13');
         }}
       />
     </SafeAreaView>
@@ -84,10 +93,12 @@ export function BodyPagesT({
   // };
   return (
     <GroupList
-      containerStyle={{
-        // height: '100%',
-        backgroundColor: 'green',
-      }}
+      containerStyle={
+        {
+          // height: '100%',
+          // backgroundColor: 'green',
+        }
+      }
     />
   );
   // return (
@@ -167,7 +178,7 @@ export function CL2() {
 export default function TestGroupList() {
   return (
     <Container appKey={''}>
-      <CL2 />
+      <CL />
     </Container>
   );
 }

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   DefaultSectionT,
+  Pressable,
   //   SectionList as RNSectionList,
   SectionListData,
   SectionListRenderItemInfo,
@@ -40,6 +41,7 @@ export function ContactList(props: ContactListProps) {
     isHasNewRequest,
     onContextMenuMoreActions,
     onSearch,
+    onCancel,
     onNavigationBarMoreActions,
   } = props;
   const {
@@ -94,13 +96,18 @@ export function ContactList(props: ContactListProps) {
       return (
         <TopNavigationBar
           Left={
-            <View style={{ flexDirection: 'row' }}>
+            <Pressable
+              style={{ flexDirection: 'row' }}
+              onPress={() => {
+                onCancel?.();
+              }}
+            >
               <Text paletteType={'label'} textType={'medium'}>
                 {'Cancel'}
               </Text>
-            </View>
+            </Pressable>
           }
-          Right={<View />}
+          Right={<View style={{ width: 32, height: 32 }} />}
           Title={TopNavigationBarTitle({ text: 'New Conversation' })}
           containerStyle={{ paddingHorizontal: 12 }}
         />

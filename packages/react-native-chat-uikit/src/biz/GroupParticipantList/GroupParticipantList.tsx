@@ -1,27 +1,23 @@
 import * as React from 'react';
-import { ListRenderItemInfo, View } from 'react-native';
+import { ListRenderItemInfo, Pressable, View } from 'react-native';
 
-import { g_not_existed_url } from '../../const';
 import { FlatListFactory } from '../../ui/FlatList';
-import { Avatar } from '../Avatar';
+import { Icon } from '../../ui/Image';
+import { Text } from '../../ui/Text';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
-import {
-  TopNavigationBar,
-  TopNavigationBarRight,
-  TopNavigationBarTitle,
-} from '../TopNavigationBar';
-import { useGroupParticipantListApi } from './GroupParticipantList.hooks';
-import {
-  GroupParticipantListItemMemo,
+import { TopNavigationBar } from '../TopNavigationBar';
+import { useGroupParticipantList } from './GroupParticipantList.hooks';
+import { GroupParticipantListItemMemo } from './GroupParticipantList.item';
+import type {
   GroupParticipantListItemProps,
-} from './GroupParticipantList.item';
-import type { GroupParticipantListProps } from './types';
+  GroupParticipantListProps,
+} from './types';
 
 const FlatList = FlatListFactory<GroupParticipantListItemProps>();
 
 export function GroupParticipantList(props: GroupParticipantListProps) {
-  const { containerStyle } = props;
+  const { containerStyle, onBack, onSearch } = props;
   const {
     data,
     refreshing,
@@ -31,70 +27,68 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     viewabilityConfig,
     onViewableItemsChanged,
     listState,
-  } = useGroupParticipantListApi({});
+    onClicked,
+  } = useGroupParticipantList(props);
 
   return (
-    <View
-      style={[
-        {
-          // height: '100%',
-          flexGrow: 1,
-        },
-        containerStyle,
-      ]}
-    >
+    <View style={[{ flexGrow: 1 }, containerStyle]}>
       <TopNavigationBar
-        Left={<Avatar url={g_not_existed_url} size={24} />}
-        Right={TopNavigationBarRight}
-        RightProps={{
-          onClicked: () => {
-            // todo: right
-          },
-          iconName: 'plus_in_circle',
-        }}
-        Title={TopNavigationBarTitle({ text: 'Chat' })}
-        containerStyle={{ marginHorizontal: 12 }}
+        Left={
+          <Pressable
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+            onPress={onBack}
+          >
+            <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+            <Text>{'Group ${count}'}</Text>
+          </Pressable>
+        }
+        Right={<View style={{ width: 32, height: 32 }} />}
+        containerStyle={{ paddingHorizontal: 12 }}
       />
       <SearchStyle
         title={'Search'}
         onPress={() => {
-          // todo: search
+          onSearch?.();
         }}
       />
-      <FlatList
-        ref={ref}
-        contentContainerStyle={{
-          flexGrow: 1,
-          // height: '100%',
-          // height: 400,
-          // backgroundColor: 'yellow',
-        }}
-        data={data}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-        renderItem={(
-          info: ListRenderItemInfo<GroupParticipantListItemProps>
-        ) => {
-          const { item } = info;
-          return <GroupParticipantListItemMemo {...item} />;
-        }}
-        keyExtractor={(item: GroupParticipantListItemProps) => {
-          return item.id;
-        }}
-        onEndReached={onMore}
-        viewabilityConfig={viewabilityConfig}
-        onViewableItemsChanged={onViewableItemsChanged}
-        ListEmptyComponent={EmptyPlaceholder}
-        ListErrorComponent={
-          listState === 'error' ? (
-            <ErrorPlaceholder
-              onClicked={() => {
-                onRefresh?.();
-              }}
-            />
-          ) : null
-        }
-      />
+      <View style={{ flex: 1 }}>
+        <FlatList
+          ref={ref}
+          contentContainerStyle={{
+            flexGrow: 1,
+            // height: '100%',
+            // height: 400,
+            // backgroundColor: 'yellow',
+          }}
+          data={data}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          renderItem={(
+            info: ListRenderItemInfo<GroupParticipantListItemProps>
+          ) => {
+            const { item } = info;
+            return (
+              <GroupParticipantListItemMemo {...item} onClicked={onClicked} />
+            );
+          }}
+          keyExtractor={(item: GroupParticipantListItemProps) => {
+            return item.id;
+          }}
+          onEndReached={onMore}
+          viewabilityConfig={viewabilityConfig}
+          onViewableItemsChanged={onViewableItemsChanged}
+          ListEmptyComponent={EmptyPlaceholder}
+          ListErrorComponent={
+            listState === 'error' ? (
+              <ErrorPlaceholder
+                onClicked={() => {
+                  onRefresh?.();
+                }}
+              />
+            ) : null
+          }
+        />
+      </View>
     </View>
   );
 }

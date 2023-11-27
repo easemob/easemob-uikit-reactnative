@@ -19,10 +19,13 @@ import type { RootParamsList, RootParamsName } from './routes';
 import {
   ContactListScreen,
   ConversationListScreen,
+  GroupListScreen,
+  GroupParticipantListScreen,
   LoginListScreen,
   LoginScreen,
   SearchContactScreen,
   SearchConversationScreen,
+  SearchGroupScreen,
   TopMenuScreen,
 } from './screens';
 
@@ -204,6 +207,27 @@ export function App() {
                 headerShown: false,
               }}
               component={SearchContactScreen}
+            />
+            <Root.Screen
+              name={'GroupList'}
+              options={{
+                headerShown: false,
+              }}
+              component={GroupListScreen}
+            />
+            <Root.Screen
+              name={'SearchGroup'}
+              options={{
+                headerShown: false,
+              }}
+              component={SearchGroupScreen}
+            />
+            <Root.Screen
+              name={'GroupParticipantList'}
+              options={{
+                headerShown: false,
+              }}
+              component={GroupParticipantListScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

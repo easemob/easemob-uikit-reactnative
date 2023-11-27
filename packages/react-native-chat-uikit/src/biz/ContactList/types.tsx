@@ -50,6 +50,7 @@ export type ContactListProps = ListRequestProps<DataModel> &
       nextProps: ContactListItemProps
     ) => number;
     onSearch?: () => void;
+    onCancel?: () => void;
     onNavigationBarMoreActions?: () => void;
   };
 
