@@ -117,6 +117,10 @@ export default function TestAppServer() {
         onPress={() => {
           rr(call as CallManagerImpl);
         }}
+        buttonStyle={'commonButton'}
+        sizesType={'small'}
+        radiusType={'small'}
+        contentType={'only-text'}
       >
         requestRTCToken
       </Button>
@@ -125,6 +129,10 @@ export default function TestAppServer() {
         onPress={() => {
           rm(call as CallManagerImpl);
         }}
+        buttonStyle={'commonButton'}
+        sizesType={'small'}
+        radiusType={'small'}
+        contentType={'only-text'}
       >
         requestUserMap
       </Button>

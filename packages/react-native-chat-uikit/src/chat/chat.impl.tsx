@@ -39,6 +39,7 @@ export abstract class ChatServiceImpl
 {
   _listeners: Set<ChatServiceListener>;
   _user?: UserServiceData;
+  _userList: Map<string, UserServiceData>;
   _convStorage?: ConversationStorage;
   _convList: Map<string, ConversationModel>;
   _contactList: Map<string, ContactModel>;
@@ -66,6 +67,7 @@ export abstract class ChatServiceImpl
 
   constructor() {
     this._listeners = new Set();
+    this._userList = new Map();
     this._convList = new Map();
     this._contactList = new Map();
     this._groupList = new Map();
@@ -79,6 +81,7 @@ export abstract class ChatServiceImpl
 
   _reset(): void {
     this.clearListener();
+    this._userList.clear();
     this._convList.clear();
     this._contactList.clear();
     this._groupList.clear();
@@ -111,7 +114,9 @@ export abstract class ChatServiceImpl
       });
     }
   }
-  unInit() {}
+  unInit() {
+    this.destructor();
+  }
 
   addListener(listener: ChatServiceListener): void {
     this._listeners.add(listener);
@@ -132,26 +137,32 @@ export abstract class ChatServiceImpl
   async login(params: {
     userId: string;
     userToken: string;
-    userNickname?: string | undefined;
+    userName: string;
     userAvatarURL?: string | undefined;
     gender?: number;
-    identify?: string;
     usePassword?: boolean;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     const {
       userId,
       userToken,
-      userNickname,
+      userName,
       userAvatarURL,
       gender,
-      identify,
       result,
       usePassword,
     } = params;
     try {
-      if (userToken.startsWith('00')) {
-        await this.client.loginWithAgoraToken(userId, userToken);
+      const version = require('react-native-chat-sdk/src/version');
+      const list = version.default.split('.');
+      const major = parseInt(list[0]!, 10);
+      const minor = parseInt(list[1]!, 10);
+      if (major <= 1 && minor < 3) {
+        if (userToken.startsWith('00')) {
+          await this.client.loginWithAgoraToken(userId, userToken);
+        } else {
+          await this.client.login(userId, userToken, usePassword ?? false);
+        }
       } else {
         await this.client.login(userId, userToken, usePassword ?? false);
       }
@@ -160,11 +171,11 @@ export abstract class ChatServiceImpl
 
       // !!! hot-reload no pass, into catch codes
       this._user = {
-        nickName: userNickname,
+        userName: userName,
+        remark: userName,
         avatarURL: userAvatarURL,
         userId: userId,
         gender: gender,
-        identify: identify,
       } as UserServiceData;
 
       this.client.getCurrentUsername();
@@ -175,11 +186,11 @@ export abstract class ChatServiceImpl
         this._convStorage?.setCurrentId(userId);
         // !!! for dev hot-reload
         this._user = {
-          nickName: userNickname,
+          userName: userName,
+          remark: userName,
           avatarURL: userAvatarURL,
           userId: userId,
           gender: gender,
-          identify: identify,
         } as UserServiceData;
 
         this.client.getCurrentUsername();
@@ -232,6 +243,21 @@ export abstract class ChatServiceImpl
 
   get userId(): string | undefined {
     return this.client.currentUserName as string | undefined;
+  }
+
+  user(userId?: string): UserServiceData | undefined {
+    if (this._user?.userId === userId) {
+      return this._user;
+    } else if (userId) {
+      return this._userList.get(userId);
+    }
+    return undefined;
+  }
+
+  setUser(params: { users: UserServiceData[] }): void {
+    params.users.forEach((v) => {
+      this._userList.set(v.userId, v);
+    });
   }
 
   sendError(params: { error: UIKitError; from?: string; extra?: any }): void {
@@ -930,6 +956,19 @@ export abstract class ChatServiceImpl
         },
       });
     }
+  }
+
+  fetchJoinedGroupCount(params: {
+    groupId: string;
+    onResult: ResultCallback<number>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.fetchJoinedGroupCount(),
+      event: 'fetchJoinedGroupCount',
+      onFinished: async (value) => {
+        params.onResult({ isOk: true, value: value });
+      },
+    });
   }
 }
 

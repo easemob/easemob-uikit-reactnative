@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 
 import { g_not_existed_url } from '../../const';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { SectionListFactory } from '../../ui/SectionList';
 import { Text } from '../../ui/Text';
@@ -60,6 +62,13 @@ export function ContactList(props: ContactListProps) {
     menuRef,
     onShowMenu,
   } = useContactList(props);
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
 
   const navigationBar = () => {
     if (type === 'contact-list') {
@@ -159,7 +168,7 @@ export function ContactList(props: ContactListProps) {
     <View
       style={[
         {
-          // height: '100%',
+          backgroundColor: getColor('bg'),
           flexGrow: 1,
         },
         containerStyle,

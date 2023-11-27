@@ -17,6 +17,7 @@ import {
 
 import type { RootParamsList, RootParamsName } from './routes';
 import {
+  ConfigScreen,
   ContactListScreen,
   ConversationListScreen,
   GroupListScreen,
@@ -165,6 +166,13 @@ export function App() {
                 headerShown: true,
               }}
               component={TopMenuScreen}
+            />
+            <Root.Screen
+              name={'Config'}
+              options={{
+                headerShown: true,
+              }}
+              component={ConfigScreen}
             />
             <Root.Screen
               name={'Login'}

@@ -35,7 +35,9 @@ export function TopMenuScreen(props: Props) {
                 borderRadius: 8,
               }}
               onPress={() => {
-                if (v === 'LoginList') {
+                if (v === 'Config') {
+                  navigation.push('Config', {});
+                } else if (v === 'LoginList') {
                   navigation.push('LoginList', {});
                 } else if (v === 'Login') {
                   navigation.push('Login', {});
@@ -43,20 +45,10 @@ export function TopMenuScreen(props: Props) {
                   navigation.push('ConversationList', {});
                 } else if (v === 'ContactList') {
                   navigation.push('ContactList', {});
-                } else if (v === 'SearchConversation') {
-                  navigation.push('SearchConversation', {});
-                } else if (v === 'SearchContact') {
-                  navigation.push('SearchContact', {});
                 } else if (v === 'GroupList') {
                   navigation.push('GroupList', {});
-                } else if (v === 'SearchGroup') {
-                  navigation.push('SearchGroup', {});
                 } else if (v === 'GroupParticipantList') {
                   navigation.push('GroupParticipantList', {
-                    params: { groupId: 'xx' },
-                  });
-                } else if (v === 'SearchGroupParticipant') {
-                  navigation.push('SearchGroupParticipant', {
                     params: { groupId: 'xx' },
                   });
                 }

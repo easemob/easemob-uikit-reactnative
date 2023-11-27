@@ -1,5 +1,4 @@
-import { useChatContext } from 'src/chat';
-
+import { useChatContext } from '../../chat';
 import { useFlatList } from '../List';
 import type { ListItemActions, UseFlatListReturn } from '../types';
 import type {

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ChatMessageType } from 'react-native-chat-sdk';
 
 import { ConversationModel, useChatContext } from '../../chat';
+import type { UIKitError } from '../../error';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useFlatList } from '../List';
@@ -149,27 +150,75 @@ export function useConversationList(
     onSetData(dataRef.current);
   };
   const onPin = async (conv: ConversationModel) => {
-    await im.setConversationPin({
-      convId: conv.convId,
-      convType: conv.convType,
-      isPin: !conv.isPinned,
-    });
-    onSetData(dataRef.current);
+    try {
+      const isPinned = !conv.isPinned;
+      let isExist = false;
+      for (const item of dataRef.current) {
+        if (item.data.convId === conv.convId) {
+          item.data.isPinned = isPinned;
+          item.data = { ...item.data };
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist === true) {
+        await im.setConversationPin({
+          convId: conv.convId,
+          convType: conv.convType,
+          isPin: isPinned,
+        });
+        onSetData(dataRef.current);
+      }
+    } catch (error) {
+      console.log('test:zuoyu:onPin', error);
+      im.sendError({ error: error as UIKitError });
+    }
   };
   const onDisturb = async (conv: ConversationModel) => {
-    await im.setConversationSilentMode({
-      convId: conv.convId,
-      convType: conv.convType,
-      doNotDisturb: !conv.doNotDisturb,
-    });
-    onSetData(dataRef.current);
+    try {
+      const isDisturb = !conv.doNotDisturb;
+      let isExist = false;
+      for (const item of dataRef.current) {
+        if (item.data.convId === conv.convId) {
+          item.data.doNotDisturb = isDisturb;
+          item.data = { ...item.data };
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist === true) {
+        await im.setConversationSilentMode({
+          convId: conv.convId,
+          convType: conv.convType,
+          doNotDisturb: isDisturb,
+        });
+        onSetData(dataRef.current);
+      }
+    } catch (error) {
+      im.sendError({ error: error as UIKitError });
+    }
   };
   const onRead = (conv: ConversationModel) => {
-    im.setConversationRead({
-      convId: conv.convId,
-      convType: conv.convType,
-    });
-    onSetData(dataRef.current);
+    try {
+      let isExist = false;
+      for (const item of dataRef.current) {
+        if (item.data.convId === conv.convId) {
+          item.data.unreadMessageCount = 0;
+          item.data = { ...item.data };
+          isExist = true;
+          break;
+        }
+      }
+      if (isExist === true) {
+        im.setConversationRead({
+          convId: conv.convId,
+          convType: conv.convType,
+        });
+        onSetData(dataRef.current);
+      }
+    } catch (error) {
+      im.sendError({ error: error as UIKitError });
+    }
   };
 
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);

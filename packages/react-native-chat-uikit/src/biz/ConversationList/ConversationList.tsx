@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { ListRenderItemInfo, View } from 'react-native';
 
-import { g_not_existed_url } from '../../const';
+import { useChatContext } from '../../chat';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Avatar } from '../Avatar';
@@ -38,11 +40,26 @@ export function ConversationList(props: ConversationListProps) {
     onRequestModalClose,
     alertRef,
   } = useConversationList(props);
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
+  const im = useChatContext();
 
   return (
-    <View style={[containerStyle]}>
+    <View
+      style={[
+        {
+          backgroundColor: getColor('bg'),
+        },
+        containerStyle,
+      ]}
+    >
       <TopNavigationBar
-        Left={<Avatar url={g_not_existed_url} size={24} />}
+        Left={<Avatar url={im.user(im.userId)?.avatarURL} size={24} />}
         Right={TopNavigationBarRight}
         RightProps={{
           onClicked: () => {

@@ -57,9 +57,13 @@ export type UserServiceData = {
    */
   userId: string;
   /**
-   * User nick name. It is very important to set.
+   * User name.
    */
-  nickName?: string;
+  userName: string;
+  /**
+   * User remark.
+   */
+  remark?: string;
   /**
    * User avatar URL.
    */
@@ -69,9 +73,12 @@ export type UserServiceData = {
    */
   gender?: number;
   /**
-   * User custom identify.
+   * User from information.
    */
-  identify?: string;
+  from?: {
+    type: 'friend' | 'group' | 'black';
+    groupId?: string;
+  };
 };
 
 /**
@@ -259,6 +266,10 @@ export interface ConversationServices {
   }): Promise<ConversationModel | undefined>;
   removeConversation(params: { convId: string }): Promise<void>;
   clearAllConversations(): Promise<void>;
+  /**
+   * Set the conversation pin.
+   * @throws {@link UIKitError}
+   */
   setConversationPin(params: {
     convId: string;
     convType: ChatConversationType;
@@ -315,6 +326,10 @@ export interface GroupServices {
   getAllGroupMembers(params: {
     groupId: string;
     onResult: ResultCallback<GroupParticipantModel[]>;
+  }): void;
+  fetchJoinedGroupCount(params: {
+    groupId: string;
+    onResult: ResultCallback<number>;
   }): void;
 }
 
@@ -376,10 +391,10 @@ export interface ChatService
    * @params
    * - userId: User ID.
    * - userToken: User token.
-   * - userNickname: User nickname. It is very important to set.
+   * - userName: User nickname. It is very important to set.
    * - userAvatarURL: User avatar URL.
    * - gender: User gender. [0, 1, 2]
-   * - identify: User identify.
+   * - usePassword: Whether to use password login. If you use password login, you need to set the password. If you use token login, you do not need to set the password.
    * - result: The result after performing the operation. If failed, an error object is returned.
    *
    * @noThrows {@link UIKitError}
@@ -387,10 +402,10 @@ export interface ChatService
   login(params: {
     userId: string;
     userToken: string;
-    userNickname?: string;
+    userName?: string;
     userAvatarURL?: string;
     gender?: number;
-    identify?: string;
+    usePassword?: boolean;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
   /**
@@ -430,6 +445,18 @@ export interface ChatService
    * Get the current logged user ID. If you are not logged in, undefined is returned.
    */
   get userId(): string | undefined;
+
+  /**
+   * Get the user information from memory.
+   * @param userId User ID.
+   */
+  user(userId?: string): UserServiceData | undefined;
+
+  /**
+   * Set the users information to memory.
+   * @params params {@link UserServiceData}
+   */
+  setUser(params: { users: UserServiceData[] }): void;
 
   /**
    * Send a error to the listener.

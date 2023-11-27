@@ -3,6 +3,10 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  Config: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
   Login: {
     option?: {} | undefined;
     params?: {} | undefined;
@@ -55,6 +59,10 @@ export type RootScreenParamsList<
 
 export const SCREEN_LIST: RootParamsList = {
   TopMenu: {
+    option: undefined,
+    params: undefined,
+  },
+  Config: {
     option: undefined,
     params: undefined,
   },

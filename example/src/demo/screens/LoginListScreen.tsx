@@ -72,12 +72,10 @@ export function LoginListScreen(props: Props) {
                 im.login({
                   userId: v.id,
                   userToken: v.token,
-                  userNickname: v.id,
+                  userName: v.id,
                   userAvatarURL:
                     'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/cat-512.png',
                   gender: 1,
-                  identify:
-                    'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678064-star-512.png',
                   result: ({ isOk, error }) => {
                     setS(isOk === true ? 'success' : 'failed');
                     if (error) {

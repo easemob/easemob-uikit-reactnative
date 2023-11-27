@@ -12,11 +12,16 @@ import type { ConversationListItemProps } from './types';
 
 export function ConversationListItem(props: ConversationListItemProps) {
   const { onClicked, onLongPressed, data } = props;
+  console.log('test:zuoyu:ConversationListItem', data.convId, data.isPinned);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
       light: colors.neutral[98],
       dark: colors.neutral[1],
+    },
+    pin_bg: {
+      light: colors.neutral[9],
+      dark: colors.neutral[6],
     },
     t1: {
       light: colors.neutral[1],
@@ -34,7 +39,8 @@ export function ConversationListItem(props: ConversationListItemProps) {
   return (
     <Pressable
       style={{
-        backgroundColor: getColor('bg'),
+        backgroundColor:
+          data.isPinned === true ? getColor('pin_bg') : getColor('bg'),
       }}
       onPress={() => {
         onClicked?.(data);

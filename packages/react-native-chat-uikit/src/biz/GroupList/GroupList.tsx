@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { ListRenderItemInfo, Pressable, View } from 'react-native';
 
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
@@ -26,9 +28,24 @@ export function GroupList(props: GroupListProps) {
     listState,
     onClicked,
   } = useGroupList(props);
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
 
   return (
-    <View style={[{ flexGrow: 1 }, containerStyle]}>
+    <View
+      style={[
+        {
+          flexGrow: 1,
+          backgroundColor: getColor('bg'),
+        },
+        containerStyle,
+      ]}
+    >
       <TopNavigationBar
         Left={
           <Pressable
@@ -36,7 +53,7 @@ export function GroupList(props: GroupListProps) {
             onPress={onBack}
           >
             <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
-            <Text>{'Group ${count}'}</Text>
+            <Text>{'Group List'}</Text>
           </Pressable>
         }
         Right={<View style={{ width: 32, height: 32 }} />}
