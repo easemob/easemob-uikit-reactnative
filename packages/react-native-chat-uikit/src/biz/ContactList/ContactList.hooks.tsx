@@ -178,11 +178,9 @@ export function useContactList(
                     onClicked: onClickedRef.current,
                   } as ContactListItemProps;
                 });
-                console.log('test:zuoyu:getAllContacts:list', list);
                 onSetData(list);
               }
             } else {
-              console.log('test:zuoyu:getAllContacts:error', error);
               if (error) {
                 im.sendError({ error });
               }

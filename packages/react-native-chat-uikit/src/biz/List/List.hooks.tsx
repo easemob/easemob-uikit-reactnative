@@ -76,7 +76,6 @@ export function useListBasic<ItemT>(
     500,
     React.useCallback(
       (keyword: string) => {
-        console.log('test:zuoyu:search:', keyword, propsOnSearch === undefined);
         propsOnSearch?.(keyword);
       },
       [propsOnSearch]

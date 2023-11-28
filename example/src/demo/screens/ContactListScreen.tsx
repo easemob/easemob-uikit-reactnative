@@ -24,7 +24,6 @@ export function ContactListScreen(props: Props) {
           ids: string[];
           result: (data?: DataModel[], error?: UIKitError) => void;
         }) => {
-          console.log('test:zuoyu:onRequestData', params);
           const userIds = params.ids;
           const users = userIds.map((v) => {
             return {

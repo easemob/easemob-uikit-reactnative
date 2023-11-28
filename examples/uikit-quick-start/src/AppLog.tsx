@@ -38,10 +38,8 @@ dlog.handler = async (message?: any, ...optionalParams: any[]) => {
 };
 
 export const LogMemo = React.memo(() => {
-  console.log('test:zuoyu:2');
   const [log, setLog] = React.useState('');
   React.useEffect(() => {
-    console.log('test:zuoyu:1');
     const sub = DeviceEventEmitter.addListener('demo_log', (event) => {
       setLog(event);
     });

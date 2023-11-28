@@ -37,7 +37,6 @@ export function UseSearchGroupParticipant(
             });
           } else {
             if (error) {
-              console.log('test:zuoyu:getAllGroupMembers:error', error);
               im.sendError({ error });
             }
           }

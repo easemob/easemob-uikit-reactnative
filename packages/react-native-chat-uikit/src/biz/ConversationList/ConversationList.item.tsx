@@ -12,7 +12,6 @@ import type { ConversationListItemProps } from './types';
 
 export function ConversationListItem(props: ConversationListItemProps) {
   const { onClicked, onLongPressed, data } = props;
-  console.log('test:zuoyu:ConversationListItem', data.convId, data.isPinned);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {

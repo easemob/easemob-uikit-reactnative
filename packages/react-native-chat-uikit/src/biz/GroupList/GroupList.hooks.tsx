@@ -49,7 +49,6 @@ export function useGroupList(
             }
           } else {
             if (error) {
-              console.log('test:zuoyu:getAllGroups:error', error);
               im.sendError({ error });
             }
           }
@@ -58,9 +57,7 @@ export function useGroupList(
     }
   };
   const onMore = () => {};
-  const onVisibleItems = (items: GroupListItemProps[]) => {
-    console.log('test:zuoyu:onVisibleItems', items);
-  };
+  const onVisibleItems = (_items: GroupListItemProps[]) => {};
 
   return {
     ...flatListProps,

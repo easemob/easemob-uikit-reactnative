@@ -103,7 +103,6 @@ export function Container(props: ContainerProps) {
     palette: palette ?? _palette,
     releaseArea: _releaseArea,
   });
-  console.log('test:zuoyu:t:', _theme === undefined, _palette === undefined);
 
   return (
     <DispatchContextProvider>

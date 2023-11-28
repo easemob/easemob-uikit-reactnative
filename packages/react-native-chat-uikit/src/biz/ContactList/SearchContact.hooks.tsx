@@ -39,7 +39,6 @@ export function useSearchContact(
               setData(list);
             }
           } else {
-            console.log('test:zuoyu:getAllContacts:error', error);
             if (error) {
               im.sendError({ error });
             }

@@ -170,7 +170,6 @@ export function useConversationList(
         onSetData(dataRef.current);
       }
     } catch (error) {
-      console.log('test:zuoyu:onPin', error);
       im.sendError({ error: error as UIKitError });
     }
   };

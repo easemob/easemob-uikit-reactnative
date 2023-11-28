@@ -13,7 +13,6 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ConfigScreen(props: Props) {
   const {} = props;
   const { style } = useThemeContext();
-  console.log('test:zuoyu:ConfigScreen', style);
   const [value, onValueChange] = React.useState(
     style === 'light' ? false : true
   );

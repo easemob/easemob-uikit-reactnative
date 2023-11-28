@@ -418,7 +418,7 @@ export abstract class ChatServiceImpl
     try {
       const map = new Map<string, ChatConversation>();
       const isFinished = await this._convStorage?.isFinishedForFetchList();
-      console.log('test:zuoyu:', isFinished);
+      console.log('test:zuoyu:1', isFinished);
       if (isFinished === true) {
         const list = await this.client.chatManager.getAllConversations();
         const ret = list.map(async (v) => {
@@ -951,7 +951,6 @@ export abstract class ChatServiceImpl
           });
         },
         onError: (e) => {
-          console.log('test:zuoyu:getmember:error:', e);
           params.onResult({ isOk: false, error: e });
         },
       });

@@ -35,7 +35,6 @@ export function useSearchGroup(
             }
           } else {
             if (error) {
-              console.log('test:zuoyu:getAllGroups:error', error);
               im.sendError({ error });
             }
           }

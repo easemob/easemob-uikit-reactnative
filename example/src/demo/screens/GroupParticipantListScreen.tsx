@@ -31,7 +31,6 @@ export function GroupParticipantListScreen(props: Props) {
           ids: string[];
           result: (data?: DataModel[], error?: UIKitError) => void;
         }) => {
-          console.log('test:zuoyu:onRequestData', params);
           params?.result([{ id: 'xx', name: 'test', avatar: '' }]);
         }}
         onRequestMultiData={(params: {
@@ -41,7 +40,6 @@ export function GroupParticipantListScreen(props: Props) {
             error?: UIKitError
           ) => void;
         }) => {
-          console.log('test:zuoyu:onRequestMultiData', params);
           const userIds = params.ids.get('user');
           const users = userIds?.map<DataModel>((id) => {
             return {
