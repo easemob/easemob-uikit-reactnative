@@ -13,54 +13,40 @@ export function useAlert(props: AlertProps) {
   const { cornerRadius } = usePaletteContext();
   const { getBorderRadius } = useGetStyleProps();
   const getButton = (
-    buttons: Omit<AlertButton, 'isPreferred'>[] | undefined,
+    buttons: AlertButton[] | undefined,
     onRequestModalClose: () => void
   ) => {
     const count = buttons?.length ?? 1;
+    const _getButton = (
+      Button: typeof BorderButton | typeof CmnButton,
+      v: AlertButton,
+      i: number
+    ) => {
+      return (
+        <Button
+          key={i}
+          sizesType={'large'}
+          radiusType={'large'}
+          contentType={'only-text'}
+          onPress={() => v.onPress?.(v.text)}
+          text={v.text}
+          style={{
+            height: 48,
+            width: count === 2 ? '48%' : '100%',
+            borderRadius: getBorderRadius({
+              height: 48,
+              crt: corner.input,
+              cr: cornerRadius,
+              style: containerStyle,
+            }),
+          }}
+        />
+      );
+    };
     if (buttons) {
       const list = buttons.map((v, i) => {
-        if (i < count - 1) {
-          return (
-            <BorderButton
-              key={i}
-              sizesType={'large'}
-              radiusType={'large'}
-              contentType={'only-text'}
-              onPress={() => v.onPress?.(v.text)}
-              text={v.text}
-              style={{
-                height: 48,
-                width: count === 2 ? '48%' : '100%',
-                borderRadius: getBorderRadius({
-                  height: 48,
-                  crt: corner.input,
-                  cr: cornerRadius,
-                  style: containerStyle,
-                }),
-              }}
-            />
-          );
-        }
-        return (
-          <CmnButton
-            key={i}
-            sizesType={'large'}
-            radiusType={'large'}
-            contentType={'only-text'}
-            onPress={() => v.onPress?.(v.text)}
-            text={v.text}
-            style={{
-              height: 48,
-              width: count === 2 ? '48%' : '100%',
-              borderRadius: getBorderRadius({
-                height: 48,
-                crt: corner.input,
-                cr: cornerRadius,
-                style: containerStyle,
-              }),
-            }}
-          />
-        );
+        const Button = v.isPreferred !== true ? BorderButton : CmnButton;
+        return _getButton(Button, v, i);
       });
       const ret = [] as JSX.Element[];
       if (count < 3) {
@@ -89,24 +75,11 @@ export function useAlert(props: AlertProps) {
     }
 
     return [
-      <CmnButton
-        key={99}
-        sizesType={'large'}
-        radiusType={'large'}
-        contentType={'only-text'}
-        onPress={onRequestModalClose}
-        text={'Confirm'}
-        style={{
-          height: 48,
-          width: count === 2 ? '48%' : '100%',
-          borderRadius: getBorderRadius({
-            height: 48,
-            crt: corner.input,
-            cr: cornerRadius,
-            style: containerStyle,
-          }),
-        }}
-      />,
+      _getButton(
+        CmnButton,
+        { text: 'Confirm', onPress: onRequestModalClose },
+        99
+      ),
     ];
   };
   const onUpdate = (props: AlertProps) => {
