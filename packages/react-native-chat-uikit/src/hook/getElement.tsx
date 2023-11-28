@@ -3,7 +3,7 @@ import * as React from 'react';
 export function getElement<Props = any>(
   Component?:
     | React.ComponentType<Props>
-    | React.ReactElement
+    | React.ReactElement<Props>
     | null
     | undefined,
   ComponentProps?: Props
@@ -15,7 +15,10 @@ export function getElement<Props = any>(
   if (isValid) {
     return Component as React.ReactElement;
   } else if (typeof Component === 'function' || typeof Component === 'object') {
-    const C = Component as any; // !!! error TS2604: JSX element type 'Component' does not have any construct or call signatures.
+    const C = Component as React.ComponentType;
+    if (ComponentProps === undefined || ComponentProps === null) {
+      return (<C />) as React.ReactElement;
+    }
     return (<C {...ComponentProps} />) as React.ReactElement;
   }
   return null;
