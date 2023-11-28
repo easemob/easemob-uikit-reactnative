@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { ChatMessageType } from 'react-native-chat-sdk';
 
-import { ConversationModel, useChatContext } from '../../chat';
+import {
+  ChatServiceListener,
+  ConversationModel,
+  useChatContext,
+  useChatListener,
+} from '../../chat';
 import type { UIKitError } from '../../error';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
@@ -117,6 +122,7 @@ export function useConversationList(
           onResult: (result) => {
             const { isOk, value: list, error } = result;
             if (isOk && list) {
+              dataRef.current = [];
               if (list) {
                 for (const conv of list) {
                   dataRef.current.push({
@@ -286,6 +292,44 @@ export function useConversationList(
       ],
     });
   };
+
+  useChatListener({
+    onMessagesReceived: (msgs) => {
+      for (const msg of msgs) {
+        for (const item of dataRef.current) {
+          if (item.data.convId === msg.conversationId) {
+            item.data.lastMessage = msg;
+            if (item.data.doNotDisturb !== true) {
+              if (item.data.unreadMessageCount === undefined) {
+                item.data.unreadMessageCount = 0;
+              }
+              item.data.unreadMessageCount += 1;
+            }
+            item.data = { ...item.data };
+            break;
+          }
+        }
+      }
+      onSetData(dataRef.current);
+    },
+    onMessagesRecalled: async (msgs) => {
+      for (const msg of msgs) {
+        for (const item of dataRef.current) {
+          if (item.data.convId === msg.conversationId) {
+            // todo: update last message
+            break;
+          }
+        }
+      }
+      onSetData(dataRef.current);
+    },
+    onConversationsUpdate: () => {
+      init();
+    },
+    onMessageContentChanged: () => {
+      // todo:
+    },
+  } as ChatServiceListener);
 
   return {
     listType,

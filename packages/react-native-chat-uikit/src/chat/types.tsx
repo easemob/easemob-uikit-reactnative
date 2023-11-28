@@ -48,6 +48,8 @@ export type DataModel = {
   avatar: string;
 };
 
+export type UserFrom = 'friend' | 'group' | 'black' | 'others';
+
 /**
  * The type of user data.
  */
@@ -76,7 +78,7 @@ export type UserServiceData = {
    * User from information.
    */
   from?: {
-    type: 'friend' | 'group' | 'black';
+    type: UserFrom;
     groupId?: string;
   };
 };
@@ -317,6 +319,10 @@ export interface ContactServices {
     }) => void
   ): void;
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void;
+  getContact(params: {
+    userId: string;
+    onResult: ResultCallback<ContactModel | undefined>;
+  }): void;
   addNewContact(params: {
     useId: string;
     reason?: string;
@@ -336,6 +342,17 @@ export interface ContactServices {
   }): void;
 }
 
+export interface UserServices {
+  getUserInfo(params: {
+    userId: string;
+    onResult: ResultCallback<UserServiceData | undefined>;
+  }): void;
+  getUsersInfo(params: {
+    userIds: string[];
+    onResult: ResultCallback<UserServiceData[]>;
+  }): void;
+}
+
 export interface GroupServices {
   setGroupOnRequestData<DataT>(
     callback?: (params: {
@@ -352,12 +369,17 @@ export interface GroupServices {
     groupId: string;
     onResult: ResultCallback<number>;
   }): void;
+  getGroupInfo(params: {
+    groupId: string;
+    onResult: ResultCallback<GroupModel>;
+  }): void;
 }
 
 export interface ChatService
   extends ConversationServices,
     ContactServices,
-    GroupServices {
+    GroupServices,
+    UserServices {
   /**
    * Add listener.
    * @param listener {@link ChatServiceListener}

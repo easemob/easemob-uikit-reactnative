@@ -13,11 +13,12 @@ import {
   ChatPresence,
   ChatPushRemindType,
   ChatSilentModeParamType,
+  ChatUserInfo,
 } from 'react-native-chat-sdk';
 
 import { ConversationStorage } from '../db/storage';
 import { ErrorCode, UIKitError } from '../error';
-import { asyncTask } from '../utils';
+import { asyncTask, mergeObjects } from '../utils';
 import {
   ChatEventType,
   ChatService,
@@ -31,6 +32,7 @@ import {
   GroupModel,
   GroupParticipantModel,
   ResultCallback,
+  UserFrom,
   UserServiceData,
 } from './types';
 
@@ -316,6 +318,23 @@ export abstract class ChatServiceImpl
         extra: this._fromChatError(error),
       });
     }
+  }
+
+  toUserData(
+    user: ChatUserInfo,
+    from?: {
+      type: UserFrom;
+      groupId?: string;
+    }
+  ): UserServiceData {
+    return {
+      userId: user.userId,
+      userName: user.nickName ?? user.userId,
+      remark: user.nickName ?? user.userId,
+      avatarURL: user.avatarUrl,
+      gender: user.gender,
+      from: from,
+    };
   }
 
   async toUIConversation(conv: ChatConversation): Promise<ConversationModel> {
@@ -835,6 +854,55 @@ export abstract class ChatServiceImpl
     });
   }
 
+  getContact(params: {
+    userId: string;
+    onResult: ResultCallback<ContactModel | undefined>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.contactManager.getContact(params.userId),
+      event: 'getContact',
+      onFinished: async (value) => {
+        if (value) {
+          const contact = await this.toUIContact(value);
+          this._contactList.set(contact.userId, contact);
+
+          if (this._contactDataRequestCallback) {
+            this._contactDataRequestCallback({
+              ids: [params.userId],
+              result: async (data?: DataModel[], error?: UIKitError) => {
+                if (data) {
+                  data.forEach((value) => {
+                    const contact = this._contactList.get(value.id);
+                    if (contact) {
+                      contact.nickName = value.name;
+                      contact.avatar = value.avatar;
+                    }
+                  });
+                }
+
+                params.onResult({
+                  isOk: true,
+                  value: contact,
+                  error,
+                });
+              },
+            });
+          } else {
+            params.onResult({
+              isOk: true,
+              value: contact,
+            });
+          }
+        } else {
+          params.onResult({
+            isOk: true,
+            value: undefined,
+          });
+        }
+      },
+    });
+  }
+
   addNewContact(params: {
     useId: string;
     reason?: string;
@@ -1038,11 +1106,151 @@ export abstract class ChatServiceImpl
       },
     });
   }
+
+  getGroupInfo(params: {
+    groupId: string;
+    onResult: ResultCallback<GroupModel>;
+  }): void {
+    if (this._groupList.has(params.groupId)) {
+      params.onResult({
+        isOk: true,
+        value: this._groupList.get(params.groupId),
+      });
+      return;
+    }
+    this.tryCatch({
+      promise: this.client.groupManager.getGroupWithId(params.groupId),
+      event: 'getGroupInfo',
+      onFinished: async (value) => {
+        if (value === undefined) {
+          this.tryCatch({
+            promise: this.client.groupManager.fetchGroupInfoFromServer(
+              params.groupId
+            ),
+            event: 'getGroupInfo',
+            onFinished: async (value) => {
+              const localGroup = this._groupList.get(params.groupId);
+              if (value) {
+                const group = await this.toUIGroup(value);
+                this._groupList.set(
+                  group.groupId,
+                  mergeObjects(group, localGroup ?? ({} as any))
+                );
+                params.onResult({
+                  isOk: true,
+                  value: group,
+                });
+              } else {
+                params.onResult({
+                  isOk: true,
+                  value: localGroup,
+                });
+              }
+            },
+          });
+        } else {
+          const localGroup = this._groupList.get(params.groupId);
+          if (value) {
+            const group = await this.toUIGroup(value);
+            this._groupList.set(
+              group.groupId,
+              mergeObjects(group, localGroup ?? ({} as any))
+            );
+            params.onResult({
+              isOk: true,
+              value: group,
+            });
+          } else {
+            params.onResult({
+              isOk: true,
+              value: localGroup,
+            });
+          }
+        }
+      },
+    });
+  }
+
+  getUserInfo(params: {
+    userId: string;
+    onResult: ResultCallback<UserServiceData | undefined>;
+  }): void {
+    if (this._userList.has(params.userId)) {
+      params.onResult({
+        isOk: true,
+        value: this._userList.get(params.userId),
+      });
+      return;
+    }
+    this.tryCatch({
+      promise: this.client.userManager.fetchUserInfoById([params.userId]),
+      event: 'getUserInfo',
+      onFinished: async (value) => {
+        if (value) {
+          Array.from(value.values()).forEach(async (v) => {
+            const user = this.toUserData(v);
+            const localUser = this._userList.get(v.userId);
+            this._userList.set(
+              user.userId,
+              mergeObjects<UserServiceData>(user, localUser ?? ({} as any))
+            );
+          });
+          if (this._userList.has(params.userId)) {
+            params.onResult({
+              isOk: true,
+              value: this._userList.get(params.userId),
+            });
+          } else {
+            params.onResult({
+              isOk: true,
+            });
+          }
+        } else {
+          params.onResult({
+            isOk: true,
+          });
+        }
+      },
+    });
+  }
+  getUsersInfo(params: {
+    userIds: string[];
+    onResult: ResultCallback<UserServiceData[]>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.userManager.fetchUserInfoById(params.userIds),
+      event: 'getUsersInfo',
+      onFinished: async (value) => {
+        if (value) {
+          Array.from(value.values()).forEach(async (v) => {
+            const user = this.toUserData(v);
+            const localUser = this._userList.get(v.userId);
+            this._userList.set(
+              user.userId,
+              mergeObjects<UserServiceData>(user, localUser ?? ({} as any))
+            );
+          });
+          params.onResult({
+            isOk: true,
+            value: params.userIds
+              .map((v) => this._userList.get(v))
+              .filter((v) => v !== undefined) as UserServiceData[],
+          });
+        } else {
+          params.onResult({
+            isOk: true,
+            value: [],
+          });
+        }
+      },
+    });
+  }
 }
 
 export class ChatServicePrivateImpl extends ChatServiceImpl {
   constructor() {
     super();
+    this._initListener();
   }
 
   _initListener() {

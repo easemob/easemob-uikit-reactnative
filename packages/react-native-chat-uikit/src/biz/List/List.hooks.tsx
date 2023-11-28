@@ -165,9 +165,7 @@ export function useSectionList<
     /**
      * @description The data source of the reference.
      */
-    sectionsRef: React.MutableRefObject<
-      ReadonlyArray<SectionListData<ItemT, SectionT>>
-    >;
+    sectionsRef: React.MutableRefObject<SectionListData<ItemT, SectionT>[]>;
     /**
      * @description The set data source of the list.
      */
@@ -180,9 +178,7 @@ export function useSectionList<
     setIndexTitles: React.Dispatch<React.SetStateAction<string[]>>;
   } {
   const basics = useListBasic({ ...props, listType: 'FlatList' });
-  const sectionsRef = React.useRef<
-    ReadonlyArray<SectionListData<ItemT, SectionT>>
-  >([]);
+  const sectionsRef = React.useRef<SectionListData<ItemT, SectionT>[]>([]);
   const [sections, setSection] = React.useState<
     ReadonlyArray<SectionListData<ItemT, SectionT>>
   >([]);

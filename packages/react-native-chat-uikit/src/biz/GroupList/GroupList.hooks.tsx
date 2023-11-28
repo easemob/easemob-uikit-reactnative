@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { GroupModel, useChatContext } from '../../chat';
+import { GroupModel, useChatContext, useChatListener } from '../../chat';
 import { useFlatList } from '../List';
 import type { ListItemActions, UseFlatListReturn } from '../types';
 import type { GroupListItemProps, UseGroupListProps } from './types';
@@ -58,6 +58,63 @@ export function useGroupList(
   };
   const onMore = () => {};
   const onVisibleItems = (_items: GroupListItemProps[]) => {};
+
+  const removeGroup = (groupId: string) => {
+    dataRef.current = dataRef.current.filter((item) => item.id !== groupId);
+    setData([...dataRef.current]);
+  };
+  const addGroup = (params: {
+    groupId: string;
+    inviter: string;
+    inviteMessage?: string;
+  }) => {
+    const isExisted = dataRef.current.find(
+      (item) => item.id === params.groupId
+    );
+    if (isExisted === undefined) {
+      im.getGroupInfo({
+        groupId: params.groupId,
+        onResult: (result) => {
+          const { isOk, value, error } = result;
+          if (isOk === true) {
+            if (value) {
+              dataRef.current = [
+                {
+                  id: value.groupId,
+                  data: value,
+                  onClicked: onClickedCallback,
+                },
+                ...dataRef.current,
+              ];
+              setData([...dataRef.current]);
+            } else {
+              // todo: ???
+            }
+          } else {
+            if (error) {
+              im.sendError({ error });
+            }
+          }
+        },
+      });
+    }
+  };
+
+  useChatListener({
+    onMemberRemoved: (params: { groupId: string; groupName?: string }) => {
+      removeGroup(params.groupId);
+    },
+    onDestroyed: (params: { groupId: string; groupName?: string }) => {
+      removeGroup(params.groupId);
+    },
+    onAutoAcceptInvitation: (params: {
+      groupId: string;
+      inviter: string;
+      inviteMessage?: string;
+    }) => {
+      addGroup({ ...params });
+    },
+  });
 
   return {
     ...flatListProps,

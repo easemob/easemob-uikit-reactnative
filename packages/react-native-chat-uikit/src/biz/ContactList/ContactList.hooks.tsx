@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ContactModel, useChatContext } from '../../chat';
+import { ContactModel, useChatContext, useChatListener } from '../../chat';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useSectionList } from '../List';
@@ -37,6 +37,7 @@ export function useContactList(
     isSort,
     setIndexTitles,
     setSection,
+    sectionsRef,
     ref: sectionListRef,
     isAutoLoad,
   } = sectionProps;
@@ -112,8 +113,105 @@ export function useContactList(
         sortList[index]?.data.push(item);
       }
     });
-    setIndexTitles(sortList.map((item) => item.indexTitle));
-    setSection(sortList);
+    sectionsRef.current = sortList;
+    setIndexTitles(sectionsRef.current.map((item) => item.indexTitle));
+    setSection(sectionsRef.current);
+  };
+
+  const addContact = (data: ContactModel) => {
+    const list = sectionsRef.current
+      .map((section) => {
+        return section.data.map((item) => {
+          return item;
+        });
+      })
+      .flat();
+    const isExisted = list.find((item) => {
+      if (item.id === data.userId) {
+        item.section = {
+          ...item.section,
+          ...data,
+        };
+        return true;
+      }
+      return false;
+    });
+    if (isExisted === undefined) {
+      list.push({
+        id: data.userId,
+        section: data,
+        onClicked: onClickedRef.current,
+      } as ContactListItemProps);
+    }
+    onSetData(list);
+
+    // const isExisted = sectionsRef.current.find((section) => {
+    //   const index = section.data.findIndex((item) => {
+    //     return item.section.userId === data.userId;
+    //   });
+    //   if (index !== -1) {
+    //     section.data[index]!.section = {
+    //       ...section.data[index]!.section,
+    //       ...data,
+    //     };
+    //     return true;
+    //   }
+    //   return false;
+    // });
+    // if (isExisted === undefined) {
+    //   //添加到指定位置
+    //   const first = data.nickName?.[0]?.toLocaleUpperCase();
+    //   const indexTitle = first
+    //     ? g_index_alphabet_range.includes(first)
+    //       ? first
+    //       : '#'
+    //     : '#';
+    //   const index = sectionsRef.current.findIndex((section) => {
+    //     return section.indexTitle === indexTitle;
+    //   });
+    //   if (index === -1) {
+    //     sectionsRef.current.push({
+    //       indexTitle: indexTitle,
+    //       data: [
+    //         {
+    //           id: data.userId,
+    //           section: data,
+    //           onClicked: onClickedRef.current,
+    //         } as ContactListItemProps,
+    //       ],
+    //     });
+    //   } else {
+    //     const dataTemp = [
+    //       ...sectionsRef.current[index]!.data,
+    //       {
+    //         id: data.userId,
+    //         section: data,
+    //         onClicked: onClickedRef.current,
+    //       } as ContactListItemProps,
+    //     ];
+
+    //     if (isSort === true) {
+    //       dataTemp.sort(onSort);
+    //     }
+
+    //     sectionsRef.current[index]!.data = dataTemp;
+
+    //     _setSection();
+    //   }
+    // } else {
+    //   //更新
+    // }
+  };
+
+  const removeContact = (userId: string) => {
+    sectionsRef.current = sectionsRef.current.filter((section) => {
+      section.data = section.data.filter((item) => {
+        return item.section.userId !== userId;
+      });
+      return section.data.length > 0;
+    });
+    setIndexTitles(sectionsRef.current.map((item) => item.indexTitle));
+    setSection(sectionsRef.current);
   };
 
   const onIndexSelected = (index: number) => {
@@ -233,14 +331,24 @@ export function useContactList(
                     {
                       text: 'Cancel',
                       onPress: () => {
-                        // todo:
+                        alertRef.current?.close?.();
                       },
                     },
                     {
                       text: 'Add',
                       isPreferred: true,
-                      onPress: () => {
-                        // todo:
+                      onPress: (value) => {
+                        alertRef.current?.close?.();
+                        if (value) {
+                          im.addNewContact({
+                            useId: value.trim(),
+                            reason: 'add contact',
+                            onResult: (result) => {
+                              // todo:
+                              console.log('test:zuoyu:addNewContact:', result);
+                            },
+                          });
+                        }
                       },
                     },
                   ],
@@ -266,6 +374,27 @@ export function useContactList(
   };
 
   const alertRef = React.useRef<AlertRef>(null);
+
+  useChatListener({
+    onContactAdded: async (userId: string) => {
+      im.getContact({
+        userId,
+        onResult: (result) => {
+          if (result.isOk === true && result.value) {
+            addContact(result.value);
+          }
+        },
+      });
+    },
+    onContactDeleted: async (userId: string) => {
+      im.removeContact({
+        userId,
+        onResult: () => {
+          removeContact(userId);
+        },
+      });
+    },
+  });
 
   return {
     ...sectionProps,
