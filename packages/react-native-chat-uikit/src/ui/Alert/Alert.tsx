@@ -19,7 +19,6 @@ export type AlertRef = {
 export const Alert = React.forwardRef<AlertRef, AlertProps>(
   (props: AlertProps, ref?: React.ForwardedRef<AlertRef>) => {
     const { containerStyle } = props;
-    const [value, onChangeText] = React.useState('');
     const modalRef = React.useRef<ModalRef>({} as any);
     const { width: winWidth } = useWindowDimensions();
     const { style: themeStyle, cornerRadius: corner } = useThemeContext();
@@ -43,7 +42,13 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
     const onRequestModalClose = React.useCallback(() => {
       modalRef?.current?.startHide?.();
     }, []);
-    const { props: updatedProps, getButton, onUpdate } = useAlert(props);
+    const {
+      props: updatedProps,
+      getButton,
+      onUpdate,
+      value,
+      onChangeText,
+    } = useAlert(props);
     const { buttons, message, title, supportInput = false } = updatedProps;
     const count = buttons?.length ?? 1;
     if (count > 3) {

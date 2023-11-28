@@ -11,6 +11,7 @@ import {
 import { g_not_existed_url } from '../../const';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
+import { Alert } from '../../ui/Alert';
 import { IconButton } from '../../ui/Button';
 import { SectionListFactory } from '../../ui/SectionList';
 import { Text } from '../../ui/Text';
@@ -61,6 +62,7 @@ export function ContactList(props: ContactListProps) {
     onRequestModalClose,
     menuRef,
     onShowMenu,
+    alertRef,
   } = useContactList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -241,6 +243,7 @@ export function ContactList(props: ContactListProps) {
         ref={menuRef}
         onRequestModalClose={onRequestModalClose}
       />
+      <Alert ref={alertRef} />
     </View>
   );
 }

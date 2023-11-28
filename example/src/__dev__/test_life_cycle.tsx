@@ -88,6 +88,21 @@ export function CL2() {
   );
 }
 
+export class CL3 extends React.PureComponent<{ id: string }> {
+  constructor(props: { id: string }) {
+    super(props);
+  }
+  render(): React.ReactNode {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={{ width: 100, height: 100, backgroundColor: 'red' }}>
+          <Text>{'test'}</Text>
+        </View>
+      </View>
+    );
+  }
+}
+
 export default function TestLifeCycle() {
   return (
     <Container appKey={''}>

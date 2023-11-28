@@ -2,6 +2,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 
 import type { IconNameType } from '../../assets';
 import type { ContactModel, DataModel } from '../../chat';
+import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import type { DefaultComponentModel } from '../ListSearch';
 import type {
@@ -52,6 +53,9 @@ export type ContactListProps = ListRequestProps<DataModel> &
     onSearch?: () => void;
     onCancel?: () => void;
     onNavigationBarMoreActions?: () => void;
+    onNewConversation?: () => void;
+    onNewGroup?: () => void;
+    onNewContact?: () => void;
   };
 
 export type SearchContactProps = ListRequestProps<DataModel> &
@@ -70,6 +74,7 @@ export type UseContactListReturn = {
   onRequestModalClose: () => void;
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   onShowMenu?: () => void;
+  alertRef: React.RefObject<AlertRef>;
 };
 
 export type ContactSearchModel = ContactModel & DefaultComponentModel;

@@ -317,6 +317,23 @@ export interface ContactServices {
     }) => void
   ): void;
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void;
+  addNewContact(params: {
+    useId: string;
+    reason?: string;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void;
+  removeContact(params: {
+    userId: string;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void;
+  acceptInvitation(params: {
+    userId: string;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void;
+  declineInvitation(params: {
+    userId: string;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void;
 }
 
 export interface GroupServices {

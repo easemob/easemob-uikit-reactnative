@@ -277,6 +277,7 @@ export function useConversationList(
         },
         {
           text: 'Remove',
+          isPreferred: true,
           onPress: () => {
             alertRef.current?.close?.();
             onRemove(conv);

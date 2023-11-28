@@ -8,6 +8,7 @@ import type { AlertProps } from './types';
 
 export function useAlert(props: AlertProps) {
   const { containerStyle } = props;
+  const [value, onChangeText] = React.useState('');
   const [_props, setProps] = React.useState(props);
   const { cornerRadius: corner } = useThemeContext();
   const { cornerRadius } = usePaletteContext();
@@ -28,7 +29,7 @@ export function useAlert(props: AlertProps) {
           sizesType={'large'}
           radiusType={'large'}
           contentType={'only-text'}
-          onPress={() => v.onPress?.(v.text)}
+          onPress={() => v.onPress?.(value)}
           text={v.text}
           style={{
             height: 48,
@@ -89,5 +90,7 @@ export function useAlert(props: AlertProps) {
     getButton,
     onUpdate,
     props: _props,
+    value,
+    onChangeText,
   };
 }

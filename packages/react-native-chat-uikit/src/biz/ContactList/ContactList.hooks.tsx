@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { ContactModel, useChatContext } from '../../chat';
+import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
@@ -16,7 +17,15 @@ export function useContactList(
   props: ContactListProps
 ): UseSectionListReturn<ContactListItemProps, IndexModel, ListIndexProps> &
   UseContactListReturn {
-  const { onClicked, testMode, onRequestData, onSort: propsOnSort } = props;
+  const {
+    onClicked,
+    testMode,
+    onRequestData,
+    onSort: propsOnSort,
+    onNewContact,
+    onNewConversation,
+    onNewGroup,
+  } = props;
   const sectionProps = useSectionList<
     ContactListItemProps,
     IndexModel,
@@ -199,12 +208,12 @@ export function useContactList(
     menuRef.current?.startShowWithProps?.({
       initItems: [
         {
-          name: 'Create New Request',
+          name: 'New Conversation',
           isHigh: false,
           icon: 'bubble_fill',
           onClicked: () => {
-            // todo: create new request
             menuRef.current?.startHide?.();
+            onNewConversation?.();
           },
         },
         {
@@ -212,8 +221,32 @@ export function useContactList(
           isHigh: false,
           icon: 'person_add_fill',
           onClicked: () => {
-            // todo: add contact
-            menuRef.current?.startHide?.();
+            menuRef.current?.startHide?.(() => {
+              if (onNewContact) {
+                onNewContact();
+              } else {
+                alertRef.current?.alertWithInit?.({
+                  title: 'Add Contact',
+                  message: 'Add contacts by user ID.',
+                  supportInput: true,
+                  buttons: [
+                    {
+                      text: 'Cancel',
+                      onPress: () => {
+                        // todo:
+                      },
+                    },
+                    {
+                      text: 'Add',
+                      isPreferred: true,
+                      onPress: () => {
+                        // todo:
+                      },
+                    },
+                  ],
+                });
+              }
+            });
           },
         },
         {
@@ -221,8 +254,8 @@ export function useContactList(
           isHigh: false,
           icon: 'person_double_fill',
           onClicked: () => {
-            // todo: create group
             menuRef.current?.startHide?.();
+            onNewGroup?.();
           },
         },
       ],
@@ -232,11 +265,14 @@ export function useContactList(
     });
   };
 
+  const alertRef = React.useRef<AlertRef>(null);
+
   return {
     ...sectionProps,
     onIndexSelected,
     onRequestModalClose,
     menuRef,
     onShowMenu,
+    alertRef,
   };
 }

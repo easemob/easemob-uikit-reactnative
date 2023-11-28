@@ -835,6 +835,67 @@ export abstract class ChatServiceImpl
     });
   }
 
+  addNewContact(params: {
+    useId: string;
+    reason?: string;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.contactManager.addContact(
+        params.useId,
+        params.reason
+      ),
+      event: 'addContact',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  removeContact(params: {
+    userId: string;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.contactManager.deleteContact(params.userId),
+      event: 'deleteContact',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  acceptInvitation(params: {
+    userId: string;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.contactManager.acceptInvitation(params.userId),
+      event: 'acceptInvitation',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  declineInvitation(params: {
+    userId: string;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.contactManager.declineInvitation(params.userId),
+      event: 'declineInvitation',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+
   getAllGroups(params: { onResult: ResultCallback<GroupModel[]> }): void {
     if (this._groupList.size > 0) {
       params.onResult({

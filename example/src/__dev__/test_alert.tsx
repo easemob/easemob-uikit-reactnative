@@ -39,7 +39,9 @@ export function Alert1() {
               },
               {
                 text: 'confirm2',
-                onPress: () => {
+                isPreferred: true,
+                onPress: (value) => {
+                  console.log('test:zuoyu:', value);
                   ref.current.close();
                 },
               },
