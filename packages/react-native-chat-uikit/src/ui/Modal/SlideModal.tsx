@@ -4,15 +4,20 @@
 import * as React from 'react';
 import {
   Animated,
+  GestureResponderEvent,
   Modal as RNModal,
+  PanResponderGestureState,
+  Platform,
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
 
 import { g_mask_color } from '../../const';
+import { KeyboardAvoidingView } from '../Keyboard';
 import { DefaultSlide, SlideProps } from './DefaultSlide';
 import type { ModalProps, ModalRef } from './Modal';
 import { useModalAnimation, useModalPanResponder } from './Modal.hooks';
+import type { ModalAnimationType } from './types';
 
 /**
  * Why not use properties to show and hide components? The method of using attributes has been tried, but this method requires more renderings (the function needs to be executed multiple times internally).
@@ -41,6 +46,9 @@ export function SlideModal(props: SlideModalProps) {
     onMoveShouldSetPanResponder,
     onFinished,
     Slide,
+    keyboardVerticalOffset,
+    enableSlideComponent = true,
+    enabledKeyboardAdjust = false,
     ...others
   } = props;
   const { translateY, startShow, startHide, backgroundOpacity } =
@@ -98,30 +106,37 @@ export function SlideModal(props: SlideModalProps) {
           ]}
         />
       </TouchableWithoutFeedback>
-      <Animated.View
-        style={[
-          {
-            flex: 1,
-            justifyContent: 'flex-end',
-            opacity: modalAnimationType === 'fade' ? backgroundOpacity : 1,
-            transform: [{ translateY: translateY }],
-          },
-          modalStyle,
-        ]}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={keyboardVerticalOffset}
         pointerEvents={'box-none'}
+        enabled={enabledKeyboardAdjust}
+        style={{ flex: 1 }}
       >
-        <_Slide
-          modalType={'modal'}
-          {...useModalPanResponder({
-            type: modalAnimationType,
-            translateY,
-            startShow,
-            onRequestModalClose,
-            onMoveShouldSetPanResponder,
-          }).panHandlers}
-        />
+        <Animated.View
+          style={[
+            {
+              flex: 1,
+              justifyContent: 'flex-end',
+              opacity: modalAnimationType === 'fade' ? backgroundOpacity : 1,
+              transform: [{ translateY: translateY }],
+            },
+            modalStyle,
+          ]}
+          pointerEvents={'box-none'}
+        >
+          <SlideComponent
+            Slide={_Slide}
+            modalAnimationType={modalAnimationType}
+            translateY={translateY}
+            startShow={startShow}
+            startHide={startHide}
+            onRequestModalClose={onRequestModalClose}
+            onMoveShouldSetPanResponder={onMoveShouldSetPanResponder}
+            enableSlideComponent={enableSlideComponent}
+          />
 
-        {/* <View
+          {/* <View
           style={[
             {
               height: 100,
@@ -152,7 +167,7 @@ export function SlideModal(props: SlideModalProps) {
           />
         </View> */}
 
-        {/* <Pressable>
+          {/* <Pressable>
           <View
             style={[
               {
@@ -185,15 +200,53 @@ export function SlideModal(props: SlideModalProps) {
           </View>
         </Pressable> */}
 
-        {/*
+          {/*
           // NOTE: https://github.com/facebook/react-native/issues/14295
           // Subcomponents need to be wrapped in `Pressable` to support sliding operations.
           // example: <Pressable>{children}</Pressable>
           // Note: Nested `FlatList` components are not supported, otherwise the list cannot be scrolled. It is recommended to use the `SimuModal` component.
          */}
-        {children}
-        {/* <Pressable>{children}</Pressable> */}
-      </Animated.View>
+          {children}
+          {/* <Pressable>{children}</Pressable> */}
+        </Animated.View>
+      </KeyboardAvoidingView>
     </RNModal>
   );
 }
+
+const SlideComponent = (props: {
+  Slide: React.ComponentType<SlideProps> | ((props: SlideProps) => JSX.Element);
+  enableSlideComponent: boolean;
+  modalAnimationType: ModalAnimationType;
+  translateY: Animated.Value;
+  startShow: (callback?: Animated.EndCallback | undefined) => void;
+  startHide: (callback?: Animated.EndCallback | undefined) => void;
+  onRequestModalClose: () => void;
+  onMoveShouldSetPanResponder:
+    | ((
+        e: GestureResponderEvent,
+        gestureState: PanResponderGestureState
+      ) => boolean)
+    | undefined;
+}) => {
+  const {
+    Slide,
+    modalAnimationType,
+    translateY,
+    startShow,
+    onRequestModalClose,
+    onMoveShouldSetPanResponder,
+    enableSlideComponent,
+  } = props;
+  const panHandlers = useModalPanResponder({
+    type: modalAnimationType,
+    translateY: translateY,
+    startShow: startShow,
+    onRequestModalClose: onRequestModalClose,
+    onMoveShouldSetPanResponder: onMoveShouldSetPanResponder,
+  }).panHandlers;
+
+  return enableSlideComponent === true ? (
+    <Slide modalType={'modal'} {...panHandlers} />
+  ) : null;
+};

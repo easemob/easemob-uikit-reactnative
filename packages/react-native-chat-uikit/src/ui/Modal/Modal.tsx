@@ -56,9 +56,14 @@ export type ModalProps = Omit<
       ) => boolean)
     | undefined;
   onFinished?: () => void;
+  keyboardVerticalOffset?: number | undefined;
+  enableSlideComponent?: boolean | undefined;
+  enabledKeyboardAdjust?: boolean | undefined;
 };
 
 /**
+ * @deprecated 2023-11-28 Please use `SlideModal` instead.
+ *
  * Mainly solves the effect problem of native modal component `RNModal` display mask.
  */
 export function Modal(props: ModalProps) {

@@ -4,7 +4,7 @@ import { useWindowDimensions, View } from 'react-native';
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
-import { Modal, ModalRef } from '../Modal';
+import { SlideModal, SlideModalRef } from '../Modal';
 import { Text } from '../Text';
 import { TextInput } from '../TextInput';
 import { useAlert } from './Alert.hooks';
@@ -19,7 +19,7 @@ export type AlertRef = {
 export const Alert = React.forwardRef<AlertRef, AlertProps>(
   (props: AlertProps, ref?: React.ForwardedRef<AlertRef>) => {
     const { containerStyle } = props;
-    const modalRef = React.useRef<ModalRef>({} as any);
+    const modalRef = React.useRef<SlideModalRef>({} as any);
     const { width: winWidth } = useWindowDimensions();
     const { style: themeStyle, cornerRadius: corner } = useThemeContext();
     const { colors, cornerRadius } = usePaletteContext();
@@ -86,11 +86,16 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
     }, [updatedProps]);
 
     return (
-      <Modal
+      <SlideModal
         propsRef={modalRef}
         modalAnimationType={'fade'}
         onRequestModalClose={onRequestModalClose}
-        modalStyle={{ justifyContent: 'center', alignItems: 'center' }}
+        modalStyle={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        enableSlideComponent={false}
+        enabledKeyboardAdjust={true}
       >
         <View
           style={[
@@ -184,7 +189,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
             </View>
           </View>
         </View>
-      </Modal>
+      </SlideModal>
     );
   }
 );
