@@ -303,6 +303,10 @@ export interface ConversationServices {
     convId: string,
     convType: ChatConversationType
   ): Promise<ChatMessage | undefined>;
+  getDoNotDisturb(
+    convId: string,
+    convType: ChatConversationType
+  ): Promise<boolean>;
 }
 
 export interface ContactServices {

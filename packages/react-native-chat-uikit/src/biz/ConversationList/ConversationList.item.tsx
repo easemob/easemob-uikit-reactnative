@@ -5,13 +5,14 @@ import { getMessageFormatTime, getMessageSnapshot } from '../../chat/utils';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { Badges } from '../Badges';
 import type { ConversationListItemProps } from './types';
 
 export function ConversationListItem(props: ConversationListItemProps) {
   const { onClicked, onLongPressed, data } = props;
+  console.log('test:zuoyu:ConversationListItem:props', props.data);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -58,23 +59,31 @@ export function ConversationListItem(props: ConversationListItemProps) {
         }}
       >
         <Avatar url={data.convAvatar} size={50} />
-        <View style={{ flexDirection: 'column', flexGrow: 1, paddingLeft: 12 }}>
+        <View
+          style={{
+            flexDirection: 'column',
+            flexGrow: 1,
+            paddingLeft: 12,
+            maxWidth: '65%',
+          }}
+        >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text paletteType={'title'} textType={'medium'}>
+            <SingleLineText paletteType={'title'} textType={'medium'}>
               {data.convName ?? data.convId}
-            </Text>
+            </SingleLineText>
             {data.doNotDisturb === true ? (
               <Icon name={'bell_slash'} style={{ height: 20, width: 20 }} />
             ) : null}
           </View>
-          <Text paletteType={'body'} textType={'medium'}>
+          <SingleLineText paletteType={'body'} textType={'medium'}>
             {getMessageSnapshot(data.lastMessage)}
-          </Text>
+          </SingleLineText>
         </View>
+        <View style={{ flex: 1 }} />
         <View style={{ flexDirection: 'column' }}>
-          <Text paletteType={'body'} textType={'small'}>
+          <SingleLineText paletteType={'body'} textType={'small'}>
             {getMessageFormatTime(data.lastMessage, data.pinnedTime)}
-          </Text>
+          </SingleLineText>
           <View
             style={{
               justifyContent: 'center',
@@ -91,7 +100,10 @@ export function ConversationListItem(props: ConversationListItemProps) {
               <Badges
                 count={
                   data.doNotDisturb === true
-                    ? undefined
+                    ? data.unreadMessageCount === undefined ||
+                      data.unreadMessageCount === 0
+                      ? 0
+                      : undefined
                     : data.unreadMessageCount
                 }
               />

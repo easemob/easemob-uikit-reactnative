@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { GroupParticipantListItemProps } from './types';
 
@@ -44,14 +44,14 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
         }}
       >
         <Avatar url={data.avatar} size={40} />
-        <View style={{ flexGrow: 1, paddingLeft: 12 }}>
-          <Text
+        <View style={{ flexGrow: 1, paddingLeft: 12, maxWidth: '80%' }}>
+          <SingleLineText
             paletteType={'title'}
             textType={'medium'}
             style={{ color: getColor('t1') }}
           >
             {data.name ?? data.id}
-          </Text>
+          </SingleLineText>
         </View>
       </View>
       <View

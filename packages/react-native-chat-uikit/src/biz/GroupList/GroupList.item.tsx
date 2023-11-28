@@ -3,7 +3,7 @@ import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { GroupListItemProps } from './types';
 
@@ -47,12 +47,19 @@ export function GroupListItem(props: GroupListItemProps) {
         }}
       >
         <Avatar url={data.groupAvatar} size={50} />
-        <View style={{ flexDirection: 'column', flexGrow: 1, paddingLeft: 12 }}>
-          <Text paletteType={'title'} textType={'medium'}>
+        <View
+          style={{
+            flexDirection: 'column',
+            flexGrow: 1,
+            paddingLeft: 12,
+            maxWidth: '80%',
+          }}
+        >
+          <SingleLineText paletteType={'title'} textType={'medium'}>
             {data.groupName === undefined || data.groupName.length === 0
               ? data.groupId
               : data.groupName}
-          </Text>
+          </SingleLineText>
         </View>
       </View>
 

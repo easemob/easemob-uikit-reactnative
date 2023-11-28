@@ -4,7 +4,7 @@ import { SectionListData, View } from 'react-native';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { IndexModel } from '../ListIndex';
 import { ListItem } from '../ListItem';
@@ -47,14 +47,14 @@ export function ContactListItem(props: ContactListItemProps) {
         }}
       >
         <Avatar url={section.avatar} size={40} />
-        <View style={{ flexGrow: 1, paddingLeft: 12 }}>
-          <Text
+        <View style={{ flexGrow: 1, paddingLeft: 12, maxWidth: '80%' }}>
+          <SingleLineText
             paletteType={'title'}
             textType={'medium'}
             style={{ color: getColor('t1') }}
           >
             {section.nickName}
-          </Text>
+          </SingleLineText>
         </View>
       </View>
       <View
@@ -110,9 +110,9 @@ export function ContactListItemHeader(
           },
         ]}
       >
-        <Text paletteType={'title'} textType={'small'}>
+        <SingleLineText paletteType={'title'} textType={'small'}>
           {indexTitle}
-        </Text>
+        </SingleLineText>
       </View>
     </View>
   );
@@ -137,9 +137,9 @@ export function ContactItem(props: ContactItemProps) {
             </>
           ) : null}
 
-          <Text paletteType={'title'} textType={'medium'}>
+          <SingleLineText paletteType={'title'} textType={'medium'}>
             {name}
-          </Text>
+          </SingleLineText>
         </View>
       }
       RightText={count}

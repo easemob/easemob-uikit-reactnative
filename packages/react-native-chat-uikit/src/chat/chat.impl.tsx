@@ -323,18 +323,7 @@ export abstract class ChatServiceImpl
       if (conv.ext?.doNotDisturb !== undefined) {
         return conv.ext.doNotDisturb as boolean;
       } else {
-        const ret =
-          await this.client.pushManager.fetchSilentModeForConversation({
-            convId: conv.convId,
-            convType: conv.convType,
-          });
-        if (ret) {
-          return (
-            ret?.remindType === ChatPushRemindType.MENTION_ONLY ||
-            ret?.remindType === ChatPushRemindType.NONE
-          );
-        }
-        return false;
+        return await this.getDoNotDisturb(conv.convId, conv.convType);
       }
     };
     return {
@@ -765,6 +754,25 @@ export abstract class ChatServiceImpl
       promise: this.client.chatManager.getLatestMessage(convId, convType),
       event: 'getLastMessage',
     });
+  }
+  async getDoNotDisturb(
+    convId: string,
+    convType: ChatConversationType
+  ): Promise<boolean> {
+    const ret = await this.tryCatchSync({
+      promise: this.client.pushManager.fetchSilentModeForConversation({
+        convId,
+        convType,
+      }),
+      event: 'getDoNotDisturb',
+    });
+    if (ret) {
+      return (
+        ret?.remindType === ChatPushRemindType.MENTION_ONLY ||
+        ret?.remindType === ChatPushRemindType.NONE
+      );
+    }
+    return false;
   }
 
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void {
