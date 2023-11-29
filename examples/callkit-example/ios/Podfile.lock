@@ -471,12 +471,12 @@ PODS:
     - React-Core
   - react-native-cameraroll (5.6.0):
     - React-Core
-  - react-native-chat-callkit (1.0.0):
+  - react-native-chat-callkit (1.0.1):
     - React-Core
   - react-native-chat-sdk (1.1.2):
     - HyphenateChat (= 4.0.2)
     - React-Core
-  - react-native-chat-uikit (1.0.0):
+  - react-native-chat-uikit (1.0.3):
     - React-Core
   - react-native-create-thumbnail (1.6.4):
     - React-Core
@@ -703,7 +703,7 @@ DEPENDENCIES:
   - react-native-chat-callkit (from `../../../packages/react-native-chat-callkit`)
   - react-native-chat-sdk (from `../../../node_modules/react-native-chat-sdk`)
   - react-native-chat-uikit (from `../../../packages/react-native-chat-uikit`)
-  - react-native-create-thumbnail (from `../../../node_modules/react-native-create-thumbnail`)
+  - "react-native-create-thumbnail (from `../../../node_modules/@easemob/react-native-create-thumbnail`)"
   - react-native-document-picker (from `../../../node_modules/react-native-document-picker`)
   - react-native-get-random-values (from `../../../node_modules/react-native-get-random-values`)
   - react-native-image-picker (from `../../../node_modules/react-native-image-picker`)
@@ -878,7 +878,7 @@ EXTERNAL SOURCES:
   react-native-chat-uikit:
     :path: "../../../packages/react-native-chat-uikit"
   react-native-create-thumbnail:
-    :path: "../../../node_modules/react-native-create-thumbnail"
+    :path: "../../../node_modules/@easemob/react-native-create-thumbnail"
   react-native-document-picker:
     :path: "../../../node_modules/react-native-document-picker"
   react-native-get-random-values:
@@ -1021,9 +1021,9 @@ SPEC CHECKSUMS:
   react-native-agora: e7232cc1502d4ba176bc74450e9b030f6e51a7d8
   react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-cameraroll: 755bcc628148a90a7c9cf3f817a252be3a601bc5
-  react-native-chat-callkit: cf3f8c52b206d62000b681c372d83d1262035070
+  react-native-chat-callkit: 7fd09500b8dabf1279517aab08c846073a201888
   react-native-chat-sdk: 06f9401ef05b0e9cfe3ac659cfe83904baa50b75
-  react-native-chat-uikit: 1c02d927b5987fbb208e8671cf8a566faafa96df
+  react-native-chat-uikit: 94ca77de381923cf0bf95b45e26f7acde037ad96
   react-native-create-thumbnail: e022bcdcba8a0b4529a50d3fa1a832ec921be39d
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
@@ -1065,4 +1065,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 7520e8360f5a168d545dc504ac990b519ebf0c87
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.14.2

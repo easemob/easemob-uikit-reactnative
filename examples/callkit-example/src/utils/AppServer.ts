@@ -1,13 +1,20 @@
 import { ChatClient } from 'react-native-chat-sdk';
 
+let agoraDomain = '';
+let loginDomain = '';
+try {
+  agoraDomain = require('../env').agoraDomain;
+  loginDomain = require('../env').loginDomain;
+  console.log('test:callkit:', agoraDomain, loginDomain);
+} catch (error) {
+  console.warn('test:callkit:', error);
+}
+
 export class AppServerClient {
-  private static _rtcTokenUrl: string =
-    'https://a1.easemob.com/token/rtcToken/v1';
-  private static _mapUrl: string = 'https://a1.easemob.com/channel/mapper';
-  private static _regUrl: string =
-    'https://a41.easemob.com/app/chat/user/register';
-  private static _tokenUrl: string =
-    'https://a41.easemob.com/app/chat/user/login';
+  private static _rtcTokenUrl: string = `https://${loginDomain}/token/rtcToken/v1`;
+  private static _mapUrl: string = `https://${loginDomain}/channel/mapper`;
+  private static _regUrl: string = `https://${agoraDomain}/app/chat/user/register`;
+  private static _tokenUrl: string = `https://${agoraDomain}/app/chat/user/login`;
 
   protected _(): void {}
   private static async req(params: {
@@ -127,6 +134,7 @@ export class AppServerClient {
       } else if (params.from === 'registerAccount') {
         url = AppServerClient._regUrl;
       }
+      console.log('test:zuoyu:url:', url);
       const response = await fetch(url, {
         method: 'POST',
         headers: {

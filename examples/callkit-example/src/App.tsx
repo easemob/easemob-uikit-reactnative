@@ -71,6 +71,7 @@ let appKey = '';
 let agoraAppId = '';
 let fcmSenderId: string | undefined;
 let accountType: 'easemob' | 'agora' | undefined;
+let agoraDomain = '';
 
 try {
   const env = require('./env');
@@ -79,8 +80,10 @@ try {
   agoraAppId = env.agoraAppId;
   fcmSenderId = env.fcmSenderId;
   accountType = env.accountType;
+  agoraDomain = env.agoraDomain;
+  console.log('test:callkit:', appKey, agoraAppId, fcmSenderId, accountType);
 } catch (e) {
-  console.warn('test:', e);
+  console.warn('test:callkit:', e);
 }
 
 console.log('DEV:', __DEV__);
@@ -158,8 +161,8 @@ export default function App() {
     }
 
     if (accountType !== 'easemob') {
-      AppServerClient.rtcTokenUrl = 'http://a41.easemob.com/token/rtc/channel';
-      AppServerClient.mapUrl = 'http://a41.easemob.com/agora/channel/mapper';
+      AppServerClient.rtcTokenUrl = `http://${agoraDomain}/token/rtc/channel`;
+      AppServerClient.mapUrl = `http://${agoraDomain}agora/channel/mapper`;
     }
 
     if ((await checkFCMPermission()) === false) {

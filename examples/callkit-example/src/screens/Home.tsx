@@ -191,7 +191,7 @@ const ContactList = React.memo((props: ContactListProps) => {
         setData([...data]);
       })
       .catch((error) => {
-        console.log('test:', error);
+        console.warn('test:', error);
       });
   }, [client.contactManager, data]);
   React.useEffect(() => {
