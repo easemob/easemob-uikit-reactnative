@@ -16,7 +16,7 @@ export function CL() {
     <SafeAreaView>
       <ContactList
         testMode={'only-ui'}
-        type={'new-contact-list'}
+        contactType={'new-contact-list'}
         containerStyle={{
           height: '100%',
           // backgroundColor: 'yellow',
@@ -55,7 +55,7 @@ export function CL3() {
   return (
     <SafeAreaView>
       <SearchContact
-        type={'contact-list'}
+        searchType={'contact-list'}
         onCancel={() => {
           console.log('test:zuoyu:cancel');
         }}
@@ -90,7 +90,7 @@ export function BodyPagesT({
   // };
   return (
     <ContactList
-      type={'contact-list'}
+      contactType={'contact-list'}
       containerStyle={{
         // height: '100%',
         backgroundColor: 'green',

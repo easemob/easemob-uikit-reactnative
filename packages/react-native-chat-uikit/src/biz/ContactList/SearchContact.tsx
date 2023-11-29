@@ -5,7 +5,7 @@ import { useSearchContact } from './SearchContact.hooks';
 import type { ContactSearchModel, SearchContactProps } from './types';
 
 export function SearchContact(props: SearchContactProps) {
-  const { onCancel, containerStyle } = props;
+  const { onCancel, containerStyle, searchType } = props;
   const { data, onClicked } = useSearchContact(props);
 
   return (
@@ -13,7 +13,7 @@ export function SearchContact(props: SearchContactProps) {
       initData={data}
       onCancel={onCancel}
       containerStyle={containerStyle}
-      searchType={'contact-list'}
+      searchType={searchType}
       onClicked={onClicked}
     />
   );

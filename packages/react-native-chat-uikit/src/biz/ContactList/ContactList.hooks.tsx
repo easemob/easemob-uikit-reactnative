@@ -25,6 +25,7 @@ export function useContactList(
     onNewContact,
     onNewConversation,
     onNewGroup,
+    contactType,
   } = props;
   const sectionProps = useSectionList<
     ContactListItemProps,
@@ -119,6 +120,9 @@ export function useContactList(
   };
 
   const addContact = (data: ContactModel) => {
+    if (contactType !== 'contact-list') {
+      return;
+    }
     const list = sectionsRef.current
       .map((section) => {
         return section.data.map((item) => {
@@ -204,6 +208,9 @@ export function useContactList(
   };
 
   const removeContact = (userId: string) => {
+    if (contactType !== 'contact-list') {
+      return;
+    }
     sectionsRef.current = sectionsRef.current.filter((section) => {
       section.data = section.data.filter((item) => {
         return item.section.userId !== userId;
@@ -303,6 +310,9 @@ export function useContactList(
     menuRef.current?.startHide?.();
   };
   const onShowMenu = () => {
+    if (contactType !== 'contact-list') {
+      return;
+    }
     menuRef.current?.startShowWithProps?.({
       initItems: [
         {
@@ -377,6 +387,7 @@ export function useContactList(
 
   useChatListener({
     onContactAdded: async (userId: string) => {
+      console.log('test:zuoyu:onContactAdded', userId);
       im.getContact({
         userId,
         onResult: (result) => {

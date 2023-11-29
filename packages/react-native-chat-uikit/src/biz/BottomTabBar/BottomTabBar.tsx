@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useWindowDimensions, View } from 'react-native';
-import type { IconNameType } from 'src/assets';
 
+import type { IconNameType } from '../../assets';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';

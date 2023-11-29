@@ -8,14 +8,8 @@ import type {
   ListRequestProps,
   PropsWithError,
   PropsWithTest,
+  SearchType,
 } from '../types';
-
-export type SearchType =
-  | 'conv-list'
-  | 'contact-list'
-  | 'group-list'
-  | 'group-member-list'
-  | 'request-list';
 
 export type DefaultComponentModel = {
   id: string;

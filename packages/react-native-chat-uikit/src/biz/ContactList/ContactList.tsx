@@ -39,7 +39,7 @@ const SectionList = SectionListFactory<ContactListItemProps, IndexModel>();
 export function ContactList(props: ContactListProps) {
   const {
     containerStyle,
-    type,
+    contactType,
     isHasGroupList,
     isHasNewRequest,
     onContextMenuMoreActions,
@@ -73,7 +73,7 @@ export function ContactList(props: ContactListProps) {
   });
 
   const navigationBar = () => {
-    if (type === 'contact-list') {
+    if (contactType === 'contact-list') {
       return (
         <TopNavigationBar
           Left={
@@ -103,7 +103,7 @@ export function ContactList(props: ContactListProps) {
           containerStyle={{ paddingHorizontal: 12 }}
         />
       );
-    } else if (type === 'new-contact-list') {
+    } else if (contactType === 'new-contact-list') {
       return (
         <TopNavigationBar
           Left={
@@ -129,12 +129,12 @@ export function ContactList(props: ContactListProps) {
   };
 
   const items = () => {
-    if (type === 'contact-list') {
+    if (contactType === 'contact-list') {
       return (
         <>
           {isHasNewRequest === true ? (
             <ContactItem
-              name={'new invite'}
+              name={'new request'}
               count={<Badges count={0} />}
               hasArrow={true}
               onClicked={() => {
@@ -144,7 +144,7 @@ export function ContactList(props: ContactListProps) {
           ) : null}
           {isHasGroupList === true ? (
             <ContactItem
-              name={'group'}
+              name={'group list'}
               count={
                 <Text paletteType={'label'} textType={'medium'}>
                   {'0'}
@@ -159,7 +159,7 @@ export function ContactList(props: ContactListProps) {
           {onContextMenuMoreActions}
         </>
       );
-    } else if (type === 'new-contact-list') {
+    } else if (contactType === 'new-contact-list') {
       return null;
     } else {
       return null;

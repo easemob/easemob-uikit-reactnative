@@ -24,6 +24,8 @@ import {
   GroupParticipantListScreen,
   LoginListScreen,
   LoginScreen,
+  NewConversationScreen,
+  NewRequestScreen,
   SearchContactScreen,
   SearchConversationScreen,
   SearchGroupScreen,
@@ -117,7 +119,7 @@ export function App() {
         isDevMode={env.isDevMode}
         palette={palette}
         theme={theme}
-        language={'fr'}
+        language={'en'}
         fontFamily={fontFamily}
         onInitialized={() => {
           console.log('dev:onInitialized:');
@@ -236,6 +238,20 @@ export function App() {
                 headerShown: false,
               }}
               component={GroupParticipantListScreen}
+            />
+            <Root.Screen
+              name={'NewConversation'}
+              options={{
+                headerShown: false,
+              }}
+              component={NewConversationScreen}
+            />
+            <Root.Screen
+              name={'NewRequests'}
+              options={{
+                headerShown: false,
+              }}
+              component={NewRequestScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

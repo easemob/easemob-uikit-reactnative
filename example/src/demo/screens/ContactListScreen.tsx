@@ -16,6 +16,7 @@ export function ContactListScreen(props: Props) {
       }}
     >
       <ContactList
+        contactType={'contact-list'}
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
@@ -36,9 +37,10 @@ export function ContactListScreen(props: Props) {
           params.result(users ?? []);
         }}
         onSearch={() => {
-          navigation.navigate('SearchContact', {});
+          navigation.navigate('SearchContact', {
+            params: { searchType: 'contact-list' },
+          });
         }}
-        type={'contact-list'}
       />
     </SafeAreaView>
   );

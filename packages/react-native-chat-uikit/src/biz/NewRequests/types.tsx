@@ -1,20 +1,36 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
-import type { DataModel } from '../../chat';
-import type { ListRequestProps, PropsWithError, PropsWithTest } from '../types';
-export type NewRequestsPageProps = ListRequestProps<DataModel> &
-  PropsWithTest &
-  PropsWithError & {
-    containerStyle?: StyleProp<ViewStyle>;
-  };
+import type { DataModel, NewRequestModel } from '../../chat';
+import type {
+  ListItemActions,
+  ListItemProps,
+  ListItemRequestProps,
+  ListRequestProps,
+  PropsWithError,
+  PropsWithTest,
+} from '../types';
+
 export type NewRequestsProps = ListRequestProps<DataModel> &
   PropsWithTest &
-  PropsWithError & {
+  PropsWithError &
+  Omit<
+    ListItemActions<NewRequestModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > & {
     containerStyle?: StyleProp<ViewStyle>;
+    onButtonClicked?: (data?: NewRequestModel | undefined) => void;
+    onSort?: (
+      prevProps: NewRequestsItemProps,
+      nextProps: NewRequestsItemProps
+    ) => number;
   };
-export type SearchNewRequestProps<DataT> = ListRequestProps<DataT> &
-  PropsWithTest &
-  PropsWithError & {
-    containerStyle?: StyleProp<ViewStyle>;
-    onCancel?: () => void;
+export type UseNewRequestsProps = NewRequestsProps;
+export type NewRequestsItemProps = ListItemProps &
+  ListItemRequestProps<DataModel> &
+  Omit<
+    ListItemActions<NewRequestModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > & {
+    data: NewRequestModel;
+    onButtonClicked?: (data?: NewRequestModel | undefined) => void;
   };

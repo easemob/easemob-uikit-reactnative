@@ -82,7 +82,6 @@ export function useGroupList(
                 {
                   id: value.groupId,
                   data: value,
-                  onClicked: onClickedCallback,
                 },
                 ...dataRef.current,
               ];

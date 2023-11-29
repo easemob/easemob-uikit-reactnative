@@ -8,10 +8,12 @@ import {
   ChatMessage,
   ChatMessageReactionEvent,
   ChatMessageThreadEvent,
+  ChatMessageType,
   ChatMultiDeviceEvent,
   ChatOptions,
   ChatPresence,
   ChatPushRemindType,
+  ChatSearchDirection,
   ChatSilentModeParamType,
   ChatUserInfo,
 } from 'react-native-chat-sdk';
@@ -19,6 +21,7 @@ import {
 import { ConversationStorage } from '../db/storage';
 import { ErrorCode, UIKitError } from '../error';
 import { asyncTask, mergeObjects } from '../utils';
+import { RequestList } from './requestList';
 import {
   ChatEventType,
   ChatService,
@@ -47,6 +50,7 @@ export abstract class ChatServiceImpl
   _contactList: Map<string, ContactModel>;
   _groupList: Map<string, GroupModel>;
   _groupMemberList: Map<string, Map<string, GroupParticipantModel>>;
+  _request: RequestList;
   _convDataRequestCallback?: (params: {
     ids: Map<DataModelType, string[]>;
     result: (
@@ -74,11 +78,14 @@ export abstract class ChatServiceImpl
     this._contactList = new Map();
     this._groupList = new Map();
     this._groupMemberList = new Map();
+    this._request = new RequestList(this);
   }
 
   destructor() {
     this._convStorage?.destructor();
     this._reset();
+    this._request.destructor();
+    this._request = undefined as any;
   }
 
   _reset(): void {
@@ -213,6 +220,7 @@ export abstract class ChatServiceImpl
       await this.client.logout();
       params.result?.({ isOk: true });
       this._user = undefined;
+      this._reset();
     } catch (error) {
       params.result?.({
         isOk: false,
@@ -271,6 +279,10 @@ export abstract class ChatServiceImpl
     this._listeners.forEach((v) => {
       asyncTask(() => v.onFinished?.(params));
     });
+  }
+
+  get requestList(): RequestList {
+    return this._request;
   }
 
   tryCatch<T>(params: {
@@ -906,7 +918,7 @@ export abstract class ChatServiceImpl
   addNewContact(params: {
     useId: string;
     reason?: string;
-    onResult: ResultCallback<ContactModel[]>;
+    onResult: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.contactManager.addContact(
@@ -923,7 +935,7 @@ export abstract class ChatServiceImpl
   }
   removeContact(params: {
     userId: string;
-    onResult: ResultCallback<ContactModel[]>;
+    onResult: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.contactManager.deleteContact(params.userId),
@@ -937,7 +949,7 @@ export abstract class ChatServiceImpl
   }
   acceptInvitation(params: {
     userId: string;
-    onResult: ResultCallback<ContactModel[]>;
+    onResult: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.contactManager.acceptInvitation(params.userId),
@@ -951,7 +963,7 @@ export abstract class ChatServiceImpl
   }
   declineInvitation(params: {
     userId: string;
-    onResult: ResultCallback<ContactModel[]>;
+    onResult: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.contactManager.declineInvitation(params.userId),
@@ -1242,6 +1254,81 @@ export abstract class ChatServiceImpl
             value: [],
           });
         }
+      },
+    });
+  }
+
+  insertMessage(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.insertMessage(params.message),
+      event: 'insertMessage',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  updateMessage(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.updateMessage(params.message),
+      event: 'updateMessage',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+
+  removeMessage(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.deleteMessage(
+        params.message.conversationId,
+        params.message.chatType as number as ChatConversationType,
+        params.message.msgId
+      ),
+      event: 'removeMessage',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+
+  getNewRequestList(params: {
+    convId: string;
+    convType: ChatConversationType;
+    timestamp?: number;
+    pageSize?: number;
+    direction?: ChatSearchDirection;
+    onResult: ResultCallback<ChatMessage[]>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.getMessagesWithMsgType(
+        params.convId,
+        params.convType,
+        ChatMessageType.CUSTOM,
+        params.direction,
+        params.timestamp,
+        params.pageSize
+      ),
+      event: 'getNewRequestList',
+      onFinished: async (value) => {
+        params.onResult({
+          isOk: true,
+          value: value,
+        });
       },
     });
   }

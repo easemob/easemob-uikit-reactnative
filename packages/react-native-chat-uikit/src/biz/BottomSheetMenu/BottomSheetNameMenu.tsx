@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import type { IconNameType } from 'src/assets';
 
+import type { IconNameType } from '../../assets';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';

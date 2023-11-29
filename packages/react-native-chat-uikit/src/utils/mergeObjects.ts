@@ -1,4 +1,4 @@
-import type { PartialDeep } from 'src/types';
+import type { PartialDeep } from '../types';
 
 export function mergeObjects<T extends Object>(
   part: PartialDeep<T>,

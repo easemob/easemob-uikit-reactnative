@@ -10,6 +10,7 @@ export * from './biz/GiftIcon';
 export * from './biz/GroupList';
 export * from './biz/GroupParticipantList';
 export * from './biz/ListIndex';
+export * from './biz/NewRequests';
 export * from './biz/Placeholder';
 export * from './biz/SlideListItem';
 export * from './biz/TopNavigationBar';

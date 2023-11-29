@@ -51,6 +51,10 @@ export function TopMenuScreen(props: Props) {
                   navigation.push('GroupParticipantList', {
                     params: { groupId: 'xx' },
                   });
+                } else if (v === 'NewConversation') {
+                  navigation.push('NewConversation', { params: {} });
+                } else if (v === 'NewRequests') {
+                  navigation.push('NewRequests', { params: {} });
                 }
               }}
             >

@@ -1,78 +1,131 @@
 import * as React from 'react';
-import type { ViewabilityConfig, ViewToken } from 'react-native';
 
-import { useDelayExecTask } from '../../hook';
-import type { ListState, UseFlatListReturn, UseListReturn } from '../types';
-import type { NewRequestsItemProps } from './NewRequests.item';
+import { NewRequestModel, useChatContext } from '../../chat';
+import { useLifecycle } from '../../hook';
+import { seqId } from '../../utils';
+import { useFlatList } from '../List';
+import type { ListItemActions, UseFlatListReturn } from '../types';
+import type { NewRequestsItemProps, UseNewRequestsProps } from './types';
 
-export type useNewRequestsApiProps = {};
-export function useNewRequestsApi(
-  props: useNewRequestsApiProps
-): UseFlatListReturn<NewRequestsItemProps> & UseListReturn {
-  const {} = props;
-  const [data, _setData] = React.useState<ReadonlyArray<NewRequestsItemProps>>([
-    { id: '1' },
-  ]);
-  const listType = React.useRef<'FlatList' | 'SectionList'>('FlatList').current;
-  const loadType = React.useRef<'once' | 'multiple'>('once').current;
-  const [listState, _setListState] = React.useState<ListState>('normal');
-  const isLoadAll = React.useRef(true).current;
-  const isShowAfterLoaded = React.useRef(true).current;
-  const isVisibleUpdate = React.useRef(false).current;
-  const isAutoUpdate = React.useRef(false).current;
-  const isEventUpdate = React.useRef(true).current;
-  const enableRefresh = React.useRef(false).current;
-  const enableMore = React.useRef(false).current;
-  const [refreshing, setRefreshing] = React.useState(false);
-  const ListItem: React.ComponentType<NewRequestsItemProps> = () => null;
-
-  const viewabilityConfigRef = React.useRef<ViewabilityConfig>({
-    // minimumViewTime: 1000,
-    viewAreaCoveragePercentThreshold: 50,
-    itemVisiblePercentThreshold: 50,
-    waitForInteraction: false,
+export function useNewRequests(
+  props: UseNewRequestsProps
+): UseFlatListReturn<NewRequestsItemProps> &
+  Omit<
+    ListItemActions<NewRequestModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > & {
+    onButtonClicked?: (data?: NewRequestModel | undefined) => void;
+  } {
+  const { onClicked, onButtonClicked, testMode, onSort: propsOnSort } = props;
+  const flatListProps = useFlatList<NewRequestsItemProps>({
+    listState: 'normal',
+    onInit: () => init(),
   });
-  const { delayExecTask: onViewableItemsChanged } = useDelayExecTask(
-    500,
-    React.useCallback(
-      (_info: {
-        viewableItems: Array<ViewToken>;
-        changed: Array<ViewToken>;
-      }) => {},
-      []
-    )
+  const { setData, dataRef } = flatListProps;
+  const im = useChatContext();
+
+  const onClickedCallback = React.useCallback(
+    (data?: NewRequestModel | undefined) => {
+      if (onClicked) {
+        onClicked(data);
+      } else {
+        // todo: goto new friend info page.
+      }
+    },
+    [onClicked]
   );
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1000);
+  const onButtonClickedCallback = React.useCallback(
+    (data?: NewRequestModel | undefined) => {
+      if (onButtonClicked) {
+        onButtonClicked(data);
+      } else {
+        // todo: accept invite. no have reject.
+        if (data) {
+          im.acceptInvitation({
+            userId: data.id,
+            onResult: () => {
+              data.state === 'accepted';
+              im.requestList.removeRequest(data);
+            },
+          });
+        }
+      }
+    },
+    [im, onButtonClicked]
+  );
+
+  useLifecycle((state) => {
+    if (state === 'load') {
+      im.requestList.addListener('newRequests', {
+        onNewRequestListChanged: (list) => {
+          dataRef.current = list.map((item) => {
+            return {
+              id: seqId('_$new_request').toString(),
+              data: item,
+            };
+          });
+          dataRef.current.sort(onSort);
+          setData([...dataRef.current]);
+        },
+      });
+    }
+  });
+
+  const init = async () => {
+    if (testMode === 'only-ui') {
+    } else {
+      const state = await im.loginState();
+      if (state === 'logged') {
+        im.requestList.getRequestList({
+          onResult: (result) => {
+            if (result.isOk && result.value) {
+              dataRef.current = result.value.map((item) => {
+                return {
+                  id: seqId('_$new_request').toString(),
+                  data: item,
+                };
+              });
+              dataRef.current.sort(onSort);
+              setData([...dataRef.current]);
+            }
+          },
+        });
+      }
+    }
   };
-  const onMore = () => {};
-  const sort: (
+
+  const onSort = (
     prevProps: NewRequestsItemProps,
     nextProps: NewRequestsItemProps
-  ) => boolean = () => true;
+  ): number => {
+    if (propsOnSort) {
+      return propsOnSort(prevProps, nextProps);
+    } else {
+      return sortRequest(prevProps, nextProps);
+    }
+  };
+
+  const sortRequest = (
+    prevProps: NewRequestsItemProps,
+    nextProps: NewRequestsItemProps
+  ): number => {
+    const prevTimestamp = prevProps.data.msg?.localTime;
+    const nextTimestamp = nextProps.data.msg?.localTime;
+    if (prevTimestamp !== undefined && nextTimestamp !== undefined) {
+      return prevTimestamp === nextTimestamp
+        ? 0
+        : prevTimestamp < nextTimestamp
+        ? 1
+        : -1;
+    } else {
+      return 0;
+    }
+  };
 
   return {
-    data,
-    listState,
-    listType,
-    onRefresh: enableRefresh === true ? onRefresh : undefined,
-    onMore: enableMore === true ? onMore : undefined,
-    isLoadAll,
-    isShowAfterLoaded,
-    loadType,
-    isVisibleUpdate,
-    isAutoUpdate,
-    isEventUpdate,
-    ListItem,
-    sort,
-    refreshing: enableRefresh === true ? refreshing : undefined,
-    viewabilityConfig:
-      isVisibleUpdate === true ? viewabilityConfigRef.current : undefined,
-    onViewableItemsChanged:
-      isVisibleUpdate === true ? onViewableItemsChanged : undefined,
+    ...flatListProps,
+    onClicked: onClickedCallback,
+    onButtonClicked: onButtonClickedCallback,
   };
 }

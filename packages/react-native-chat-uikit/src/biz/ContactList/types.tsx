@@ -6,12 +6,14 @@ import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import type { DefaultComponentModel } from '../ListSearch';
 import type {
+  ContactType,
   ListItemActions,
   ListItemProps,
   ListItemRequestProps,
   ListRequestProps,
   PropsWithError,
   PropsWithTest,
+  SearchType,
 } from '../types';
 
 export type ContactItemProps = {
@@ -21,9 +23,6 @@ export type ContactItemProps = {
   hasArrow?: boolean;
   onClicked?: () => void;
 };
-
-export type ContactType = 'contact-list' | 'new-contact-list';
-export type ContactSearchType = ContactType;
 
 export type ContactListItemProps = ListItemProps &
   ListItemRequestProps<DataModel> &
@@ -42,7 +41,7 @@ export type ContactListProps = ListRequestProps<DataModel> &
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
-    type: ContactType;
+    contactType: ContactType;
     isHasNewRequest?: boolean;
     isHasGroupList?: boolean;
     onContextMenuMoreActions?: React.ReactElement<ContactItemProps>[];
@@ -67,7 +66,7 @@ export type SearchContactProps = ListRequestProps<DataModel> &
   > & {
     containerStyle?: StyleProp<ViewStyle>;
     onCancel?: () => void;
-    type: ContactSearchType;
+    searchType: SearchType;
   };
 
 export type UseContactListReturn = {

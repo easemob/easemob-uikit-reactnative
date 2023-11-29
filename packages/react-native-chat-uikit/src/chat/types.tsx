@@ -11,10 +11,12 @@ import type {
   ChatMessageEventListener,
   ChatMultiDeviceEventListener,
   ChatPresenceEventListener,
+  ChatSearchDirection,
 } from 'react-native-chat-sdk';
 
 import type { UIKitError } from '../error';
 import type { Keyof, PartialNullable } from '../types';
+import type { RequestList } from './requestList';
 
 export type ChatEventType = 'undefined' | string;
 
@@ -49,6 +51,7 @@ export type DataModel = {
 };
 
 export type UserFrom = 'friend' | 'group' | 'black' | 'others';
+export type NewRequestStateType = 'pending' | 'accepted' | 'declined';
 
 /**
  * The type of user data.
@@ -251,6 +254,15 @@ export type GroupParticipantModel = {
   avatar?: string;
 };
 
+export type NewRequestModel = {
+  id: string;
+  name: string;
+  avatar?: string;
+  tip?: string;
+  state?: NewRequestStateType;
+  msg?: ChatMessage;
+};
+
 export interface ConversationServices {
   setOnRequestMultiData<DataT>(
     callback?: (params: {
@@ -326,19 +338,19 @@ export interface ContactServices {
   addNewContact(params: {
     useId: string;
     reason?: string;
-    onResult: ResultCallback<ContactModel[]>;
+    onResult: ResultCallback<void>;
   }): void;
   removeContact(params: {
     userId: string;
-    onResult: ResultCallback<ContactModel[]>;
+    onResult: ResultCallback<void>;
   }): void;
   acceptInvitation(params: {
     userId: string;
-    onResult: ResultCallback<ContactModel[]>;
+    onResult: ResultCallback<void>;
   }): void;
   declineInvitation(params: {
     userId: string;
-    onResult: ResultCallback<ContactModel[]>;
+    onResult: ResultCallback<void>;
   }): void;
 }
 
@@ -350,6 +362,29 @@ export interface UserServices {
   getUsersInfo(params: {
     userIds: string[];
     onResult: ResultCallback<UserServiceData[]>;
+  }): void;
+}
+
+export interface MessageServices {
+  insertMessage(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<void>;
+  }): void;
+  updateMessage(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<void>;
+  }): void;
+  removeMessage(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<void>;
+  }): void;
+  getNewRequestList(params: {
+    convId: string;
+    convType: ChatConversationType;
+    timestamp?: number;
+    pageSize?: number;
+    direction?: ChatSearchDirection;
+    onResult: ResultCallback<ChatMessage[]>;
   }): void;
 }
 
@@ -379,7 +414,8 @@ export interface ChatService
   extends ConversationServices,
     ContactServices,
     GroupServices,
-    UserServices {
+    UserServices,
+    MessageServices {
   /**
    * Add listener.
    * @param listener {@link ChatServiceListener}
@@ -516,6 +552,8 @@ export interface ChatService
    * - extra: the extra data.
    */
   sendFinished(params: { event: ChatEventType; extra?: any }): void;
+
+  get requestList(): RequestList;
 }
 
 /**

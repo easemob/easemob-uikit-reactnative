@@ -1,51 +1,97 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
-import type { DataModel } from '../../chat';
-import { g_not_existed_url } from '../../const';
-import { Text } from '../../ui/Text';
+import { getNewRequest } from '../../chat/utils';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
+import { CmnButton } from '../../ui/Button';
+import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
-import { Badges } from '../Badges';
-import type { ListItemProps, ListItemRequestProps } from '../types';
+import type { NewRequestsItemProps } from './types';
 
-export type NewRequestsItemProps = ListItemProps &
-  ListItemRequestProps<DataModel> & {};
 export function NewRequestsItem(props: NewRequestsItemProps) {
-  const {} = props;
+  const { onClicked, onButtonClicked, data } = props;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    pin_bg: {
+      light: colors.neutral[9],
+      dark: colors.neutral[6],
+    },
+    t1: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    t2: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+    divider: {
+      light: colors.neutral[9],
+      dark: colors.neutral[2],
+    },
+  });
   return (
-    <View
+    <Pressable
       style={{
-        width: '100%',
-        height: 76,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 16,
+        backgroundColor: getColor('bg'),
+      }}
+      onPress={() => {
+        onClicked?.(data);
       }}
     >
-      <Avatar url={g_not_existed_url} size={50} />
-      <View style={{ flexDirection: 'column', flexGrow: 1, paddingLeft: 12 }}>
-        <Text paletteType={'title'} textType={'medium'}>
-          {'用户昵称'}
-        </Text>
-        <Text paletteType={'body'} textType={'medium'}>
-          {'最新消息'}
-        </Text>
-      </View>
-      <View style={{ flexDirection: 'column' }}>
-        <Text paletteType={'body'} textType={'small'}>
-          {'HH:MM'}
-        </Text>
+      <View
+        style={{
+          width: '100%',
+          height: 75.5,
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 16,
+        }}
+      >
+        <Avatar url={data.avatar} size={40} />
         <View
           style={{
-            justifyContent: 'center',
-            flexDirection: 'row',
+            flexDirection: 'column',
+            flexGrow: 1,
+            paddingLeft: 12,
+            maxWidth: '55%',
           }}
         >
-          <View style={{ flexGrow: 1 }} />
-          <Badges count={8} />
+          <SingleLineText paletteType={'title'} textType={'medium'}>
+            {data.name ?? data.id}
+          </SingleLineText>
+          <SingleLineText paletteType={'body'} textType={'medium'}>
+            {getNewRequest(data.msg)?.tip}
+          </SingleLineText>
+        </View>
+        <View style={{ flex: 1 }} />
+        <View style={{ flexDirection: 'column' }}>
+          <CmnButton
+            sizesType={'small'}
+            radiusType={'small'}
+            contentType={'only-text'}
+            style={{ height: 28, width: 74 }}
+            text={'add'}
+            onPress={() => {
+              onButtonClicked?.(data);
+            }}
+          />
         </View>
       </View>
-    </View>
+
+      <View
+        style={{
+          width: '100%',
+          borderBottomWidth: 0.5,
+          borderBottomColor: getColor('divider'),
+          marginLeft: 78,
+        }}
+      />
+    </Pressable>
   );
 }
 export const NewRequestsItemMemo = React.memo(NewRequestsItem);

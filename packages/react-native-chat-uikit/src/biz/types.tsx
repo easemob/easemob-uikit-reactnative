@@ -15,6 +15,16 @@ export type PropsWithTest = { testMode?: 'only-ui' | undefined };
 export type PropsWithError = { onError?: (error: UIKitError) => void };
 export type PropsWithChildren = React.PropsWithChildren<{}>;
 
+export type ContactType = 'contact-list' | 'new-contact-list';
+
+export type SearchType =
+  | 'conv-list'
+  | 'contact-list'
+  | 'new-contact-list'
+  | 'group-list'
+  | 'group-member-list'
+  | 'request-list';
+
 export type ListState = 'loading' | 'normal' | 'error' | 'empty';
 
 export type ListItemType =

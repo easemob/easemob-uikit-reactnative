@@ -5,6 +5,8 @@ export * from './GroupListScreen';
 export * from './GroupParticipantListScreen';
 export * from './LoginListScreen';
 export * from './LoginScreen';
+export * from './NewConversationScreen';
+export * from './NewRequestScreen';
 export * from './SearchContactScreen';
 export * from './SearchConversationScreen';
 export * from './SearchGroupParticipantScreen';

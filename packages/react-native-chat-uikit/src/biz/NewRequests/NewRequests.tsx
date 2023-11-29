@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { ListRenderItemInfo, View } from 'react-native';
 
-import { g_not_existed_url } from '../../const';
+import { useColors } from '../../hook';
+import { usePaletteContext } from '../../theme';
+import { IconButton } from '../../ui/Button';
 import { FlatListFactory } from '../../ui/FlatList';
-import { Avatar } from '../Avatar';
+import { Text } from '../../ui/Text';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
 import {
@@ -11,9 +13,9 @@ import {
   TopNavigationBarRight,
   TopNavigationBarTitle,
 } from '../TopNavigationBar';
-import { useNewRequestsApi } from './NewRequests.hooks';
-import { NewRequestsItemMemo, NewRequestsItemProps } from './NewRequests.item';
-import type { NewRequestsProps } from './types';
+import { useNewRequests } from './NewRequests.hooks';
+import { NewRequestsItemMemo } from './NewRequests.item';
+import type { NewRequestsItemProps, NewRequestsProps } from './types';
 
 const FlatList = FlatListFactory<NewRequestsItemProps>();
 
@@ -28,29 +30,58 @@ export function NewRequests(props: NewRequestsProps) {
     viewabilityConfig,
     onViewableItemsChanged,
     listState,
-  } = useNewRequestsApi({});
+    onClicked,
+    onButtonClicked,
+  } = useNewRequests(props);
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    text: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+  });
 
   return (
     <View
       style={[
         {
-          // height: '100%',
-          flexGrow: 1,
+          backgroundColor: getColor('bg'),
         },
         containerStyle,
       ]}
     >
       <TopNavigationBar
-        Left={<Avatar url={g_not_existed_url} size={24} />}
+        Left={
+          <View style={{ flexDirection: 'row' }}>
+            <IconButton
+              iconName={'chevron_left'}
+              style={{ width: 24, height: 24 }}
+              onPress={() => {
+                // todo: left
+              }}
+            />
+            <Text
+              paletteType={'title'}
+              textType={'medium'}
+              style={{ color: getColor('text') }}
+            >
+              {'new request'}
+            </Text>
+          </View>
+        }
         Right={TopNavigationBarRight}
         RightProps={{
           onClicked: () => {
-            // todo: right
+            // todo:
           },
-          iconName: 'plus_in_circle',
+          iconName: 'person_add',
         }}
-        Title={TopNavigationBarTitle({ text: 'Chat' })}
-        containerStyle={{ marginHorizontal: 12 }}
+        Title={TopNavigationBarTitle({ text: '' })}
+        containerStyle={{ paddingHorizontal: 12 }}
       />
       <SearchStyle
         title={'Search'}
@@ -58,38 +89,42 @@ export function NewRequests(props: NewRequestsProps) {
           // todo: search
         }}
       />
-      <FlatList
-        ref={ref}
-        contentContainerStyle={{
-          flexGrow: 1,
-          // height: '100%',
-          // height: 400,
-          // backgroundColor: 'yellow',
-        }}
-        data={data}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-        renderItem={(info: ListRenderItemInfo<NewRequestsItemProps>) => {
-          const { item } = info;
-          return <NewRequestsItemMemo {...item} />;
-        }}
-        keyExtractor={(item: NewRequestsItemProps) => {
-          return item.id;
-        }}
-        onEndReached={onMore}
-        viewabilityConfig={viewabilityConfig}
-        onViewableItemsChanged={onViewableItemsChanged}
-        ListEmptyComponent={EmptyPlaceholder}
-        ListErrorComponent={
-          listState === 'error' ? (
-            <ErrorPlaceholder
-              onClicked={() => {
-                onRefresh?.();
-              }}
-            />
-          ) : null
-        }
-      />
+      <View style={{ flex: 1 }}>
+        <FlatList
+          ref={ref}
+          style={{ flexGrow: 1 }}
+          contentContainerStyle={{ flexGrow: 1 }}
+          data={data}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          renderItem={(info: ListRenderItemInfo<NewRequestsItemProps>) => {
+            const { item } = info;
+            return (
+              <NewRequestsItemMemo
+                {...item}
+                onClicked={onClicked}
+                onButtonClicked={onButtonClicked}
+              />
+            );
+          }}
+          keyExtractor={(item: NewRequestsItemProps) => {
+            return item.id;
+          }}
+          onEndReached={onMore}
+          viewabilityConfig={viewabilityConfig}
+          onViewableItemsChanged={onViewableItemsChanged}
+          ListEmptyComponent={EmptyPlaceholder}
+          ListErrorComponent={
+            listState === 'error' ? (
+              <ErrorPlaceholder
+                onClicked={() => {
+                  onRefresh?.();
+                }}
+              />
+            ) : null
+          }
+        />
+      </View>
     </View>
   );
 }

@@ -1,15 +1,13 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { SearchContact, SearchType } from 'react-native-chat-uikit';
+import { NewConversation } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function SearchContactScreen(props: Props) {
-  const { navigation, route } = props;
-  const searchType = ((route.params as any)?.params as any)
-    ?.searchType as SearchType;
+export function NewConversationScreen(props: Props) {
+  const { navigation } = props;
   return (
     <SafeAreaView
       style={{
@@ -17,15 +15,16 @@ export function SearchContactScreen(props: Props) {
         flex: 1,
       }}
     >
-      <SearchContact
+      <NewConversation
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
-        onCancel={() => {
-          navigation.goBack();
+        onSearch={() => {
+          navigation.navigate('SearchContact', {
+            params: { searchType: 'new-contact-list' },
+          });
         }}
-        searchType={searchType}
       />
     </SafeAreaView>
   );
