@@ -5,8 +5,8 @@ import { useSearchContact } from './SearchContact.hooks';
 import type { ContactSearchModel, SearchContactProps } from './types';
 
 export function SearchContact(props: SearchContactProps) {
-  const { onCancel, containerStyle, searchType } = props;
-  const { data, onClicked } = useSearchContact(props);
+  const { containerStyle, searchType } = props;
+  const { data, onClicked, onCancel } = useSearchContact(props);
 
   return (
     <ListSearch<ContactSearchModel>

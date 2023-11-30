@@ -6,6 +6,7 @@ import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import type { DefaultComponentModel } from '../ListSearch';
 import type {
+  ChoiceType,
   ContactType,
   ListItemActions,
   ListItemProps,
@@ -31,6 +32,10 @@ export type ContactListItemProps = ListItemProps &
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     section: ContactModel;
+    contactType: ContactType;
+    onCheckClicked?:
+      | ((checked?: boolean, data?: ContactModel) => void)
+      | undefined;
   };
 
 export type ContactListProps = ListRequestProps<DataModel> &
@@ -53,8 +58,10 @@ export type ContactListProps = ListRequestProps<DataModel> &
     onCancel?: () => void;
     onNavigationBarMoreActions?: () => void;
     onNewConversation?: () => void;
-    onNewGroup?: () => void;
+    onNewGroup?: (data?: ContactModel[]) => void;
     onNewContact?: () => void;
+    selectedData?: ContactModel[];
+    choiceType?: ChoiceType;
   };
 
 export type SearchContactProps = ListRequestProps<DataModel> &
@@ -65,16 +72,31 @@ export type SearchContactProps = ListRequestProps<DataModel> &
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
-    onCancel?: () => void;
+    onCancel?: (data?: ContactModel[]) => void;
     searchType: SearchType;
+    choiceType?: ChoiceType;
+    // onSelectedResult?: (result: Map<string, boolean>) => void;
   };
 
-export type UseContactListReturn = {
+export type UseContactListReturn = Omit<
+  ListItemActions<ContactModel>,
+  'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+> & {
   onRequestModalClose: () => void;
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   onShowMenu?: () => void;
   alertRef: React.RefObject<AlertRef>;
+  onCheckClicked?:
+    | ((checked?: boolean, data?: ContactModel) => void)
+    | undefined;
+  selectedCount?: number;
+  onNewGroup?: () => void;
 };
 
-export type ContactSearchModel = ContactModel & DefaultComponentModel;
+export type ContactSearchModel = ContactModel &
+  DefaultComponentModel & {
+    onCheckClicked?:
+      | ((checked?: boolean, data?: ContactModel) => void)
+      | undefined;
+  };
 export type UseSearchContactProps = SearchContactProps;

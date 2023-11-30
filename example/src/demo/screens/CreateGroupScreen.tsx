@@ -1,15 +1,16 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { SearchContact, SearchType } from 'react-native-chat-uikit';
+import { CreateGroup } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function SearchContactScreen(props: Props) {
+export function CreateGroupScreen(props: Props) {
   const { navigation, route } = props;
-  const searchType = ((route.params as any)?.params as any)
-    ?.searchType as SearchType;
+  const data = ((route.params as any)?.params as any)?.data
+    ? JSON.parse(((route.params as any)?.params as any)?.data)
+    : undefined;
   return (
     <SafeAreaView
       style={{
@@ -17,21 +18,17 @@ export function SearchContactScreen(props: Props) {
         flex: 1,
       }}
     >
-      <SearchContact
+      <CreateGroup
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
-        onCancel={(data) => {
-          // navigation.goBack();
-          navigation.navigate('CreateGroup', {
-            params: {
-              searchType: 'create-group',
-              data: data ? JSON.stringify(data) : undefined,
-            },
+        onSearch={() => {
+          navigation.navigate('SearchContact', {
+            params: { searchType: 'create-group' },
           });
         }}
-        searchType={searchType}
+        selectedData={data}
       />
     </SafeAreaView>
   );

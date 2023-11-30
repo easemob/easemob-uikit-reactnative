@@ -30,6 +30,7 @@ export type ListSearchItemProps<
   > & {
     data: ComponentModel;
     keyword: string;
+    searchType: SearchType;
   };
 
 export type ListSearchProps<

@@ -80,7 +80,6 @@ export class RequestList {
       },
 
       onFriendRequestAccepted: (userId: string): void => {
-        console.log('test:zuoyu:onFriendRequestAccepted', userId);
         for (const request of this._newRequestList) {
           if (request.id === userId) {
             request.state = 'accepted';

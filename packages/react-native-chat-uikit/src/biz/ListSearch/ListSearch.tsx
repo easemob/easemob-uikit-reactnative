@@ -15,7 +15,7 @@ import type {
 export function ListSearch<
   ComponentModel extends DefaultComponentModel = DefaultComponentModel
 >(props: ListSearchProps<ComponentModel>) {
-  const { onCancel, containerStyle, ItemRender } = props;
+  const { onCancel, containerStyle, ItemRender, searchType } = props;
   const FlatList = React.useMemo(
     () => FlatListFactory<ListSearchItemProps<ComponentModel>>(),
     []
@@ -58,7 +58,13 @@ export function ListSearch<
             info: ListRenderItemInfo<ListSearchItemProps<ComponentModel>>
           ) => {
             const { item } = info;
-            return <ListSearchItemMemo {...item} onClicked={onClicked} />;
+            return (
+              <ListSearchItemMemo
+                {...item}
+                onClicked={onClicked}
+                searchType={searchType}
+              />
+            );
           }}
           keyExtractor={(item: ListSearchItemProps<ComponentModel>) => {
             return item.id;

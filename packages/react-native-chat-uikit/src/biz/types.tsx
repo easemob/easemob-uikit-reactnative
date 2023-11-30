@@ -15,12 +15,13 @@ export type PropsWithTest = { testMode?: 'only-ui' | undefined };
 export type PropsWithError = { onError?: (error: UIKitError) => void };
 export type PropsWithChildren = React.PropsWithChildren<{}>;
 
-export type ContactType = 'contact-list' | 'new-contact-list';
+export type ContactType = 'contact-list' | 'new-contact-list' | 'create-group';
 
 export type SearchType =
   | 'conv-list'
   | 'contact-list'
   | 'new-contact-list'
+  | 'create-group'
   | 'group-list'
   | 'group-member-list'
   | 'request-list';
@@ -32,6 +33,9 @@ export type ListItemType =
   | 'contact-list'
   | 'group-list'
   | 'group-member-list';
+
+export type ChoiceType = 'single' | 'multiple';
+
 export type ListItemProps = {
   id: string;
 };

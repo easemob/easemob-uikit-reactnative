@@ -1,6 +1,7 @@
 export * from './ConfigScreen';
 export * from './ContactListScreen';
 export * from './ConversationListScreen';
+export * from './CreateGroupScreen';
 export * from './GroupListScreen';
 export * from './GroupParticipantListScreen';
 export * from './LoginListScreen';

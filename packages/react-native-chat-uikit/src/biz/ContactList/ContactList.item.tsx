@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { SectionListData, View } from 'react-native';
+import { Pressable, SectionListData, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
+import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
@@ -11,7 +12,8 @@ import { ListItem } from '../ListItem';
 import type { ContactItemProps, ContactListItemProps } from './types';
 
 export function ContactListItem(props: ContactListItemProps) {
-  const { section } = props;
+  const { section, onClicked, onCheckClicked } = props;
+  const { checked } = section;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -30,6 +32,14 @@ export function ContactListItem(props: ContactListItemProps) {
       light: colors.neutral[9],
       dark: colors.neutral[2],
     },
+    no_checked: {
+      light: colors.neutral[7],
+      dark: colors.neutral[4],
+    },
+    checked: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
   });
   return (
     <View
@@ -37,7 +47,7 @@ export function ContactListItem(props: ContactListItemProps) {
         backgroundColor: getColor('bg'),
       }}
     >
-      <View
+      <Pressable
         style={{
           width: '100%',
           height: 59.5,
@@ -45,9 +55,37 @@ export function ContactListItem(props: ContactListItemProps) {
           alignItems: 'center',
           paddingHorizontal: 16,
         }}
+        onPress={() => {
+          onClicked?.(section);
+        }}
       >
+        {checked !== undefined ? (
+          <View style={{ marginRight: 12 }}>
+            <IconButton
+              iconName={
+                checked !== false ? 'checked_rectangle' : 'unchecked_rectangle'
+              }
+              style={{
+                height: 28,
+                width: 28,
+                tintColor: getColor(
+                  checked !== false ? 'checked' : 'no_checked'
+                ),
+              }}
+              onPress={() => {
+                onCheckClicked?.(section.checked, section);
+              }}
+            />
+          </View>
+        ) : null}
         <Avatar url={section.avatar} size={40} />
-        <View style={{ flexGrow: 1, paddingLeft: 12, maxWidth: '80%' }}>
+        <View
+          style={{
+            flexGrow: 1,
+            paddingLeft: 12,
+            maxWidth: checked !== undefined ? '70%' : '80%',
+          }}
+        >
           <SingleLineText
             paletteType={'title'}
             textType={'medium'}
@@ -56,7 +94,7 @@ export function ContactListItem(props: ContactListItemProps) {
             {section.nickName}
           </SingleLineText>
         </View>
-      </View>
+      </Pressable>
       <View
         style={{
           height: 0.5,

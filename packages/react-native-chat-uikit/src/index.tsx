@@ -5,6 +5,7 @@ export * from './biz/BottomSheetMenu';
 export * from './biz/BottomTabBar';
 export * from './biz/ContactList';
 export * from './biz/ConversationList';
+export * from './biz/CreateGroup';
 export * from './biz/EmojiList';
 export * from './biz/GiftIcon';
 export * from './biz/GroupList';

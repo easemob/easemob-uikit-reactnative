@@ -63,12 +63,28 @@ export function ContactList(props: ContactListProps) {
     menuRef,
     onShowMenu,
     alertRef,
+    onClicked,
+    onCheckClicked,
+    selectedCount,
+    onNewGroup,
   } = useContactList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
       light: colors.neutral[98],
       dark: colors.neutral[1],
+    },
+    text: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    text_disable: {
+      light: colors.neutral[7],
+      dark: colors.neutral[3],
+    },
+    text_enable: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
     },
   });
 
@@ -123,6 +139,42 @@ export function ContactList(props: ContactListProps) {
           containerStyle={{ paddingHorizontal: 12 }}
         />
       );
+    } else if (contactType === 'create-group') {
+      return (
+        <TopNavigationBar
+          Left={
+            <View style={{ flexDirection: 'row' }}>
+              <IconButton
+                iconName={'chevron_left'}
+                style={{ width: 24, height: 24 }}
+                onPress={() => {
+                  // todo: left
+                }}
+              />
+              <Text
+                paletteType={'title'}
+                textType={'medium'}
+                style={{ color: getColor('text') }}
+              >
+                {'Create Group'}
+              </Text>
+            </View>
+          }
+          Right={
+            <Pressable onPress={onNewGroup}>
+              <Text
+                paletteType={'label'}
+                textType={'medium'}
+                style={{ color: getColor('text') }}
+              >
+                {`Create(${selectedCount})`}
+              </Text>
+            </Pressable>
+          }
+          Title={TopNavigationBarTitle({ text: '' })}
+          containerStyle={{ paddingHorizontal: 12 }}
+        />
+      );
     } else {
       return null;
     }
@@ -159,8 +211,6 @@ export function ContactList(props: ContactListProps) {
           {onContextMenuMoreActions}
         </>
       );
-    } else if (contactType === 'new-contact-list') {
-      return null;
     } else {
       return null;
     }
@@ -206,7 +256,13 @@ export function ContactList(props: ContactListProps) {
             >
           ) => {
             const { item } = info;
-            return <ContactListItemMemo {...item} />;
+            return (
+              <ContactListItemMemo
+                {...item}
+                onClicked={onClicked}
+                onCheckClicked={onCheckClicked}
+              />
+            );
           }}
           keyExtractor={(item: ContactListItemProps) => {
             return item.id;

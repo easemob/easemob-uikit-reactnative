@@ -25,8 +25,10 @@ export function useListSearch<
   });
   const { setData, dataRef, isAutoLoad, isShowAfterLoaded } = flatListProps;
   const isLocalSearch = React.useRef(props.onSearch ?? true).current;
+  const keywordRef = React.useRef('');
 
   const onSearch = async (keyword: string) => {
+    keywordRef.current = keyword;
     if (keyword === '') {
       setData([]);
     } else {
@@ -37,7 +39,6 @@ export function useListSearch<
             return {
               id: item.id,
               data: item,
-              onClicked: onClicked,
               keyword: keyword,
             } as ListSearchItemProps<ComponentModel>;
           })
@@ -77,10 +78,10 @@ export function useListSearch<
           return {
             id: item.id,
             data: item,
-            keyword: '',
+            keyword: keywordRef.current,
           } as ListSearchItemProps<ComponentModel>;
         });
-        if (isShowAfterLoaded === true) {
+        if (isShowAfterLoaded === true || keywordRef.current.length > 0) {
           setData([...dataRef.current]);
         }
       } else {
@@ -89,10 +90,10 @@ export function useListSearch<
           return {
             id: item.id,
             data: item,
-            keyword: '',
+            keyword: keywordRef.current,
           } as ListSearchItemProps<ComponentModel>;
         });
-        if (isShowAfterLoaded === true) {
+        if (isShowAfterLoaded === true || keywordRef.current.length > 0) {
           setData([...dataRef.current]);
         }
       }

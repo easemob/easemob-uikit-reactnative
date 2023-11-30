@@ -55,6 +55,8 @@ export function TopMenuScreen(props: Props) {
                   navigation.push('NewConversation', { params: {} });
                 } else if (v === 'NewRequests') {
                   navigation.push('NewRequests', { params: {} });
+                } else if (v === 'CreateGroup') {
+                  navigation.push('CreateGroup', { params: {} });
                 }
               }}
             >

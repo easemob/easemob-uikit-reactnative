@@ -20,6 +20,7 @@ import {
   ConfigScreen,
   ContactListScreen,
   ConversationListScreen,
+  CreateGroupScreen,
   GroupListScreen,
   GroupParticipantListScreen,
   LoginListScreen,
@@ -252,6 +253,13 @@ export function App() {
                 headerShown: false,
               }}
               component={NewRequestScreen}
+            />
+            <Root.Screen
+              name={'CreateGroup'}
+              options={{
+                headerShown: false,
+              }}
+              component={CreateGroupScreen}
             />
           </Root.Navigator>
         </NavigationContainer>
