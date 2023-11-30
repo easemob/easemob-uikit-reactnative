@@ -132,6 +132,15 @@ export function once2(fn: Callback) {
   f.called = false;
   return f;
 }
+export function onceT<Callback extends (...args: any[]) => any>(fn: Callback) {
+  let f: any = function (...args: any[]) {
+    if (f.called) return f.value;
+    f.called = true;
+    return (f.value = fn.apply(f, args));
+  };
+  f.called = false;
+  return f as Callback;
+}
 
 /**
  * Returns the hash value of a string.
