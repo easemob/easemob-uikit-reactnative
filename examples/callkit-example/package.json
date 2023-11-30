@@ -9,6 +9,7 @@
     "pods": "pod-install --quiet",
     "start": "expo start --dev-client",
     "startr": "expo start --dev-client --clear",
+    "startr8888": "expo start --dev-client --clear --port 8888",
     "android": "expo run:android",
     "androidd": "expo run:android --device \"MX6\"",
     "ios": "expo run:ios",

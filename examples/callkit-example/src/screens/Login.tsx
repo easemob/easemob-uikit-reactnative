@@ -75,6 +75,49 @@ export default function LoginScreen({ route, navigation }: Props): JSX.Element {
       return;
     }
     setButtonState('loading');
+    // AppServerClient.getAccountToken({
+    //   userId: id,
+    //   userPassword: password,
+    //   onResult: (result) => {
+    //     console.log('test:getAccountToken:', result);
+    //     if (result.data.token) {
+    //       loginAction({
+    //         id: id,
+    //         pass: result.data.token,
+    //         type: accountType,
+    //         onResult: (result) => {
+    //           if (result.result === true) {
+    //             console.log('test:login:success');
+    //             setButtonState('stop');
+    //             sendEventFromSigIn({
+    //               eventType: 'DataEvent',
+    //               action: 'on_logined',
+    //               params: {},
+    //             });
+    //             navigation.dispatch(StackActions.push('Home', { params: {} }));
+    //           } else {
+    //             console.warn('test:login:fail:', result.error);
+    //             setButtonState('stop');
+    //             if (result.error.code === 200) {
+    //               sendEventFromSigIn({
+    //                 eventType: 'DataEvent',
+    //                 action: 'on_logined',
+    //                 params: {},
+    //               });
+    //               navigation.dispatch(
+    //                 StackActions.push('Home', { params: {} })
+    //               );
+    //             } else {
+    //               setTip(result.error.description);
+    //               // toast.showToast('Login Failed');
+    //             }
+    //           }
+    //         },
+    //       });
+    //     }
+    //   },
+    // });
+    // return;
     loginAction({
       id: id,
       pass: password,
