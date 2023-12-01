@@ -1,3 +1,4 @@
+export * from './CommonSwitch';
 export * from './Switch';
 
 /**

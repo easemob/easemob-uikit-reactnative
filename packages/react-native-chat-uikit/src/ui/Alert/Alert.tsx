@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { useWindowDimensions, View } from 'react-native';
+import { Platform, useWindowDimensions, View } from 'react-native';
 
+import { useConfigContext } from '../../config';
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
@@ -24,6 +25,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
     const { style: themeStyle, cornerRadius: corner } = useThemeContext();
     const { colors, cornerRadius } = usePaletteContext();
     const { getBorderRadius } = useGetStyleProps();
+    const { fontFamily } = useConfigContext();
     const { getColor } = useColors({
       bg: {
         light: colors.neutral[98],
@@ -37,6 +39,10 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
         light: colors.neutral[1],
         dark: colors.neutral[98],
       },
+      text2: {
+        light: colors.neutral[7],
+        dark: colors.neutral[6],
+      },
     });
     const isShow = React.useRef(false);
     const onRequestModalClose = React.useCallback(() => {
@@ -48,8 +54,18 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
       onUpdate,
       value,
       onChangeText,
+      setTextCount,
+      textCount,
     } = useAlert(props);
-    const { buttons, message, title, supportInput = false } = updatedProps;
+    const {
+      buttons,
+      message,
+      title,
+      supportInput = false,
+      supportInputStatistics,
+      inputMaxCount,
+      isSaveInput = true,
+    } = updatedProps;
     const count = buttons?.length ?? 1;
     if (count > 3) {
       throw new UIKitError({
@@ -71,12 +87,16 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
             onUpdate(props);
           },
           close: (onFinished) => {
+            console.log('test:zuoyu:close', isSaveInput);
             isShow.current = false;
+            if (isSaveInput === false) {
+              onChangeText?.('');
+            }
             modalRef?.current?.startHide?.(onFinished);
           },
         };
       },
-      [onUpdate]
+      [isSaveInput, onChangeText, onUpdate]
     );
 
     React.useEffect(() => {
@@ -159,13 +179,33 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                     cr: cornerRadius,
                     style: containerStyle,
                   }),
-                  height: 48,
+                  minHeight: 48,
                   width: '100%',
                 }}
                 style={{
                   paddingHorizontal: 20,
-                  height: 24,
+                  fontSize: 16,
+                  fontStyle: 'normal',
+                  fontWeight: '400',
+                  lineHeight: 22,
+                  fontFamily: fontFamily,
                 }}
+                numberOfLines={4}
+                multiline={true}
+                unitHeight={Platform.OS === 'ios' ? 22 : 22}
+                statistics={
+                  supportInputStatistics === true
+                    ? {
+                        count: textCount,
+                        maxCount: inputMaxCount ?? 200,
+                        onCountChange: setTextCount,
+                        textStyles: {
+                          color: getColor('text2'),
+                          paddingRight: 12,
+                        },
+                      }
+                    : undefined
+                }
               />
               <View style={{ height: 24 }} />
             </>

@@ -9,6 +9,7 @@ import type { AlertProps } from './types';
 export function useAlert(props: AlertProps) {
   const { containerStyle } = props;
   const [value, onChangeText] = React.useState('');
+  const [textCount, setTextCount] = React.useState(0);
   const [_props, setProps] = React.useState(props);
   const { cornerRadius: corner } = useThemeContext();
   const { cornerRadius } = usePaletteContext();
@@ -92,5 +93,7 @@ export function useAlert(props: AlertProps) {
     props: _props,
     value,
     onChangeText,
+    textCount,
+    setTextCount,
   };
 }

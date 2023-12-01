@@ -15,7 +15,7 @@ import { usePaletteContext } from '../../theme';
 import { Icon } from '../Image';
 import { useSwitchAnimation } from './Switch.hooks';
 
-export interface MySwitchProps {
+export interface SwitchProps {
   height?: number | undefined;
   width?: number | undefined;
   /**
@@ -94,8 +94,23 @@ export interface MySwitchProps {
   animationDuration?: number | undefined;
 }
 
-export function Switch(props: MySwitchProps) {
+export function Switch(props: SwitchProps) {
   const { colors } = usePaletteContext();
+  const {
+    style,
+    height: propsHeight,
+    width: propsWidth,
+    value: propsValue,
+    onValueChange,
+    disabled,
+    thumbColor,
+    thumbBackgroundColor,
+    trackColor: propsTrackColor,
+    trackIcon: propsTrackIcon,
+    backgroundView,
+    iconStyle,
+    animationDuration = 100,
+  } = props;
   const { getColor } = useColors({
     trackFalse: {
       light: colors.neutral[9],
@@ -106,29 +121,15 @@ export function Switch(props: MySwitchProps) {
       dark: colors.neutral[3],
     },
     thumbColor: {
-      light: colors.neutral[98],
-      dark: colors.neutral[98],
+      light: thumbColor ?? colors.neutral[98],
+      dark: thumbColor ?? colors.neutral[1],
     },
     thumbBackgroundColor: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
+      light: thumbBackgroundColor ?? colors.primary[5],
+      dark: thumbBackgroundColor ?? colors.primary[6],
     },
   });
-  const {
-    style,
-    height: propsHeight,
-    width: propsWidth,
-    value: propsValue,
-    onValueChange,
-    disabled,
-    thumbColor = getColor('thumbColor'),
-    thumbBackgroundColor = getColor('thumbBackgroundColor'),
-    trackColor: propsTrackColor,
-    trackIcon: propsTrackIcon,
-    backgroundView,
-    iconStyle,
-    animationDuration = 100,
-  } = props;
+
   const height = propsHeight ?? 40;
   const width = propsWidth ?? height * (70 / 40);
   const _value = propsValue ?? false;
@@ -210,7 +211,7 @@ export function Switch(props: MySwitchProps) {
           height: height * 0.9,
           width: height * 0.9,
           borderRadius: width * 0.9,
-          backgroundColor: thumbBackgroundColor,
+          backgroundColor: getColor('thumbBackgroundColor'),
           justifyContent: 'center',
           alignItems: 'center',
         }}
@@ -224,7 +225,7 @@ export function Switch(props: MySwitchProps) {
               {
                 width: height * 0.9,
                 height: height * 0.9,
-                tintColor: thumbColor,
+                tintColor: getColor('thumbColor'),
               },
               iconStyle,
             ]}

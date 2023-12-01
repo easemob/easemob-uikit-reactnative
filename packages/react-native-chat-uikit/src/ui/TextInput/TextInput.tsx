@@ -9,12 +9,33 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { Text } from '../Text';
+
 export type TextInputProps = RNTextInputProps & {
   unitHeight?: number;
   /**
    * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
    */
   containerStyle?: StyleProp<ViewStyle>;
+
+  statistics?: {
+    /**
+     * Current word count.
+     */
+    count: number;
+    /**
+     * Callback notification when word count changes.
+     */
+    onCountChange?: (count: number) => void;
+    /**
+     * The maximum number of characters that can be entered.
+     */
+    maxCount: number;
+    /**
+     * Style of the text.
+     */
+    textStyles?: StyleProp<TextStyle>;
+  };
 };
 
 /**
@@ -32,6 +53,8 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       style,
       onContentSizeChange,
       containerStyle,
+      statistics,
+      onChangeText,
       ...others
     } = props;
 
@@ -45,6 +68,13 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
     let [maxHeight, setMaxHeight] = React.useState<number | undefined>(
       maxHeightRef.current
     );
+
+    const _onChangeText = (text: string) => {
+      onChangeText?.(text);
+      if (statistics) {
+        statistics.onCountChange?.(text.length);
+      }
+    };
 
     const getStyle = (): StyleProp<TextStyle> => {
       const s = containerStyle as any;
@@ -87,8 +117,26 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
               }
             }
           }}
+          onChangeText={_onChangeText}
           {...others}
         />
+        {statistics ? (
+          <View style={{ height: 22, width: '100%' }}>
+            <Text
+              textType={'large'}
+              paletteType={'body'}
+              style={[
+                {
+                  // height: 22,
+                  // paddingRight: 12,
+                  width: '100%',
+                  textAlign: 'right',
+                },
+                statistics.textStyles,
+              ]}
+            >{`${statistics.count}/${statistics.maxCount}`}</Text>
+          </View>
+        ) : null}
       </View>
     );
   }

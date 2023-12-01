@@ -5,5 +5,8 @@ export type AlertProps = {
   message?: string;
   buttons?: AlertButton[];
   supportInput?: boolean;
+  supportInputStatistics?: boolean;
+  inputMaxCount?: number;
+  isSaveInput?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
 };
