@@ -31,6 +31,7 @@ export function useContactList(
     onNewContact,
     onNewConversation,
     onNewGroup,
+    onCreateGroup,
     contactType,
     choiceType = 'multiple',
     selectedData,
@@ -417,9 +418,8 @@ export function useContactList(
                           im.addNewContact({
                             useId: value.trim(),
                             reason: 'add contact',
-                            onResult: (result) => {
+                            onResult: (_result) => {
                               // todo:
-                              console.log('test:zuoyu:addNewContact:', result);
                             },
                           });
                         }
@@ -437,7 +437,7 @@ export function useContactList(
           icon: 'person_double_fill',
           onClicked: () => {
             menuRef.current?.startHide?.(() => {
-              onCreateGroupCallback();
+              onNewGroup?.();
             });
           },
         },
@@ -518,7 +518,6 @@ export function useContactList(
   //   const sub = DeviceEventEmitter.addListener(
   //     '_$response_contact_state',
   //     (event) => {
-  //       console.log('test:zuoyu:recv:response_contact_state:', event);
   //       const data = event as ContactModel;
   //       if (contactType !== 'create-group') {
   //         return;
@@ -596,8 +595,8 @@ export function useContactList(
       .map((item) => {
         return item.section;
       });
-    onNewGroup?.(list);
-  }, [contactType, onNewGroup, sectionsRef]);
+    onCreateGroup?.(list);
+  }, [contactType, onCreateGroup, sectionsRef]);
 
   return {
     ...sectionProps,
@@ -609,7 +608,7 @@ export function useContactList(
     onClicked: onClickedCallback,
     onCheckClicked: onCheckClickedCallback,
     selectedCount,
-    onNewGroup: onCreateGroupCallback,
+    onCreateGroup: onCreateGroupCallback,
   };
 }
 

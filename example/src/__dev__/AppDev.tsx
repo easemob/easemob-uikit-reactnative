@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { default as Test } from './test_modal';
+import { default as Test } from './test_utils';
 
 // if (
 //   Platform.OS === 'android' &&

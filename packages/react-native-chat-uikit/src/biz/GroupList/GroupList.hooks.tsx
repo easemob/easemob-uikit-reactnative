@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { GroupModel, useChatContext, useChatListener } from '../../chat';
+import { gGroupListPageNumber } from '../const';
 import { useFlatList } from '../List';
 import type { ListItemActions, UseFlatListReturn } from '../types';
 import type { GroupListItemProps, UseGroupListProps } from './types';
@@ -12,7 +13,7 @@ export function useGroupList(
     ListItemActions<GroupModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > {
-  const { testMode, onClicked } = props;
+  const { testMode, onClicked, onNoMore } = props;
   const flatListProps = useFlatList<GroupListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
     onInit: () => init(),
@@ -21,6 +22,8 @@ export function useGroupList(
   });
   const { setData, dataRef } = flatListProps;
   const im = useChatContext();
+  const currentPageNumberRef = React.useRef(0);
+  const isNoMoreRef = React.useRef(false);
 
   const onClickedCallback = React.useCallback(
     (data?: GroupModel | undefined) => {
@@ -31,21 +34,42 @@ export function useGroupList(
     [onClicked]
   );
 
+  const addData = (list: GroupListItemProps[]) => {
+    if (dataRef.current.length === 0) {
+      dataRef.current = list;
+      setData(list);
+    } else {
+      dataRef.current = [...dataRef.current, ...list];
+      const uniqueList = dataRef.current.filter(
+        (item, index, self) =>
+          index === self.findIndex((t) => t.data.groupId === item.data.groupId)
+      );
+      setData([...uniqueList]);
+    }
+  };
+
   const init = () => {
     if (testMode === 'only-ui') {
     } else {
-      im.getAllGroups({
+      console.log(
+        'test:zuoyu:creategroup:',
+        gGroupListPageNumber,
+        currentPageNumberRef.current
+      );
+      im.getPageGroups({
+        pageSize: gGroupListPageNumber,
+        pageNum: currentPageNumberRef.current,
         onResult: (result) => {
           const { isOk, value, error } = result;
           if (isOk === true) {
             if (value) {
-              dataRef.current = value.map((item) => {
+              const list = value.map((item) => {
                 return {
                   id: item.groupId,
                   data: item,
                 } as GroupListItemProps;
               });
-              setData([...dataRef.current]);
+              addData(list);
             }
           } else {
             if (error) {
@@ -56,7 +80,41 @@ export function useGroupList(
       });
     }
   };
-  const onMore = () => {};
+  const onMore = () => {
+    if (isNoMoreRef.current === true) {
+      return;
+    }
+    im.getPageGroups({
+      pageSize: gGroupListPageNumber,
+      pageNum: currentPageNumberRef.current + 1,
+      onResult: (result) => {
+        const { isOk, value, error } = result;
+        if (isOk === true) {
+          if (value) {
+            const list = value.map((item) => {
+              return {
+                id: item.groupId,
+                data: item,
+              } as GroupListItemProps;
+            });
+            addData(list);
+          }
+          if (value) {
+            if (value?.length < gGroupListPageNumber) {
+              isNoMoreRef.current = true;
+              onNoMore?.();
+            } else {
+              ++currentPageNumberRef.current;
+            }
+          }
+        } else {
+          if (error) {
+            im.sendError({ error });
+          }
+        }
+      },
+    });
+  };
   const onVisibleItems = (_items: GroupListItemProps[]) => {};
 
   const removeGroup = (groupId: string) => {

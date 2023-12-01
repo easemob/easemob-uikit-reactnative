@@ -58,8 +58,9 @@ export type ContactListProps = ListRequestProps<DataModel> &
     onCancel?: () => void;
     onNavigationBarMoreActions?: () => void;
     onNewConversation?: () => void;
-    onNewGroup?: (data?: ContactModel[]) => void;
+    onNewGroup?: () => void;
     onNewContact?: () => void;
+    onCreateGroup?: (data?: ContactModel[]) => void;
     selectedData?: ContactModel[];
     choiceType?: ChoiceType;
   };
@@ -91,6 +92,7 @@ export type UseContactListReturn = Omit<
     | undefined;
   selectedCount?: number;
   onNewGroup?: () => void;
+  onCreateGroup?: () => void;
 };
 
 export type ContactSearchModel = ContactModel &

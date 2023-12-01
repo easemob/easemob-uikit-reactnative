@@ -21,6 +21,7 @@ export type GroupListProps = ListRequestProps<DataModel> &
     containerStyle?: StyleProp<ViewStyle>;
     onBack?: () => void;
     onSearch?: () => void;
+    onNoMore?: () => void;
   };
 export type SearchGroupProps = ListRequestProps<DataModel> &
   PropsWithTest &

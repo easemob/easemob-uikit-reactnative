@@ -46,6 +46,11 @@ export function ContactListScreen(props: Props) {
             params: { searchType: 'create-group' },
           });
         }}
+        onNewConversation={() => {
+          navigation.navigate('NewConversation', {
+            params: { searchType: 'new-conversation' },
+          });
+        }}
       />
     </SafeAreaView>
   );

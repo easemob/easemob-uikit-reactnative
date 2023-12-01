@@ -5,6 +5,8 @@ import {
   ChatConversationType,
   ChatGroup,
   ChatGroupMessageAck,
+  ChatGroupOptions,
+  ChatGroupStyle,
   ChatMessage,
   ChatMessageReactionEvent,
   ChatMessageThreadEvent,
@@ -976,66 +978,65 @@ export abstract class ChatServiceImpl
     });
   }
 
-  getAllGroups(params: { onResult: ResultCallback<GroupModel[]> }): void {
-    if (this._groupList.size > 0) {
-      params.onResult({
-        isOk: true,
-        value: Array.from(this._groupList.values()),
-      });
-      return;
-    } else {
-      this.client.groupManager.getJoinedGroups();
-      this.tryCatch({
-        promise: this.client.groupManager.fetchJoinedGroupsFromServer(0, 20),
-        event: 'getJoinedGroups',
-        onFinished: async (value) => {
-          value.forEach(async (v) => {
-            this._groupList.set(v.groupId, {
-              ...v,
-              groupName:
-                v.groupName === undefined || v.groupName.length === 0
-                  ? v.groupId
-                  : v.groupName,
-            });
+  getPageGroups(params: {
+    pageSize: number;
+    pageNum: number;
+    onResult: ResultCallback<GroupModel[]>;
+  }): void {
+    this.client.groupManager.getJoinedGroups();
+    this.tryCatch({
+      promise: this.client.groupManager.fetchJoinedGroupsFromServer(
+        params.pageSize,
+        params.pageNum
+      ),
+      event: 'getPageGroups',
+      onFinished: async (value) => {
+        value.forEach(async (v) => {
+          this._groupList.set(v.groupId, {
+            ...v,
           });
+        });
 
-          if (this._groupDataRequestCallback) {
-            this._groupDataRequestCallback({
-              ids: Array.from(this._groupList.values())
-                .filter(
-                  (v) => v.groupName === undefined || v.groupName === v.groupId
-                )
-                .map((v) => v.groupId),
-              result: async (data?: DataModel[], error?: UIKitError) => {
-                if (data) {
-                  data.forEach((value) => {
-                    const group = this._groupList.get(value.id);
-                    if (group) {
-                      group.groupName = value.name;
-                      group.groupAvatar = value.avatar;
-                    }
-                  });
-                }
-
-                params.onResult({
-                  isOk: true,
-                  value: Array.from(this._groupList.values()).map((v) => v),
-                  error,
+        if (this._groupDataRequestCallback) {
+          this._groupDataRequestCallback({
+            ids: Array.from(this._groupList.values())
+              .filter(
+                (v) => v.groupName === undefined || v.groupName === v.groupId
+              )
+              .map((v) => v.groupId),
+            result: async (data?: DataModel[], error?: UIKitError) => {
+              if (data) {
+                data.forEach((value) => {
+                  const group = this._groupList.get(value.id);
+                  if (group) {
+                    group.groupName = value.name;
+                    group.groupAvatar = value.avatar;
+                  }
                 });
-              },
-            });
-          } else {
-            params.onResult({
-              isOk: true,
-              value: Array.from(this._groupList.values()).map((v) => v),
-            });
-          }
-        },
-        onError: (e) => {
-          params.onResult({ isOk: false, error: e });
-        },
-      });
-    }
+              }
+
+              params.onResult({
+                isOk: true,
+                value: Array.from(value).map(
+                  (v) => this._groupList.get(v.groupId)!
+                ),
+                error,
+              });
+            },
+          });
+        } else {
+          params.onResult({
+            isOk: true,
+            value: Array.from(value).map(
+              (v) => this._groupList.get(v.groupId)!
+            ),
+          });
+        }
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
+    });
   }
 
   getAllGroupMembers(params: {
@@ -1179,6 +1180,33 @@ export abstract class ChatServiceImpl
             });
           }
         }
+      },
+    });
+  }
+
+  CreateGroup(params: {
+    groupName: string;
+    groupDescription?: string;
+    inviteMembers: string[];
+    onResult: ResultCallback<ChatGroup>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.createGroup(
+        new ChatGroupOptions({
+          style: ChatGroupStyle.PrivateMemberCanInvite,
+          maxCount: 2000,
+          inviteNeedConfirm: false,
+        }),
+        params.groupName,
+        params.groupDescription,
+        params.inviteMembers
+      ),
+      event: 'createGroup',
+      onFinished: async (value) => {
+        params.onResult({
+          isOk: true,
+          value: value,
+        });
       },
     });
   }

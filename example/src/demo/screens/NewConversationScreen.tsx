@@ -22,7 +22,7 @@ export function NewConversationScreen(props: Props) {
         }}
         onSearch={() => {
           navigation.navigate('SearchContact', {
-            params: { searchType: 'new-contact-list' },
+            params: { searchType: 'new-conversation' },
           });
         }}
       />

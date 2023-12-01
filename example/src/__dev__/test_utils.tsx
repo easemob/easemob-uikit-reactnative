@@ -68,10 +68,23 @@ export function Split() {
   );
 }
 
+export function UnitList() {
+  const list = [1, 2, 1, 3, 5, 1, 2];
+  const ret = list.filter((item, index, self) => {
+    if (index === self.findIndex((t) => t === item)) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+  console.log('test:zuoyu:UnitList', ret);
+  return <></>;
+}
+
 export default function TestUtils() {
   return (
     <Container appKey={''}>
-      <Split />
+      <UnitList />
     </Container>
   );
 }

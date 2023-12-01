@@ -396,7 +396,11 @@ export interface GroupServices {
       result: (data?: DataT[], error?: UIKitError) => void;
     }) => void
   ): void;
-  getAllGroups(params: { onResult: ResultCallback<GroupModel[]> }): void;
+  getPageGroups(params: {
+    pageSize: number;
+    pageNum: number;
+    onResult: ResultCallback<GroupModel[]>;
+  }): void;
   getAllGroupMembers(params: {
     groupId: string;
     onResult: ResultCallback<GroupParticipantModel[]>;
@@ -407,6 +411,12 @@ export interface GroupServices {
   }): void;
   getGroupInfo(params: {
     groupId: string;
+    onResult: ResultCallback<GroupModel>;
+  }): void;
+  CreateGroup(params: {
+    groupName: string;
+    groupDescription?: string;
+    inviteMembers: string[];
     onResult: ResultCallback<GroupModel>;
   }): void;
 }

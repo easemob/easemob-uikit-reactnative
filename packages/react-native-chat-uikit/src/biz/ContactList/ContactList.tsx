@@ -66,7 +66,7 @@ export function ContactList(props: ContactListProps) {
     onClicked,
     onCheckClicked,
     selectedCount,
-    onNewGroup,
+    onCreateGroup,
   } = useContactList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -119,7 +119,7 @@ export function ContactList(props: ContactListProps) {
           containerStyle={{ paddingHorizontal: 12 }}
         />
       );
-    } else if (contactType === 'new-contact-list') {
+    } else if (contactType === 'new-conversation') {
       return (
         <TopNavigationBar
           Left={
@@ -161,7 +161,7 @@ export function ContactList(props: ContactListProps) {
             </View>
           }
           Right={
-            <Pressable onPress={onNewGroup}>
+            <Pressable onPress={onCreateGroup}>
               <Text
                 paletteType={'label'}
                 textType={'medium'}

@@ -7,5 +7,5 @@ export type NewConversationProps = Pick<
   'containerStyle' | 'onClicked' | 'onSearch'
 >;
 export function NewConversation(props: NewConversationProps) {
-  return <ContactList contactType={'new-contact-list'} {...props} />;
+  return <ContactList contactType={'new-conversation'} {...props} />;
 }
