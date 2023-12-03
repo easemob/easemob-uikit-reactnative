@@ -165,7 +165,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
           ) : null}
           <View style={{ height: 24 }} />
           {supportInput === true ? (
-            <>
+            <View style={{ width: '100%', minHeight: 48 + 24 }}>
               <TextInput
                 value={value}
                 onChangeText={onChangeText}
@@ -208,12 +208,13 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 }
               />
               <View style={{ height: 24 }} />
-            </>
+            </View>
           ) : null}
 
           <View
             style={{
               width: '100%',
+              minHeight: 1,
             }}
           >
             <View

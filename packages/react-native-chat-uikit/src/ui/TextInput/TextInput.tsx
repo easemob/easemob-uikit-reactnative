@@ -90,7 +90,7 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
           return {
             maxHeight: max,
             minHeight: min,
-            flex: 1,
+            // flex: 1,
           };
         }
       }
