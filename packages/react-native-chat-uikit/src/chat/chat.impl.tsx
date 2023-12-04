@@ -808,6 +808,10 @@ export abstract class ChatServiceImpl
     return false;
   }
 
+  isContact(params: { userId: string }): boolean {
+    return this._contactList.has(params.userId);
+  }
+
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void {
     if (this._contactList.size > 0) {
       params.onResult({
@@ -1206,6 +1210,107 @@ export abstract class ChatServiceImpl
         params.onResult({
           isOk: true,
           value: value,
+        });
+      },
+    });
+  }
+
+  quitGroup(params: { groupId: string; onResult: ResultCallback<void> }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.leaveGroup(params.groupId),
+      event: 'quitGroup',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  destroyGroup(params: {
+    groupId: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.destroyGroup(params.groupId),
+      event: 'destroyGroup',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+
+  setGroupName(params: {
+    groupId: string;
+    groupNewName: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.changeGroupName(
+        params.groupId,
+        params.groupNewName
+      ),
+      event: 'setGroupName',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  setGroupDescription(params: {
+    groupId: string;
+    groupDescription: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.changeGroupDescription(
+        params.groupId,
+        params.groupDescription
+      ),
+      event: 'setGroupDescription',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  setGroupMyRemark(params: {
+    groupId: string;
+    groupMyRemark: string;
+    ext?: Record<string, string>;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.updateGroupExtension(
+        params.groupId,
+        JSON.stringify({ ...params.ext, myRemark: params.groupMyRemark })
+      ),
+      event: 'setGroupMyRemark',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  setGroupAvatar(params: {
+    groupId: string;
+    groupAvatar: string;
+    ext?: Record<string, string>;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.updateGroupExtension(
+        params.groupId,
+        JSON.stringify({ ...params.ext, groupAvatar: params.groupAvatar })
+      ),
+      event: 'setGroupMyRemark',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
         });
       },
     });

@@ -57,6 +57,12 @@ export function TopMenuScreen(props: Props) {
                   navigation.push('NewRequests', { params: {} });
                 } else if (v === 'CreateGroup') {
                   navigation.push('CreateGroup', { params: {} });
+                } else if (v === 'ContactInfo') {
+                  navigation.push('ContactInfo', { params: {} });
+                } else if (v === 'GroupInfo') {
+                  navigation.push('GroupInfo', { params: {} });
+                } else if (v === 'GroupParticipantInfo') {
+                  navigation.push('GroupParticipantInfo', { params: {} });
                 }
               }}
             >

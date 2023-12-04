@@ -82,6 +82,7 @@ arr.forEach((obj) => {
   } else {
     throw new Error('impossible');
   }
+  console.log('test:', key, rel, ext, d1, d2, d3);
   if (rel === '') {
     icons[
       key

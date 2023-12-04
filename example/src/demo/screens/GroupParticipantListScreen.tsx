@@ -69,7 +69,17 @@ export function GroupParticipantListScreen(props: Props) {
         onSearch={() => {
           navigation.push('GroupParticipantList', {});
         }}
-        onClicked={() => {}}
+        onClicked={(data) => {
+          console.log('test:zuoyu:memberlist:', data);
+          if (data) {
+            navigation.push('GroupParticipantInfo', {
+              params: {
+                groupId: groupId,
+                userId: data.id,
+              },
+            });
+          }
+        }}
       />
     </SafeAreaView>
   );

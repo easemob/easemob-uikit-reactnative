@@ -7,7 +7,7 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function NewRequestScreen(props: Props) {
-  const {} = props;
+  const { navigation } = props;
   return (
     <SafeAreaView
       style={{
@@ -19,6 +19,11 @@ export function NewRequestScreen(props: Props) {
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
+        }}
+        onClicked={(data) => {
+          if (data?.id) {
+            navigation.push('ContactInfo', { params: { userId: data.id } });
+          }
         }}
       />
     </SafeAreaView>

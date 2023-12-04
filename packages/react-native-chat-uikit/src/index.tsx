@@ -10,6 +10,7 @@ export * from './biz/EmojiList';
 export * from './biz/GiftIcon';
 export * from './biz/GroupList';
 export * from './biz/GroupParticipantList';
+export * from './biz/Info';
 export * from './biz/ListIndex';
 export * from './biz/NewRequests';
 export * from './biz/Placeholder';

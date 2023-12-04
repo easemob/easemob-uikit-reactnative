@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
@@ -8,7 +8,7 @@ import { Avatar } from '../Avatar';
 import type { GroupParticipantListItemProps } from './types';
 
 export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
-  const { data } = props;
+  const { data, onClicked } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -34,13 +34,16 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
         backgroundColor: getColor('bg'),
       }}
     >
-      <View
+      <Pressable
         style={{
           width: '100%',
           height: 59.5,
           flexDirection: 'row',
           alignItems: 'center',
           paddingHorizontal: 16,
+        }}
+        onPress={() => {
+          onClicked?.(data);
         }}
       >
         <Avatar url={data.avatar} size={40} />
@@ -53,7 +56,7 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
             {data.name ?? data.id}
           </SingleLineText>
         </View>
-      </View>
+      </Pressable>
       <View
         style={{
           height: 0.5,

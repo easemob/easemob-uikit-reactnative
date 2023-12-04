@@ -69,7 +69,7 @@ export function GroupListScreen(props: Props) {
         }}
         onClicked={(data) => {
           if (data) {
-            navigation.push('GroupParticipantList', {
+            navigation.push('GroupInfo', {
               params: {
                 groupId: data.groupId,
               },

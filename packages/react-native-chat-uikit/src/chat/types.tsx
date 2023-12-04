@@ -247,6 +247,10 @@ export type GroupModel = {
    * The group avatar url.
    */
   groupAvatar?: string;
+  /**
+   * The group my remark.
+   */
+  myRemark?: string;
 };
 
 export type GroupParticipantModel = {
@@ -331,6 +335,7 @@ export interface ContactServices {
       result: (data?: DataT[], error?: UIKitError) => void;
     }) => void
   ): void;
+  isContact(params: { userId: string }): boolean;
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void;
   getContact(params: {
     userId: string;
@@ -418,6 +423,33 @@ export interface GroupServices {
     groupDescription?: string;
     inviteMembers: string[];
     onResult: ResultCallback<GroupModel>;
+  }): void;
+  quitGroup(params: { groupId: string; onResult: ResultCallback<void> }): void;
+  destroyGroup(params: {
+    groupId: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  setGroupName(params: {
+    groupId: string;
+    groupNewName: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  setGroupDescription(params: {
+    groupId: string;
+    groupDescription: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  setGroupMyRemark(params: {
+    groupId: string;
+    groupMyRemark: string;
+    ext?: Record<string, string>;
+    onResult: ResultCallback<void>;
+  }): void;
+  setGroupAvatar(params: {
+    groupId: string;
+    groupAvatar: string;
+    ext?: Record<string, string>;
+    onResult: ResultCallback<void>;
   }): void;
 }
 

@@ -7,7 +7,7 @@ import { FlatListFactory } from '../../ui/FlatList';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
-import { SearchStyle } from '../SearchStyle';
+// import { SearchStyle } from '../SearchStyle';
 import { TopNavigationBar } from '../TopNavigationBar';
 import { useGroupParticipantList } from './GroupParticipantList.hooks';
 import { GroupParticipantListItemMemo } from './GroupParticipantList.item';
@@ -19,7 +19,7 @@ import type {
 const FlatList = FlatListFactory<GroupParticipantListItemProps>();
 
 export function GroupParticipantList(props: GroupParticipantListProps) {
-  const { containerStyle, onBack, onSearch } = props;
+  const { containerStyle, onBack } = props;
   const {
     data,
     refreshing,
@@ -30,6 +30,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     onViewableItemsChanged,
     listState,
     onClicked,
+    participantCount,
   } = useGroupParticipantList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -56,18 +57,30 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
             onPress={onBack}
           >
             <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
-            <Text>{'Group Participant List'}</Text>
+            <Text>{`Group Participant List (${participantCount})`}</Text>
           </Pressable>
         }
-        Right={<View style={{ width: 32, height: 32 }} />}
+        Right={
+          <View style={{ flexDirection: 'row' }}>
+            <Icon
+              name={'person_add'}
+              style={{ width: 24, height: 24, padding: 6 }}
+            />
+            <View style={{ width: 4 }} />
+            <Icon
+              name={'person_minus'}
+              style={{ width: 24, height: 24, padding: 6 }}
+            />
+          </View>
+        }
         containerStyle={{ paddingHorizontal: 12 }}
       />
-      <SearchStyle
+      {/* <SearchStyle
         title={'Search'}
         onPress={() => {
           onSearch?.();
         }}
-      />
+      /> */}
       <View style={{ flex: 1 }}>
         <FlatList
           ref={ref}

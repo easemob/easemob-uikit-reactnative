@@ -14,17 +14,21 @@ export function useGroupParticipantList(
   Omit<
     ListItemActions<GroupParticipantModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > {
+  > & {
+    participantCount: number;
+  } {
   const { onClicked, testMode, groupId } = props;
   const flatListProps = useFlatList<GroupParticipantListItemProps>({
     onInit: () => init(),
   });
   const { setData, dataRef } = flatListProps;
+  const [participantCount, setParticipantCount] = React.useState(0);
 
   const im = useChatContext();
 
   const onClickedCallback = React.useCallback(
     (data?: GroupParticipantModel | undefined) => {
+      console.log('test:zuoyu:onclicked:', data);
       if (onClicked) {
         onClicked(data);
       }
@@ -48,6 +52,7 @@ export function useGroupParticipantList(
                 } as GroupParticipantListItemProps;
               });
               setData([...dataRef.current]);
+              setParticipantCount(dataRef.current.length);
             }
           } else {
             if (error) {
@@ -62,5 +67,6 @@ export function useGroupParticipantList(
   return {
     ...flatListProps,
     onClicked: onClickedCallback,
+    participantCount: participantCount,
   };
 }

@@ -64,6 +64,15 @@ export const ICON_ASSETS = {
       return require('./icons/airplane_2x.png');
     }
   },
+  'aobot': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/aobot_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/aobot_3x.png');
+    } else {
+      return require('./icons/aobot_2x.png');
+    }
+  },
   'archives': (size: string) => {
     if (size === '3x') {
       return require('./icons/archives_3x.png');
@@ -296,6 +305,15 @@ export const ICON_ASSETS = {
       return require('./icons/arrowshape_right_3x.png');
     } else {
       return require('./icons/arrowshape_right_2x.png');
+    }
+  },
+  'bars_3': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/bars_3_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/bars_3_3x.png');
+    } else {
+      return require('./icons/bars_3_2x.png');
     }
   },
   'bell': (size: string) => {
@@ -577,6 +595,15 @@ export const ICON_ASSETS = {
       return require('./icons/crown1_2x.png');
     }
   },
+  'onlight': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/cursor/onlight_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/cursor/onlight_3x.png');
+    } else {
+      return require('./icons/cursor/onlight_2x.png');
+    }
+  },
   'dice': (size: string) => {
     if (size === '3x') {
       return require('./icons/dice_3x.png');
@@ -647,6 +674,24 @@ export const ICON_ASSETS = {
       return require('./icons/ellipsis_horizontally_3x.png');
     } else {
       return require('./icons/ellipsis_horizontally_2x.png');
+    }
+  },
+  'ellipsis_horizontally_in_circle': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/ellipsis_horizontally_in_circle_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/ellipsis_horizontally_in_circle_3x.png');
+    } else {
+      return require('./icons/ellipsis_horizontally_in_circle_2x.png');
+    }
+  },
+  'ellipsis_horizontally_in_circle_fill': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/ellipsis_horizontally_in_circle_fill_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/ellipsis_horizontally_in_circle_fill_3x.png');
+    } else {
+      return require('./icons/ellipsis_horizontally_in_circle_fill_2x.png');
     }
   },
   'ellipsis_vertical': (size: string) => {
@@ -811,6 +856,15 @@ export const ICON_ASSETS = {
       return require('./icons/hashtag_in_bubble_2x.png');
     }
   },
+  'hashtag_in_bubble_fill': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/hashtag_in_bubble_fill_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/hashtag_in_bubble_fill_3x.png');
+    } else {
+      return require('./icons/hashtag_in_bubble_fill_2x.png');
+    }
+  },
   'hashtag_n_lock': (size: string) => {
     if (size === '3x') {
       return require('./icons/hashtag_n_lock_3x.png');
@@ -872,6 +926,15 @@ export const ICON_ASSETS = {
       return require('./icons/img_3x.png');
     } else {
       return require('./icons/img_2x.png');
+    }
+  },
+  'img_circle': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/img_circle_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/img_circle_3x.png');
+    } else {
+      return require('./icons/img_circle_2x.png');
     }
   },
   'img_xmark': (size: string) => {
@@ -1090,6 +1153,15 @@ export const ICON_ASSETS = {
       return require('./icons/person_add_fill_2x.png');
     }
   },
+  'person_double': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/person_double_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/person_double_3x.png');
+    } else {
+      return require('./icons/person_double_3x.png');
+    }
+  },
   'person_double_3lines_fill': (size: string) => {
     if (size === '3x') {
       return require('./icons/person_double_3lines_fill_3x.png');
@@ -1099,6 +1171,15 @@ export const ICON_ASSETS = {
       return require('./icons/person_double_3lines_fill_2x.png');
     }
   },
+  'person_double_add': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/person_double_add_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/person_double_add_3x.png');
+    } else {
+      return require('./icons/person_double_add_2x.png');
+    }
+  },
   'person_double_fill': (size: string) => {
     if (size === '3x') {
       return require('./icons/person_double_fill_3x.png');
@@ -1106,6 +1187,15 @@ export const ICON_ASSETS = {
       return require('./icons/person_double_fill_3x.png');
     } else {
       return require('./icons/person_double_fill_2x.png');
+    }
+  },
+  'person_minus': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/person_minus_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/person_minus_3x.png');
+    } else {
+      return require('./icons/person_minus_2x.png');
     }
   },
   'person_minus_fill': (size: string) => {
@@ -1324,6 +1414,15 @@ export const ICON_ASSETS = {
       return require('./icons/rectangle_separate_2x.png');
     }
   },
+  'round_arrow': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/round_arrow_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/round_arrow_3x.png');
+    } else {
+      return require('./icons/round_arrow_2x.png');
+    }
+  },
   'round_arrow_thick': (size: string) => {
     if (size === '3x') {
       return require('./icons/round_arrow_thick_3x.png');
@@ -1331,6 +1430,15 @@ export const ICON_ASSETS = {
       return require('./icons/round_arrow_thick_3x.png');
     } else {
       return require('./icons/round_arrow_thick_2x.png');
+    }
+  },
+  'scan': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/scan_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/scan_3x.png');
+    } else {
+      return require('./icons/scan_2x.png');
     }
   },
   'screen_n_polygon': (size: string) => {
@@ -1583,6 +1691,24 @@ export const ICON_ASSETS = {
       return require('./icons/unchecked_rectangle_3x.png');
     } else {
       return require('./icons/unchecked_rectangle_2x.png');
+    }
+  },
+  'vertical_n_arrows': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/vertical_n_arrows_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/vertical_n_arrows_3x.png');
+    } else {
+      return require('./icons/vertical_n_arrows_2x.png');
+    }
+  },
+  'vertical_n_arrows——left': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/vertical_n_arrows——left_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/vertical_n_arrows——left_3x.png');
+    } else {
+      return require('./icons/vertical_n_arrows——left_2x.png');
     }
   },
   'video_camera': (size: string) => {

@@ -81,10 +81,16 @@ export function UnitList() {
   return <></>;
 }
 
+export function CalcuCount() {
+  const text = '中国人imin';
+  console.log('test:zuoyu:UnitList', text.length);
+  return <></>;
+}
+
 export default function TestUtils() {
   return (
     <Container appKey={''}>
-      <UnitList />
+      <CalcuCount />
     </Container>
   );
 }

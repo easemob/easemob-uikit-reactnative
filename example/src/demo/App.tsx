@@ -10,6 +10,7 @@ import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
 import {
   Container,
+  useChatListener,
   useDarkTheme,
   useLightTheme,
   usePresetPalette,
@@ -18,10 +19,13 @@ import {
 import type { RootParamsList, RootParamsName } from './routes';
 import {
   ConfigScreen,
+  ContactInfoScreen,
   ContactListScreen,
   ConversationListScreen,
   CreateGroupScreen,
+  GroupInfoScreen,
   GroupListScreen,
+  GroupParticipantInfoScreen,
   GroupParticipantListScreen,
   LoginListScreen,
   LoginScreen,
@@ -261,9 +265,47 @@ export function App() {
               }}
               component={CreateGroupScreen}
             />
+            <Root.Screen
+              name={'ContactInfo'}
+              options={{
+                headerShown: false,
+              }}
+              component={ContactInfoScreen}
+            />
+            <Root.Screen
+              name={'GroupInfo'}
+              options={{
+                headerShown: false,
+              }}
+              component={GroupInfoScreen}
+            />
+            <Root.Screen
+              name={'GroupParticipantInfo'}
+              options={{
+                headerShown: false,
+              }}
+              component={GroupParticipantInfoScreen}
+            />
           </Root.Navigator>
         </NavigationContainer>
+        <TestListener />
       </Container>
     </React.StrictMode>
   );
+}
+
+export function TestListener() {
+  useChatListener(
+    React.useMemo(() => {
+      return {
+        onError: (params) => {
+          console.log('dev:app:onError:', JSON.stringify(params));
+        },
+        onFinished: (params) => {
+          console.log('dev:app:onFinished:', params);
+        },
+      };
+    }, [])
+  );
+  return <></>;
 }

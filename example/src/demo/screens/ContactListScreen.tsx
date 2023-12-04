@@ -51,6 +51,11 @@ export function ContactListScreen(props: Props) {
             params: { searchType: 'new-conversation' },
           });
         }}
+        onClicked={(data) => {
+          if (data?.userId) {
+            navigation.push('ContactInfo', { params: { userId: data.userId } });
+          }
+        }}
       />
     </SafeAreaView>
   );
