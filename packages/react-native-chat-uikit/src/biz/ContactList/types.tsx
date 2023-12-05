@@ -6,7 +6,6 @@ import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import type { DefaultComponentModel } from '../ListSearch';
 import type {
-  ChoiceType,
   ContactType,
   ListItemActions,
   ListItemProps,
@@ -33,9 +32,7 @@ export type ContactListItemProps = ListItemProps &
   > & {
     section: ContactModel;
     contactType: ContactType;
-    onCheckClicked?:
-      | ((checked?: boolean, data?: ContactModel) => void)
-      | undefined;
+    onCheckClicked?: ((data?: ContactModel) => void) | undefined;
   };
 
 export type ContactListProps = ListRequestProps<DataModel> &
@@ -61,8 +58,8 @@ export type ContactListProps = ListRequestProps<DataModel> &
     onNewGroup?: () => void;
     onNewContact?: () => void;
     onCreateGroup?: (data?: ContactModel[]) => void;
-    selectedData?: ContactModel[];
-    choiceType?: ChoiceType;
+    selectedData?: ContactModel[]; // todo: changed to selectedData
+    groupId?: string;
   };
 
 export type SearchContactProps = ListRequestProps<DataModel> &
@@ -75,7 +72,7 @@ export type SearchContactProps = ListRequestProps<DataModel> &
     containerStyle?: StyleProp<ViewStyle>;
     onCancel?: (data?: ContactModel[]) => void;
     searchType: SearchType;
-    choiceType?: ChoiceType;
+    groupId?: string;
     // onSelectedResult?: (result: Map<string, boolean>) => void;
   };
 
@@ -87,9 +84,7 @@ export type UseContactListReturn = Omit<
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   onShowMenu?: () => void;
   alertRef: React.RefObject<AlertRef>;
-  onCheckClicked?:
-    | ((checked?: boolean, data?: ContactModel) => void)
-    | undefined;
+  onCheckClicked?: ((data?: ContactModel) => void) | undefined;
   selectedCount?: number;
   onNewGroup?: () => void;
   onCreateGroup?: () => void;
@@ -97,8 +92,6 @@ export type UseContactListReturn = Omit<
 
 export type ContactSearchModel = ContactModel &
   DefaultComponentModel & {
-    onCheckClicked?:
-      | ((checked?: boolean, data?: ContactModel) => void)
-      | undefined;
+    onCheckClicked?: ((data?: ContactModel) => void) | undefined;
   };
 export type UseSearchContactProps = SearchContactProps;

@@ -90,7 +90,7 @@ export function StateListSearchItem(
   props: ListSearchItemProps<ContactSearchModel>
 ) {
   const { data, keyword, onClicked } = props;
-  const { checked, onCheckClicked } = data;
+  const { checked, onCheckClicked, disable } = data;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -109,11 +109,11 @@ export function StateListSearchItem(
       light: colors.neutral[9],
       dark: colors.neutral[2],
     },
-    no_checked: {
+    disable: {
       light: colors.neutral[7],
       dark: colors.neutral[4],
     },
-    checked: {
+    enable: {
       light: colors.primary[5],
       dark: colors.primary[6],
     },
@@ -124,7 +124,13 @@ export function StateListSearchItem(
         backgroundColor: getColor('bg'),
       }}
       onPress={() => {
-        onClicked?.(data);
+        if (checked !== undefined) {
+          if (disable !== true) {
+            onCheckClicked?.(data);
+          }
+        } else {
+          onClicked?.(data);
+        }
       }}
     >
       <View
@@ -145,12 +151,12 @@ export function StateListSearchItem(
               style={{
                 height: 28,
                 width: 28,
-                tintColor: getColor(
-                  checked !== false ? 'checked' : 'no_checked'
-                ),
+                tintColor: getColor(checked === true ? 'enable' : 'disable'),
               }}
               onPress={() => {
-                onCheckClicked?.(checked, data);
+                if (disable !== true) {
+                  onCheckClicked?.(data);
+                }
               }}
             />
           </View>

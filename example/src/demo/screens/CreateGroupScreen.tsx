@@ -29,6 +29,9 @@ export function CreateGroupScreen(props: Props) {
           });
         }}
         selectedData={data}
+        onCreateGroupResult={() => {
+          navigation.goBack();
+        }}
       />
     </SafeAreaView>
   );

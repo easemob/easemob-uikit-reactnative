@@ -23,13 +23,20 @@ export function SearchContactScreen(props: Props) {
           // backgroundColor: 'red',
         }}
         onCancel={(data) => {
-          // navigation.goBack();
-          navigation.navigate('CreateGroup', {
-            params: {
-              searchType: 'create-group',
-              data: data ? JSON.stringify(data) : undefined,
-            },
-          });
+          if (searchType === 'create-group') {
+            navigation.navigate({
+              name: 'CreateGroup',
+              params: {
+                params: {
+                  searchType: 'create-group',
+                  data: data ? JSON.stringify(data) : undefined,
+                },
+              },
+              merge: true,
+            });
+          } else {
+            navigation.goBack();
+          }
         }}
         searchType={searchType}
       />

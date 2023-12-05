@@ -13,7 +13,7 @@ import type { ContactItemProps, ContactListItemProps } from './types';
 
 export function ContactListItem(props: ContactListItemProps) {
   const { section, onClicked, onCheckClicked } = props;
-  const { checked } = section;
+  const { checked, disable } = section;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -32,11 +32,11 @@ export function ContactListItem(props: ContactListItemProps) {
       light: colors.neutral[9],
       dark: colors.neutral[2],
     },
-    no_checked: {
+    disable: {
       light: colors.neutral[7],
       dark: colors.neutral[4],
     },
-    checked: {
+    enable: {
       light: colors.primary[5],
       dark: colors.primary[6],
     },
@@ -56,7 +56,13 @@ export function ContactListItem(props: ContactListItemProps) {
           paddingHorizontal: 16,
         }}
         onPress={() => {
-          onClicked?.(section);
+          if (checked !== undefined) {
+            if (disable !== true) {
+              onCheckClicked?.(section);
+            }
+          } else {
+            onClicked?.(section);
+          }
         }}
       >
         {checked !== undefined ? (
@@ -68,12 +74,12 @@ export function ContactListItem(props: ContactListItemProps) {
               style={{
                 height: 28,
                 width: 28,
-                tintColor: getColor(
-                  checked !== false ? 'checked' : 'no_checked'
-                ),
+                tintColor: getColor(checked !== false ? 'enable' : 'disable'),
               }}
               onPress={() => {
-                onCheckClicked?.(section.checked, section);
+                if (disable !== true) {
+                  onCheckClicked?.(section);
+                }
               }}
             />
           </View>

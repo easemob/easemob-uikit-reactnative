@@ -3,6 +3,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 import type { DataModel, GroupParticipantModel } from '../../chat';
 import type { DefaultComponentModel } from '../ListSearch';
 import type {
+  GroupParticipantType,
   ListItemActions,
   ListItemProps,
   ListItemRequestProps,
@@ -19,6 +20,7 @@ export type GroupParticipantListProps = ListRequestProps<DataModel> &
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     groupId: string;
+    participantType?: GroupParticipantType;
     containerStyle?: StyleProp<ViewStyle>;
     onBack?: () => void;
     onSearch?: () => void;
@@ -31,6 +33,7 @@ export type GroupParticipantListItemProps = ListItemProps &
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     data: GroupParticipantModel;
+    onCheckClicked?: ((data?: GroupParticipantModel) => void) | undefined;
   };
 
 export type SearchGroupParticipantProps = ListRequestProps<DataModel> &

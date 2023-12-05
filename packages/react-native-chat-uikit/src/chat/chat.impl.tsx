@@ -53,6 +53,7 @@ export abstract class ChatServiceImpl
   _groupList: Map<string, GroupModel>;
   _groupMemberList: Map<string, Map<string, GroupParticipantModel>>;
   _request: RequestList;
+  _contactState: Map<string, Map<string, boolean>>;
   _convDataRequestCallback?: (params: {
     ids: Map<DataModelType, string[]>;
     result: (
@@ -81,6 +82,7 @@ export abstract class ChatServiceImpl
     this._groupList = new Map();
     this._groupMemberList = new Map();
     this._request = new RequestList(this);
+    this._contactState = new Map();
   }
 
   destructor() {
@@ -97,6 +99,7 @@ export abstract class ChatServiceImpl
     this._contactList.clear();
     this._groupList.clear();
     this._groupMemberList.clear();
+    this._contactState.clear();
   }
 
   async init(params: {
@@ -982,6 +985,39 @@ export abstract class ChatServiceImpl
     });
   }
 
+  setContactCheckedState(params: {
+    key: string;
+    userId: string;
+    checked: boolean;
+  }): void {
+    const map = this._contactState.get(params.key);
+    if (map) {
+      if (params.checked === false) {
+        map.delete(params.userId);
+      } else {
+        map.set(params.userId, params.checked);
+      }
+    } else {
+      if (params.checked === true) {
+        this._contactState.set(params.key, new Map([[params.userId, true]]));
+      }
+    }
+  }
+  getContactCheckedState(params: {
+    key: string;
+    userId: string;
+  }): boolean | undefined {
+    const map = this._contactState.get(params.key);
+    if (map) {
+      return map.get(params.userId);
+    }
+    return undefined;
+  }
+
+  clearContactCheckedState(params: { key: string }): void {
+    this._contactState.delete(params.key);
+  }
+
   getPageGroups(params: {
     pageSize: number;
     pageNum: number;
@@ -1109,6 +1145,17 @@ export abstract class ChatServiceImpl
         },
       });
     }
+  }
+
+  getGroupMember(params: {
+    groupId: string;
+    userId: string;
+  }): GroupParticipantModel | undefined {
+    const memberList = this._groupMemberList.get(params.groupId);
+    if (memberList) {
+      return memberList.get(params.userId);
+    }
+    return undefined;
   }
 
   fetchJoinedGroupCount(params: {

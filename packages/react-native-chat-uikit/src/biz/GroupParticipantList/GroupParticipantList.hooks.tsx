@@ -16,8 +16,9 @@ export function useGroupParticipantList(
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     participantCount: number;
+    onCheckClicked?: ((data?: GroupParticipantModel) => void) | undefined;
   } {
-  const { onClicked, testMode, groupId } = props;
+  const { onClicked, testMode, groupId, participantType } = props;
   const flatListProps = useFlatList<GroupParticipantListItemProps>({
     onInit: () => init(),
   });
@@ -32,8 +33,30 @@ export function useGroupParticipantList(
       if (onClicked) {
         onClicked(data);
       }
+      // todo: update to model
     },
     [onClicked]
+  );
+
+  const onCheckClickedCallback = React.useCallback(
+    (data?: GroupParticipantModel) => {
+      if (data?.checked) {
+        for (let i = 0; i < dataRef.current.length; i++) {
+          const item = dataRef.current[i];
+          if (item) {
+            if (item.id === data.id) {
+              dataRef.current[i] = {
+                ...item,
+                data: { ...item.data, checked: !data.checked },
+              };
+              setData([...dataRef.current]);
+              break;
+            }
+          }
+        }
+      }
+    },
+    [dataRef, setData]
   );
 
   const init = () => {
@@ -46,10 +69,20 @@ export function useGroupParticipantList(
           if (isOk === true) {
             if (value) {
               dataRef.current = value.map((item) => {
-                return {
-                  id: item.id,
-                  data: item,
-                } as GroupParticipantListItemProps;
+                if (
+                  participantType === 'common' ||
+                  participantType === undefined
+                ) {
+                  return {
+                    id: item.id,
+                    data: { ...item, checked: undefined },
+                  } as GroupParticipantListItemProps;
+                } else {
+                  return {
+                    id: item.id,
+                    data: item,
+                  } as GroupParticipantListItemProps;
+                }
               });
               setData([...dataRef.current]);
               setParticipantCount(dataRef.current.length);
@@ -67,6 +100,7 @@ export function useGroupParticipantList(
   return {
     ...flatListProps,
     onClicked: onClickedCallback,
+    onCheckClicked: onCheckClickedCallback,
     participantCount: participantCount,
   };
 }

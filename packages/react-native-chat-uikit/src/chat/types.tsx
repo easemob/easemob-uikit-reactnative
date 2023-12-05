@@ -196,6 +196,7 @@ export type ContactModel = Record<Keyof<ChatContact>, string> & {
   nickName: string;
   avatar?: string;
   checked?: boolean;
+  disable?: boolean;
 };
 
 export type GroupModel = {
@@ -257,6 +258,8 @@ export type GroupParticipantModel = {
   id: string;
   name?: string;
   avatar?: string;
+  checked?: boolean;
+  disable?: boolean;
 };
 
 export type NewRequestModel = {
@@ -358,6 +361,19 @@ export interface ContactServices {
     userId: string;
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Save state for multi-page components.
+   */
+  setContactCheckedState(params: {
+    key: string;
+    userId: string;
+    checked: boolean;
+  }): void;
+  getContactCheckedState(params: {
+    key: string;
+    userId: string;
+  }): boolean | undefined;
+  clearContactCheckedState(params: { key: string }): void;
 }
 
 export interface UserServices {
@@ -410,6 +426,10 @@ export interface GroupServices {
     groupId: string;
     onResult: ResultCallback<GroupParticipantModel[]>;
   }): void;
+  getGroupMember(params: {
+    groupId: string;
+    userId: string;
+  }): GroupParticipantModel | undefined;
   fetchJoinedGroupCount(params: {
     groupId: string;
     onResult: ResultCallback<number>;

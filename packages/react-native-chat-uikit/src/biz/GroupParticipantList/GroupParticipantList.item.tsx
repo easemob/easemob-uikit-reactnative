@@ -3,12 +3,13 @@ import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
+import { IconButton } from '../../ui/Button';
 import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { GroupParticipantListItemProps } from './types';
 
 export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
-  const { data, onClicked } = props;
+  const { data, onClicked, onCheckClicked } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -27,7 +28,50 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
       light: colors.neutral[9],
       dark: colors.neutral[2],
     },
+    no_checked: {
+      light: colors.neutral[7],
+      dark: colors.neutral[4],
+    },
+    checked: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+    enable: {
+      light: colors.neutral[7],
+      dark: colors.neutral[4],
+    },
+    disable: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
   });
+  const getCheckedButton = (disable?: boolean, checked?: boolean) => {
+    const name = (checked?: boolean) => {
+      return checked !== false ? 'checked_rectangle' : 'unchecked_rectangle';
+    };
+    const color = (disable?: boolean) => {
+      return disable !== true ? getColor('enable') : getColor('disable');
+    };
+    if (checked === undefined) {
+      return null;
+    }
+
+    return (
+      <View style={{ marginRight: 12 }}>
+        <IconButton
+          iconName={name(checked)}
+          style={{
+            height: 28,
+            width: 28,
+            tintColor: color(disable),
+          }}
+          onPress={() => {
+            onCheckClicked?.(data);
+          }}
+        />
+      </View>
+    );
+  };
   return (
     <View
       style={{
@@ -46,6 +90,8 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
           onClicked?.(data);
         }}
       >
+        {getCheckedButton(data.disable, data.checked)}
+
         <Avatar url={data.avatar} size={40} />
         <View style={{ flexGrow: 1, paddingLeft: 12, maxWidth: '80%' }}>
           <SingleLineText

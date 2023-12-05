@@ -15,13 +15,19 @@ export type PropsWithTest = { testMode?: 'only-ui' | undefined };
 export type PropsWithError = { onError?: (error: UIKitError) => void };
 export type PropsWithChildren = React.PropsWithChildren<{}>;
 
-export type ContactType = 'contact-list' | 'new-conversation' | 'create-group';
+export type ContactType =
+  | 'contact-list'
+  | 'new-conversation'
+  | 'create-group'
+  | 'add-group-member';
+export type GroupParticipantType = 'common' | 'delete' | 'add';
 
 export type SearchType =
   | 'conv-list'
   | 'contact-list'
   | 'new-conversation'
   | 'create-group'
+  | 'add-group-member'
   | 'group-list'
   | 'group-member-list'
   | 'request-list';
