@@ -19,22 +19,28 @@ import type {
   UseContactListReturn,
 } from './types';
 
-export function useContactList(
-  props: ContactListProps
-): UseSectionListReturn<ContactListItemProps, IndexModel, ListIndexProps> &
-  UseContactListReturn {
+export function useContactList(props: ContactListProps): UseSectionListReturn<
+  ContactListItemProps,
+  IndexModel,
+  ListIndexProps
+> &
+  UseContactListReturn & {
+    selectedMemberCount: number;
+    onAddGroupParticipantResult?: () => void;
+  } {
   const {
     onClicked,
     testMode,
     onRequestData,
     onSort: propsOnSort,
-    onNewContact,
-    onNewConversation,
-    onNewGroup,
-    onCreateGroup,
+    onClickedNewContact,
+    onClickedNewConversation,
+    onClickedNewGroup,
+    onCreateGroupResultValue,
     contactType,
     selectedData,
     groupId,
+    onAddGroupParticipantResult,
   } = props;
   const sectionProps = useSectionList<
     ContactListItemProps,
@@ -52,6 +58,8 @@ export function useContactList(
     isAutoLoad,
   } = sectionProps;
   const [selectedCount, setSelectedCount] = React.useState(0);
+  const [selectedMemberCount, setSelectedMemberCount] =
+    React.useState<number>(0);
   const choiceType = React.useRef<ChoiceType>('multiple').current;
 
   const im = useChatContext();
@@ -95,12 +103,36 @@ export function useContactList(
     setSelectedCount(count);
   }, [contactType, sectionsRef]);
 
+  const calculateAddedGroupMemberCount = React.useCallback(() => {
+    if (contactType !== 'add-group-member') {
+      return;
+    }
+    let count = 0;
+    sectionsRef.current.forEach((section) => {
+      section.data.forEach((item) => {
+        if (item.section.checked === true) {
+          if (groupId) {
+            const isExisted = im.getGroupMember({
+              groupId: groupId,
+              userId: item.section.userId,
+            });
+            if (isExisted === undefined) {
+              count++;
+            }
+          }
+        }
+      });
+    });
+    setSelectedMemberCount(count);
+  }, [contactType, groupId, im, sectionsRef]);
+
   const onSetData = React.useCallback(
     (list: ContactListItemProps[]) => {
       if (isSort === true) {
         list.sort(onSort);
       }
       calculateGroupCount();
+      calculateAddedGroupMemberCount();
 
       const sortList: (IndexModel & { data: ContactListItemProps[] })[] = [];
       list.forEach((item) => {
@@ -127,6 +159,7 @@ export function useContactList(
       setSection(sectionsRef.current);
     },
     [
+      calculateAddedGroupMemberCount,
       calculateGroupCount,
       isSort,
       onSort,
@@ -328,7 +361,7 @@ export function useContactList(
               const { isOk, value, error } = result;
               if (isOk === true) {
                 if (value && groupId) {
-                  im.getAllGroupMembers({
+                  im.getGroupAllMembers({
                     groupId,
                     onResult: (groupResult) => {
                       if (groupResult.isOk === true) {
@@ -422,7 +455,7 @@ export function useContactList(
           icon: 'bubble_fill',
           onClicked: () => {
             menuRef.current?.startHide?.();
-            onNewConversation?.();
+            onClickedNewConversation?.();
           },
         },
         {
@@ -431,8 +464,8 @@ export function useContactList(
           icon: 'person_add_fill',
           onClicked: () => {
             menuRef.current?.startHide?.(() => {
-              if (onNewContact) {
-                onNewContact();
+              if (onClickedNewContact) {
+                onClickedNewContact();
               } else {
                 alertRef.current?.alertWithInit?.({
                   title: 'Add Contact',
@@ -473,7 +506,7 @@ export function useContactList(
           icon: 'person_double_fill',
           onClicked: () => {
             menuRef.current?.startHide?.(() => {
-              onNewGroup?.();
+              onClickedNewGroup?.();
             });
           },
         },
@@ -576,8 +609,37 @@ export function useContactList(
       .map((item) => {
         return item.section;
       });
-    onCreateGroup?.(list);
-  }, [contactType, onCreateGroup, sectionsRef]);
+    onCreateGroupResultValue?.(list);
+  }, [contactType, onCreateGroupResultValue, sectionsRef]);
+
+  const onAddGroupParticipantCallback = React.useCallback(() => {
+    if (contactType !== 'add-group-member') {
+      return;
+    }
+    const list = sectionsRef.current
+      .map((section) => {
+        return section.data.map((item) => {
+          return item;
+        });
+      })
+      .flat()
+      .filter((item) => {
+        if (item.section.checked === true) {
+          if (groupId) {
+            const isExisted = im.getGroupMember({
+              groupId: groupId,
+              userId: item.section.userId,
+            });
+            return isExisted === undefined;
+          }
+        }
+        return false;
+      })
+      .map((item) => {
+        return item.section;
+      });
+    onAddGroupParticipantResult?.(list);
+  }, [contactType, groupId, im, onAddGroupParticipantResult, sectionsRef]);
 
   return {
     ...sectionProps,
@@ -589,7 +651,9 @@ export function useContactList(
     onClicked: onClickedCallback,
     onCheckClicked: onCheckClickedCallback,
     selectedCount,
-    onCreateGroup: onCreateGroupCallback,
+    onClickedCreateGroup: onCreateGroupCallback,
+    selectedMemberCount,
+    onAddGroupParticipantResult: onAddGroupParticipantCallback,
   };
 }
 

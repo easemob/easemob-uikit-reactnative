@@ -24,6 +24,10 @@ export type GroupParticipantListProps = ListRequestProps<DataModel> &
     containerStyle?: StyleProp<ViewStyle>;
     onBack?: () => void;
     onSearch?: () => void;
+    onClickedAddParticipant?: () => void;
+    onClickedDelParticipant?: () => void;
+    onDelParticipant?: (data?: GroupParticipantModel[]) => void;
+    onChangeOwner?: (data?: GroupParticipantModel) => void;
   };
 
 export type GroupParticipantListItemProps = ListItemProps &

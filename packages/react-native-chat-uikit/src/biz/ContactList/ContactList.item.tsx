@@ -74,7 +74,9 @@ export function ContactListItem(props: ContactListItemProps) {
               style={{
                 height: 28,
                 width: 28,
-                tintColor: getColor(checked !== false ? 'enable' : 'disable'),
+                tintColor: getColor(
+                  checked !== false && disable !== true ? 'enable' : 'disable'
+                ),
               }}
               onPress={() => {
                 if (disable !== true) {

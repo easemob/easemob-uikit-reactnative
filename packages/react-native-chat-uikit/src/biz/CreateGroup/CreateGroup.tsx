@@ -6,6 +6,7 @@ import {
   ResultCallback,
   useChatContext,
 } from '../../chat';
+import { getCurTs } from '../../utils';
 import { ContactList, ContactListProps } from '../ContactList';
 
 export type CreateGroupProps = Pick<
@@ -16,27 +17,27 @@ export type CreateGroupProps = Pick<
   onCreateGroupResult?: ResultCallback<GroupModel>;
 };
 export function CreateGroup(props: CreateGroupProps) {
-  const { onCreateGroupResult } = props;
+  const { onCreateGroupResult: propsOnCreateGroupResult } = props;
   const im = useChatContext();
-  const onCreateGroup = React.useCallback(
+  const onCreateGroupResultValue = React.useCallback(
     (data?: ContactModel[]) => {
       if (data && data.length > 0) {
         im.CreateGroup({
-          groupName: 'New Group',
+          groupName: getCurTs().toString(),
           inviteMembers: data.map((item) => item.userId),
           onResult: (result) => {
             console.log('CreateGroup', result);
-            onCreateGroupResult?.(result);
+            propsOnCreateGroupResult?.(result);
           },
         });
       }
     },
-    [im, onCreateGroupResult]
+    [im, propsOnCreateGroupResult]
   );
   return (
     <ContactList
       contactType={'create-group'}
-      onCreateGroup={onCreateGroup}
+      onCreateGroupResultValue={onCreateGroupResultValue}
       {...props}
     />
   );

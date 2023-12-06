@@ -10,6 +10,7 @@ export function SearchContactScreen(props: Props) {
   const { navigation, route } = props;
   const searchType = ((route.params as any)?.params as any)
     ?.searchType as SearchType;
+  const groupId = ((route.params as any)?.params as any)?.groupId;
   return (
     <SafeAreaView
       style={{
@@ -29,6 +30,19 @@ export function SearchContactScreen(props: Props) {
               params: {
                 params: {
                   searchType: 'create-group',
+                  groupId,
+                  data: data ? JSON.stringify(data) : undefined,
+                },
+              },
+              merge: true,
+            });
+          } else if (searchType === 'add-group-member') {
+            navigation.navigate({
+              name: 'AddGroupParticipant',
+              params: {
+                params: {
+                  searchType: 'add-group-member',
+                  groupId,
                   data: data ? JSON.stringify(data) : undefined,
                 },
               },
@@ -39,6 +53,7 @@ export function SearchContactScreen(props: Props) {
           }
         }}
         searchType={searchType}
+        groupId={groupId}
       />
     </SafeAreaView>
   );

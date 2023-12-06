@@ -41,12 +41,12 @@ export function ContactListScreen(props: Props) {
             params: { searchType: 'contact-list' },
           });
         }}
-        onNewGroup={() => {
+        onClickedNewGroup={() => {
           navigation.navigate('CreateGroup', {
             params: { searchType: 'create-group' },
           });
         }}
-        onNewConversation={() => {
+        onClickedNewConversation={() => {
           navigation.navigate('NewConversation', {
             params: { searchType: 'new-conversation' },
           });

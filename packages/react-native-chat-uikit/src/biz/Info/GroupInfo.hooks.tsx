@@ -13,6 +13,7 @@ import type { GroupInfoProps } from './types';
 export function useGroupInfo(props: GroupInfoProps) {
   const {
     groupId,
+    ownerId,
     groupName: propsGroupName,
     groupAvatar: propsGroupAvatar,
     groupDescription: propsGroupDescription,
@@ -23,6 +24,10 @@ export function useGroupInfo(props: GroupInfoProps) {
     onGroupDescription: propsOnGroupDescription,
     onCopyId: propsOnCopyId,
     onParticipant: propsOnParticipant,
+    onClickedChangeGroupOwner,
+    onGroupDestroy,
+    onGroupQuit,
+    onGroupUpdateMyRemark,
   } = props;
   console.log('test:zuoyu:groupinfo:', props);
   const im = useChatContext();
@@ -30,37 +35,35 @@ export function useGroupInfo(props: GroupInfoProps) {
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const ownerIdRef = React.useRef('');
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [groupName, setGroupName] = React.useState(propsGroupName);
   const [groupAvatar, setGroupAvatar] = React.useState(propsGroupAvatar);
   const [groupDescription, setGroupDescription] = React.useState(
     propsGroupDescription
   );
+  const [groupMemberCount, setGroupMemberCount] = React.useState(0);
   useLifecycle(
     React.useCallback(
       (state: any) => {
         if (state === 'load') {
-          im.getGroupInfo({
+          im.getGroupInfoFromServer({
             groupId,
             onResult: (value) => {
               const { isOk } = value;
-              console.log('test:zuoyu:groupinfo:', value);
-              if (isOk === true) {
+              console.log('test:zuoyu:groupinfo:', value, ownerId);
+              if (isOk === true && value.value) {
                 setGroupDescription(value.value?.description);
                 setGroupName(value.value?.groupName);
-                let ext = value.value?.options?.ext;
-                try {
-                  if (ext) {
-                    ext = JSON.parse(ext);
-                    setGroupAvatar((ext as any)?.groupAvatar);
-                  }
-                } catch (error) {}
+                setGroupAvatar(value.value.groupAvatar);
+                setGroupMemberCount(value.value.memberCount ?? 0);
+                ownerIdRef.current = value.value.owner;
               }
             },
           });
         }
       },
-      [im, groupId]
+      [im, groupId, ownerId]
     )
   );
   const onDoNotDisturb = (value: boolean) => {
@@ -216,6 +219,7 @@ export function useGroupInfo(props: GroupInfoProps) {
       supportInput: true,
       supportInputStatistics: true,
       inputMaxCount: 200,
+      // isSaveInput: true,
       buttons: [
         {
           text: tr('Cancel'),
@@ -232,23 +236,15 @@ export function useGroupInfo(props: GroupInfoProps) {
               if (text.trim().length === 0) {
                 return;
               }
-              im.getGroupInfo({
+              if (im.userId === undefined) {
+                return;
+              }
+              im.setGroupMyRemark({
                 groupId,
-                onResult: (value) => {
-                  let ext = value.value?.options?.ext;
-                  try {
-                    if (ext) {
-                      ext = JSON.parse(ext);
-                    }
-                  } catch (error) {}
-                  im.setGroupMyRemark({
-                    groupId,
-                    groupMyRemark: text,
-                    ext: typeof ext === 'object' ? ext : {},
-                    onResult: () => {
-                      // todo:
-                    },
-                  });
+                memberId: im.userId,
+                groupMyRemark: text,
+                onResult: () => {
+                  onGroupUpdateMyRemark?.(groupId);
                 },
               });
             }
@@ -281,52 +277,100 @@ export function useGroupInfo(props: GroupInfoProps) {
   };
 
   const onMoreMenu = () => {
-    // todo: quit or destroy
-    im.getGroupInfo({
-      groupId,
-      onResult: (value) => {
-        if (value.isOk === true && value) {
-          if (value.value?.owner === im.userId) {
-          }
-        }
-      },
-    });
-    menuRef.current.startShowWithProps({
-      onRequestModalClose: onRequestModalClose,
-      hasCancel: true,
-      layoutType: 'center',
-      initItems: [
-        {
-          name: tr('quit_group'),
-          isHigh: true,
-          onClicked: () => {
-            menuRef.current.startHide(() => {
-              alertRef.current.alertWithInit({
-                title: tr('quit_group'),
-                message: tr('quit_group_confirm'),
-                buttons: [
-                  {
-                    text: tr('cancel'),
-                    onPress: () => {
-                      alertRef.current.close();
+    if (im.userId !== ownerIdRef.current) {
+      menuRef.current.startShowWithProps({
+        onRequestModalClose: onRequestModalClose,
+        hasCancel: true,
+        layoutType: 'center',
+        initItems: [
+          {
+            name: tr('quit_group'),
+            isHigh: true,
+            onClicked: () => {
+              menuRef.current.startHide(() => {
+                alertRef.current.alertWithInit({
+                  title: tr('quit_group'),
+                  message: tr('quit_group_confirm'),
+                  buttons: [
+                    {
+                      text: tr('cancel'),
+                      onPress: () => {
+                        alertRef.current.close();
+                      },
                     },
-                  },
-                  {
-                    text: tr('Quit'),
-                    isPreferred: true,
-                    onPress: () => {
-                      alertRef.current.close();
-                      // todo: quit or destroy
-                      im.quitGroup({ groupId, onResult: () => {} });
+                    {
+                      text: tr('Quit'),
+                      isPreferred: true,
+                      onPress: () => {
+                        alertRef.current.close();
+                        im.quitGroup({
+                          groupId,
+                          onResult: () => {
+                            console.log('test:zuoyu:quitgroup:');
+                            onGroupQuit?.(groupId);
+                          },
+                        });
+                      },
                     },
-                  },
-                ],
+                  ],
+                });
               });
-            });
+            },
           },
-        },
-      ],
-    });
+        ],
+      });
+    } else {
+      menuRef.current.startShowWithProps({
+        onRequestModalClose: onRequestModalClose,
+        hasCancel: true,
+        layoutType: 'center',
+        initItems: [
+          {
+            name: tr('change_group_owner'),
+            isHigh: false,
+            onClicked: () => {
+              menuRef.current.startHide(() => {
+                onClickedChangeGroupOwner?.(groupId, ownerIdRef.current);
+              });
+            },
+          },
+          {
+            name: tr('destroy_group'),
+            isHigh: true,
+            onClicked: () => {
+              menuRef.current.startHide(() => {
+                alertRef.current.alertWithInit({
+                  title: tr('confirm destroy group?'),
+                  message: tr('confirm group and remove message'),
+                  buttons: [
+                    {
+                      text: tr('Cancel'),
+                      onPress: () => {
+                        alertRef.current.close?.();
+                      },
+                    },
+                    {
+                      text: tr('Confirm'),
+                      isPreferred: true,
+                      onPress: () => {
+                        alertRef.current.close?.();
+                        im.destroyGroup({
+                          groupId,
+                          onResult: () => {
+                            console.log('test:zuoyu:destroygroup:', groupId);
+                            onGroupDestroy?.(groupId);
+                          },
+                        });
+                      },
+                    },
+                  ],
+                });
+              });
+            },
+          },
+        ],
+      });
+    }
   };
 
   return {
@@ -348,5 +392,6 @@ export function useGroupInfo(props: GroupInfoProps) {
     onRequestModalClose,
     menuRef,
     onMore: onMoreMenu,
+    groupMemberCount,
   };
 }

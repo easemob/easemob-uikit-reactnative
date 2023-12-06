@@ -1,6 +1,11 @@
 import * as React from 'react';
 
-import { GroupModel, useChatContext, useChatListener } from '../../chat';
+import {
+  ChatServiceListener,
+  GroupModel,
+  useChatContext,
+  useChatListener,
+} from '../../chat';
 import { gGroupListPageNumber } from '../const';
 import { useFlatList } from '../List';
 import type { ListItemActions, UseFlatListReturn } from '../types';
@@ -44,8 +49,19 @@ export function useGroupList(
         (item, index, self) =>
           index === self.findIndex((t) => t.data.groupId === item.data.groupId)
       );
-      setData([...uniqueList]);
+      dataRef.current = uniqueList;
+      setData([...dataRef.current]);
     }
+  };
+
+  const updateData = (data: GroupModel) => {
+    dataRef.current = dataRef.current.map((item) => {
+      if (item.data.groupId === data.groupId) {
+        item.data = { ...item.data, ...data };
+      }
+      return item;
+    });
+    setData([...dataRef.current]);
   };
 
   const init = () => {
@@ -157,11 +173,13 @@ export function useGroupList(
     }
   };
 
-  useChatListener({
+  const listenerRef = React.useRef<ChatServiceListener>({
     onMemberRemoved: (params: { groupId: string; groupName?: string }) => {
+      console.log('test:zuoyu:onMemberRemoved:', params);
       removeGroup(params.groupId);
     },
     onDestroyed: (params: { groupId: string; groupName?: string }) => {
+      console.log('test:zuoyu:onDestroyed:', params);
       removeGroup(params.groupId);
     },
     onAutoAcceptInvitation: (params: {
@@ -169,9 +187,24 @@ export function useGroupList(
       inviter: string;
       inviteMessage?: string;
     }) => {
+      console.log('test:zuoyu:onAutoAcceptInvitation:', params);
       addGroup({ ...params });
     },
+    onCreateGroup: (group) => {
+      console.log('test:zuoyu:onCreateGroup:', group);
+      addGroup({ groupId: group.groupId, inviter: '' });
+    },
+    onGroupInfoChanged: (group) => {
+      updateData(group);
+    },
+    onDetailChanged: (group) => {
+      console.log('test:zuoyu:onDetailChanged', group);
+    },
+    onQuitGroup: (groupId) => {
+      removeGroup(groupId);
+    },
   });
+  useChatListener(listenerRef.current);
 
   return {
     ...flatListProps,

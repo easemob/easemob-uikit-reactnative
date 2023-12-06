@@ -3,6 +3,8 @@ import { ListRenderItemInfo, Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
+import { Alert } from '../../ui/Alert';
+import { IconButton } from '../../ui/Button';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
@@ -19,7 +21,7 @@ import type {
 const FlatList = FlatListFactory<GroupParticipantListItemProps>();
 
 export function GroupParticipantList(props: GroupParticipantListProps) {
-  const { containerStyle, onBack } = props;
+  const { containerStyle, onBack, participantType } = props;
   const {
     data,
     refreshing,
@@ -31,6 +33,12 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     listState,
     onClicked,
     participantCount,
+    onClickedAddParticipant,
+    onClickedDelParticipant,
+    deleteCount,
+    onDelParticipant,
+    alertRef,
+    onCheckClicked,
   } = useGroupParticipantList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -38,7 +46,108 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
       light: colors.neutral[98],
       dark: colors.neutral[1],
     },
+    text: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    text_disable: {
+      light: colors.neutral[7],
+      dark: colors.neutral[3],
+    },
+    text_enable: {
+      light: colors.error[5],
+      dark: colors.error[6],
+    },
   });
+
+  const navigationBar = () => {
+    if (participantType === 'delete') {
+      return (
+        <TopNavigationBar
+          Left={
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+              onPress={onBack}
+            >
+              <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+              <Text
+                textType={'medium'}
+                paletteType={'label'}
+                style={{ color: getColor('text') }}
+              >{`Remove Group Participant`}</Text>
+            </Pressable>
+          }
+          Right={
+            <Pressable
+              style={{ flexDirection: 'row' }}
+              onPress={onDelParticipant}
+            >
+              <Text
+                textType={'medium'}
+                paletteType={'label'}
+                style={{
+                  color: getColor(
+                    deleteCount === 0 ? 'text_disable' : 'text_enable'
+                  ),
+                }}
+              >{`Delete(${deleteCount})`}</Text>
+            </Pressable>
+          }
+          containerStyle={{ paddingHorizontal: 12 }}
+        />
+      );
+    } else if (participantType === 'change-owner') {
+      return (
+        <TopNavigationBar
+          Left={
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+              onPress={onBack}
+            >
+              <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+              <Text
+                textType={'medium'}
+                paletteType={'label'}
+                style={{ color: getColor('text') }}
+              >{`Change owner`}</Text>
+            </Pressable>
+          }
+          Right={<View style={{ width: 1, height: 1 }} />}
+          containerStyle={{ paddingHorizontal: 12 }}
+        />
+      );
+    } else {
+      return (
+        <TopNavigationBar
+          Left={
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+              onPress={onBack}
+            >
+              <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+              <Text>{`Group Participant List (${participantCount})`}</Text>
+            </Pressable>
+          }
+          Right={
+            <View style={{ flexDirection: 'row' }}>
+              <IconButton
+                iconName={'person_add'}
+                style={{ width: 24, height: 24, padding: 6 }}
+                onPress={onClickedAddParticipant}
+              />
+              <View style={{ width: 4 }} />
+              <IconButton
+                iconName={'person_minus'}
+                style={{ width: 24, height: 24, padding: 6 }}
+                onPress={onClickedDelParticipant}
+              />
+            </View>
+          }
+          containerStyle={{ paddingHorizontal: 12 }}
+        />
+      );
+    }
+  };
 
   return (
     <View
@@ -50,31 +159,8 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
         containerStyle,
       ]}
     >
-      <TopNavigationBar
-        Left={
-          <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center' }}
-            onPress={onBack}
-          >
-            <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
-            <Text>{`Group Participant List (${participantCount})`}</Text>
-          </Pressable>
-        }
-        Right={
-          <View style={{ flexDirection: 'row' }}>
-            <Icon
-              name={'person_add'}
-              style={{ width: 24, height: 24, padding: 6 }}
-            />
-            <View style={{ width: 4 }} />
-            <Icon
-              name={'person_minus'}
-              style={{ width: 24, height: 24, padding: 6 }}
-            />
-          </View>
-        }
-        containerStyle={{ paddingHorizontal: 12 }}
-      />
+      {navigationBar()}
+
       {/* <SearchStyle
         title={'Search'}
         onPress={() => {
@@ -98,7 +184,11 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
           ) => {
             const { item } = info;
             return (
-              <GroupParticipantListItemMemo {...item} onClicked={onClicked} />
+              <GroupParticipantListItemMemo
+                {...item}
+                onClicked={onClicked}
+                onCheckClicked={onCheckClicked}
+              />
             );
           }}
           keyExtractor={(item: GroupParticipantListItemProps) => {
@@ -119,6 +209,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
           }
         />
       </View>
+      <Alert ref={alertRef} />
     </View>
   );
 }

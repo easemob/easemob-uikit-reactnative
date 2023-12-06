@@ -80,6 +80,12 @@ export function GroupParticipantListScreen(props: Props) {
             });
           }
         }}
+        onClickedAddParticipant={() => {
+          navigation.push('AddGroupParticipant', { params: { groupId } });
+        }}
+        onClickedDelParticipant={() => {
+          navigation.push('DelGroupParticipant', { params: { groupId } });
+        }}
       />
     </SafeAreaView>
   );

@@ -23,7 +23,7 @@ export function UseSearchGroupParticipant(
   const init = () => {
     if (testMode === 'only-ui') {
     } else {
-      im.getAllGroupMembers({
+      im.getGroupAllMembers({
         groupId: groupId,
         onResult: (result) => {
           const { isOk, value, error } = result;

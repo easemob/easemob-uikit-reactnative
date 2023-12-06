@@ -43,6 +43,7 @@ export function GroupInfo(props: GroupInfoProps) {
     menuRef,
     onRequestModalClose,
     onMore,
+    groupMemberCount,
   } = useGroupInfo(props);
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -189,7 +190,7 @@ export function GroupInfo(props: GroupInfoProps) {
               paletteType={'label'}
               style={{ color: getColor('t1') }}
             >
-              {tr('88')}
+              {groupMemberCount}
             </Text>
           }
           RightIcon={

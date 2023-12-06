@@ -25,6 +25,7 @@ export type ContactInfoProps = InfoProps & {
 };
 export type GroupInfoProps = InfoProps & {
   groupId: string;
+  ownerId?: string;
   groupName?: string;
   groupAvatar?: string;
   groupDescription?: string;
@@ -34,6 +35,10 @@ export type GroupInfoProps = InfoProps & {
   onGroupName?: (groupId: string) => void;
   onGroupDescription?: (groupId: string) => void;
   onGroupAvatar?: (groupId: string) => void;
+  onClickedChangeGroupOwner?: (groupId: string, ownerId: string) => void;
+  onGroupDestroy?: (groupId: string) => void;
+  onGroupQuit?: (groupId: string) => void;
+  onGroupUpdateMyRemark?: (groupId: string) => void;
 };
 export type GroupParticipantInfoProps = InfoProps & {
   groupId: string;

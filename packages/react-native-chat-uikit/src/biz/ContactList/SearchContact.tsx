@@ -10,6 +10,7 @@ export function SearchContact(props: SearchContactProps) {
 
   return (
     <ListSearch<ContactSearchModel>
+      {...props}
       initData={data}
       onCancel={onCancel}
       containerStyle={containerStyle}

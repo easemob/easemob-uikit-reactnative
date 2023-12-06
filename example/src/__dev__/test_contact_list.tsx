@@ -16,7 +16,7 @@ export function CL() {
     <SafeAreaView>
       <ContactList
         testMode={'only-ui'}
-        contactType={'new-contact-list'}
+        contactType={'new-conversation'}
         containerStyle={{
           height: '100%',
           // backgroundColor: 'yellow',

@@ -23,6 +23,7 @@ import {
 import { ConversationStorage } from '../db/storage';
 import { ErrorCode, UIKitError } from '../error';
 import { asyncTask, mergeObjects } from '../utils';
+import { gGroupMemberMyRemark } from './const';
 import { RequestList } from './requestList';
 import {
   ChatEventType,
@@ -393,7 +394,7 @@ export abstract class ChatServiceImpl
     };
   }
 
-  async toUIGroup(group: ChatGroup): Promise<GroupModel> {
+  toUIGroup(group: ChatGroup): GroupModel {
     return {
       ...group,
       groupId: group.groupId,
@@ -1079,72 +1080,73 @@ export abstract class ChatServiceImpl
     });
   }
 
-  getAllGroupMembers(params: {
+  getGroupAllMembers(params: {
     groupId: string;
+    isReset?: boolean;
     onResult: ResultCallback<GroupParticipantModel[]>;
   }): void {
+    const { isReset = false } = params;
     const memberList = this._groupMemberList.get(params.groupId);
-    if (memberList && memberList.size > 0) {
+    if (memberList && memberList.size > 0 && isReset === false) {
       params.onResult({
         isOk: true,
         value: Array.from(memberList.values()),
       });
       return;
-    } else {
-      let cursor = '';
-      const pageSize = 200;
-      this.tryCatch({
-        promise: this.client.groupManager.fetchMemberListFromServer(
-          params.groupId,
-          pageSize,
-          cursor
-        ),
-        event: 'getGroupMemberList',
-        onFinished: async (value) => {
-          const memberList = new Map();
-          value.list?.forEach(async (v) => {
-            memberList.set(v, { id: v });
-          });
-          this._groupMemberList.set(params.groupId, memberList);
-          cursor = value.cursor;
-          if (
-            cursor.length === 0 ||
-            (value.list && value.list.length < pageSize) ||
-            value.list === undefined
-          ) {
-          } else {
-            for (;;) {
-              const list =
-                await this.client.groupManager.fetchMemberListFromServer(
-                  params.groupId,
-                  pageSize,
-                  cursor
-                );
-              list.list?.forEach((v) => {
-                memberList.set(v, { id: v });
-              });
+    }
+    let cursor = '';
+    const pageSize = 200;
+    this.tryCatch({
+      promise: this.client.groupManager.fetchMemberListFromServer(
+        params.groupId,
+        pageSize,
+        cursor
+      ),
+      event: 'getGroupMemberList',
+      onFinished: async (value) => {
+        const memberList = new Map();
+        value.list?.forEach(async (v) => {
+          memberList.set(v, { id: v });
+        });
+        this._groupMemberList.set(params.groupId, memberList);
+        cursor = value.cursor;
+        if (
+          cursor.length === 0 ||
+          (value.list && value.list.length < pageSize) ||
+          value.list === undefined
+        ) {
+        } else {
+          for (;;) {
+            const list =
+              await this.client.groupManager.fetchMemberListFromServer(
+                params.groupId,
+                pageSize,
+                cursor
+              );
+            list.list?.forEach((v) => {
+              memberList.set(v, { id: v });
+            });
 
-              cursor = value.cursor;
-              if (
-                cursor.length === 0 ||
-                (value.list && value.list.length < pageSize) ||
-                value.list === undefined
-              ) {
-                break;
-              }
+            cursor = value.cursor;
+            if (
+              cursor.length === 0 ||
+              (value.list && value.list.length < pageSize) ||
+              value.list === undefined
+            ) {
+              break;
             }
           }
+        }
 
-          params.onResult({
-            isOk: true,
-            value: Array.from(memberList.values()),
-          });
-        },
-        onError: (e) => {
-          params.onResult({ isOk: false, error: e });
-        },
-      });
-    }
+        params.onResult({
+          isOk: true,
+          value: Array.from(memberList.values()),
+        });
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
+    });
   }
 
   getGroupMember(params: {
@@ -1158,6 +1160,21 @@ export abstract class ChatServiceImpl
     return undefined;
   }
 
+  setGroupMemberState(params: {
+    groupId: string;
+    userId: string;
+    checked: boolean;
+    onResult: ResultCallback<void>;
+  }): void {
+    const map = this._groupMemberList.get(params.groupId);
+    if (map) {
+      const isExisted = map.get(params.groupId);
+      if (isExisted) {
+        isExisted.checked = params.checked;
+      }
+    }
+  }
+
   fetchJoinedGroupCount(params: {
     groupId: string;
     onResult: ResultCallback<number>;
@@ -1167,6 +1184,36 @@ export abstract class ChatServiceImpl
       event: 'fetchJoinedGroupCount',
       onFinished: async (value) => {
         params.onResult({ isOk: true, value: value });
+      },
+    });
+  }
+
+  getGroupInfoFromServer(params: {
+    groupId: string;
+    onResult: ResultCallback<GroupModel>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.fetchGroupInfoFromServer(
+        params.groupId
+      ),
+      event: 'getGroupInfoFromServer',
+      onFinished: (value) => {
+        const localGroup = this._groupList.get(params.groupId);
+        if (value) {
+          const group = this.toUIGroup(value);
+          this._groupList.set(
+            group.groupId,
+            mergeObjects(group, localGroup ?? ({} as any))
+          );
+          params.onResult({
+            isOk: true,
+            value: group,
+          });
+        } else {
+          params.onResult({
+            isOk: false,
+          });
+        }
       },
     });
   }
@@ -1186,16 +1233,16 @@ export abstract class ChatServiceImpl
       promise: this.client.groupManager.getGroupWithId(params.groupId),
       event: 'getGroupInfo',
       onFinished: async (value) => {
-        if (value === undefined) {
+        if (value === undefined || value.groupId.length === 0) {
           this.tryCatch({
             promise: this.client.groupManager.fetchGroupInfoFromServer(
               params.groupId
             ),
             event: 'getGroupInfo',
-            onFinished: async (value) => {
+            onFinished: (value) => {
               const localGroup = this._groupList.get(params.groupId);
               if (value) {
-                const group = await this.toUIGroup(value);
+                const group = this.toUIGroup(value);
                 this._groupList.set(
                   group.groupId,
                   mergeObjects(group, localGroup ?? ({} as any))
@@ -1215,7 +1262,7 @@ export abstract class ChatServiceImpl
         } else {
           const localGroup = this._groupList.get(params.groupId);
           if (value) {
-            const group = await this.toUIGroup(value);
+            const group = this.toUIGroup(value);
             this._groupList.set(
               group.groupId,
               mergeObjects(group, localGroup ?? ({} as any))
@@ -1254,6 +1301,13 @@ export abstract class ChatServiceImpl
       ),
       event: 'createGroup',
       onFinished: async (value) => {
+        const group = this.toUIGroup(value);
+        if (group) {
+          this._groupList.set(group.groupId, group);
+        }
+        this._listeners.forEach((v) => {
+          v.onCreateGroup?.(this.toUIGroup(value));
+        });
         params.onResult({
           isOk: true,
           value: value,
@@ -1262,15 +1316,24 @@ export abstract class ChatServiceImpl
     });
   }
 
-  quitGroup(params: { groupId: string; onResult: ResultCallback<void> }): void {
+  quitGroup(params: {
+    groupId: string;
+    onResult?: ResultCallback<void>;
+  }): void {
     this.tryCatch({
       promise: this.client.groupManager.leaveGroup(params.groupId),
       event: 'quitGroup',
-      onFinished: async () => {
-        params.onResult({
-          isOk: true,
-        });
-      },
+      onFinished: params.onResult
+        ? async () => {
+            this._groupList.delete(params.groupId);
+            this._listeners.forEach((v) => {
+              v?.onQuitGroup?.(params.groupId);
+            });
+            params.onResult?.({
+              isOk: true,
+            });
+          }
+        : undefined,
     });
   }
   destroyGroup(params: {
@@ -1300,6 +1363,15 @@ export abstract class ChatServiceImpl
       ),
       event: 'setGroupName',
       onFinished: async () => {
+        const group = this._groupList.get(params.groupId);
+        this._listeners.forEach((v) => {
+          if (group) {
+            v.onGroupInfoChanged?.({
+              ...group,
+              groupName: params.groupNewName,
+            });
+          }
+        });
         params.onResult({
           isOk: true,
         });
@@ -1318,6 +1390,15 @@ export abstract class ChatServiceImpl
       ),
       event: 'setGroupDescription',
       onFinished: async () => {
+        const group = this._groupList.get(params.groupId);
+        this._listeners.forEach((v) => {
+          if (group) {
+            v.onGroupInfoChanged?.({
+              ...group,
+              description: params.groupDescription,
+            });
+          }
+        });
         params.onResult({
           isOk: true,
         });
@@ -1326,20 +1407,38 @@ export abstract class ChatServiceImpl
   }
   setGroupMyRemark(params: {
     groupId: string;
+    memberId: string;
     groupMyRemark: string;
     ext?: Record<string, string>;
     onResult: ResultCallback<void>;
   }): void {
     this.tryCatch({
-      promise: this.client.groupManager.updateGroupExtension(
+      promise: this.client.groupManager.setMemberAttribute(
         params.groupId,
-        JSON.stringify({ ...params.ext, myRemark: params.groupMyRemark })
+        params.memberId,
+        { [gGroupMemberMyRemark]: params.groupMyRemark }
       ),
       event: 'setGroupMyRemark',
       onFinished: async () => {
         params.onResult({
           isOk: true,
         });
+      },
+    });
+  }
+  getGroupMyRemark(params: {
+    groupId: string;
+    memberId: string;
+    onResult: ResultCallback<string | undefined>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.fetchMemberAttributes(
+        params.groupId,
+        params.memberId
+      ),
+      event: 'getGroupMyRemark',
+      onFinished: (result) => {
+        params.onResult({ isOk: true, value: result?.[gGroupMemberMyRemark] });
       },
     });
   }
@@ -1359,6 +1458,76 @@ export abstract class ChatServiceImpl
         params.onResult({
           isOk: true,
         });
+      },
+    });
+  }
+
+  addGroupMembers(params: {
+    groupId: string;
+    members: GroupParticipantModel[];
+    welcomeMessage?: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.addMembers(
+        params.groupId,
+        params.members.map((item) => item.id),
+        params.welcomeMessage
+      ),
+      event: 'addMembers',
+      onFinished: async () => {
+        const groupMembers = this._groupMemberList.get(params.groupId);
+        for (const member of params.members) {
+          groupMembers?.set(member.id, member);
+        }
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  removeGroupMembers(params: {
+    groupId: string;
+    members: string[];
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.removeMembers(
+        params.groupId,
+        params.members
+      ),
+      event: 'removeMembers',
+      onFinished: async () => {
+        for (const memberId of params.members) {
+          this._groupMemberList.get(params.groupId)?.delete(memberId);
+          this._listeners.forEach((v) => {
+            v?.onMemberExited?.({
+              groupId: params.groupId,
+              member: memberId,
+            });
+          });
+        }
+
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+
+  changeGroupOwner(params: {
+    groupId: string;
+    newOwnerId: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.changeOwner(
+        params.groupId,
+        params.newOwnerId
+      ),
+      event: 'changeGroupOwner',
+      onFinished: () => {
+        params.onResult({ isOk: true });
       },
     });
   }
@@ -1528,6 +1697,7 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
     this._initCustomListener();
     this._initContactListener();
     this._initPresenceListener();
+    this._initExtraListener();
   }
   _initConnectListener() {
     this.client.removeAllConnectionListener();
@@ -1985,6 +2155,8 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
       },
     });
   }
+
+  _initExtraListener() {}
 
   _fromChatError(error: any): string | undefined {
     let e: string | undefined;

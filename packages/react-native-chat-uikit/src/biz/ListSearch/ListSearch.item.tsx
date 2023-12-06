@@ -14,7 +14,7 @@ export function ListSearchItem<
   ComponentModel extends DefaultComponentModel = DefaultComponentModel
 >(props: ListSearchItemProps<ComponentModel>) {
   const { searchType } = props;
-  if (searchType === 'create-group') {
+  if (searchType === 'create-group' || searchType === 'add-group-member') {
     const p = props as any as ListSearchItemProps<ContactSearchModel>;
     return <StateListSearchItem {...p} />;
   }
@@ -151,7 +151,9 @@ export function StateListSearchItem(
               style={{
                 height: 28,
                 width: 28,
-                tintColor: getColor(checked === true ? 'enable' : 'disable'),
+                tintColor: getColor(
+                  checked === true && disable !== true ? 'enable' : 'disable'
+                ),
               }}
               onPress={() => {
                 if (disable !== true) {

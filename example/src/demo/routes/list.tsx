@@ -31,7 +31,7 @@ export type RootParamsList = {
   };
   SearchContact: {
     option?: {} | undefined;
-    params?: { searchType: SearchType } | undefined;
+    params?: { searchType: SearchType; groupId?: string } | undefined;
   };
   GroupList: {
     option?: {} | undefined;
@@ -70,6 +70,18 @@ export type RootParamsList = {
     params?: {} | undefined;
   };
   GroupParticipantInfo: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  AddGroupParticipant: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  ChangeGroupOwner: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  DelGroupParticipant: {
     option?: {} | undefined;
     params?: {} | undefined;
   };
@@ -153,6 +165,18 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   GroupParticipantInfo: {
+    option: undefined,
+    params: undefined,
+  },
+  AddGroupParticipant: {
+    option: undefined,
+    params: undefined,
+  },
+  ChangeGroupOwner: {
+    option: undefined,
+    params: undefined,
+  },
+  DelGroupParticipant: {
     option: undefined,
     params: undefined,
   },

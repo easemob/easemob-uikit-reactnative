@@ -36,16 +36,17 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
       light: colors.primary[5],
       dark: colors.primary[6],
     },
-    enable: {
+    disable: {
       light: colors.neutral[7],
       dark: colors.neutral[4],
     },
-    disable: {
+    enable: {
       light: colors.primary[5],
       dark: colors.primary[6],
     },
   });
   const getCheckedButton = (disable?: boolean, checked?: boolean) => {
+    console.log('test:zuoyu:GroupParticipantListItem:', data, disable, checked);
     const name = (checked?: boolean) => {
       return checked !== false ? 'checked_rectangle' : 'unchecked_rectangle';
     };
@@ -66,7 +67,9 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
             tintColor: color(disable),
           }}
           onPress={() => {
-            onCheckClicked?.(data);
+            if (disable !== true) {
+              onCheckClicked?.(data);
+            }
           }}
         />
       </View>
@@ -87,7 +90,13 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
           paddingHorizontal: 16,
         }}
         onPress={() => {
-          onClicked?.(data);
+          if (data.checked !== undefined) {
+            if (data.disable !== true) {
+              onCheckClicked?.(data);
+            }
+          } else {
+            onClicked?.(data);
+          }
         }}
       >
         {getCheckedButton(data.disable, data.checked)}

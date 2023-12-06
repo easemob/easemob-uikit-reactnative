@@ -66,7 +66,9 @@ export function ContactList(props: ContactListProps) {
     onClicked,
     onCheckClicked,
     selectedCount,
-    onCreateGroup,
+    onClickedCreateGroup,
+    selectedMemberCount,
+    onAddGroupParticipantResult,
   } = useContactList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -161,13 +163,49 @@ export function ContactList(props: ContactListProps) {
             </View>
           }
           Right={
-            <Pressable onPress={onCreateGroup}>
+            <Pressable onPress={onClickedCreateGroup}>
               <Text
                 paletteType={'label'}
                 textType={'medium'}
-                style={{ color: getColor('text') }}
+                style={{ color: getColor('text_enable') }}
               >
                 {`Create(${selectedCount})`}
+              </Text>
+            </Pressable>
+          }
+          Title={TopNavigationBarTitle({ text: '' })}
+          containerStyle={{ paddingHorizontal: 12 }}
+        />
+      );
+    } else if (contactType === 'add-group-member') {
+      return (
+        <TopNavigationBar
+          Left={
+            <View style={{ flexDirection: 'row' }}>
+              <IconButton
+                iconName={'chevron_left'}
+                style={{ width: 24, height: 24 }}
+                onPress={() => {
+                  // todo: left
+                }}
+              />
+              <Text
+                paletteType={'title'}
+                textType={'medium'}
+                style={{ color: getColor('text') }}
+              >
+                {'Add Group Member'}
+              </Text>
+            </View>
+          }
+          Right={
+            <Pressable onPress={onAddGroupParticipantResult}>
+              <Text
+                paletteType={'label'}
+                textType={'medium'}
+                style={{ color: getColor('text_enable') }}
+              >
+                {`Add(${selectedMemberCount})`}
               </Text>
             </Pressable>
           }

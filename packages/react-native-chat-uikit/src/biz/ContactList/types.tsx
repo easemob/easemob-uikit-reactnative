@@ -54,10 +54,11 @@ export type ContactListProps = ListRequestProps<DataModel> &
     onSearch?: () => void;
     onCancel?: () => void;
     onNavigationBarMoreActions?: () => void;
-    onNewConversation?: () => void;
-    onNewGroup?: () => void;
-    onNewContact?: () => void;
-    onCreateGroup?: (data?: ContactModel[]) => void;
+    onClickedNewConversation?: () => void;
+    onClickedNewGroup?: () => void;
+    onClickedNewContact?: () => void;
+    onCreateGroupResultValue?: (data?: ContactModel[]) => void;
+    onAddGroupParticipantResult?: (added: ContactModel[]) => void;
     selectedData?: ContactModel[]; // todo: changed to selectedData
     groupId?: string;
   };
@@ -86,8 +87,8 @@ export type UseContactListReturn = Omit<
   alertRef: React.RefObject<AlertRef>;
   onCheckClicked?: ((data?: ContactModel) => void) | undefined;
   selectedCount?: number;
-  onNewGroup?: () => void;
-  onCreateGroup?: () => void;
+  onClickedNewGroup?: () => void;
+  onClickedCreateGroup?: () => void;
 };
 
 export type ContactSearchModel = ContactModel &

@@ -106,7 +106,11 @@ export interface ConnectServiceListener {
 
 export type MessageServiceListener = PartialNullable<ChatMessageEventListener>;
 
-export type GroupServiceListener = PartialNullable<ChatGroupEventListener>;
+export type GroupServiceListener = PartialNullable<ChatGroupEventListener> & {
+  onGroupInfoChanged?: (group: GroupModel) => void;
+  onCreateGroup?: (group: GroupModel) => void;
+  onQuitGroup?: (groupId: string) => void;
+};
 
 export type ContactServiceListener = PartialNullable<ChatContactEventListener>;
 
@@ -422,19 +426,30 @@ export interface GroupServices {
     pageNum: number;
     onResult: ResultCallback<GroupModel[]>;
   }): void;
-  getAllGroupMembers(params: {
+  getGroupAllMembers(params: {
     groupId: string;
+    isReset?: boolean;
     onResult: ResultCallback<GroupParticipantModel[]>;
   }): void;
   getGroupMember(params: {
     groupId: string;
     userId: string;
   }): GroupParticipantModel | undefined;
+  setGroupMemberState(params: {
+    groupId: string;
+    userId: string;
+    checked: boolean;
+    onResult: ResultCallback<void>;
+  }): void;
   fetchJoinedGroupCount(params: {
     groupId: string;
     onResult: ResultCallback<number>;
   }): void;
   getGroupInfo(params: {
+    groupId: string;
+    onResult: ResultCallback<GroupModel>;
+  }): void;
+  getGroupInfoFromServer(params: {
     groupId: string;
     onResult: ResultCallback<GroupModel>;
   }): void;
@@ -444,7 +459,7 @@ export interface GroupServices {
     inviteMembers: string[];
     onResult: ResultCallback<GroupModel>;
   }): void;
-  quitGroup(params: { groupId: string; onResult: ResultCallback<void> }): void;
+  quitGroup(params: { groupId: string; onResult?: ResultCallback<void> }): void;
   destroyGroup(params: {
     groupId: string;
     onResult: ResultCallback<void>;
@@ -461,6 +476,7 @@ export interface GroupServices {
   }): void;
   setGroupMyRemark(params: {
     groupId: string;
+    memberId: string;
     groupMyRemark: string;
     ext?: Record<string, string>;
     onResult: ResultCallback<void>;
@@ -469,6 +485,27 @@ export interface GroupServices {
     groupId: string;
     groupAvatar: string;
     ext?: Record<string, string>;
+    onResult: ResultCallback<void>;
+  }): void;
+  getGroupMyRemark(params: {
+    groupId: string;
+    memberId: string;
+    onResult: ResultCallback<string | undefined>;
+  }): void;
+  addGroupMembers(params: {
+    groupId: string;
+    members: GroupParticipantModel[];
+    welcomeMessage?: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  removeGroupMembers(params: {
+    groupId: string;
+    members: string[];
+    onResult: ResultCallback<void>;
+  }): void;
+  changeGroupOwner(params: {
+    groupId: string;
+    newOwnerId: string;
     onResult: ResultCallback<void>;
   }): void;
 }

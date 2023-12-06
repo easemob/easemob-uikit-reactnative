@@ -1,15 +1,14 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { GroupInfo } from 'react-native-chat-uikit';
+import { DelGroupParticipant } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function GroupInfoScreen(props: Props) {
+export function DelGroupParticipantScreen(props: Props) {
   const { navigation, route } = props;
   const groupId = ((route.params as any)?.params as any)?.groupId;
-  const ownerId = ((route.params as any)?.params as any)?.ownerId;
   return (
     <SafeAreaView
       style={{
@@ -17,27 +16,18 @@ export function GroupInfoScreen(props: Props) {
         flex: 1,
       }}
     >
-      <GroupInfo
+      <DelGroupParticipant
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
         groupId={groupId}
-        ownerId={ownerId}
-        onParticipant={(groupId) => {
-          navigation.push('GroupParticipantList', { params: { groupId } });
-        }}
-        onGroupDestroy={() => {
+        onBack={() => {
           navigation.goBack();
         }}
-        onGroupQuit={() => {
+        onDelResult={(data) => {
+          console.log('test:zuoyu:DelGroupParticipantScreen', data);
           navigation.goBack();
-        }}
-        onGroupUpdateMyRemark={() => {
-          console.log('test:zuoyu:onGroupUpdateMyRemark');
-        }}
-        onClickedChangeGroupOwner={() => {
-          navigation.push('ChangeGroupOwner', { params: { groupId } });
         }}
       />
     </SafeAreaView>

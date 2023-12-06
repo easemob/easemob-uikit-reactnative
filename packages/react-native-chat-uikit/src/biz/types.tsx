@@ -20,7 +20,7 @@ export type ContactType =
   | 'new-conversation'
   | 'create-group'
   | 'add-group-member';
-export type GroupParticipantType = 'common' | 'delete' | 'add';
+export type GroupParticipantType = 'common' | 'delete' | 'change-owner';
 
 export type SearchType =
   | 'conv-list'

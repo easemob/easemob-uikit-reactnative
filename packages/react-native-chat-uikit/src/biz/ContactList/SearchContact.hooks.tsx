@@ -14,6 +14,7 @@ export function useSearchContact(
     onCancel?: () => void;
   } {
   const { onClicked, testMode, searchType, onCancel, groupId } = props;
+  console.log('test:zuoyu:useSearchContact:props', props);
   const flatListProps = useFlatList<ContactSearchModel>({
     isShowAfterLoaded: false,
     onInit: () => init(),
@@ -60,7 +61,7 @@ export function useSearchContact(
   );
 
   const onCancelCallback = React.useCallback(() => {
-    if (searchType === 'create-group') {
+    if (searchType === 'create-group' || searchType === 'add-group-member') {
       if (onCancel) {
         onCancel([...dataRef.current]);
       }
@@ -90,11 +91,17 @@ export function useSearchContact(
                     );
                   } else if (searchType === 'add-group-member') {
                     if (groupId) {
+                      const isExisted = im.getGroupMember({
+                        groupId,
+                        userId: item.userId,
+                      });
+                      const checked = im.getContactCheckedState({
+                        key: groupId,
+                        userId: item.userId,
+                      });
                       return (
-                        im.getContactCheckedState({
-                          key: searchType,
-                          userId: item.userId,
-                        }) ?? false
+                        isExisted !== undefined ||
+                        (checked !== undefined ? checked : false)
                       );
                     }
                   }

@@ -18,11 +18,14 @@ import {
 
 import type { RootParamsList, RootParamsName } from './routes';
 import {
+  AddGroupParticipantScreen,
+  ChangeGroupOwnerScreen,
   ConfigScreen,
   ContactInfoScreen,
   ContactListScreen,
   ConversationListScreen,
   CreateGroupScreen,
+  DelGroupParticipantScreen,
   GroupInfoScreen,
   GroupListScreen,
   GroupParticipantInfoScreen,
@@ -285,6 +288,27 @@ export function App() {
                 headerShown: false,
               }}
               component={GroupParticipantInfoScreen}
+            />
+            <Root.Screen
+              name={'AddGroupParticipant'}
+              options={{
+                headerShown: false,
+              }}
+              component={AddGroupParticipantScreen}
+            />
+            <Root.Screen
+              name={'DelGroupParticipant'}
+              options={{
+                headerShown: false,
+              }}
+              component={DelGroupParticipantScreen}
+            />
+            <Root.Screen
+              name={'ChangeGroupOwner'}
+              options={{
+                headerShown: false,
+              }}
+              component={ChangeGroupOwnerScreen}
             />
           </Root.Navigator>
         </NavigationContainer>
