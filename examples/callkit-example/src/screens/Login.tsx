@@ -25,6 +25,7 @@ import { useAppI18nContext } from '../contexts/AppI18nContext';
 import { sendEvent, type sendEventProps } from '../events/sendEvent';
 import { useStyleSheet } from '../hooks/useStyleSheet';
 import type { RootScreenParamsList } from '../routes';
+// import { AppServerClient } from '../utils/AppServer';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 

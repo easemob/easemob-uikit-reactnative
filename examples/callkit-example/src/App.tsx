@@ -162,7 +162,7 @@ export default function App() {
 
     if (accountType !== 'easemob') {
       AppServerClient.rtcTokenUrl = `http://${agoraDomain}/token/rtc/channel`;
-      AppServerClient.mapUrl = `http://${agoraDomain}agora/channel/mapper`;
+      AppServerClient.mapUrl = `http://${agoraDomain}/agora/channel/mapper`;
     }
 
     if ((await checkFCMPermission()) === false) {
