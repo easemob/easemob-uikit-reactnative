@@ -10,5 +10,6 @@ export {
 } from './enums';
 export * from './types';
 export { formatElapsed } from './utils/utils';
+export { default as CALLKIT_VERSION } from './version';
 export { InviteeListProps, MultiCall, MultiCallProps } from './view/MultiCall';
 export { SingleCall, SingleCallProps } from './view/SingleCall';

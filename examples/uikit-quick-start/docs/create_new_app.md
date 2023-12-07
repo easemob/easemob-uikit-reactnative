@@ -39,12 +39,21 @@ yarn && yarn run env
 }
 ```
 
-For callkit, you also need to add dependency `xxx`.
+For callkit, you also need to add dependencies.
 
 ```json
 {
   "dependencies": {
-    "react-native-device-info": "^10.6.0"
+    "react-native-agora": "^4.2.0",
+    "react-native-chat-sdk": "^1.1.2",
+    "react-native-device-info": "^10.6.0",
+    "react-native-fast-image": "^8.6.3",
+    "react-native-pager-view": "6.1.2",
+    "react-native-paper": "^5.8.0",
+    "react-native-permissions": "^3.8.0",
+    "react-native-safe-area-context": "4.5.0",
+    "react-native-screens": "^3.20.0",
+    "react-native-tab-view": "^3.5.1"
   }
 }
 ```

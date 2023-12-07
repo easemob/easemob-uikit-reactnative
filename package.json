@@ -104,5 +104,11 @@
         ]
       ]
     }
-  }
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "scripts/",
+    "packages/react-native-chat-uikit/scripts/",
+    "packages/react-native-chat-callkit/scripts/"
+  ]
 }

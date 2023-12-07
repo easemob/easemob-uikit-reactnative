@@ -19,6 +19,7 @@ import * as React from 'react';
 import { Linking, Platform, View } from 'react-native';
 import * as Audio from 'react-native-audio-recorder-player';
 import {
+  CALLKIT_VERSION,
   CallUser,
   GlobalContainer as CallkitContainer,
 } from 'react-native-chat-callkit';
@@ -31,6 +32,7 @@ import {
   LightTheme,
   Loading,
   Services,
+  UIKIT_VERSION,
   updateScaleFactor,
 } from 'react-native-chat-uikit';
 import * as DocumentPicker from 'react-native-document-picker';
@@ -87,6 +89,8 @@ try {
 
 console.log('DEV:', __DEV__);
 console.log('TEST:', __TEST__);
+console.log('CALLKIT_VERSION', CALLKIT_VERSION);
+console.log('UIKIT_VERSION', UIKIT_VERSION);
 
 export default function App() {
   updateScaleFactor(createAppScaleFactor());

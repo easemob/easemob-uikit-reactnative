@@ -40,7 +40,8 @@
     "generate-bundle": "node scripts/bundle-icons.js",
     "change-icon-name": "node scripts/change-icons-name.js",
     "generate-face-name": "node scripts/generate-faces-name.js",
-    "doctor": "yarn expo-doctor"
+    "doctor": "yarn expo-doctor",
+    "manual-release": "node '../../scripts/release-agora-version.js' 1.0.1 1.0.3 react-native-agora-chat-uikit react-native-chat-uikit"
   },
   "keywords": [
     "react-native",
