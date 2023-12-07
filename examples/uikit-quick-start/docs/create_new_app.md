@@ -39,6 +39,16 @@ yarn && yarn run env
 }
 ```
 
+For callkit, you also need to add dependency `xxx`.
+
+```json
+{
+  "dependencies": {
+    "react-native-device-info": "^10.6.0"
+  }
+}
+```
+
 4. Configure the iOS platform.
 
 Add the following content to the `ios/Podfile` file in the iOS folder:
