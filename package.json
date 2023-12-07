@@ -98,7 +98,9 @@
           "test",
           "tag",
           "example",
-          "test"
+          "test",
+          "uikit",
+          "callkit"
         ]
       ]
     }

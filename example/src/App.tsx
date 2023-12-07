@@ -18,6 +18,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Linking, Platform, View } from 'react-native';
 import * as Audio from 'react-native-audio-recorder-player';
+import {
+  CallUser,
+  GlobalContainer as CallkitContainer,
+} from 'react-native-chat-callkit';
 import { ChatClient } from 'react-native-chat-sdk';
 import {
   createStringSetEn2,
@@ -54,6 +58,7 @@ import LoginScreen from './screens/Login';
 import Search from './screens/Search';
 import { SplashScreen } from './screens/Splash';
 import { createAppScaleFactor } from './styles/createAppScaleFactor';
+import { AppServerClient } from './utils/AppServer';
 
 if (Platform.OS === 'web') {
   console.error('web platforms are not supported.');
@@ -64,11 +69,18 @@ const Root = createNativeStackNavigator<RootParamsList>();
 const __KEY__ = '__KEY__';
 let __TEST__ = true;
 let appKey = '';
+let agoraAppId = '';
+let accountType = '';
+const enableLog = true;
+let agoraDomain = '';
 
 try {
   const env = require('./env');
   __TEST__ = env.test ?? false;
   appKey = env.appKey;
+  agoraAppId = env.agoraAppId;
+  accountType = env.accountType;
+  agoraDomain = env.agoraDomain;
 } catch (e) {
   console.warn('test:', e);
 }
@@ -140,6 +152,12 @@ export default function App() {
     if (isOnInitialized.current === false || isOnReady.current === false) {
       return;
     }
+
+    if (accountType !== 'easemob') {
+      AppServerClient.rtcTokenUrl = `http://${agoraDomain}/token/rtc/channel`;
+      AppServerClient.mapUrl = `http://${agoraDomain}/agora/channel/mapper`;
+    }
+
     console.log('test:onInitApp:');
     sendEvent({
       eventType: 'DataEvent',
@@ -217,151 +235,233 @@ export default function App() {
         }}
         ModalComponent={() => <ModalPlaceholder />}
       >
-        {__TEST__ === true ? (
-          Dev()
-        ) : (
-          <NavigationContainer
-            ref={RootRef}
-            initialState={initialState}
-            theme={isLightTheme ? NDefaultTheme : NDarkTheme}
-            onStateChange={(state: NavigationState | undefined) => {
-              const rr: string[] & string[][] = [];
-              formatNavigationState(state, rr);
-              console.log(
-                'test:onStateChange:',
-                JSON.stringify(rr, undefined, '  ')
-              );
-              // console.log('test:onStateChange:o:', JSON.stringify(state));
-              storage.setItem(__KEY__, JSON.stringify(state));
-            }}
-            onUnhandledAction={(action: NavigationAction) => {
-              console.log('test:onUnhandledAction:', action);
-            }}
-            onReady={() => {
-              console.log('test:NavigationContainer:onReady:');
-              isOnReady.current = true;
-              onInitApp();
-            }}
-            fallback={
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flex: 1,
-                }}
-              >
-                <Loading color="rgba(15, 70, 230, 1)" size={sf(45)} />
-              </View>
-            }
-          >
-            <Root.Navigator initialRouteName={initialRouteName}>
-              <Root.Screen
-                name="Splash"
-                options={{
-                  headerShown: false,
-                }}
-                component={SplashScreen}
-              />
-              <Root.Screen
-                name="Login"
-                options={{
-                  headerShown: false,
-                }}
-                component={LoginScreen}
-              />
-              <Root.Screen
-                name="Home"
-                options={() => {
-                  return {
-                    headerBackVisible: true,
-                    headerRight: HomeHeaderRight,
-                    headerTitle: () => <HomeHeaderTitle name="Chats" />,
-                    headerShadowVisible: false,
-                    headerBackTitleVisible: false,
-                  };
-                }}
-                component={HomeScreen}
-              />
-              <Root.Group>
+        <CallkitContainer
+          option={{
+            appKey: appKey,
+            agoraAppId: agoraAppId,
+          }}
+          type={accountType as any}
+          enableLog={enableLog}
+          requestRTCToken={(params: {
+            appKey: string;
+            channelId: string;
+            userId: string;
+            userChannelId?: number | undefined;
+            type?: 'easemob' | 'agora' | undefined;
+            onResult: (params: { data?: any; error?: any }) => void;
+          }) => {
+            console.log('requestRTCToken:', params);
+            AppServerClient.getRtcToken({
+              userAccount: params.userId,
+              channelId: params.channelId,
+              appKey,
+              userChannelId: params.userChannelId,
+              type: params.type,
+              onResult: (pp: { data?: any; error?: any }) => {
+                console.log('test:', pp);
+                params.onResult(pp);
+              },
+            });
+          }}
+          requestUserMap={(params: {
+            appKey: string;
+            channelId: string;
+            userId: string;
+            onResult: (params: { data?: any; error?: any }) => void;
+          }) => {
+            console.log('requestUserMap:', params);
+            AppServerClient.getRtcMap({
+              userAccount: params.userId,
+              channelId: params.channelId,
+              appKey,
+              onResult: (pp: { data?: any; error?: any }) => {
+                console.log('requestUserMap:getRtcMap:', pp);
+                params.onResult(pp);
+              },
+            });
+          }}
+          requestCurrentUser={(params: {
+            onResult: (params: { user: CallUser; error?: any }) => void;
+          }) => {
+            console.log('requestCurrentUser:', params);
+            ChatClient.getInstance()
+              .getCurrentUsername()
+              .then((result) => {
+                params.onResult({
+                  user: {
+                    userId: result,
+                    userName: `${result}_self_name`,
+                    userAvatarUrl:
+                      'https://cdn3.iconfinder.com/data/icons/vol-2/128/dog-128.png',
+                  },
+                });
+              })
+              .catch((error) => {
+                console.warn('test:getCurrentUsername:error:', error);
+              });
+          }}
+          requestUserInfo={(params: {
+            userId: string;
+            onResult: (params: { user: CallUser; error?: any }) => void;
+          }) => {
+            console.log('requestCurrentUser:', params);
+            // pseudo
+            params.onResult({
+              user: {
+                userId: params.userId,
+                userName: `${params.userId}_name2`,
+                userAvatarUrl:
+                  'https://cdn2.iconfinder.com/data/icons/pet-and-veterinary-1/85/dog_charity_love_adopt_adoption-128.png',
+              },
+            });
+          }}
+        >
+          {__TEST__ === true ? (
+            Dev()
+          ) : (
+            <NavigationContainer
+              ref={RootRef}
+              initialState={initialState}
+              theme={isLightTheme ? NDefaultTheme : NDarkTheme}
+              onStateChange={(state: NavigationState | undefined) => {
+                const rr: string[] & string[][] = [];
+                formatNavigationState(state, rr);
+                console.log(
+                  'test:onStateChange:',
+                  JSON.stringify(rr, undefined, '  ')
+                );
+                // console.log('test:onStateChange:o:', JSON.stringify(state));
+                storage.setItem(__KEY__, JSON.stringify(state));
+              }}
+              onUnhandledAction={(action: NavigationAction) => {
+                console.log('test:onUnhandledAction:', action);
+              }}
+              onReady={() => {
+                console.log('test:NavigationContainer:onReady:');
+                isOnReady.current = true;
+                onInitApp();
+              }}
+              fallback={
+                <View
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flex: 1,
+                  }}
+                >
+                  <Loading color="rgba(15, 70, 230, 1)" size={sf(45)} />
+                </View>
+              }
+            >
+              <Root.Navigator initialRouteName={initialRouteName}>
                 <Root.Screen
-                  name="ContactInfo"
+                  name="Splash"
+                  options={{
+                    headerShown: false,
+                  }}
+                  component={SplashScreen}
+                />
+                <Root.Screen
+                  name="Login"
+                  options={{
+                    headerShown: false,
+                  }}
+                  component={LoginScreen}
+                />
+                <Root.Screen
+                  name="Home"
                   options={() => {
                     return {
-                      headerTitle: '',
+                      headerBackVisible: true,
+                      headerRight: HomeHeaderRight,
+                      headerTitle: () => <HomeHeaderTitle name="Chats" />,
                       headerShadowVisible: false,
                       headerBackTitleVisible: false,
                     };
                   }}
-                  component={ContactInfo}
+                  component={HomeScreen}
                 />
-                <Root.Screen
-                  name="GroupInfo"
-                  options={() => {
-                    return {
-                      headerTitle: '',
-                      headerShadowVisible: false,
-                      headerBackTitleVisible: false,
-                    };
-                  }}
-                  component={GroupInfo}
-                />
-                <Root.Screen
-                  name="ContactList"
-                  // options={({ route }) => {
-                  //   return {
-                  //     headerBackVisible: true,
-                  //     headerRight: ContactListHeader,
-                  //     headerTitle: route.name,
-                  //     headerShadowVisible: false,
-                  //   };
-                  // }}
-                  component={ContactList}
-                />
-                <Root.Screen
-                  name="Chat"
-                  options={() => {
-                    return {
-                      headerTitle: '',
-                      headerShadowVisible: false,
-                      headerBackTitleVisible: false,
-                    };
-                  }}
-                  component={Chat}
-                />
-                <Root.Screen
-                  name="Search"
-                  options={() => {
-                    return {
-                      headerShown: false,
-                      presentation: 'fullScreenModal',
-                    };
-                  }}
-                  component={Search}
-                />
-                <Root.Screen
-                  name="ImagePreview"
-                  options={() => {
-                    return {
-                      headerShown: false,
-                      presentation: 'fullScreenModal',
-                    };
-                  }}
-                  component={ImagePreview}
-                />
-                <Root.Screen
-                  name="AvatarPreviewList"
-                  options={() => {
-                    return {
-                      headerShown: true,
-                      // presentation: 'fullScreenModal',
-                    };
-                  }}
-                  component={AvatarPreviewList}
-                />
-              </Root.Group>
-            </Root.Navigator>
-          </NavigationContainer>
-        )}
+                <Root.Group>
+                  <Root.Screen
+                    name="ContactInfo"
+                    options={() => {
+                      return {
+                        headerTitle: '',
+                        headerShadowVisible: false,
+                        headerBackTitleVisible: false,
+                      };
+                    }}
+                    component={ContactInfo}
+                  />
+                  <Root.Screen
+                    name="GroupInfo"
+                    options={() => {
+                      return {
+                        headerTitle: '',
+                        headerShadowVisible: false,
+                        headerBackTitleVisible: false,
+                      };
+                    }}
+                    component={GroupInfo}
+                  />
+                  <Root.Screen
+                    name="ContactList"
+                    // options={({ route }) => {
+                    //   return {
+                    //     headerBackVisible: true,
+                    //     headerRight: ContactListHeader,
+                    //     headerTitle: route.name,
+                    //     headerShadowVisible: false,
+                    //   };
+                    // }}
+                    component={ContactList}
+                  />
+                  <Root.Screen
+                    name="Chat"
+                    options={() => {
+                      return {
+                        headerTitle: '',
+                        headerShadowVisible: false,
+                        headerBackTitleVisible: false,
+                      };
+                    }}
+                    component={Chat}
+                  />
+                  <Root.Screen
+                    name="Search"
+                    options={() => {
+                      return {
+                        headerShown: false,
+                        presentation: 'fullScreenModal',
+                      };
+                    }}
+                    component={Search}
+                  />
+                  <Root.Screen
+                    name="ImagePreview"
+                    options={() => {
+                      return {
+                        headerShown: false,
+                        presentation: 'fullScreenModal',
+                      };
+                    }}
+                    component={ImagePreview}
+                  />
+                  <Root.Screen
+                    name="AvatarPreviewList"
+                    options={() => {
+                      return {
+                        headerShown: true,
+                        // presentation: 'fullScreenModal',
+                      };
+                    }}
+                    component={AvatarPreviewList}
+                  />
+                </Root.Group>
+              </Root.Navigator>
+            </NavigationContainer>
+          )}
+        </CallkitContainer>
       </GlobalContainer>
     </React.StrictMode>
   );

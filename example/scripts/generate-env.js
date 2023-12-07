@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-/* eslint-disable import/no-commonjs */
 const path = require('node:path');
 const fs = require('node:fs');
 
@@ -17,5 +16,7 @@ export const id = '';
 export const ps = '';
 export const accountType = ''; // agora or easemob
 export const agoraAppId = '';
+export const agoraDomain = '';
+export const loginDomain = '';
 `;
 fs.writeFileSync(file, content, 'utf-8');
