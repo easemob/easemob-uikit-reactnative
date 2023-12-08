@@ -32,7 +32,7 @@
     "yarn-lint": "yarn workspace react-native-chat-uikit lint && yarn workspace react-native-chat-callkit lint",
     "lerna-lint": "lerna run lint",
     "lint": "yarn run lerna-lint",
-    "yarn-prepack": "yarn workspace react-native-chat-uikit prepack && yarn workspace react-native-chat-callkit prepack",
+    "yarn-prepack": "yarn workspace react-native-chat-uikit prepack && yarn workspace react-native-chat-callkit prepack && yarn sdk-version && yarn sdk-config",
     "lerna-prepack": "lerna run prepack --verbose",
     "prepack": "yarn run lerna-prepack",
     "clean": "lerna run clean  --verbose",

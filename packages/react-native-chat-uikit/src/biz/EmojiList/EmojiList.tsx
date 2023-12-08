@@ -20,7 +20,7 @@ import {
 } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
-import { gAspectRatio, gCountPerRow } from './EmojiList.const';
+import { gCountPerRow } from './EmojiList.const';
 
 export type EmojiListProps = {
   /**
@@ -86,7 +86,7 @@ export function EmojiList(props: EmojiListProps) {
     <View
       style={[
         {
-          height: gAspectRatio * winWidth,
+          // height: gAspectRatio * winWidth,
           backgroundColor: getColor('bg1'),
         },
         containerStyle,

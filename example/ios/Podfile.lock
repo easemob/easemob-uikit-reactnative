@@ -518,7 +518,7 @@ PODS:
   - react-native-chat-sdk (1.3.0-beta.0):
     - HyphenateChat (= 4.2.0)
     - React-Core
-  - react-native-chat-uikit (1.0.2):
+  - react-native-chat-uikit (1.2.0):
     - React-Core
   - react-native-create-thumbnail (1.6.4):
     - React-Core
@@ -629,7 +629,7 @@ PODS:
     - React-Core
   - RNCAsyncStorage (1.17.11):
     - React-Core
-  - RNCClipboard (1.11.2):
+  - RNCClipboard (1.12.1):
     - React-Core
   - RNFastImage (8.6.3):
     - React-Core
@@ -772,7 +772,7 @@ DEPENDENCIES:
   - ReactNativeFileAccess (from `../../node_modules/react-native-file-access`)
   - RNAudioRecorderPlayer (from `../../node_modules/react-native-audio-recorder-player`)
   - "RNCAsyncStorage (from `../../node_modules/@react-native-async-storage/async-storage`)"
-  - "RNCClipboard (from `../../node_modules/@react-native-clipboard/clipboard`)"
+  - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - RNFastImage (from `../../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../../node_modules/@react-native-firebase/messaging`)"
@@ -979,7 +979,7 @@ EXTERNAL SOURCES:
   RNCAsyncStorage:
     :path: "../../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
-    :path: "../../node_modules/@react-native-clipboard/clipboard"
+    :path: "../node_modules/@react-native-clipboard/clipboard"
   RNFastImage:
     :path: "../../node_modules/react-native-fast-image"
   RNFBApp:
@@ -1080,7 +1080,7 @@ SPEC CHECKSUMS:
   react-native-cameraroll: 755bcc628148a90a7c9cf3f817a252be3a601bc5
   react-native-chat-callkit: f3c26620cbfd756a184eb61cfb9fe5660067ebef
   react-native-chat-sdk: 27a54e58178cbfa0befc626a8732c175e9218b26
-  react-native-chat-uikit: b04dfa6686a3c506d0f0d91441974c40aa837a47
+  react-native-chat-uikit: b47322b12e761d243fb5418f2f5239d70581f09c
   react-native-create-thumbnail: e022bcdcba8a0b4529a50d3fa1a832ec921be39d
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
@@ -1104,7 +1104,7 @@ SPEC CHECKSUMS:
   ReactNativeFileAccess: 4530e3be4d5069454c6c6389096d8cb78c897f2c
   RNAudioRecorderPlayer: 6638283925b46808310c9fdf803ebabc3abdbadc
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
-  RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
+  RNCClipboard: d77213bfa269013bf4b857b7a9ca37ee062d8ef1
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBApp: 7da45c10070789f5e4337a5534139976e8d74e0a
   RNFBMessaging: fd543fa2aa4688fac4e88b1ce54e39cac4339b32

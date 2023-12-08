@@ -47,22 +47,6 @@ export function TopMenuScreen(props: Props) {
                   navigation.push('ContactList', {});
                 } else if (v === 'GroupList') {
                   navigation.push('GroupList', {});
-                } else if (v === 'GroupParticipantList') {
-                  navigation.push('GroupParticipantList', {
-                    params: { groupId: 'xx' },
-                  });
-                } else if (v === 'NewConversation') {
-                  navigation.push('NewConversation', { params: {} });
-                } else if (v === 'NewRequests') {
-                  navigation.push('NewRequests', { params: {} });
-                } else if (v === 'CreateGroup') {
-                  navigation.push('CreateGroup', { params: {} });
-                } else if (v === 'ContactInfo') {
-                  navigation.push('ContactInfo', { params: {} });
-                } else if (v === 'GroupInfo') {
-                  navigation.push('GroupInfo', { params: {} });
-                } else if (v === 'GroupParticipantInfo') {
-                  navigation.push('GroupParticipantInfo', { params: {} });
                 }
               }}
             >

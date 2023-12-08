@@ -76,6 +76,40 @@ export function TopNavigationBarRight({
     </View>
   );
 }
+export function TopNavigationBarRightList({
+  onClickedList,
+  iconNameList,
+}: {
+  onClickedList: (() => void)[];
+  iconNameList: IconNameType[];
+}) {
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
+  });
+  return (
+    <View style={{ flexDirection: 'row' }}>
+      {iconNameList.map((name, index) => {
+        return (
+          <IconButton
+            key={index}
+            iconName={name}
+            onPress={onClickedList[index]}
+            style={{
+              height: 24,
+              width: 24,
+              margin: 6,
+              tintColor: getColor('bg'),
+            }}
+          />
+        );
+      })}
+    </View>
+  );
+}
 
 export function TopNavigationBarTitle({ text }: { text: string }) {
   const { tr } = useI18nContext();
