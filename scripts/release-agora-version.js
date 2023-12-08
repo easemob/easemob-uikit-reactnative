@@ -47,7 +47,7 @@ execSync('npm pack', {
 const tarName = `${old_name}-${old_version}.tgz`;
 
 // 使用命令 `tar -xvf xxx.tar` 解压 tar 包
-const tarFolder = path.join(__dirname, `../packages/${old_name}`);
+// const tarFolder = path.join(__dirname, `../packages/${old_name}`);
 execSync(`tar -xf ${tarName}`, {
   stdio: logType,
   cwd: workingDirectory,
@@ -55,24 +55,26 @@ execSync(`tar -xf ${tarName}`, {
 
 // 使用命令 `mv package ${new-name}` 修改文件夹名字
 const packageFolder = path.join(__dirname, `../packages/${old_name}`);
-execSync(`mv package ${new_name}`, {
+execSync(`mv package ${new_name}-${new_version}`, {
   stdio: logType,
   cwd: workingDirectory,
 });
 
 // 修改 `package.json` 配置文件中的包名和版本号
-const packageJsonPath = path.join(
-  __dirname,
-  `../packages/${old_name}/${new_name}/package.json`
-);
-const packageJson = require(`${packageFolder}/${new_name}/package.json`);
+// const packageJsonPath = path.join(
+//   __dirname,
+//   `../packages/${old_name}/${new_name}-${new_version}/package.json`
+// );
+const packageJson = require(`${packageFolder}/${new_name}-${new_version}/package.json`);
 
 packageJson.name = new_name; // 替换为新的包名
 packageJson.version = new_version;
+delete packageJson.scripts['manual-release'];
+delete packageJson.scripts['prepack'];
 
 // fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 fs.writeFileSync(
-  `${packageFolder}/${new_name}/package.json`,
+  `${packageFolder}/${new_name}-${new_version}/package.json`,
   JSON.stringify(packageJson, null, 2)
 );
 
@@ -84,20 +86,25 @@ const files = [
   'src/version.ts',
 ];
 files.forEach((file) => {
-  const filePath = `${packageFolder}/${new_name}/${file}`;
+  const filePath = `${packageFolder}/${new_name}-${new_version}/${file}`;
   const fileContent = fs.readFileSync(filePath, 'utf-8');
   const newFileContent = fileContent.replace(old_version, new_version);
   fs.writeFileSync(filePath, newFileContent);
 });
 
 // 使用命令 `zip -r xxx.zip ./*` 压缩文件
-execSync(`zip -r ${new_name}-${new_version}.zip ${new_name} > /dev/null`, {
-  stdio: logType,
-  cwd: workingDirectory,
-});
+execSync(
+  `zip -r ${new_name}-${new_version}.zip ${new_name}-${new_version} > /dev/null`,
+  {
+    stdio: logType,
+    cwd: workingDirectory,
+  }
+);
 
 // 删除临时文件夹
-execSync(`rm -rf ${packageFolder}/${new_name}`, { stdio: logType });
+execSync(`rm -rf ${packageFolder}/${new_name}-${new_version}`, {
+  stdio: logType,
+});
 
 // 关闭日志文件
 logStream.on('finish', function () {
