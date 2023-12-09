@@ -25,8 +25,7 @@ export function DelGroupParticipantScreen(props: Props) {
         onBack={() => {
           navigation.goBack();
         }}
-        onDelResult={(data) => {
-          console.log('test:zuoyu:DelGroupParticipantScreen', data);
+        onDelResult={() => {
           navigation.goBack();
         }}
       />

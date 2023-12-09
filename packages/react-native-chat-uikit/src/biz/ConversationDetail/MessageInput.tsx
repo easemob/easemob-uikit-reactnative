@@ -44,7 +44,6 @@ export const MessageInput = React.forwardRef<
 
   const testRef = React.useRef<View>(null);
   const keyboardHeight = useKeyboardHeight();
-  console.log('test:zuoyu:MessageInput', keyboardHeight);
   const { fontFamily } = useConfigContext();
   const {} = useI18nContext();
   const { style } = useThemeContext();
@@ -72,7 +71,6 @@ export const MessageInput = React.forwardRef<
     useMessageTextInput();
 
   const setEmojiHeight = (h: number) => {
-    console.log('test:zuoyu:setEmojiHeight', h);
     // if (h === 0) {
     //   LayoutAnimation.configureNext({
     //     duration: 250, // from keyboard event
@@ -99,7 +97,6 @@ export const MessageInput = React.forwardRef<
   React.useImperativeHandle(ref, () => {
     return {
       close: () => {
-        console.log('test:zuoyu:close:', isClosedEmoji.current);
         isClosedEmoji.current = true;
         isClosedKeyboard.current = true;
         setEmojiHeight(0);
@@ -107,8 +104,6 @@ export const MessageInput = React.forwardRef<
       },
     };
   });
-
-  console.log('test:zuoyu:MessageInput:', top, bottom);
 
   return (
     <>

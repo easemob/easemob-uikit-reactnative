@@ -67,11 +67,6 @@ export function useGroupList(
   const init = () => {
     if (testMode === 'only-ui') {
     } else {
-      console.log(
-        'test:zuoyu:creategroup:',
-        gGroupListPageNumber,
-        currentPageNumberRef.current
-      );
       im.getPageGroups({
         pageSize: gGroupListPageNumber,
         pageNum: currentPageNumberRef.current,
@@ -175,11 +170,9 @@ export function useGroupList(
 
   const listenerRef = React.useRef<ChatServiceListener>({
     onMemberRemoved: (params: { groupId: string; groupName?: string }) => {
-      console.log('test:zuoyu:onMemberRemoved:', params);
       removeGroup(params.groupId);
     },
     onDestroyed: (params: { groupId: string; groupName?: string }) => {
-      console.log('test:zuoyu:onDestroyed:', params);
       removeGroup(params.groupId);
     },
     onAutoAcceptInvitation: (params: {
@@ -187,19 +180,15 @@ export function useGroupList(
       inviter: string;
       inviteMessage?: string;
     }) => {
-      console.log('test:zuoyu:onAutoAcceptInvitation:', params);
       addGroup({ ...params });
     },
     onCreateGroup: (group) => {
-      console.log('test:zuoyu:onCreateGroup:', group);
       addGroup({ groupId: group.groupId, inviter: '' });
     },
     onGroupInfoChanged: (group) => {
       updateData(group);
     },
-    onDetailChanged: (group) => {
-      console.log('test:zuoyu:onDetailChanged', group);
-    },
+    onDetailChanged: (_group) => {},
     onQuitGroup: (groupId) => {
       removeGroup(groupId);
     },

@@ -649,6 +649,33 @@ PODS:
     - React-Core
   - RNPermissions (3.8.0):
     - React-Core
+  - RNReanimated (2.14.4):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - glog
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
@@ -779,6 +806,7 @@ DEPENDENCIES:
   - RNFS (from `../../node_modules/react-native-fs`)
   - RNGestureHandler (from `../../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../../node_modules/react-native-permissions`)
+  - RNReanimated (from `../../node_modules/react-native-reanimated`)
   - RNScreens (from `../../node_modules/react-native-screens`)
   - Yoga (from `../../node_modules/react-native/ReactCommon/yoga`)
 
@@ -992,6 +1020,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native-gesture-handler"
   RNPermissions:
     :path: "../../node_modules/react-native-permissions"
+  RNReanimated:
+    :path: "../../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../../node_modules/react-native-screens"
   Yoga:
@@ -1111,6 +1141,7 @@ SPEC CHECKSUMS:
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNPermissions: 215c54462104b3925b412b0fb3c9c497b21c358b
+  RNReanimated: 72def2afa1d3d7e6e795c1e1d2e714a6a30b0ac1
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d

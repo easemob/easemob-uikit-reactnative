@@ -18,3 +18,4 @@
 [custom font helper](https://juejin.cn/post/6844904078703591431)
 [custom font helper](https://juejin.cn/post/7126126363009876004)
 [paper font helper](https://callstack.github.io/react-native-paper/fonts.html)
+[image previewer](https://github.com/ascoders/react-native-image-viewer)

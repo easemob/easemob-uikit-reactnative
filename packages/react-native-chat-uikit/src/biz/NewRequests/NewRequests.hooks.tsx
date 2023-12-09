@@ -42,7 +42,6 @@ export function useNewRequests(
       } else {
         // todo: accept invite. no have reject.
         if (data) {
-          console.log('test:zuoyu:acceptInvitation', data);
           im.acceptInvitation({
             userId: data.id,
             onResult: () => {

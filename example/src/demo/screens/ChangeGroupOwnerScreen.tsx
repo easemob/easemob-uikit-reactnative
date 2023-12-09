@@ -26,7 +26,6 @@ export function ChangeGroupOwnerScreen(props: Props) {
           navigation.goBack();
         }}
         onChangeResult={(data) => {
-          console.log('test:zuoyu:ChangeGroupOwnerScreen', data);
           // navigation.goBack();
           navigation.navigate({
             name: 'GroupInfo',

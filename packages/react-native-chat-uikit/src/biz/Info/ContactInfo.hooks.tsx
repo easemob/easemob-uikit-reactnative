@@ -28,7 +28,6 @@ export function useContactInfo(props: ContactInfoProps) {
             createIfNotExist: true,
           })
             .then((value) => {
-              console.log('test:zuoyu:getConversation', value);
               setDoNotDisturb(value?.doNotDisturb ?? false);
             })
             .catch((e) => {
@@ -72,7 +71,6 @@ export function useContactInfo(props: ContactInfoProps) {
         im.sendError({ error: e });
       });
   };
-  console.log('test:zuoyu:doNotDisturb', doNotDisturb);
   return {
     ...props,
     doNotDisturb,

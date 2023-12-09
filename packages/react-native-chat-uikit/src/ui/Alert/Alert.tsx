@@ -87,7 +87,6 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
             onUpdate(props);
           },
           close: (onFinished) => {
-            console.log('test:zuoyu:close', isSaveInput);
             isShow.current = false;
             if (isSaveInput === false) {
               onChangeText?.('');

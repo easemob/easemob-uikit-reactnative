@@ -51,7 +51,6 @@ export function ConversationDetail(props: ConversationDetailProps) {
     },
   });
 
-  console.log('test:zuoyu:ConversationDetail:');
   const messageInputRef = React.useRef<MessageInputRef>({} as any);
   const _messageInputRef = input?.ref ?? messageInputRef;
   const _MessageInput = input?.render ?? MessageInput;

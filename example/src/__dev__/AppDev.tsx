@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { default as Test } from './test_conversation_detail';
+import { default as Test } from './test_draggable';
 
 // if (
 //   Platform.OS === 'android' &&

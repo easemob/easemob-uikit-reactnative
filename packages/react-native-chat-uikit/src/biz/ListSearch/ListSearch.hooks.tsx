@@ -86,7 +86,6 @@ export function useListSearch<
         }
       } else {
         const data = initData as ReadonlyArray<ComponentModel>;
-        console.log('test:zuoyu:listearch:init:', data);
         dataRef.current = data.map((item) => {
           return {
             id: item.id,

@@ -53,7 +53,6 @@ export function useGroupParticipantList(
 
   const onClickedCallback = React.useCallback(
     (data?: GroupParticipantModel | undefined) => {
-      console.log('test:zuoyu:onclicked:', data);
       if (participantType === 'change-owner') {
         alertRef.current.alertWithInit({
           message: tr('Transfer group owner to xx'),
@@ -111,7 +110,6 @@ export function useGroupParticipantList(
 
   const onCheckClickedCallback = React.useCallback(
     (data?: GroupParticipantModel) => {
-      console.log('test:zuoyu:onCheckClickedCallback:', data);
       if (participantType === 'delete') {
         if (data?.checked !== undefined) {
           im.setGroupMemberState({
@@ -258,11 +256,9 @@ export function useGroupParticipantList(
       // todo: goto back last page.
     },
     onMemberJoined: (params: { groupId: string; member: string }) => {
-      console.log('test:zuoyu:onMemberJoined', params);
       addData(params.groupId, params.member);
     },
     onMemberExited: (params: { groupId: string; member: string }) => {
-      console.log('test:zuoyu:onMemberExited', params);
       removeData(params.groupId, params.member);
     },
   });

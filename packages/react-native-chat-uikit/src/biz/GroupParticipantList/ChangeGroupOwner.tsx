@@ -28,7 +28,6 @@ export function ChangeGroupOwner(props: ChangeGroupOwnerProps) {
                 groupId,
                 newOwnerId: data.id,
                 onResult: (result) => {
-                  console.log('test:zuoyu:changeGroupOwner:');
                   onChangeResult?.({
                     isOk: result.isOk,
                     value: data.id,

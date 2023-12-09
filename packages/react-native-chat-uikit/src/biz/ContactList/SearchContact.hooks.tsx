@@ -14,7 +14,6 @@ export function useSearchContact(
     onCancel?: () => void;
   } {
   const { onClicked, testMode, searchType, onCancel, groupId } = props;
-  console.log('test:zuoyu:useSearchContact:props', props);
   const flatListProps = useFlatList<ContactSearchModel>({
     isShowAfterLoaded: false,
     onInit: () => init(),

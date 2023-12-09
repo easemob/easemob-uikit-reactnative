@@ -70,7 +70,6 @@ export function GroupParticipantListScreen(props: Props) {
           navigation.push('GroupParticipantList', {});
         }}
         onClicked={(data) => {
-          console.log('test:zuoyu:memberlist:', data);
           if (data) {
             navigation.push('GroupParticipantInfo', {
               params: {

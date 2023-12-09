@@ -16,7 +16,6 @@ export function AddGroupParticipant(props: AddGroupParticipantProps) {
   const onAddGroupParticipantResult = React.useCallback(
     (added: ContactModel[]) => {
       if (added && added.length > 0 && groupId) {
-        console.log('test:zuoyu:AddGroupParticipant', added);
         im.addGroupMembers({
           groupId,
           members: added.map((item) => {

@@ -29,7 +29,6 @@ export function useGroupInfo(props: GroupInfoProps) {
     onGroupQuit,
     onGroupUpdateMyRemark,
   } = props;
-  console.log('test:zuoyu:groupinfo:', props);
   const im = useChatContext();
   const { tr } = useI18nContext();
   const alertRef = React.useRef<AlertRef>({} as any);
@@ -50,8 +49,8 @@ export function useGroupInfo(props: GroupInfoProps) {
           im.getGroupInfoFromServer({
             groupId,
             onResult: (value) => {
+              ownerId;
               const { isOk } = value;
-              console.log('test:zuoyu:groupinfo:', value, ownerId);
               if (isOk === true && value.value) {
                 setGroupDescription(value.value?.description);
                 setGroupName(value.value?.groupName);
@@ -306,7 +305,6 @@ export function useGroupInfo(props: GroupInfoProps) {
                         im.quitGroup({
                           groupId,
                           onResult: () => {
-                            console.log('test:zuoyu:quitgroup:');
                             onGroupQuit?.(groupId);
                           },
                         });
@@ -357,7 +355,6 @@ export function useGroupInfo(props: GroupInfoProps) {
                         im.destroyGroup({
                           groupId,
                           onResult: () => {
-                            console.log('test:zuoyu:destroygroup:', groupId);
                             onGroupDestroy?.(groupId);
                           },
                         });

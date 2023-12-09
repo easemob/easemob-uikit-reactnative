@@ -46,7 +46,6 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
     },
   });
   const getCheckedButton = (disable?: boolean, checked?: boolean) => {
-    console.log('test:zuoyu:GroupParticipantListItem:', data, disable, checked);
     const name = (checked?: boolean) => {
       return checked !== false ? 'checked_rectangle' : 'unchecked_rectangle';
     };

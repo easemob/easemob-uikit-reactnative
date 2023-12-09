@@ -80,7 +80,6 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
 
   const onClickedCallback = React.useCallback(
     (data?: ContactModel | undefined) => {
-      console.log('test:zuoyu:onClickedCallback:1', data);
       if (onClicked) {
         onClicked(data);
       }
@@ -265,7 +264,6 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
 
   const onCheckClickedCallback = React.useCallback(
     (data?: ContactModel) => {
-      console.log('test:zuoyu:onCheckClickedCallback:1', data);
       if (
         contactType !== 'create-group' &&
         contactType !== 'add-group-member'
@@ -294,7 +292,6 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   );
 
   const init = async (isClearState?: boolean) => {
-    console.log('test:zuoyu:init:2', isClearState);
     if (testMode === 'only-ui') {
       const names = [
         'James',
@@ -581,12 +578,10 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   // }, [contactType, sectionsRef]);
 
   React.useEffect(() => {
-    console.log('test:zuoyu:create-group:1', contactType, selectedData?.length);
     if (contactType !== 'create-group' && contactType !== 'add-group-member') {
       return;
     }
     if (selectedData && selectedData.length > 0) {
-      console.log('test:zuoyu:init:1');
       init(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

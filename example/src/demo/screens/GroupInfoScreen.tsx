@@ -33,9 +33,7 @@ export function GroupInfoScreen(props: Props) {
         onGroupQuit={() => {
           navigation.goBack();
         }}
-        onGroupUpdateMyRemark={() => {
-          console.log('test:zuoyu:onGroupUpdateMyRemark');
-        }}
+        onGroupUpdateMyRemark={() => {}}
         onClickedChangeGroupOwner={() => {
           navigation.push('ChangeGroupOwner', { params: { groupId } });
         }}
