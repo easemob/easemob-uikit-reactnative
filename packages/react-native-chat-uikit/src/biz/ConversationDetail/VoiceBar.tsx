@@ -5,13 +5,22 @@ import { useI18nContext } from '../../i18n';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
+import { gVoiceBarHeight } from '../const';
 
-export type VoiceBarProps = {};
+export type VoiceBarProps = {
+  height?: number;
+};
 export function VoiceBar(props: VoiceBarProps) {
-  const {} = props;
+  console.log('test:zuoyu:VoiceBar:props', props);
+  const { height } = props;
   const { tr } = useI18nContext();
   return (
-    <View style={{ height: 200, width: '100%' }}>
+    <View
+      style={{
+        height: height !== undefined ? height : gVoiceBarHeight,
+        width: '100%',
+      }}
+    >
       <View style={{}} />
       <View style={{ height: 70 }} />
       <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>

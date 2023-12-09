@@ -8,7 +8,8 @@ import {
 import emoji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
-import { useKeyboardHeight } from '../../hook';
+import { useDelayExecTask, useKeyboardHeight } from '../../hook';
+import { gVoiceBarHeight } from '../const';
 import { FACE_ASSETS_UTF16 } from '../EmojiList';
 import type { MessageInputProps, MessageInputState } from './types';
 
@@ -18,6 +19,7 @@ export function useMessageInput(props: MessageInputProps) {
   const inputRef = React.useRef<RNTextInput>({} as any);
   const [_value, _setValue] = React.useState('');
   const [emojiHeight, _setEmojiHeight] = React.useState(0);
+  const [voiceHeight, _setVoiceHeight] = React.useState(0);
   const isClosedEmoji = React.useRef(true);
   const isClosedKeyboard = React.useRef(true);
   const isClosedVoiceBar = React.useRef(true);
@@ -27,6 +29,7 @@ export function useMessageInput(props: MessageInputProps) {
   const rawValue = React.useRef('');
   const [inputBarState, setInputBarState] =
     React.useState<MessageInputState>('normal');
+  const hasLayoutAnimation = React.useRef(false);
 
   const changeInputBarState = (nextState: MessageInputState) => {
     if (nextState === 'normal') {
@@ -46,7 +49,7 @@ export function useMessageInput(props: MessageInputProps) {
       setEmojiIconName('keyboard2');
       closeKeyboard();
       closeVoiceBar();
-      setEmojiHeight(keyboardHeight - (bottom ?? 0));
+      showEmojiList();
     } else if (nextState === 'voice') {
       isClosedEmoji.current = true;
       isClosedKeyboard.current = true;
@@ -55,33 +58,35 @@ export function useMessageInput(props: MessageInputProps) {
       setEmojiIconName('face');
       closeKeyboard();
       closeEmojiList();
+      showVoiceBar();
     } else if (nextState === 'keyboard') {
-      console.log('dev:keyboard');
+      isClosedKeyboard.current = false;
+      setInputBarState('keyboard');
+      setEmojiIconName('face');
+      if (Platform.OS !== 'ios') {
+        isClosedEmoji.current = true;
+        isClosedVoiceBar.current = true;
+        closeEmojiList();
+        closeVoiceBar();
+      }
     }
   };
 
   const onFocus = () => {
     changeInputBarState('keyboard');
-    setEmojiIconName('face');
-    if (Platform.OS !== 'ios') {
-      setEmojiHeight(0);
-    }
   };
   const onBlur = () => {
-    LayoutAnimation.configureNext({
-      duration: 250, // from keyboard event
-      update: {
-        duration: 250,
-        type: Platform.OS === 'ios' ? 'keyboard' : 'linear',
-      },
-    });
+    setLayoutAnimation();
 
     if (isClosedEmoji.current === true) {
       setEmojiIconName('face');
-      setEmojiHeight(0);
+      closeEmojiList();
     } else {
       setEmojiIconName('keyboard2');
-      setEmojiHeight(keyboardHeight - (bottom ?? 0));
+      showEmojiList();
+    }
+    if (isClosedVoiceBar.current === true) {
+      closeVoiceBar();
     }
   };
 
@@ -162,9 +167,6 @@ export function useMessageInput(props: MessageInputProps) {
 
   const onClickedEmojiButton = () => {
     if (emojiIconName === 'face') {
-      // isClosedEmoji.current = false;
-      // isClosedKeyboard.current = true;
-      // closeKeyboard();
       changeInputBarState('emoji');
     } else {
       isClosedKeyboard.current = false;
@@ -176,26 +178,62 @@ export function useMessageInput(props: MessageInputProps) {
     changeInputBarState('voice');
   };
 
+  const { delayExecTask: resetLayoutAnimation } = useDelayExecTask(
+    175,
+    React.useCallback(() => {
+      if (hasLayoutAnimation.current === true) {
+        hasLayoutAnimation.current = false;
+      }
+    }, [])
+  );
+
+  const setLayoutAnimation = React.useCallback(() => {
+    if (hasLayoutAnimation.current === false) {
+      hasLayoutAnimation.current = true;
+      LayoutAnimation.configureNext({
+        duration: 250, // from keyboard event
+        update: {
+          duration: 250,
+          type: Platform.OS === 'ios' ? 'keyboard' : 'linear',
+        },
+      });
+    }
+    resetLayoutAnimation();
+  }, [resetLayoutAnimation]);
+
+  const setEmojiHeight = React.useCallback(
+    (h: number) => {
+      setLayoutAnimation();
+      _setEmojiHeight(h);
+    },
+    [setLayoutAnimation]
+  );
+  const setVoiceHeight = React.useCallback(
+    (h: number) => {
+      setLayoutAnimation();
+      _setVoiceHeight(h);
+    },
+    [setLayoutAnimation]
+  );
+
   const closeKeyboard = React.useCallback(() => {
     Keyboard.dismiss();
   }, []);
   const closeEmojiList = React.useCallback(() => {
     setEmojiHeight(0);
-  }, []);
-  const closeVoiceBar = React.useCallback(() => {}, []);
+  }, [setEmojiHeight]);
+  const closeVoiceBar = React.useCallback(() => {
+    setVoiceHeight(0);
+  }, [setVoiceHeight]);
 
-  const setEmojiHeight = (h: number) => {
-    // if (h === 0) {
-    //   LayoutAnimation.configureNext({
-    //     duration: 250, // from keyboard event
-    //     update: {
-    //       duration: 10,
-    //       type: Platform.OS === 'ios' ? 'keyboard' : 'easeIn',
-    //     },
-    //   });
-    // }
-    _setEmojiHeight(h);
-  };
+  const showEmojiList = React.useCallback(() => {
+    setEmojiHeight(keyboardHeight - (bottom ?? 0));
+  }, [bottom, keyboardHeight, setEmojiHeight]);
+
+  const showVoiceBar = React.useCallback(() => {
+    setVoiceHeight(gVoiceBarHeight + (bottom ?? 0));
+  }, [bottom, setVoiceHeight]);
+  console.log('test:zuoyu:showVoiceBar:outer', voiceHeight, emojiHeight);
 
   return {
     value: _value,
@@ -209,6 +247,7 @@ export function useMessageInput(props: MessageInputProps) {
     closeKeyboard,
     inputRef,
     setEmojiHeight,
+    voiceHeight,
     emojiHeight,
     isClosedEmoji,
     isClosedKeyboard,

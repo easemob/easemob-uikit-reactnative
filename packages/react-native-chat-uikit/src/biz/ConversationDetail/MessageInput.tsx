@@ -13,6 +13,7 @@ import { EmojiListMemo } from '../EmojiList';
 import { DelButtonMemo } from './DelButton';
 import { useMessageInput } from './MessageInput.hooks';
 import type { MessageInputProps, MessageInputRef } from './types';
+import { VoiceBar } from './VoiceBar';
 
 export const MessageInput = React.forwardRef<
   MessageInputRef,
@@ -62,6 +63,7 @@ export const MessageInput = React.forwardRef<
     onFocus,
     onBlur,
     changeInputBarState,
+    voiceHeight,
   } = useMessageInput(props);
 
   const onSend = () => {
@@ -78,10 +80,6 @@ export const MessageInput = React.forwardRef<
   React.useImperativeHandle(ref, () => {
     return {
       close: () => {
-        // isClosedEmoji.current = true;
-        // isClosedKeyboard.current = true;
-        // setEmojiHeight(0);
-        // closeKeyboard();
         changeInputBarState('normal');
       },
     };
@@ -226,15 +224,11 @@ export const MessageInput = React.forwardRef<
           backgroundColor:
             emojiHeight === 0 ? undefined : getColor('backgroundColor'),
           height: emojiHeight,
-          // overflow: 'hidden',
-          // paddingBottom: bottom,
-          // display: isStyle === false ? 'flex' : 'none',
         }}
       >
         <EmojiListMemo
           containerStyle={{
             flex: 1,
-            // marginBottom: 8,
           }}
           onFace={onClickedFaceListItem}
         />
@@ -244,6 +238,7 @@ export const MessageInput = React.forwardRef<
           onClicked={onClickedDelButton}
         />
       </View>
+      <VoiceBar height={voiceHeight} />
     </>
   );
 });
