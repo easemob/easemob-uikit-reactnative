@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { LayoutAnimation } from 'react-native';
-import { Platform, TextInput as RNTextInput, View } from 'react-native';
+import { Platform, View } from 'react-native';
 
-import type { IconNameType } from '../../assets';
 import { useConfigContext } from '../../config';
-import { useColors, useKeyboardHeight } from '../../hook';
+import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { IconButtonMemo } from '../../ui/Button';
@@ -13,18 +11,9 @@ import { TextInput } from '../../ui/TextInput';
 import { timeoutTask } from '../../utils';
 import { EmojiListMemo } from '../EmojiList';
 import { DelButtonMemo } from './DelButton';
-import { useMessageTextInput } from './MessageInput.hooks';
+import { useMessageInput } from './MessageInput.hooks';
+import type { MessageInputProps, MessageInputRef } from './types';
 
-export type MessageInputRef = {
-  close: () => void;
-};
-export type MessageInputProps = {
-  top?: number | undefined;
-  bottom?: number | undefined;
-  numberOfLines?: number | undefined;
-  onClickedSend?: (text: string) => void;
-  closeAfterSend?: boolean;
-};
 export const MessageInput = React.forwardRef<
   MessageInputRef,
   MessageInputProps
@@ -32,18 +21,9 @@ export const MessageInput = React.forwardRef<
   props: React.PropsWithChildren<MessageInputProps>,
   ref?: React.ForwardedRef<MessageInputRef>
 ) {
-  const { top, bottom, numberOfLines, closeAfterSend, onClickedSend } = props;
-
-  const [isStyle, _setIsStyle] = React.useState(false);
-  const inputRef = React.useRef<RNTextInput>({} as any);
-
-  const isClosedEmoji = React.useRef(true);
-  const isClosedKeyboard = React.useRef(true);
-  const [emojiHeight, _setEmojiHeight] = React.useState(0);
-  const [iconName, setIconName] = React.useState<IconNameType>('face');
+  const { top, numberOfLines, closeAfterSend, onClickedSend } = props;
 
   const testRef = React.useRef<View>(null);
-  const keyboardHeight = useKeyboardHeight();
   const { fontFamily } = useConfigContext();
   const {} = useI18nContext();
   const { style } = useThemeContext();
@@ -67,21 +47,22 @@ export const MessageInput = React.forwardRef<
     },
   });
 
-  const { value, valueRef, setValue, onFace, onDel, closeKeyboard } =
-    useMessageTextInput();
-
-  const setEmojiHeight = (h: number) => {
-    // if (h === 0) {
-    //   LayoutAnimation.configureNext({
-    //     duration: 250, // from keyboard event
-    //     update: {
-    //       duration: 10,
-    //       type: Platform.OS === 'ios' ? 'keyboard' : 'easeIn',
-    //     },
-    //   });
-    // }
-    _setEmojiHeight(h);
-  };
+  const {
+    value,
+    valueRef,
+    setValue,
+    onClickedFaceListItem,
+    onClickedDelButton,
+    onClickedEmojiButton,
+    onClickedVoiceButton,
+    closeKeyboard,
+    inputRef,
+    emojiHeight,
+    emojiIconName,
+    onFocus,
+    onBlur,
+    changeInputBarState,
+  } = useMessageInput(props);
 
   const onSend = () => {
     const content = valueRef.current;
@@ -97,10 +78,11 @@ export const MessageInput = React.forwardRef<
   React.useImperativeHandle(ref, () => {
     return {
       close: () => {
-        isClosedEmoji.current = true;
-        isClosedKeyboard.current = true;
-        setEmojiHeight(0);
-        closeKeyboard();
+        // isClosedEmoji.current = true;
+        // isClosedKeyboard.current = true;
+        // setEmojiHeight(0);
+        // closeKeyboard();
+        changeInputBarState('normal');
       },
     };
   });
@@ -118,32 +100,32 @@ export const MessageInput = React.forwardRef<
             display: 'flex',
           }}
           onLayout={() => {
-            testRef.current?.measure(
-              (
-                _x: number,
-                _y: number,
-                _width: number,
-                _height: number,
-                _pageX: number,
-                pageY: number
-              ) => {
-                console.log(
-                  'Sub:Sub:measure:',
-                  _x,
-                  _y,
-                  _width,
-                  _height,
-                  _pageX,
-                  pageY
-                );
-                // setPageY(pageY);
-              }
-            );
-            testRef.current?.measureInWindow(
-              (_x: number, _y: number, _width: number, _height: number) => {
-                // console.log('Sub:Sub:measureInWindow:', _x, _y, _width, _height);
-              }
-            );
+            // testRef.current?.measure(
+            //   (
+            //     _x: number,
+            //     _y: number,
+            //     _width: number,
+            //     _height: number,
+            //     _pageX: number,
+            //     pageY: number
+            //   ) => {
+            //     console.log(
+            //       'Sub:Sub:measure:',
+            //       _x,
+            //       _y,
+            //       _width,
+            //       _height,
+            //       _pageX,
+            //       pageY
+            //     );
+            //     // setPageY(pageY);
+            //   }
+            // );
+            // testRef.current?.measureInWindow(
+            //   (_x: number, _y: number, _width: number, _height: number) => {
+            //     // console.log('Sub:Sub:measureInWindow:', _x, _y, _width, _height);
+            //   }
+            // );
           }}
         >
           <View
@@ -152,6 +134,19 @@ export const MessageInput = React.forwardRef<
               margin: 8,
             }}
           >
+            <IconButtonMemo
+              style={{
+                width: 30,
+                height: 30,
+                tintColor: getColor('tintColor'),
+              }}
+              containerStyle={{
+                alignSelf: 'flex-end',
+                margin: 6,
+              }}
+              onPress={onClickedVoiceButton}
+              iconName={'wave_in_circle'}
+            />
             <View
               style={{
                 flexDirection: 'column',
@@ -187,30 +182,8 @@ export const MessageInput = React.forwardRef<
                     width: '100%',
                     minHeight: 22,
                   }}
-                  onFocus={() => {
-                    setIconName('face');
-                    if (Platform.OS !== 'ios') {
-                      setEmojiHeight(0);
-                    }
-                  }}
-                  onBlur={() => {
-                    setIconName('keyboard2');
-                    if (isStyle === false) {
-                      LayoutAnimation.configureNext({
-                        duration: 250, // from keyboard event
-                        update: {
-                          duration: 250,
-                          type: Platform.OS === 'ios' ? 'keyboard' : 'linear',
-                        },
-                      });
-                    }
-
-                    if (isClosedEmoji.current === true) {
-                      setEmojiHeight(0);
-                    } else {
-                      setEmojiHeight(keyboardHeight - (bottom ?? 0));
-                    }
-                  }}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
                   onChangeText={setValue}
                   value={value}
                   keyboardAppearance={style === 'light' ? 'light' : 'dark'}
@@ -227,17 +200,8 @@ export const MessageInput = React.forwardRef<
                 alignSelf: 'flex-end',
                 margin: 6,
               }}
-              onPress={() => {
-                if (iconName === 'face') {
-                  isClosedEmoji.current = false;
-                  isClosedKeyboard.current = true;
-                  closeKeyboard();
-                } else {
-                  isClosedKeyboard.current = false;
-                  inputRef.current?.focus();
-                }
-              }}
-              iconName={iconName}
+              onPress={onClickedEmojiButton}
+              iconName={emojiIconName}
             />
             <IconButtonMemo
               style={{
@@ -272,12 +236,12 @@ export const MessageInput = React.forwardRef<
             flex: 1,
             // marginBottom: 8,
           }}
-          onFace={onFace}
+          onFace={onClickedFaceListItem}
         />
         <DelButtonMemo
           getColor={getColor}
           emojiHeight={emojiHeight}
-          onClicked={onDel}
+          onClicked={onClickedDelButton}
         />
       </View>
     </>

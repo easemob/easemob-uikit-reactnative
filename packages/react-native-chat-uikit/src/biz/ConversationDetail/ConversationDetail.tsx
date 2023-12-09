@@ -12,12 +12,9 @@ import {
   TopNavigationBar,
   TopNavigationBarRightList,
 } from '../TopNavigationBar';
-import {
-  MessageInput,
-  MessageInputProps,
-  MessageInputRef,
-} from './MessageInput';
+import { MessageInput } from './MessageInput';
 import { MessageList } from './MessageList';
+import type { MessageInputProps, MessageInputRef } from './types';
 
 export type ConversationDetailProps = {
   input?: {

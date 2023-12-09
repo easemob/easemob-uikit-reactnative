@@ -21,13 +21,18 @@ import {
 export function ConvDetail() {
   const { top, bottom } = useSafeAreaInsets();
   return (
-    <View style={{ flex: 1, backgroundColor: 'red' }}>
+    <View
+      style={{
+        flex: 1,
+        // backgroundColor: 'red',
+      }}
+    >
       <SafeAreaView style={{ flex: 1 }}>
         <View
           style={{
             // height: 100,
             // width: 100,
-            backgroundColor: 'green',
+            // backgroundColor: 'green',
             flexGrow: 1,
             // overflow: 'hidden',
           }}
@@ -42,7 +47,12 @@ export function ConvDetail() {
 export function ConvDetail2() {
   const { top } = useSafeAreaInsets();
   return (
-    <View style={{ flex: 1, backgroundColor: 'red' }}>
+    <View
+      style={{
+        flex: 1,
+        // backgroundColor: 'red',
+      }}
+    >
       <RNSafeAreaView style={{ flex: 1 }}>
         <View
           style={{
@@ -76,7 +86,12 @@ export function ConvDetail2() {
 export function ConvDetail3() {
   const { bottom } = useSafeAreaInsets();
   return (
-    <View style={{ flex: 1, backgroundColor: 'red' }}>
+    <View
+      style={{
+        flex: 1,
+        // backgroundColor: 'red',
+      }}
+    >
       <View
         style={{
           // height: 100,
