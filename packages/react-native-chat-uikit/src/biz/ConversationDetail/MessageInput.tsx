@@ -34,6 +34,10 @@ export const MessageInput = React.forwardRef<
       light: colors.neutral[98],
       dark: colors.neutral[1],
     },
+    input_bg: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
     text: {
       light: colors.neutral[1],
       dark: colors.neutral[98],
@@ -159,7 +163,7 @@ export const MessageInput = React.forwardRef<
                   flexDirection: 'row',
                   paddingHorizontal: 16,
                   paddingVertical: 7,
-                  backgroundColor: getColor('backgroundColor2'),
+                  backgroundColor: getColor('input_bg'),
                   borderRadius: 18,
                 }}
               >
