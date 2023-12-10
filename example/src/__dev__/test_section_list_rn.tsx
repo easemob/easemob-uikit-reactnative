@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import {
-  Container,
+  GlobalContainer,
   ListIndex,
   useDelayExecTask,
 } from 'react-native-chat-uikit';
@@ -236,8 +236,8 @@ const styles = StyleSheet.create({
 
 export default function TestSectionListRn() {
   return (
-    <Container appKey={''}>
+    <GlobalContainer appKey={''}>
       <SL />
-    </Container>
+    </GlobalContainer>
   );
 }

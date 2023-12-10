@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import {
-  Container,
+  GlobalContainer,
   // ImagePreview,
   useLightTheme,
   usePresetPalette,
@@ -245,8 +245,8 @@ export default function TestDraggable() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <Container appKey={''} palette={p} theme={t}>
+    <GlobalContainer appKey={''} palette={p} theme={t}>
       <TestMyDraggable />
-    </Container>
+    </GlobalContainer>
   );
 }

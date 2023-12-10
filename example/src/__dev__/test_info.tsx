@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   ContactInfo,
-  Container,
+  GlobalContainer,
   GroupInfo,
   GroupParticipantInfo,
 } from 'react-native-chat-uikit';
@@ -38,6 +38,7 @@ export function TestGroupParticipantInfo() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <GroupParticipantInfo
+        groupId="sdf"
         doNotDisturb={doNotDisturb}
         onDoNotDisturb={onDoNotDisturb}
         userId={''}
@@ -48,8 +49,8 @@ export function TestGroupParticipantInfo() {
 
 export default function TestInfo() {
   return (
-    <Container appKey={''}>
+    <GlobalContainer appKey={''}>
       <TestGroupParticipantInfo />
-    </Container>
+    </GlobalContainer>
   );
 }

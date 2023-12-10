@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { Container, HighText } from 'react-native-chat-uikit';
+import { GlobalContainer, HighText } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function Split() {
@@ -89,8 +89,8 @@ export function CalcuCount() {
 
 export default function TestUtils() {
   return (
-    <Container appKey={''}>
+    <GlobalContainer appKey={''}>
       <CalcuCount />
-    </Container>
+    </GlobalContainer>
   );
 }

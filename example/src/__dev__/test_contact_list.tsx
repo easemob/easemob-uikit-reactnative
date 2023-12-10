@@ -2,9 +2,9 @@ import * as React from 'react';
 import {
   BottomTabBar,
   ContactList,
-  Container,
   DataModel,
   DataModelType,
+  GlobalContainer,
   SearchContact,
   TabPage,
   UIKitError,
@@ -173,8 +173,8 @@ export function CL2() {
 
 export default function TestContactList() {
   return (
-    <Container appKey={''}>
+    <GlobalContainer appKey={''}>
       <CL />
-    </Container>
+    </GlobalContainer>
   );
 }

@@ -1,10 +1,10 @@
-import Clipboard from '@react-native-clipboard/clipboard';
 import * as React from 'react';
 import { ChatConversationType } from 'react-native-chat-sdk';
 
 import { useChatContext } from '../../chat';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { GroupParticipantInfoProps } from './types';
@@ -102,7 +102,7 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
       propsOnCopyId(userId);
       return;
     }
-    Clipboard.setString(userId);
+    Services.cbs.setString(userId);
     toastRef.current.show({
       message: tr('copy_success'),
     });

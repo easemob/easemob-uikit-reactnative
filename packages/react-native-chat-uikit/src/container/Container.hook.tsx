@@ -1,7 +1,20 @@
+import CreateThumbnail from '@easemob/react-native-create-thumbnail';
+import { CameraRoll as MediaLibrary } from '@react-native-camera-roll/camera-roll';
+import Clipboard from '@react-native-clipboard/clipboard';
+import FirebaseMessage from '@react-native-firebase/messaging';
+import * as Audio from 'react-native-audio-recorder-player';
+import * as DocumentPicker from 'react-native-document-picker';
+import * as FileAccess from 'react-native-file-access';
+import * as ImagePicker from 'react-native-image-picker';
+import * as Permissions from 'react-native-permissions';
+import VideoComponent from 'react-native-video';
+
 import { CreateStringSet, LanguageCode, languageCodes } from '../i18n';
+import { Services } from '../services';
 import { Palette, Theme, useLightTheme } from '../theme';
 import type { ReleaseArea } from '../types';
 import { getSystemLanguage } from '../utils';
+import type { GlobalContainerProps } from './types';
 
 const getDefaultLanguage = (): LanguageCode => {
   let ret: LanguageCode;
@@ -73,5 +86,52 @@ export const useGetTheme = (params: {
     return theme;
   } else {
     return light;
+  }
+};
+
+export const useInitServices = (props: GlobalContainerProps) => {
+  const {} = props;
+
+  if (Services.cbs === undefined) {
+    Services.createClipboardService({
+      clipboard: Clipboard,
+    });
+  }
+
+  if (Services.ls === undefined) {
+    Services.createLocalStorageService();
+  }
+
+  if (Services.ps === undefined) {
+    Services.createPermissionService({
+      permissions: Permissions,
+      firebaseMessage: FirebaseMessage,
+    });
+  }
+
+  if (Services.ms === undefined) {
+    Services.createMediaService({
+      videoModule: VideoComponent,
+      videoThumbnail: CreateThumbnail,
+      imagePickerModule: ImagePicker,
+      documentPickerModule: DocumentPicker,
+      mediaLibraryModule: MediaLibrary,
+      fsModule: FileAccess,
+      audioModule: Audio,
+      permission: Services.ps,
+    });
+  }
+
+  if (Services.ns === undefined) {
+    Services.createNotificationService({
+      firebaseMessage: FirebaseMessage,
+      permission: Services.ps,
+    });
+  }
+
+  if (Services.dcs === undefined) {
+    Services.createDirCacheService({
+      media: Services.ms,
+    });
   }
 };

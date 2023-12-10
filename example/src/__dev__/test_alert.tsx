@@ -3,7 +3,7 @@ import {
   Alert,
   AlertRef,
   CmnButton,
-  Container,
+  GlobalContainer,
   useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-uikit';
@@ -58,8 +58,8 @@ export default function TestAlert() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <Container appKey={''} palette={p} theme={t}>
+    <GlobalContainer appKey={''} palette={p} theme={t}>
       <Alert1 />
-    </Container>
+    </GlobalContainer>
   );
 }

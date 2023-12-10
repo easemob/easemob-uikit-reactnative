@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
   BottomTabBar,
-  Container,
   DataModel,
   DataModelType,
+  GlobalContainer,
   GroupList,
   SearchGroup,
   TabPage,
@@ -177,8 +177,8 @@ export function CL2() {
 
 export default function TestGroupList() {
   return (
-    <Container appKey={''}>
+    <GlobalContainer appKey={''}>
       <CL />
-    </Container>
+    </GlobalContainer>
   );
 }

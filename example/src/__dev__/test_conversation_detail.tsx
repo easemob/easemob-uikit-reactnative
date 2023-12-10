@@ -7,8 +7,8 @@ import {
   View,
 } from 'react-native';
 import {
-  Container,
   ConversationDetail,
+  GlobalContainer,
   TextInput,
   useLightTheme,
   usePresetPalette,
@@ -129,9 +129,9 @@ export default function TestConversationDetail() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <Container appKey={''} palette={p} theme={t}>
+    <GlobalContainer appKey={''} palette={p} theme={t}>
       <ConvDetail />
       {/* <View style={{ height: 50 }} /> */}
-    </Container>
+    </GlobalContainer>
   );
 }

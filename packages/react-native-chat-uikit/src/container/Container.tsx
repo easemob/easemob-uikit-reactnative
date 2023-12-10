@@ -4,82 +4,31 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ChatContextProvider } from '../chat';
 import { ConfigContextProvider } from '../config';
 import { DispatchContextProvider } from '../dispatch';
-import { CreateStringSet, I18nContextProvider, LanguageCode } from '../i18n';
+import { I18nContextProvider } from '../i18n';
 import { createStringSet } from '../i18n/StringSet';
 import {
-  Palette,
   PaletteContextProvider,
-  Theme,
   ThemeContextProvider,
   usePresetPalette,
 } from '../theme';
-import type { ReleaseArea } from '../types';
 import {
   getI18nLanguage,
   getReleaseArea,
   getTranslateLanguage,
   useGetTheme,
+  useInitServices,
 } from './Container.hook';
-
-/**
- * Properties of the Container.
- */
-export type ContainerProps = React.PropsWithChildren<{
-  /**
-   * The application key.
-   */
-  appKey: string;
-  /**
-   * Whether to enable the development mode.
-   */
-  isDevMode?: boolean;
-  /**
-   * The language code.
-   */
-  language?: LanguageCode;
-  /**
-   * The language built-in factory.
-   *
-   * If set, replace the data inside uikit.
-   */
-  languageBuiltInFactory?: CreateStringSet;
-  /**
-   * The language extension factory.
-   *
-   * If set, it can also be used in the application.
-   */
-  languageExtensionFactory?: CreateStringSet;
-  /**
-   * The palette.
-   */
-  palette?: Palette;
-  /**
-   * The theme.
-   */
-  theme?: Theme;
-  /**
-   * The font family name.
-   */
-  fontFamily?: string;
-  /**
-   * The release area.
-   */
-  releaseArea?: ReleaseArea;
-  /**
-   * IM initialization is completed.
-   */
-  onInitialized?: () => void;
-}>;
+import type { GlobalContainerProps } from './types';
 
 /**
  * Entry to the UIKit component library. It will complete initialization, configure custom parameters and other preparations.
  * 
  * **Note** IM will be initialized here. If other UIKit is integrated at the same time, the parameters initialized first shall prevail.
 For example: if `chat uikit sdk` and `chat uikit sdk` are integrated at the same time, then the parameter initialized first will prevail.
- * @param props {@link ContainerProps}
+ * @param props {@link GlobalContainerProps}
  * @returns JSX.Element
  */
-export function Container(props: ContainerProps) {
+export function GlobalContainer(props: GlobalContainerProps) {
   const {
     appKey,
     children,
@@ -93,6 +42,7 @@ export function Container(props: ContainerProps) {
     releaseArea,
     onInitialized,
   } = props;
+  useInitServices(props);
   const _palette = usePresetPalette();
 
   const _languageBuiltInFactory = languageBuiltInFactory ?? createStringSet;

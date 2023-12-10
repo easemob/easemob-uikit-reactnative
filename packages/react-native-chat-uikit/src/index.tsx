@@ -26,6 +26,7 @@ export * from './dispatch';
 export * from './error';
 export * from './hook';
 export * from './i18n';
+export * from './services';
 export * from './theme';
 export * from './types';
 export * from './ui/Alert';

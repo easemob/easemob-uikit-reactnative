@@ -1564,6 +1564,11 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@easemob/react-native-create-thumbnail@^1.6.4":
+  version "1.6.4"
+  resolved "https://registry.npmmirror.com/@easemob/react-native-create-thumbnail/-/react-native-create-thumbnail-1.6.4.tgz#463798075d0fd245c4782aa87e59a72076eb06b4"
+  integrity sha512-4rqBxmGA9VJtLdJ4NbcTjVtqiqMHZgUwlABuwEmNN2KGEjOBjEaNxwoeKBvmQ+WiMlYhLKRvTNtKMD23Ouo3Vw==
+
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
   resolved "https://registry.npmmirror.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
@@ -12070,11 +12075,6 @@ react-native-codegen@^0.71.5:
     flow-parser "^0.185.0"
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
-
-react-native-create-thumbnail@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.npmmirror.com/react-native-create-thumbnail/-/react-native-create-thumbnail-1.6.4.tgz#90f5b0a587de6e3738a7632fe3d9a9624ed83581"
-  integrity sha512-JWuKXswDXtqUPfuqh6rjCVMvTSSG3kUtwvSK/YdaNU0i+nZKxeqHmt/CO2+TyI/WSUFynGVmWT1xOHhCZAFsRQ==
 
 react-native-device-info@^10.6.0:
   version "10.6.0"

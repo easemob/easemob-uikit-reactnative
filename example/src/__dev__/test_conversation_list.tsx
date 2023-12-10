@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
   BottomTabBar,
-  Container,
   ConversationList,
   DataModel,
   DataModelType,
+  GlobalContainer,
   SearchConversation,
   TabPage,
   UIKitError,
@@ -169,8 +169,8 @@ export function CL2() {
 
 export default function TestConversationList() {
   return (
-    <Container appKey={''}>
+    <GlobalContainer appKey={''}>
       <CL3 />
-    </Container>
+    </GlobalContainer>
   );
 }

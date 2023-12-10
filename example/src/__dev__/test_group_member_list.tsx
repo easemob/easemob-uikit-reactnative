@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
   BottomTabBar,
-  Container,
   DataModel,
   DataModelType,
+  GlobalContainer,
   GroupParticipantList,
   SearchGroupParticipant,
   TabPage,
@@ -15,6 +15,7 @@ export function CL() {
   return (
     <SafeAreaView>
       <GroupParticipantList
+        groupId="sdf"
         containerStyle={{
           height: '100%',
           backgroundColor: 'red',
@@ -50,6 +51,7 @@ export function CL3() {
   return (
     <SafeAreaView>
       <SearchGroupParticipant
+        groupId="sdf"
         onCancel={() => {
           console.log('test:zuoyu:cancel');
         }}
@@ -84,6 +86,7 @@ export function BodyPagesT({
   // };
   return (
     <GroupParticipantList
+      groupId="sdf"
       containerStyle={{
         // height: '100%',
         backgroundColor: 'green',
@@ -166,8 +169,8 @@ export function CL2() {
 
 export default function TestGroupParticipantList() {
   return (
-    <Container appKey={''}>
+    <GlobalContainer appKey={''}>
       <CL2 />
-    </Container>
+    </GlobalContainer>
   );
 }
