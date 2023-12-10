@@ -556,6 +556,8 @@ export interface ChatService
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
 
+  // unInit(): Promise<void>;
+
   /**
    * Log in to the IM server.
    *

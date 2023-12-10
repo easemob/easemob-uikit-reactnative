@@ -129,8 +129,8 @@ export abstract class ChatServiceImpl
       });
     }
   }
-  unInit() {
-    this.destructor();
+  async unInit(): Promise<void> {
+    return this._reset();
   }
 
   addListener(listener: ChatServiceListener): void {
@@ -1700,7 +1700,7 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
     this._initExtraListener();
   }
   _initConnectListener() {
-    this.client.removeAllConnectionListener();
+    // this.client.removeAllConnectionListener();
     this.client.addConnectionListener({
       onConnected: () => {
         this._listeners.forEach((v) => {
@@ -1772,7 +1772,7 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
   }
 
   _initMessageListener() {
-    this.client.chatManager.removeAllMessageListener();
+    // this.client.chatManager.removeAllMessageListener();
     this.client.chatManager.addMessageListener({
       onMessagesReceived: (messages: Array<ChatMessage>): void => {
         this._listeners.forEach((v) => {
@@ -1860,7 +1860,7 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
   }
 
   _initGroupListener() {
-    this.client.groupManager.removeAllGroupListener();
+    // this.client.groupManager.removeAllGroupListener();
     this.client.groupManager.addGroupListener({
       onInvitationReceived: (params: {
         groupId: string;
@@ -2060,7 +2060,7 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
   }
 
   _initMultiDeviceListener() {
-    this.client.removeAllMultiDeviceListener();
+    // this.client.removeAllMultiDeviceListener();
     this.client.addMultiDeviceListener({
       onContactEvent: (
         event?: ChatMultiDeviceEvent,
@@ -2106,7 +2106,7 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
     });
   }
   _initCustomListener() {
-    this.client.removeAllCustomListener();
+    // this.client.removeAllCustomListener();
     this.client.addCustomListener({
       onDataReceived: (params: any): void => {
         this._listeners.forEach((v) => {
@@ -2116,7 +2116,7 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
     });
   }
   _initContactListener() {
-    this.client.contactManager.removeAllContactListener();
+    // this.client.contactManager.removeAllContactListener();
     this.client.contactManager.addContactListener({
       onContactAdded: (userName: string): void => {
         this._listeners.forEach((v) => {
@@ -2146,7 +2146,7 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
     });
   }
   _initPresenceListener() {
-    this.client.presenceManager.removeAllPresenceListener();
+    // this.client.presenceManager.removeAllPresenceListener();
     this.client.presenceManager.addPresenceListener({
       onPresenceStatusChanged: (list: Array<ChatPresence>): void => {
         this._listeners.forEach((v) => {
