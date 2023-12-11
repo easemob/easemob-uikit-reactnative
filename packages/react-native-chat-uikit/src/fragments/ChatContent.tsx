@@ -930,7 +930,7 @@ export const ChatContent = React.memo(
             chatType as number as ChatConversationType,
             earliestId ?? '',
             ChatSearchDirection.UP,
-            2
+            20
           )
           .then((result) => {
             if (result) {
