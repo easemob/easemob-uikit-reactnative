@@ -126,7 +126,6 @@ export class ImageViewer extends React.Component<
         status: 'loading',
       });
     });
-    console.log('test:zuoyu:imageSizes', imageSizes);
 
     this.setState(
       {

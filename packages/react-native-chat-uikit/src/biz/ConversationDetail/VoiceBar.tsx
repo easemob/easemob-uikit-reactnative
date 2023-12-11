@@ -7,6 +7,7 @@ import {
   AVEncoderAudioQualityIOSType,
   AVEncodingOption,
   AVModeIOSOption,
+  OutputFormatAndroidType,
 } from 'react-native-audio-recorder-player';
 
 import { useChatContext } from '../../chat';
@@ -16,7 +17,7 @@ import { Services } from '../../services';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
-import { Text } from '../../ui/Text';
+import { Text, TimerText, TimerTextRef } from '../../ui/Text';
 import {
   getFileExtension,
   localUrl,
@@ -110,6 +111,8 @@ export function VoiceBar(props: VoiceBarProps) {
     onClickedClearButton,
     onClickedRecordButton,
     onClickedSendButton,
+    tipTimerRef,
+    contentTimerRef,
   } = useVoiceBar(props);
 
   const getTextTip = () => {
@@ -175,16 +178,34 @@ export function VoiceBar(props: VoiceBarProps) {
           onPress={onClickedRecordButton}
         >
           <View>
-            {state === 'idle' ? (
-              <Icon
-                name={'mic_on'}
-                style={{
-                  width: 24,
-                  height: 24,
-                  tintColor: getColor('bg'),
+            <Icon
+              name={'mic_on'}
+              style={{
+                width: 24,
+                height: 24,
+                tintColor: getColor('bg'),
+                display: state === 'idle' ? 'flex' : 'none',
+              }}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                display: state === 'idle' ? 'none' : 'flex',
+              }}
+            >
+              <TimerText
+                textStyle={{
+                  textType: 'small',
+                  paletteType: 'headline',
+                  style: {
+                    color: getColor('bg'),
+                  },
                 }}
+                isIncrease={true}
+                startValue={0}
+                stopValue={60}
+                propsRef={contentTimerRef}
               />
-            ) : (
               <Text
                 textType={'small'}
                 paletteType={'headline'}
@@ -192,9 +213,9 @@ export function VoiceBar(props: VoiceBarProps) {
                   color: getColor('bg'),
                 }}
               >
-                {'sdf'}
+                {'s'}
               </Text>
-            )}
+            </View>
           </View>
         </Pressable>
         {state === 'playing' || state === 'stopping' ? (
@@ -231,18 +252,36 @@ export function VoiceBar(props: VoiceBarProps) {
         >
           {getTextTip()}
         </Text>
-        {state === 'recording' ? (
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 8,
+            display: state === 'recording' ? 'flex' : 'none',
+          }}
+        >
+          <TimerText
+            textStyle={{
+              textType: 'small',
+              paletteType: 'body',
+              style: {
+                color: getColor('trash'),
+              },
+            }}
+            isIncrease={false}
+            startValue={60}
+            stopValue={0}
+            propsRef={tipTimerRef}
+          />
           <Text
             textType={'small'}
             paletteType={'body'}
             style={{
               color: getColor('trash'),
-              marginTop: 8,
             }}
           >
-            {tr('left xx seconds')}
+            {tr('s Remaining')}
           </Text>
-        ) : null}
+        </View>
       </View>
     </View>
   );
@@ -260,27 +299,41 @@ export function useVoiceBar(props: VoiceBarProps) {
   const isPlayingRef = React.useRef<boolean>(false);
   const recordTimeoutRef = React.useRef<NodeJS.Timeout>();
   const im = useChatContext();
+  const tipTimerRef = React.useRef<TimerTextRef>({} as any);
+  const contentTimerRef = React.useRef<TimerTextRef>({} as any);
+
+  const AudioOptionRef = React.useRef<AudioSet>({
+    AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
+    OutputFormatAndroid: OutputFormatAndroidType.AAC_ADIF,
+    AudioSourceAndroid: AudioSourceAndroidType.MIC,
+    AVModeIOS: AVModeIOSOption.measurement,
+    AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+    AVNumberOfChannelsKeyIOS: 2,
+    AVFormatIDKeyIOS: AVEncodingOption.aac,
+  });
+
+  const onState = (s: VoiceBarState) => {
+    console.log('test:onState:', s);
+    setState(s);
+  };
 
   const startRecord = (voiceFilePath?: string) => {
     if (voiceFilePath) {
       voiceFilePathRef.current = voiceFilePath;
     }
-    setState('recording');
+    onState('recording');
     recordTimeoutRef.current = setTimeout(() => {
       stopRecord();
     }, 60000);
+    tipTimerRef.current?.reset?.();
+    tipTimerRef.current?.start?.();
+    contentTimerRef.current?.reset?.();
+    contentTimerRef.current?.start?.();
 
     Services.ms
       .startRecordAudio({
         url: voiceFilePath,
-        audio: {
-          AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
-          AudioSourceAndroid: AudioSourceAndroidType.MIC,
-          AVModeIOS: AVModeIOSOption.measurement,
-          AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
-          AVNumberOfChannelsKeyIOS: 2,
-          AVFormatIDKeyIOS: AVEncodingOption.aac,
-        } as AudioSet,
+        audio: AudioOptionRef.current,
         onPosition: (pos) => {
           console.log('test:startRecordAudio:pos:', pos);
         },
@@ -298,15 +351,19 @@ export function useVoiceBar(props: VoiceBarProps) {
       .catch((error) => {
         console.warn('test:startRecordAudio:error:', error);
         onRecordFailed?.({ reason: error.toString() });
+        tipTimerRef.current?.stop?.();
+        contentTimerRef.current?.stop?.();
       });
   };
   const stopRecord = React.useCallback(() => {
+    tipTimerRef.current?.stop?.();
+    contentTimerRef.current?.stop?.();
     if (recordTimeoutRef.current) {
       clearTimeout(recordTimeoutRef.current);
       recordTimeoutRef.current = undefined;
     }
 
-    setState('stopping');
+    onState('stopping');
 
     const conv = im.getCurrentConversation();
     if (!conv) {
@@ -344,27 +401,33 @@ export function useVoiceBar(props: VoiceBarProps) {
       });
   }, [im]);
   const replay = async () => {
-    setState('playing');
+    onState('playing');
     if (isPlayingRef.current === true) {
-      await Services.ms.stopAudio();
+      return;
     }
     isPlayingRef.current = true;
+    contentTimerRef.current?.reset?.();
+    contentTimerRef.current?.start?.();
     Services.ms
       .playAudio({
         url: localUrlEscape(playUrl(voiceFilePathRef.current)),
         onPlay({ isMuted, currentPosition, duration }) {
           console.log('test:zuoyu:onPlay', isMuted, currentPosition, duration);
+          if (currentPosition === duration) {
+            isPlayingRef.current = false;
+            contentTimerRef.current?.stop?.();
+            onState('stopping');
+          }
         },
       })
       .then(() => {
         console.log('test:zuoyu:playAudio:finish:2:');
-        isPlayingRef.current = false;
-        setState('stopping');
       })
       .catch((error) => {
         console.warn('test:zuoyu:error:', error);
         isPlayingRef.current = false;
-        setState('stopping');
+        contentTimerRef.current?.stop?.();
+        onState('stopping');
       });
   };
   const _onClickedRecordButton = () => {
@@ -386,7 +449,7 @@ export function useVoiceBar(props: VoiceBarProps) {
   };
   const _onClickedClearButton = () => {
     onClickedClearButton?.();
-    setState('idle');
+    onState('idle');
     if (isPlayingRef.current === true) {
       Services.ms.stopAudio();
       isPlayingRef.current = false;
@@ -395,6 +458,8 @@ export function useVoiceBar(props: VoiceBarProps) {
       clearTimeout(recordTimeoutRef.current);
       recordTimeoutRef.current = undefined;
     }
+    contentTimerRef.current?.stop?.();
+    tipTimerRef.current?.stop?.();
     voiceFilePathRef.current = '';
   };
   const _onClickedSendButton = () => {
@@ -409,6 +474,10 @@ export function useVoiceBar(props: VoiceBarProps) {
         recordTimeoutRef.current = undefined;
         stopRecord();
       }
+      if (isPlayingRef.current === true) {
+        Services.ms.stopAudio();
+        isPlayingRef.current = false;
+      }
     };
   }, [stopRecord]);
 
@@ -417,5 +486,7 @@ export function useVoiceBar(props: VoiceBarProps) {
     onClickedRecordButton: _onClickedRecordButton,
     onClickedClearButton: _onClickedClearButton,
     onClickedSendButton: _onClickedSendButton,
+    tipTimerRef,
+    contentTimerRef,
   };
 }
