@@ -9,6 +9,7 @@ import {
 import {
   ConversationDetail,
   GlobalContainer,
+  Services,
   TextInput,
   useLightTheme,
   usePresetPalette,
@@ -20,6 +21,7 @@ import {
 
 export function ConvDetail() {
   const { top, bottom } = useSafeAreaInsets();
+  Services.dcs.init(`appkey/userid`);
   return (
     <View
       style={{
@@ -37,7 +39,12 @@ export function ConvDetail() {
             // overflow: 'hidden',
           }}
         >
-          <ConversationDetail input={{ props: { top, bottom } }} />
+          <ConversationDetail
+            testMode={'only-ui'}
+            convId="xxx"
+            convType={0}
+            input={{ props: { top, bottom } }}
+          />
         </View>
       </SafeAreaView>
     </View>

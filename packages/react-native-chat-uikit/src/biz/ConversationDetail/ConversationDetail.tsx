@@ -12,21 +12,13 @@ import {
   TopNavigationBar,
   TopNavigationBarRightList,
 } from '../TopNavigationBar';
+import { useConversationDetail } from './ConversationDetail.hooks';
 import { MessageInput } from './MessageInput';
 import { MessageList } from './MessageList';
-import type { MessageInputProps, MessageInputRef } from './types';
+import type { ConversationDetailProps, MessageInputRef } from './types';
 
-export type ConversationDetailProps = {
-  input?: {
-    props?: MessageInputProps;
-    render?: React.ForwardRefExoticComponent<
-      MessageInputProps & React.RefAttributes<MessageInputRef>
-    >;
-    ref?: React.RefObject<MessageInputRef>;
-  };
-};
 export function ConversationDetail(props: ConversationDetailProps) {
-  const { input } = props;
+  const { input, convId } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -48,10 +40,12 @@ export function ConversationDetail(props: ConversationDetailProps) {
     },
   });
 
+  useConversationDetail(props);
+
   const messageInputRef = React.useRef<MessageInputRef>({} as any);
   const _messageInputRef = input?.ref ?? messageInputRef;
   const _MessageInput = input?.render ?? MessageInput;
-  const messageInputProps = input?.props ?? {};
+  const messageInputProps = input?.props ?? { convId };
 
   const navigationBar = () => {
     return (

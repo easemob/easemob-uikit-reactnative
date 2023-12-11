@@ -282,6 +282,8 @@ export interface ConversationServices {
       result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
     }) => void
   ): void;
+  setCurrentConversation(params: { conv: ConversationModel }): void;
+  getCurrentConversation(): ConversationModel | undefined;
   getAllConversations(params: {
     onResult: ResultCallback<ConversationModel[]>;
   }): Promise<void>;
@@ -603,6 +605,17 @@ export interface ChatService
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
   /**
+   * Automatically log in to the IM server.
+   * @params params
+   * - result: The result after performing the operation. If failed, an error object is returned.
+   */
+  autoLogin(params: {
+    userName: string;
+    userAvatarURL?: string | undefined;
+    gender?: number;
+    result: (params: { isOk: boolean; error?: UIKitError }) => void;
+  }): Promise<void>;
+  /**
    * Get the login status.
    */
   loginState(): Promise<'logged' | 'noLogged'>;
@@ -670,6 +683,10 @@ export type ChatServiceInit = {
    * Whether to enable debug mode.
    */
   debugMode?: boolean;
+  /**
+   * Whether to automatically log in after initialization.
+   */
+  autoLogin?: boolean;
   /**
    * IM initialization is completed.
    */

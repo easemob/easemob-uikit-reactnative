@@ -13,6 +13,7 @@ import {
   useChatListener,
   useDarkTheme,
   useLightTheme,
+  usePermissions,
   usePresetPalette,
 } from 'react-native-chat-uikit';
 
@@ -59,6 +60,14 @@ export function App() {
   const fontFamily = 'Twemoji-Mozilla';
   const [fontsLoaded] = useFonts({
     [fontFamily]: require('../../assets/Twemoji.Mozilla.ttf'),
+  });
+
+  const permissionsRef = React.useRef(false);
+  usePermissions({
+    onResult: (isSuccess) => {
+      console.log('dev:permissions:', isSuccess);
+      permissionsRef.current = isSuccess;
+    },
   });
 
   const formatNavigationState = (
@@ -128,7 +137,7 @@ export function App() {
         palette={palette}
         theme={theme}
         language={'en'}
-        fontFamily={fontFamily}
+        // fontFamily={fontFamily}
         onInitialized={() => {
           console.log('dev:onInitialized:');
           isContainerReadyRef.current = true;

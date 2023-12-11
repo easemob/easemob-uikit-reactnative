@@ -8,6 +8,7 @@ export * from './useGetObjectName';
 export * from './useGetStyleProps';
 export * from './useKeyboardHeight';
 export * from './useLifecycle';
+export * from './usePermissions';
 
 /**
  * Preface

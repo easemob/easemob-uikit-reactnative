@@ -19,9 +19,9 @@ import type { GlobalContainerProps } from './types';
 const getDefaultLanguage = (): LanguageCode => {
   let ret: LanguageCode;
   const systemLanguage = getSystemLanguage();
-  if (systemLanguage?.includes('zh_CN')) {
+  if (systemLanguage?.startsWith('zh')) {
     ret = 'zh-Hans';
-  } else if (systemLanguage?.includes('en')) {
+  } else if (systemLanguage?.startsWith('en')) {
     ret = 'en';
   } else {
     ret = require('../config.local').language as LanguageCode;

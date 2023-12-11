@@ -22,6 +22,7 @@ import {
 
 import { ConversationStorage } from '../db/storage';
 import { ErrorCode, UIKitError } from '../error';
+import { Services } from '../services';
 import { asyncTask, mergeObjects } from '../utils';
 import { gGroupMemberMyRemark } from './const';
 import { RequestList } from './requestList';
@@ -55,6 +56,7 @@ export abstract class ChatServiceImpl
   _groupMemberList: Map<string, Map<string, GroupParticipantModel>>;
   _request: RequestList;
   _contactState: Map<string, Map<string, boolean>>;
+  _currentConversation?: ConversationModel;
   _convDataRequestCallback?: (params: {
     ids: Map<DataModelType, string[]>;
     result: (
@@ -193,6 +195,11 @@ export abstract class ChatServiceImpl
         gender: gender,
       } as UserServiceData;
 
+      Services.dcs.init(
+        `${this.client.options!.appKey.replace('#', '-')}/${userId}`
+      );
+      await Services.dcs.createUserDir();
+
       this.client.getCurrentUsername();
 
       result?.({ isOk: true });
@@ -207,6 +214,11 @@ export abstract class ChatServiceImpl
           userId: userId,
           gender: gender,
         } as UserServiceData;
+
+        Services.dcs.init(
+          `${this.client.options!.appKey.replace('#', '-')}/${userId}`
+        );
+        await Services.dcs.createUserDir();
 
         this.client.getCurrentUsername();
       }
@@ -233,6 +245,44 @@ export abstract class ChatServiceImpl
         error: new UIKitError({ code: ErrorCode.logout_error }),
       });
     }
+  }
+  async autoLogin(params: {
+    userName: string;
+    userAvatarURL?: string | undefined;
+    gender?: number;
+    result: (params: { isOk: boolean; error?: UIKitError }) => void;
+  }): Promise<void> {
+    if (this.client.options?.autoLogin !== true) {
+      params.result?.({ isOk: false });
+      return;
+    }
+    this.tryCatch({
+      promise: this.client.isLoginBefore(),
+      event: 'autoLogin',
+      onFinished: async (value) => {
+        if (value === true) {
+          const userId = await this.client.getCurrentUsername();
+          this._convStorage?.setCurrentId(userId);
+
+          this._user = {
+            userName: params.userName,
+            remark: params.userName,
+            avatarURL: params.userAvatarURL,
+            userId: userId,
+            gender: params.gender,
+          } as UserServiceData;
+
+          Services.dcs.init(
+            `${this.client.options!.appKey.replace('#', '-')}/${userId}`
+          );
+          await Services.dcs.createUserDir();
+
+          params.result?.({ isOk: true });
+        } else {
+          params.result?.({ isOk: false });
+        }
+      },
+    });
   }
   async loginState(): Promise<'logged' | 'noLogged'> {
     const r = await this.client.isLoginBefore();
@@ -430,6 +480,13 @@ export abstract class ChatServiceImpl
     }) => void
   ): void {
     this._convDataRequestCallback = callback;
+  }
+
+  setCurrentConversation(params: { conv: ConversationModel }): void {
+    this._currentConversation = params.conv;
+  }
+  getCurrentConversation(): ConversationModel | undefined {
+    return this._currentConversation;
   }
 
   /**
