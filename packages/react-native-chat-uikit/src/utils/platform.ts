@@ -48,15 +48,15 @@ export function playUrl(localPath: string): string {
   });
 }
 export function localUrlEscape(localPath: string): string {
-  // if (localPath.startsWith('file://')) {
-  //   return localPath.replace(/#/g, '%23').replace(/ /g, '%20');
-  // } else {
-  //   return localPath;
-  // }
   if (localPath.startsWith('file://')) {
-    const path = localPath.replace('file://', '');
-    return `file://${encodeURIComponent(path)}`;
+    return localPath.replace(/#/g, '%23').replace(/ /g, '%20');
   } else {
-    return encodeURIComponent(localPath);
+    return localPath;
   }
+  // if (localPath.startsWith('file://')) {
+  //   const path = localPath.replace('file://', '');
+  //   return `file://${encodeURIComponent(path)}`;
+  // } else {
+  //   return encodeURIComponent(localPath);
+  // }
 }
