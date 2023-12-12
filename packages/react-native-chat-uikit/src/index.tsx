@@ -19,6 +19,7 @@ export * from './biz/Placeholder';
 export * from './biz/SlideListItem';
 export * from './biz/TopNavigationBar';
 export * from './biz/types';
+export * from './biz/VoiceBar';
 export * from './chat';
 export * from './config';
 export * from './container';

@@ -9,8 +9,9 @@ import emoji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
 import { useDelayExecTask, useKeyboardHeight } from '../../hook';
-import { gVoiceBarHeight } from '../const';
+// import { gVoiceBarHeight } from '../const';
 import { FACE_ASSETS_UTF16 } from '../EmojiList';
+import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
 import type { MessageInputProps, MessageInputState } from './types';
 
 export function useMessageInput(props: MessageInputProps) {
@@ -30,6 +31,8 @@ export function useMessageInput(props: MessageInputProps) {
   const [inputBarState, setInputBarState] =
     React.useState<MessageInputState>('normal');
   const hasLayoutAnimation = React.useRef(false);
+  const voiceBarRef = React.useRef<BottomVoiceBarRef>({} as any);
+  const voiceBarStateRef = React.useRef<VoiceBarState>('idle');
 
   const changeInputBarState = (nextState: MessageInputState) => {
     if (nextState === 'normal') {
@@ -208,13 +211,13 @@ export function useMessageInput(props: MessageInputProps) {
     },
     [setLayoutAnimation]
   );
-  const setVoiceHeight = React.useCallback(
-    (h: number) => {
-      setLayoutAnimation();
-      _setVoiceHeight(h);
-    },
-    [setLayoutAnimation]
-  );
+  // const setVoiceHeight = React.useCallback(
+  //   (h: number) => {
+  //     setLayoutAnimation();
+  //     _setVoiceHeight(h);
+  //   },
+  //   [setLayoutAnimation]
+  // );
 
   const closeKeyboard = React.useCallback(() => {
     Keyboard.dismiss();
@@ -223,16 +226,34 @@ export function useMessageInput(props: MessageInputProps) {
     setEmojiHeight(0);
   }, [setEmojiHeight]);
   const closeVoiceBar = React.useCallback(() => {
-    setVoiceHeight(0);
-  }, [setVoiceHeight]);
+    // setVoiceHeight(0);
+    voiceBarRef.current?.startHide?.();
+  }, []);
 
   const showEmojiList = React.useCallback(() => {
     setEmojiHeight(keyboardHeight - (bottom ?? 0));
   }, [bottom, keyboardHeight, setEmojiHeight]);
 
   const showVoiceBar = React.useCallback(() => {
-    setVoiceHeight(gVoiceBarHeight + (bottom ?? 0));
-  }, [bottom, setVoiceHeight]);
+    // setVoiceHeight(gVoiceBarHeight + (bottom ?? 0));
+    voiceBarRef.current?.startShow?.();
+  }, []);
+
+  const onRequestModalClose = () => {
+    if (voiceBarStateRef.current === 'recording') {
+      return;
+    }
+    voiceBarRef.current?.startHide?.();
+  };
+
+  const onVoiceStateChange = (state: VoiceBarState) => {
+    voiceBarStateRef.current = state;
+  };
+
+  const onClickedVoiceBarSendButton = (_voiceFilePath: string) => {
+    // todo: send message
+  };
+
   console.log('test:zuoyu:showVoiceBar:outer', voiceHeight, emojiHeight);
 
   return {
@@ -257,5 +278,9 @@ export function useMessageInput(props: MessageInputProps) {
     onBlur,
     inputBarState,
     changeInputBarState,
+    voiceBarRef,
+    onRequestModalClose,
+    onVoiceStateChange,
+    onClickedVoiceBarSendButton,
   };
 }

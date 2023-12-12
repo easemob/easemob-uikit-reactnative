@@ -10,10 +10,10 @@ import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
 import { timeoutTask } from '../../utils';
 import { EmojiListMemo } from '../EmojiList';
+import { BottomVoiceBar } from '../VoiceBar';
 import { DelButtonMemo } from './DelButton';
 import { useMessageInput } from './MessageInput.hooks';
 import type { MessageInputProps, MessageInputRef } from './types';
-import { VoiceBar } from './VoiceBar';
 
 export const MessageInput = React.forwardRef<
   MessageInputRef,
@@ -67,7 +67,10 @@ export const MessageInput = React.forwardRef<
     onFocus,
     onBlur,
     changeInputBarState,
-    voiceHeight,
+    onRequestModalClose,
+    voiceBarRef,
+    onClickedVoiceBarSendButton,
+    onVoiceStateChange,
   } = useMessageInput(props);
 
   const onSend = () => {
@@ -242,7 +245,13 @@ export const MessageInput = React.forwardRef<
           onClicked={onClickedDelButton}
         />
       </View>
-      <VoiceBar height={voiceHeight} />
+      {/* <VoiceBar height={voiceHeight} /> */}
+      <BottomVoiceBar
+        ref={voiceBarRef}
+        onRequestModalClose={onRequestModalClose}
+        onClickedSendButton={onClickedVoiceBarSendButton}
+        onState={onVoiceStateChange}
+      />
     </>
   );
 });
