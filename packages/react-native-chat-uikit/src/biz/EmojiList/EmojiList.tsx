@@ -21,12 +21,21 @@ import {
 import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
 import { gCountPerRow } from './EmojiList.const';
+import { EmojiListFloatButtonMemo } from './EmojiListFloatButton';
 
 export type EmojiListProps = {
   /**
    * Callback function when an emoji is selected.
    */
   onFace: (id: string) => void;
+  /**
+   * Callback function when the delete button is clicked.
+   */
+  onDel: () => void;
+  /**
+   * Callback function when the send button is clicked.
+   */
+  onSend: () => void;
   /**
    * The style of the container.
    */
@@ -57,12 +66,22 @@ export function EmojiList(props: EmojiListProps) {
       light: colors.neutral[98],
       dark: colors.neutral[1],
     },
+    btn1: {
+      light: colors.neutral[3],
+      dark: colors.neutral[98],
+    },
+    btn2: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
   });
   const {
     onFace,
     containerStyle,
     countPerRow = gCountPerRow,
     emojiList,
+    onDel,
+    onSend,
   } = props;
   const { getStyleSize } = useGetStyleProps();
   const { width: propsWidth } = getStyleSize(containerStyle);
@@ -128,6 +147,34 @@ export function EmojiList(props: EmojiListProps) {
           </View>
         </View>
       </ScrollView>
+      <EmojiListFloatButtonMemo
+        iconName={'arrow_left_thick'}
+        isVisible={true}
+        onClicked={onDel}
+        containerStyle={{
+          right: 16 + 36 + 12,
+          bottom: 16,
+          borderRadius: 4,
+          backgroundColor: getColor('bg1'),
+        }}
+        style={{
+          tintColor: getColor('btn1'),
+        }}
+      />
+      <EmojiListFloatButtonMemo
+        iconName={'airplane'}
+        isVisible={true}
+        onClicked={onSend}
+        containerStyle={{
+          right: 16,
+          bottom: 16,
+          borderRadius: 4,
+          backgroundColor: getColor('btn2'),
+        }}
+        style={{
+          tintColor: getColor('bg1'),
+        }}
+      />
     </View>
   );
 }

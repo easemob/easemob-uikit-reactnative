@@ -1,5 +1,10 @@
 import * as React from 'react';
-import type { ImageStyle, StyleProp, ViewStyle } from 'react-native';
+import type {
+  ImageStyle,
+  RecursiveArray,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 
 import { ErrorCode, UIKitError } from '../error';
 import type { CornerRadiusPalette, CornerRadiusPaletteType } from '../theme';
@@ -31,10 +36,11 @@ export function useGetStyleProps() {
   const ret = React.useMemo(() => {
     return {
       getStyleSize: (style?: StyleProp<ViewStyle>) => {
-        const s = style as any;
+        const height = getPropValueFromStyleT(style, 'height');
+        const width = getPropValueFromStyleT(style, 'width');
         return {
-          height: s?.height,
-          width: s?.width,
+          height: height,
+          width: width,
         } as SizeType;
       },
       getBorderRadius: (params: {
@@ -65,5 +71,42 @@ export function useGetStyleProps() {
       },
     };
   }, []);
+  return ret;
+}
+
+function _getPropValueFromStyleT<Style = ViewStyle>(
+  style: RecursiveArray<Style>,
+  propKey: string
+): any | undefined {
+  let ret;
+
+  style.forEach((item) => {
+    if (Array.isArray(item)) {
+      const prop = _getPropValueFromStyleT<Style>(item, propKey);
+      if (prop !== undefined) {
+        ret = prop;
+      }
+    } else if (item && (item as any)[propKey] !== undefined) {
+      ret = (item as any)[propKey];
+    }
+  });
+
+  return ret;
+}
+export function getPropValueFromStyleT<Style = ViewStyle>(
+  style: StyleProp<Style>,
+  propKey: string
+): any | undefined {
+  let ret;
+
+  if (Array.isArray(style)) {
+    ret = _getPropValueFromStyleT<Style>(
+      style as RecursiveArray<Style>,
+      propKey
+    );
+  } else if (style && (style as any)[propKey] !== undefined) {
+    ret = (style as any)[propKey];
+  }
+
   return ret;
 }

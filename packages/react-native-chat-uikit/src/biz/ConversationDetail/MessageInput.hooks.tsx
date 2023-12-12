@@ -9,13 +9,15 @@ import emoji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
 import { useDelayExecTask, useKeyboardHeight } from '../../hook';
+import { timeoutTask } from '../../utils';
+import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 // import { gVoiceBarHeight } from '../const';
 import { FACE_ASSETS_UTF16 } from '../EmojiList';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
 import type { MessageInputProps, MessageInputState } from './types';
 
 export function useMessageInput(props: MessageInputProps) {
-  const { bottom } = props;
+  const { bottom, onClickedSend: propsOnClickedSend, closeAfterSend } = props;
   const keyboardHeight = useKeyboardHeight();
   const inputRef = React.useRef<RNTextInput>({} as any);
   const [_value, _setValue] = React.useState('');
@@ -26,6 +28,8 @@ export function useMessageInput(props: MessageInputProps) {
   const isClosedVoiceBar = React.useRef(true);
   const [emojiIconName, setEmojiIconName] =
     React.useState<IconNameType>('face');
+  const [sendIconName, setSendIconName] =
+    React.useState<IconNameType>('plus_in_circle');
   const valueRef = React.useRef('');
   const rawValue = React.useRef('');
   const [inputBarState, setInputBarState] =
@@ -33,6 +37,17 @@ export function useMessageInput(props: MessageInputProps) {
   const hasLayoutAnimation = React.useRef(false);
   const voiceBarRef = React.useRef<BottomVoiceBarRef>({} as any);
   const voiceBarStateRef = React.useRef<VoiceBarState>('idle');
+  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+
+  const _onValue = (v: string) => {
+    console.log('test:zuoyu:v', v, inputBarState);
+    if (v.length > 0 && inputBarState === 'keyboard') {
+      setSendIconName('airplane');
+    } else {
+      setSendIconName('plus_in_circle');
+    }
+    _setValue(v);
+  };
 
   const changeInputBarState = (nextState: MessageInputState) => {
     if (nextState === 'normal') {
@@ -103,7 +118,7 @@ export function useMessageInput(props: MessageInputProps) {
         rawValue.current += face;
         valueRef.current =
           valueRef.current + emoji.convert.fromCodePoint(face!.substring(2));
-        _setValue(valueRef.current);
+        _onValue(valueRef.current);
       } else if (op === 'del_face') {
         const rawFace = emoji.convert.toCodePoint(face!);
         rawValue.current = rawValue.current.substring(
@@ -114,7 +129,7 @@ export function useMessageInput(props: MessageInputProps) {
           0,
           valueRef.current.length - 2
         );
-        _setValue(valueRef.current);
+        _onValue(valueRef.current);
       } else if (op === 'del_c') {
         rawValue.current = rawValue.current.substring(
           0,
@@ -124,7 +139,9 @@ export function useMessageInput(props: MessageInputProps) {
           0,
           valueRef.current.length - 1
         );
-        _setValue(valueRef.current);
+        _onValue(valueRef.current);
+      } else {
+        console.log('test:zuoyu:c:', text);
       }
     } else {
       if (valueRef.current !== text) {
@@ -138,12 +155,12 @@ export function useMessageInput(props: MessageInputProps) {
         }
       }
       valueRef.current = text;
-      _setValue(valueRef.current);
+      _onValue(valueRef.current);
     }
   };
-  const onClickedFaceListItem = React.useCallback((face: string) => {
+  const onClickedFaceListItem = (face: string) => {
     setInputValue(valueRef.current, 'add_face', face);
-  }, []);
+  };
 
   const onClickedDelButton = () => {
     if (valueRef.current.length >= 2) {
@@ -165,7 +182,7 @@ export function useMessageInput(props: MessageInputProps) {
   const onClickedClearButton = () => {
     valueRef.current = '';
     rawValue.current = '';
-    _setValue(valueRef.current);
+    _onValue(valueRef.current);
   };
 
   const onClickedEmojiButton = () => {
@@ -231,7 +248,8 @@ export function useMessageInput(props: MessageInputProps) {
   }, []);
 
   const showEmojiList = React.useCallback(() => {
-    setEmojiHeight(keyboardHeight - (bottom ?? 0));
+    const tmp = keyboardHeight === 0 ? 300 : keyboardHeight;
+    setEmojiHeight(tmp - (bottom ?? 0));
   }, [bottom, keyboardHeight, setEmojiHeight]);
 
   const showVoiceBar = React.useCallback(() => {
@@ -254,7 +272,81 @@ export function useMessageInput(props: MessageInputProps) {
     // todo: send message
   };
 
-  console.log('test:zuoyu:showVoiceBar:outer', voiceHeight, emojiHeight);
+  const onRequestModalCloseMenu = () => {
+    menuRef.current?.startHide?.();
+  };
+
+  const onClickedSend = () => {
+    if (sendIconName === 'airplane') {
+      const content = valueRef.current;
+      propsOnClickedSend?.(content);
+      onClickedClearButton();
+      if (closeAfterSend === true) {
+        timeoutTask(0, closeKeyboard);
+      }
+    } else {
+      onShowMenu();
+    }
+  };
+
+  const onShowMenu = () => {
+    menuRef.current?.startShowWithProps?.({
+      initItems: [
+        {
+          name: 'Select Picture',
+          isHigh: false,
+          icon: 'img',
+          onClicked: () => {
+            menuRef.current?.startHide?.();
+            // todo:
+          },
+        },
+        {
+          name: 'Select Video',
+          isHigh: false,
+          icon: 'triangle_in_rectangle',
+          onClicked: () => {
+            menuRef.current?.startHide?.(() => {});
+          },
+        },
+        {
+          name: 'Select Camera',
+          isHigh: false,
+          icon: 'camera_fill',
+          onClicked: () => {
+            menuRef.current?.startHide?.(() => {});
+          },
+        },
+        {
+          name: 'Select File',
+          isHigh: false,
+          icon: 'folder',
+          onClicked: () => {
+            menuRef.current?.startHide?.(() => {});
+          },
+        },
+        {
+          name: 'Select Card',
+          isHigh: false,
+          icon: 'person_single_fill',
+          onClicked: () => {
+            menuRef.current?.startHide?.(() => {});
+          },
+        },
+      ],
+      onRequestModalClose: onRequestModalClose,
+      layoutType: 'left',
+      hasCancel: true,
+    });
+  };
+
+  console.log(
+    'test:zuoyu:showVoiceBar:outer',
+    voiceHeight,
+    emojiHeight,
+    keyboardHeight,
+    inputBarState
+  );
 
   return {
     value: _value,
@@ -282,5 +374,9 @@ export function useMessageInput(props: MessageInputProps) {
     onRequestModalClose,
     onVoiceStateChange,
     onClickedVoiceBarSendButton,
+    onRequestModalCloseMenu,
+    menuRef,
+    sendIconName,
+    onClickedSend,
   };
 }

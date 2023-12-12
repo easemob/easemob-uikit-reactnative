@@ -8,10 +8,9 @@ import { usePaletteContext, useThemeContext } from '../../theme';
 import { IconButtonMemo } from '../../ui/Button';
 import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
-import { timeoutTask } from '../../utils';
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { EmojiListMemo } from '../EmojiList';
 import { BottomVoiceBar } from '../VoiceBar';
-import { DelButtonMemo } from './DelButton';
 import { useMessageInput } from './MessageInput.hooks';
 import type { MessageInputProps, MessageInputRef } from './types';
 
@@ -22,7 +21,7 @@ export const MessageInput = React.forwardRef<
   props: React.PropsWithChildren<MessageInputProps>,
   ref?: React.ForwardedRef<MessageInputRef>
 ) {
-  const { top, numberOfLines, closeAfterSend, onClickedSend } = props;
+  const { top, numberOfLines } = props;
 
   const testRef = React.useRef<View>(null);
   const { fontFamily } = useConfigContext();
@@ -54,13 +53,11 @@ export const MessageInput = React.forwardRef<
 
   const {
     value,
-    valueRef,
     setValue,
     onClickedFaceListItem,
     onClickedDelButton,
     onClickedEmojiButton,
     onClickedVoiceButton,
-    closeKeyboard,
     inputRef,
     emojiHeight,
     emojiIconName,
@@ -71,18 +68,11 @@ export const MessageInput = React.forwardRef<
     voiceBarRef,
     onClickedVoiceBarSendButton,
     onVoiceStateChange,
+    menuRef,
+    onRequestModalCloseMenu,
+    sendIconName,
+    onClickedSend,
   } = useMessageInput(props);
-
-  const onSend = () => {
-    const content = valueRef.current;
-    if (content.length > 0) {
-      onClickedSend?.(content);
-    }
-
-    if (closeAfterSend === true) {
-      timeoutTask(0, closeKeyboard);
-    }
-  };
 
   React.useImperativeHandle(ref, () => {
     return {
@@ -220,8 +210,8 @@ export const MessageInput = React.forwardRef<
                 alignSelf: 'flex-end',
                 margin: 6,
               }}
-              onPress={onSend}
-              iconName={'airplane'}
+              onPress={onClickedSend}
+              iconName={sendIconName}
             />
           </View>
         </View>
@@ -231,6 +221,7 @@ export const MessageInput = React.forwardRef<
           backgroundColor:
             emojiHeight === 0 ? undefined : getColor('backgroundColor'),
           height: emojiHeight,
+          overflow: 'hidden',
         }}
       >
         <EmojiListMemo
@@ -238,12 +229,14 @@ export const MessageInput = React.forwardRef<
             flex: 1,
           }}
           onFace={onClickedFaceListItem}
+          onDel={onClickedDelButton}
+          onSend={onClickedSend}
         />
-        <DelButtonMemo
+        {/* <DelButtonMemo
           getColor={getColor}
           emojiHeight={emojiHeight}
           onClicked={onClickedDelButton}
-        />
+        /> */}
       </View>
       {/* <VoiceBar height={voiceHeight} /> */}
       <BottomVoiceBar
@@ -251,6 +244,10 @@ export const MessageInput = React.forwardRef<
         onRequestModalClose={onRequestModalClose}
         onClickedSendButton={onClickedVoiceBarSendButton}
         onState={onVoiceStateChange}
+      />
+      <BottomSheetNameMenu
+        ref={menuRef}
+        onRequestModalClose={onRequestModalCloseMenu}
       />
     </>
   );
