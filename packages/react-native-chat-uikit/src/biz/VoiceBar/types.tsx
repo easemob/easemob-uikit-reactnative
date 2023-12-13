@@ -1,4 +1,5 @@
 import type { SlideModalProps, SlideModalRef } from '../../ui/Modal';
+import type { SendVoiceProps } from '../ConversationDetail';
 import type { PropsWithError, PropsWithTest } from '../types';
 
 export type VoiceBarState = 'idle' | 'recording' | 'playing' | 'stopping';
@@ -42,7 +43,7 @@ export type VoiceBarProps = PropsWithError &
     /**
      * Callback notification when the send button is clicked. Returns the path of the recording file.
      */
-    onClickedSendButton?: (voiceFilePath: string) => void;
+    onClickedSendButton?: (voice: SendVoiceProps) => void;
     /**
      * Callback notification when the recording is failed.
      */

@@ -113,7 +113,7 @@ export interface MediaService {
   getVideoComponent<Props = {}>(props: VideoProps & Props): JSX.Element;
   getVideoThumbnail(
     options: VideoThumbnailOptions
-  ): Promise<Nullable<{ path: string }>>;
+  ): Promise<string | undefined>;
 
   openMediaLibrary(
     options?: OpenMediaLibraryOptions

@@ -14,7 +14,20 @@ import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 // import { gVoiceBarHeight } from '../const';
 import { FACE_ASSETS_UTF16 } from '../EmojiList';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
-import type { MessageInputProps, MessageInputState } from './types';
+import type {
+  MessageInputProps,
+  MessageInputState,
+  SendFileProps,
+  SendImageProps,
+  SendVideoProps,
+  SendVoiceProps,
+} from './types';
+import {
+  selectCamera,
+  selectFile,
+  selectOnePicture,
+  selectOneShortVideo,
+} from './useSelectFile';
 
 export function useMessageInput(props: MessageInputProps) {
   const { bottom, onClickedSend: propsOnClickedSend, closeAfterSend } = props;
@@ -268,10 +281,6 @@ export function useMessageInput(props: MessageInputProps) {
     voiceBarStateRef.current = state;
   };
 
-  const onClickedVoiceBarSendButton = (_voiceFilePath: string) => {
-    // todo: send message
-  };
-
   const onRequestModalCloseMenu = () => {
     menuRef.current?.startHide?.();
   };
@@ -279,7 +288,10 @@ export function useMessageInput(props: MessageInputProps) {
   const onClickedSend = () => {
     if (sendIconName === 'airplane') {
       const content = valueRef.current;
-      propsOnClickedSend?.(content);
+      propsOnClickedSend?.({
+        type: 'text',
+        content: content,
+      });
       onClickedClearButton();
       if (closeAfterSend === true) {
         timeoutTask(0, closeKeyboard);
@@ -287,6 +299,19 @@ export function useMessageInput(props: MessageInputProps) {
     } else {
       onShowMenu();
     }
+  };
+
+  const onSelectSendImage = (props: SendImageProps) => {
+    propsOnClickedSend?.(props);
+  };
+  const onSelectSendVoice = (props: SendVoiceProps) => {
+    propsOnClickedSend?.(props);
+  };
+  const onSelectSendVideo = (props: SendVideoProps) => {
+    propsOnClickedSend?.(props);
+  };
+  const onSelectSendFile = (props: SendFileProps) => {
+    propsOnClickedSend?.(props);
   };
 
   const onShowMenu = () => {
@@ -297,8 +322,15 @@ export function useMessageInput(props: MessageInputProps) {
           isHigh: false,
           icon: 'img',
           onClicked: () => {
-            menuRef.current?.startHide?.();
-            // todo:
+            menuRef.current?.startHide?.(() => {
+              console.log('test:zuoyu:selectOnePicture');
+              selectOnePicture({
+                onResult: (params) => {
+                  console.log('test:zuoyu:selectOnePicture', params);
+                  onSelectSendImage(params);
+                },
+              });
+            });
           },
         },
         {
@@ -306,7 +338,14 @@ export function useMessageInput(props: MessageInputProps) {
           isHigh: false,
           icon: 'triangle_in_rectangle',
           onClicked: () => {
-            menuRef.current?.startHide?.(() => {});
+            menuRef.current?.startHide?.(() => {
+              selectOneShortVideo({
+                onResult: (params) => {
+                  console.log('test:zuoyu:selectOneShortVideo', params);
+                  onSelectSendVideo(params);
+                },
+              });
+            });
           },
         },
         {
@@ -314,7 +353,14 @@ export function useMessageInput(props: MessageInputProps) {
           isHigh: false,
           icon: 'camera_fill',
           onClicked: () => {
-            menuRef.current?.startHide?.(() => {});
+            menuRef.current?.startHide?.(() => {
+              selectCamera({
+                onResult: (params) => {
+                  console.log('test:zuoyu:selectCamera', params);
+                  onSelectSendImage(params);
+                },
+              });
+            });
           },
         },
         {
@@ -322,7 +368,14 @@ export function useMessageInput(props: MessageInputProps) {
           isHigh: false,
           icon: 'folder',
           onClicked: () => {
-            menuRef.current?.startHide?.(() => {});
+            menuRef.current?.startHide?.(() => {
+              selectFile({
+                onResult: (params) => {
+                  console.log('test:zuoyu:selectFile', params);
+                  onSelectSendFile(params);
+                },
+              });
+            }, 100);
           },
         },
         {
@@ -373,7 +426,7 @@ export function useMessageInput(props: MessageInputProps) {
     voiceBarRef,
     onRequestModalClose,
     onVoiceStateChange,
-    onClickedVoiceBarSendButton,
+    onSelectSendVoice,
     onRequestModalCloseMenu,
     menuRef,
     sendIconName,

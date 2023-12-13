@@ -10,7 +10,14 @@ export type MessageInputProps = PropsWithError &
     top?: number | undefined;
     bottom?: number | undefined;
     numberOfLines?: number | undefined;
-    onClickedSend?: (text: string) => void;
+    onClickedSend?: (
+      value:
+        | SendTextProps
+        | SendFileProps
+        | SendImageProps
+        | SendVideoProps
+        | SendVoiceProps
+    ) => void;
     closeAfterSend?: boolean;
   };
 export type MessageInputState = 'normal' | 'emoji' | 'voice' | 'keyboard';
@@ -26,4 +33,34 @@ export type ConversationDetailProps = PropsWithError &
       >;
       ref?: React.RefObject<MessageInputRef>;
     };
+  };
+
+export type SendType = 'text' | 'file' | 'image' | 'voice' | 'video';
+export type SendBasicProps = {
+  type: SendType;
+};
+export type SendTextProps = SendBasicProps & {
+  content: string;
+};
+export type SendFileProps = SendBasicProps & {
+  localPath: string;
+  fileSize?: number;
+  displayName?: string;
+  fileExtension?: string;
+};
+export type SendImageProps = SendBasicProps &
+  SendFileProps & {
+    imageWidth: number;
+    imageHeight: number;
+  };
+export type SendVoiceProps = SendBasicProps &
+  SendFileProps & {
+    duration: number;
+  };
+export type SendVideoProps = SendBasicProps &
+  SendFileProps & {
+    thumbLocalPath: string;
+    videoWidth: number;
+    videoHeight: number;
+    duration?: number;
   };

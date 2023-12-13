@@ -31,6 +31,7 @@ export function useVoiceBar(props: VoiceBarProps) {
   } = props;
   const [state, setState] = React.useState<VoiceBarState>('idle');
   const voiceFilePathRef = React.useRef<string>('');
+  const voiceDurationRef = React.useRef<number>(0);
   const isPlayingRef = React.useRef<boolean>(false);
   const recordTimeoutRef = React.useRef<NodeJS.Timeout>();
   const im = useChatContext();
@@ -74,6 +75,7 @@ export function useVoiceBar(props: VoiceBarProps) {
         audio: AudioOptionRef.current,
         onPosition: (pos) => {
           console.log('test:startRecordAudio:pos:', pos);
+          voiceDurationRef.current = pos;
         },
         onFailed: (error) => {
           console.warn('test:startRecordAudio:onFailed:', error);
@@ -201,7 +203,11 @@ export function useVoiceBar(props: VoiceBarProps) {
     voiceFilePathRef.current = '';
   };
   const _onClickedSendButton = () => {
-    onClickedSendButton?.(voiceFilePathRef.current);
+    onClickedSendButton?.({
+      localPath: voiceFilePathRef.current,
+      duration: voiceDurationRef.current,
+      type: 'voice',
+    });
     // todo: do something after send message?
   };
 

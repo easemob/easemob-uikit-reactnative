@@ -35,9 +35,9 @@ export class MediaServiceImplement implements MediaService {
     this.createRootDir(rootDirName);
   }
 
-  protected createRootDir(rootDirName: string): void {
+  protected createRootDir(rootDirName: string, DocumentDir?: string): void {
     const create = () => {
-      const docDir = this.option.fsModule.Dirs.DocumentDir;
+      const docDir = DocumentDir ?? this.option.fsModule.Dirs.LibraryDir;
       this.rootDir = `${docDir}/${rootDirName}`;
       console.log('test:rootDir:', this.rootDir);
       this.option.fsModule.FileSystem.exists(this.rootDir)
@@ -418,7 +418,7 @@ export class MediaServiceImplement implements MediaService {
   }
   async getVideoThumbnail(
     options: VideoThumbnailOptions
-  ): Promise<Nullable<{ path: string }>> {
+  ): Promise<string | undefined> {
     try {
       const CreateThumbnail = this.option.videoThumbnail;
       const { path } = await CreateThumbnail.createThumbnail({
@@ -427,10 +427,10 @@ export class MediaServiceImplement implements MediaService {
         timeStamp: options.timeMills,
         cacheName: MediaServiceImplement._hash(options.url),
       });
-      return { path };
+      return path;
     } catch (e) {
       console.warn(e);
-      return null;
+      return undefined;
     }
   }
 }

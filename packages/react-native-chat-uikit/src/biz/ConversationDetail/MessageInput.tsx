@@ -66,7 +66,7 @@ export const MessageInput = React.forwardRef<
     changeInputBarState,
     onRequestModalClose,
     voiceBarRef,
-    onClickedVoiceBarSendButton,
+    onSelectSendVoice,
     onVoiceStateChange,
     menuRef,
     onRequestModalCloseMenu,
@@ -242,7 +242,7 @@ export const MessageInput = React.forwardRef<
       <BottomVoiceBar
         ref={voiceBarRef}
         onRequestModalClose={onRequestModalClose}
-        onClickedSendButton={onClickedVoiceBarSendButton}
+        onClickedSendButton={onSelectSendVoice}
         onState={onVoiceStateChange}
       />
       <BottomSheetNameMenu
