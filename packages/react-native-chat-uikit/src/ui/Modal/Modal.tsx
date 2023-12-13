@@ -30,7 +30,7 @@ export type ModalRef = {
   /**
    * Hiding a component is not destroying it.
    */
-  startHide: (onFinished?: () => void) => void;
+  startHide: (onFinished?: () => void, timeout?: number) => void;
 };
 
 export type ModalProps = Omit<

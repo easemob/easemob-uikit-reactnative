@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import { g_mask_color } from '../../const';
+import { timeoutTask } from '../../utils';
 import { KeyboardAvoidingView } from '../Keyboard';
 import { DefaultSlide, SlideProps } from './DefaultSlide';
 import type { ModalProps, ModalRef } from './Modal';
@@ -62,12 +63,22 @@ export function SlideModal(props: SlideModalProps) {
       setVisible(true);
       startShow();
     };
-    propsRef.current.startHide = (onf?: () => void) => {
-      startHide(() => {
-        setVisible(false);
-        onf?.();
-        onFinished?.();
-      });
+    propsRef.current.startHide = (onf?: () => void, timeout?: number) => {
+      if (timeout !== undefined) {
+        startHide(() => {
+          setVisible(false);
+          timeoutTask(timeout, () => {
+            onf?.();
+            onFinished?.();
+          });
+        });
+      } else {
+        startHide(() => {
+          setVisible(false);
+          onf?.();
+          onFinished?.();
+        });
+      }
     };
   }
 
