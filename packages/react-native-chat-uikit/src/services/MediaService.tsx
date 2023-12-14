@@ -37,7 +37,11 @@ export class MediaServiceImplement implements MediaService {
 
   protected createRootDir(rootDirName: string, DocumentDir?: string): void {
     const create = () => {
-      const docDir = DocumentDir ?? this.option.fsModule.Dirs.LibraryDir;
+      const _rootDir = Platform.select({
+        ios: this.option.fsModule.Dirs.LibraryDir,
+        default: this.option.fsModule.Dirs.DocumentDir,
+      });
+      const docDir = DocumentDir ?? _rootDir;
       this.rootDir = `${docDir}/${rootDirName}`;
       console.log('test:rootDir:', this.rootDir);
       this.option.fsModule.FileSystem.exists(this.rootDir)
