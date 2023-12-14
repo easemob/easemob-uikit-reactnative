@@ -8,3 +8,5 @@ export const gNewRequestConversationState = '_$uikit_new_request_state';
 
 export const gNewRequestConversationMsgEventType = '_$uikit_new_request_event';
 export const gGroupMemberMyRemark = 'chatUIKit_group_member_nick_name';
+
+export const gConversationSystemMessage = '_$uikit_conv_system_msg';

@@ -13,12 +13,9 @@ import {
   TopNavigationBarRightList,
 } from '../TopNavigationBar';
 import { useConversationDetail } from './ConversationDetail.hooks';
-import { MessageInput } from './MessageInput';
-import { MessageList } from './MessageList';
-import type { ConversationDetailProps, MessageInputRef } from './types';
+import type { ConversationDetailProps } from './types';
 
 export function ConversationDetail(props: ConversationDetailProps) {
-  const { input, convId } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -40,12 +37,15 @@ export function ConversationDetail(props: ConversationDetailProps) {
     },
   });
 
-  useConversationDetail(props);
-
-  const messageInputRef = React.useRef<MessageInputRef>({} as any);
-  const _messageInputRef = input?.ref ?? messageInputRef;
-  const _MessageInput = input?.render ?? MessageInput;
-  const messageInputProps = input?.props ?? { convId };
+  const {
+    onClickedSend,
+    _messageInputRef,
+    _MessageInput,
+    messageInputProps,
+    _messageListRef,
+    _MessageList,
+    messageListProps,
+  } = useConversationDetail(props);
 
   const navigationBar = () => {
     return (
@@ -98,12 +98,18 @@ export function ConversationDetail(props: ConversationDetailProps) {
   return (
     <View style={{ flexGrow: 1 }}>
       {navigationBar()}
-      <MessageList
+      <_MessageList
         onClicked={() => {
-          messageInputRef?.current?.close?.();
+          _messageInputRef?.current?.close?.();
         }}
+        ref={_messageListRef}
+        {...messageListProps}
       />
-      <_MessageInput ref={_messageInputRef} {...messageInputProps} />
+      <_MessageInput
+        ref={_messageInputRef}
+        onClickedSend={onClickedSend}
+        {...messageInputProps}
+      />
       {/* <MessageInput ref={messageInputRef} /> */}
     </View>
   );

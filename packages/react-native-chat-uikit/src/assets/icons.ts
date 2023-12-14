@@ -1018,6 +1018,24 @@ export const ICON_ASSETS = {
       return require('./icons/magnifier_2x.png');
     }
   },
+  'message_arrow_lft': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/message_arrow_lft_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/message_arrow_lft_2x.png');
+    } else {
+      return require('./icons/message_arrow_lft.png');
+    }
+  },
+  'message_arrow_rgt': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/message_arrow_rgt_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/message_arrow_rgt_2x.png');
+    } else {
+      return require('./icons/message_arrow_rgt.png');
+    }
+  },
   'mic': (size: string) => {
     if (size === '3x') {
       return require('./icons/mic_3x.png');
