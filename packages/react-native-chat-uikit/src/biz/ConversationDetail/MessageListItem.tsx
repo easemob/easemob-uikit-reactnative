@@ -97,7 +97,6 @@ export function MessageBubble(props: MessageBubbleProps) {
   const { hasTriangle = true, model } = props;
   const { layoutType, msg } = model;
   const isSupport = isSupportMessage(msg);
-  console.log('test:zuoyu:', isSupport, msg.body.type);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     left_bg: {

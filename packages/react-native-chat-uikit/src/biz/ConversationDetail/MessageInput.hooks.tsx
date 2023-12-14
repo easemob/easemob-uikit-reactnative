@@ -58,7 +58,6 @@ export function useMessageInput(props: MessageInputProps) {
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
 
   const _onValue = (v: string) => {
-    console.log('test:zuoyu:v', v, inputBarState);
     if (v.length > 0 && inputBarState === 'keyboard') {
       setSendIconName('airplane');
     } else {
@@ -158,8 +157,6 @@ export function useMessageInput(props: MessageInputProps) {
           valueRef.current.length - 1
         );
         _onValue(valueRef.current);
-      } else {
-        console.log('test:zuoyu:c:', text);
       }
     } else {
       if (valueRef.current !== text) {
@@ -310,6 +307,7 @@ export function useMessageInput(props: MessageInputProps) {
     propsOnClickedSend?.(props);
   };
   const onSelectSendVoice = (props: SendVoiceProps) => {
+    console.log('test:zuoyu:onSelectSendVoice', props);
     propsOnClickedSend?.(props);
   };
   const onSelectSendVideo = (props: SendVideoProps) => {
@@ -398,6 +396,13 @@ export function useMessageInput(props: MessageInputProps) {
     });
   };
 
+  const onVoiceFailed = React.useCallback(
+    (error: { reason: string; error: any }) => {
+      console.warn('test:zuoyu:voice:failed:', error);
+    },
+    []
+  );
+
   React.useEffect(() => {
     console.log('test:zuoyu:height:', keyboardCurrentHeight, emojiHeight);
     if (
@@ -450,5 +455,6 @@ export function useMessageInput(props: MessageInputProps) {
     menuRef,
     sendIconName,
     onClickedSend,
+    onVoiceFailed,
   };
 }

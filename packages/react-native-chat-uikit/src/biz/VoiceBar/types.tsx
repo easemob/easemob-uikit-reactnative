@@ -45,9 +45,9 @@ export type VoiceBarProps = PropsWithError &
      */
     onClickedSendButton?: (voice: SendVoiceProps) => void;
     /**
-     * Callback notification when the recording is failed.
+     * Callback notification when the op is failed.
      */
-    onRecordFailed?: (error: { reason: string }) => void;
+    onFailed?: (error: { reason: string; error: any }) => void;
     /**
      * Callback notification when the state changes.
      */

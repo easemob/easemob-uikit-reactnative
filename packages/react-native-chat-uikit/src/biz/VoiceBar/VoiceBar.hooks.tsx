@@ -26,7 +26,7 @@ export function useVoiceBar(props: VoiceBarProps) {
     onClickedRecordButton,
     onClickedClearButton,
     onClickedSendButton,
-    onRecordFailed,
+    onFailed,
     onState: propsOnState,
   } = props;
   const [state, setState] = React.useState<VoiceBarState>('idle');
@@ -75,11 +75,11 @@ export function useVoiceBar(props: VoiceBarProps) {
         audio: AudioOptionRef.current,
         onPosition: (pos) => {
           console.log('test:startRecordAudio:pos:', pos);
-          voiceDurationRef.current = pos;
+          voiceDurationRef.current = Math.floor(pos);
         },
         onFailed: (error) => {
           console.warn('test:startRecordAudio:onFailed:', error);
-          onRecordFailed?.({ reason: error.toString() });
+          onFailed?.({ reason: 'record voice is failed.', error: error });
         },
         onFinished: ({ result, path, error }) => {
           console.log('test:startRecordAudio:onFinished:', result, path, error);
@@ -90,7 +90,7 @@ export function useVoiceBar(props: VoiceBarProps) {
       })
       .catch((error) => {
         console.warn('test:startRecordAudio:error:', error);
-        onRecordFailed?.({ reason: error.toString() });
+        onFailed?.({ reason: 'record voice is failed.', error: error });
         tipTimerRef.current?.stop?.();
         contentTimerRef.current?.stop?.();
       });
@@ -107,7 +107,6 @@ export function useVoiceBar(props: VoiceBarProps) {
 
     const conv = im.getCurrentConversation();
     if (!conv) {
-      console.log('test:zuoyu:', conv);
       Services.ms.stopRecordAudio();
       return;
     }
@@ -121,7 +120,7 @@ export function useVoiceBar(props: VoiceBarProps) {
           );
           const extension = getFileExtension(result.path);
           localPath = localPath + extension;
-          console.log('test:zuoyu:localPath:', localPath);
+          console.log('test:zuoyu:voice:file:', localPath);
           voiceFilePathRef.current = localPath;
           Services.ms
             .saveFromLocal({
@@ -132,14 +131,20 @@ export function useVoiceBar(props: VoiceBarProps) {
               // todo: send message
             })
             .catch((error) => {
-              console.warn('test:zuoyu:startRecordAudio:save:error', error);
+              onFailed?.({
+                reason: 'save file voice is failed.',
+                error: error,
+              });
             });
         }
       })
       .catch((error) => {
-        console.warn('test:zuoyu:stopRecordAudio:error:', error);
+        onFailed?.({
+          reason: 'stop record voice is failed.',
+          error: error,
+        });
       });
-  }, [im, onState]);
+  }, [im, onFailed, onState]);
   const replay = async () => {
     onState('playing');
     if (isPlayingRef.current === true) {
@@ -151,8 +156,7 @@ export function useVoiceBar(props: VoiceBarProps) {
     Services.ms
       .playAudio({
         url: localUrlEscape(playUrl(voiceFilePathRef.current)),
-        onPlay({ isMuted, currentPosition, duration }) {
-          console.log('test:zuoyu:onPlay', isMuted, currentPosition, duration);
+        onPlay({ currentPosition, duration }) {
           if (currentPosition === duration) {
             isPlayingRef.current = false;
             contentTimerRef.current?.stop?.();
@@ -160,11 +164,9 @@ export function useVoiceBar(props: VoiceBarProps) {
           }
         },
       })
-      .then(() => {
-        console.log('test:zuoyu:playAudio:finish:2:');
-      })
+      .then(() => {})
       .catch((error) => {
-        console.warn('test:zuoyu:error:', error);
+        onFailed?.({ reason: 'play voice is failed.', error: error });
         isPlayingRef.current = false;
         contentTimerRef.current?.stop?.();
         onState('stopping');

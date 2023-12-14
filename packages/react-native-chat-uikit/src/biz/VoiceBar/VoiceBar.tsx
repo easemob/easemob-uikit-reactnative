@@ -12,7 +12,6 @@ import type { VoiceBarProps } from './types';
 import { useVoiceBar } from './VoiceBar.hooks';
 
 export function VoiceBar(props: VoiceBarProps) {
-  console.log('test:zuoyu:VoiceBar:props', props);
   const { height } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();

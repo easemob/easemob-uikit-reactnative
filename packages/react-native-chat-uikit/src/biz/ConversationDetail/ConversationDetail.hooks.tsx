@@ -35,7 +35,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
 
   usePermissions({
     onResult: (isSuccess) => {
-      console.log('test:zuoyu:permissions:', isSuccess);
       permissionsRef.current = isSuccess;
     },
   });

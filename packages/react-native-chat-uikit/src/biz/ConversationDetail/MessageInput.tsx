@@ -72,6 +72,7 @@ export const MessageInput = React.forwardRef<
     onRequestModalCloseMenu,
     sendIconName,
     onClickedSend,
+    onVoiceFailed,
   } = useMessageInput(props);
 
   React.useImperativeHandle(ref, () => {
@@ -244,6 +245,7 @@ export const MessageInput = React.forwardRef<
         onRequestModalClose={onRequestModalClose}
         onClickedSendButton={onSelectSendVoice}
         onState={onVoiceStateChange}
+        onFailed={onVoiceFailed}
       />
       <BottomSheetNameMenu
         ref={menuRef}

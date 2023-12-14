@@ -3,7 +3,7 @@ import { ChatMessage, ChatMessageChatType } from 'react-native-chat-sdk';
 
 import { ChatServiceListener, useChatListener } from '../../chat';
 import type { AlertRef } from '../../ui/Alert';
-import { getCurTs } from '../../utils';
+import { getCurTs, timeoutTask } from '../../utils';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useFlatList } from '../List';
 import type { UseFlatListReturn } from '../types';
@@ -50,6 +50,8 @@ export function useMessageList(
     listType,
     ref: listRef,
   } = flatListProps;
+
+  const isNeedScrollToEndRef = React.useRef(false);
 
   const init = async () => {
     if (testMode === 'only-ui') {
@@ -131,6 +133,14 @@ export function useMessageList(
     return undefined;
   };
 
+  const onScrollToEnd = React.useCallback(() => {
+    if (isNeedScrollToEndRef.current === true) {
+      timeoutTask(0, () => {
+        listRef?.current?.scrollToEnd?.();
+      });
+    }
+  }, [listRef]);
+
   const onAddData = React.useCallback(
     (d: MessageListItemProps, pos: MessageAddPosition) => {
       if (pos === 'bottom') {
@@ -191,6 +201,33 @@ export function useMessageList(
                 displayName: v.displayName ?? '',
               }
             );
+            console.log('test:zuoyu:image:', msg);
+            onAddData(
+              {
+                id: msg.localTime.toString(),
+                model: {
+                  userId: msg.from,
+                  modelType: 'message',
+                  layoutType: 'right',
+                  msg: msg,
+                },
+                containerStyle: getStyle(),
+              },
+              'bottom'
+            );
+          } else if (value.type === 'voice') {
+            const v = value as SendVoiceProps;
+            const msg = ChatMessage.createVoiceMessage(
+              convId,
+              v.localPath,
+              convType as number as ChatMessageChatType,
+              {
+                duration: v.duration,
+                fileSize: v.fileSize,
+                displayName: v.displayName ?? '',
+              }
+            );
+            console.log('test:zuoyu:voice:', msg);
             onAddData(
               {
                 id: msg.localTime.toString(),
@@ -205,6 +242,8 @@ export function useMessageList(
               'bottom'
             );
           }
+          isNeedScrollToEndRef.current = true;
+          onScrollToEnd();
         },
         removeMessage: (_msg: ChatMessage) => {},
         recallMessage: (_msg: ChatMessage) => {},
@@ -216,12 +255,11 @@ export function useMessageList(
         onInputHeightChange: (height: number) => {
           if (height > 0) {
             listRef?.current?.scrollToEnd?.();
-            listRef?.current.scrollToIndex({ index: 2 });
           }
         },
       };
     },
-    [convId, convType, listRef, onAddData]
+    [convId, convType, listRef, onAddData, onScrollToEnd]
   );
 
   return {
