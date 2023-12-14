@@ -41,8 +41,15 @@ export function useMessageList(
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
     onInit: () => init(),
   });
-  const { data, dataRef, setData, isAutoLoad, listState, listType } =
-    flatListProps;
+  const {
+    data,
+    dataRef,
+    setData,
+    isAutoLoad,
+    listState,
+    listType,
+    ref: listRef,
+  } = flatListProps;
 
   const init = async () => {
     if (testMode === 'only-ui') {
@@ -55,7 +62,7 @@ export function useMessageList(
             layoutType: 'right',
             msg: ChatMessage.createTextMessage(
               'xxx',
-              'fjeinsdlkjsdlksjdfiosjelfijse lfeijselfsjefisejlfijsslkdjflsefl',
+              'fjeinsdlkjsdlksjdfiosjelfijse lfeijsdlkjsdljf sldfkjsldfj ls sdflksj dlfksjd flsdfj sldkf jsldfkj sdlfkj sldkfj sdlkfj sdlfkj sdlfkjs dflskjd flsdkfj sldfkj sdlfkj sdfsdlkf jlksdfj sldkfj sdlkf sldfkj sdlfkjs dlfkjsd lfkjsd fkosldfk jsldkfj sldkfj sldkf jsldkfj lsld flksdf lskdfj lskdfj lskdfj sldkfj sldkfjsldfkj sdlkfj lsdkfj slkdfj kldsf jsldfkj sdlkfj sldfkj sdlfkj sdlfkj sdlkflsdf jlksdf lskdjf lsdkjf lsdkfj ksldfj slkdfj sldkfj sldkfj slkdfj lksdfj selfsjefisejlfijsslkdjflsefl',
               0
             ),
           },
@@ -206,12 +213,19 @@ export function useMessageList(
           _msgs: ChatMessage[],
           _pos: MessageAddPosition
         ) => {},
+        onInputHeightChange: (height: number) => {
+          if (height > 0) {
+            listRef?.current?.scrollToEnd?.();
+            listRef?.current.scrollToIndex({ index: 2 });
+          }
+        },
       };
     },
-    [convId, convType, onAddData]
+    [convId, convType, listRef, onAddData]
   );
 
   return {
+    ...flatListProps,
     listType,
     listState,
     data,

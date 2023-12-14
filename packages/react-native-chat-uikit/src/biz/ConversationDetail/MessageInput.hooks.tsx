@@ -30,8 +30,13 @@ import {
 } from './useSelectFile';
 
 export function useMessageInput(props: MessageInputProps) {
-  const { bottom, onClickedSend: propsOnClickedSend, closeAfterSend } = props;
-  const keyboardHeight = useKeyboardHeight();
+  const {
+    bottom,
+    onClickedSend: propsOnClickedSend,
+    closeAfterSend,
+    onHeightChange,
+  } = props;
+  const { keyboardHeight, keyboardCurrentHeight } = useKeyboardHeight();
   const inputRef = React.useRef<RNTextInput>({} as any);
   const [_value, _setValue] = React.useState('');
   const [emojiHeight, _setEmojiHeight] = React.useState(0);
@@ -392,6 +397,20 @@ export function useMessageInput(props: MessageInputProps) {
       hasCancel: true,
     });
   };
+
+  React.useEffect(() => {
+    console.log('test:zuoyu:height:', keyboardCurrentHeight, emojiHeight);
+    if (
+      (keyboardCurrentHeight > 0 && emojiHeight === 0) ||
+      (emojiHeight > 0 && keyboardCurrentHeight === 0) ||
+      (emojiHeight === 0 && keyboardCurrentHeight === 0)
+    ) {
+      // todo: height is pseudo.
+      onHeightChange?.(
+        emojiHeight === 0 && keyboardCurrentHeight === 0 ? 0 : 1
+      );
+    }
+  }, [keyboardCurrentHeight, emojiHeight, onHeightChange]);
 
   console.log(
     'test:zuoyu:showVoiceBar:outer',

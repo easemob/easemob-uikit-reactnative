@@ -20,6 +20,7 @@ export type MessageInputProps = PropsWithError &
         | SendVoiceProps
     ) => void;
     closeAfterSend?: boolean;
+    onHeightChange?: (height: number) => void;
   };
 export type MessageInputState = 'normal' | 'emoji' | 'voice' | 'keyboard';
 
@@ -149,6 +150,7 @@ export type MessageListRef = {
   recallMessage: (msg: ChatMessage) => void;
   updateMessage: (updatedMsg: ChatMessage) => void;
   loadHistoryMessage: (msgs: ChatMessage[], pos: MessageAddPosition) => void;
+  onInputHeightChange: (height: number) => void;
 };
 export type MessageListProps = PropsWithError &
   PropsWithTest & {

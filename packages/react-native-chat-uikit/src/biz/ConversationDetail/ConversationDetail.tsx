@@ -108,6 +108,9 @@ export function ConversationDetail(props: ConversationDetailProps) {
       <_MessageInput
         ref={_messageInputRef}
         onClickedSend={onClickedSend}
+        onHeightChange={(height) => {
+          _messageListRef?.current?.onInputHeightChange?.(height);
+        }}
         {...messageInputProps}
       />
       {/* <MessageInput ref={messageInputRef} /> */}
