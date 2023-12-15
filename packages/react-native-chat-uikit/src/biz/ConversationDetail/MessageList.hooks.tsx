@@ -62,11 +62,7 @@ export function useMessageList(
             userId: 'xxx',
             modelType: 'message',
             layoutType: 'right',
-            msg: ChatMessage.createTextMessage(
-              'xxx',
-              'fjeinsdlkjsdlksjdfiosjelfijse lfeijsdlkjsdljf sldfkjsldfj ls sdflksj dlfksjd flsdfj sldkf jsldfkj sdlfkj sldkfj sdlkfj sdlfkj sdlfkjs dflskjd flsdkfj sldfkj sdlfkj sdfsdlkf jlksdfj sldkfj sdlkf sldfkj sdlfkjs dlfkjsd lfkjsd fkosldfk jsldkfj sldkfj sldkf jsldkfj lsld flksdf lskdfj lskdfj lskdfj sldkfj sldkfjsldfkj sdlkfj lsdkfj slkdfj kldsf jsldfkj sdlkfj sldfkj sdlfkj sdlfkj sdlkflsdf jlksdf lskdjf lsdkjf lsdkfj ksldfj slkdfj sldkfj sldkfj slkdfj lksdfj selfsjefisejlfijsslkdjflsefl',
-              0
-            ),
+            msg: ChatMessage.createTextMessage('xxx', 'you are welcome.', 0),
           },
         } as MessageListItemProps,
         {
@@ -94,6 +90,30 @@ export function useMessageList(
             modelType: 'message',
             layoutType: 'left',
             msg: ChatMessage.createCmdMessage('xxx', 'test', 0),
+          },
+        } as MessageListItemProps,
+        {
+          id: '5',
+          model: {
+            userId: 'xxx',
+            modelType: 'message',
+            layoutType: 'left',
+            msg: ChatMessage.createVoiceMessage('xxx', '', 0, {
+              duration: 16000,
+            }),
+            isPlaying: false,
+          },
+        } as MessageListItemProps,
+        {
+          id: '6',
+          model: {
+            userId: 'xxx',
+            modelType: 'message',
+            layoutType: 'right',
+            msg: ChatMessage.createVoiceMessage('xxx', '', 0, {
+              duration: 1000,
+            }),
+            isPlaying: false,
           },
         } as MessageListItemProps,
       ];

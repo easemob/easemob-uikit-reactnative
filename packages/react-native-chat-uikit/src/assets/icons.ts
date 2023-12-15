@@ -1783,6 +1783,60 @@ export const ICON_ASSETS = {
       return require('./icons/video_camera_xmark_2x.png');
     }
   },
+  '1st_frame_lft_lgt_sdy': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/voice/1st_frame_lft_lgt_sdy_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/voice/1st_frame_lft_lgt_sdy_2x.png');
+    } else {
+      return require('./icons/voice/1st_frame_lft_lgt_sdy.png');
+    }
+  },
+  '1st_frame_rgt_lgt_sdy': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/voice/1st_frame_rgt_lgt_sdy_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/voice/1st_frame_rgt_lgt_sdy_2x.png');
+    } else {
+      return require('./icons/voice/1st_frame_rgt_lgt_sdy.png');
+    }
+  },
+  '2nd_frame_lft_lgt_sdy': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/voice/2nd_frame_lft_lgt_sdy_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/voice/2nd_frame_lft_lgt_sdy_2x.png');
+    } else {
+      return require('./icons/voice/2nd_frame_lft_lgt_sdy.png');
+    }
+  },
+  '2nd_frame_rgt_lgt_sdy': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/voice/2nd_frame_rgt_lgt_sdy_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/voice/2nd_frame_rgt_lgt_sdy_2x.png');
+    } else {
+      return require('./icons/voice/2nd_frame_rgt_lgt_sdy.png');
+    }
+  },
+  '3th_frame_lft_lgt_sdy': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/voice/3th_frame_lft_lgt_sdy_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/voice/3th_frame_lft_lgt_sdy_2x.png');
+    } else {
+      return require('./icons/voice/3th_frame_lft_lgt_sdy.png');
+    }
+  },
+  '3th_frame_rgt_lgt_sdy': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/voice/3th_frame_rgt_lgt_sdy_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/voice/3th_frame_rgt_lgt_sdy_2x.png');
+    } else {
+      return require('./icons/voice/3th_frame_rgt_lgt_sdy.png');
+    }
+  },
   'wave1_left': (size: string) => {
     if (size === '3x') {
       return require('./icons/wave1_left_3x.png');

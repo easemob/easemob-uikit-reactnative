@@ -113,3 +113,17 @@ export function getImageShowSize(msg: ChatMessage) {
     };
   }
 }
+
+export class VoicePlayManager {
+  static list: Map<string, boolean> = new Map();
+  static setPlaying(msgId: string, isPlaying: boolean) {
+    if (isPlaying === true) {
+      this.list.set(msgId, isPlaying);
+    } else {
+      this.list.delete(msgId);
+    }
+  }
+  static isPlaying(msgId: string) {
+    return this.list.get(msgId) === true;
+  }
+}

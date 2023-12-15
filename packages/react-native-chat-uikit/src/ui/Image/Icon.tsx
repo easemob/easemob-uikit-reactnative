@@ -15,7 +15,7 @@ export function Icon(props: IconProps) {
 
   return (
     <Image
-      source={getIconSource(name, resolution)}
+      source={getIconSource(name, resolution) ?? 0}
       style={[style]}
       {...others}
     />

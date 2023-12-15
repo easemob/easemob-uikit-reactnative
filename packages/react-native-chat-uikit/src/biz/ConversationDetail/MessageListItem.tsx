@@ -1,17 +1,27 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import {
+  Dimensions,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {
   ChatMessage,
   ChatMessageType,
   ChatTextMessageBody,
+  ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
+import type { IconNameType } from 'src/assets';
 
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
-import { Icon, Image } from '../../ui/Image';
+import { DynamicIcon, DynamicIconRef, Icon, Image } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
+import { gMaxVoiceDuration } from '../const';
 import {
   getImageShowSize,
   getImageThumbUrl,
@@ -19,8 +29,8 @@ import {
   isSupportMessage,
 } from './MessageListItem.hooks';
 import type {
-  MessageBubbleType,
   MessageLayoutType,
+  MessageListItemActionsProps,
   MessageListItemProps,
   MessageModel,
   SystemMessageModel,
@@ -88,14 +98,147 @@ export function MessageImage(props: MessageImageProps) {
   );
 }
 
-export type MessageBubbleProps = {
+export type MessageVoiceProps = {
+  layoutType: MessageLayoutType;
+  msg: ChatMessage;
+  isPlay?: boolean;
+};
+export function MessageVoice(props: MessageVoiceProps) {
+  const { msg, layoutType, isPlay: propsIsPlay = false } = props;
+  const body = msg.body as ChatVoiceMessageBody;
+  const { duration } = body;
+  const maxWidth = Dimensions.get('window').width * 0.6;
+  const minWidth = Dimensions.get('window').width * 0.1;
+  const width =
+    Math.floor(((maxWidth - minWidth) * duration) / gMaxVoiceDuration) +
+    minWidth;
+  // const loopCount = React.useRef(
+  //   Math.floor(duration / (gFrameInterval * 3))
+  // ).current;
+  const loopCount = -1;
+  const ref = React.useRef<DynamicIconRef>({} as any);
+  // const isPlayRef = React.useRef(false);
+  console.log('test:zuoyu:MessageVoice:', width, maxWidth, minWidth);
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    left_voice: {
+      light: colors.neutralSpecial[5],
+      dark: colors.neutralSpecial[6],
+    },
+    right_voice: {
+      light: colors.neutral[98],
+      dark: colors.neutral[95],
+    },
+    left_second: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    right_second: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
+  const voiceIcons = React.useMemo((): IconNameType[] => {
+    if (layoutType === 'left') {
+      return [
+        '1st_frame_lft_lgt_sdy',
+        '2nd_frame_lft_lgt_sdy',
+        '3th_frame_lft_lgt_sdy',
+      ];
+    } else {
+      return [
+        '1st_frame_rgt_lgt_sdy',
+        '2nd_frame_rgt_lgt_sdy',
+        '3th_frame_rgt_lgt_sdy',
+      ];
+    }
+  }, [layoutType]);
+  const seconds = Math.floor(duration / 1000);
+
+  React.useEffect(() => {
+    console.log('test:zuoyu:useEffect:voice:', propsIsPlay);
+    if (propsIsPlay === true) {
+      ref.current?.startPlay?.();
+    } else {
+      ref.current?.stopPlay?.();
+    }
+  }, [propsIsPlay]);
+
+  // if (propsRef?.current) {
+  //   propsRef.current.play = () => {
+  //     const isPlaying = VoicePlayManager.isPlaying(msg.localTime.toString());
+  //     console.log('test:zuoyu:isplaying', isPlaying, msg.localTime.toString());
+  //     if (isPlaying === true) {
+  //       ref.current?.stopPlay?.();
+  //     } else {
+  //       ref.current?.startPlay?.();
+  //     }
+  //   };
+  // }
+
+  // const onPlayStart = React.useCallback(() => {
+  //   console.log('test:zuoyu:onPlayStart', msg.localTime.toString());
+  //   // VoicePlayManager.setPlaying(msg.localTime.toString(), true);
+  // }, [msg.localTime]);
+  // const onPlayFinished = React.useCallback(() => {
+  //   console.log('test:zuoyu:onPlayFinished', msg.localTime.toString());
+  //   // VoicePlayManager.setPlaying(msg.localTime.toString(), false);
+  //   // setIsPlay(false);
+  //   isPlayRef.current = false;
+  // }, [msg.localTime]);
+
+  return (
+    <View
+      style={{
+        flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
+        maxWidth: '100%',
+        width: width,
+        alignItems: 'center',
+      }}
+    >
+      <DynamicIcon
+        propsRef={ref}
+        names={voiceIcons}
+        loopCount={loopCount}
+        // onPlayStart={onPlayStart}
+        // onPlayFinished={onPlayFinished}
+        initialIndex={2}
+        style={{
+          width: 20,
+          height: 20,
+          tintColor: getColor(
+            layoutType === 'left' ? 'left_voice' : 'right_voice'
+          ),
+        }}
+      />
+      <View style={{ flexGrow: 1 }} />
+      <Text
+        textType={'large'}
+        paletteType={'body'}
+        style={{
+          color: getColor(
+            layoutType === 'left' ? 'left_second' : 'right_second'
+          ),
+        }}
+      >{`${seconds}"`}</Text>
+    </View>
+  );
+}
+
+export type MessageBubbleProps = MessageListItemActionsProps & {
   hasTriangle?: boolean;
-  modelType: MessageBubbleType;
   model: MessageModel;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 export function MessageBubble(props: MessageBubbleProps) {
-  const { hasTriangle = true, model } = props;
-  const { layoutType, msg } = model;
+  const {
+    hasTriangle = true,
+    model,
+    containerStyle,
+    onClicked,
+    onLongPress,
+  } = props;
+  const { layoutType, msg, isPlaying } = model;
   const isSupport = isSupportMessage(msg);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -126,10 +269,10 @@ export function MessageBubble(props: MessageBubbleProps) {
         }
         case ChatMessageType.VOICE: {
           return (
-            <MessageText
+            <MessageVoice
               msg={msg}
               layoutType={layoutType}
-              isSupport={isSupport}
+              isPlay={isPlaying}
             />
           );
         }
@@ -177,12 +320,27 @@ export function MessageBubble(props: MessageBubbleProps) {
     }
   };
 
+  const _onClicked = React.useCallback(() => {
+    if (onClicked) {
+      onClicked(msg.localTime.toString(), model);
+    }
+  }, [model, msg.localTime, onClicked]);
+
+  const _onLongPress = React.useCallback(() => {
+    if (onLongPress) {
+      onLongPress(msg.localTime.toString(), model);
+    }
+  }, [model, msg.localTime, onLongPress]);
+
   return (
     <View
-      style={{
-        flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
-        maxWidth: '66.6%',
-      }}
+      style={[
+        {
+          flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
+          maxWidth: '66.6%',
+        },
+        containerStyle,
+      ]}
     >
       {msg.body.type === ChatMessageType.IMAGE ? null : null}
       {hasTriangle === true && msg.body.type !== ChatMessageType.IMAGE ? (
@@ -203,7 +361,7 @@ export function MessageBubble(props: MessageBubbleProps) {
         </View>
       ) : null}
 
-      <View
+      <Pressable
         style={[
           styles.text_bubble,
           {
@@ -217,9 +375,11 @@ export function MessageBubble(props: MessageBubbleProps) {
               msg.body.type === ChatMessageType.IMAGE ? undefined : 7,
           },
         ]}
+        onTouchEnd={_onClicked}
+        onLongPress={_onLongPress}
       >
         {getContent()}
-      </View>
+      </Pressable>
     </View>
   );
 }
@@ -348,7 +508,7 @@ export function CheckView(props: CheckViewProps) {
   );
 }
 
-export type MessageViewProps = {
+export type MessageViewProps = MessageListItemActionsProps & {
   isVisible?: boolean;
   model: MessageModel;
   avatarIsVisible?: boolean;
@@ -362,8 +522,9 @@ export function MessageView(props: MessageViewProps) {
     avatarIsVisible = true,
     nameIsVisible = true,
     timeIsVisible = true,
+    ...others
   } = props;
-  const { modelType, layoutType } = model;
+  const { layoutType } = model;
   const state = getMessageState(model.msg);
   return (
     <View
@@ -386,7 +547,7 @@ export function MessageView(props: MessageViewProps) {
           }}
         >
           {avatarIsVisible ? <AvatarView layoutType={layoutType} /> : null}
-          <MessageBubble model={model} modelType={modelType} />
+          <MessageBubble model={model} {...others} />
           {state !== 'none' ? <StateView layoutType={layoutType} /> : null}
         </View>
         {timeIsVisible ? <TimeView layoutType={layoutType} /> : null}
@@ -441,7 +602,7 @@ export function TimeTipView(props: TimeTipViewProps) {
 }
 
 export function MessageListItem(props: MessageListItemProps) {
-  const { model } = props;
+  const { model, ...others } = props;
   const { modelType } = model;
   return (
     <View
@@ -459,6 +620,7 @@ export function MessageListItem(props: MessageListItemProps) {
         <MessageView
           isVisible={modelType === 'message' ? true : false}
           model={model as MessageModel}
+          {...others}
         />
       ) : null}
       {modelType === 'system' ? (

@@ -112,26 +112,36 @@ type BasicModel = {
   userName?: string;
   userAvatar?: string;
 };
+type VoiceModel = {
+  isPlaying?: boolean;
+};
 export type SystemMessageModel = BasicModel & {
   contents: string[];
 };
 export type TimeMessageModel = BasicModel & {
   timestamp: number;
 };
-export type MessageModel = BasicModel & {
-  msg: ChatMessage;
-};
+export type MessageModel = BasicModel &
+  VoiceModel & {
+    msg: ChatMessage;
+  };
 
-export type MessageListItemProps = {
+export type MessageListItemActionsProps = {
+  onClicked?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
+  onLongPress?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
+};
+export type MessageListItemProps = MessageListItemActionsProps & {
   /**
    * @description: message id. If it is a message, use the message time, otherwise use the millisecond message timestamp.
    */
   id: string;
   model: SystemMessageModel | TimeMessageModel | MessageModel;
-  onClicked?: (
-    id: string,
-    model: SystemMessageModel | TimeMessageModel | MessageModel
-  ) => void;
   containerStyle?: StyleProp<ViewStyle>;
 };
 export type MessageAddPosition = 'top' | 'bottom';
