@@ -67,6 +67,8 @@ export function useMessageList(
           id: '1',
           model: {
             userId: 'xxx',
+            userAvatar:
+              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
             modelType: 'message',
             layoutType: 'right',
             msg: ChatMessage.createTextMessage('xxx', 'you are welcome.', 0),
@@ -105,9 +107,14 @@ export function useMessageList(
             userId: 'xxx',
             modelType: 'message',
             layoutType: 'left',
-            msg: ChatMessage.createVoiceMessage('xxx', 'sdf', 0, {
-              duration: 16000,
-            }),
+            msg: ChatMessage.createVoiceMessage(
+              'xxx',
+              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.aac',
+              0,
+              {
+                duration: 60000,
+              }
+            ),
             isVoicePlaying: false,
           },
         } as MessageListItemProps,
@@ -117,51 +124,95 @@ export function useMessageList(
             userId: 'xxx',
             modelType: 'message',
             layoutType: 'right',
-            msg: ChatMessage.createVoiceMessage('xxx', 'sdf', 0, {
-              duration: 1000,
-            }),
+            msg: ChatMessage.createVoiceMessage(
+              'xxx',
+              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.aac',
+              0,
+              {
+                duration: 1000,
+              }
+            ),
             isVoicePlaying: false,
           },
         } as MessageListItemProps,
-        // {
-        //   id: '7',
-        //   model: {
-        //     userId: 'xxx',
-        //     modelType: 'message',
-        //     layoutType: 'right',
-        //     msg: ChatMessage.createImageMessage(
-        //       'xxx',
-        //       '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.jpeg',
-        //       0,
-        //       {
-        //         displayName: 'sdf',
-        //         thumbnailLocalPath:
-        //           '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
-        //         width: 300,
-        //         height: 300,
-        //         fileSize: 200,
-        //       }
-        //     ),
-        //     isVoicePlaying: false,
-        //   },
-        // } as MessageListItemProps,
-        // {
-        //   id: '8',
-        //   model: {
-        //     userId: 'xxx',
-        //     modelType: 'message',
-        //     layoutType: 'left',
-        //     msg: ChatMessage.createVideoMessage('xxx', 'sdf', 0, {
-        //       displayName: 'sdf',
-        //       thumbnailLocalPath:
-        //         '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
-        //       duration: 3000,
-        //       width: 300,
-        //       height: 300,
-        //     }),
-        //     isVoicePlaying: false,
-        //   },
-        // } as MessageListItemProps,
+        {
+          id: '7',
+          model: {
+            userId: 'xxx',
+            modelType: 'message',
+            layoutType: 'right',
+            msg: ChatMessage.createImageMessage(
+              'xxx',
+              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.jpeg',
+              0,
+              {
+                displayName: 'sdf',
+                thumbnailLocalPath:
+                  '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
+                width: 300,
+                height: 300,
+                fileSize: 200,
+              }
+            ),
+          },
+        } as MessageListItemProps,
+        {
+          id: '8',
+          model: {
+            userId: 'xxx',
+            modelType: 'message',
+            layoutType: 'left',
+            msg: ChatMessage.createVideoMessage(
+              'xxx',
+              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.mp4',
+              0,
+              {
+                displayName: 'sdf',
+                thumbnailLocalPath:
+                  '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
+                duration: 3000,
+                width: 300,
+                height: 300,
+              }
+            ),
+          },
+        } as MessageListItemProps,
+        {
+          id: '9',
+          model: {
+            userId: 'xxx',
+            modelType: 'message',
+            layoutType: 'left',
+            msg: ChatMessage.createFileMessage(
+              'xxx',
+              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
+              0,
+              {
+                displayName: 'sdf',
+                fileSize: 300,
+              }
+            ),
+          },
+        } as MessageListItemProps,
+        {
+          id: '10',
+          model: {
+            userId: 'xxx',
+            userAvatar:
+              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+            modelType: 'message',
+            layoutType: 'right',
+            msg: ChatMessage.createFileMessage(
+              'xxx',
+              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
+              0,
+              {
+                displayName: 'sdf',
+                fileSize: 300,
+              }
+            ),
+          },
+        } as MessageListItemProps,
       ];
       setData(dataRef.current);
       return;
@@ -216,7 +267,6 @@ export function useMessageList(
           }
         }
       });
-      console.log(dataRef.current);
       setData([...dataRef.current]);
     },
     [dataRef, setData]
@@ -293,7 +343,7 @@ export function useMessageList(
     return undefined;
   };
 
-  const onScrollToEnd = React.useCallback(() => {
+  const scrollToEnd = React.useCallback(() => {
     if (isNeedScrollToEndRef.current === true) {
       timeoutTask(0, () => {
         listRef?.current?.scrollToEnd?.();
@@ -430,9 +480,34 @@ export function useMessageList(
               },
               'bottom'
             );
+          } else if (value.type === 'file') {
+            const v = value as SendFileProps;
+            const msg = ChatMessage.createFileMessage(
+              convId,
+              v.localPath,
+              convType as number as ChatMessageChatType,
+              {
+                fileSize: v.fileSize,
+                displayName: v.displayName ?? '',
+              }
+            );
+            console.log('test:zuoyu:video:', msg);
+            onAddData(
+              {
+                id: msg.msgId.toString(),
+                model: {
+                  userId: msg.from,
+                  modelType: 'message',
+                  layoutType: 'right',
+                  msg: msg,
+                },
+                containerStyle: getStyle(),
+              },
+              'bottom'
+            );
           }
           isNeedScrollToEndRef.current = true;
-          onScrollToEnd();
+          scrollToEnd();
         },
         removeMessage: (_msg: ChatMessage) => {},
         recallMessage: (_msg: ChatMessage) => {},
@@ -448,7 +523,7 @@ export function useMessageList(
         },
       };
     },
-    [convId, convType, listRef, onAddData, onScrollToEnd]
+    [convId, convType, listRef, onAddData, scrollToEnd]
   );
 
   return {

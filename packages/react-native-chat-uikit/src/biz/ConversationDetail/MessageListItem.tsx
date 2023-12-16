@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {
+  ChatFileMessageBody,
   ChatMessage,
   ChatMessageType,
   ChatTextMessageBody,
@@ -19,14 +20,24 @@ import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
-import { DynamicIcon, DynamicIconRef, Icon, Image } from '../../ui/Image';
-import { Text } from '../../ui/Text';
+import {
+  DynamicIcon,
+  DynamicIconRef,
+  Icon,
+  Image,
+  LoadingIcon,
+} from '../../ui/Image';
+import { SingleLineText, Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { gMaxVoiceDuration } from '../const';
 import {
+  getFileSize,
+  getFormatTime,
   getImageShowSize,
   getImageThumbUrl,
   getMessageState,
+  getStateIcon,
+  getStateIconColor,
   getVideoThumbUrl,
   isSupportMessage,
 } from './MessageListItem.hooks';
@@ -35,6 +46,7 @@ import type {
   MessageListItemActionsProps,
   MessageListItemProps,
   MessageModel,
+  MessageStateType,
   SystemMessageModel,
   TimeMessageModel,
 } from './types';
@@ -244,6 +256,108 @@ export function MessageVideo(props: MessageVideoProps) {
   );
 }
 
+export type MessageFileProps = MessageBasicProps & {};
+export function MessageFile(props: MessageFileProps) {
+  const { msg, maxWidth, layoutType } = props;
+  const body = msg.body as ChatFileMessageBody;
+  const fileName = body.displayName;
+  const fileSize = React.useMemo(
+    () => getFileSize(body.fileSize),
+    [body.fileSize]
+  );
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    left_file_bg: {
+      light: colors.neutral[100],
+      dark: colors.neutral[6],
+    },
+    right_file_bg: {
+      light: colors.neutral[100],
+      dark: colors.neutral[6],
+    },
+    left_file_fg: {
+      light: colors.neutral[7],
+      dark: colors.neutral[6],
+    },
+    right_file_fg: {
+      light: colors.neutral[7],
+      dark: colors.neutral[6],
+    },
+    left_name: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    right_name: {
+      light: colors.neutral[98],
+      dark: colors.neutral[98],
+    },
+    left_size: {
+      light: colors.neutralSpecial[5],
+      dark: colors.neutralSpecial[6],
+    },
+    right_size: {
+      light: colors.neutral[95],
+      dark: colors.neutralSpecial[6],
+    },
+  });
+  return (
+    <View
+      style={{
+        flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
+        width: maxWidth,
+      }}
+    >
+      <View
+        style={{
+          padding: 6,
+          backgroundColor: getColor(
+            layoutType === 'left' ? 'left_file_bg' : 'right_file_bg'
+          ),
+          borderRadius: 4,
+        }}
+      >
+        <Icon
+          name={'doc'}
+          style={{
+            width: 32,
+            height: 32,
+            tintColor: getColor(
+              layoutType === 'left' ? 'left_file_fg' : 'right_file_fg'
+            ),
+          }}
+        />
+      </View>
+
+      {layoutType === 'left' ? null : <View style={{ flexGrow: 1 }} />}
+      <View
+        style={{
+          maxWidth: '75%',
+          paddingHorizontal: layoutType === 'left' ? 12 : undefined,
+        }}
+      >
+        <SingleLineText
+          textType={'medium'}
+          paletteType={'title'}
+          style={{
+            color: getColor(layoutType === 'left' ? 'left_name' : 'right_name'),
+          }}
+        >
+          {fileName}
+        </SingleLineText>
+        <SingleLineText
+          textType={'medium'}
+          paletteType={'title'}
+          style={{
+            color: getColor(layoutType === 'left' ? 'left_size' : 'right_size'),
+          }}
+        >
+          {fileSize}
+        </SingleLineText>
+      </View>
+    </View>
+  );
+}
+
 export type MessageBubbleProps = MessageListItemActionsProps & {
   hasTriangle?: boolean;
   model: MessageModel;
@@ -260,6 +374,9 @@ export function MessageBubble(props: MessageBubbleProps) {
     maxWidth,
   } = props;
   const { layoutType, msg, isVoicePlaying } = model;
+  const paddingHorizontal = 12;
+  const paddingVertical = 7;
+  const triangleWidth = 5;
   const isSupport = isSupportMessage(msg);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -272,6 +389,21 @@ export function MessageBubble(props: MessageBubbleProps) {
       dark: colors.primary[2],
     },
   });
+  const isShowTriangle = React.useMemo(() => {
+    return (
+      hasTriangle === true &&
+      msg.body.type !== ChatMessageType.IMAGE &&
+      msg.body.type !== ChatMessageType.VIDEO
+    );
+  }, [hasTriangle, msg.body.type]);
+  const contentMaxWidth = React.useMemo(() => {
+    const _maxWidth = maxWidth ? maxWidth - paddingHorizontal * 2 : undefined;
+    if (isShowTriangle === true) {
+      return _maxWidth ? _maxWidth - triangleWidth : undefined;
+    } else {
+      return _maxWidth;
+    }
+  }, [isShowTriangle, maxWidth]);
 
   const getContent = () => {
     if (isSupport === true) {
@@ -282,7 +414,7 @@ export function MessageBubble(props: MessageBubbleProps) {
               msg={msg}
               layoutType={layoutType}
               isSupport={isSupport}
-              maxWidth={maxWidth}
+              maxWidth={contentMaxWidth}
             />
           );
         }
@@ -301,7 +433,7 @@ export function MessageBubble(props: MessageBubbleProps) {
               msg={msg}
               layoutType={layoutType}
               isPlay={isVoicePlaying}
-              maxWidth={maxWidth}
+              maxWidth={contentMaxWidth}
             />
           );
         }
@@ -316,11 +448,10 @@ export function MessageBubble(props: MessageBubbleProps) {
         }
         case ChatMessageType.FILE: {
           return (
-            <MessageText
+            <MessageFile
               msg={msg}
               layoutType={layoutType}
-              isSupport={isSupport}
-              maxWidth={maxWidth}
+              maxWidth={contentMaxWidth}
             />
           );
         }
@@ -340,7 +471,7 @@ export function MessageBubble(props: MessageBubbleProps) {
               msg={msg}
               layoutType={layoutType}
               isSupport={isSupport}
-              maxWidth={maxWidth}
+              maxWidth={contentMaxWidth}
             />
           );
         }
@@ -374,9 +505,7 @@ export function MessageBubble(props: MessageBubbleProps) {
         containerStyle,
       ]}
     >
-      {hasTriangle === true &&
-      msg.body.type !== ChatMessageType.IMAGE &&
-      msg.body.type !== ChatMessageType.VIDEO ? (
+      {isShowTriangle ? (
         <View style={{ paddingBottom: 10 }}>
           <View style={{ flexGrow: 1 }} />
           <Icon
@@ -384,7 +513,7 @@ export function MessageBubble(props: MessageBubbleProps) {
               layoutType === 'left' ? 'message_arrow_lft' : 'message_arrow_rgt'
             }
             style={{
-              width: 5,
+              width: triangleWidth,
               height: 8,
               tintColor: getColor(
                 layoutType === 'left' ? 'left_bg' : 'right_bg'
@@ -406,12 +535,12 @@ export function MessageBubble(props: MessageBubbleProps) {
               msg.body.type === ChatMessageType.IMAGE ||
               msg.body.type === ChatMessageType.VIDEO
                 ? undefined
-                : 12,
+                : paddingHorizontal,
             paddingVertical:
               msg.body.type === ChatMessageType.IMAGE ||
               msg.body.type === ChatMessageType.VIDEO
                 ? undefined
-                : 7,
+                : paddingVertical,
           },
         ]}
         onTouchEnd={_onClicked}
@@ -425,9 +554,10 @@ export function MessageBubble(props: MessageBubbleProps) {
 export type AvatarViewProps = {
   isVisible?: boolean;
   layoutType: MessageLayoutType;
+  avatar?: string;
 };
 export function AvatarView(props: AvatarViewProps) {
-  const { isVisible = true, layoutType } = props;
+  const { isVisible = true, layoutType, avatar } = props;
   return (
     <View
       style={{
@@ -437,16 +567,17 @@ export function AvatarView(props: AvatarViewProps) {
       }}
     >
       <View style={{ flexGrow: 1 }} />
-      <Avatar size={28} />
+      <Avatar size={28} url={avatar} />
     </View>
   );
 }
 export type NameViewProps = {
   isVisible?: boolean;
   layoutType: MessageLayoutType;
+  name: string;
 };
 export function NameView(props: NameViewProps) {
-  const { isVisible = true, layoutType } = props;
+  const { isVisible = true, layoutType, name } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     text: {
@@ -462,15 +593,15 @@ export function NameView(props: NameViewProps) {
         paddingRight: layoutType === 'left' ? undefined : 53,
       }}
     >
-      <Text
+      <SingleLineText
         textType={'small'}
         paletteType={'label'}
         style={{
           color: getColor('text'),
         }}
       >
-        {'name'}
-      </Text>
+        {name}
+      </SingleLineText>
     </View>
   );
 }
@@ -478,9 +609,10 @@ export function NameView(props: NameViewProps) {
 export type TimeViewProps = {
   isVisible?: boolean;
   layoutType: MessageLayoutType;
+  timestamp: number;
 };
 export function TimeView(props: TimeViewProps) {
-  const { isVisible = true, layoutType } = props;
+  const { isVisible = true, layoutType, timestamp } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     text: {
@@ -488,6 +620,7 @@ export function TimeView(props: TimeViewProps) {
       dark: colors.neutral[6],
     },
   });
+  const time = getFormatTime(timestamp);
   return (
     <View
       style={{
@@ -501,7 +634,7 @@ export function TimeView(props: TimeViewProps) {
         paletteType={'body'}
         style={{ color: getColor('text') }}
       >
-        {'2023.11.23'}
+        {time}
       </Text>
     </View>
   );
@@ -510,9 +643,31 @@ export function TimeView(props: TimeViewProps) {
 export type StateViewProps = {
   isVisible?: boolean;
   layoutType: MessageLayoutType;
+  state: MessageStateType;
 };
 export function StateView(props: StateViewProps) {
-  const { isVisible = true, layoutType } = props;
+  const { isVisible = true, layoutType, state } = props;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    common: {
+      light: colors.neutral[7],
+      dark: colors.neutral[6],
+    },
+    red: {
+      light: colors.error[5],
+      dark: colors.error[6],
+    },
+    green: {
+      light: colors.secondary[4],
+      dark: colors.secondary[5],
+    },
+  });
+
+  const isStop = React.useMemo(() => {
+    return state !== 'loading-attachment' && state !== 'sending';
+  }, [state]);
+  const iconName = React.useMemo(() => getStateIcon(state), [state]);
+  const iconColor = React.useMemo(() => getStateIconColor(state), [state]);
   return (
     <View
       style={{
@@ -522,7 +677,15 @@ export function StateView(props: StateViewProps) {
       }}
     >
       <View style={{ flexGrow: 1 }} />
-      <Icon name={'loading'} style={{ width: 20, height: 20 }} />
+      <LoadingIcon
+        isStop={isStop}
+        name={iconName}
+        style={{
+          width: 20,
+          height: 20,
+          tintColor: getColor(iconColor),
+        }}
+      />
     </View>
   );
 }
@@ -566,6 +729,9 @@ export function MessageView(props: MessageViewProps) {
   const { layoutType } = model;
   const state = getMessageState(model.msg);
   const maxWidth = Dimensions.get('window').width * 0.6;
+  const userName = model.userName ?? model.userId;
+  const time = model.msg.localTime ?? model.msg.serverTime;
+  const avatar = avatarIsVisible === true ? model.userAvatar : undefined;
   return (
     <View
       style={{
@@ -580,17 +746,25 @@ export function MessageView(props: MessageViewProps) {
           alignItems: layoutType === 'left' ? 'flex-start' : 'flex-end',
         }}
       >
-        {nameIsVisible ? <NameView layoutType={layoutType} /> : null}
+        {nameIsVisible ? (
+          <NameView layoutType={layoutType} name={userName} />
+        ) : null}
         <View
           style={{
             flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
           }}
         >
-          {avatarIsVisible ? <AvatarView layoutType={layoutType} /> : null}
+          {avatarIsVisible ? (
+            <AvatarView layoutType={layoutType} avatar={avatar} />
+          ) : null}
           <MessageBubble model={model} maxWidth={maxWidth} {...others} />
-          {state !== 'none' ? <StateView layoutType={layoutType} /> : null}
+          {state !== 'none' ? (
+            <StateView layoutType={layoutType} state={state} />
+          ) : null}
         </View>
-        {timeIsVisible ? <TimeView layoutType={layoutType} /> : null}
+        {timeIsVisible ? (
+          <TimeView layoutType={layoutType} timestamp={time} />
+        ) : null}
       </View>
     </View>
   );

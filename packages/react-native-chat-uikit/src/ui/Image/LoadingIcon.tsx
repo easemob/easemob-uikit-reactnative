@@ -36,7 +36,7 @@ export function LoadingIcon(props: LoadingIconProps) {
   }, [deg, isStop]);
   return (
     <AnimatedImage
-      source={getIconSource(name, resolution)}
+      source={getIconSource(name, resolution) ?? 0}
       style={[
         style,
         {

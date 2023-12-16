@@ -7,8 +7,10 @@ import {
   ChatMessageType,
   ChatVideoMessageBody,
 } from 'react-native-chat-sdk';
+import type { IconNameType } from 'src/assets';
 
 import { Services } from '../../services';
+import { formatTs2 } from '../../utils';
 import type { MessageStateType } from './types';
 
 export function isSupportMessage(msg: ChatMessage) {
@@ -45,6 +47,73 @@ export function getMessageState(msg: ChatMessage): MessageStateType {
     }
     // todo: send-to-peer
     // todo: peer-read
+  }
+  return ret;
+}
+
+export function getStateIcon(state: MessageStateType): IconNameType {
+  let ret = 'loading' as IconNameType;
+  switch (state) {
+    case 'loading-attachment':
+      ret = 'loading';
+      break;
+    case 'send-success':
+      ret = 'check';
+      break;
+    case 'send-fail':
+      ret = 'exclamation_mark_in_circle';
+      break;
+    case 'send-to-peer':
+      ret = 'check_2';
+      break;
+    case 'peer-read':
+      ret = 'check_2';
+      break;
+    case 'sending':
+      ret = 'loading';
+      break;
+    case 'no-play':
+      ret = 'dot_1';
+      break;
+    case 'none':
+      ret = 'loading';
+      break;
+
+    default:
+      break;
+  }
+  return ret;
+}
+export function getStateIconColor(state: MessageStateType): string {
+  let ret = 'common';
+  switch (state) {
+    case 'loading-attachment':
+      ret = 'common';
+      break;
+    case 'send-success':
+      ret = 'common';
+      break;
+    case 'send-fail':
+      ret = 'red';
+      break;
+    case 'send-to-peer':
+      ret = 'common';
+      break;
+    case 'peer-read':
+      ret = 'green';
+      break;
+    case 'sending':
+      ret = 'common';
+      break;
+    case 'no-play':
+      ret = 'red';
+      break;
+    case 'none':
+      ret = 'common';
+      break;
+
+    default:
+      break;
   }
   return ret;
 }
@@ -172,4 +241,23 @@ export class VoicePlayManager {
   static isVoicePlaying(msgId: string) {
     return this.list.get(msgId) === true;
   }
+}
+
+export function getFileSize(size: number) {
+  if (size === undefined) {
+    return '0B';
+  }
+  if (size < 1024) {
+    return `${size}B`;
+  } else if (size < 1024 * 1024) {
+    return `${(size / 1024).toFixed(1)}KB`;
+  } else if (size < 1024 * 1024 * 1024) {
+    return `${(size / 1024 / 1024).toFixed(1)}MB`;
+  } else {
+    return `${(size / 1024 / 1024 / 1024).toFixed(1)}GB`;
+  }
+}
+
+export function getFormatTime(time: number) {
+  return formatTs2(time);
 }
