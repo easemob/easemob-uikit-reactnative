@@ -8,6 +8,7 @@ export type MessageInputRef = {
 };
 export type MessageInputProps = PropsWithError &
   PropsWithTest & {
+    convId: string;
     top?: number | undefined;
     bottom?: number | undefined;
     numberOfLines?: number | undefined;
@@ -113,7 +114,7 @@ type BasicModel = {
   userAvatar?: string;
 };
 type VoiceModel = {
-  isPlaying?: boolean;
+  isVoicePlaying?: boolean;
 };
 export type SystemMessageModel = BasicModel & {
   contents: string[];
@@ -138,7 +139,7 @@ export type MessageListItemActionsProps = {
 };
 export type MessageListItemProps = MessageListItemActionsProps & {
   /**
-   * @description: message id. If it is a message, use the message time, otherwise use the millisecond message timestamp.
+   * @description: message id. If it is a message, use the message msgId, otherwise use the millisecond message timestamp.
    */
   id: string;
   model: SystemMessageModel | TimeMessageModel | MessageModel;

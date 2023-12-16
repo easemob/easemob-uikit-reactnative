@@ -19,16 +19,16 @@ export function AppDev(): JSX.Element {
       permissionsRef.current = isSuccess;
     },
   });
-  return (
-    <View style={{ flex: 1 }}>
-      <Test />
-    </View>
-  );
   // return (
-  //   <React.StrictMode>
-  //     <View style={{ flex: 1 }}>
-  //       <Test />
-  //     </View>
-  //   </React.StrictMode>
+  //   <View style={{ flex: 1 }}>
+  //     <Test />
+  //   </View>
   // );
+  return (
+    <React.StrictMode>
+      <View style={{ flex: 1 }}>
+        <Test />
+      </View>
+    </React.StrictMode>
+  );
 }

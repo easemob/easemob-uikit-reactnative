@@ -25,7 +25,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const _messageInputRef = input?.ref ?? messageInputRef;
   const _MessageInput = input?.render ?? MessageInput;
   const messageInputProps = input?.props
-    ? { ...input.props, convId, testMode }
+    ? { ...input.props, convId, convType, testMode }
     : { convId, testMode };
   const _messageListRef = list?.ref ?? messageListRef;
   const _MessageList = list?.render ?? MessageList;

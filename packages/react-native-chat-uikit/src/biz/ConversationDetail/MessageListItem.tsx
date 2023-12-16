@@ -164,29 +164,6 @@ export function MessageVoice(props: MessageVoiceProps) {
     }
   }, [propsIsPlay]);
 
-  // if (propsRef?.current) {
-  //   propsRef.current.play = () => {
-  //     const isPlaying = VoicePlayManager.isPlaying(msg.localTime.toString());
-  //     console.log('test:zuoyu:isplaying', isPlaying, msg.localTime.toString());
-  //     if (isPlaying === true) {
-  //       ref.current?.stopPlay?.();
-  //     } else {
-  //       ref.current?.startPlay?.();
-  //     }
-  //   };
-  // }
-
-  // const onPlayStart = React.useCallback(() => {
-  //   console.log('test:zuoyu:onPlayStart', msg.localTime.toString());
-  //   // VoicePlayManager.setPlaying(msg.localTime.toString(), true);
-  // }, [msg.localTime]);
-  // const onPlayFinished = React.useCallback(() => {
-  //   console.log('test:zuoyu:onPlayFinished', msg.localTime.toString());
-  //   // VoicePlayManager.setPlaying(msg.localTime.toString(), false);
-  //   // setIsPlay(false);
-  //   isPlayRef.current = false;
-  // }, [msg.localTime]);
-
   return (
     <View
       style={{
@@ -238,7 +215,7 @@ export function MessageBubble(props: MessageBubbleProps) {
     onClicked,
     onLongPress,
   } = props;
-  const { layoutType, msg, isPlaying } = model;
+  const { layoutType, msg, isVoicePlaying } = model;
   const isSupport = isSupportMessage(msg);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -272,7 +249,7 @@ export function MessageBubble(props: MessageBubbleProps) {
             <MessageVoice
               msg={msg}
               layoutType={layoutType}
-              isPlay={isPlaying}
+              isPlay={isVoicePlaying}
             />
           );
         }
@@ -322,15 +299,15 @@ export function MessageBubble(props: MessageBubbleProps) {
 
   const _onClicked = React.useCallback(() => {
     if (onClicked) {
-      onClicked(msg.localTime.toString(), model);
+      onClicked(msg.msgId.toString(), model);
     }
-  }, [model, msg.localTime, onClicked]);
+  }, [model, msg.msgId, onClicked]);
 
   const _onLongPress = React.useCallback(() => {
     if (onLongPress) {
-      onLongPress(msg.localTime.toString(), model);
+      onLongPress(msg.msgId.toString(), model);
     }
-  }, [model, msg.localTime, onLongPress]);
+  }, [model, msg.msgId, onLongPress]);
 
   return (
     <View
@@ -493,7 +470,7 @@ export type CheckViewProps = {
   layoutType: MessageLayoutType;
 };
 export function CheckView(props: CheckViewProps) {
-  const { isVisible = true, layoutType } = props;
+  const { isVisible = false, layoutType } = props;
   return (
     <View
       style={{

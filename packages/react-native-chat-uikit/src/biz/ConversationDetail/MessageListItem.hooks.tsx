@@ -116,14 +116,14 @@ export function getImageShowSize(msg: ChatMessage) {
 
 export class VoicePlayManager {
   static list: Map<string, boolean> = new Map();
-  static setPlaying(msgId: string, isPlaying: boolean) {
-    if (isPlaying === true) {
-      this.list.set(msgId, isPlaying);
+  static setPlaying(msgId: string, isVoicePlaying: boolean) {
+    if (isVoicePlaying === true) {
+      this.list.set(msgId, isVoicePlaying);
     } else {
       this.list.delete(msgId);
     }
   }
-  static isPlaying(msgId: string) {
+  static isVoicePlaying(msgId: string) {
     return this.list.get(msgId) === true;
   }
 }

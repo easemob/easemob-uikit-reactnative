@@ -1,9 +1,15 @@
 import * as React from 'react';
-import { ChatMessage, ChatMessageChatType } from 'react-native-chat-sdk';
+import {
+  ChatMessage,
+  ChatMessageChatType,
+  ChatMessageType,
+  ChatVoiceMessageBody,
+} from 'react-native-chat-sdk';
 
 import { ChatServiceListener, useChatListener } from '../../chat';
+import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
-import { getCurTs, timeoutTask } from '../../utils';
+import { getCurTs, localUrlEscape, playUrl, timeoutTask } from '../../utils';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useFlatList } from '../List';
 import type { UseFlatListReturn } from '../types';
@@ -52,6 +58,7 @@ export function useMessageList(
   } = flatListProps;
 
   const isNeedScrollToEndRef = React.useRef(false);
+  const currentVoicePlayingRef = React.useRef<MessageModel | undefined>();
 
   const init = async () => {
     if (testMode === 'only-ui') {
@@ -98,10 +105,10 @@ export function useMessageList(
             userId: 'xxx',
             modelType: 'message',
             layoutType: 'left',
-            msg: ChatMessage.createVoiceMessage('xxx', '', 0, {
+            msg: ChatMessage.createVoiceMessage('xxx', 'sdf', 0, {
               duration: 16000,
             }),
-            isPlaying: false,
+            isVoicePlaying: false,
           },
         } as MessageListItemProps,
         {
@@ -110,10 +117,10 @@ export function useMessageList(
             userId: 'xxx',
             modelType: 'message',
             layoutType: 'right',
-            msg: ChatMessage.createVoiceMessage('xxx', '', 0, {
+            msg: ChatMessage.createVoiceMessage('xxx', 'sdf', 0, {
               duration: 1000,
             }),
-            isPlaying: false,
+            isVoicePlaying: false,
           },
         } as MessageListItemProps,
       ];
@@ -139,14 +146,108 @@ export function useMessageList(
   });
   useChatListener(listenerRef.current);
 
+  const updateMessageVoiceUIState = React.useCallback(
+    (model: MessageModel) => {
+      const msgId = model.msg.msgId;
+      // const msgs = dataRef.current
+      //   .filter((d) => d.model.modelType === 'message')
+      //   .filter((d) => {
+      //     return (
+      //       (d.model as MessageModel).msg.body.type === ChatMessageType.VOICE
+      //     );
+      //   });
+      // msgs.forEach((d) => {
+      //   const msgModel = d.model as MessageModel;
+      //   if (msgId === msgModel.msg.msgId) {
+      //     msgModel.isVoicePlaying = !msgModel.isVoicePlaying;
+      //   } else {
+      //     msgModel.isVoicePlaying = false;
+      //   }
+      // });
+      dataRef.current.map((d) => {
+        if (d.model.modelType === 'message') {
+          const msgModel = d.model as MessageModel;
+          if (msgModel.msg.body.type === ChatMessageType.VOICE) {
+            if (msgModel.msg.msgId === msgId) {
+              msgModel.isVoicePlaying = !msgModel.isVoicePlaying;
+            } else {
+              msgModel.isVoicePlaying = false;
+            }
+            d.model = { ...msgModel };
+          }
+        }
+      });
+      console.log(dataRef.current);
+      setData([...dataRef.current]);
+    },
+    [dataRef, setData]
+  );
+
+  const startVoicePlay = React.useCallback(
+    async (msgModel: MessageModel) => {
+      const isSame =
+        msgModel.msg.msgId === currentVoicePlayingRef.current?.msg.msgId;
+      if (currentVoicePlayingRef.current) {
+        const tmp = currentVoicePlayingRef.current;
+        try {
+          await Services.ms.stopAudio();
+          tmp.isVoicePlaying = true;
+          currentVoicePlayingRef.current = undefined;
+          updateMessageVoiceUIState(tmp);
+        } catch (error) {
+          tmp.isVoicePlaying = true;
+          currentVoicePlayingRef.current = undefined;
+          updateMessageVoiceUIState(tmp);
+        }
+      }
+
+      if (isSame === true) {
+        return;
+      }
+
+      currentVoicePlayingRef.current = msgModel;
+      const tmp = currentVoicePlayingRef.current;
+      updateMessageVoiceUIState(msgModel);
+      const localPath = (msgModel.msg.body as ChatVoiceMessageBody).localPath;
+      try {
+        const isExisted = await Services.dcs.isExistedFile(localPath);
+        if (isExisted !== true) {
+          currentVoicePlayingRef.current = undefined;
+          updateMessageVoiceUIState(msgModel);
+          return;
+        }
+        await Services.ms.playAudio({
+          url: localUrlEscape(playUrl(localPath)),
+          onPlay({ currentPosition, duration }) {
+            if (currentPosition === duration) {
+              tmp.isVoicePlaying = true;
+              currentVoicePlayingRef.current = undefined;
+              updateMessageVoiceUIState(msgModel);
+            }
+          },
+        });
+      } catch (error) {
+        tmp.isVoicePlaying = true;
+        currentVoicePlayingRef.current = undefined;
+        updateMessageVoiceUIState(msgModel);
+      }
+    },
+    [updateMessageVoiceUIState]
+  );
+
   const onClickedItem = React.useCallback(
     (
-      id: string,
+      _id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
-      console.log('test:zuoyu:', id, model);
+      if (model.modelType === 'message') {
+        const msgModel = model as MessageModel;
+        if (msgModel.msg.body.type === 'voice') {
+          startVoicePlay(msgModel);
+        }
+      }
     },
-    []
+    [startVoicePlay]
   );
 
   const getStyle = () => {
@@ -197,7 +298,7 @@ export function useMessageList(
             );
             onAddData(
               {
-                id: msg.localTime.toString(),
+                id: msg.msgId.toString(),
                 model: {
                   userId: msg.from,
                   modelType: 'message',
@@ -224,7 +325,7 @@ export function useMessageList(
             console.log('test:zuoyu:image:', msg);
             onAddData(
               {
-                id: msg.localTime.toString(),
+                id: msg.msgId.toString(),
                 model: {
                   userId: msg.from,
                   modelType: 'message',
@@ -250,7 +351,7 @@ export function useMessageList(
             console.log('test:zuoyu:voice:', msg);
             onAddData(
               {
-                id: msg.localTime.toString(),
+                id: msg.msgId.toString(),
                 model: {
                   userId: msg.from,
                   modelType: 'message',

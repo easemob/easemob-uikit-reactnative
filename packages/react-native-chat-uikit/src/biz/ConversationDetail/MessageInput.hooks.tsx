@@ -35,6 +35,7 @@ export function useMessageInput(props: MessageInputProps) {
     onClickedSend: propsOnClickedSend,
     closeAfterSend,
     onHeightChange,
+    convId,
   } = props;
   const { keyboardHeight, keyboardCurrentHeight } = useKeyboardHeight();
   const inputRef = React.useRef<RNTextInput>({} as any);
@@ -309,6 +310,7 @@ export function useMessageInput(props: MessageInputProps) {
   const onSelectSendVoice = (props: SendVoiceProps) => {
     console.log('test:zuoyu:onSelectSendVoice', props);
     propsOnClickedSend?.(props);
+    changeInputBarState('normal');
   };
   const onSelectSendVideo = (props: SendVideoProps) => {
     propsOnClickedSend?.(props);
@@ -343,6 +345,7 @@ export function useMessageInput(props: MessageInputProps) {
           onClicked: () => {
             menuRef.current?.startHide?.(() => {
               selectOneShortVideo({
+                convId: convId,
                 onResult: (params) => {
                   console.log('test:zuoyu:selectOneShortVideo', params);
                   onSelectSendVideo(params);

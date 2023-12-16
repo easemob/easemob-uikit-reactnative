@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 
 import { Services } from '../../services';
+import { getFileExtension, localUrl, uuid } from '../../utils';
 import type { SendFileProps, SendImageProps, SendVideoProps } from './types';
 
 export function selectOnePicture(params: {
@@ -33,6 +34,7 @@ export function selectOnePicture(params: {
     });
 }
 export function selectOneShortVideo(params: {
+  convId: string;
   onResult: (params: SendVideoProps) => void;
   onCancel?: () => void;
   onError?: (error: any) => void;
@@ -53,7 +55,14 @@ export function selectOneShortVideo(params: {
         });
       } catch (error) {
         console.warn('dev:getVideoThumbnail', error);
+        params.onError?.(error);
+        return;
       }
+
+      let localPath = localUrl(Services.dcs.getFileDir(params.convId, uuid()));
+      const extension = getFileExtension(thumbLocalPath!);
+      localPath = localPath + extension;
+      console.log('test:zuoyu:video:file:', localPath, thumbLocalPath);
       params.onResult({
         localPath: result[0]!.uri,
         fileSize: result[0]!.size,
