@@ -8,6 +8,7 @@ import {
 import emoji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
+// import { useDispatchContext } from '../../dispatch';
 import { useDelayExecTask, useKeyboardHeight } from '../../hook';
 import { timeoutTask } from '../../utils';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
@@ -288,7 +289,7 @@ export function useMessageInput(props: MessageInputProps) {
     menuRef.current?.startHide?.();
   };
 
-  const onClickedSend = () => {
+  const onClickedSend = React.useCallback(() => {
     if (sendIconName === 'airplane') {
       const content = valueRef.current;
       propsOnClickedSend?.({
@@ -300,9 +301,17 @@ export function useMessageInput(props: MessageInputProps) {
         timeoutTask(0, closeKeyboard);
       }
     } else {
+      console.log('test:zuoyu:onClickedSend');
       onShowMenu();
+      // selectOnePicture({
+      //   onResult: (params) => {
+      //     console.log('test:zuoyu:selectOnePicture', params);
+      //     onSelectSendImage(params);
+      //   },
+      // });
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSelectSendImage = (props: SendImageProps) => {
     propsOnClickedSend?.(props);
@@ -319,6 +328,33 @@ export function useMessageInput(props: MessageInputProps) {
     propsOnClickedSend?.(props);
   };
 
+  // const { addListener, removeListener, emit } = useDispatchContext();
+  // React.useEffect(() => {
+  //   const listener = () => {
+  //     // selectOnePicture({
+  //     //   onResult: (params) => {
+  //     //     console.log('test:zuoyu:selectOnePicture', params);
+  //     //     onSelectSendImage(params);
+  //     //   },
+  //     // });
+  //     menuRef.current?.startHide?.(() => {
+  //       console.log('test:zuoyu:selectOnePicture');
+  //       selectOnePicture({
+  //         onResult: (params) => {
+  //           console.log('test:zuoyu:selectOnePicture', params);
+  //           onSelectSendImage(params);
+  //         },
+  //       });
+  //     });
+  //   };
+  //   addListener('_$useMessageInput_selectOnePicture', listener);
+  //   return () => {
+  //     removeListener('_$useMessageInput_selectOnePicture', listener);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [addListener, removeListener]);
+
+  console.log('test:zuoyu:onShowMenu');
   const onShowMenu = () => {
     menuRef.current?.startShowWithProps?.({
       initItems: [
@@ -329,6 +365,7 @@ export function useMessageInput(props: MessageInputProps) {
           onClicked: () => {
             menuRef.current?.startHide?.(() => {
               console.log('test:zuoyu:selectOnePicture');
+              // emit('_$useMessageInput_selectOnePicture');
               selectOnePicture({
                 onResult: (params) => {
                   console.log('test:zuoyu:selectOnePicture', params);
@@ -336,6 +373,7 @@ export function useMessageInput(props: MessageInputProps) {
                 },
               });
             });
+            // emit('_$useMessageInput_selectOnePicture');
           },
         },
         {

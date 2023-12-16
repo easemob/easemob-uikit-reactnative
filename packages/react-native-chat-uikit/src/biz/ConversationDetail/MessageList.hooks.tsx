@@ -123,6 +123,45 @@ export function useMessageList(
             isVoicePlaying: false,
           },
         } as MessageListItemProps,
+        // {
+        //   id: '7',
+        //   model: {
+        //     userId: 'xxx',
+        //     modelType: 'message',
+        //     layoutType: 'right',
+        //     msg: ChatMessage.createImageMessage(
+        //       'xxx',
+        //       '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.jpeg',
+        //       0,
+        //       {
+        //         displayName: 'sdf',
+        //         thumbnailLocalPath:
+        //           '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
+        //         width: 300,
+        //         height: 300,
+        //         fileSize: 200,
+        //       }
+        //     ),
+        //     isVoicePlaying: false,
+        //   },
+        // } as MessageListItemProps,
+        // {
+        //   id: '8',
+        //   model: {
+        //     userId: 'xxx',
+        //     modelType: 'message',
+        //     layoutType: 'left',
+        //     msg: ChatMessage.createVideoMessage('xxx', 'sdf', 0, {
+        //       displayName: 'sdf',
+        //       thumbnailLocalPath:
+        //         '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
+        //       duration: 3000,
+        //       width: 300,
+        //       height: 300,
+        //     }),
+        //     isVoicePlaying: false,
+        //   },
+        // } as MessageListItemProps,
       ];
       setData(dataRef.current);
       return;
@@ -349,6 +388,35 @@ export function useMessageList(
               }
             );
             console.log('test:zuoyu:voice:', msg);
+            onAddData(
+              {
+                id: msg.msgId.toString(),
+                model: {
+                  userId: msg.from,
+                  modelType: 'message',
+                  layoutType: 'right',
+                  msg: msg,
+                },
+                containerStyle: getStyle(),
+              },
+              'bottom'
+            );
+          } else if (value.type === 'video') {
+            const v = value as SendVideoProps;
+            const msg = ChatMessage.createVideoMessage(
+              convId,
+              v.localPath,
+              convType as number as ChatMessageChatType,
+              {
+                duration: v.duration ?? 0,
+                fileSize: v.fileSize,
+                displayName: v.displayName ?? '',
+                thumbnailLocalPath: v.thumbLocalPath,
+                width: v.videoHeight,
+                height: v.videoHeight,
+              }
+            );
+            console.log('test:zuoyu:video:', msg);
             onAddData(
               {
                 id: msg.msgId.toString(),

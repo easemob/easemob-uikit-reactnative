@@ -13,11 +13,12 @@ import {
   ChatTextMessageBody,
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
-import type { IconNameType } from 'src/assets';
 
+import type { IconNameType } from '../../assets';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
+import { IconButton } from '../../ui/Button';
 import { DynamicIcon, DynamicIconRef, Icon, Image } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
@@ -26,6 +27,7 @@ import {
   getImageShowSize,
   getImageThumbUrl,
   getMessageState,
+  getVideoThumbUrl,
   isSupportMessage,
 } from './MessageListItem.hooks';
 import type {
@@ -37,9 +39,13 @@ import type {
   TimeMessageModel,
 } from './types';
 
-export type MessageTextProps = {
+export type MessageBasicProps = {
   layoutType: MessageLayoutType;
   msg: ChatMessage;
+  maxWidth?: number;
+};
+
+export type MessageTextProps = MessageBasicProps & {
   isSupport: boolean;
 };
 export function MessageText(props: MessageTextProps) {
@@ -74,14 +80,11 @@ export function MessageText(props: MessageTextProps) {
   );
 }
 
-export type MessageImageProps = {
-  layoutType: MessageLayoutType;
-  msg: ChatMessage;
-};
+export type MessageImageProps = MessageBasicProps & {};
 export function MessageImage(props: MessageImageProps) {
-  const { msg } = props;
+  const { msg, maxWidth } = props;
   const [thumbUrl, setThumbUrl] = React.useState<string | undefined>();
-  const { width, height } = getImageShowSize(msg);
+  const { width, height } = getImageShowSize(msg, maxWidth);
   React.useEffect(() => {
     msg.status;
     getImageThumbUrl(msg)
@@ -98,16 +101,19 @@ export function MessageImage(props: MessageImageProps) {
   );
 }
 
-export type MessageVoiceProps = {
-  layoutType: MessageLayoutType;
-  msg: ChatMessage;
+export type MessageVoiceProps = MessageBasicProps & {
   isPlay?: boolean;
 };
 export function MessageVoice(props: MessageVoiceProps) {
-  const { msg, layoutType, isPlay: propsIsPlay = false } = props;
+  const {
+    msg,
+    layoutType,
+    isPlay: propsIsPlay = false,
+    maxWidth: propsMaxWidth,
+  } = props;
   const body = msg.body as ChatVoiceMessageBody;
   const { duration } = body;
-  const maxWidth = Dimensions.get('window').width * 0.6;
+  const maxWidth = propsMaxWidth ?? Dimensions.get('window').width * 0.6;
   const minWidth = Dimensions.get('window').width * 0.1;
   const width =
     Math.floor(((maxWidth - minWidth) * duration) / gMaxVoiceDuration) +
@@ -118,7 +124,6 @@ export function MessageVoice(props: MessageVoiceProps) {
   const loopCount = -1;
   const ref = React.useRef<DynamicIconRef>({} as any);
   // const isPlayRef = React.useRef(false);
-  console.log('test:zuoyu:MessageVoice:', width, maxWidth, minWidth);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     left_voice: {
@@ -156,7 +161,6 @@ export function MessageVoice(props: MessageVoiceProps) {
   const seconds = Math.floor(duration / 1000);
 
   React.useEffect(() => {
-    console.log('test:zuoyu:useEffect:voice:', propsIsPlay);
     if (propsIsPlay === true) {
       ref.current?.startPlay?.();
     } else {
@@ -202,10 +206,49 @@ export function MessageVoice(props: MessageVoiceProps) {
   );
 }
 
+export type MessageVideoProps = MessageBasicProps & {};
+export function MessageVideo(props: MessageVideoProps) {
+  const { msg, maxWidth } = props;
+  const [thumbUrl, setThumbUrl] = React.useState<string | undefined>();
+  const { width, height } = getImageShowSize(msg, maxWidth);
+  React.useEffect(() => {
+    msg.status;
+    getVideoThumbUrl(msg, (url) => {
+      setThumbUrl(url);
+    })
+      .then((url) => {
+        if (url !== undefined) {
+          setThumbUrl(url);
+        }
+      })
+      .catch();
+  }, [msg, msg.status]);
+  return (
+    <View>
+      <Image
+        style={{ width: width, height: height }}
+        source={{ uri: thumbUrl }}
+      />
+      <IconButton
+        iconName={'loading'}
+        containerStyle={[
+          StyleSheet.absoluteFill,
+          {
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+        ]}
+        style={{ width: 100, height: 100 }}
+      />
+    </View>
+  );
+}
+
 export type MessageBubbleProps = MessageListItemActionsProps & {
   hasTriangle?: boolean;
   model: MessageModel;
   containerStyle?: StyleProp<ViewStyle>;
+  maxWidth?: number;
 };
 export function MessageBubble(props: MessageBubbleProps) {
   const {
@@ -214,6 +257,7 @@ export function MessageBubble(props: MessageBubbleProps) {
     containerStyle,
     onClicked,
     onLongPress,
+    maxWidth,
   } = props;
   const { layoutType, msg, isVoicePlaying } = model;
   const isSupport = isSupportMessage(msg);
@@ -238,11 +282,18 @@ export function MessageBubble(props: MessageBubbleProps) {
               msg={msg}
               layoutType={layoutType}
               isSupport={isSupport}
+              maxWidth={maxWidth}
             />
           );
         }
         case ChatMessageType.IMAGE: {
-          return <MessageImage layoutType={layoutType} msg={msg} />;
+          return (
+            <MessageImage
+              layoutType={layoutType}
+              msg={msg}
+              maxWidth={maxWidth}
+            />
+          );
         }
         case ChatMessageType.VOICE: {
           return (
@@ -250,15 +301,16 @@ export function MessageBubble(props: MessageBubbleProps) {
               msg={msg}
               layoutType={layoutType}
               isPlay={isVoicePlaying}
+              maxWidth={maxWidth}
             />
           );
         }
         case ChatMessageType.VIDEO: {
           return (
-            <MessageText
+            <MessageVideo
               msg={msg}
               layoutType={layoutType}
-              isSupport={isSupport}
+              maxWidth={maxWidth}
             />
           );
         }
@@ -268,6 +320,7 @@ export function MessageBubble(props: MessageBubbleProps) {
               msg={msg}
               layoutType={layoutType}
               isSupport={isSupport}
+              maxWidth={maxWidth}
             />
           );
         }
@@ -277,6 +330,7 @@ export function MessageBubble(props: MessageBubbleProps) {
               msg={msg}
               layoutType={layoutType}
               isSupport={isSupport}
+              maxWidth={maxWidth}
             />
           );
         }
@@ -286,6 +340,7 @@ export function MessageBubble(props: MessageBubbleProps) {
               msg={msg}
               layoutType={layoutType}
               isSupport={isSupport}
+              maxWidth={maxWidth}
             />
           );
         }
@@ -314,13 +369,14 @@ export function MessageBubble(props: MessageBubbleProps) {
       style={[
         {
           flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
-          maxWidth: '66.6%',
+          maxWidth: maxWidth ?? '60%',
         },
         containerStyle,
       ]}
     >
-      {msg.body.type === ChatMessageType.IMAGE ? null : null}
-      {hasTriangle === true && msg.body.type !== ChatMessageType.IMAGE ? (
+      {hasTriangle === true &&
+      msg.body.type !== ChatMessageType.IMAGE &&
+      msg.body.type !== ChatMessageType.VIDEO ? (
         <View style={{ paddingBottom: 10 }}>
           <View style={{ flexGrow: 1 }} />
           <Icon
@@ -347,9 +403,15 @@ export function MessageBubble(props: MessageBubbleProps) {
             ),
             borderRadius: 4,
             paddingHorizontal:
-              msg.body.type === ChatMessageType.IMAGE ? undefined : 12,
+              msg.body.type === ChatMessageType.IMAGE ||
+              msg.body.type === ChatMessageType.VIDEO
+                ? undefined
+                : 12,
             paddingVertical:
-              msg.body.type === ChatMessageType.IMAGE ? undefined : 7,
+              msg.body.type === ChatMessageType.IMAGE ||
+              msg.body.type === ChatMessageType.VIDEO
+                ? undefined
+                : 7,
           },
         ]}
         onTouchEnd={_onClicked}
@@ -503,6 +565,7 @@ export function MessageView(props: MessageViewProps) {
   } = props;
   const { layoutType } = model;
   const state = getMessageState(model.msg);
+  const maxWidth = Dimensions.get('window').width * 0.6;
   return (
     <View
       style={{
@@ -524,7 +587,7 @@ export function MessageView(props: MessageViewProps) {
           }}
         >
           {avatarIsVisible ? <AvatarView layoutType={layoutType} /> : null}
-          <MessageBubble model={model} {...others} />
+          <MessageBubble model={model} maxWidth={maxWidth} {...others} />
           {state !== 'none' ? <StateView layoutType={layoutType} /> : null}
         </View>
         {timeIsVisible ? <TimeView layoutType={layoutType} /> : null}
