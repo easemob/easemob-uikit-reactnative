@@ -1,3 +1,4 @@
+import type { ConversationDetailType } from '../config';
 import type { CreateStringSet, LanguageCode } from '../i18n';
 import type {
   ClipboardService,
@@ -54,6 +55,10 @@ export type GlobalContainerProps = React.PropsWithChildren<{
    * The release area.
    */
   releaseArea?: ReleaseArea;
+  /**
+   * The conversation detail config.
+   */
+  conversationDetail?: ConversationDetailType;
   /**
    * IM initialization is completed.
    */

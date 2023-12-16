@@ -320,6 +320,11 @@ export function useMessageInput(props: MessageInputProps) {
   const onSelectSendFile = (props: SendFileProps) => {
     propsOnClickedSend?.(props);
   };
+  const onSelectSendCard = () => {
+    propsOnClickedSend?.({
+      type: 'card',
+    });
+  };
 
   console.log('test:zuoyu:onShowMenu');
   const onShowMenu = () => {
@@ -392,7 +397,9 @@ export function useMessageInput(props: MessageInputProps) {
           isHigh: false,
           icon: 'person_single_fill',
           onClicked: () => {
-            menuRef.current?.startHide?.(() => {});
+            menuRef.current?.startHide?.(() => {
+              onSelectSendCard();
+            });
           },
         },
       ],

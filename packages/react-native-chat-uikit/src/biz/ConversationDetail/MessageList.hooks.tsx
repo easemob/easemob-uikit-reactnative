@@ -2,11 +2,16 @@ import * as React from 'react';
 import {
   ChatMessage,
   ChatMessageChatType,
+  ChatMessageStatus,
   ChatMessageType,
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 
-import { ChatServiceListener, useChatListener } from '../../chat';
+import {
+  ChatServiceListener,
+  gCustomMessageCardEventType,
+  useChatListener,
+} from '../../chat';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import { getCurTs, localUrlEscape, playUrl, timeoutTask } from '../../utils';
@@ -135,48 +140,48 @@ export function useMessageList(
             isVoicePlaying: false,
           },
         } as MessageListItemProps,
-        {
-          id: '7',
-          model: {
-            userId: 'xxx',
-            modelType: 'message',
-            layoutType: 'right',
-            msg: ChatMessage.createImageMessage(
-              'xxx',
-              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.jpeg',
-              0,
-              {
-                displayName: 'sdf',
-                thumbnailLocalPath:
-                  '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
-                width: 300,
-                height: 300,
-                fileSize: 200,
-              }
-            ),
-          },
-        } as MessageListItemProps,
-        {
-          id: '8',
-          model: {
-            userId: 'xxx',
-            modelType: 'message',
-            layoutType: 'left',
-            msg: ChatMessage.createVideoMessage(
-              'xxx',
-              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.mp4',
-              0,
-              {
-                displayName: 'sdf',
-                thumbnailLocalPath:
-                  '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
-                duration: 3000,
-                width: 300,
-                height: 300,
-              }
-            ),
-          },
-        } as MessageListItemProps,
+        // {
+        //   id: '7',
+        //   model: {
+        //     userId: 'xxx',
+        //     modelType: 'message',
+        //     layoutType: 'right',
+        //     msg: ChatMessage.createImageMessage(
+        //       'xxx',
+        //       '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.jpeg',
+        //       0,
+        //       {
+        //         displayName: 'sdf',
+        //         thumbnailLocalPath:
+        //           '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
+        //         width: 300,
+        //         height: 300,
+        //         fileSize: 200,
+        //       }
+        //     ),
+        //   },
+        // } as MessageListItemProps,
+        // {
+        //   id: '8',
+        //   model: {
+        //     userId: 'xxx',
+        //     modelType: 'message',
+        //     layoutType: 'left',
+        //     msg: ChatMessage.createVideoMessage(
+        //       'xxx',
+        //       '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.mp4',
+        //       0,
+        //       {
+        //         displayName: 'sdf',
+        //         thumbnailLocalPath:
+        //           '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
+        //         duration: 3000,
+        //         width: 300,
+        //         height: 300,
+        //       }
+        //     ),
+        //   },
+        // } as MessageListItemProps,
         {
           id: '9',
           model: {
@@ -213,7 +218,59 @@ export function useMessageList(
             ),
           },
         } as MessageListItemProps,
+        {
+          id: '11',
+          model: {
+            userId: 'xxx',
+            userAvatar:
+              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+            modelType: 'message',
+            layoutType: 'left',
+            msg: ChatMessage.createCustomMessage(
+              'xxx',
+              gCustomMessageCardEventType,
+              0,
+              {
+                params: {
+                  userId: 'userId',
+                  nickname: 'nickname',
+                  avatar:
+                    'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+                },
+              }
+            ),
+          },
+        } as MessageListItemProps,
+        {
+          id: '12',
+          model: {
+            userId: 'xxx',
+            userAvatar:
+              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+            modelType: 'message',
+            layoutType: 'right',
+            msg: ChatMessage.createCustomMessage(
+              'xxx',
+              gCustomMessageCardEventType,
+              0,
+              {
+                params: {
+                  userId: 'userId',
+                  nickname: 'nickname',
+                  avatar:
+                    'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+                },
+              }
+            ),
+          },
+        } as MessageListItemProps,
       ];
+      dataRef.current.map((d) => {
+        if (d.model.modelType === 'message') {
+          const msgModel = d.model as MessageModel;
+          msgModel.msg.status = ChatMessageStatus.SUCCESS;
+        }
+      });
       setData(dataRef.current);
       return;
     }
@@ -492,6 +549,34 @@ export function useMessageList(
               }
             );
             console.log('test:zuoyu:video:', msg);
+            onAddData(
+              {
+                id: msg.msgId.toString(),
+                model: {
+                  userId: msg.from,
+                  modelType: 'message',
+                  layoutType: 'right',
+                  msg: msg,
+                },
+                containerStyle: getStyle(),
+              },
+              'bottom'
+            );
+          } else if (value.type === 'card') {
+            const msg = ChatMessage.createCustomMessage(
+              convId,
+              gCustomMessageCardEventType,
+              convType as number as ChatMessageChatType,
+              {
+                params: {
+                  userId: convId,
+                  nickname: convId,
+                  avatar:
+                    'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+                },
+              }
+            );
+            console.log('test:zuoyu:card:', msg);
             onAddData(
               {
                 id: msg.msgId.toString(),

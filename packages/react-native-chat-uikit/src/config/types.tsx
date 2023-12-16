@@ -1,5 +1,11 @@
 import type { LanguageCode } from '../i18n';
 
+export type ConversationDetailType = {
+  bubble?: {
+    radiusStyle?: 'small' | 'large';
+  };
+};
+
 /**
  * Config types
  */
@@ -25,4 +31,9 @@ export type Config = {
    * The font family name.
    */
   fontFamily?: string;
+
+  /**
+   * The conversation detail config.
+   */
+  conversationDetail?: ConversationDetailType;
 };

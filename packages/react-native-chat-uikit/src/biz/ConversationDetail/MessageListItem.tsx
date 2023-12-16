@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {
+  ChatCustomMessageBody,
   ChatFileMessageBody,
   ChatMessage,
   ChatMessageType,
@@ -16,6 +17,7 @@ import {
 } from 'react-native-chat-sdk';
 
 import type { IconNameType } from '../../assets';
+import { gCustomMessageCardEventType } from '../../chat';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
@@ -35,6 +37,7 @@ import {
   getFormatTime,
   getImageShowSize,
   getImageThumbUrl,
+  getMessageBubblePadding,
   getMessageState,
   getStateIcon,
   getStateIconColor,
@@ -358,6 +361,82 @@ export function MessageFile(props: MessageFileProps) {
   );
 }
 
+export type MessageCustomCardProps = MessageBasicProps & {};
+export function MessageCustomCard(props: MessageCustomCardProps) {
+  const { msg, maxWidth, layoutType } = props;
+  console.log('test:zuoyu:MessageCustomCard:', props);
+  const body = msg.body as ChatCustomMessageBody;
+  const avatar = body.params?.avatar;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    left_divider: {
+      light: colors.neutralSpecial[8],
+      dark: colors.primary[6],
+    },
+    right_divider: {
+      light: colors.primary[8],
+      dark: colors.primary[6],
+    },
+    left_name: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    right_name: {
+      light: colors.neutral[98],
+      dark: colors.neutral[98],
+    },
+    left_name_small: {
+      light: colors.neutralSpecial[5],
+      dark: colors.neutralSpecial[3],
+    },
+    right_name_small: {
+      light: colors.neutral[95],
+      dark: colors.neutralSpecial[7],
+    },
+  });
+  return (
+    <View style={{ width: maxWidth }}>
+      <View style={{ padding: 12, flexDirection: 'row', alignItems: 'center' }}>
+        <Avatar size={44} url={avatar} />
+        <View style={{ width: 12 }} />
+        <SingleLineText
+          textType={'medium'}
+          paletteType={'title'}
+          style={{
+            color: getColor(layoutType === 'left' ? 'left_name' : 'right_name'),
+            maxWidth: '70%',
+          }}
+        >
+          {'name'}
+        </SingleLineText>
+      </View>
+      <View
+        style={{
+          borderBottomColor: getColor(
+            layoutType === 'left' ? 'left_divider' : 'right_divider'
+          ),
+          borderBottomWidth: 0.5,
+          marginHorizontal: 12,
+        }}
+      />
+      <View style={{ paddingHorizontal: 12, paddingVertical: 4 }}>
+        <SingleLineText
+          textType={'extraSmall'}
+          paletteType={'label'}
+          style={{
+            color: getColor(
+              layoutType === 'left' ? 'left_name_small' : 'right_name_small'
+            ),
+            maxWidth: '100%',
+          }}
+        >
+          {'contact'}
+        </SingleLineText>
+      </View>
+    </View>
+  );
+}
+
 export type MessageBubbleProps = MessageListItemActionsProps & {
   hasTriangle?: boolean;
   model: MessageModel;
@@ -374,8 +453,12 @@ export function MessageBubble(props: MessageBubbleProps) {
     maxWidth,
   } = props;
   const { layoutType, msg, isVoicePlaying } = model;
-  const paddingHorizontal = 12;
-  const paddingVertical = 7;
+  const { paddingHorizontal, paddingVertical } = React.useMemo(
+    () => getMessageBubblePadding(msg),
+    [msg]
+  );
+  // const paddingHorizontal = 12;
+  // const paddingVertical = 7;
   const triangleWidth = 5;
   const isSupport = isSupportMessage(msg);
   const { colors } = usePaletteContext();
@@ -397,13 +480,15 @@ export function MessageBubble(props: MessageBubbleProps) {
     );
   }, [hasTriangle, msg.body.type]);
   const contentMaxWidth = React.useMemo(() => {
-    const _maxWidth = maxWidth ? maxWidth - paddingHorizontal * 2 : undefined;
+    const _maxWidth = maxWidth
+      ? maxWidth - (paddingHorizontal ?? 0) * 2
+      : undefined;
     if (isShowTriangle === true) {
       return _maxWidth ? _maxWidth - triangleWidth : undefined;
     } else {
       return _maxWidth;
     }
-  }, [isShowTriangle, maxWidth]);
+  }, [isShowTriangle, maxWidth, paddingHorizontal]);
 
   const getContent = () => {
     if (isSupport === true) {
@@ -423,7 +508,7 @@ export function MessageBubble(props: MessageBubbleProps) {
             <MessageImage
               layoutType={layoutType}
               msg={msg}
-              maxWidth={maxWidth}
+              maxWidth={contentMaxWidth}
             />
           );
         }
@@ -442,7 +527,7 @@ export function MessageBubble(props: MessageBubbleProps) {
             <MessageVideo
               msg={msg}
               layoutType={layoutType}
-              maxWidth={maxWidth}
+              maxWidth={contentMaxWidth}
             />
           );
         }
@@ -456,12 +541,22 @@ export function MessageBubble(props: MessageBubbleProps) {
           );
         }
         case ChatMessageType.CUSTOM: {
+          const body = msg.body as ChatCustomMessageBody;
+          if (body.event === gCustomMessageCardEventType) {
+            return (
+              <MessageCustomCard
+                msg={msg}
+                layoutType={layoutType}
+                maxWidth={contentMaxWidth}
+              />
+            );
+          }
           return (
             <MessageText
               msg={msg}
               layoutType={layoutType}
               isSupport={isSupport}
-              maxWidth={maxWidth}
+              maxWidth={contentMaxWidth}
             />
           );
         }

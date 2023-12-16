@@ -19,6 +19,7 @@ export type MessageInputProps = PropsWithError &
         | SendImageProps
         | SendVideoProps
         | SendVoiceProps
+        | SendCardProps
     ) => void;
     closeAfterSend?: boolean;
     onHeightChange?: (height: number) => void;
@@ -55,7 +56,8 @@ export type SendType =
   | 'voice'
   | 'video'
   | 'time'
-  | 'system';
+  | 'system'
+  | 'card';
 export type SendBasicProps = {
   type: SendType;
 };
@@ -91,6 +93,8 @@ export type SendTimeProps = SendBasicProps & {
 export type SendSystemProps = SendBasicProps & {
   msg: ChatMessage;
 };
+
+export type SendCardProps = SendBasicProps & {};
 
 export type MessageBubbleType = 'system' | 'time' | 'message';
 export type MessageLayoutType = 'left' | 'right';

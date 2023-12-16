@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ChatContextProvider } from '../chat';
-import { ConfigContextProvider } from '../config';
+import { ConfigContextProvider, ConversationDetailType } from '../config';
 import { DispatchContextProvider } from '../dispatch';
 import { I18nContextProvider } from '../i18n';
 import { createStringSet } from '../i18n/StringSet';
@@ -11,6 +11,7 @@ import {
   ThemeContextProvider,
   usePresetPalette,
 } from '../theme';
+import { mergeObjects } from '../utils';
 import {
   getI18nLanguage,
   getReleaseArea,
@@ -41,6 +42,7 @@ export function GlobalContainer(props: GlobalContainerProps) {
     fontFamily,
     releaseArea,
     onInitialized,
+    conversationDetail,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -79,6 +81,14 @@ export function GlobalContainer(props: GlobalContainerProps) {
                   enableCheckType: false,
                   languageCode: getTranslateLanguage(language),
                   fontFamily: fontFamily,
+                  conversationDetail: mergeObjects(
+                    conversationDetail as ConversationDetailType,
+                    {
+                      bubble: {
+                        radiusStyle: 'small',
+                      },
+                    }
+                  ),
                 }}
               >
                 <SafeAreaProvider>{children}</SafeAreaProvider>

@@ -1,5 +1,6 @@
 import { Dimensions } from 'react-native';
 import {
+  ChatCustomMessageBody,
   ChatImageMessageBody,
   ChatMessage,
   ChatMessageDirection,
@@ -7,8 +8,9 @@ import {
   ChatMessageType,
   ChatVideoMessageBody,
 } from 'react-native-chat-sdk';
-import type { IconNameType } from 'src/assets';
 
+import type { IconNameType } from '../../assets';
+import { gCustomMessageCardEventType } from '../../chat';
 import { Services } from '../../services';
 import { formatTs2 } from '../../utils';
 import type { MessageStateType } from './types';
@@ -21,7 +23,10 @@ export function isSupportMessage(msg: ChatMessage) {
   } else if (msg.body.type === ChatMessageType.COMBINE) {
     return false;
   } else if (msg.body.type === ChatMessageType.CUSTOM) {
-    // todo: custom message
+    const body = msg.body as ChatCustomMessageBody;
+    if (body.event === gCustomMessageCardEventType) {
+      return true;
+    }
     return false;
   }
   return true;
@@ -229,19 +234,19 @@ export function getImageShowSize(msg: ChatMessage, maxW?: number) {
   }
 }
 
-export class VoicePlayManager {
-  static list: Map<string, boolean> = new Map();
-  static setPlaying(msgId: string, isVoicePlaying: boolean) {
-    if (isVoicePlaying === true) {
-      this.list.set(msgId, isVoicePlaying);
-    } else {
-      this.list.delete(msgId);
-    }
-  }
-  static isVoicePlaying(msgId: string) {
-    return this.list.get(msgId) === true;
-  }
-}
+// export class VoicePlayManager {
+//   static list: Map<string, boolean> = new Map();
+//   static setPlaying(msgId: string, isVoicePlaying: boolean) {
+//     if (isVoicePlaying === true) {
+//       this.list.set(msgId, isVoicePlaying);
+//     } else {
+//       this.list.delete(msgId);
+//     }
+//   }
+//   static isVoicePlaying(msgId: string) {
+//     return this.list.get(msgId) === true;
+//   }
+// }
 
 export function getFileSize(size: number) {
   if (size === undefined) {
@@ -260,4 +265,30 @@ export function getFileSize(size: number) {
 
 export function getFormatTime(time: number) {
   return formatTs2(time);
+}
+
+export function getMessageBubblePadding(msg: ChatMessage) {
+  if (msg.body.type === ChatMessageType.IMAGE) {
+    return {
+      paddingHorizontal: undefined,
+      paddingVertical: undefined,
+    };
+  } else if (msg.body.type === ChatMessageType.VIDEO) {
+    return {
+      paddingHorizontal: undefined,
+      paddingVertical: undefined,
+    };
+  } else if (msg.body.type === ChatMessageType.CUSTOM) {
+    const body = msg.body as ChatCustomMessageBody;
+    if (body.event === gCustomMessageCardEventType) {
+      return {
+        paddingHorizontal: undefined,
+        paddingVertical: undefined,
+      };
+    }
+  }
+  return {
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+  };
 }
