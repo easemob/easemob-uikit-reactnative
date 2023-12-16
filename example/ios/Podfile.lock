@@ -520,7 +520,8 @@ PODS:
     - React-Core
   - react-native-chat-uikit (1.2.0):
     - React-Core
-  - react-native-create-thumbnail (1.6.4):
+  - react-native-create-thumbnail (1.6.6):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - react-native-document-picker (9.0.1):
     - React-Core
@@ -1111,7 +1112,7 @@ SPEC CHECKSUMS:
   react-native-chat-callkit: f3c26620cbfd756a184eb61cfb9fe5660067ebef
   react-native-chat-sdk: 27a54e58178cbfa0befc626a8732c175e9218b26
   react-native-chat-uikit: b47322b12e761d243fb5418f2f5239d70581f09c
-  react-native-create-thumbnail: e022bcdcba8a0b4529a50d3fa1a832ec921be39d
+  react-native-create-thumbnail: e4fc6953a754bcfa3a03d74ec8687850134b1b93
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-image-picker: 77f552291e993f3fdcdf48cc3c280ef7f11789c8

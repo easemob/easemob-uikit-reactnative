@@ -1,4 +1,4 @@
-import CreateThumbnail from '@easemob/react-native-create-thumbnail';
+// import CreateThumbnail from '@easemob/react-native-create-thumbnail';
 import { CameraRoll as MediaLibrary } from '@react-native-camera-roll/camera-roll';
 import Clipboard from '@react-native-clipboard/clipboard';
 import FirebaseMessage from '@react-native-firebase/messaging';
@@ -112,7 +112,7 @@ export const useInitServices = (props: GlobalContainerProps) => {
   if (Services.ms === undefined) {
     Services.createMediaService({
       videoModule: VideoComponent,
-      videoThumbnail: CreateThumbnail,
+      videoThumbnail: {} as any,
       imagePickerModule: ImagePicker,
       documentPickerModule: DocumentPicker,
       mediaLibraryModule: MediaLibrary,
