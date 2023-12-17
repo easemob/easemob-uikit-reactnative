@@ -10,7 +10,10 @@ import {
 } from 'react-native-chat-sdk';
 
 import type { IconNameType } from '../../assets';
-import { gCustomMessageCardEventType } from '../../chat';
+import {
+  gCustomMessageCardEventType,
+  gMessageAttributeQuote,
+} from '../../chat';
 import { Services } from '../../services';
 import { formatTs2 } from '../../utils';
 import type { MessageStateType } from './types';
@@ -291,4 +294,9 @@ export function getMessageBubblePadding(msg: ChatMessage) {
     paddingHorizontal: 12,
     paddingVertical: 7,
   };
+}
+
+export function isQuoteMessage(msg: ChatMessage, msgQuote?: ChatMessage) {
+  const msgId = msg.attributes?.[gMessageAttributeQuote];
+  return msgQuote !== undefined && msgQuote.msgId === msgId;
 }

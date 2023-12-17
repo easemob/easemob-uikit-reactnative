@@ -130,6 +130,7 @@ export type TimeMessageModel = BasicModel & {
 export type MessageModel = BasicModel &
   VoiceModel & {
     msg: ChatMessage;
+    msgQuote?: ChatMessage;
   };
 
 export type MessageListItemActionsProps = {

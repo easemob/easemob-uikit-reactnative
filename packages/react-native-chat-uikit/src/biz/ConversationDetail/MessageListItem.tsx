@@ -42,6 +42,7 @@ import {
   getStateIcon,
   getStateIconColor,
   getVideoThumbUrl,
+  isQuoteMessage,
   isSupportMessage,
 } from './MessageListItem.hooks';
 import type {
@@ -109,6 +110,8 @@ export function MessageText(props: MessageTextProps) {
       {editable === 'edited' ? (
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
           <SingleLineText
+            textType={'extraSmall'}
+            paletteType={'body'}
             style={{
               color: getColor(
                 layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
@@ -485,8 +488,6 @@ export function MessageBubble(props: MessageBubbleProps) {
     () => getMessageBubblePadding(msg),
     [msg]
   );
-  // const paddingHorizontal = 12;
-  // const paddingVertical = 7;
   const triangleWidth = 5;
   const isSupport = isSupportMessage(msg);
   const { colors } = usePaletteContext();
@@ -654,16 +655,8 @@ export function MessageBubble(props: MessageBubbleProps) {
               layoutType === 'left' ? 'left_bg' : 'right_bg'
             ),
             borderRadius: 4,
-            paddingHorizontal:
-              msg.body.type === ChatMessageType.IMAGE ||
-              msg.body.type === ChatMessageType.VIDEO
-                ? undefined
-                : paddingHorizontal,
-            paddingVertical:
-              msg.body.type === ChatMessageType.IMAGE ||
-              msg.body.type === ChatMessageType.VIDEO
-                ? undefined
-                : paddingVertical,
+            paddingHorizontal: paddingHorizontal,
+            paddingVertical: paddingVertical,
           },
         ]}
         onTouchEnd={_onClicked}
@@ -685,8 +678,8 @@ export function AvatarView(props: AvatarViewProps) {
     <View
       style={{
         display: isVisible === true ? 'flex' : 'none',
-        paddingLeft: layoutType === 'left' ? 12 : 8,
-        paddingRight: layoutType === 'left' ? 8 : 12,
+        paddingLeft: layoutType === 'left' ? undefined : 8,
+        paddingRight: layoutType === 'left' ? 8 : undefined,
       }}
     >
       <View style={{ flexGrow: 1 }} />
@@ -698,9 +691,11 @@ export type NameViewProps = {
   isVisible?: boolean;
   layoutType: MessageLayoutType;
   name: string;
+  hasAvatar: boolean;
+  hasTriangle: boolean;
 };
 export function NameView(props: NameViewProps) {
-  const { isVisible = true, layoutType, name } = props;
+  const { isVisible = true, layoutType, name, hasAvatar, hasTriangle } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     text: {
@@ -708,12 +703,20 @@ export function NameView(props: NameViewProps) {
       dark: colors.neutralSpecial[6],
     },
   });
+  const paddingWidth =
+    hasAvatar === true
+      ? hasTriangle === true
+        ? 53
+        : 48
+      : hasTriangle === true
+      ? 17
+      : 12;
   return (
     <View
       style={{
         display: isVisible === true ? 'flex' : 'none',
-        paddingLeft: layoutType === 'left' ? 53 : undefined,
-        paddingRight: layoutType === 'left' ? undefined : 53,
+        paddingLeft: layoutType === 'left' ? paddingWidth : undefined,
+        paddingRight: layoutType === 'left' ? undefined : paddingWidth,
       }}
     >
       <SingleLineText
@@ -733,9 +736,17 @@ export type TimeViewProps = {
   isVisible?: boolean;
   layoutType: MessageLayoutType;
   timestamp: number;
+  hasAvatar: boolean;
+  hasTriangle: boolean;
 };
 export function TimeView(props: TimeViewProps) {
-  const { isVisible = true, layoutType, timestamp } = props;
+  const {
+    isVisible = true,
+    layoutType,
+    timestamp,
+    hasAvatar,
+    hasTriangle,
+  } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     text: {
@@ -744,12 +755,20 @@ export function TimeView(props: TimeViewProps) {
     },
   });
   const time = getFormatTime(timestamp);
+  const paddingWidth =
+    hasAvatar === true
+      ? hasTriangle === true
+        ? 53
+        : 48
+      : hasTriangle === true
+      ? 17
+      : 12;
   return (
     <View
       style={{
         display: isVisible === true ? 'flex' : 'none',
-        paddingLeft: layoutType === 'left' ? 53 : undefined,
-        paddingRight: layoutType === 'left' ? undefined : 53,
+        paddingLeft: layoutType === 'left' ? paddingWidth : undefined,
+        paddingRight: layoutType === 'left' ? undefined : paddingWidth,
       }}
     >
       <Text
@@ -833,6 +852,353 @@ export function CheckView(props: CheckViewProps) {
   );
 }
 
+export type MessageQuoteBubbleProps = MessageListItemActionsProps & {
+  hasAvatar: boolean;
+  hasTriangle: boolean;
+  model: MessageModel;
+  containerStyle?: StyleProp<ViewStyle>;
+  maxWidth?: number;
+};
+export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
+  const {
+    hasAvatar,
+    hasTriangle,
+    model,
+    containerStyle,
+    onClicked,
+    onLongPress,
+    maxWidth,
+  } = props;
+  const { layoutType, msgQuote: msg } = model;
+  const { paddingHorizontal, paddingVertical } = React.useMemo(() => {
+    return {
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+    };
+  }, []);
+  // const triangleWidth = 5;
+  const { tr } = useI18nContext();
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    left_bg: {
+      light: colors.neutral[95],
+      dark: colors.neutral[6],
+    },
+    right_bg: {
+      light: colors.neutral[95],
+      dark: colors.neutral[6],
+    },
+    left_name: {
+      light: colors.neutralSpecial[6],
+      dark: colors.neutralSpecial[7],
+    },
+    right_name: {
+      light: colors.neutralSpecial[6],
+      dark: colors.neutralSpecial[7],
+    },
+    left_text: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+    right_text: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+  });
+  const marginWidth =
+    hasAvatar === true
+      ? hasTriangle === true
+        ? 53
+        : 48
+      : hasTriangle === true
+      ? 17
+      : 12;
+
+  const getContent = (msg: ChatMessage) => {
+    switch (msg.body.type) {
+      case ChatMessageType.TXT: {
+        return (
+          <View>
+            <SingleLineText
+              textType={'small'}
+              paletteType={'label'}
+              style={{
+                color: getColor(
+                  layoutType === 'left' ? 'left_name' : 'right_name'
+                ),
+              }}
+            >
+              {'name'}
+            </SingleLineText>
+            <Text
+              textType={'medium'}
+              paletteType={'label'}
+              numberOfLines={2}
+              style={{
+                color: getColor(
+                  layoutType === 'left' ? 'left_text' : 'right_text'
+                ),
+              }}
+            >
+              {'content'}
+            </Text>
+          </View>
+        );
+      }
+      case ChatMessageType.IMAGE: {
+        return (
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ paddingRight: 12 }}>
+              <SingleLineText
+                textType={'small'}
+                paletteType={'label'}
+                style={{
+                  color: getColor(
+                    layoutType === 'left' ? 'left_name' : 'right_name'
+                  ),
+                }}
+              >
+                {'name'}
+              </SingleLineText>
+              <View style={{ flexDirection: 'row' }}>
+                <Icon
+                  name={'img'}
+                  style={{
+                    width: 18,
+                    height: 18,
+                    tintColor: getColor(
+                      layoutType === 'left' ? 'left_text' : 'left_text'
+                    ),
+                  }}
+                />
+                <Text
+                  textType={'medium'}
+                  paletteType={'label'}
+                  numberOfLines={2}
+                  style={{
+                    color: getColor(
+                      layoutType === 'left' ? 'left_text' : 'right_text'
+                    ),
+                  }}
+                >
+                  {tr('picture')}
+                </Text>
+              </View>
+            </View>
+            <View style={{ borderRadius: 4, overflow: 'hidden' }}>
+              <Image
+                source={{
+                  uri: 'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+                }}
+                style={{ width: 36, height: 36 }}
+              />
+            </View>
+          </View>
+        );
+      }
+      case ChatMessageType.VOICE: {
+        return (
+          <View>
+            <SingleLineText
+              textType={'small'}
+              paletteType={'label'}
+              style={{
+                color: getColor(
+                  layoutType === 'left' ? 'left_name' : 'right_name'
+                ),
+              }}
+            >
+              {'name'}
+            </SingleLineText>
+            <View style={{ flexDirection: 'row' }}>
+              <Icon
+                name={'3th_frame_lft_lgt_sdy'}
+                style={{
+                  width: 18,
+                  height: 18,
+                  tintColor: getColor(
+                    layoutType === 'left' ? 'left_text' : 'left_text'
+                  ),
+                }}
+              />
+              <Text
+                textType={'medium'}
+                paletteType={'label'}
+                numberOfLines={2}
+                style={{
+                  color: getColor(
+                    layoutType === 'left' ? 'left_text' : 'right_text'
+                  ),
+                }}
+              >
+                {tr("voice: ${0}'", 45)}
+              </Text>
+            </View>
+          </View>
+        );
+      }
+      case ChatMessageType.VIDEO: {
+        return (
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ paddingRight: 12 }}>
+              <SingleLineText
+                textType={'small'}
+                paletteType={'label'}
+                style={{
+                  color: getColor(
+                    layoutType === 'left' ? 'left_name' : 'right_name'
+                  ),
+                }}
+              >
+                {'name'}
+              </SingleLineText>
+              <View style={{ flexDirection: 'row' }}>
+                <Icon
+                  name={'triangle_in_rectangle'}
+                  style={{
+                    width: 18,
+                    height: 18,
+                    tintColor: getColor(
+                      layoutType === 'left' ? 'left_text' : 'left_text'
+                    ),
+                  }}
+                />
+                <Text
+                  textType={'medium'}
+                  paletteType={'label'}
+                  numberOfLines={2}
+                  style={{
+                    color: getColor(
+                      layoutType === 'left' ? 'left_text' : 'right_text'
+                    ),
+                  }}
+                >
+                  {tr('video')}
+                </Text>
+              </View>
+            </View>
+            <View style={{ borderRadius: 4, overflow: 'hidden' }}>
+              <Image
+                source={{
+                  uri: 'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+                }}
+                style={{ width: 36, height: 36 }}
+              />
+            </View>
+          </View>
+        );
+      }
+      case ChatMessageType.FILE: {
+        return (
+          <View>
+            <SingleLineText
+              textType={'small'}
+              paletteType={'label'}
+              style={{
+                color: getColor(
+                  layoutType === 'left' ? 'left_name' : 'right_name'
+                ),
+              }}
+            >
+              {'name'}
+            </SingleLineText>
+            <View style={{ flexDirection: 'row' }}>
+              <Icon
+                name={'doc'}
+                style={{
+                  width: 18,
+                  height: 18,
+                  tintColor: getColor(
+                    layoutType === 'left' ? 'left_text' : 'left_text'
+                  ),
+                }}
+              />
+              <Text
+                textType={'medium'}
+                paletteType={'label'}
+                numberOfLines={2}
+                style={{
+                  color: getColor(
+                    layoutType === 'left' ? 'left_text' : 'right_text'
+                  ),
+                }}
+              >
+                {tr("file: ${0}'", 'filename')}
+              </Text>
+            </View>
+          </View>
+        );
+      }
+      default: {
+        return (
+          <Text
+            textType={'large'}
+            paletteType={'body'}
+            style={{
+              color: getColor(
+                layoutType === 'left' ? 'left_text' : 'right_text'
+              ),
+            }}
+          >
+            {tr('not-support-message')}
+          </Text>
+        );
+      }
+    }
+  };
+
+  const _onClicked = (msg: ChatMessage) => {
+    if (onClicked) {
+      onClicked(msg.msgId.toString(), model);
+    }
+  };
+
+  const _onLongPress = (msg: ChatMessage) => {
+    if (onLongPress) {
+      onLongPress(msg.msgId.toString(), model);
+    }
+  };
+
+  console.log('test:zuoyu:MessageQuoteBubble:', layoutType);
+
+  if (msg === undefined) {
+    return null;
+  }
+
+  return (
+    <View
+      style={[
+        {
+          flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
+          maxWidth: maxWidth ?? '60%',
+          marginLeft: layoutType === 'left' ? marginWidth : marginWidth,
+          marginBottom: 2,
+          // marginRight: layoutType === 'left' ? marginWidth : undefined,
+        },
+        containerStyle,
+      ]}
+    >
+      <Pressable
+        style={[
+          styles.text_bubble,
+          {
+            backgroundColor: getColor(
+              layoutType === 'left' ? 'left_bg' : 'right_bg'
+            ),
+            borderRadius: 4,
+            paddingHorizontal: paddingHorizontal,
+            paddingVertical: paddingVertical,
+          },
+        ]}
+        onTouchEnd={() => _onClicked(msg)}
+        onLongPress={() => _onLongPress(msg)}
+      >
+        {getContent(msg)}
+      </Pressable>
+    </View>
+  );
+}
+
 export type MessageViewProps = MessageListItemActionsProps & {
   isVisible?: boolean;
   model: MessageModel;
@@ -855,6 +1221,9 @@ export function MessageView(props: MessageViewProps) {
   const userName = model.userName ?? model.userId;
   const time = model.msg.localTime ?? model.msg.serverTime;
   const avatar = avatarIsVisible === true ? model.userAvatar : undefined;
+  const bubblePadding = 12;
+  const hasTriangle = true;
+  const isQuote = isQuoteMessage(model.msg, model.msgQuote);
   return (
     <View
       style={{
@@ -870,23 +1239,46 @@ export function MessageView(props: MessageViewProps) {
         }}
       >
         {nameIsVisible ? (
-          <NameView layoutType={layoutType} name={userName} />
+          <NameView
+            layoutType={layoutType}
+            name={userName}
+            hasAvatar={avatarIsVisible}
+            hasTriangle={hasTriangle}
+          />
+        ) : null}
+        {isQuote ? (
+          <MessageQuoteBubble
+            hasAvatar={avatarIsVisible}
+            hasTriangle={hasTriangle}
+            model={model}
+          />
         ) : null}
         <View
           style={{
             flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
+            paddingHorizontal: bubblePadding,
           }}
         >
           {avatarIsVisible ? (
             <AvatarView layoutType={layoutType} avatar={avatar} />
           ) : null}
-          <MessageBubble model={model} maxWidth={maxWidth} {...others} />
+          <MessageBubble
+            model={model}
+            maxWidth={maxWidth}
+            hasTriangle={hasTriangle}
+            {...others}
+          />
           {state !== 'none' ? (
             <StateView layoutType={layoutType} state={state} />
           ) : null}
         </View>
         {timeIsVisible ? (
-          <TimeView layoutType={layoutType} timestamp={time} />
+          <TimeView
+            layoutType={layoutType}
+            timestamp={time}
+            hasAvatar={avatarIsVisible}
+            hasTriangle={hasTriangle}
+          />
         ) : null}
       </View>
     </View>
@@ -900,6 +1292,13 @@ export type SystemTipViewProps = {
 export function SystemTipView(props: SystemTipViewProps) {
   const { isVisible = true, model } = props;
   const { contents } = model;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    fg: {
+      light: colors.neutral[7],
+      dark: colors.neutral[6],
+    },
+  });
   return (
     <View
       style={{
@@ -908,7 +1307,13 @@ export function SystemTipView(props: SystemTipViewProps) {
         paddingHorizontal: 27.5,
       }}
     >
-      <Text style={{ flexWrap: 'wrap', textAlign: 'center' }}>
+      <Text
+        style={{
+          flexWrap: 'wrap',
+          textAlign: 'center',
+          color: getColor('fg'),
+        }}
+      >
         {contents?.[0]}
       </Text>
     </View>
@@ -923,6 +1328,13 @@ export function TimeTipView(props: TimeTipViewProps) {
   const { isVisible = true, model } = props;
   const { timestamp } = model;
   const date = new Date(timestamp);
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    fg: {
+      light: colors.neutral[7],
+      dark: colors.neutral[6],
+    },
+  });
   return (
     <View
       style={{
@@ -931,7 +1343,13 @@ export function TimeTipView(props: TimeTipViewProps) {
         paddingHorizontal: 27.5,
       }}
     >
-      <Text style={{ flexWrap: 'wrap', textAlign: 'center' }}>
+      <Text
+        style={{
+          flexWrap: 'wrap',
+          textAlign: 'center',
+          color: getColor('fg'),
+        }}
+      >
         {date.toDateString()}
       </Text>
     </View>

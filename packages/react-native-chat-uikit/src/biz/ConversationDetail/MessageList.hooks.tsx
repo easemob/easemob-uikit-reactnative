@@ -10,6 +10,7 @@ import {
 import {
   ChatServiceListener,
   gCustomMessageCardEventType,
+  gMessageAttributeQuote,
   useChatListener,
 } from '../../chat';
 import { Services } from '../../services';
@@ -67,6 +68,94 @@ export function useMessageList(
 
   const init = async () => {
     if (testMode === 'only-ui') {
+      const textMsg = ChatMessage.createTextMessage(
+        'xxx',
+        'you are welcome. 1',
+        0
+      );
+      const textMsg2 = ChatMessage.createTextMessage(
+        'xxx',
+        'you are welcome. 2',
+        0
+      );
+      const textMsg3 = ChatMessage.createTextMessage(
+        'xxx',
+        'you are welcome. 1',
+        0
+      );
+      const voiceMsg = ChatMessage.createVoiceMessage(
+        'xxx',
+        '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.aac',
+        0,
+        {
+          duration: 60000,
+        }
+      );
+      textMsg.attributes = {
+        [gMessageAttributeQuote]: textMsg2.msgId,
+      };
+      textMsg3.attributes = {
+        [gMessageAttributeQuote]: voiceMsg.msgId,
+      };
+      const textMsg4 = ChatMessage.createTextMessage(
+        'xxx',
+        'you are welcome. 1',
+        0
+      );
+      const fileMsg = ChatMessage.createFileMessage(
+        'xxx',
+        '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
+        0,
+        {
+          displayName: 'sdf',
+          fileSize: 300,
+        }
+      );
+      textMsg4.attributes = {
+        [gMessageAttributeQuote]: fileMsg.msgId,
+      };
+      const textMsg5 = ChatMessage.createTextMessage(
+        'xxx',
+        'you are welcome. 1',
+        0
+      );
+      const imageMsg = ChatMessage.createImageMessage(
+        'xxx',
+        '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.jpeg',
+        0,
+        {
+          displayName: 'sdf',
+          thumbnailLocalPath:
+            '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
+          width: 300,
+          height: 300,
+          fileSize: 200,
+        }
+      );
+      textMsg5.attributes = {
+        [gMessageAttributeQuote]: imageMsg.msgId,
+      };
+      const textMsg6 = ChatMessage.createTextMessage(
+        'xxx',
+        'you are welcome. 1',
+        0
+      );
+      const videoMsg = ChatMessage.createVideoMessage(
+        'xxx',
+        '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.mp4',
+        0,
+        {
+          displayName: 'sdf',
+          thumbnailLocalPath:
+            '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
+          duration: 3000,
+          width: 300,
+          height: 300,
+        }
+      );
+      textMsg6.attributes = {
+        [gMessageAttributeQuote]: videoMsg.msgId,
+      };
       dataRef.current = [
         {
           id: '1',
@@ -77,6 +166,78 @@ export function useMessageList(
             modelType: 'message',
             layoutType: 'right',
             msg: ChatMessage.createTextMessage('xxx', 'you are welcome. ', 0),
+          },
+        } as MessageListItemProps,
+        // {
+        //   id: '13',
+        //   model: {
+        //     userId: 'xxx',
+        //     userAvatar:
+        //       'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+        //     modelType: 'message',
+        //     layoutType: 'right',
+        //     msg: textMsg,
+        //     msgQuote: textMsg2,
+        //   },
+        // } as MessageListItemProps,
+        // {
+        //   id: '14',
+        //   model: {
+        //     userId: 'xxx',
+        //     userAvatar:
+        //       'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+        //     modelType: 'message',
+        //     layoutType: 'left',
+        //     msg: textMsg,
+        //     msgQuote: textMsg2,
+        //   },
+        // } as MessageListItemProps,
+        // {
+        //   id: '15',
+        //   model: {
+        //     userId: 'xxx',
+        //     userAvatar:
+        //       'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+        //     modelType: 'message',
+        //     layoutType: 'right',
+        //     msg: textMsg3,
+        //     msgQuote: voiceMsg,
+        //   },
+        // } as MessageListItemProps,
+        // {
+        //   id: '16',
+        //   model: {
+        //     userId: 'xxx',
+        //     userAvatar:
+        //       'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+        //     modelType: 'message',
+        //     layoutType: 'left',
+        //     msg: textMsg4,
+        //     msgQuote: fileMsg,
+        //   },
+        // } as MessageListItemProps,
+        // {
+        //   id: '17',
+        //   model: {
+        //     userId: 'xxx',
+        //     userAvatar:
+        //       'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+        //     modelType: 'message',
+        //     layoutType: 'left',
+        //     msg: textMsg5,
+        //     msgQuote: imageMsg,
+        //   },
+        // } as MessageListItemProps,
+        {
+          id: '18',
+          model: {
+            userId: 'xxx',
+            userAvatar:
+              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+            modelType: 'message',
+            layoutType: 'right',
+            msg: textMsg6,
+            msgQuote: videoMsg,
           },
         } as MessageListItemProps,
         {

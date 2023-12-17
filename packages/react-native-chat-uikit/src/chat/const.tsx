@@ -13,3 +13,4 @@ export const gConversationSystemMessage = '_$uikit_conv_system_msg';
 export const gVoiceReadFlag = '_$uikit_voice_read_flag';
 
 export const gCustomMessageCardEventType = 'chatUIKit_userCard';
+export const gMessageAttributeQuote = '_$uikit_msg_quote';
