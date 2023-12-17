@@ -45,6 +45,7 @@ import {
   isSupportMessage,
 } from './MessageListItem.hooks';
 import type {
+  MessageEditableStateType,
   MessageLayoutType,
   MessageListItemActionsProps,
   MessageListItemProps,
@@ -76,22 +77,49 @@ export function MessageText(props: MessageTextProps) {
       light: colors.neutral[98],
       dark: colors.neutral[98],
     },
+    left_text_flag: {
+      light: colors.neutralSpecial[5],
+      dark: colors.neutralSpecial[7],
+    },
+    right_text_flag: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
   });
   const body = msg.body as ChatTextMessageBody;
   let content = body.content;
+  const editable =
+    body.modifyCount !== undefined && body.modifyCount > 0
+      ? 'edited'
+      : ('no-editable' as MessageEditableStateType);
   if (isSupport !== true) {
     content = tr('not-support-message');
   }
   return (
-    <Text
-      textType={'large'}
-      paletteType={'body'}
-      style={{
-        color: getColor(layoutType === 'left' ? 'left_text' : 'right_text'),
-      }}
-    >
-      {content}
-    </Text>
+    <View>
+      <Text
+        textType={'large'}
+        paletteType={'body'}
+        style={{
+          color: getColor(layoutType === 'left' ? 'left_text' : 'right_text'),
+        }}
+      >
+        {content}
+      </Text>
+      {editable === 'edited' ? (
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          <SingleLineText
+            style={{
+              color: getColor(
+                layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
+              ),
+            }}
+          >
+            {tr('edited')}
+          </SingleLineText>
+        </View>
+      ) : null}
+    </View>
   );
 }
 

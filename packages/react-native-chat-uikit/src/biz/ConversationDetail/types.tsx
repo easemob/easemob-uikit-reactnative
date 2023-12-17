@@ -109,6 +109,7 @@ export type MessageStateType =
   | MessageRecvStateType
   | MessageSendStateType
   | 'none';
+export type MessageEditableStateType = 'no-editable' | 'editable' | 'edited';
 
 type BasicModel = {
   modelType: MessageBubbleType;

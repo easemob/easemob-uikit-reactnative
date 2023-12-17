@@ -76,7 +76,7 @@ export function useMessageList(
               'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
             modelType: 'message',
             layoutType: 'right',
-            msg: ChatMessage.createTextMessage('xxx', 'you are welcome.', 0),
+            msg: ChatMessage.createTextMessage('xxx', 'you are welcome. ', 0),
           },
         } as MessageListItemProps,
         {
