@@ -218,8 +218,8 @@ export function MessageVoice(props: MessageVoiceProps) {
     <View
       style={{
         flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
-        maxWidth: '100%',
-        width: width,
+        maxWidth: maxWidth,
+        width: Math.floor(width), // !!! Decimals cause errors. Appears only if aligned right. for example: 105.5
         alignItems: 'center',
       }}
     >
@@ -1364,9 +1364,9 @@ export function MessageListItem(props: MessageListItemProps) {
       style={{
         // height: 100,
         // width: '100%',
-        borderBottomColor: 'yellow',
-        borderBottomWidth: 1,
-        borderTopWidth: 1,
+        // borderBottomColor: 'yellow',
+        // borderBottomWidth: 1,
+        // borderTopWidth: 1,
         paddingVertical: 8,
         flexDirection: 'column',
       }}
