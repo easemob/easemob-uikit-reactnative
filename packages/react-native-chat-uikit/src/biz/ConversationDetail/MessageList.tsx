@@ -39,6 +39,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       alertRef,
       onRequestModalClose,
       onClickedItem,
+      onLongPressItem,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -74,7 +75,11 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             renderItem={(info: ListRenderItemInfo<MessageListItemProps>) => {
               const { item } = info;
               return (
-                <MessageListItemMemo {...item} onClicked={onClickedItem} />
+                <MessageListItemMemo
+                  {...item}
+                  onClicked={onClickedItem}
+                  onLongPress={onLongPressItem}
+                />
               );
             }}
             keyExtractor={(item: MessageListItemProps) => {

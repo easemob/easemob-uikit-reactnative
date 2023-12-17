@@ -12,6 +12,7 @@ import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { EmojiListMemo } from '../EmojiList';
 import { BottomVoiceBar } from '../VoiceBar';
 import { useMessageInput } from './MessageInput.hooks';
+import { MessageInputQuoteView } from './MessageInputQuoteView';
 import type { MessageInputProps, MessageInputRef } from './types';
 
 export const MessageInput = React.forwardRef<
@@ -63,7 +64,6 @@ export const MessageInput = React.forwardRef<
     emojiIconName,
     onFocus,
     onBlur,
-    changeInputBarState,
     onRequestModalClose,
     voiceBarRef,
     onSelectSendVoice,
@@ -73,15 +73,9 @@ export const MessageInput = React.forwardRef<
     sendIconName,
     onClickedSend,
     onVoiceFailed,
-  } = useMessageInput(props);
-
-  React.useImperativeHandle(ref, () => {
-    return {
-      close: () => {
-        changeInputBarState('normal');
-      },
-    };
-  });
+    showQuote,
+    onHideQuoteMessage,
+  } = useMessageInput(props, ref);
 
   return (
     <>
@@ -89,6 +83,11 @@ export const MessageInput = React.forwardRef<
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={top}
       >
+        <MessageInputQuoteView
+          showQuote={showQuote}
+          onDel={onHideQuoteMessage}
+        />
+
         <View
           ref={testRef}
           style={{

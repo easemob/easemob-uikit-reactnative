@@ -4,6 +4,7 @@ import {
   ChatMessageChatType,
   ChatMessageStatus,
   ChatMessageType,
+  ChatTextMessageBody,
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 
@@ -11,12 +12,17 @@ import {
   ChatServiceListener,
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
+  useChatContext,
   useChatListener,
 } from '../../chat';
+import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import { getCurTs, localUrlEscape, playUrl, timeoutTask } from '../../utils';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import type {
+  BottomSheetNameMenuRef,
+  InitMenuItemsType,
+} from '../BottomSheetMenu';
 import { useFlatList } from '../List';
 import type { UseFlatListReturn } from '../types';
 import type {
@@ -25,6 +31,7 @@ import type {
   MessageListProps,
   MessageListRef,
   MessageModel,
+  SendCardProps,
   SendFileProps,
   SendImageProps,
   SendSystemProps,
@@ -47,8 +54,20 @@ export function useMessageList(
     id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
   ) => void;
+  onLongPressItem?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
 } {
-  const { convId, convType, testMode } = props;
+  const {
+    convId,
+    convType,
+    testMode,
+    onClickedItem: propsOnClicked,
+    onLongPressItem: propsOnLongPress,
+    onQuoteMessageForInput: propsOnQuoteMessageForInput,
+  } = props;
+  const { tr } = useI18nContext();
   const flatListProps = useFlatList<MessageListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
     onInit: () => init(),
@@ -65,6 +84,7 @@ export function useMessageList(
 
   const isNeedScrollToEndRef = React.useRef(false);
   const currentVoicePlayingRef = React.useRef<MessageModel | undefined>();
+  const im = useChatContext();
 
   const init = async () => {
     if (testMode === 'only-ui') {
@@ -544,9 +564,10 @@ export function useMessageList(
 
   const onClickedItem = React.useCallback(
     (
-      _id: string,
+      id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
+      propsOnClicked?.(id, model);
       if (model.modelType === 'message') {
         const msgModel = model as MessageModel;
         if (msgModel.msg.body.type === 'voice') {
@@ -554,7 +575,19 @@ export function useMessageList(
         }
       }
     },
-    [startVoicePlay]
+    [propsOnClicked, startVoicePlay]
+  );
+
+  const onLongPressItem = React.useCallback(
+    (
+      id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel
+    ) => {
+      propsOnLongPress?.(id, model);
+      onShowLongPressMenu(id, model);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [propsOnLongPress]
   );
 
   const getStyle = () => {
@@ -582,6 +615,64 @@ export function useMessageList(
     [dataRef, setData]
   );
 
+  const onShowLongPressMenu = (
+    _id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => {
+    if (model.modelType !== 'message') {
+      return;
+    }
+    const initItems = [] as InitMenuItemsType[];
+    const msgModel = model as MessageModel;
+    if (model.modelType === 'message') {
+      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+        if (
+          msgModel.msg.body.type === ChatMessageType.TXT &&
+          msgModel.msg.from === im.userId
+        ) {
+          const textBody = msgModel.msg.body as ChatTextMessageBody;
+          if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
+            initItems.push({
+              name: tr('Edit Text Message'),
+              isHigh: false,
+              icon: 'img',
+              onClicked: () => {
+                menuRef.current?.startHide?.(() => {});
+              },
+            });
+          }
+        }
+        if (
+          msgModel.msg.body.type === ChatMessageType.TXT ||
+          msgModel.msg.body.type === ChatMessageType.VOICE ||
+          msgModel.msg.body.type === ChatMessageType.IMAGE ||
+          msgModel.msg.body.type === ChatMessageType.VIDEO ||
+          msgModel.msg.body.type === ChatMessageType.FILE
+        ) {
+          initItems.push({
+            name: tr('Quote Message'),
+            isHigh: false,
+            icon: 'triangle_in_rectangle',
+            onClicked: () => {
+              menuRef.current?.startHide?.(() => {
+                propsOnQuoteMessageForInput?.(model as MessageModel);
+              });
+            },
+          });
+        }
+      }
+    }
+    if (initItems.length === 0) {
+      return;
+    }
+    menuRef.current?.startShowWithProps?.({
+      initItems: initItems,
+      onRequestModalClose: onRequestModalClose,
+      layoutType: 'left',
+      hasCancel: true,
+    });
+  };
+
   React.useImperativeHandle(
     ref,
     () => {
@@ -595,6 +686,7 @@ export function useMessageList(
             | SendVoiceProps
             | SendTimeProps
             | SendSystemProps
+            | SendCardProps
         ) => {
           if (value.type === 'text') {
             const v = value as SendTextProps;
@@ -781,5 +873,6 @@ export function useMessageList(
     menuRef,
     alertRef,
     onClickedItem,
+    onLongPressItem,
   };
 }

@@ -8,6 +8,8 @@ import type {
   ConversationDetailProps,
   MessageInputRef,
   MessageListRef,
+  MessageModel,
+  SendCardProps,
   SendFileProps,
   SendImageProps,
   SendTextProps,
@@ -77,10 +79,18 @@ export function useConversationDetail(props: ConversationDetailProps) {
         | SendImageProps
         | SendVideoProps
         | SendVoiceProps
+        | SendCardProps
     ) => {
       _messageListRef.current?.addSendMessage(value);
     },
     [_messageListRef]
+  );
+
+  const onQuoteMessageForInput = React.useCallback(
+    (model: MessageModel) => {
+      _messageInputRef.current?.quoteMessage?.(model);
+    },
+    [_messageInputRef]
   );
 
   return {
@@ -91,5 +101,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
     _messageListRef,
     _MessageList,
     messageListProps,
+    onQuoteMessageForInput,
   };
 }

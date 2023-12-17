@@ -17,7 +17,9 @@ import { FACE_ASSETS_UTF16 } from '../EmojiList';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
 import type {
   MessageInputProps,
+  MessageInputRef,
   MessageInputState,
+  MessageModel,
   SendFileProps,
   SendImageProps,
   SendVideoProps,
@@ -30,7 +32,10 @@ import {
   selectOneShortVideo,
 } from './useSelectFile';
 
-export function useMessageInput(props: MessageInputProps) {
+export function useMessageInput(
+  props: MessageInputProps,
+  ref?: React.ForwardedRef<MessageInputRef>
+) {
   const {
     bottom,
     onClickedSend: propsOnClickedSend,
@@ -58,6 +63,8 @@ export function useMessageInput(props: MessageInputProps) {
   const voiceBarRef = React.useRef<BottomVoiceBarRef>({} as any);
   const voiceBarStateRef = React.useRef<VoiceBarState>('idle');
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const quoteMessageRef = React.useRef<MessageModel | undefined>(undefined);
+  const [showQuote, setShowQuote] = React.useState(false);
 
   const _onValue = (v: string) => {
     if (v.length > 0 && inputBarState === 'keyboard') {
@@ -292,17 +299,27 @@ export function useMessageInput(props: MessageInputProps) {
   const onClickedSend = () => {
     if (sendIconName === 'airplane') {
       const content = valueRef.current;
-      propsOnClickedSend?.({
-        type: 'text',
-        content: content,
-      });
+      if (quoteMessageRef.current !== undefined) {
+        propsOnClickedSend?.({
+          type: 'quote',
+          content: content,
+          quote: quoteMessageRef.current,
+        });
+        onHideQuoteMessage();
+      } else {
+        propsOnClickedSend?.({
+          type: 'text',
+          content: content,
+        });
+      }
+
       onClickedClearButton();
+
       if (closeAfterSend === true) {
         timeoutTask(0, closeKeyboard);
       }
     } else {
-      console.log('test:zuoyu:onClickedSend');
-      onShowMenu();
+      onShowMoreMenu();
     }
   };
 
@@ -326,8 +343,7 @@ export function useMessageInput(props: MessageInputProps) {
     });
   };
 
-  console.log('test:zuoyu:onShowMenu');
-  const onShowMenu = () => {
+  const onShowMoreMenu = () => {
     menuRef.current?.startShowWithProps?.({
       initItems: [
         {
@@ -416,6 +432,15 @@ export function useMessageInput(props: MessageInputProps) {
     []
   );
 
+  const onShowQuoteMessage = React.useCallback((model: MessageModel) => {
+    quoteMessageRef.current = model;
+    setShowQuote(true);
+  }, []);
+  const onHideQuoteMessage = React.useCallback(() => {
+    quoteMessageRef.current = undefined;
+    setShowQuote(false);
+  }, []);
+
   React.useEffect(() => {
     console.log('test:zuoyu:height:', keyboardCurrentHeight, emojiHeight);
     if (
@@ -429,6 +454,17 @@ export function useMessageInput(props: MessageInputProps) {
       );
     }
   }, [keyboardCurrentHeight, emojiHeight, onHeightChange]);
+
+  React.useImperativeHandle(ref, () => {
+    return {
+      close: () => {
+        changeInputBarState('normal');
+      },
+      quoteMessage: (model) => {
+        onShowQuoteMessage(model);
+      },
+    };
+  });
 
   console.log(
     'test:zuoyu:showVoiceBar:outer',
@@ -469,5 +505,7 @@ export function useMessageInput(props: MessageInputProps) {
     sendIconName,
     onClickedSend,
     onVoiceFailed,
+    showQuote,
+    onHideQuoteMessage,
   };
 }

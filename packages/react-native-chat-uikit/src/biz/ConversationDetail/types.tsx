@@ -5,6 +5,7 @@ import type { PropsWithError, PropsWithTest } from '../types';
 
 export type MessageInputRef = {
   close: () => void;
+  quoteMessage: (model: MessageModel) => void;
 };
 export type MessageInputProps = PropsWithError &
   PropsWithTest & {
@@ -20,6 +21,7 @@ export type MessageInputProps = PropsWithError &
         | SendVideoProps
         | SendVoiceProps
         | SendCardProps
+        | SendQuoteProps
     ) => void;
     closeAfterSend?: boolean;
     onHeightChange?: (height: number) => void;
@@ -57,7 +59,8 @@ export type SendType =
   | 'video'
   | 'time'
   | 'system'
-  | 'card';
+  | 'card'
+  | 'quote';
 export type SendBasicProps = {
   type: SendType;
 };
@@ -95,6 +98,10 @@ export type SendSystemProps = SendBasicProps & {
 };
 
 export type SendCardProps = SendBasicProps & {};
+export type SendQuoteProps = SendBasicProps & {
+  content: string;
+  quote: MessageModel;
+};
 
 export type MessageBubbleType = 'system' | 'time' | 'message';
 export type MessageLayoutType = 'left' | 'right';
@@ -162,6 +169,8 @@ export type MessageListRef = {
       | SendVoiceProps
       | SendTimeProps
       | SendSystemProps
+      | SendCardProps
+      | SendQuoteProps
   ) => void; // todo:
   removeMessage: (msg: ChatMessage) => void;
   recallMessage: (msg: ChatMessage) => void;
@@ -174,5 +183,14 @@ export type MessageListProps = PropsWithError &
     convId: string;
     convType: ChatConversationType;
     onClicked?: () => void;
+    onClickedItem?: (
+      id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel
+    ) => void;
+    onLongPressItem?: (
+      id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel
+    ) => void;
+    onQuoteMessageForInput?: (model: MessageModel) => void;
     containerStyle?: StyleProp<ViewStyle>;
   };
