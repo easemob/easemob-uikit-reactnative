@@ -45,7 +45,7 @@ export function useVoiceBar(props: VoiceBarProps) {
     AVModeIOS: AVModeIOSOption.measurement,
     AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
     AVNumberOfChannelsKeyIOS: 2,
-    AVFormatIDKeyIOS: AVEncodingOption.aac,
+    AVFormatIDKeyIOS: AVEncodingOption.aac, // !!! amr is not supported
   });
 
   const onState = React.useCallback(
@@ -80,6 +80,8 @@ export function useVoiceBar(props: VoiceBarProps) {
         onFailed: (error) => {
           console.warn('test:startRecordAudio:onFailed:', error);
           onFailed?.({ reason: 'record voice is failed.', error: error });
+          tipTimerRef.current?.stop?.();
+          contentTimerRef.current?.stop?.();
         },
         onFinished: ({ result, path, error }) => {
           console.log('test:startRecordAudio:onFinished:', result, path, error);

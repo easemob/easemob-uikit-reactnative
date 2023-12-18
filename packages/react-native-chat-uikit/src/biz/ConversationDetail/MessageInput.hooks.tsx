@@ -427,7 +427,11 @@ export function useMessageInput(
 
   const onVoiceFailed = React.useCallback(
     (error: { reason: string; error: any }) => {
-      console.warn('test:zuoyu:voice:failed:', error);
+      let e = error;
+      try {
+        e.error = JSON.stringify(error);
+      } catch {}
+      console.warn('test:zuoyu:voice:failed:', e);
     },
     []
   );
