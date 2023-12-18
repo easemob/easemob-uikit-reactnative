@@ -67,6 +67,21 @@ export function ConversationListScreen(props: Props) {
         onSearch={() => {
           navigation.push('SearchConversation', {});
         }}
+        onClicked={(data) => {
+          if (data === undefined) {
+            return;
+          }
+          const convId = data?.convId;
+          const convType = data?.convType;
+          const convName = data?.convName;
+          navigation.push('ConversationDetail', {
+            params: {
+              convId,
+              convType,
+              convName,
+            },
+          });
+        }}
       />
     </SafeAreaView>
   );

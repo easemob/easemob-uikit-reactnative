@@ -3,6 +3,7 @@ export * from './ChangeGroupOwnerScreen';
 export * from './ConfigScreen';
 export * from './ContactInfoScreen';
 export * from './ContactListScreen';
+export * from './ConversationDetailScreen';
 export * from './ConversationListScreen';
 export * from './CreateGroupScreen';
 export * from './DelGroupParticipantScreen';

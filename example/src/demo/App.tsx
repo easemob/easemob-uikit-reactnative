@@ -24,6 +24,7 @@ import {
   ConfigScreen,
   ContactInfoScreen,
   ContactListScreen,
+  ConversationDetailScreen,
   ConversationListScreen,
   CreateGroupScreen,
   DelGroupParticipantScreen,
@@ -318,6 +319,13 @@ export function App() {
                 headerShown: false,
               }}
               component={ChangeGroupOwnerScreen}
+            />
+            <Root.Screen
+              name={'ConversationDetail'}
+              options={{
+                headerShown: false,
+              }}
+              component={ConversationDetailScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

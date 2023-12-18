@@ -9,7 +9,11 @@ import type {
   ListItemProps,
   ListItemRequestProps,
   ListRequestProps,
+  PropsWithBack,
+  PropsWithCancel,
   PropsWithError,
+  PropsWithInit,
+  PropsWithSearch,
   PropsWithTest,
 } from '../types';
 
@@ -25,6 +29,9 @@ export type ConversationListItemProps = ListItemProps &
 export type ConversationListProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
+  PropsWithInit &
+  PropsWithBack &
+  PropsWithSearch &
   Omit<
     ListItemActions<ConversationModel>,
     'onToRightSlide' | 'onToLeftSlide'
@@ -34,17 +41,16 @@ export type ConversationListProps = ListRequestProps<DataModel> &
       prevProps: ConversationListItemProps,
       nextProps: ConversationListItemProps
     ) => number;
-    onSearch?: () => void;
   };
 export type SearchConversationProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
+  PropsWithCancel &
   Omit<
     ListItemActions<ConversationModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
-    onCancel?: () => void;
   };
 export type UseConversationListReturn = {
   onRemove: (conv: ConversationModel) => void;

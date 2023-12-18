@@ -44,7 +44,7 @@ export function ContactList(props: ContactListProps) {
     isHasNewRequest,
     onContextMenuMoreActions,
     onSearch,
-    onCancel,
+    onBack,
     onNavigationBarMoreActions,
   } = props;
   const {
@@ -128,7 +128,7 @@ export function ContactList(props: ContactListProps) {
             <Pressable
               style={{ flexDirection: 'row' }}
               onPress={() => {
-                onCancel?.();
+                onBack?.();
               }}
             >
               <Text paletteType={'label'} textType={'medium'}>

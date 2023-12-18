@@ -1,7 +1,13 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
 
-import type { PropsWithError, PropsWithTest } from '../types';
+import type {
+  PropsWithBack,
+  PropsWithError,
+  PropsWithInit,
+  PropsWithSearch,
+  PropsWithTest,
+} from '../types';
 
 export type MessageInputRef = {
   close: () => void;
@@ -29,9 +35,13 @@ export type MessageInputProps = PropsWithError &
 export type MessageInputState = 'normal' | 'emoji' | 'voice' | 'keyboard';
 
 export type ConversationDetailProps = PropsWithError &
-  PropsWithTest & {
+  PropsWithTest &
+  PropsWithInit &
+  PropsWithBack &
+  PropsWithSearch & {
     convId: string;
     convType: ChatConversationType;
+    convName?: string;
     input?: {
       props?: MessageInputProps & { convId?: string };
       render?: React.ForwardRefExoticComponent<
@@ -49,6 +59,7 @@ export type ConversationDetailProps = PropsWithError &
       >;
       ref?: React.RefObject<MessageListRef>;
     };
+    containerStyle?: StyleProp<ViewStyle>;
   };
 
 export type SendType =

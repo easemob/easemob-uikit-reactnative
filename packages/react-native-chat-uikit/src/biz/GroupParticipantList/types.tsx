@@ -8,13 +8,19 @@ import type {
   ListItemProps,
   ListItemRequestProps,
   ListRequestProps,
+  PropsWithBack,
   PropsWithError,
+  PropsWithInit,
+  PropsWithSearch,
   PropsWithTest,
 } from '../types';
 
 export type GroupParticipantListProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
+  PropsWithInit &
+  PropsWithBack &
+  PropsWithSearch &
   Omit<
     ListItemActions<GroupParticipantModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
@@ -22,8 +28,6 @@ export type GroupParticipantListProps = ListRequestProps<DataModel> &
     groupId: string;
     participantType?: GroupParticipantType;
     containerStyle?: StyleProp<ViewStyle>;
-    onBack?: () => void;
-    onSearch?: () => void;
     onClickedAddParticipant?: () => void;
     onClickedDelParticipant?: () => void;
     onDelParticipant?: (data?: GroupParticipantModel[]) => void;

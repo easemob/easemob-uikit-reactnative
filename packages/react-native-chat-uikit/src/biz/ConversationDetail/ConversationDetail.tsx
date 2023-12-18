@@ -16,6 +16,7 @@ import { useConversationDetail } from './ConversationDetail.hooks';
 import type { ConversationDetailProps } from './types';
 
 export function ConversationDetail(props: ConversationDetailProps) {
+  const { containerStyle, onBack, convId, convName } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -57,7 +58,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
               iconName={'chevron_left'}
               style={{ width: 24, height: 24 }}
               onPress={() => {
-                // todo: left
+                onBack?.();
               }}
             />
             <Avatar url={g_not_existed_url} size={24} />
@@ -67,7 +68,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
                 paletteType={'title'}
                 style={{ color: getColor('text') }}
               >
-                {tr('NickName')}
+                {convName ?? convId}
               </Text>
               <Text
                 textType={'extraSmall'}
@@ -97,7 +98,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
   };
 
   return (
-    <View style={{ flexGrow: 1 }}>
+    <View style={[{ flexGrow: 1 }, containerStyle]}>
       {navigationBar()}
       <_MessageList
         onClicked={() => {

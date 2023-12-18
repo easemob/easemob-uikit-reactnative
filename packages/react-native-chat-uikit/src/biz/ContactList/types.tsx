@@ -11,7 +11,11 @@ import type {
   ListItemProps,
   ListItemRequestProps,
   ListRequestProps,
+  PropsWithBack,
+  PropsWithCancel,
   PropsWithError,
+  PropsWithInit,
+  PropsWithSearch,
   PropsWithTest,
   SearchType,
 } from '../types';
@@ -38,6 +42,9 @@ export type ContactListItemProps = ListItemProps &
 export type ContactListProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
+  PropsWithInit &
+  PropsWithBack &
+  PropsWithSearch &
   Omit<
     ListItemActions<ContactModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
@@ -51,8 +58,6 @@ export type ContactListProps = ListRequestProps<DataModel> &
       prevProps: ContactListItemProps,
       nextProps: ContactListItemProps
     ) => number;
-    onSearch?: () => void;
-    onCancel?: () => void;
     onNavigationBarMoreActions?: () => void;
     onClickedNewConversation?: () => void;
     onClickedNewGroup?: () => void;
@@ -66,12 +71,12 @@ export type ContactListProps = ListRequestProps<DataModel> &
 export type SearchContactProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
+  PropsWithCancel &
   Omit<
     ListItemActions<ContactModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
-    onCancel?: (data?: ContactModel[]) => void;
     searchType: SearchType;
     groupId?: string;
     // onSelectedResult?: (result: Map<string, boolean>) => void;

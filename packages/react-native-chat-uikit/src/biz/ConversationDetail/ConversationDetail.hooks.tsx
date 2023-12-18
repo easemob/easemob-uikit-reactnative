@@ -19,7 +19,8 @@ import type {
 import { useCreateConversationDirectory } from './useCreateConversationDirectory';
 
 export function useConversationDetail(props: ConversationDetailProps) {
-  const { convId, convType, testMode, input, list } = props;
+  const { convId, convType, convName, testMode, input, list, onInitialized } =
+    props;
   const permissionsRef = React.useRef(false);
 
   const messageInputRef = React.useRef<MessageInputRef>({} as any);
@@ -50,22 +51,38 @@ export function useConversationDetail(props: ConversationDetailProps) {
       createIfNotExist: true,
     });
     if (conv) {
+      if (conv.convName === undefined) {
+        conv.convName = convName;
+      }
       im.setCurrentConversation({ conv });
     }
-  }, [convId, convType, im]);
+  }, [convId, convName, convType, im]);
 
   React.useEffect(() => {
     const conv = im.getCurrentConversation();
     if (conv === undefined || conv.convId !== convId) {
       if (testMode === 'only-ui') {
-        im.setCurrentConversation({ conv: { convId, convType } });
+        im.setCurrentConversation({ conv: { convId, convType, convName } });
+        onInitialized?.(true);
       } else {
-        setConversation().then(() => {
-          // todo: ready
-        });
+        setConversation()
+          .then(() => {
+            onInitialized?.(true);
+          })
+          .catch(() => {
+            onInitialized?.(false);
+          });
       }
     }
-  }, [convId, convType, im, setConversation, testMode]);
+  }, [
+    convId,
+    convName,
+    convType,
+    im,
+    onInitialized,
+    setConversation,
+    testMode,
+  ]);
 
   React.useEffect(() => {
     createDirectoryIfNotExisted(convId);

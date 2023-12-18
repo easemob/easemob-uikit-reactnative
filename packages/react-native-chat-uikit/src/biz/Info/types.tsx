@@ -1,8 +1,9 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { ChatGroupStyle } from 'react-native-chat-sdk';
 
-export type InfoProps = {
-  onBack?: () => void;
+import type { PropsWithBack } from '../types';
+
+export type InfoProps = PropsWithBack & {
   onMore?: () => void;
   hasSendMessage?: boolean;
   hasAudioCall?: boolean;

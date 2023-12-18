@@ -14,6 +14,14 @@ import type { SectionListRef } from '../ui/SectionList';
 export type PropsWithTest = { testMode?: 'only-ui' | undefined };
 export type PropsWithError = { onError?: (error: UIKitError) => void };
 export type PropsWithChildren = React.PropsWithChildren<{}>;
+export type PropsWithInit = { onInitialized?: (data?: any) => void };
+export type PropsWithBack = {
+  onBack?: (data?: any) => void;
+};
+export type PropsWithCancel = {
+  onCancel?: (data?: any) => void;
+};
+export type PropsWithSearch = { onSearch?: (data?: any) => void };
 
 export type ContactType =
   | 'contact-list'

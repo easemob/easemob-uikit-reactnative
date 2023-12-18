@@ -41,7 +41,6 @@ export function ListSearch<
     >
       <Search
         onCancel={onCancel}
-        // onBack={() => {}}
         onChangeText={(v) => {
           setValue(v);
           deferSearch?.(v);

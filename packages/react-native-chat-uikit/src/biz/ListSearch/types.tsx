@@ -6,6 +6,7 @@ import type {
   ListItemProps,
   ListItemRequestProps,
   ListRequestProps,
+  PropsWithCancel,
   PropsWithError,
   PropsWithTest,
   SearchType,
@@ -38,12 +39,12 @@ export type ListSearchProps<
 > = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
+  PropsWithCancel &
   Omit<
     ListItemActions<ComponentModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
-    onCancel?: () => void;
     searchType: SearchType;
     initData?:
       | ReadonlyArray<ComponentModel>

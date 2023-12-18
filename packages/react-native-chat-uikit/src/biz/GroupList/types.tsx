@@ -7,31 +7,36 @@ import type {
   ListItemProps,
   ListItemRequestProps,
   ListRequestProps,
+  PropsWithBack,
+  PropsWithCancel,
   PropsWithError,
+  PropsWithInit,
+  PropsWithSearch,
   PropsWithTest,
 } from '../types';
 
 export type GroupListProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
+  PropsWithInit &
+  PropsWithBack &
+  PropsWithSearch &
   Omit<
     ListItemActions<GroupModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
-    onBack?: () => void;
-    onSearch?: () => void;
     onNoMore?: () => void;
   };
 export type SearchGroupProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
+  PropsWithCancel &
   Omit<
     ListItemActions<GroupModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
-    onCancel?: () => void;
   };
 export type UseGroupListProps = GroupListProps;
 export type GroupListItemProps = ListItemProps &
