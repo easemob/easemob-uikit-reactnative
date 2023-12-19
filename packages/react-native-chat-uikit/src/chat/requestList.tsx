@@ -10,6 +10,7 @@ import {
   gNewRequestConversationUserId,
   gNewRequestConversationUserName,
 } from './const';
+import type { RequestList } from './requestList.types';
 import type {
   ChatService,
   ChatServiceListener,
@@ -23,7 +24,7 @@ export type RequestListListener = {
   onNewRequestListChanged: (list: NewRequestModel[]) => void;
 };
 
-export class RequestList {
+export class RequestListImpl implements RequestList {
   _client: ChatService;
   _listener?: ChatServiceListener;
   _newRequestList: NewRequestModel[] = [];

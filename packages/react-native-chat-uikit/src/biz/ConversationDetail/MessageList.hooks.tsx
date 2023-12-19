@@ -11,6 +11,7 @@ import {
 import {
   ChatServiceListener,
   gCustomMessageCardEventType,
+  gCustomMessageRecallEventType,
   gMessageAttributeQuote,
   useChatContext,
   useChatListener,
@@ -69,8 +70,9 @@ export function useMessageList(
   } = props;
   const { tr } = useI18nContext();
   const flatListProps = useFlatList<MessageListItemProps>({
-    listState: testMode === 'only-ui' ? 'normal' : 'loading',
+    listState: testMode === 'only-ui' ? 'normal' : 'normal',
     onInit: () => init(),
+    onRefresh: () => onRequestHistoryMessage(),
   });
   const {
     data,
@@ -85,6 +87,7 @@ export function useMessageList(
   const isNeedScrollToEndRef = React.useRef(false);
   const currentVoicePlayingRef = React.useRef<MessageModel | undefined>();
   const im = useChatContext();
+  const startMsgIdRef = React.useRef('');
 
   const init = async () => {
     if (testMode === 'only-ui') {
@@ -615,6 +618,55 @@ export function useMessageList(
     [dataRef, setData]
   );
 
+  const onAddMessageList = React.useCallback(
+    (msgs: ChatMessage[], position: MessageAddPosition) => {
+      const list = msgs.map((msg) => {
+        return {
+          id: msg.msgId.toString(),
+          model: {
+            userId: msg.from,
+            modelType: 'message',
+            layoutType: msg.from === im.userId ? 'right' : 'left',
+            msg: msg,
+          },
+          containerStyle: getStyle(),
+        } as MessageListItemProps;
+      });
+      if (position === 'bottom') {
+        dataRef.current = [...dataRef.current, ...list];
+      } else {
+        dataRef.current = [...list, ...dataRef.current];
+      }
+      setData([...dataRef.current]);
+    },
+    [dataRef, im.userId, setData]
+  );
+
+  const onDelMessage = React.useCallback(
+    (msg: ChatMessage) => {
+      const index = dataRef.current.findIndex((d) => {
+        if (d.model.modelType === 'message') {
+          const msgModel = d.model as MessageModel;
+          if (msg.status === ChatMessageStatus.SUCCESS) {
+            if (msgModel.msg.msgId === msg.msgId) {
+              return true;
+            }
+          } else {
+            if (msgModel.msg.localMsgId === msg.localMsgId) {
+              return true;
+            }
+          }
+        }
+        return false;
+      });
+      if (index !== -1) {
+        dataRef.current.splice(index, 1);
+        setData([...dataRef.current]);
+      }
+    },
+    [dataRef, setData]
+  );
+
   const onShowLongPressMenu = (
     _id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
@@ -673,6 +725,315 @@ export function useMessageList(
     });
   };
 
+  const onUpdateMessageToUI = React.useCallback(
+    (msg: ChatMessage, fromType: 'send' | 'recv') => {
+      const isExisted = dataRef.current.find((d) => {
+        if (d.model.modelType === 'message') {
+          const msgModel = d.model as MessageModel;
+          if (fromType === 'send') {
+            if (msgModel.msg.localMsgId === msg.localMsgId) {
+              console.log('test:zuoyu:onUpdateMessageToUI:msgId:2', isExisted);
+              msgModel.msg = msg;
+              d.model = { ...msgModel };
+              return true;
+            }
+          } else {
+            if (msgModel.msg.msgId === msg.msgId) {
+              console.log('test:zuoyu:onUpdateMessageToUI:msgId', isExisted);
+              msgModel.msg = msg;
+              d.model = { ...msgModel };
+              return true;
+            }
+          }
+        }
+        return false;
+      });
+      console.log('test:zuoyu:onUpdateMessageToUI:', isExisted);
+      if (isExisted) {
+        setData([...dataRef.current]);
+      }
+    },
+    [dataRef, setData]
+  );
+
+  const onAddMessageToUI = React.useCallback(
+    (msg: ChatMessage) => {
+      onAddData(
+        {
+          id: msg.msgId.toString(),
+          model: {
+            userId: msg.from,
+            modelType: 'message',
+            layoutType: msg.from === im.userId ? 'right' : 'left',
+            msg: msg,
+          },
+          containerStyle: getStyle(),
+        },
+        'bottom'
+      );
+      if (isNeedScrollToEndRef.current === true) {
+        scrollToEnd();
+      }
+    },
+    [im.userId, onAddData, scrollToEnd]
+  );
+
+  const createRecallMessageTip = React.useCallback(
+    (msg: ChatMessage) => {
+      const text = tr('${0} recalled a message.', msg.from);
+      const tip = ChatMessage.createCustomMessage(
+        msg.conversationId,
+        gCustomMessageRecallEventType,
+        msg.chatType,
+        {
+          params: { text },
+        }
+      );
+      const tmp = { ...msg, body: { ...tip.body } } as ChatMessage;
+      const msgModel = {
+        id: msg.msgId.toString(),
+        model: {
+          userId: msg.from,
+          modelType: 'system',
+          contents: [text],
+          msg: tmp,
+        },
+        containerStyle: getStyle(),
+      } as MessageListItemProps;
+      return msgModel;
+    },
+    [tr]
+  );
+
+  const onRecallMessageToUI = React.useCallback(
+    (msg: ChatMessage) => {
+      onAddData(createRecallMessageTip(msg), 'bottom');
+      if (isNeedScrollToEndRef.current === true) {
+        scrollToEnd();
+      }
+    },
+    [createRecallMessageTip, onAddData, scrollToEnd]
+  );
+
+  React.useEffect(() => {
+    console.log('test:zuoyu:useEffect');
+    const listener = {
+      onSendMessageChanged: (msg: ChatMessage) => {
+        onUpdateMessageToUI(msg, 'send');
+      },
+      onRecvMessage: (msg: ChatMessage) => {
+        onAddMessageToUI(msg);
+      },
+      onRecvMessageStatusChanged: (msg: ChatMessage) => {
+        onUpdateMessageToUI(msg, 'recv');
+      },
+      onRecvMessageContentChanged: (msg: ChatMessage, _byUserId: string) => {
+        onUpdateMessageToUI(msg, 'recv');
+      },
+      onRecallMessage: (msg: ChatMessage, _byUserId: string) => {
+        onRecallMessageToUI(msg);
+      },
+    };
+    im.messageManager.addListener('MessageList', listener);
+    return () => {
+      im.messageManager.removeListener('MessageList');
+    };
+  }, [
+    im.messageManager,
+    onAddMessageToUI,
+    onRecallMessageToUI,
+    onUpdateMessageToUI,
+  ]);
+
+  const addSendMessageToUI = React.useCallback(
+    (
+      value:
+        | SendFileProps
+        | SendImageProps
+        | SendTextProps
+        | SendVideoProps
+        | SendVoiceProps
+        | SendTimeProps
+        | SendSystemProps
+        | SendCardProps,
+
+      onFinished?: (msg: ChatMessage) => void
+    ) => {
+      if (value.type === 'text') {
+        const v = value as SendTextProps;
+        const msg = ChatMessage.createTextMessage(
+          convId,
+          v.content,
+          convType as number as ChatMessageChatType
+        );
+        onAddData(
+          {
+            id: msg.msgId.toString(),
+            model: {
+              userId: msg.from,
+              modelType: 'message',
+              layoutType: 'right',
+              msg: msg,
+            },
+            containerStyle: getStyle(),
+          },
+          'bottom'
+        );
+        onFinished?.(msg);
+      } else if (value.type === 'image') {
+        const v = value as SendImageProps;
+        const msg = ChatMessage.createImageMessage(
+          convId,
+          v.localPath,
+          convType as number as ChatMessageChatType,
+          {
+            width: v.imageWidth,
+            height: v.imageHeight,
+            fileSize: v.fileSize,
+            displayName: v.displayName ?? '',
+          }
+        );
+        console.log('test:zuoyu:image:', msg);
+        onAddData(
+          {
+            id: msg.msgId.toString(),
+            model: {
+              userId: msg.from,
+              modelType: 'message',
+              layoutType: 'right',
+              msg: msg,
+            },
+            containerStyle: getStyle(),
+          },
+          'bottom'
+        );
+        onFinished?.(msg);
+      } else if (value.type === 'voice') {
+        const v = value as SendVoiceProps;
+        const msg = ChatMessage.createVoiceMessage(
+          convId,
+          v.localPath,
+          convType as number as ChatMessageChatType,
+          {
+            duration: v.duration,
+            fileSize: v.fileSize,
+            displayName: v.displayName ?? '',
+          }
+        );
+        console.log('test:zuoyu:voice:', msg);
+        onAddData(
+          {
+            id: msg.msgId.toString(),
+            model: {
+              userId: msg.from,
+              modelType: 'message',
+              layoutType: 'right',
+              msg: msg,
+            },
+            containerStyle: getStyle(),
+          },
+          'bottom'
+        );
+        onFinished?.(msg);
+      } else if (value.type === 'video') {
+        const v = value as SendVideoProps;
+        const msg = ChatMessage.createVideoMessage(
+          convId,
+          v.localPath,
+          convType as number as ChatMessageChatType,
+          {
+            duration: v.duration ?? 0,
+            fileSize: v.fileSize,
+            displayName: v.displayName ?? '',
+            thumbnailLocalPath: v.thumbLocalPath,
+            width: v.videoHeight,
+            height: v.videoHeight,
+          }
+        );
+        console.log('test:zuoyu:video:', msg);
+        onAddData(
+          {
+            id: msg.msgId.toString(),
+            model: {
+              userId: msg.from,
+              modelType: 'message',
+              layoutType: 'right',
+              msg: msg,
+            },
+            containerStyle: getStyle(),
+          },
+          'bottom'
+        );
+        onFinished?.(msg);
+      } else if (value.type === 'file') {
+        const v = value as SendFileProps;
+        const msg = ChatMessage.createFileMessage(
+          convId,
+          v.localPath,
+          convType as number as ChatMessageChatType,
+          {
+            fileSize: v.fileSize,
+            displayName: v.displayName ?? '',
+          }
+        );
+        console.log('test:zuoyu:video:', msg);
+        onAddData(
+          {
+            id: msg.msgId.toString(),
+            model: {
+              userId: msg.from,
+              modelType: 'message',
+              layoutType: 'right',
+              msg: msg,
+            },
+            containerStyle: getStyle(),
+          },
+          'bottom'
+        );
+        onFinished?.(msg);
+      } else if (value.type === 'card') {
+        const msg = ChatMessage.createCustomMessage(
+          convId,
+          gCustomMessageCardEventType,
+          convType as number as ChatMessageChatType,
+          {
+            params: {
+              userId: convId,
+              nickname: convId,
+              avatar:
+                'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+            },
+          }
+        );
+        console.log('test:zuoyu:card:', msg);
+        onAddData(
+          {
+            id: msg.msgId.toString(),
+            model: {
+              userId: msg.from,
+              modelType: 'message',
+              layoutType: 'right',
+              msg: msg,
+            },
+            containerStyle: getStyle(),
+          },
+          'bottom'
+        );
+        onFinished?.(msg);
+      }
+      isNeedScrollToEndRef.current = true;
+      scrollToEnd();
+    },
+    [convId, convType, onAddData, scrollToEnd]
+  );
+
+  const sendMessageToServer = React.useCallback(
+    (msg: ChatMessage) => {
+      im.messageManager.sendMessage(msg);
+    },
+    [im]
+  );
+
   React.useImperativeHandle(
     ref,
     () => {
@@ -688,172 +1049,27 @@ export function useMessageList(
             | SendSystemProps
             | SendCardProps
         ) => {
-          if (value.type === 'text') {
-            const v = value as SendTextProps;
-            const msg = ChatMessage.createTextMessage(
-              convId,
-              v.content,
-              convType as number as ChatMessageChatType
-            );
-            onAddData(
-              {
-                id: msg.msgId.toString(),
-                model: {
-                  userId: msg.from,
-                  modelType: 'message',
-                  layoutType: 'right',
-                  msg: msg,
-                },
-                containerStyle: getStyle(),
-              },
-              'bottom'
-            );
-          } else if (value.type === 'image') {
-            const v = value as SendImageProps;
-            const msg = ChatMessage.createImageMessage(
-              convId,
-              v.localPath,
-              convType as number as ChatMessageChatType,
-              {
-                width: v.imageWidth,
-                height: v.imageHeight,
-                fileSize: v.fileSize,
-                displayName: v.displayName ?? '',
-              }
-            );
-            console.log('test:zuoyu:image:', msg);
-            onAddData(
-              {
-                id: msg.msgId.toString(),
-                model: {
-                  userId: msg.from,
-                  modelType: 'message',
-                  layoutType: 'right',
-                  msg: msg,
-                },
-                containerStyle: getStyle(),
-              },
-              'bottom'
-            );
-          } else if (value.type === 'voice') {
-            const v = value as SendVoiceProps;
-            const msg = ChatMessage.createVoiceMessage(
-              convId,
-              v.localPath,
-              convType as number as ChatMessageChatType,
-              {
-                duration: v.duration,
-                fileSize: v.fileSize,
-                displayName: v.displayName ?? '',
-              }
-            );
-            console.log('test:zuoyu:voice:', msg);
-            onAddData(
-              {
-                id: msg.msgId.toString(),
-                model: {
-                  userId: msg.from,
-                  modelType: 'message',
-                  layoutType: 'right',
-                  msg: msg,
-                },
-                containerStyle: getStyle(),
-              },
-              'bottom'
-            );
-          } else if (value.type === 'video') {
-            const v = value as SendVideoProps;
-            const msg = ChatMessage.createVideoMessage(
-              convId,
-              v.localPath,
-              convType as number as ChatMessageChatType,
-              {
-                duration: v.duration ?? 0,
-                fileSize: v.fileSize,
-                displayName: v.displayName ?? '',
-                thumbnailLocalPath: v.thumbLocalPath,
-                width: v.videoHeight,
-                height: v.videoHeight,
-              }
-            );
-            console.log('test:zuoyu:video:', msg);
-            onAddData(
-              {
-                id: msg.msgId.toString(),
-                model: {
-                  userId: msg.from,
-                  modelType: 'message',
-                  layoutType: 'right',
-                  msg: msg,
-                },
-                containerStyle: getStyle(),
-              },
-              'bottom'
-            );
-          } else if (value.type === 'file') {
-            const v = value as SendFileProps;
-            const msg = ChatMessage.createFileMessage(
-              convId,
-              v.localPath,
-              convType as number as ChatMessageChatType,
-              {
-                fileSize: v.fileSize,
-                displayName: v.displayName ?? '',
-              }
-            );
-            console.log('test:zuoyu:video:', msg);
-            onAddData(
-              {
-                id: msg.msgId.toString(),
-                model: {
-                  userId: msg.from,
-                  modelType: 'message',
-                  layoutType: 'right',
-                  msg: msg,
-                },
-                containerStyle: getStyle(),
-              },
-              'bottom'
-            );
-          } else if (value.type === 'card') {
-            const msg = ChatMessage.createCustomMessage(
-              convId,
-              gCustomMessageCardEventType,
-              convType as number as ChatMessageChatType,
-              {
-                params: {
-                  userId: convId,
-                  nickname: convId,
-                  avatar:
-                    'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-                },
-              }
-            );
-            console.log('test:zuoyu:card:', msg);
-            onAddData(
-              {
-                id: msg.msgId.toString(),
-                model: {
-                  userId: msg.from,
-                  modelType: 'message',
-                  layoutType: 'right',
-                  msg: msg,
-                },
-                containerStyle: getStyle(),
-              },
-              'bottom'
-            );
-          }
-          isNeedScrollToEndRef.current = true;
-          scrollToEnd();
+          addSendMessageToUI(value, (msg) => {
+            sendMessageToServer(msg);
+          });
         },
-        removeMessage: (_msg: ChatMessage) => {},
-        recallMessage: (_msg: ChatMessage) => {},
-        updateMessage: (_updatedMsg: ChatMessage) => {},
-        loadHistoryMessage: (
-          _msgs: ChatMessage[],
-          _pos: MessageAddPosition
-        ) => {},
+        removeMessage: (msg: ChatMessage) => {
+          onDelMessage(msg);
+        },
+        recallMessage: (msg: ChatMessage) => {
+          onRecallMessageToUI(msg);
+        },
+        updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => {
+          onUpdateMessageToUI(updatedMsg, fromType);
+        },
+        loadHistoryMessage: (msgs: ChatMessage[], pos: MessageAddPosition) => {
+          if (pos === 'top') {
+            if (msgs.length > 0) {
+              startMsgIdRef.current = msgs[0]!.msgId.toString();
+            }
+          }
+          onAddMessageList(msgs, pos);
+        },
         onInputHeightChange: (height: number) => {
           if (height > 0) {
             listRef?.current?.scrollToEnd?.();
@@ -861,8 +1077,45 @@ export function useMessageList(
         },
       };
     },
-    [convId, convType, listRef, onAddData, scrollToEnd]
+    [
+      addSendMessageToUI,
+      sendMessageToServer,
+      listRef,
+      onAddMessageList,
+      onDelMessage,
+      onRecallMessageToUI,
+      onUpdateMessageToUI,
+    ]
   );
+
+  const onRequestHistoryMessage = () => {
+    console.log('test:zuoyu:first:', startMsgIdRef.current);
+    im.messageManager.loadHistoryMessage({
+      convId,
+      convType,
+      startMsgId: startMsgIdRef.current,
+      onResult: (msgs) => {
+        if (msgs.length > 0) {
+          startMsgIdRef.current = msgs[0]!.msgId.toString();
+        }
+        onAddMessageList(msgs, 'top');
+      },
+    });
+  };
+
+  React.useEffect(() => {
+    im.messageManager.loadHistoryMessage({
+      convId,
+      convType,
+      startMsgId: '',
+      onResult: (msgs) => {
+        if (msgs.length > 0) {
+          startMsgIdRef.current = msgs[0]!.msgId.toString();
+        }
+        onAddMessageList(msgs, 'top');
+      },
+    });
+  }, [convId, convType, im.messageManager, onAddMessageList]);
 
   return {
     ...flatListProps,

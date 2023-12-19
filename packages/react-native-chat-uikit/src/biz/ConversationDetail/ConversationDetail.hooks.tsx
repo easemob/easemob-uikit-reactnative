@@ -43,6 +43,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
   });
   const { createDirectoryIfNotExisted } = useCreateConversationDirectory();
   const im = useChatContext();
+  im.messageManager.setCurrentConvId({ convId, convType, convName });
 
   const setConversation = React.useCallback(async () => {
     const conv = await im.getConversation({

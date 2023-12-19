@@ -9,6 +9,7 @@ import {
   ChatGroupStyle,
   ChatMessage,
   ChatMessageReactionEvent,
+  ChatMessageStatusCallback,
   ChatMessageThreadEvent,
   ChatMessageType,
   ChatMultiDeviceEvent,
@@ -25,7 +26,10 @@ import { ErrorCode, UIKitError } from '../error';
 import { Services } from '../services';
 import { asyncTask, mergeObjects } from '../utils';
 import { gGroupMemberMyRemark } from './const';
-import { RequestList } from './requestList';
+import { MessageCacheManagerImpl } from './messageManager';
+import type { MessageCacheManager } from './messageManager.types';
+import { RequestListImpl } from './requestList';
+import type { RequestList } from './requestList.types';
 import {
   ChatEventType,
   ChatService,
@@ -55,6 +59,7 @@ export abstract class ChatServiceImpl
   _groupList: Map<string, GroupModel>;
   _groupMemberList: Map<string, Map<string, GroupParticipantModel>>;
   _request: RequestList;
+  _messageManager: MessageCacheManager;
   _contactState: Map<string, Map<string, boolean>>;
   _currentConversation?: ConversationModel;
   _convDataRequestCallback?: (params: {
@@ -84,8 +89,9 @@ export abstract class ChatServiceImpl
     this._contactList = new Map();
     this._groupList = new Map();
     this._groupMemberList = new Map();
-    this._request = new RequestList(this);
     this._contactState = new Map();
+    this._request = new RequestListImpl(this);
+    this._messageManager = new MessageCacheManagerImpl(this);
   }
 
   destructor() {
@@ -93,6 +99,8 @@ export abstract class ChatServiceImpl
     this._reset();
     this._request.destructor();
     this._request = undefined as any;
+    this._messageManager.destructor();
+    this._messageManager = undefined as any;
   }
 
   _reset(): void {
@@ -339,6 +347,10 @@ export abstract class ChatServiceImpl
 
   get requestList(): RequestList {
     return this._request;
+  }
+
+  get messageManager(): MessageCacheManager {
+    return this._messageManager;
   }
 
   tryCatch<T>(params: {
@@ -1735,6 +1747,53 @@ export abstract class ChatServiceImpl
           isOk: true,
           value: value,
         });
+      },
+    });
+  }
+
+  sendMessage(params: {
+    message: ChatMessage;
+    callback?: ChatMessageStatusCallback;
+  }): void {
+    const { message, callback } = params;
+    this.tryCatch({
+      promise: this.client.chatManager.sendMessage(message, callback),
+      event: 'sendMessage',
+    });
+  }
+
+  downloadMessageAttachment(params: {
+    message: ChatMessage;
+    callback?: ChatMessageStatusCallback;
+  }): void {
+    this.tryCatchSync({
+      promise: this.client.chatManager.downloadAttachment(
+        params.message,
+        params.callback
+      ),
+      event: 'downloadMessageAttachment',
+    });
+  }
+  getHistoryMessage(params: {
+    convId: string;
+    convType: ChatConversationType;
+    startMsgId: string;
+    direction: ChatSearchDirection;
+    loadCount: number;
+    onResult: ResultCallback<ChatMessage[]>;
+  }): void {
+    const { convId, convType, startMsgId, direction, loadCount } = params;
+    this.tryCatch({
+      promise: this.client.chatManager.getMessages(
+        convId,
+        convType,
+        startMsgId,
+        direction,
+        loadCount
+      ),
+      event: 'getHistoryMessage',
+      onFinished: (value) => {
+        params.onResult({ isOk: true, value: value });
       },
     });
   }

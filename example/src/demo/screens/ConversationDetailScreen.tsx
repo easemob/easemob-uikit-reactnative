@@ -1,7 +1,10 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ConversationDetail } from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
 
@@ -11,6 +14,7 @@ export function ConversationDetailScreen(props: Props) {
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
   const convName = ((route.params as any)?.params as any)?.convName;
+  const { top, bottom } = useSafeAreaInsets();
   return (
     <SafeAreaView
       style={{
@@ -26,6 +30,7 @@ export function ConversationDetailScreen(props: Props) {
         convId={convId}
         convType={convType}
         convName={convName}
+        input={{ props: { top, bottom } }}
         onBack={() => {
           // todo: maybe need update
           navigation.goBack();

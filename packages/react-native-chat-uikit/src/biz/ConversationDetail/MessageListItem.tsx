@@ -819,15 +819,26 @@ export function StateView(props: StateViewProps) {
       }}
     >
       <View style={{ flexGrow: 1 }} />
-      <LoadingIcon
-        isStop={isStop}
-        name={iconName}
-        style={{
-          width: 20,
-          height: 20,
-          tintColor: getColor(iconColor),
-        }}
-      />
+      {isStop === true ? (
+        <Icon
+          name={iconName}
+          style={{
+            height: 20,
+            width: 20,
+            tintColor: getColor(iconColor),
+          }}
+        />
+      ) : (
+        <LoadingIcon
+          isStop={isStop}
+          name={iconName}
+          style={{
+            width: 20,
+            height: 20,
+            tintColor: getColor(iconColor),
+          }}
+        />
+      )}
     </View>
   );
 }

@@ -3,6 +3,7 @@ import {
   ChatCustomMessageBody,
   ChatImageMessageBody,
   ChatMessage,
+  ChatMessageChatType,
   ChatMessageDirection,
   ChatMessageStatus,
   ChatMessageType,
@@ -53,8 +54,18 @@ export function getMessageState(msg: ChatMessage): MessageStateType {
     } else {
       ret = 'sending';
     }
-    // todo: send-to-peer
-    // todo: peer-read
+    if (
+      msg.chatType === ChatMessageChatType.PeerChat &&
+      msg.hasDeliverAck === true
+    ) {
+      ret = 'send-to-peer';
+    }
+    if (
+      msg.chatType === ChatMessageChatType.PeerChat &&
+      msg.hasReadAck === true
+    ) {
+      ret = 'peer-read';
+    }
   }
   return ret;
 }

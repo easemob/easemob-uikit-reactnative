@@ -43,14 +43,17 @@ export type ConversationDetailProps = PropsWithError &
     convType: ChatConversationType;
     convName?: string;
     input?: {
-      props?: MessageInputProps & { convId?: string };
+      props?: Omit<MessageInputProps, 'convId' | 'convType'> & {
+        convId?: string;
+        convType?: ChatConversationType;
+      };
       render?: React.ForwardRefExoticComponent<
         MessageInputProps & React.RefAttributes<MessageInputRef>
       >;
       ref?: React.RefObject<MessageInputRef>;
     };
     list?: {
-      props?: MessageListProps & {
+      props?: Omit<MessageListProps, 'convId' | 'convType'> & {
         convId?: string;
         convType?: ChatConversationType;
       };
@@ -141,6 +144,7 @@ type VoiceModel = {
 };
 export type SystemMessageModel = BasicModel & {
   contents: string[];
+  msg?: ChatMessage;
 };
 export type TimeMessageModel = BasicModel & {
   timestamp: number;
@@ -185,7 +189,7 @@ export type MessageListRef = {
   ) => void; // todo:
   removeMessage: (msg: ChatMessage) => void;
   recallMessage: (msg: ChatMessage) => void;
-  updateMessage: (updatedMsg: ChatMessage) => void;
+  updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => void;
   loadHistoryMessage: (msgs: ChatMessage[], pos: MessageAddPosition) => void;
   onInputHeightChange: (height: number) => void;
 };

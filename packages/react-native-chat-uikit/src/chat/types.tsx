@@ -9,6 +9,7 @@ import type {
   ChatGroupPermissionType,
   ChatMessage,
   ChatMessageEventListener,
+  ChatMessageStatusCallback,
   ChatMultiDeviceEventListener,
   ChatPresenceEventListener,
   ChatSearchDirection,
@@ -16,7 +17,8 @@ import type {
 
 import type { UIKitError } from '../error';
 import type { Keyof, PartialNullable } from '../types';
-import type { RequestList } from './requestList';
+import type { MessageCacheManager } from './messageManager.types';
+import type { RequestList } from './requestList.types';
 
 export type ChatEventType = 'undefined' | string;
 
@@ -414,6 +416,22 @@ export interface MessageServices {
     direction?: ChatSearchDirection;
     onResult: ResultCallback<ChatMessage[]>;
   }): void;
+  sendMessage(params: {
+    message: ChatMessage;
+    callback?: ChatMessageStatusCallback;
+  }): void;
+  downloadMessageAttachment(params: {
+    message: ChatMessage;
+    callback?: ChatMessageStatusCallback;
+  }): void;
+  getHistoryMessage(params: {
+    convId: string;
+    convType: ChatConversationType;
+    startMsgId: string;
+    direction: ChatSearchDirection;
+    loadCount: number;
+    onResult: ResultCallback<ChatMessage[]>;
+  }): void;
 }
 
 export interface GroupServices {
@@ -669,6 +687,7 @@ export interface ChatService
   sendFinished(params: { event: ChatEventType; extra?: any }): void;
 
   get requestList(): RequestList;
+  get messageManager(): MessageCacheManager;
 }
 
 /**
