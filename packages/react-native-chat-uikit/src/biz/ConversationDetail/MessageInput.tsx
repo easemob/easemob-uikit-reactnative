@@ -91,7 +91,7 @@ export const MessageInput = React.forwardRef<
         <View
           ref={testRef}
           style={{
-            backgroundColor: getColor('backgroundColor'),
+            backgroundColor: getColor('bg'),
             display: 'flex',
           }}
           onLayout={() => {

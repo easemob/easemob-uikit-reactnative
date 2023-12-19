@@ -204,9 +204,13 @@ export function useMessageInput(
     }
   };
   const onClickedClearButton = () => {
+    // !!! https://github.com/facebook/react-native/issues/37979
+    // !!! https://github.com/facebook/react-native/commit/a804c0f22b4b11b3d9632dc59a6da14f6c4325e3
     valueRef.current = '';
     rawValue.current = '';
-    _onValue(valueRef.current);
+    // inputRef.current?.clear();
+    setInputValue(valueRef.current);
+    // _onValue(valueRef.current);
   };
 
   const onClickedEmojiButton = () => {
