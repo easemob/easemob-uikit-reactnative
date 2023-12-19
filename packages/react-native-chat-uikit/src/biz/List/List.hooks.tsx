@@ -47,7 +47,7 @@ export function useListBasic<ItemT>(
   const isAutoUpdate = React.useRef(props.isAutoUpdate ?? false).current;
   const isEventUpdate = React.useRef(props.isEventUpdate ?? true).current;
   const enableRefresh = React.useRef(props.onRefresh ? true : false).current;
-  const enableMore = React.useRef(props.onMore ? true : false).current;
+  const enableMore = React.useRef(props.onLoadMore ? true : false).current;
   const [refreshing, setRefreshing] = React.useState(props.refreshing ?? false);
 
   const viewabilityConfigRef = React.useRef<ViewabilityConfig>({
