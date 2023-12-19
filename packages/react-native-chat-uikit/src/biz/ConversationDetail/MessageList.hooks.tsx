@@ -59,6 +59,10 @@ export function useMessageList(
     id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
   ) => void;
+  inverted: boolean;
+  maxListHeight: number;
+  setMaxListHeight: React.Dispatch<React.SetStateAction<number>>;
+  reachedThreshold: number;
 } {
   const {
     convId,
@@ -72,7 +76,7 @@ export function useMessageList(
   const flatListProps = useFlatList<MessageListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'normal',
     onInit: () => init(),
-    onRefresh: () => onRequestHistoryMessage(),
+    onLoadMore: () => onRequestHistoryMessage(),
   });
   const {
     data,
@@ -88,6 +92,11 @@ export function useMessageList(
   const currentVoicePlayingRef = React.useRef<MessageModel | undefined>();
   const im = useChatContext();
   const startMsgIdRef = React.useRef('');
+  const [maxListHeight, setMaxListHeight] = React.useState<number>(0);
+  // !!! https://github.com/facebook/react-native/issues/36529
+  // !!! https://github.com/facebook/react-native/issues/14312
+  // !!! only android, FlatList onEndReached no work android
+  const [reachedThreshold] = React.useState(100);
 
   const init = async () => {
     if (testMode === 'only-ui') {
@@ -467,6 +476,7 @@ export function useMessageList(
     menuRef.current?.startHide?.();
   };
   const alertRef = React.useRef<AlertRef>(null);
+  const inverted = React.useRef(true).current;
 
   const listenerRef = React.useRef<ChatServiceListener>({
     onMessagesReceived: () => {},
@@ -600,7 +610,7 @@ export function useMessageList(
   const scrollToEnd = React.useCallback(() => {
     if (isNeedScrollToEndRef.current === true) {
       timeoutTask(0, () => {
-        listRef?.current?.scrollToEnd?.();
+        listRef?.current?.scrollToIndex?.({ index: 0 });
       });
     }
   }, [listRef]);
@@ -608,9 +618,9 @@ export function useMessageList(
   const onAddData = React.useCallback(
     (d: MessageListItemProps, pos: MessageAddPosition) => {
       if (pos === 'bottom') {
-        dataRef.current = [...dataRef.current, d];
-      } else {
         dataRef.current = [d, ...dataRef.current];
+      } else {
+        dataRef.current = [...dataRef.current, d];
       }
 
       setData(dataRef.current);
@@ -620,7 +630,7 @@ export function useMessageList(
 
   const onAddMessageList = React.useCallback(
     (msgs: ChatMessage[], position: MessageAddPosition) => {
-      const list = msgs.map((msg) => {
+      const list = msgs.reverse().map((msg) => {
         return {
           id: msg.msgId.toString(),
           model: {
@@ -633,9 +643,9 @@ export function useMessageList(
         } as MessageListItemProps;
       });
       if (position === 'bottom') {
-        dataRef.current = [...dataRef.current, ...list];
-      } else {
         dataRef.current = [...list, ...dataRef.current];
+      } else {
+        dataRef.current = [...dataRef.current, ...list];
       }
       setData([...dataRef.current]);
     },
@@ -771,9 +781,7 @@ export function useMessageList(
         },
         'bottom'
       );
-      if (isNeedScrollToEndRef.current === true) {
-        scrollToEnd();
-      }
+      scrollToEnd();
     },
     [im.userId, onAddData, scrollToEnd]
   );
@@ -808,11 +816,8 @@ export function useMessageList(
   const onRecallMessageToUI = React.useCallback(
     (msg: ChatMessage) => {
       onAddData(createRecallMessageTip(msg), 'bottom');
-      if (isNeedScrollToEndRef.current === true) {
-        scrollToEnd();
-      }
     },
-    [createRecallMessageTip, onAddData, scrollToEnd]
+    [createRecallMessageTip, onAddData]
   );
 
   React.useEffect(() => {
@@ -1021,7 +1026,6 @@ export function useMessageList(
         );
         onFinished?.(msg);
       }
-      isNeedScrollToEndRef.current = true;
       scrollToEnd();
     },
     [convId, convType, onAddData, scrollToEnd]
@@ -1049,6 +1053,7 @@ export function useMessageList(
             | SendSystemProps
             | SendCardProps
         ) => {
+          isNeedScrollToEndRef.current = true;
           addSendMessageToUI(value, (msg) => {
             sendMessageToServer(msg);
           });
@@ -1069,22 +1074,25 @@ export function useMessageList(
             }
           }
           onAddMessageList(msgs, pos);
+          if (pos === 'top') {
+            isNeedScrollToEndRef.current = false;
+          }
         },
         onInputHeightChange: (height: number) => {
           if (height > 0) {
-            listRef?.current?.scrollToEnd?.();
+            scrollToEnd();
           }
         },
       };
     },
     [
       addSendMessageToUI,
-      sendMessageToServer,
-      listRef,
       onAddMessageList,
       onDelMessage,
       onRecallMessageToUI,
       onUpdateMessageToUI,
+      scrollToEnd,
+      sendMessageToServer,
     ]
   );
 
@@ -1099,6 +1107,7 @@ export function useMessageList(
           startMsgIdRef.current = msgs[0]!.msgId.toString();
         }
         onAddMessageList(msgs, 'top');
+        isNeedScrollToEndRef.current = false;
       },
     });
   };
@@ -1113,6 +1122,7 @@ export function useMessageList(
           startMsgIdRef.current = msgs[0]!.msgId.toString();
         }
         onAddMessageList(msgs, 'top');
+        isNeedScrollToEndRef.current = false;
       },
     });
   }, [convId, convType, im.messageManager, onAddMessageList]);
@@ -1127,5 +1137,9 @@ export function useMessageList(
     alertRef,
     onClickedItem,
     onLongPressItem,
+    inverted,
+    maxListHeight,
+    setMaxListHeight,
+    reachedThreshold,
   };
 }

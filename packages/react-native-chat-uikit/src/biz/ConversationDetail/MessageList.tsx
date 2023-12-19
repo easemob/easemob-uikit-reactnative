@@ -40,6 +40,10 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onRequestModalClose,
       onClickedItem,
       onLongPressItem,
+      inverted,
+      maxListHeight,
+      setMaxListHeight,
+      reachedThreshold,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -54,24 +58,36 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
         style={[
           {
             backgroundColor: getColor('bg'),
-            flexGrow: 1,
+            // flexGrow: 1,
+            // flexShrink: 1,
+            flex: 1,
+            // backgroundColor: 'blue',
           },
           containerStyle,
         ]}
         onTouchEnd={onClicked}
+        onLayout={(e) => {
+          setMaxListHeight(e.nativeEvent.layout.height);
+        }}
       >
         <View
           style={{
-            flex: 1,
+            // flexGrow: 1,
+            // flexShrink: 1,
+            // flex: 1,
+            // maxListHeight: '80%',
+            maxHeight: maxListHeight,
+            // backgroundColor: 'red',
           }}
         >
           <FlatList
             ref={flatListRef}
-            style={{ flexGrow: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
+            // style={{ flexGrow: 1 }}
+            // contentContainerStyle={{ flexGrow: 1 }}
             data={data}
             refreshing={refreshing}
             onRefresh={onRefresh}
+            inverted={inverted}
             renderItem={(info: ListRenderItemInfo<MessageListItemProps>) => {
               const { item } = info;
               return (
@@ -86,6 +102,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
               return item.id;
             }}
             onEndReached={onMore}
+            onEndReachedThreshold={reachedThreshold}
             viewabilityConfig={viewabilityConfig}
             onViewableItemsChanged={onViewableItemsChanged}
             ListEmptyComponent={EmptyPlaceholder}

@@ -198,7 +198,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       convType,
       startMsgId,
       direction: ChatSearchDirection.UP,
-      loadCount: 2,
+      loadCount: 10,
       onResult: (result) => {
         if (result.isOk && result.value) {
           // todo: try download failed attachment. dispatch download result.
