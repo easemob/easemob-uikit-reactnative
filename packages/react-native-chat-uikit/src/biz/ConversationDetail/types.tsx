@@ -165,6 +165,14 @@ export type MessageListItemActionsProps = {
     id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
   ) => void;
+  onAvatarClicked?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
+  onQuoteClicked?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
 };
 export type MessageListItemProps = MessageListItemActionsProps & {
   /**

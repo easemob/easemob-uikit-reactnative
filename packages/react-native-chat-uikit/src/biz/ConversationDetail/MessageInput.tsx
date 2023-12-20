@@ -79,6 +79,7 @@ export const MessageInput = React.forwardRef<
     onRequestModalCloseEdit,
     editRef,
     onEditMessageFinished,
+    quoteMsg,
   } = useMessageInput(props, ref);
 
   return (
@@ -87,10 +88,13 @@ export const MessageInput = React.forwardRef<
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={top}
       >
-        <MessageInputQuoteView
-          showQuote={showQuote}
-          onDel={onHideQuoteMessage}
-        />
+        {showQuote === true ? (
+          <MessageInputQuoteView
+            showQuote={showQuote}
+            onDel={onHideQuoteMessage}
+            msg={quoteMsg}
+          />
+        ) : null}
 
         <View
           ref={testRef}

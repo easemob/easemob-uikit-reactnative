@@ -309,6 +309,7 @@ export function useMessageInput(
     if (sendIconName === 'airplane') {
       const content = valueRef.current;
       if (quoteMessageRef.current !== undefined) {
+        // !!! only support text message for quote
         propsOnClickedSend?.({
           type: 'quote',
           content: content,
@@ -547,5 +548,6 @@ export function useMessageInput(
     onRequestModalCloseEdit,
     editRef,
     onEditMessageFinished,
+    quoteMsg: quoteMessageRef.current?.msg,
   };
 }

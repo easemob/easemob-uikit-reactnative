@@ -234,7 +234,6 @@ export function getImageShowSize(msg: ChatMessage, maxW?: number) {
   const body = msg.body as ChatImageMessageBody | ChatVideoMessageBody;
   const width = body.width;
   const height = body.height;
-  console.log('test:zuoyu:width:', maxWidth, width, height);
   if (
     width !== undefined &&
     height !== undefined &&
@@ -309,9 +308,9 @@ export function getMessageBubblePadding(msg: ChatMessage) {
   };
 }
 
-export function isQuoteMessage(msg: ChatMessage, msgQuote?: ChatMessage) {
-  const msgId = msg.attributes?.[gMessageAttributeQuote];
-  return msgQuote !== undefined && msgQuote.msgId === msgId;
+export function isQuoteMessage(msg: ChatMessage, _msgQuote?: ChatMessage) {
+  const quote = msg.attributes?.[gMessageAttributeQuote];
+  return quote !== undefined;
 }
 
 export function getSystemTip(

@@ -17,7 +17,10 @@ import {
 } from 'react-native-chat-sdk';
 
 import type { IconNameType } from '../../assets';
-import { gCustomMessageCardEventType } from '../../chat';
+import {
+  gCustomMessageCardEventType,
+  gMessageAttributeQuote,
+} from '../../chat';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
@@ -97,6 +100,7 @@ export function MessageText(props: MessageTextProps) {
   if (isSupport !== true) {
     content = tr('not-support-message');
   }
+
   return (
     <View>
       <Text
@@ -404,7 +408,6 @@ export function MessageFile(props: MessageFileProps) {
 export type MessageCustomCardProps = MessageBasicProps & {};
 export function MessageCustomCard(props: MessageCustomCardProps) {
   const { msg, maxWidth, layoutType } = props;
-  console.log('test:zuoyu:MessageCustomCard:', props);
   const body = msg.body as ChatCustomMessageBody;
   const avatar = body.params?.avatar;
   const userId = body.params?.userId;
@@ -887,11 +890,10 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
     hasTriangle,
     model,
     containerStyle,
-    onClicked,
-    onLongPress,
     maxWidth,
+    onQuoteClicked,
   } = props;
-  const { layoutType, msgQuote: msg } = model;
+  const { layoutType, msgQuote: msg, msg: originalMsg } = model;
   const { paddingHorizontal, paddingVertical } = React.useMemo(() => {
     return {
       paddingHorizontal: 12,
@@ -936,8 +938,8 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
       ? 17
       : 12;
 
-  const getContent = (msg: ChatMessage) => {
-    switch (msg.body.type) {
+  const getContent = (msg?: ChatMessage) => {
+    switch (msg?.body.type) {
       case ChatMessageType.TXT: {
         return (
           <View>
@@ -1169,30 +1171,19 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
     }
   };
 
-  const _onClicked = (msg: ChatMessage) => {
-    if (onClicked) {
-      onClicked(msg.msgId.toString(), model);
+  const _onClicked = (msg: ChatMessage, quoteMsg?: ChatMessage) => {
+    if (onQuoteClicked) {
+      const quote = msg.attributes[gMessageAttributeQuote];
+      onQuoteClicked?.(quoteMsg ? quoteMsg.msgId : quote.msgID, model);
     }
   };
-
-  const _onLongPress = (msg: ChatMessage) => {
-    if (onLongPress) {
-      onLongPress(msg.msgId.toString(), model);
-    }
-  };
-
-  console.log('test:zuoyu:MessageQuoteBubble:', layoutType);
-
-  if (msg === undefined) {
-    return null;
-  }
 
   return (
     <View
       style={[
         {
           flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
-          maxWidth: maxWidth ?? '60%',
+          maxWidth: maxWidth ?? '70%',
           marginLeft: layoutType === 'left' ? marginWidth : marginWidth,
           marginBottom: 2,
           // marginRight: layoutType === 'left' ? marginWidth : undefined,
@@ -1212,8 +1203,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             paddingVertical: paddingVertical,
           },
         ]}
-        onTouchEnd={() => _onClicked(msg)}
-        onLongPress={() => _onLongPress(msg)}
+        onTouchEnd={() => _onClicked(originalMsg, msg)}
       >
         {getContent(msg)}
       </Pressable>
@@ -1235,6 +1225,7 @@ export function MessageView(props: MessageViewProps) {
     avatarIsVisible = true,
     nameIsVisible = true,
     timeIsVisible = true,
+    onQuoteClicked,
     ...others
   } = props;
   const { layoutType } = model;
@@ -1272,6 +1263,8 @@ export function MessageView(props: MessageViewProps) {
           <MessageQuoteBubble
             hasAvatar={avatarIsVisible}
             hasTriangle={hasTriangle}
+            onQuoteClicked={onQuoteClicked}
+            maxWidth={maxWidth}
             model={model}
           />
         ) : null}

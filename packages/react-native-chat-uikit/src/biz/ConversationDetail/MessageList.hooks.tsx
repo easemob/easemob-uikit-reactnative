@@ -36,6 +36,7 @@ import type {
   SendCardProps,
   SendFileProps,
   SendImageProps,
+  SendQuoteProps,
   SendSystemProps,
   SendTextProps,
   SendTimeProps,
@@ -643,9 +644,9 @@ export function useMessageList(
   );
 
   const onAddMessageList = React.useCallback(
-    (msgs: ChatMessage[], position: MessageAddPosition) => {
-      const list = msgs.reverse().map((msg) => {
-        const getModel = () => {
+    async (msgs: ChatMessage[], position: MessageAddPosition) => {
+      const list = msgs.reverse().map(async (msg) => {
+        const getModel = async () => {
           let modelType = 'message';
           if (msg.body.type === ChatMessageType.CUSTOM) {
             const body = msg.body as ChatCustomMessageBody;
@@ -662,28 +663,37 @@ export function useMessageList(
               msg: msg,
             } as SystemMessageModel;
           } else {
+            const quote = msg.attributes?.[gMessageAttributeQuote];
+            let quoteMsg: ChatMessage | undefined;
+            if (quote) {
+              quoteMsg = await im.getMessage({
+                messageId: quote.msgID,
+              });
+            }
             return {
               userId: msg.from,
               modelType: 'message',
               layoutType: msg.from === im.userId ? 'right' : 'left',
               msg: msg,
+              msgQuote: quoteMsg,
             } as MessageModel;
           }
         };
         return {
           id: msg.msgId.toString(),
-          model: getModel(),
+          model: await getModel(),
           containerStyle: getStyle(),
         } as MessageListItemProps;
       });
+      const l = await Promise.all(list);
       if (position === 'bottom') {
-        dataRef.current = [...list, ...dataRef.current];
+        dataRef.current = [...l, ...dataRef.current];
       } else {
-        dataRef.current = [...dataRef.current, ...list];
+        dataRef.current = [...dataRef.current, ...l];
       }
       setData([...dataRef.current]);
     },
-    [dataRef, im.userId, setData]
+    [dataRef, im, setData]
   );
 
   const onDelMessageToUI = React.useCallback(
@@ -781,7 +791,6 @@ export function useMessageList(
               icon: 'img',
               onClicked: () => {
                 menuRef.current?.startHide?.(() => {
-                  // onEditMessage(msgModel.msg); // todo:
                   propsOnEditMessageForInput?.(model as MessageModel);
                 });
               },
@@ -1031,7 +1040,8 @@ export function useMessageList(
         | SendVoiceProps
         | SendTimeProps
         | SendSystemProps
-        | SendCardProps,
+        | SendCardProps
+        | SendQuoteProps,
 
       onFinished?: (msg: ChatMessage) => void
     ) => {
@@ -1196,6 +1206,39 @@ export function useMessageList(
           'bottom'
         );
         onFinished?.(msg);
+      } else if (value.type === 'quote') {
+        const quote = value as SendQuoteProps;
+        const quoteMsg = quote.quote.msg;
+        // !!! only support text quote message.
+        const msg = ChatMessage.createTextMessage(
+          convId,
+          quote.content,
+          convType as number as ChatMessageChatType
+        );
+        msg.attributes = {
+          [gMessageAttributeQuote]: {
+            msgID: quoteMsg.msgId,
+            msgPreview: 'rn',
+            msgSender: quoteMsg.from,
+            msgType: quoteMsg.body.type,
+          },
+        };
+        console.log('test:zuoyu:card:', msg);
+        onAddData(
+          {
+            id: msg.msgId.toString(),
+            model: {
+              userId: msg.from,
+              modelType: 'message',
+              layoutType: 'right',
+              msg: msg,
+              msgQuote: quote.quote.msg,
+            },
+            containerStyle: getStyle(),
+          },
+          'bottom'
+        );
+        onFinished?.(msg);
       }
       scrollToEnd();
     },
@@ -1223,6 +1266,7 @@ export function useMessageList(
             | SendTimeProps
             | SendSystemProps
             | SendCardProps
+            | SendQuoteProps
         ) => {
           isNeedScrollToEndRef.current = true;
           addSendMessageToUI(value, (msg) => {
@@ -1241,6 +1285,9 @@ export function useMessageList(
         loadHistoryMessage: (msgs: ChatMessage[], pos: MessageAddPosition) => {
           if (pos === 'top') {
             if (msgs.length > 0) {
+              if (startMsgIdRef.current === msgs[0]?.msgId) {
+                return;
+              }
               startMsgIdRef.current = msgs[0]!.msgId.toString();
             }
           }

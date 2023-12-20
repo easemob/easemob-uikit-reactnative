@@ -1676,6 +1676,13 @@ export abstract class ChatServiceImpl
     });
   }
 
+  getMessage(params: { messageId: string }): Promise<ChatMessage | undefined> {
+    return this.tryCatchSync({
+      promise: this.client.chatManager.getMessage(params.messageId),
+      event: 'getMessage',
+    });
+  }
+
   recallMessage(params: {
     message: ChatMessage;
     onResult: ResultCallback<void>;

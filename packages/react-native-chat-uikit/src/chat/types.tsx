@@ -396,6 +396,7 @@ export interface UserServices {
 }
 
 export interface MessageServices {
+  getMessage(params: { messageId: string }): Promise<ChatMessage | undefined>;
   recallMessage(params: {
     message: ChatMessage;
     onResult: ResultCallback<void>;

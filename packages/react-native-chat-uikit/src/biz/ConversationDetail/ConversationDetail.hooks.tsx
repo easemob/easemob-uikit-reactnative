@@ -12,6 +12,7 @@ import type {
   SendCardProps,
   SendFileProps,
   SendImageProps,
+  SendQuoteProps,
   SendTextProps,
   SendVideoProps,
   SendVoiceProps,
@@ -98,6 +99,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
         | SendVideoProps
         | SendVoiceProps
         | SendCardProps
+        | SendQuoteProps
     ) => {
       _messageListRef.current?.addSendMessage(value);
     },
