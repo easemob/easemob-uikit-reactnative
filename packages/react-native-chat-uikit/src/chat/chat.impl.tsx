@@ -1748,6 +1748,25 @@ export abstract class ChatServiceImpl
     });
   }
 
+  editMessage(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<ChatMessage>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.modifyMessageBody(
+        params.message.msgId,
+        params.message.body
+      ),
+      event: 'editMessage',
+      onFinished: async (msg) => {
+        params.onResult({
+          isOk: true,
+          value: msg,
+        });
+      },
+    });
+  }
+
   getNewRequestList(params: {
     convId: string;
     convType: ChatConversationType;

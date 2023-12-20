@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { usePermissions } from 'react-native-chat-uikit';
 
-import { default as Test } from './test_conversation_detail';
+import { default as Test } from './test_edit_message';
 
 // if (
 //   Platform.OS === 'android' &&

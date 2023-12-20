@@ -72,6 +72,7 @@ export function useMessageList(
     onClickedItem: propsOnClicked,
     onLongPressItem: propsOnLongPress,
     onQuoteMessageForInput: propsOnQuoteMessageForInput,
+    onEditMessageForInput: propsOnEditMessageForInput,
   } = props;
   const { tr } = useI18nContext();
   const flatListProps = useFlatList<MessageListItemProps>({
@@ -779,7 +780,10 @@ export function useMessageList(
               isHigh: false,
               icon: 'img',
               onClicked: () => {
-                menuRef.current?.startHide?.(() => {});
+                menuRef.current?.startHide?.(() => {
+                  // onEditMessage(msgModel.msg); // todo:
+                  propsOnEditMessageForInput?.(model as MessageModel);
+                });
               },
             });
           }
@@ -849,14 +853,12 @@ export function useMessageList(
           const msgModel = d.model as MessageModel;
           if (fromType === 'send') {
             if (msgModel.msg.localMsgId === msg.localMsgId) {
-              console.log('test:zuoyu:onUpdateMessageToUI:msgId:2', isExisted);
               msgModel.msg = msg;
               d.model = { ...msgModel };
               return true;
             }
           } else {
             if (msgModel.msg.msgId === msg.msgId) {
-              console.log('test:zuoyu:onUpdateMessageToUI:msgId', isExisted);
               msgModel.msg = msg;
               d.model = { ...msgModel };
               return true;
@@ -865,12 +867,23 @@ export function useMessageList(
         }
         return false;
       });
-      console.log('test:zuoyu:onUpdateMessageToUI:', isExisted);
       if (isExisted) {
         setData([...dataRef.current]);
       }
     },
     [dataRef, setData]
+  );
+
+  const onEditMessage = React.useCallback(
+    (msg: ChatMessage) => {
+      im.editMessage({
+        message: msg,
+        onResult: () => {
+          onUpdateMessageToUI(msg, 'recv');
+        },
+      });
+    },
+    [im, onUpdateMessageToUI]
   );
 
   const onAddMessageToUI = React.useCallback(
@@ -1241,12 +1254,16 @@ export function useMessageList(
             scrollToEnd();
           }
         },
+        editMessageFinished: (model) => {
+          onEditMessage(model.msg);
+        },
       };
     },
     [
       addSendMessageToUI,
       onAddMessageList,
       onDelMessage,
+      onEditMessage,
       onRecallMessage,
       onUpdateMessageToUI,
       scrollToEnd,
@@ -1264,11 +1281,6 @@ export function useMessageList(
         console.log('test:zuoyu:first:result:', startMsgIdRef.current);
         if (msgs.length > 0) {
           const newStartMsgId = msgs[0]!.msgId.toString();
-          console.log(
-            'test:zuoyu:first:',
-            startMsgIdRef.current,
-            newStartMsgId
-          );
           console.log();
           if (newStartMsgId === startMsgIdRef.current) {
             return;

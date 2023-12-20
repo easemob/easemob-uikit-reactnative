@@ -412,6 +412,10 @@ export interface MessageServices {
     message: ChatMessage;
     onResult: ResultCallback<void>;
   }): void;
+  editMessage(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<ChatMessage>;
+  }): void;
   getNewRequestList(params: {
     convId: string;
     convType: ChatConversationType;

@@ -5,6 +5,7 @@ import {
   Platform,
   TextInput as RNTextInput,
 } from 'react-native';
+import type { ChatTextMessageBody } from 'react-native-chat-sdk';
 import emoji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
@@ -15,6 +16,7 @@ import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 // import { gVoiceBarHeight } from '../const';
 import { FACE_ASSETS_UTF16 } from '../EmojiList';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
+import type { MessageInputEditMessageRef } from './MessageInputEditMessage';
 import type {
   MessageInputProps,
   MessageInputRef,
@@ -42,6 +44,7 @@ export function useMessageInput(
     closeAfterSend,
     onHeightChange,
     convId,
+    onEditMessageFinished: propsOnEditMessageFinished,
   } = props;
   const { keyboardHeight, keyboardCurrentHeight } = useKeyboardHeight();
   const inputRef = React.useRef<RNTextInput>({} as any);
@@ -65,6 +68,8 @@ export function useMessageInput(
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
   const quoteMessageRef = React.useRef<MessageModel | undefined>(undefined);
   const [showQuote, setShowQuote] = React.useState(false);
+  const editRef = React.useRef<MessageInputEditMessageRef>({} as any);
+  const msgModelRef = React.useRef<MessageModel>();
 
   const _onValue = (v: string) => {
     if (v.length > 0 && inputBarState === 'keyboard') {
@@ -331,7 +336,6 @@ export function useMessageInput(
     propsOnClickedSend?.(props);
   };
   const onSelectSendVoice = (props: SendVoiceProps) => {
-    console.log('test:zuoyu:onSelectSendVoice', props);
     propsOnClickedSend?.(props);
     changeInputBarState('normal');
   };
@@ -449,6 +453,28 @@ export function useMessageInput(
     setShowQuote(false);
   }, []);
 
+  const onRequestModalCloseEdit = React.useCallback(() => {
+    editRef.current?.startHide?.();
+  }, []);
+
+  const onShowEditMessage = React.useCallback((model: MessageModel) => {
+    msgModelRef.current = model;
+    editRef.current?.startShowWithInit?.(model.msg);
+  }, []);
+
+  const onEditMessageFinished = React.useCallback(
+    (msgId: string, text: string) => {
+      editRef.current?.startHide?.(() => {
+        if (msgModelRef.current?.msg.msgId === msgId) {
+          const body = msgModelRef.current.msg.body as ChatTextMessageBody;
+          body.content = text;
+          propsOnEditMessageFinished?.(msgModelRef.current);
+        }
+      });
+    },
+    [propsOnEditMessageFinished]
+  );
+
   React.useEffect(() => {
     console.log('test:zuoyu:height:', keyboardCurrentHeight, emojiHeight);
     if (
@@ -470,6 +496,9 @@ export function useMessageInput(
       },
       quoteMessage: (model) => {
         onShowQuoteMessage(model);
+      },
+      editMessage: (model) => {
+        onShowEditMessage(model);
       },
     };
   });
@@ -515,5 +544,8 @@ export function useMessageInput(
     onVoiceFailed,
     showQuote,
     onHideQuoteMessage,
+    onRequestModalCloseEdit,
+    editRef,
+    onEditMessageFinished,
   };
 }

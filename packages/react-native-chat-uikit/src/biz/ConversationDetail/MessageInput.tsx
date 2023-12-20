@@ -12,6 +12,7 @@ import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { EmojiListMemo } from '../EmojiList';
 import { BottomVoiceBar } from '../VoiceBar';
 import { useMessageInput } from './MessageInput.hooks';
+import { MessageInputEditMessage } from './MessageInputEditMessage';
 import { MessageInputQuoteView } from './MessageInputQuoteView';
 import type { MessageInputProps, MessageInputRef } from './types';
 
@@ -75,6 +76,9 @@ export const MessageInput = React.forwardRef<
     onVoiceFailed,
     showQuote,
     onHideQuoteMessage,
+    onRequestModalCloseEdit,
+    editRef,
+    onEditMessageFinished,
   } = useMessageInput(props, ref);
 
   return (
@@ -249,6 +253,12 @@ export const MessageInput = React.forwardRef<
       <BottomSheetNameMenu
         ref={menuRef}
         onRequestModalClose={onRequestModalCloseMenu}
+      />
+      <MessageInputEditMessage
+        ref={editRef}
+        top={top}
+        onRequestModalClose={onRequestModalCloseEdit}
+        onEditMessageFinished={onEditMessageFinished}
       />
     </>
   );

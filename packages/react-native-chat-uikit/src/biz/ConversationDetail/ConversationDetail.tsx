@@ -47,6 +47,8 @@ export function ConversationDetail(props: ConversationDetailProps) {
     _MessageList,
     messageListProps,
     onQuoteMessageForInput,
+    onEditMessageForInput,
+    onEditMessageFinished,
   } = useConversationDetail(props);
 
   const navigationBar = () => {
@@ -105,12 +107,14 @@ export function ConversationDetail(props: ConversationDetailProps) {
           _messageInputRef?.current?.close?.();
         }}
         onQuoteMessageForInput={onQuoteMessageForInput}
+        onEditMessageForInput={onEditMessageForInput}
         ref={_messageListRef}
         {...messageListProps}
       />
       <_MessageInput
         ref={_messageInputRef}
         onClickedSend={onClickedSend}
+        onEditMessageFinished={onEditMessageFinished}
         onHeightChange={(height) => {
           _messageListRef?.current?.onInputHeightChange?.(height);
         }}

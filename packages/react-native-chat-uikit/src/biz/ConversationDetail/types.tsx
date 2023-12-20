@@ -12,6 +12,7 @@ import type {
 export type MessageInputRef = {
   close: () => void;
   quoteMessage: (model: MessageModel) => void;
+  editMessage: (model: MessageModel) => void;
 };
 export type MessageInputProps = PropsWithError &
   PropsWithTest & {
@@ -31,6 +32,7 @@ export type MessageInputProps = PropsWithError &
     ) => void;
     closeAfterSend?: boolean;
     onHeightChange?: (height: number) => void;
+    onEditMessageFinished: (model: MessageModel) => void;
   };
 export type MessageInputState = 'normal' | 'emoji' | 'voice' | 'keyboard';
 
@@ -191,6 +193,7 @@ export type MessageListRef = {
   updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => void;
   loadHistoryMessage: (msgs: ChatMessage[], pos: MessageAddPosition) => void;
   onInputHeightChange: (height: number) => void;
+  editMessageFinished: (model: MessageModel) => void;
 };
 export type MessageListProps = PropsWithError &
   PropsWithTest & {
@@ -206,5 +209,6 @@ export type MessageListProps = PropsWithError &
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => void;
     onQuoteMessageForInput?: (model: MessageModel) => void;
+    onEditMessageForInput?: (model: MessageModel) => void;
     containerStyle?: StyleProp<ViewStyle>;
   };

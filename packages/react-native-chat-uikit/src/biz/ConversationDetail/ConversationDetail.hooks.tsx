@@ -111,6 +111,20 @@ export function useConversationDetail(props: ConversationDetailProps) {
     [_messageInputRef]
   );
 
+  const onEditMessageForInput = React.useCallback(
+    (model: MessageModel) => {
+      _messageInputRef.current?.editMessage?.(model);
+    },
+    [_messageInputRef]
+  );
+
+  const onEditMessageFinished = React.useCallback(
+    (model: MessageModel) => {
+      _messageListRef.current?.editMessageFinished?.(model);
+    },
+    [_messageListRef]
+  );
+
   return {
     onClickedSend,
     _messageInputRef,
@@ -120,5 +134,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     _MessageList,
     messageListProps,
     onQuoteMessageForInput,
+    onEditMessageForInput,
+    onEditMessageFinished,
   };
 }
