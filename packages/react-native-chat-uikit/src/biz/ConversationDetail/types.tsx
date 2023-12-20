@@ -143,8 +143,7 @@ type VoiceModel = {
   isVoicePlaying?: boolean;
 };
 export type SystemMessageModel = BasicModel & {
-  contents: string[];
-  msg?: ChatMessage;
+  msg: ChatMessage;
 };
 export type TimeMessageModel = BasicModel & {
   timestamp: number;

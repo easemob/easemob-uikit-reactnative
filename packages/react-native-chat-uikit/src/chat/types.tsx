@@ -396,6 +396,10 @@ export interface UserServices {
 }
 
 export interface MessageServices {
+  recallMessage(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<void>;
+  }): void;
   insertMessage(params: {
     message: ChatMessage;
     onResult: ResultCallback<void>;

@@ -13,6 +13,8 @@ import {
 import type { IconNameType } from '../../assets';
 import {
   gCustomMessageCardEventType,
+  gCustomMessageCreateGroupEventType,
+  gCustomMessageRecallEventType,
   gMessageAttributeQuote,
 } from '../../chat';
 import { Services } from '../../services';
@@ -310,4 +312,29 @@ export function getMessageBubblePadding(msg: ChatMessage) {
 export function isQuoteMessage(msg: ChatMessage, msgQuote?: ChatMessage) {
   const msgId = msg.attributes?.[gMessageAttributeQuote];
   return msgQuote !== undefined && msgQuote.msgId === msgId;
+}
+
+export function getSystemTip(
+  msg: ChatMessage,
+  tr: (key: string, ...args: any[]) => string
+): string {
+  if (msg.body.type !== ChatMessageType.CUSTOM) {
+    return '';
+  }
+  const body = msg.body as ChatCustomMessageBody;
+  if (body.event === gCustomMessageRecallEventType) {
+    try {
+      const content = JSON.parse(body.params?.recall as any) as {
+        text: string;
+        self: string;
+        from: string;
+        fromName: string;
+      };
+      return tr(content.text, content.fromName ?? content.from);
+    } catch (error) {}
+    return tr('recall a message');
+  } else if (body.event === gCustomMessageCreateGroupEventType) {
+    return 'create group';
+  }
+  return '';
 }

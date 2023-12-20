@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  ChatCustomMessageBody,
   ChatMessage,
   ChatMessageChatType,
   ChatMessageStatus,
@@ -76,7 +77,7 @@ export function useMessageList(
   const flatListProps = useFlatList<MessageListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'normal',
     onInit: () => init(),
-    onLoadMore: () => onRequestHistoryMessage(),
+    // onLoadMore: () => onRequestHistoryMessage(),
   });
   const {
     data,
@@ -277,9 +278,21 @@ export function useMessageList(
           model: {
             userId: 'xxx',
             modelType: 'system',
-            contents: [
-              'this is a system message.this is a system message.this is a system message.this is a system message.',
-            ],
+            msg: ChatMessage.createCustomMessage(
+              'xxx',
+              gCustomMessageRecallEventType,
+              0,
+              {
+                params: {
+                  recall: JSON.stringify({
+                    text: '${0} recalled a message.',
+                    self: 'im.userId',
+                    from: 'msg.from',
+                    fromName: 'msg.from',
+                  }),
+                },
+              }
+            ),
           },
         } as MessageListItemProps,
         {
@@ -631,14 +644,34 @@ export function useMessageList(
   const onAddMessageList = React.useCallback(
     (msgs: ChatMessage[], position: MessageAddPosition) => {
       const list = msgs.reverse().map((msg) => {
+        const getModel = () => {
+          let modelType = 'message';
+          if (msg.body.type === ChatMessageType.CUSTOM) {
+            const body = msg.body as ChatCustomMessageBody;
+            if (body.event === gCustomMessageCardEventType) {
+              modelType = 'system';
+            } else if (body.event === gCustomMessageRecallEventType) {
+              modelType = 'system';
+            }
+          }
+          if (modelType === 'system') {
+            return {
+              userId: msg.from,
+              modelType: 'system',
+              msg: msg,
+            } as SystemMessageModel;
+          } else {
+            return {
+              userId: msg.from,
+              modelType: 'message',
+              layoutType: msg.from === im.userId ? 'right' : 'left',
+              msg: msg,
+            } as MessageModel;
+          }
+        };
         return {
           id: msg.msgId.toString(),
-          model: {
-            userId: msg.from,
-            modelType: 'message',
-            layoutType: msg.from === im.userId ? 'right' : 'left',
-            msg: msg,
-          },
+          model: getModel(),
           containerStyle: getStyle(),
         } as MessageListItemProps;
       });
@@ -652,7 +685,7 @@ export function useMessageList(
     [dataRef, im.userId, setData]
   );
 
-  const onDelMessage = React.useCallback(
+  const onDelMessageToUI = React.useCallback(
     (msg: ChatMessage) => {
       const index = dataRef.current.findIndex((d) => {
         if (d.model.modelType === 'message') {
@@ -677,16 +710,63 @@ export function useMessageList(
     [dataRef, setData]
   );
 
+  const onDelMessage = React.useCallback(
+    (msg: ChatMessage) => {
+      im.removeMessage({
+        message: msg,
+        onResult: () => {
+          onDelMessageToUI(msg);
+        },
+      });
+    },
+    [im, onDelMessageToUI]
+  );
+
   const onShowLongPressMenu = (
     _id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
   ) => {
+    console.log('test:zuoyu:longpress:', model.modelType);
     if (model.modelType !== 'message') {
       return;
     }
     const initItems = [] as InitMenuItemsType[];
     const msgModel = model as MessageModel;
     if (model.modelType === 'message') {
+      if (msgModel.msg.body.type === ChatMessageType.TXT) {
+        initItems.push({
+          name: tr('Copy Text Message'),
+          isHigh: false,
+          icon: 'doc_on_doc',
+          onClicked: () => {
+            menuRef.current?.startHide?.(() => {
+              const body = msgModel.msg.body as ChatTextMessageBody;
+              Services.cbs.setString(body.content);
+              // todo: toast
+            });
+          },
+        });
+      }
+      if (
+        msgModel.msg.body.type === ChatMessageType.TXT ||
+        msgModel.msg.body.type === ChatMessageType.VOICE ||
+        msgModel.msg.body.type === ChatMessageType.IMAGE ||
+        msgModel.msg.body.type === ChatMessageType.VIDEO ||
+        msgModel.msg.body.type === ChatMessageType.FILE
+      ) {
+        if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+          initItems.push({
+            name: tr('Quote Message'),
+            isHigh: false,
+            icon: 'arrowshape_left',
+            onClicked: () => {
+              menuRef.current?.startHide?.(() => {
+                propsOnQuoteMessageForInput?.(model as MessageModel);
+              });
+            },
+          });
+        }
+      }
       if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
         if (
           msgModel.msg.body.type === ChatMessageType.TXT &&
@@ -704,20 +784,47 @@ export function useMessageList(
             });
           }
         }
+      }
+      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+        initItems.push({
+          name: tr('Report Message'),
+          isHigh: false,
+          icon: 'envelope',
+          onClicked: () => {
+            menuRef.current?.startHide?.(() => {});
+          },
+        });
+      }
+      initItems.push({
+        name: tr('Delete Message'),
+        isHigh: false,
+        icon: 'trash',
+        onClicked: () => {
+          menuRef.current?.startHide?.(() => {
+            onDelMessage(msgModel.msg);
+          });
+        },
+      });
+      if (
+        msgModel.msg.body.type === ChatMessageType.TXT ||
+        msgModel.msg.body.type === ChatMessageType.VOICE ||
+        msgModel.msg.body.type === ChatMessageType.IMAGE ||
+        msgModel.msg.body.type === ChatMessageType.VIDEO ||
+        msgModel.msg.body.type === ChatMessageType.FILE
+      ) {
+        // todo: max time limit
         if (
-          msgModel.msg.body.type === ChatMessageType.TXT ||
-          msgModel.msg.body.type === ChatMessageType.VOICE ||
-          msgModel.msg.body.type === ChatMessageType.IMAGE ||
-          msgModel.msg.body.type === ChatMessageType.VIDEO ||
-          msgModel.msg.body.type === ChatMessageType.FILE
+          msgModel.msg.status === ChatMessageStatus.SUCCESS &&
+          msgModel.msg.from === im.userId
         ) {
           initItems.push({
-            name: tr('Quote Message'),
+            name: tr('Recall Message'),
             isHigh: false,
-            icon: 'triangle_in_rectangle',
+            icon: 'arrow_Uturn_anti_clockwise',
             onClicked: () => {
               menuRef.current?.startHide?.(() => {
-                propsOnQuoteMessageForInput?.(model as MessageModel);
+                const msgModel = model as MessageModel;
+                onRecallMessage(msgModel.msg);
               });
             },
           });
@@ -788,36 +895,86 @@ export function useMessageList(
 
   const createRecallMessageTip = React.useCallback(
     (msg: ChatMessage) => {
-      const text = tr('${0} recalled a message.', msg.from);
       const tip = ChatMessage.createCustomMessage(
         msg.conversationId,
         gCustomMessageRecallEventType,
         msg.chatType,
         {
-          params: { text },
+          params: {
+            recall: JSON.stringify({
+              text: '${0} recalled a message.',
+              self: im.userId,
+              from: msg.from,
+              fromName: msg.from,
+            }),
+          },
         }
       );
-      const tmp = { ...msg, body: { ...tip.body } } as ChatMessage;
-      const msgModel = {
-        id: msg.msgId.toString(),
-        model: {
-          userId: msg.from,
-          modelType: 'system',
-          contents: [text],
-          msg: tmp,
-        },
-        containerStyle: getStyle(),
-      } as MessageListItemProps;
-      return msgModel;
+      // tip.localTime = msg.localTime;
+      // tip.serverTime = msg.serverTime;
+      return tip;
     },
-    [tr]
+    [im.userId]
   );
 
   const onRecallMessageToUI = React.useCallback(
-    (msg: ChatMessage) => {
-      onAddData(createRecallMessageTip(msg), 'bottom');
+    (newMsg: ChatMessage) => {
+      // let isExisted = false;
+      // for (const v of dataRef.current) {
+      //   if (v.model.modelType === 'message') {
+      //     const msgModel = v.model as MessageModel;
+      //     if (newMsg.msgId === msgModel.msg.msgId) {
+      //       v.model = { modelType: 'system', msg: newMsg } as MessageModel;
+      //       v.onClicked = undefined;
+      //       v.onLongPress = undefined;
+      //       v.containerStyle = undefined;
+      //       isExisted = true;
+      //       break;
+      //     }
+      //   }
+      // }
+      // if (isExisted === true) {
+      //   setData([...dataRef.current]);
+      // }
+
+      onAddData(
+        {
+          id: newMsg.msgId.toString(),
+          model: {
+            userId: newMsg.from,
+            modelType: 'system',
+            msg: newMsg,
+          } as SystemMessageModel,
+          containerStyle: getStyle(),
+        },
+        'bottom'
+      );
     },
-    [createRecallMessageTip, onAddData]
+    [onAddData]
+  );
+
+  const onRecallMessage = React.useCallback(
+    (msg: ChatMessage) => {
+      const newMsg = createRecallMessageTip(msg);
+      console.log('test:zuoyu:msgId:', newMsg.msgId, msg.msgId);
+      im.recallMessage({
+        message: msg,
+        onResult: (value) => {
+          if (value.isOk === true) {
+            onDelMessageToUI(msg);
+            im.insertMessage({
+              message: newMsg,
+              onResult: () => {
+                onRecallMessageToUI(newMsg);
+              },
+            });
+          } else {
+            console.log('test:zuoyu:error:', value.error);
+          }
+        },
+      });
+    },
+    [createRecallMessageTip, im, onDelMessageToUI, onRecallMessageToUI]
   );
 
   React.useEffect(() => {
@@ -836,7 +993,7 @@ export function useMessageList(
         onUpdateMessageToUI(msg, 'recv');
       },
       onRecallMessage: (msg: ChatMessage, _byUserId: string) => {
-        onRecallMessageToUI(msg);
+        onRecallMessage(msg);
       },
     };
     im.messageManager.addListener('MessageList', listener);
@@ -846,6 +1003,7 @@ export function useMessageList(
   }, [
     im.messageManager,
     onAddMessageToUI,
+    onRecallMessage,
     onRecallMessageToUI,
     onUpdateMessageToUI,
   ]);
@@ -1062,7 +1220,7 @@ export function useMessageList(
           onDelMessage(msg);
         },
         recallMessage: (msg: ChatMessage) => {
-          onRecallMessageToUI(msg);
+          onRecallMessage(msg);
         },
         updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => {
           onUpdateMessageToUI(updatedMsg, fromType);
@@ -1089,43 +1247,49 @@ export function useMessageList(
       addSendMessageToUI,
       onAddMessageList,
       onDelMessage,
-      onRecallMessageToUI,
+      onRecallMessage,
       onUpdateMessageToUI,
       scrollToEnd,
       sendMessageToServer,
     ]
   );
 
-  const onRequestHistoryMessage = () => {
+  const onRequestHistoryMessage = React.useCallback(() => {
     console.log('test:zuoyu:first:', startMsgIdRef.current);
     im.messageManager.loadHistoryMessage({
       convId,
       convType,
       startMsgId: startMsgIdRef.current,
       onResult: (msgs) => {
+        console.log('test:zuoyu:first:result:', startMsgIdRef.current);
         if (msgs.length > 0) {
+          const newStartMsgId = msgs[0]!.msgId.toString();
+          console.log(
+            'test:zuoyu:first:',
+            startMsgIdRef.current,
+            newStartMsgId
+          );
+          console.log();
+          if (newStartMsgId === startMsgIdRef.current) {
+            return;
+          }
           startMsgIdRef.current = msgs[0]!.msgId.toString();
+          onAddMessageList(msgs, 'top');
         }
-        onAddMessageList(msgs, 'top');
-        isNeedScrollToEndRef.current = false;
-      },
-    });
-  };
-
-  React.useEffect(() => {
-    im.messageManager.loadHistoryMessage({
-      convId,
-      convType,
-      startMsgId: '',
-      onResult: (msgs) => {
-        if (msgs.length > 0) {
-          startMsgIdRef.current = msgs[0]!.msgId.toString();
-        }
-        onAddMessageList(msgs, 'top');
         isNeedScrollToEndRef.current = false;
       },
     });
   }, [convId, convType, im.messageManager, onAddMessageList]);
+
+  React.useEffect(() => {
+    onRequestHistoryMessage();
+  }, [
+    convId,
+    convType,
+    im.messageManager,
+    onAddMessageList,
+    onRequestHistoryMessage,
+  ]);
 
   return {
     ...flatListProps,
@@ -1141,5 +1305,6 @@ export function useMessageList(
     maxListHeight,
     setMaxListHeight,
     reachedThreshold,
+    onMore: onRequestHistoryMessage,
   };
 }

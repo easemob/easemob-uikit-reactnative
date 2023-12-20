@@ -1676,6 +1676,30 @@ export abstract class ChatServiceImpl
     });
   }
 
+  recallMessage(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.recallMessage(params.message.msgId),
+      event: 'recallMessage',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+      onError: (e) => {
+        params.onResult({
+          isOk: false,
+          error: new UIKitError({
+            code: ErrorCode.common,
+            extra: JSON.stringify(e),
+          }),
+        });
+      },
+    });
+  }
+
   insertMessage(params: {
     message: ChatMessage;
     onResult: ResultCallback<void>;

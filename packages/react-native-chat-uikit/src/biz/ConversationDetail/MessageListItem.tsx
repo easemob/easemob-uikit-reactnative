@@ -41,6 +41,7 @@ import {
   getMessageState,
   getStateIcon,
   getStateIconColor,
+  getSystemTip,
   getVideoThumbUrl,
   isQuoteMessage,
   isSupportMessage,
@@ -257,6 +258,13 @@ export function MessageVideo(props: MessageVideoProps) {
   const { msg, maxWidth } = props;
   const [thumbUrl, setThumbUrl] = React.useState<string | undefined>();
   const { width, height } = getImageShowSize(msg, maxWidth);
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    video: {
+      light: colors.neutral[98],
+      dark: colors.neutral[95],
+    },
+  });
   React.useEffect(() => {
     msg.status;
     getVideoThumbUrl(msg, (url) => {
@@ -276,7 +284,7 @@ export function MessageVideo(props: MessageVideoProps) {
         source={{ uri: thumbUrl }}
       />
       <IconButton
-        iconName={'loading'}
+        iconName={'triangle_in_circle'}
         containerStyle={[
           StyleSheet.absoluteFill,
           {
@@ -284,7 +292,8 @@ export function MessageVideo(props: MessageVideoProps) {
             alignItems: 'center',
           },
         ]}
-        style={{ width: 100, height: 100 }}
+        style={{ width: 64, height: 64, tintColor: getColor('video') }}
+        iconResolution={'3x'}
       />
     </View>
   );
@@ -398,6 +407,8 @@ export function MessageCustomCard(props: MessageCustomCardProps) {
   console.log('test:zuoyu:MessageCustomCard:', props);
   const body = msg.body as ChatCustomMessageBody;
   const avatar = body.params?.avatar;
+  const userId = body.params?.userId;
+  const userName = body.params?.nickname;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     left_divider: {
@@ -438,7 +449,7 @@ export function MessageCustomCard(props: MessageCustomCardProps) {
             maxWidth: '70%',
           }}
         >
-          {'name'}
+          {userId ?? userName}
         </SingleLineText>
       </View>
       <View
@@ -1302,7 +1313,8 @@ export type SystemTipViewProps = {
 };
 export function SystemTipView(props: SystemTipViewProps) {
   const { isVisible = true, model } = props;
-  const { contents } = model;
+  const { msg } = model;
+  const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     fg: {
@@ -1325,7 +1337,7 @@ export function SystemTipView(props: SystemTipViewProps) {
           color: getColor('fg'),
         }}
       >
-        {contents?.[0]}
+        {getSystemTip(msg, tr)}
       </Text>
     </View>
   );

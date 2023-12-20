@@ -12,6 +12,7 @@ export const gGroupMemberMyRemark = 'chatUIKit_group_member_nick_name';
 export const gConversationSystemMessage = '_$uikit_conv_system_msg';
 export const gVoiceReadFlag = '_$uikit_voice_read_flag';
 
-export const gCustomMessageCardEventType = 'chatUIKit_userCard';
+export const gCustomMessageCardEventType = 'userCard';
 export const gCustomMessageRecallEventType = 'chatUIKit_recall';
-export const gMessageAttributeQuote = '_$uikit_msg_quote';
+export const gCustomMessageCreateGroupEventType = 'chatUIKit_create_group';
+export const gMessageAttributeQuote = 'msgQuote';

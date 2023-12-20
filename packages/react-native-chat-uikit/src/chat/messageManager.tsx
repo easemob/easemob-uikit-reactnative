@@ -140,7 +140,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       onError: (localMsgId, _error) => {
         const isExisted = this._sendList.get(localMsgId);
         if (isExisted) {
-          const msg = isExisted.msg;
+          const msg = { ...isExisted.msg } as ChatMessage;
           msg.status = ChatMessageStatus.FAIL;
           this.emitSendMessageChanged(msg);
           this._sendList.delete(localMsgId);
