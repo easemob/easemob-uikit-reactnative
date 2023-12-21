@@ -501,6 +501,20 @@ export function useMessageInput(
       editMessage: (model) => {
         onShowEditMessage(model);
       },
+      mentionSelected: (list: { id: string; name: string }[]) => {
+        console.log('test:zuoyu:mentionSelected:', list);
+        // !!! only support one mention
+        const text = valueRef.current;
+        const index = text.lastIndexOf('@');
+        if (index !== -1) {
+          const pre = text.substring(0, index);
+          const post = text.substring(index + 1);
+          const mention = list[0];
+          const mentionText = `@${mention!.name} `;
+          const newText = `${pre}${mentionText}${post}`;
+          setInputValue(newText);
+        }
+      },
     };
   });
 

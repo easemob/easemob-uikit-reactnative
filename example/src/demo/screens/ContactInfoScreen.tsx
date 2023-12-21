@@ -7,7 +7,7 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ContactInfoScreen(props: Props) {
-  const { route } = props;
+  const { navigation, route } = props;
   const userId = ((route.params as any)?.params as any)?.userId;
   return (
     <SafeAreaView
@@ -22,6 +22,15 @@ export function ContactInfoScreen(props: Props) {
           // backgroundColor: 'red',
         }}
         userId={userId}
+        onSendMessage={() => {
+          navigation.navigate('ConversationDetail', {
+            params: {
+              convId: userId,
+              convType: 0,
+              convName: userId,
+            },
+          });
+        }}
       />
     </SafeAreaView>
   );

@@ -12,10 +12,10 @@ export type InfoProps = PropsWithBack & {
   doNotDisturb?: boolean;
   onDoNotDisturb?: (isDisturb: boolean) => void;
   containerStyle?: StyleProp<ViewStyle>;
-  onSendMessage?: (userId: string) => void;
-  onAudioCall?: (userId: string) => void;
-  onVideoCall?: (userId: string) => void;
-  onCopyId?: (userId: string) => void;
+  onSendMessage?: (id: string) => void;
+  onAudioCall?: (id: string) => void;
+  onVideoCall?: (id: string) => void;
+  onCopyId?: (id: string) => void;
 };
 
 export type ContactInfoProps = InfoProps & {

@@ -13,6 +13,7 @@ export const gConversationSystemMessage = '_$uikit_conv_system_msg';
 export const gVoiceReadFlag = '_$uikit_voice_read_flag';
 
 export const gCustomMessageCardEventType = 'userCard';
-export const gCustomMessageRecallEventType = 'chatUIKit_recall';
-export const gCustomMessageCreateGroupEventType = 'chatUIKit_create_group';
+export const gCustomMessageRecallEventType = '_$uikit_msg_recall';
+export const gCustomMessageCreateGroupEventType = '_$uikit_create_group';
 export const gMessageAttributeQuote = 'msgQuote';
+export const gMessageAttributeUserInfo = 'ease_chat_uikit_user_info';

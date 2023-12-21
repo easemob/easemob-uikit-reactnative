@@ -44,6 +44,9 @@ export function GroupInfo(props: GroupInfoProps) {
     onRequestModalClose,
     onMore,
     groupMemberCount,
+    onSendMessage,
+    onVideoCall,
+    onAudioCall,
   } = useGroupInfo(props);
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -153,6 +156,7 @@ export function GroupInfo(props: GroupInfoProps) {
                 iconName={'bubble_fill'}
                 text={tr('send message')}
                 containerStyle={{ height: 62, width: 114 }}
+                onPress={() => onSendMessage?.(groupId)}
               />
             ) : null}
             {hasAudioCall ? (
@@ -160,6 +164,7 @@ export function GroupInfo(props: GroupInfoProps) {
                 iconName={'phone_pick'}
                 text={tr('audio call')}
                 containerStyle={{ height: 62, width: 114 }}
+                onPress={() => onAudioCall?.(groupId)}
               />
             ) : null}
             {hasVideoCall ? (
@@ -167,6 +172,7 @@ export function GroupInfo(props: GroupInfoProps) {
                 iconName={'video_camera'}
                 text={tr('video call')}
                 containerStyle={{ height: 62, width: 114 }}
+                onPress={() => onVideoCall?.(groupId)}
               />
             ) : null}
           </View>

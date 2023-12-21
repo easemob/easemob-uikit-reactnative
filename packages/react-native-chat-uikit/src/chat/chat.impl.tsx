@@ -25,7 +25,7 @@ import { ConversationStorage } from '../db/storage';
 import { ErrorCode, UIKitError } from '../error';
 import { Services } from '../services';
 import { asyncTask, mergeObjects } from '../utils';
-import { gGroupMemberMyRemark } from './const';
+import { gGroupMemberMyRemark, gMessageAttributeUserInfo } from './const';
 import { MessageCacheManagerImpl } from './messageManager';
 import type { MessageCacheManager } from './messageManager.types';
 import { RequestListImpl } from './requestList';
@@ -45,6 +45,7 @@ import {
   ResultCallback,
   UserFrom,
   UserServiceData,
+  UserServiceDataFromMessage,
 } from './types';
 
 export abstract class ChatServiceImpl
@@ -120,7 +121,7 @@ export abstract class ChatServiceImpl
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     const { appKey, debugMode, autoLogin } = params;
-    this._convStorage = new ConversationStorage({ appKey: '' });
+    this._convStorage = new ConversationStorage({ appKey: appKey });
     const options = new ChatOptions({
       appKey,
       debugModel: debugMode,
@@ -154,6 +155,7 @@ export abstract class ChatServiceImpl
   }
 
   abstract _fromChatError(error: any): string | undefined;
+  abstract _createUserDir(): Promise<void>;
 
   get client(): ChatClient {
     return ChatClient.getInstance();
@@ -206,9 +208,11 @@ export abstract class ChatServiceImpl
       Services.dcs.init(
         `${this.client.options!.appKey.replace('#', '-')}/${userId}`
       );
-      await Services.dcs.createUserDir();
+
+      await this._createUserDir();
 
       this.client.getCurrentUsername();
+      this.updateSelfInfo({ self: this._user, onResult: () => {} });
 
       result?.({ isOk: true });
     } catch (error: any) {
@@ -226,9 +230,11 @@ export abstract class ChatServiceImpl
         Services.dcs.init(
           `${this.client.options!.appKey.replace('#', '-')}/${userId}`
         );
-        await Services.dcs.createUserDir();
+
+        await this._createUserDir();
 
         this.client.getCurrentUsername();
+        this.updateSelfInfo({ self: this._user, onResult: () => {} });
       }
       result?.({
         isOk: false,
@@ -283,7 +289,8 @@ export abstract class ChatServiceImpl
           Services.dcs.init(
             `${this.client.options!.appKey.replace('#', '-')}/${userId}`
           );
-          await Services.dcs.createUserDir();
+
+          await this._createUserDir();
 
           params.result?.({ isOk: true });
         } else {
@@ -1676,6 +1683,23 @@ export abstract class ChatServiceImpl
     });
   }
 
+  updateSelfInfo(params: {
+    self: UserServiceData;
+    onResult: ResultCallback<void>;
+  }): void {
+    const { self } = params;
+    const p = {
+      userId: self.userId,
+      nickName: self.userName,
+      avatarUrl: self.avatarURL,
+      gender: self.gender,
+    };
+    this.tryCatch({
+      promise: this.client.userManager.updateOwnUserInfo(p),
+      event: 'updateSelfInfo',
+    });
+  }
+
   getMessage(params: { messageId: string }): Promise<ChatMessage | undefined> {
     return this.tryCatchSync({
       promise: this.client.chatManager.getMessage(params.messageId),
@@ -1806,6 +1830,7 @@ export abstract class ChatServiceImpl
     callback?: ChatMessageStatusCallback;
   }): void {
     const { message, callback } = params;
+    this.setUserInfoToMessage({ msg: message, user: this._user });
     this.tryCatch({
       promise: this.client.chatManager.sendMessage(message, callback),
       event: 'sendMessage',
@@ -1846,6 +1871,41 @@ export abstract class ChatServiceImpl
         params.onResult({ isOk: true, value: value });
       },
     });
+  }
+
+  userInfoFromMessage(msg?: ChatMessage): UserServiceData | undefined {
+    if (msg === undefined || msg === null) {
+      return undefined;
+    }
+    const jsonUserInfo = (msg.attributes as any)[gMessageAttributeUserInfo];
+    if (jsonUserInfo) {
+      const userInfo = jsonUserInfo as UserServiceDataFromMessage;
+      const ret = {
+        userId: msg.from,
+        userName: userInfo.nickname,
+        avatarURL: userInfo.avatarURL ?? 'unknown',
+      } as UserServiceData;
+      return ret;
+    }
+
+    return undefined;
+  }
+
+  setUserInfoToMessage(params: {
+    msg: ChatMessage;
+    user?: UserServiceData;
+  }): void {
+    const { msg, user } = params;
+    if (user === undefined || user === null) {
+      return;
+    }
+    msg.attributes = {
+      ...msg.attributes,
+      [gMessageAttributeUserInfo]: {
+        nickname: user.userName,
+        avatarURL: user.avatarURL ?? 'unknown',
+      } as UserServiceDataFromMessage,
+    };
   }
 }
 
@@ -2336,6 +2396,18 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
       }
     }
     return e;
+  }
+
+  async _createUserDir(): Promise<void> {
+    try {
+      const isExisted = await Services.dcs.isExistedUserDir();
+      if (isExisted !== true) {
+        await Services.dcs.createUserDir();
+      }
+    } catch (e) {
+      console.warn('createUserDir:', e);
+      // todo: show alert
+    }
   }
 }
 

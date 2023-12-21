@@ -37,6 +37,15 @@ export function GroupInfoScreen(props: Props) {
         onClickedChangeGroupOwner={() => {
           navigation.push('ChangeGroupOwner', { params: { groupId } });
         }}
+        onSendMessage={() => {
+          navigation.navigate('ConversationDetail', {
+            params: {
+              convId: groupId,
+              convType: 1,
+              convName: groupId,
+            },
+          });
+        }}
       />
     </SafeAreaView>
   );

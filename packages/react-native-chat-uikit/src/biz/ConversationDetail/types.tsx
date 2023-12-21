@@ -13,6 +13,7 @@ export type MessageInputRef = {
   close: () => void;
   quoteMessage: (model: MessageModel) => void;
   editMessage: (model: MessageModel) => void;
+  mentionSelected: (list: { id: string; name: string }[]) => void;
 };
 export type MessageInputProps = PropsWithError &
   PropsWithTest & {
@@ -32,7 +33,11 @@ export type MessageInputProps = PropsWithError &
     ) => void;
     closeAfterSend?: boolean;
     onHeightChange?: (height: number) => void;
-    onEditMessageFinished: (model: MessageModel) => void;
+    onEditMessageFinished?: (model: MessageModel) => void;
+    /**
+     * Only groups are available.
+     */
+    onInputMention?: (groupId: string) => void;
   };
 export type MessageInputState = 'normal' | 'emoji' | 'voice' | 'keyboard';
 

@@ -88,6 +88,11 @@ export type UserServiceData = {
   };
 };
 
+export type UserServiceDataFromMessage = {
+  nickname: string;
+  avatarURL: string;
+};
+
 /**
  * The type of client listener.
  */
@@ -440,6 +445,15 @@ export interface MessageServices {
     direction: ChatSearchDirection;
     loadCount: number;
     onResult: ResultCallback<ChatMessage[]>;
+  }): void;
+  /**
+   * Get the user information from the message.
+   * @param msg the message.
+   */
+  userInfoFromMessage(msg?: ChatMessage): UserServiceData | undefined;
+  setUserInfoToMessage(params: {
+    msg: ChatMessage;
+    user: UserServiceData;
   }): void;
 }
 
