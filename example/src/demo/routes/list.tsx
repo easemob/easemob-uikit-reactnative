@@ -89,6 +89,10 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  SelectSingleParticipant: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
 };
 export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
@@ -185,6 +189,10 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   ConversationDetail: {
+    option: undefined,
+    params: undefined,
+  },
+  SelectSingleParticipant: {
     option: undefined,
     params: undefined,
   },

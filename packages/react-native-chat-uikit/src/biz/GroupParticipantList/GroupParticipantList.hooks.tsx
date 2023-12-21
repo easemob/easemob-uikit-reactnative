@@ -162,6 +162,26 @@ export function useGroupParticipantList(
                   } as GroupParticipantListItemProps;
                 }
               });
+              if (participantType === 'change-owner') {
+                dataRef.current = dataRef.current.filter((item) => {
+                  return item.data.id !== im.userId;
+                });
+              } else if (participantType === 'delete') {
+                dataRef.current = dataRef.current.filter((item) => {
+                  return item.data.id !== im.userId;
+                });
+              } else if (participantType === 'mention') {
+                dataRef.current.unshift({
+                  id: 'All',
+                  data: {
+                    id: 'All',
+                    name: 'All',
+                  } as GroupParticipantModel,
+                });
+                dataRef.current = dataRef.current.filter((item) => {
+                  return item.data.id !== im.userId;
+                });
+              }
               onSetData();
               setParticipantCount(dataRef.current.length);
             }

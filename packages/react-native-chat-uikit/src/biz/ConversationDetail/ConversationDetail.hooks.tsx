@@ -12,7 +12,6 @@ import type {
   SendCardProps,
   SendFileProps,
   SendImageProps,
-  SendQuoteProps,
   SendTextProps,
   SendVideoProps,
   SendVoiceProps,
@@ -20,8 +19,16 @@ import type {
 import { useCreateConversationDirectory } from './useCreateConversationDirectory';
 
 export function useConversationDetail(props: ConversationDetailProps) {
-  const { convId, convType, convName, testMode, input, list, onInitialized } =
-    props;
+  const {
+    convId,
+    convType,
+    convName,
+    testMode,
+    input,
+    list,
+    onInitialized,
+    selectedParticipant,
+  } = props;
   const permissionsRef = React.useRef(false);
 
   const messageInputRef = React.useRef<MessageInputRef>({} as any);
@@ -30,7 +37,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const _MessageInput = input?.render ?? MessageInput;
   const messageInputProps = input?.props
     ? { ...input.props, convId, convType, testMode }
-    : { convId, testMode };
+    : { convId, convType, testMode };
   const _messageListRef = list?.ref ?? messageListRef;
   const _MessageList = list?.render ?? MessageList;
   const messageListProps = list?.props
@@ -90,6 +97,19 @@ export function useConversationDetail(props: ConversationDetailProps) {
     createDirectoryIfNotExisted(convId);
   }, [convId, createDirectoryIfNotExisted]);
 
+  React.useEffect(() => {
+    if (selectedParticipant) {
+      _messageInputRef.current?.mentionSelected?.(
+        selectedParticipant.map((v) => {
+          return {
+            id: v.id,
+            name: v.name ?? v.id,
+          };
+        })
+      );
+    }
+  }, [_messageInputRef, selectedParticipant]);
+
   const onClickedSend = React.useCallback(
     (
       value:
@@ -99,7 +119,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
         | SendVideoProps
         | SendVoiceProps
         | SendCardProps
-        | SendQuoteProps
     ) => {
       _messageListRef.current?.addSendMessage(value);
     },

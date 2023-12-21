@@ -39,6 +39,7 @@ import {
   SearchContactScreen,
   SearchConversationScreen,
   SearchGroupScreen,
+  SelectSingleParticipantScreen,
   TopMenuScreen,
 } from './screens';
 
@@ -326,6 +327,13 @@ export function App() {
                 headerShown: false,
               }}
               component={ConversationDetailScreen}
+            />
+            <Root.Screen
+              name={'SelectSingleParticipant'}
+              options={{
+                headerShown: false,
+              }}
+              component={SelectSingleParticipantScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

@@ -116,6 +116,26 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
           containerStyle={{ paddingHorizontal: 12 }}
         />
       );
+    } else if (participantType === 'mention') {
+      return (
+        <TopNavigationBar
+          Left={
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+              onPress={onBack}
+            >
+              <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+              <Text
+                textType={'medium'}
+                paletteType={'label'}
+                style={{ color: getColor('text') }}
+              >{`@ mention`}</Text>
+            </Pressable>
+          }
+          Right={<View style={{ width: 1, height: 1 }} />}
+          containerStyle={{ paddingHorizontal: 12 }}
+        />
+      );
     } else {
       return (
         <TopNavigationBar

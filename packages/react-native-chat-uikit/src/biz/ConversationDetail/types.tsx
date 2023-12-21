@@ -1,5 +1,6 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
+import type { GroupParticipantModel } from 'src/chat';
 
 import type {
   PropsWithBack,
@@ -18,6 +19,7 @@ export type MessageInputRef = {
 export type MessageInputProps = PropsWithError &
   PropsWithTest & {
     convId: string;
+    convType: ChatConversationType;
     top?: number | undefined;
     bottom?: number | undefined;
     numberOfLines?: number | undefined;
@@ -29,7 +31,6 @@ export type MessageInputProps = PropsWithError &
         | SendVideoProps
         | SendVoiceProps
         | SendCardProps
-        | SendQuoteProps
     ) => void;
     closeAfterSend?: boolean;
     onHeightChange?: (height: number) => void;
@@ -70,6 +71,7 @@ export type ConversationDetailProps = PropsWithError &
       ref?: React.RefObject<MessageListRef>;
     };
     containerStyle?: StyleProp<ViewStyle>;
+    selectedParticipant?: GroupParticipantModel[];
   };
 
 export type SendType =
@@ -84,6 +86,7 @@ export type SendType =
   | 'quote';
 export type SendBasicProps = {
   type: SendType;
+  quote?: MessageModel;
 };
 export type SendTextProps = SendBasicProps & {
   content: string;
@@ -119,10 +122,6 @@ export type SendSystemProps = SendBasicProps & {
 };
 
 export type SendCardProps = SendBasicProps & {};
-export type SendQuoteProps = SendBasicProps & {
-  content: string;
-  quote: MessageModel;
-};
 
 export type MessageBubbleType = 'system' | 'time' | 'message';
 export type MessageLayoutType = 'left' | 'right';
@@ -199,7 +198,6 @@ export type MessageListRef = {
       | SendTimeProps
       | SendSystemProps
       | SendCardProps
-      | SendQuoteProps
   ) => void; // todo:
   removeMessage: (msg: ChatMessage) => void;
   recallMessage: (msg: ChatMessage) => void;

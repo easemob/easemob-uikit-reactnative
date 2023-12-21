@@ -19,4 +19,5 @@ export * from './SearchContactScreen';
 export * from './SearchConversationScreen';
 export * from './SearchGroupParticipantScreen';
 export * from './SearchGroupScreen';
+export * from './SelectSingleParticipantScreen';
 export * from './TopMenuScreen';

@@ -28,7 +28,11 @@ export type ContactType =
   | 'new-conversation'
   | 'create-group'
   | 'add-group-member';
-export type GroupParticipantType = 'common' | 'delete' | 'change-owner';
+export type GroupParticipantType =
+  | 'common'
+  | 'delete'
+  | 'change-owner'
+  | 'mention';
 
 export type SearchType =
   | 'conv-list'

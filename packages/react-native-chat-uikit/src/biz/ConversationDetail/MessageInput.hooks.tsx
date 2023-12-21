@@ -45,6 +45,7 @@ export function useMessageInput(
     onHeightChange,
     convId,
     onEditMessageFinished: propsOnEditMessageFinished,
+    // onInputMention: propsOnInputMention,
   } = props;
   const { keyboardHeight, keyboardCurrentHeight } = useKeyboardHeight();
   const inputRef = React.useRef<RNTextInput>({} as any);
@@ -70,6 +71,7 @@ export function useMessageInput(
   const [showQuote, setShowQuote] = React.useState(false);
   const editRef = React.useRef<MessageInputEditMessageRef>({} as any);
   const msgModelRef = React.useRef<MessageModel>();
+  const mentionListRef = React.useRef<{ id: string; name: string }[]>([]);
 
   const _onValue = (v: string) => {
     if (v.length > 0 && inputBarState === 'keyboard') {
@@ -175,18 +177,32 @@ export function useMessageInput(
     } else {
       if (valueRef.current !== text) {
         if (valueRef.current.length > text.length) {
+          // const tmp = findLastMention(valueRef.current);
+          // console.log('test:zuoyu:tmp:', tmp, text, valueRef.current);
+          // if (tmp) {
+          //   text = tmp;
+          // }
           rawValue.current = rawValue.current.substring(
             0,
             rawValue.current.length - (valueRef.current.length - text.length)
           );
         } else {
+          // if (convType === ChatConversationType.GroupChat) {
+          //   if (text.length > 0 && text[text.length - 1] === '@') {
+          //     propsOnInputMention?.(convId);
+          //   }
+          // }
           rawValue.current += text.substring(valueRef.current.length);
         }
+      }
+      if (text.length === 0) {
+        clearMentionList();
       }
       valueRef.current = text;
       _onValue(valueRef.current);
     }
   };
+
   const onClickedFaceListItem = (face: string) => {
     setInputValue(valueRef.current, 'add_face', face);
   };
@@ -215,6 +231,7 @@ export function useMessageInput(
     rawValue.current = '';
     // inputRef.current?.clear();
     setInputValue(valueRef.current);
+    clearMentionList();
     // _onValue(valueRef.current);
   };
 
@@ -503,6 +520,7 @@ export function useMessageInput(
       },
       mentionSelected: (list: { id: string; name: string }[]) => {
         console.log('test:zuoyu:mentionSelected:', list);
+        mentionListRef.current.push(...list);
         // !!! only support one mention
         const text = valueRef.current;
         const index = text.lastIndexOf('@');
@@ -518,13 +536,53 @@ export function useMessageInput(
     };
   });
 
-  console.log(
-    'test:zuoyu:showVoiceBar:outer',
-    voiceHeight,
-    emojiHeight,
-    keyboardHeight,
-    inputBarState
-  );
+  // const deleteLastMentionFromList = React.useCallback((name: string) => {
+  //   const index = mentionListRef.current
+  //     .reverse()
+  //     .findIndex((v) => v.name === name);
+  //   if (index !== -1) {
+  //     mentionListRef.current.splice(index, 1);
+  //   }
+  // }, []);
+
+  // const findLastMention = React.useCallback(
+  //   (text: string) => {
+  //     if (mentionListRef.current.length > 0) {
+  //       const last = mentionListRef.current[mentionListRef.current.length - 1];
+  //       if (last) {
+  //         // const index = text.lastIndexOf(`@${last.name} `);
+  //         const key = `@${last.name}`;
+  //         const index = text.lastIndexOf(key);
+  //         console.log('test:zuoyu:index:', index, last.name);
+  //         if (index !== -1) {
+  //           const start = index;
+  //           const end = index + last.name.length + 1;
+  //           console.log('test:zuoyu:index:2', end, text.length);
+  //           if (end + 1 === text.length) {
+  //             deleteLastMentionFromList(last.name);
+  //             return text.replace(text.substring(start, end), '');
+  //           }
+  //         }
+  //       }
+  //     }
+  //     return undefined;
+  //   },
+  //   [deleteLastMentionFromList]
+  // );
+
+  const clearMentionList = React.useCallback(() => {
+    if (mentionListRef.current.length > 0) {
+      mentionListRef.current = [];
+    }
+  }, []);
+
+  // console.log(
+  //   'test:zuoyu:showVoiceBar:outer',
+  //   voiceHeight,
+  //   emojiHeight,
+  //   keyboardHeight,
+  //   inputBarState
+  // );
 
   return {
     value: _value,

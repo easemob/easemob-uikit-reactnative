@@ -36,7 +36,6 @@ import type {
   SendCardProps,
   SendFileProps,
   SendImageProps,
-  SendQuoteProps,
   SendSystemProps,
   SendTextProps,
   SendTimeProps,
@@ -1040,8 +1039,7 @@ export function useMessageList(
         | SendVoiceProps
         | SendTimeProps
         | SendSystemProps
-        | SendCardProps
-        | SendQuoteProps,
+        | SendCardProps,
 
       onFinished?: (msg: ChatMessage) => void
     ) => {
@@ -1207,9 +1205,12 @@ export function useMessageList(
         );
         onFinished?.(msg);
       } else if (value.type === 'quote') {
-        const quote = value as SendQuoteProps;
-        const quoteMsg = quote.quote.msg;
         // !!! only support text quote message.
+        const quote = value as SendTextProps;
+        if (quote.quote === undefined || quote.quote === null) {
+          return;
+        }
+        const quoteMsg = quote.quote.msg;
         const msg = ChatMessage.createTextMessage(
           convId,
           quote.content,
@@ -1266,7 +1267,6 @@ export function useMessageList(
             | SendTimeProps
             | SendSystemProps
             | SendCardProps
-            | SendQuoteProps
         ) => {
           isNeedScrollToEndRef.current = true;
           addSendMessageToUI(value, (msg) => {
