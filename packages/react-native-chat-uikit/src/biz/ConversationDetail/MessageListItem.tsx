@@ -25,7 +25,6 @@ import { g_not_existed_url } from '../../const';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
-import { IconButton } from '../../ui/Button';
 import {
   DynamicIcon,
   DynamicIconRef,
@@ -291,18 +290,21 @@ export function MessageVideo(props: MessageVideoProps) {
         style={{ width: width, height: height }}
         source={{ uri: thumbUrl }}
       />
-      <IconButton
-        iconName={'triangle_in_circle'}
-        containerStyle={[
+      <View
+        style={[
           StyleSheet.absoluteFill,
           {
             justifyContent: 'center',
             alignItems: 'center',
           },
         ]}
-        style={{ width: 64, height: 64, tintColor: getColor('video') }}
-        iconResolution={'3x'}
-      />
+      >
+        <Icon
+          name={'triangle_in_circle'}
+          style={{ width: 64, height: 64, tintColor: getColor('video') }}
+          resolution={'3x'}
+        />
+      </View>
     </View>
   );
 }
@@ -677,7 +679,7 @@ export function MessageBubble(props: MessageBubbleProps) {
             paddingVertical: paddingVertical,
           },
         ]}
-        onTouchEnd={_onClicked}
+        onPress={_onClicked}
         onLongPress={_onLongPress}
       >
         {getContent()}

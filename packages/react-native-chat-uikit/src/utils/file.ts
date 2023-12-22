@@ -21,6 +21,11 @@ export function getFileExtension(filePath: string) {
   if (idx === -1) return '';
   return filePath.slice(idx - filePath.length).toLowerCase();
 }
+export function getFileDirectory(filePath: string) {
+  const idx = filePath.lastIndexOf('/');
+  if (idx === -1) return '';
+  return filePath.substring(0, idx);
+}
 export function generateFileName(fileName: string, extension: string) {
   if (fileName.indexOf(extension) > -1) {
     return fileName;

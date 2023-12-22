@@ -598,6 +598,7 @@ export function useMessageList(
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
       if (model.modelType === 'message') {
+        console.log('test:zuoyu:clicked:', model);
         const msgModel = model as MessageModel;
         if (msgModel.msg.body.type === ChatMessageType.VOICE) {
           startVoicePlay(msgModel);
@@ -1176,7 +1177,7 @@ export function useMessageList(
             fileSize: v.fileSize,
             displayName: v.displayName ?? '',
             thumbnailLocalPath: v.thumbLocalPath,
-            width: v.videoHeight,
+            width: v.videoWidth,
             height: v.videoHeight,
           }
         );

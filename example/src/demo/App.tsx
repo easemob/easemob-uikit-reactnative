@@ -42,6 +42,7 @@ import {
   SearchGroupScreen,
   SelectSingleParticipantScreen,
   TopMenuScreen,
+  VideoMessagePreviewScreen,
 } from './screens';
 
 const env = require('../env');
@@ -342,6 +343,13 @@ export function App() {
                 headerShown: false,
               }}
               component={ImageMessagePreviewScreen}
+            />
+            <Root.Screen
+              name={'VideoMessagePreview'}
+              options={{
+                headerShown: false,
+              }}
+              component={VideoMessagePreviewScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

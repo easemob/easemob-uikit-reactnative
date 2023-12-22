@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+import { ChatMessageType } from 'react-native-chat-sdk';
 import {
   ConversationDetail,
   MessageModel,
@@ -68,11 +69,23 @@ export function ConversationDetailScreen(props: Props) {
               model: SystemMessageModel | TimeMessageModel | MessageModel
             ) => {
               console.log('onClickedItem', id, model);
-              navigation.push('ImageMessagePreview', {
-                params: {
-                  msgId: id,
-                },
-              });
+              if (model.modelType !== 'message') {
+                return;
+              }
+              const msgModel = model as MessageModel;
+              if (msgModel.msg.body.type === ChatMessageType.IMAGE) {
+                navigation.push('ImageMessagePreview', {
+                  params: {
+                    msgId: id,
+                  },
+                });
+              } else if (msgModel.msg.body.type === ChatMessageType.VIDEO) {
+                navigation.push('VideoMessagePreview', {
+                  params: {
+                    msgId: id,
+                  },
+                });
+              }
             },
           },
         }}

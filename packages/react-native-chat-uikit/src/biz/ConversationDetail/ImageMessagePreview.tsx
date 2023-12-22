@@ -75,7 +75,7 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
   );
 }
 
-export type ImageSize = {
+type ImageSize = {
   width: number;
   height: number;
 };

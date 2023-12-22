@@ -47,6 +47,8 @@ export function TopMenuScreen(props: Props) {
                   navigation.push('ContactList', {});
                 } else if (v === 'GroupList') {
                   navigation.push('GroupList', {});
+                } else if (v === 'NewRequests') {
+                  navigation.push('NewRequests', {});
                 }
               }}
             >

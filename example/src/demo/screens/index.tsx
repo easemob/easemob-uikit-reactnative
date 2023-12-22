@@ -22,3 +22,4 @@ export * from './SearchGroupParticipantScreen';
 export * from './SearchGroupScreen';
 export * from './SelectSingleParticipantScreen';
 export * from './TopMenuScreen';
+export * from './VideoMessagePreviewScreen';
