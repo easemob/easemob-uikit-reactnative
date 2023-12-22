@@ -16,9 +16,10 @@ import {
   gCustomMessageCreateGroupEventType,
   gCustomMessageRecallEventType,
   gMessageAttributeQuote,
+  gMessageAttributeVoiceReadFlag,
 } from '../../chat';
 import { Services } from '../../services';
-import { formatTs2 } from '../../utils';
+import { formatTs2, ImageUrl, localUrlEscape } from '../../utils';
 import type { MessageStateType } from './types';
 
 export function isSupportMessage(msg: ChatMessage) {
@@ -42,7 +43,7 @@ export function getMessageState(msg: ChatMessage): MessageStateType {
   if (msg.direction === ChatMessageDirection.RECEIVE) {
     switch (msg.body.type) {
       case ChatMessageType.VOICE: {
-        const r = msg.attributes?._$uikit.voice['no-play'] as
+        const r = msg.attributes?.[gMessageAttributeVoiceReadFlag] as
           | boolean
           | undefined;
         ret = r === true ? 'no-play' : 'none';
@@ -146,7 +147,8 @@ export async function getImageThumbUrl(msg: ChatMessage) {
   // todo: 如果是接收的消息，本地缩略图 =》 服务器缩略图
   let isExisted = await Services.dcs.isExistedFile(body.thumbnailLocalPath);
   if (isExisted) {
-    return `file://${body.thumbnailLocalPath}`;
+    return localUrlEscape(ImageUrl(body.thumbnailLocalPath));
+    // return `file://${body.thumbnailLocalPath}`;
   }
   isExisted = await Services.dcs.isExistedFile(body.localPath);
   if (isExisted) {

@@ -21,6 +21,7 @@ import {
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
 } from '../../chat';
+import { g_not_existed_url } from '../../const';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
@@ -134,12 +135,15 @@ export function MessageText(props: MessageTextProps) {
 export type MessageImageProps = MessageBasicProps & {};
 export function MessageImage(props: MessageImageProps) {
   const { msg, maxWidth } = props;
-  const [thumbUrl, setThumbUrl] = React.useState<string | undefined>();
+  const [thumbUrl, setThumbUrl] = React.useState<string | undefined>(
+    g_not_existed_url
+  );
   const { width, height } = getImageShowSize(msg, maxWidth);
   React.useEffect(() => {
     msg.status;
     getImageThumbUrl(msg)
       .then((url) => {
+        console.log('test:zuoyu:url:image:', url);
         setThumbUrl(url);
       })
       .catch();

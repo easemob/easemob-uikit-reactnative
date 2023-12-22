@@ -3,6 +3,7 @@ import {
   ChatCustomMessageBody,
   ChatMessage,
   ChatMessageChatType,
+  ChatMessageDirection,
   ChatMessageStatus,
   ChatMessageType,
   ChatTextMessageBody,
@@ -17,6 +18,7 @@ import {
   useChatContext,
   useChatListener,
 } from '../../chat';
+import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
@@ -562,7 +564,8 @@ export function useMessageList(
       currentVoicePlayingRef.current = msgModel;
       const tmp = currentVoicePlayingRef.current;
       updateMessageVoiceUIState(msgModel);
-      const localPath = (msgModel.msg.body as ChatVoiceMessageBody).localPath;
+      const body = msgModel.msg.body as ChatVoiceMessageBody;
+      const localPath = body.localPath;
       try {
         const isExisted = await Services.dcs.isExistedFile(localPath);
         if (isExisted !== true) {
@@ -836,7 +839,7 @@ export function useMessageList(
             onClicked: () => {
               menuRef.current?.startHide?.(() => {
                 const msgModel = model as MessageModel;
-                onRecallMessage(msgModel.msg);
+                onRecallMessage(msgModel.msg, 'send');
               });
             },
           });
@@ -975,27 +978,55 @@ export function useMessageList(
   );
 
   const onRecallMessage = React.useCallback(
-    (msg: ChatMessage) => {
+    (msg: ChatMessage, fromType: 'send' | 'recv') => {
       const newMsg = createRecallMessageTip(msg);
       console.log('test:zuoyu:msgId:', newMsg.msgId, msg.msgId);
-      im.recallMessage({
-        message: msg,
-        onResult: (value) => {
-          if (value.isOk === true) {
-            onDelMessageToUI(msg);
-            im.insertMessage({
-              message: newMsg,
-              onResult: () => {
-                onRecallMessageToUI(newMsg);
-              },
-            });
-          } else {
-            console.log('test:zuoyu:error:', value.error);
-          }
-        },
-      });
+      if (fromType === 'send') {
+        im.recallMessage({
+          message: msg,
+          onResult: (value) => {
+            if (value.isOk === true) {
+              onDelMessageToUI(msg);
+              im.insertMessage({
+                message: newMsg,
+                onResult: () => {
+                  onRecallMessageToUI(newMsg);
+                },
+              });
+            } else {
+              console.log('test:zuoyu:error:', value.error);
+            }
+          },
+        });
+      } else {
+        onDelMessageToUI(msg);
+        im.insertMessage({
+          message: newMsg,
+          onResult: () => {
+            onRecallMessageToUI(newMsg);
+          },
+        });
+      }
     },
     [createRecallMessageTip, im, onDelMessageToUI, onRecallMessageToUI]
+  );
+
+  const onSetMessageRead = React.useCallback(
+    (msg: ChatMessage) => {
+      if (
+        msg.chatType === ChatMessageChatType.PeerChat &&
+        msg.direction === ChatMessageDirection.RECEIVE &&
+        msg.hasReadAck === true &&
+        msg.hasRead === false
+      ) {
+        im.setMessageRead({
+          convId,
+          convType,
+          msgId: msg.msgId,
+        });
+      }
+    },
+    [convId, convType, im]
   );
 
   React.useEffect(() => {
@@ -1005,7 +1036,10 @@ export function useMessageList(
         onUpdateMessageToUI(msg, 'send');
       },
       onRecvMessage: (msg: ChatMessage) => {
-        onAddMessageToUI(msg);
+        if (msg.conversationId === convId) {
+          onAddMessageToUI(msg);
+          onSetMessageRead(msg);
+        }
       },
       onRecvMessageStatusChanged: (msg: ChatMessage) => {
         onUpdateMessageToUI(msg, 'recv');
@@ -1014,18 +1048,25 @@ export function useMessageList(
         onUpdateMessageToUI(msg, 'recv');
       },
       onRecallMessage: (msg: ChatMessage, _byUserId: string) => {
-        onRecallMessage(msg);
+        console.log('test:zuoyu:msg:', msg.msgId);
+        if (msg.conversationId === convId) {
+          onRecallMessage(msg, 'recv');
+        }
       },
-    };
-    im.messageManager.addListener('MessageList', listener);
+    } as MessageManagerListener;
+    console.log('test:zuoyu:addlistener:22222', convId);
+    im.messageManager.addListener(convId, listener);
     return () => {
-      im.messageManager.removeListener('MessageList');
+      console.log('test:zuoyu:addlistener:33333', convId);
+      im.messageManager.removeListener(convId);
     };
   }, [
+    convId,
     im.messageManager,
     onAddMessageToUI,
     onRecallMessage,
     onRecallMessageToUI,
+    onSetMessageRead,
     onUpdateMessageToUI,
   ]);
 
@@ -1269,6 +1310,7 @@ export function useMessageList(
             | SendCardProps
         ) => {
           isNeedScrollToEndRef.current = true;
+          console.log('test:zuoyu:addSendMessage', value);
           addSendMessageToUI(value, (msg) => {
             sendMessageToServer(msg);
           });
@@ -1277,7 +1319,7 @@ export function useMessageList(
           onDelMessage(msg);
         },
         recallMessage: (msg: ChatMessage) => {
-          onRecallMessage(msg);
+          onRecallMessage(msg, 'send');
         },
         updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => {
           onUpdateMessageToUI(updatedMsg, fromType);
@@ -1349,6 +1391,10 @@ export function useMessageList(
     onAddMessageList,
     onRequestHistoryMessage,
   ]);
+
+  React.useEffect(() => {
+    im.setConversationRead({ convId, convType });
+  }, [convId, convType, im]);
 
   return {
     ...flatListProps,

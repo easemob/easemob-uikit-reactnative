@@ -30,6 +30,7 @@ export function useVoiceBar(props: VoiceBarProps) {
   } = props;
   const [state, setState] = React.useState<VoiceBarState>('idle');
   const voiceFilePathRef = React.useRef<string>('');
+  const voiceFileNameRef = React.useRef<string>('');
   const voiceDurationRef = React.useRef<number>(0);
   const isPlayingRef = React.useRef<boolean>(false);
   const recordTimeoutRef = React.useRef<NodeJS.Timeout>();
@@ -116,13 +117,19 @@ export function useVoiceBar(props: VoiceBarProps) {
       .stopRecordAudio()
       .then((result?: { pos: number; path: string }) => {
         if (result?.path) {
+          voiceFileNameRef.current = uuid();
           let localPath = localUrl(
-            Services.dcs.getFileDir(conv.convId, uuid())
+            Services.dcs.getFileDir(conv.convId, voiceFileNameRef.current)
           );
           const extension = getFileExtension(result.path);
           localPath = localPath + extension;
-          console.log('test:zuoyu:voice:file:', localPath);
           voiceFilePathRef.current = localPath;
+          voiceFileNameRef.current = voiceFileNameRef.current + extension;
+          console.log(
+            'test:zuoyu:voice:file:',
+            localPath,
+            voiceFileNameRef.current
+          );
           Services.ms
             .saveFromLocal({
               targetPath: localPath,
@@ -209,6 +216,7 @@ export function useVoiceBar(props: VoiceBarProps) {
     onClickedSendButton?.({
       localPath: voiceFilePathRef.current,
       duration: voiceDurationRef.current,
+      displayName: voiceFileNameRef.current,
       type: 'voice',
     });
     // todo: do something after send message?

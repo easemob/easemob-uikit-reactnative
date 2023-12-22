@@ -178,6 +178,7 @@ export class MediaServiceImplement implements MediaService {
       // !!! extension must, or no working
       // url =
       //   'file:///var/mobile/Containers/Data/Application/A630B779-3187-4CE7-A6DC-470AA34ED72F/Library/Caches/sound.m4a';
+      console.log('test:zuoyu:playAudio:', options.url);
       const r = await recorder.startPlayer(options.url, options.opt);
       options.onFile?.(r);
       return true;
