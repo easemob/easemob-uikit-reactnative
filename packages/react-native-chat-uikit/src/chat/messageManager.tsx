@@ -22,6 +22,7 @@ export type MessageManagerListener = {
   onRecvMessage?: (msg: ChatMessage) => void;
   onRecvMessageStatusChanged?: (msg: ChatMessage) => void;
   onRecvMessageContentChanged?: (msg: ChatMessage, byUserId: string) => void;
+  onMessageAttachmentChanged?: (msg: ChatMessage) => void;
   onRecallMessage?: (msg: ChatMessage, byUserId: string) => void;
 };
 
@@ -57,7 +58,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   }
   emitAttachmentChanged(msg: ChatMessage) {
     this._userListener.forEach((v) => {
-      v.onSendMessageChanged?.(msg);
+      v.onMessageAttachmentChanged?.(msg);
     });
   }
   init() {

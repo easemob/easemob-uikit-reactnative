@@ -11,6 +11,7 @@ export * from './GroupInfoScreen';
 export * from './GroupListScreen';
 export * from './GroupParticipantInfoScreen';
 export * from './GroupParticipantListScreen';
+export * from './ImageMessagePreviewScreen';
 export * from './LoginListScreen';
 export * from './LoginScreen';
 export * from './NewConversationScreen';

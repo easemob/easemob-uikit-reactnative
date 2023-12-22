@@ -1,6 +1,11 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ConversationDetail } from 'react-native-chat-uikit';
+import {
+  ConversationDetail,
+  MessageModel,
+  SystemMessageModel,
+  TimeMessageModel,
+} from 'react-native-chat-uikit';
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -51,6 +56,21 @@ export function ConversationDetailScreen(props: Props) {
               navigation.push('SelectSingleParticipant', {
                 params: {
                   groupId,
+                },
+              });
+            },
+          },
+        }}
+        list={{
+          props: {
+            onClickedItem: (
+              id: string,
+              model: SystemMessageModel | TimeMessageModel | MessageModel
+            ) => {
+              console.log('onClickedItem', id, model);
+              navigation.push('ImageMessagePreview', {
+                params: {
+                  msgId: id,
                 },
               });
             },

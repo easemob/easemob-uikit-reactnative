@@ -597,11 +597,16 @@ export function useMessageList(
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
-      propsOnClicked?.(id, model);
       if (model.modelType === 'message') {
         const msgModel = model as MessageModel;
-        if (msgModel.msg.body.type === 'voice') {
+        if (msgModel.msg.body.type === ChatMessageType.VOICE) {
           startVoicePlay(msgModel);
+        } else if (msgModel.msg.body.type === ChatMessageType.IMAGE) {
+          propsOnClicked?.(id, model);
+        } else if (msgModel.msg.body.type === ChatMessageType.VIDEO) {
+          propsOnClicked?.(id, model);
+        } else if (msgModel.msg.body.type === ChatMessageType.FILE) {
+          propsOnClicked?.(id, model);
         }
       }
     },

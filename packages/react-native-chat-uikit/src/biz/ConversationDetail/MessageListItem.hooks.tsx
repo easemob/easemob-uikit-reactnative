@@ -152,7 +152,8 @@ export async function getImageThumbUrl(msg: ChatMessage) {
   }
   isExisted = await Services.dcs.isExistedFile(body.localPath);
   if (isExisted) {
-    return `file://${body.localPath}`;
+    return localUrlEscape(ImageUrl(body.localPath));
+    // return `file://${body.localPath}`;
   }
   return body.thumbnailRemotePath;
 }
@@ -167,7 +168,8 @@ export async function getVideoThumbUrl(
   // todo: 如果是接收的消息，本地缩略图 =》 服务器缩略图
   let isExisted = await Services.dcs.isExistedFile(body.thumbnailLocalPath);
   if (isExisted) {
-    return `file://${body.thumbnailLocalPath}`;
+    return localUrlEscape(ImageUrl(body.thumbnailLocalPath));
+    // return `file://${body.thumbnailLocalPath}`;
   }
   isExisted =
     body.thumbnailRemotePath !== undefined &&

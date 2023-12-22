@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { ImageSourcePropType, Pressable, View, ViewStyle } from 'react-native';
+import {
+  ImageSourcePropType,
+  ImageStyle,
+  Pressable,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import { Image } from '../../ui/Image';
 // import { ImageViewer } from './__private__/image-viewer.component';
@@ -12,10 +19,18 @@ export type ImagePreviewProps = {
   onClicked?: () => void;
   onDupClicked?: () => void;
   onLongPress?: () => void;
+  imageStyle?: StyleProp<ImageStyle>;
 };
 export function ImagePreview(props: ImagePreviewProps) {
-  const { source, containerStyle, onLongPress, onClicked, onDupClicked } =
-    props;
+  const {
+    source,
+    containerStyle,
+    onLongPress,
+    onClicked,
+    onDupClicked,
+    imageStyle,
+  } = props;
+
   return (
     <Pressable
       style={containerStyle}
@@ -29,7 +44,7 @@ export function ImagePreview(props: ImagePreviewProps) {
       <Draggable2>
         <Scalable onDoubleClicked={onDupClicked}>
           <View>
-            <Image source={source} />
+            <Image source={source} style={imageStyle} />
           </View>
         </Scalable>
       </Draggable2>

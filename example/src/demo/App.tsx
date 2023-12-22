@@ -32,6 +32,7 @@ import {
   GroupListScreen,
   GroupParticipantInfoScreen,
   GroupParticipantListScreen,
+  ImageMessagePreviewScreen,
   LoginListScreen,
   LoginScreen,
   NewConversationScreen,
@@ -334,6 +335,13 @@ export function App() {
                 headerShown: false,
               }}
               component={SelectSingleParticipantScreen}
+            />
+            <Root.Screen
+              name={'ImageMessagePreview'}
+              options={{
+                headerShown: false,
+              }}
+              component={ImageMessagePreviewScreen}
             />
           </Root.Navigator>
         </NavigationContainer>
