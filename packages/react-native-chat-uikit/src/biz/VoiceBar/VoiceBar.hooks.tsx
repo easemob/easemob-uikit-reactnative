@@ -6,7 +6,6 @@ import {
   AVEncoderAudioQualityIOSType,
   AVEncodingOption,
   AVModeIOSOption,
-  OutputFormatAndroidType,
 } from 'react-native-audio-recorder-player';
 
 import { useChatContext } from '../../chat';
@@ -40,7 +39,7 @@ export function useVoiceBar(props: VoiceBarProps) {
 
   const AudioOptionRef = React.useRef<AudioSet>({
     AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
-    OutputFormatAndroid: OutputFormatAndroidType.AAC_ADIF,
+    // OutputFormatAndroid: OutputFormatAndroidType.AAC_ADIF,
     AudioSourceAndroid: AudioSourceAndroidType.MIC,
     AVModeIOS: AVModeIOSOption.measurement,
     AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
