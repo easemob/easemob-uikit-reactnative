@@ -61,6 +61,7 @@ const initChat = once2(
     autoLogin: boolean,
     onInitialized?: () => void
   ) => {
+    console.log('test:zuoyu:initChat:1');
     im.init({
       appKey: appKey,
       debugMode: debugMode,

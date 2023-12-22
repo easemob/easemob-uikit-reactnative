@@ -59,8 +59,8 @@ export abstract class ChatServiceImpl
   _contactList: Map<string, ContactModel>;
   _groupList: Map<string, GroupModel>;
   _groupMemberList: Map<string, Map<string, GroupParticipantModel>>;
-  _request: RequestList;
-  _messageManager: MessageCacheManager;
+  _request?: RequestList;
+  _messageManager?: MessageCacheManager;
   _contactState: Map<string, Map<string, boolean>>;
   _currentConversation?: ConversationModel;
   _convDataRequestCallback?: (params: {
@@ -91,16 +91,16 @@ export abstract class ChatServiceImpl
     this._groupList = new Map();
     this._groupMemberList = new Map();
     this._contactState = new Map();
-    this._request = new RequestListImpl(this);
-    this._messageManager = new MessageCacheManagerImpl(this);
+    // this._request = new RequestListImpl(this);
+    // this._messageManager = new MessageCacheManagerImpl(this);
   }
 
   destructor() {
     this._convStorage?.destructor();
     this._reset();
-    this._request.destructor();
+    // this._request.destructor();
     this._request = undefined as any;
-    this._messageManager.destructor();
+    // this._messageManager.destructor();
     this._messageManager = undefined as any;
   }
 
@@ -122,6 +122,9 @@ export abstract class ChatServiceImpl
   }): Promise<void> {
     const { appKey, debugMode, autoLogin } = params;
     this._convStorage = new ConversationStorage({ appKey: appKey });
+    // !!! hot-reload no pass, into catch codes
+    this._request = new RequestListImpl(this);
+    this._messageManager = new MessageCacheManagerImpl(this);
     const options = new ChatOptions({
       appKey,
       debugModel: debugMode,
@@ -353,11 +356,11 @@ export abstract class ChatServiceImpl
   }
 
   get requestList(): RequestList {
-    return this._request;
+    return this._request!;
   }
 
   get messageManager(): MessageCacheManager {
-    return this._messageManager;
+    return this._messageManager!;
   }
 
   tryCatch<T>(params: {
@@ -1906,6 +1909,21 @@ export abstract class ChatServiceImpl
         avatarURL: user.avatarURL ?? 'unknown',
       } as UserServiceDataFromMessage,
     };
+  }
+
+  setMessageRead(params: {
+    convId: string;
+    convType: ChatConversationType;
+    msgId: string;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.markMessageAsRead(
+        params.convId,
+        params.convType,
+        params.msgId
+      ),
+      event: 'setMessageRead',
+    });
   }
 }
 

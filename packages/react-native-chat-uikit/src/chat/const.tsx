@@ -10,10 +10,10 @@ export const gNewRequestConversationMsgEventType = '_$uikit_new_request_event';
 export const gGroupMemberMyRemark = 'chatUIKit_group_member_nick_name';
 
 export const gConversationSystemMessage = '_$uikit_conv_system_msg';
-export const gVoiceReadFlag = '_$uikit_voice_read_flag';
 
 export const gCustomMessageCardEventType = 'userCard';
 export const gCustomMessageRecallEventType = '_$uikit_msg_recall';
 export const gCustomMessageCreateGroupEventType = '_$uikit_create_group';
 export const gMessageAttributeQuote = 'msgQuote';
 export const gMessageAttributeUserInfo = 'ease_chat_uikit_user_info';
+export const gMessageAttributeVoiceReadFlag = '_$uikit_voice_read_flag';

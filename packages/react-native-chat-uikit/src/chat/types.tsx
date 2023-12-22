@@ -455,6 +455,11 @@ export interface MessageServices {
     msg: ChatMessage;
     user: UserServiceData;
   }): void;
+  setMessageRead(params: {
+    convId: string;
+    convType: ChatConversationType;
+    msgId: string;
+  }): void;
 }
 
 export interface GroupServices {
