@@ -16,6 +16,7 @@ import { Services } from '../../services';
 import { IconButton } from '../../ui/Button';
 import { ImageUrl, localUrlEscape } from '../../utils';
 import { ImagePreview } from '../ImagePreview';
+import { useImageSize } from './useImageSize';
 
 export type ImageMessagePreviewProps = {
   msgId: string;
@@ -88,28 +89,8 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
     width: 300,
     height: 300,
   });
-  const { width, height } = useWindowDimensions();
-
-  const getImageSize = React.useCallback(
-    (imageHight: number, imageWidth: number) => {
-      // todo: 保存图片原始比例，高度和宽度不超过屏幕
-      const ratio = imageHight / imageWidth;
-      const maxWidth = width;
-      const maxHeight = height;
-      if (maxWidth < imageWidth) {
-        const w = maxWidth;
-        const h = maxWidth * ratio;
-        return { width: w, height: h };
-      } else if (maxHeight < imageHight) {
-        const h = maxHeight;
-        const w = maxHeight / ratio;
-        return { width: w, height: h };
-      } else {
-        return { width: imageWidth, height: imageHight };
-      }
-    },
-    [height, width]
-  );
+  const { width: winWidth, height: winHeight } = useWindowDimensions();
+  const { getImageSize } = useImageSize({});
 
   const onGetMessage = React.useCallback(
     (msgId: string) => {
@@ -125,7 +106,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
             const body = result.body as ChatImageMessageBody;
             const h = body.height ?? 300;
             const w = body.width ?? 300;
-            setSize(getImageSize(h, w));
+            setSize(getImageSize(h, w, winHeight, winWidth));
             const isExisted = await Services.dcs.isExistedFile(body.localPath);
             if (isExisted !== true) {
               im.messageManager.downloadAttachment(result);
@@ -136,7 +117,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
         })
         .catch();
     },
-    [getImageSize, im]
+    [getImageSize, im, winHeight, winWidth]
   );
 
   React.useEffect(() => {
@@ -152,7 +133,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
             if (body.fileStatus === ChatDownloadStatus.SUCCESS) {
               setUrl(localUrlEscape(ImageUrl(body.localPath)));
             } else if (body.fileStatus === ChatDownloadStatus.FAILED) {
-              console.log('test:zuoyu:download failed');
+              // todo: download failed
             }
           }
         }

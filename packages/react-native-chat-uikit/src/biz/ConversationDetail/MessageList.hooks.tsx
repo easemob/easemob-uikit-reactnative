@@ -101,7 +101,7 @@ export function useMessageList(
   // !!! https://github.com/facebook/react-native/issues/36529
   // !!! https://github.com/facebook/react-native/issues/14312
   // !!! only android, FlatList onEndReached no work android
-  const [reachedThreshold] = React.useState(100);
+  const [reachedThreshold] = React.useState(0.5);
 
   const init = async () => {
     if (testMode === 'only-ui') {
@@ -599,7 +599,6 @@ export function useMessageList(
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
       if (model.modelType === 'message') {
-        console.log('test:zuoyu:clicked:', model);
         const msgModel = model as MessageModel;
         if (msgModel.msg.body.type === ChatMessageType.VOICE) {
           startVoicePlay(msgModel);
@@ -746,7 +745,6 @@ export function useMessageList(
     _id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
   ) => {
-    console.log('test:zuoyu:longpress:', model.modelType);
     if (model.modelType !== 'message') {
       return;
     }
@@ -987,7 +985,6 @@ export function useMessageList(
   const onRecallMessage = React.useCallback(
     (msg: ChatMessage, fromType: 'send' | 'recv') => {
       const newMsg = createRecallMessageTip(msg);
-      console.log('test:zuoyu:msgId:', newMsg.msgId, msg.msgId);
       if (fromType === 'send') {
         im.recallMessage({
           message: msg,
@@ -1001,7 +998,7 @@ export function useMessageList(
                 },
               });
             } else {
-              console.log('test:zuoyu:error:', value.error);
+              // todo: recall failed.
             }
           },
         });
@@ -1037,7 +1034,6 @@ export function useMessageList(
   );
 
   React.useEffect(() => {
-    console.log('test:zuoyu:useEffect');
     const listener = {
       onSendMessageChanged: (msg: ChatMessage) => {
         onUpdateMessageToUI(msg, 'send');
@@ -1055,16 +1051,15 @@ export function useMessageList(
         onUpdateMessageToUI(msg, 'recv');
       },
       onRecallMessage: (msg: ChatMessage, _byUserId: string) => {
-        console.log('test:zuoyu:msg:', msg.msgId);
         if (msg.conversationId === convId) {
           onRecallMessage(msg, 'recv');
         }
       },
     } as MessageManagerListener;
-    console.log('test:zuoyu:addlistener:22222', convId);
+    console.log('test:zuoyu:addlistener', convId);
     im.messageManager.addListener(convId, listener);
     return () => {
-      console.log('test:zuoyu:addlistener:33333', convId);
+      console.log('test:zuoyu:removeListener', convId);
       im.messageManager.removeListener(convId);
     };
   }, [
@@ -1317,7 +1312,6 @@ export function useMessageList(
             | SendCardProps
         ) => {
           isNeedScrollToEndRef.current = true;
-          console.log('test:zuoyu:addSendMessage', value);
           addSendMessageToUI(value, (msg) => {
             sendMessageToServer(msg);
           });

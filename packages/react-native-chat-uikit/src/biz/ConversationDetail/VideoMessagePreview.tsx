@@ -34,6 +34,7 @@ import {
   localUrlEscape,
   uuid,
 } from '../../utils';
+import { useImageSize } from './useImageSize';
 
 export type VideoMessagePreviewProps = {
   msgId: string;
@@ -169,39 +170,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
     undefined
   );
   const [pause, setPause] = React.useState(false);
-
-  const getImageSize = React.useCallback(
-    (
-      imageHight: number,
-      imageWidth: number,
-      maxHeight: number,
-      maxWidth: number
-    ) => {
-      // todo: 保存图片原始比例，高度和宽度不超过屏幕
-      const ratio = imageHight / imageWidth;
-      // const maxWidth = winWidth;
-      // const maxHeight = winHeight;
-      if (maxWidth < imageWidth) {
-        const w = maxWidth;
-        const h = maxWidth * ratio;
-        console.log('test:zuoyu:1:', w, h);
-        if (maxHeight < h) {
-          return { width: maxHeight / ratio, height: maxHeight };
-        }
-        return { width: w, height: h };
-      } else if (maxHeight < imageHight) {
-        const h = maxHeight;
-        const w = maxHeight / ratio;
-        if (maxWidth < w) {
-          return { width: maxWidth, height: maxWidth * ratio };
-        }
-        return { width: w, height: h };
-      } else {
-        return { width: imageWidth, height: imageHight };
-      }
-    },
-    []
-  );
+  const { getImageSize } = useImageSize({});
 
   const onGetMessage = React.useCallback(
     (msgId: string) => {
@@ -255,7 +224,6 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
   }, []);
 
   const onClickedVideo = React.useCallback(() => {
-    console.log('test:zuoyu:onClickedVideo');
     if (Platform.OS === 'ios') {
       videoRef.current?.seek(0);
       setPause((v) => !v);

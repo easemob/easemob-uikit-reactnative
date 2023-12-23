@@ -29,7 +29,6 @@ export function ShareContactScreen(props: Props) {
           });
         }}
         onClicked={(data) => {
-          console.log('test:zuoyu:ShareContact:onClicked', data);
           navigation.navigate('ConversationDetail', {
             params: {
               convId,

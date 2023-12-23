@@ -30,7 +30,6 @@ export function ConversationDetailScreen(props: Props) {
   const listRef = React.useRef<MessageListRef>({} as any);
   const inputRef = React.useRef<MessageInputRef>({} as any);
   const { top, bottom } = useSafeAreaInsets();
-  console.log('test:zuoyu:ConversationDetailScreen', route.params);
 
   React.useEffect(() => {
     if (selectedParticipants && operateType === 'mention') {
@@ -84,7 +83,6 @@ export function ConversationDetailScreen(props: Props) {
             bottom,
             // onInputMention: (groupId: string) => {
             //   // todo : select group member.
-            //   console.log('test:zuoyu:SelectSingleParticipant:', groupId);
             //   navigation.push('SelectSingleParticipant', {
             //     params: {
             //       groupId,

@@ -7,7 +7,6 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function SelectSingleParticipantScreen(props: Props) {
-  console.log('test:zuoyu:SelectSingleParticipantScreen');
   const { navigation, route } = props;
   const groupId = ((route.params as any)?.params as any)?.groupId;
   return (

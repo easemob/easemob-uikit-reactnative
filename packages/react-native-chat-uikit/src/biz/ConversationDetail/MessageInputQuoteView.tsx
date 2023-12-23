@@ -168,16 +168,8 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
   };
 
   const getContentThumb = (msg: ChatMessage) => {
-    // console.log('test:zuoyu:getContentThumb', msg.body.type);
     if (msg.body.type === ChatMessageType.IMAGE) {
       const body = msg.body as ChatImageMessageBody;
-      // console.log('test:zuoyu:getContentThumb', body);
-      // return '';
-      // return null;
-      // return '/var/mobile/Containers/Data/Application/CC0AD493-D627-463B-B351-44500E6FB1E2/tmp/E62D6817-E4D2-4FB7-9EF6-ECEAFDC5613A.jpg';
-      // return body.thumbnailLocalPath.length > 0
-      //   ? body.thumbnailLocalPath
-      //   : null;
       return body.thumbnailLocalPath;
     } else if (msg.body.type === ChatMessageType.VIDEO) {
       const body = msg.body as ChatVideoMessageBody;

@@ -44,16 +44,19 @@ export function useConversationList(
     listType,
   } = flatListProps;
 
-  const onSort = (
-    prevProps: ConversationListItemProps,
-    nextProps: ConversationListItemProps
-  ): number => {
-    if (propsOnSort) {
-      return propsOnSort(prevProps, nextProps);
-    } else {
-      return sortConversations(prevProps, nextProps);
-    }
-  };
+  const onSort = React.useCallback(
+    (
+      prevProps: ConversationListItemProps,
+      nextProps: ConversationListItemProps
+    ): number => {
+      if (propsOnSort) {
+        return propsOnSort(prevProps, nextProps);
+      } else {
+        return sortConversations(prevProps, nextProps);
+      }
+    },
+    [propsOnSort]
+  );
 
   const im = useChatContext();
 
@@ -76,12 +79,15 @@ export function useConversationList(
     }
   });
 
-  const onSetData = (list: ConversationListItemProps[]) => {
-    if (isSort === true) {
-      list.sort(onSort);
-    }
-    setData([...list]);
-  };
+  const onSetData = React.useCallback(
+    (list: ConversationListItemProps[]) => {
+      if (isSort === true) {
+        list.sort(onSort);
+      }
+      setData([...list]);
+    },
+    [isSort, onSort, setData]
+  );
 
   const init = async () => {
     if (testMode === 'only-ui') {
@@ -293,43 +299,86 @@ export function useConversationList(
     });
   };
 
-  useChatListener({
-    onMessagesReceived: (msgs) => {
-      for (const msg of msgs) {
-        for (const item of dataRef.current) {
-          if (item.data.convId === msg.conversationId) {
-            item.data.lastMessage = msg;
-            if (item.data.doNotDisturb !== true) {
-              if (item.data.unreadMessageCount === undefined) {
-                item.data.unreadMessageCount = 0;
+  console.log('test:zuoyu:conv:list:', data.length);
+  const listener = React.useMemo(() => {
+    return {
+      onMessagesReceived: (msgs) => {
+        for (const msg of msgs) {
+          for (const item of dataRef.current) {
+            if (item.data.convId === msg.conversationId) {
+              item.data.lastMessage = msg;
+              if (item.data.doNotDisturb !== true) {
+                if (item.data.unreadMessageCount === undefined) {
+                  item.data.unreadMessageCount = 0;
+                }
+                item.data.unreadMessageCount += 1;
               }
-              item.data.unreadMessageCount += 1;
+              item.data = { ...item.data };
+              break;
             }
-            item.data = { ...item.data };
-            break;
           }
         }
-      }
-      onSetData(dataRef.current);
-    },
-    onMessagesRecalled: async (msgs) => {
-      for (const msg of msgs) {
-        for (const item of dataRef.current) {
-          if (item.data.convId === msg.conversationId) {
-            // todo: update last message
-            break;
+        onSetData(dataRef.current);
+      },
+      onMessagesRecalled: async (msgs) => {
+        for (const msg of msgs) {
+          for (const item of dataRef.current) {
+            if (item.data.convId === msg.conversationId) {
+              // todo: update last message
+              break;
+            }
           }
         }
-      }
-      onSetData(dataRef.current);
-    },
-    onConversationsUpdate: () => {
-      init();
-    },
-    onMessageContentChanged: () => {
-      // todo:
-    },
-  } as ChatServiceListener);
+        onSetData(dataRef.current);
+      },
+      onConversationsUpdate: () => {
+        // init();
+      },
+      onMessageContentChanged: () => {
+        // todo:
+      },
+    } as ChatServiceListener;
+  }, [dataRef, onSetData]);
+
+  useChatListener(listener);
+
+  // useChatListener({
+  //   onMessagesReceived: (msgs) => {
+  //     for (const msg of msgs) {
+  //       for (const item of dataRef.current) {
+  //         if (item.data.convId === msg.conversationId) {
+  //           item.data.lastMessage = msg;
+  //           if (item.data.doNotDisturb !== true) {
+  //             if (item.data.unreadMessageCount === undefined) {
+  //               item.data.unreadMessageCount = 0;
+  //             }
+  //             item.data.unreadMessageCount += 1;
+  //           }
+  //           item.data = { ...item.data };
+  //           break;
+  //         }
+  //       }
+  //     }
+  //     onSetData(dataRef.current);
+  //   },
+  //   onMessagesRecalled: async (msgs) => {
+  //     for (const msg of msgs) {
+  //       for (const item of dataRef.current) {
+  //         if (item.data.convId === msg.conversationId) {
+  //           // todo: update last message
+  //           break;
+  //         }
+  //       }
+  //     }
+  //     onSetData(dataRef.current);
+  //   },
+  //   onConversationsUpdate: () => {
+  //     init();
+  //   },
+  //   onMessageContentChanged: () => {
+  //     // todo:
+  //   },
+  // } as ChatServiceListener);
 
   return {
     listType,

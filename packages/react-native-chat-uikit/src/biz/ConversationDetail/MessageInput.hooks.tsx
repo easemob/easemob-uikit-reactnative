@@ -179,7 +179,6 @@ export function useMessageInput(
       if (valueRef.current !== text) {
         if (valueRef.current.length > text.length) {
           // const tmp = findLastMention(valueRef.current);
-          // console.log('test:zuoyu:tmp:', tmp, text, valueRef.current);
           // if (tmp) {
           //   text = tmp;
           // }
@@ -377,10 +376,8 @@ export function useMessageInput(
           icon: 'img',
           onClicked: () => {
             menuRef.current?.startHide?.(() => {
-              console.log('test:zuoyu:selectOnePicture');
               selectOnePicture({
                 onResult: (params) => {
-                  console.log('test:zuoyu:selectOnePicture', params);
                   onSelectSendImage(params);
                 },
               });
@@ -396,7 +393,6 @@ export function useMessageInput(
               selectOneShortVideo({
                 convId: convId,
                 onResult: (params) => {
-                  console.log('test:zuoyu:selectOneShortVideo', params);
                   onSelectSendVideo(params);
                 },
               });
@@ -411,7 +407,6 @@ export function useMessageInput(
             menuRef.current?.startHide?.(() => {
               selectCamera({
                 onResult: (params) => {
-                  console.log('test:zuoyu:selectCamera', params);
                   onSelectSendImage(params);
                 },
               });
@@ -426,7 +421,6 @@ export function useMessageInput(
             menuRef.current?.startHide?.(() => {
               selectFile({
                 onResult: (params) => {
-                  console.log('test:zuoyu:selectFile', params);
                   onSelectSendFile(params);
                 },
               });
@@ -518,7 +512,6 @@ export function useMessageInput(
         onShowEditMessage(model);
       },
       mentionSelected: (list: { id: string; name: string }[]) => {
-        console.log('test:zuoyu:mentionSelected:', list);
         mentionListRef.current.push(...list);
         // !!! only support one mention
         const text = valueRef.current;
@@ -552,11 +545,9 @@ export function useMessageInput(
   //         // const index = text.lastIndexOf(`@${last.name} `);
   //         const key = `@${last.name}`;
   //         const index = text.lastIndexOf(key);
-  //         console.log('test:zuoyu:index:', index, last.name);
   //         if (index !== -1) {
   //           const start = index;
   //           const end = index + last.name.length + 1;
-  //           console.log('test:zuoyu:index:2', end, text.length);
   //           if (end + 1 === text.length) {
   //             deleteLastMentionFromList(last.name);
   //             return text.replace(text.substring(start, end), '');

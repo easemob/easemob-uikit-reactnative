@@ -56,7 +56,6 @@ export function SearchContactScreen(props: Props) {
           }
         }}
         onClicked={(data) => {
-          console.log('test:zuoyu:SearchContactScreen:clicked', data);
           if (searchType === 'share-contact') {
             // todo: go back 2 times
             // navigation.pop(2);
