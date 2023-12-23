@@ -1,4 +1,9 @@
-import { ChatMessage, ChatSearchDirection } from 'react-native-chat-sdk';
+import {
+  ChatCustomMessageBody,
+  ChatMessage,
+  ChatMessageType,
+  ChatSearchDirection,
+} from 'react-native-chat-sdk';
 
 import { timeoutTask } from '../utils';
 import {
@@ -54,6 +59,20 @@ export class RequestListImpl implements RequestList {
   init() {
     this._listener = {
       onContactInvited: (userId: string): void => {
+        const isExisted = this._newRequestList.findIndex((v) => {
+          const t2 = v.msg?.body.type === ChatMessageType.CUSTOM;
+          if (t2 === true) {
+            const body = v.msg?.body as ChatCustomMessageBody;
+            const t3 = body.event === gNewRequestConversationMsgEventType;
+            const t1 =
+              v.msg?.attributes[gNewRequestConversationUserId] === userId;
+            return t1 === true && t3 === true;
+          }
+          return false;
+        });
+        if (isExisted !== -1) {
+          return;
+        }
         const newMsg = ChatMessage.createCustomMessage(
           gNewRequestConversationId,
           gNewRequestConversationMsgEventType
@@ -118,11 +137,12 @@ export class RequestListImpl implements RequestList {
       params.onResult({ isOk: true, value: this._newRequestList });
       return;
     }
+    // this._client.removeConversation({ convId: gNewRequestConversationId });
     this._client.getNewRequestList({
       convId: gNewRequestConversationId,
       convType: 0,
       pageSize: 200,
-      direction: ChatSearchDirection.DOWN,
+      direction: ChatSearchDirection.UP,
       onResult: (result) => {
         if (result.isOk) {
           if (result.value) {

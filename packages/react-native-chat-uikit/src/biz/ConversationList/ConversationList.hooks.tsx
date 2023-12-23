@@ -4,6 +4,7 @@ import { ChatMessageType } from 'react-native-chat-sdk';
 import {
   ChatServiceListener,
   ConversationModel,
+  gNewRequestConversationId,
   useChatContext,
   useChatListener,
 } from '../../chat';
@@ -145,6 +146,9 @@ export function useConversationList(
               dataRef.current = [];
               if (list) {
                 for (const conv of list) {
+                  if (conv.convId === gNewRequestConversationId) {
+                    continue;
+                  }
                   dataRef.current.push({
                     id: conv.convId,
                     data: conv,

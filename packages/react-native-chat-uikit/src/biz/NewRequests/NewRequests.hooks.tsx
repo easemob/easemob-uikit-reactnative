@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { NewRequestModel, useChatContext } from '../../chat';
 import { useLifecycle } from '../../hook';
-import { seqId } from '../../utils';
 import { useFlatList } from '../List';
 import type { ListItemActions, UseFlatListReturn } from '../types';
 import type { NewRequestsItemProps, UseNewRequestsProps } from './types';
@@ -61,7 +60,7 @@ export function useNewRequests(
         onNewRequestListChanged: (list) => {
           dataRef.current = list.map((item) => {
             return {
-              id: seqId('_$new_request').toString(),
+              id: item.id,
               data: item,
             };
           });
@@ -82,7 +81,7 @@ export function useNewRequests(
             if (result.isOk && result.value) {
               dataRef.current = result.value.map((item) => {
                 return {
-                  id: seqId('_$new_request').toString(),
+                  id: item.id,
                   data: item,
                 };
               });
