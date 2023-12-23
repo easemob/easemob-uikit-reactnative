@@ -25,7 +25,7 @@ import { ConversationStorage } from '../db/storage';
 import { ErrorCode, UIKitError } from '../error';
 import { Services } from '../services';
 import { asyncTask, mergeObjects } from '../utils';
-import { gGroupMemberMyRemark, gMessageAttributeUserInfo } from './const';
+import { gGroupMemberMyRemark } from './const';
 import { MessageCacheManagerImpl } from './messageManager';
 import type { MessageCacheManager } from './messageManager.types';
 import { RequestListImpl } from './requestList';
@@ -45,8 +45,8 @@ import {
   ResultCallback,
   UserFrom,
   UserServiceData,
-  UserServiceDataFromMessage,
 } from './types';
+import { setUserInfoToMessage, userInfoFromMessage } from './utils';
 
 export abstract class ChatServiceImpl
   implements ChatService, ConversationServices
@@ -1946,38 +1946,14 @@ export abstract class ChatServiceImpl
   }
 
   userInfoFromMessage(msg?: ChatMessage): UserServiceData | undefined {
-    if (msg === undefined || msg === null) {
-      return undefined;
-    }
-    const jsonUserInfo = (msg.attributes as any)[gMessageAttributeUserInfo];
-    if (jsonUserInfo) {
-      const userInfo = jsonUserInfo as UserServiceDataFromMessage;
-      const ret = {
-        userId: msg.from,
-        userName: userInfo.nickname,
-        avatarURL: userInfo.avatarURL ?? 'unknown',
-      } as UserServiceData;
-      return ret;
-    }
-
-    return undefined;
+    return userInfoFromMessage(msg);
   }
 
   setUserInfoToMessage(params: {
     msg: ChatMessage;
     user?: UserServiceData;
   }): void {
-    const { msg, user } = params;
-    if (user === undefined || user === null) {
-      return;
-    }
-    msg.attributes = {
-      ...msg.attributes,
-      [gMessageAttributeUserInfo]: {
-        nickname: user.userName,
-        avatarURL: user.avatarURL ?? 'unknown',
-      } as UserServiceDataFromMessage,
-    };
+    return setUserInfoToMessage(params);
   }
 
   setMessageRead(params: {

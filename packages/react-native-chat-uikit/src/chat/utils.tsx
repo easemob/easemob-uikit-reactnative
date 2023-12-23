@@ -1,12 +1,14 @@
 import {
   ChatCustomMessageBody,
   ChatMessage,
+  ChatMessageChatType,
   ChatMessageType,
   ChatTextMessageBody,
 } from 'react-native-chat-sdk';
 
 import { formatTs2 } from '../utils';
 import {
+  gMessageAttributeUserInfo,
   gNewRequestConversationMsgEventType,
   gNewRequestConversationState,
   gNewRequestConversationTip,
@@ -14,15 +16,65 @@ import {
   gNewRequestConversationUserId,
   gNewRequestConversationUserName,
 } from './const';
-import type { NewRequestModel } from './types';
+import type {
+  NewRequestModel,
+  UserServiceData,
+  UserServiceDataFromMessage,
+} from './types';
+
+export function userInfoFromMessage(
+  msg?: ChatMessage
+): UserServiceData | undefined {
+  if (msg === undefined || msg === null) {
+    return undefined;
+  }
+  const jsonUserInfo = (msg.attributes as any)[gMessageAttributeUserInfo];
+  if (jsonUserInfo) {
+    const userInfo = jsonUserInfo as UserServiceDataFromMessage;
+    const ret = {
+      userId: msg.from,
+      userName: userInfo.nickname,
+      avatarURL: userInfo.avatarURL ?? 'unknown',
+    } as UserServiceData;
+    return ret;
+  }
+
+  return undefined;
+}
+
+export function setUserInfoToMessage(params: {
+  msg: ChatMessage;
+  user?: UserServiceData;
+}): void {
+  const { msg, user } = params;
+  if (user === undefined || user === null) {
+    return;
+  }
+  msg.attributes = {
+    ...msg.attributes,
+    [gMessageAttributeUserInfo]: {
+      nickname: user.userName,
+      avatarURL: user.avatarURL ?? 'unknown',
+    } as UserServiceDataFromMessage,
+  };
+}
 
 export function getMessageSnapshot(msg?: ChatMessage): string {
   if (msg === undefined) {
     return '';
   }
   switch (msg.body.type) {
-    case ChatMessageType.TXT:
-      return (msg.body as ChatTextMessageBody).content;
+    case ChatMessageType.TXT: {
+      if (msg.chatType === ChatMessageChatType.GroupChat) {
+        const user = userInfoFromMessage(msg);
+        return `${user?.userName ?? user?.userId ?? msg.from}: ${
+          (msg.body as ChatTextMessageBody).content
+        }`;
+      } else {
+        return (msg.body as ChatTextMessageBody).content;
+      }
+    }
+
     case ChatMessageType.IMAGE:
       return '[image]';
     case ChatMessageType.VIDEO:
