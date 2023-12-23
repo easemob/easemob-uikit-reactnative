@@ -11,10 +11,11 @@ export type DefaultIconImageProps = {
   size: number;
   borderRadius?: number;
   style?: StyleProp<ImageStyle>;
+  defaultStyle?: StyleProp<ImageStyle>;
 };
 
 export function DefaultIconImage(props: DefaultIconImageProps) {
-  const { url, size, borderRadius, style, localIcon } = props;
+  const { url, size, borderRadius, style, defaultStyle, localIcon } = props;
   const isInvalid = (url?: string) => {
     return (
       url === undefined ||
@@ -40,6 +41,7 @@ export function DefaultIconImage(props: DefaultIconImageProps) {
         },
         style,
       ]}
+      defaultStyle={defaultStyle}
     />
   );
 }

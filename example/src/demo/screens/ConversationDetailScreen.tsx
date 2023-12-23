@@ -49,7 +49,6 @@ export function ConversationDetailScreen(props: Props) {
   }, [selectedParticipants, operateType]);
 
   React.useEffect(() => {
-    console.log('test:zuoyu:ConversationDetailScreen:2', selectedContacts, operateType);
     if (selectedContacts && operateType === 'share_card') {
       try {
         const p = JSON.parse(selectedContacts);

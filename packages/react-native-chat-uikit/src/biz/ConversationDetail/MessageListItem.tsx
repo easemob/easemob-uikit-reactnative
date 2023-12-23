@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Dimensions,
+  // Image as RNImage,
   Pressable,
   StyleProp,
   StyleSheet,
@@ -16,16 +17,16 @@ import {
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 
-import type { IconNameType } from '../../assets';
+import { ICON_ASSETS, IconNameType } from '../../assets';
 import {
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
 } from '../../chat';
-import { g_not_existed_url } from '../../const';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import {
+  DefaultImage,
   DynamicIcon,
   DynamicIconRef,
   Icon,
@@ -131,12 +132,69 @@ export function MessageText(props: MessageTextProps) {
   );
 }
 
+export type MessageDefaultImageProps = {
+  url?: string;
+  width: number;
+  height: number;
+  iconName: IconNameType;
+  onError?: () => void;
+};
+export function MessageDefaultImage(props: MessageDefaultImageProps) {
+  const { url, width, height, iconName, onError } = props;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[8],
+      dark: colors.neutral[3],
+    },
+    fg: {
+      light: colors.neutral[7],
+      dark: colors.neutral[2],
+    },
+  });
+  return (
+    <DefaultImage
+      source={{
+        uri: url,
+      }}
+      style={[
+        {
+          width: width,
+          height: height,
+          borderRadius: 4, // todo:
+        },
+      ]}
+      defaultSource={ICON_ASSETS[iconName]('3x')}
+      defaultStyle={{
+        width: 64,
+        height: 64,
+        tintColor: getColor('fg'),
+      }}
+      defaultContainerStyle={{
+        width: width,
+        height: height,
+        backgroundColor: getColor('bg'),
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      onError={onError}
+    />
+  );
+}
+
 export type MessageImageProps = MessageBasicProps & {};
 export function MessageImage(props: MessageImageProps) {
   const { msg, maxWidth } = props;
-  const [thumbUrl, setThumbUrl] = React.useState<string | undefined>(
-    g_not_existed_url
-  );
+  // const url1 =
+  //   '/storage/emulated/0/Android/data/com.hyphenate.rn.ChatUikitExample/1135220126133718#demo/files/asterisk003/asterisk001/53e8d540-a144-11ee-a811-ab4c303d7025.jpg';
+  // const url3 =
+  //   'file:///storage/emulated/0/Android/data/com.hyphenate.rn.ChatUikitExample/1135220126133718%23demo/files/asterisk003/asterisk001/53e8d540-a144-11ee-a811-ab4c303d7025.jpg';
+  // const url5 =
+  //   'file:///storage/emulated/0/Android/data/com.hyphenate.rn.ChatUikitExample/1135220126133718#demo/files/asterisk003/asterisk001/53e8d540-a144-11ee-a811-ab4c303d7025.jpg';
+  // const url2 =
+  //   '/var/mobile/Containers/Data/Application/CC0AD493-D627-463B-B351-44500E6FB1E2/tmp/AD1256B8-B32C-4CFE-B5F5-ECA21662B4E8.jpg';
+  // const url4 = g_not_existed_url;
+  const [thumbUrl, setThumbUrl] = React.useState<string | undefined>(undefined);
   const { width, height } = getImageShowSize(msg, maxWidth);
   React.useEffect(() => {
     msg.status;
@@ -148,11 +206,54 @@ export function MessageImage(props: MessageImageProps) {
       .catch();
   }, [msg, msg.status]);
   return (
-    <Image
-      style={{ width: width, height: height }}
-      source={{ uri: thumbUrl }}
+    <MessageDefaultImage
+      url={thumbUrl}
+      width={width}
+      height={height}
+      iconName={'img'}
     />
   );
+  // return (
+  //   <DefaultImage
+  //     source={{
+  //       uri: url3,
+  //     }}
+  //     style={[
+  //       {
+  //         width: width,
+  //         height: height,
+  //         borderRadius: 4,
+  //       },
+  //     ]}
+  //     defaultSource={ICON_ASSETS.img('3x')}
+  //     defaultStyle={{
+  //       width: 64,
+  //       height: 64,
+  //       // backgroundColor: 'blue',
+  //     }}
+  //     defaultContainerStyle={{
+  //       width: width,
+  //       height: height,
+  //       // backgroundColor: 'red',
+  //       justifyContent: 'center',
+  //       alignItems: 'center',
+  //     }}
+  //   />
+  // );
+  // return (
+  //   <RNImage
+  //     style={{ width: width, height: height }}
+  //     // url={thumbUrl}
+  //     // size={width}
+  //     source={{ uri: url5 }}
+  //     onError={(e) => {
+  //       console.log('test:zuoyu:error:', e.nativeEvent.error);
+  //     }}
+  //     onLoad={(e) => {
+  //       console.log('test:zuoyu:onLoad:', e.nativeEvent.source);
+  //     }}
+  //   />
+  // );
 }
 
 export type MessageVoiceProps = MessageBasicProps & {
@@ -265,6 +366,7 @@ export function MessageVideo(props: MessageVideoProps) {
   const { msg, maxWidth } = props;
   const [thumbUrl, setThumbUrl] = React.useState<string | undefined>();
   const { width, height } = getImageShowSize(msg, maxWidth);
+  const [showTriangle, setShowTriangle] = React.useState(true);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     video: {
@@ -286,25 +388,32 @@ export function MessageVideo(props: MessageVideoProps) {
   }, [msg, msg.status]);
   return (
     <View>
-      <Image
-        style={{ width: width, height: height }}
-        source={{ uri: thumbUrl }}
+      <MessageDefaultImage
+        url={thumbUrl}
+        width={width}
+        height={height}
+        iconName={'triangle_in_rectangle'}
+        onError={() => {
+          setShowTriangle(false);
+        }}
       />
-      <View
-        style={[
-          StyleSheet.absoluteFill,
-          {
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-        ]}
-      >
-        <Icon
-          name={'triangle_in_circle'}
-          style={{ width: 64, height: 64, tintColor: getColor('video') }}
-          resolution={'3x'}
-        />
-      </View>
+      {showTriangle === true ? (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+          ]}
+        >
+          <Icon
+            name={'triangle_in_circle'}
+            style={{ width: 64, height: 64, tintColor: getColor('video') }}
+            resolution={'3x'}
+          />
+        </View>
+      ) : null}
     </View>
   );
 }

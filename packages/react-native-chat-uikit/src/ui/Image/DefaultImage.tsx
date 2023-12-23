@@ -1,31 +1,50 @@
 import * as React from 'react';
-import { ImageSourcePropType, ImageURISource, View } from 'react-native';
+import {
+  ImageSourcePropType,
+  ImageStyle,
+  ImageURISource,
+  StyleProp,
+  View,
+} from 'react-native';
 
 import { Image, ImageProps } from './Image';
 
 export type DefaultImageProps = Omit<ImageProps, 'source' | 'defaultSource'> & {
   defaultSource: ImageSourcePropType;
   source: ImageURISource;
+  defaultStyle?: StyleProp<ImageStyle>;
+  defaultContainerStyle?: StyleProp<ImageStyle>;
 };
 
 /**
  * It mainly adds the function of native component `Image` and preloading the default image.
  */
 export function DefaultImage(props: DefaultImageProps) {
-  const { style, defaultSource, onLoad, source, ...others } = props;
+  const {
+    style,
+    defaultStyle = style,
+    defaultContainerStyle,
+    defaultSource,
+    onLoad,
+    source,
+    ...others
+  } = props;
   const [visible, setVisible] = React.useState(true);
   return (
     <View>
-      <Image
-        style={[
-          style,
-          {
-            // display: visible ? 'flex' : 'none',
-            opacity: visible === true ? 1 : 0,
-          },
-        ]}
-        source={defaultSource}
-      />
+      <View style={[defaultContainerStyle]}>
+        <Image
+          style={[
+            defaultStyle,
+            {
+              // display: visible ? 'flex' : 'none',
+              opacity: visible === true ? 1 : 0,
+            },
+          ]}
+          source={defaultSource}
+        />
+      </View>
+
       <Image
         style={[style, { position: 'absolute' }]}
         onLoad={(e) => {

@@ -12,6 +12,8 @@ export type ImageProps = Omit<RNImageProps, 'source'> & {
 
 /**
  * It mainly adds the function of native component `RNImage` to use the default image after loading failure.
+ *
+ * !!! If your image source (source attribute) is null or invalid, onError may not be called. You should ensure that your image source is a valid URL or a local image obtained through the require function.
  */
 export function Image(props: ImageProps) {
   const { style, source, failedSource, onError, ...others } = props;
