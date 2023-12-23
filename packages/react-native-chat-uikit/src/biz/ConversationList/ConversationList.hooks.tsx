@@ -30,7 +30,7 @@ export function useConversationList(
   } = props;
   const flatListProps = useFlatList<ConversationListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
-    onInit: () => init(),
+    // onInit: () => init(),
   });
   const {
     data,
@@ -89,7 +89,21 @@ export function useConversationList(
     [isSort, onSort, setData]
   );
 
-  const init = async () => {
+  const onUpdateData = React.useCallback(
+    (conv: ConversationModel) => {
+      for (const item of dataRef.current) {
+        if (conv.convId === item.data.convId) {
+          item.data = conv;
+          item.data = { ...item.data };
+          break;
+        }
+      }
+      onSetData(dataRef.current);
+    },
+    [dataRef, onSetData]
+  );
+
+  const init = React.useCallback(async () => {
     if (testMode === 'only-ui') {
       const array = Array.from({ length: 10 }, (_, index) => ({
         id: index.toString(),
@@ -154,7 +168,16 @@ export function useConversationList(
         });
       }
     }
-  };
+  }, [
+    dataRef,
+    im,
+    isAutoLoad,
+    isShowAfterLoaded,
+    onRequestMultiData,
+    onSetData,
+    setListState,
+    testMode,
+  ]);
 
   const onRemove = async (conv: ConversationModel) => {
     await im.removeConversation({ convId: conv.convId });
@@ -179,7 +202,7 @@ export function useConversationList(
           convType: conv.convType,
           isPin: isPinned,
         });
-        onSetData(dataRef.current);
+        // onSetData(dataRef.current);
       }
     } catch (error) {
       im.sendError({ error: error as UIKitError });
@@ -203,7 +226,7 @@ export function useConversationList(
           convType: conv.convType,
           doNotDisturb: isDisturb,
         });
-        onSetData(dataRef.current);
+        // onSetData(dataRef.current);
       }
     } catch (error) {
       im.sendError({ error: error as UIKitError });
@@ -225,7 +248,7 @@ export function useConversationList(
           convId: conv.convId,
           convType: conv.convType,
         });
-        onSetData(dataRef.current);
+        // onSetData(dataRef.current);
       }
     } catch (error) {
       im.sendError({ error: error as UIKitError });
@@ -299,7 +322,6 @@ export function useConversationList(
     });
   };
 
-  console.log('test:zuoyu:conv:list:', data.length);
   const listener = React.useMemo(() => {
     return {
       onMessagesReceived: (msgs) => {
@@ -308,11 +330,20 @@ export function useConversationList(
             if (item.data.convId === msg.conversationId) {
               item.data.lastMessage = msg;
               if (item.data.doNotDisturb !== true) {
-                if (item.data.unreadMessageCount === undefined) {
+                if (
+                  im.getCurrentConversation()?.convId === msg.conversationId
+                ) {
                   item.data.unreadMessageCount = 0;
+                } else {
+                  if (item.data.unreadMessageCount === undefined) {
+                    item.data.unreadMessageCount = 0;
+                  }
+                  item.data.unreadMessageCount += 1;
                 }
-                item.data.unreadMessageCount += 1;
+              } else {
+                item.data.unreadMessageCount = undefined;
               }
+              console.log('test:zuoyu:data:', item.data);
               item.data = { ...item.data };
               break;
             }
@@ -332,53 +363,27 @@ export function useConversationList(
         onSetData(dataRef.current);
       },
       onConversationsUpdate: () => {
-        // init();
+        console.log('test:zuoyu:conv:list:onConversationsUpdate:');
+        init();
+      },
+      onConversationRead: (from, to) => {
+        console.log('test:zuoyu:conv:list:onConversationRead:', from, to);
       },
       onMessageContentChanged: () => {
         // todo:
       },
+      onConversationChanged: (conv: ConversationModel) => {
+        console.log('test:zuoyu:conv:list:onConversationChanged:', conv);
+        onUpdateData(conv);
+      },
     } as ChatServiceListener;
-  }, [dataRef, onSetData]);
+  }, [dataRef, im, init, onSetData, onUpdateData]);
 
   useChatListener(listener);
 
-  // useChatListener({
-  //   onMessagesReceived: (msgs) => {
-  //     for (const msg of msgs) {
-  //       for (const item of dataRef.current) {
-  //         if (item.data.convId === msg.conversationId) {
-  //           item.data.lastMessage = msg;
-  //           if (item.data.doNotDisturb !== true) {
-  //             if (item.data.unreadMessageCount === undefined) {
-  //               item.data.unreadMessageCount = 0;
-  //             }
-  //             item.data.unreadMessageCount += 1;
-  //           }
-  //           item.data = { ...item.data };
-  //           break;
-  //         }
-  //       }
-  //     }
-  //     onSetData(dataRef.current);
-  //   },
-  //   onMessagesRecalled: async (msgs) => {
-  //     for (const msg of msgs) {
-  //       for (const item of dataRef.current) {
-  //         if (item.data.convId === msg.conversationId) {
-  //           // todo: update last message
-  //           break;
-  //         }
-  //       }
-  //     }
-  //     onSetData(dataRef.current);
-  //   },
-  //   onConversationsUpdate: () => {
-  //     init();
-  //   },
-  //   onMessageContentChanged: () => {
-  //     // todo:
-  //   },
-  // } as ChatServiceListener);
+  React.useEffect(() => {
+    init();
+  }, [init]);
 
   return {
     listType,

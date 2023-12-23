@@ -113,6 +113,10 @@ export interface ConnectServiceListener {
 
 export type MessageServiceListener = PartialNullable<ChatMessageEventListener>;
 
+export type ConversationListener = {
+  onConversationChanged?: (conv: ConversationModel) => void;
+};
+
 export type GroupServiceListener = PartialNullable<ChatGroupEventListener> & {
   onGroupInfoChanged?: (group: GroupModel) => void;
   onCreateGroup?: (group: GroupModel) => void;
@@ -138,6 +142,7 @@ export interface ResultServiceListener {
 
 export type ChatServiceListener = ConnectServiceListener &
   MessageServiceListener &
+  ConversationListener &
   GroupServiceListener &
   ContactServiceListener &
   PresenceServiceListener &
@@ -289,7 +294,7 @@ export interface ConversationServices {
       result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
     }) => void
   ): void;
-  setCurrentConversation(params: { conv: ConversationModel }): void;
+  setCurrentConversation(params: { conv?: ConversationModel }): void;
   getCurrentConversation(): ConversationModel | undefined;
   getAllConversations(params: {
     onResult: ResultCallback<ConversationModel[]>;
@@ -298,6 +303,7 @@ export interface ConversationServices {
     convId: string;
     convType: ChatConversationType;
     createIfNotExist?: boolean;
+    fromNative?: boolean;
   }): Promise<ConversationModel | undefined>;
   removeConversation(params: { convId: string }): Promise<void>;
   clearAllConversations(): Promise<void>;

@@ -99,8 +99,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
               <Badges
                 count={
                   data.doNotDisturb === true
-                    ? data.unreadMessageCount === undefined ||
-                      data.unreadMessageCount === 0
+                    ? data.unreadMessageCount === 0
                       ? 0
                       : undefined
                     : data.unreadMessageCount

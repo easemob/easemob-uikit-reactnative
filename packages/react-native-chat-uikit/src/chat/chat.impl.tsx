@@ -504,7 +504,7 @@ export abstract class ChatServiceImpl
     this._convDataRequestCallback = callback;
   }
 
-  setCurrentConversation(params: { conv: ConversationModel }): void {
+  setCurrentConversation(params: { conv?: ConversationModel }): void {
     this._currentConversation = params.conv;
   }
   getCurrentConversation(): ConversationModel | undefined {
@@ -612,7 +612,9 @@ export abstract class ChatServiceImpl
                 .filter(
                   (v) =>
                     v.convType === ChatConversationType.PeerChat &&
-                    (v.convId === v.convName || v.convName === undefined) &&
+                    (v.convId === v.convName ||
+                      v.convName === undefined ||
+                      v.convName === null) &&
                     v.convAvatar === undefined
                 )
                 .map((v) => v.convId),
@@ -623,7 +625,9 @@ export abstract class ChatServiceImpl
                 .filter(
                   (v) =>
                     v.convType === ChatConversationType.GroupChat &&
-                    (v.convId === v.convName || v.convName === undefined) &&
+                    (v.convId === v.convName ||
+                      v.convName === undefined ||
+                      v.convName === null) &&
                     v.convAvatar === undefined
                 )
                 .map((v) => v.convId),
@@ -672,7 +676,30 @@ export abstract class ChatServiceImpl
     convId: string;
     convType: ChatConversationType;
     createIfNotExist?: boolean;
+    fromNative?: boolean;
   }): Promise<ConversationModel | undefined> {
+    const { fromNative = false } = params;
+    if (fromNative === true) {
+      const ret = await this.tryCatchSync({
+        promise: this.client.chatManager.getConversation(
+          params.convId,
+          params.convType,
+          params.createIfNotExist ?? true
+        ),
+        event: 'createConversation',
+      });
+      if (ret) {
+        const c1 = await this.toUIConversation(ret);
+        const c2 = this._convList.get(params.convId);
+        if (c2) {
+          const conv = mergeObjects(c1, c2);
+          this._convList.set(conv.convId, conv);
+          return conv;
+        }
+        this._convList.set(c1.convId, c1);
+        return c1;
+      }
+    }
     if (params.createIfNotExist === true) {
       const conv = this._convList.get(params.convId);
       if (conv === undefined) {
@@ -728,9 +755,17 @@ export abstract class ChatServiceImpl
       ),
       event: 'pinConversation',
     });
-    const conv = this._convList.get(params.convId);
+    // const conv = this._convList.get(params.convId);
+    const conv = await this.getConversation({
+      convId: params.convId,
+      convType: params.convType,
+      fromNative: true,
+    });
     if (conv) {
       conv.isPinned = params.isPin;
+      this._listeners.forEach((v) => {
+        v.onConversationChanged?.(conv);
+      });
     }
     return ret;
   }
@@ -753,9 +788,17 @@ export abstract class ChatServiceImpl
       }),
       event: 'setSilentModeForConversation',
     });
-    const conv = this._convList.get(params.convId);
+    // const conv = this._convList.get(params.convId);
+    const conv = await this.getConversation({
+      convId: params.convId,
+      convType: params.convType,
+      fromNative: true,
+    });
     if (conv) {
       conv.doNotDisturb = params.doNotDisturb;
+      this._listeners.forEach((v) => {
+        v.onConversationChanged?.(conv);
+      });
     }
     return ret;
   }
@@ -770,10 +813,20 @@ export abstract class ChatServiceImpl
       ),
       event: 'markAllMessagesAsRead',
     });
-    const conv = this._convList.get(params.convId);
+    // const conv = this._convList.get(params.convId);
+    const conv = await this.getConversation({
+      convId: params.convId,
+      convType: params.convType,
+      fromNative: true,
+    });
+    console.log('test:zuoyu:setConversationRead', conv);
     if (conv) {
       conv.unreadMessageCount = 0;
+      this._listeners.forEach((v) => {
+        v.onConversationChanged?.(conv);
+      });
     }
+
     return ret;
   }
   async setConversationExt(params: {
@@ -789,9 +842,17 @@ export abstract class ChatServiceImpl
       ),
       event: 'setConversationExtension',
     });
-    const conv = this._convList.get(params.convId);
+    // const conv = this._convList.get(params.convId);
+    const conv = await this.getConversation({
+      convId: params.convId,
+      convType: params.convType,
+      fromNative: true,
+    });
     if (conv) {
       conv.ext = params.ext;
+      this._listeners.forEach((v) => {
+        v.onConversationChanged?.(conv);
+      });
     }
     return ret;
   }
@@ -800,9 +861,17 @@ export abstract class ChatServiceImpl
     convType: ChatConversationType;
     lastMessage: ChatMessage;
   }): Promise<void> {
-    const conv = this._convList.get(params.convId);
+    // const conv = this._convList.get(params.convId);
+    const conv = await this.getConversation({
+      convId: params.convId,
+      convType: params.convType,
+      fromNative: true,
+    });
     if (conv) {
       conv.lastMessage = params.lastMessage;
+      this._listeners.forEach((v) => {
+        v.onConversationChanged?.(conv);
+      });
     }
   }
   async updateConversation(params: { conv: ConversationModel }): Promise<void> {

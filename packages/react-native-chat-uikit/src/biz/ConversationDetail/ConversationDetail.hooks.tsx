@@ -50,31 +50,41 @@ export function useConversationDetail(props: ConversationDetailProps) {
       convId,
       convType,
       createIfNotExist: true,
+      fromNative: true,
     });
     if (conv) {
       if (conv.convName === undefined) {
         conv.convName = convName;
       }
       im.setCurrentConversation({ conv });
+      im.setConversationRead({ convId, convType });
     }
   }, [convId, convName, convType, im]);
 
   React.useEffect(() => {
     const conv = im.getCurrentConversation();
-    if (conv === undefined || conv.convId !== convId) {
-      if (testMode === 'only-ui') {
+    if (testMode === 'only-ui') {
+      if (conv === undefined || conv.convId !== convId) {
         im.setCurrentConversation({ conv: { convId, convType, convName } });
         onInitialized?.(true);
       } else {
-        setConversation()
-          .then(() => {
-            onInitialized?.(true);
-          })
-          .catch(() => {
-            onInitialized?.(false);
-          });
+        onInitialized?.(false);
       }
+    } else {
+      setConversation()
+        .then(() => {
+          onInitialized?.(true);
+        })
+        .catch(() => {
+          onInitialized?.(false);
+        });
     }
+    return () => {
+      const conv = im.getCurrentConversation();
+      if (conv) {
+        im.setCurrentConversation({ conv: undefined });
+      }
+    };
   }, [
     convId,
     convName,

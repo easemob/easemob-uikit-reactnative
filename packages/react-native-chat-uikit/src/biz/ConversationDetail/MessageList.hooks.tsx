@@ -11,12 +11,10 @@ import {
 } from 'react-native-chat-sdk';
 
 import {
-  ChatServiceListener,
   gCustomMessageCardEventType,
   gCustomMessageRecallEventType,
   gMessageAttributeQuote,
   useChatContext,
-  useChatListener,
 } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { g_not_existed_url } from '../../const';
@@ -494,15 +492,6 @@ export function useMessageList(
   };
   const alertRef = React.useRef<AlertRef>(null);
   const inverted = React.useRef(true).current;
-
-  const listenerRef = React.useRef<ChatServiceListener>({
-    onMessagesReceived: () => {},
-    onMessagesRecalled: async () => {},
-    onMessageContentChanged: () => {
-      // todo:
-    },
-  });
-  useChatListener(listenerRef.current);
 
   const updateMessageVoiceUIState = React.useCallback(
     (model: MessageModel) => {
@@ -1392,10 +1381,6 @@ export function useMessageList(
     onAddMessageList,
     onRequestHistoryMessage,
   ]);
-
-  React.useEffect(() => {
-    im.setConversationRead({ convId, convType });
-  }, [convId, convType, im]);
 
   return {
     ...flatListProps,
