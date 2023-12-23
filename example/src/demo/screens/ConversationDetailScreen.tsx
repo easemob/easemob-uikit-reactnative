@@ -3,6 +3,8 @@ import * as React from 'react';
 import { ChatMessageType } from 'react-native-chat-sdk';
 import {
   ConversationDetail,
+  MessageInputRef,
+  MessageListRef,
   MessageModel,
   SystemMessageModel,
   TimeMessageModel,
@@ -20,18 +22,47 @@ export function ConversationDetailScreen(props: Props) {
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
   const convName = ((route.params as any)?.params as any)?.convName;
-  const selected = ((route.params as any)?.params as any)?.selected;
-  const getSelected = () => {
-    if (selected) {
+  const operateType = ((route.params as any)?.params as any)?.operateType;
+  const selectedParticipants = ((route.params as any)?.params as any)
+    ?.selectedParticipants;
+  const selectedContacts = ((route.params as any)?.params as any)
+    ?.selectedContacts;
+  const listRef = React.useRef<MessageListRef>({} as any);
+  const inputRef = React.useRef<MessageInputRef>({} as any);
+  const { top, bottom } = useSafeAreaInsets();
+  console.log('test:zuoyu:ConversationDetailScreen', route.params);
+
+  React.useEffect(() => {
+    if (selectedParticipants && operateType === 'mention') {
       try {
-        const p = JSON.parse(selected);
-        return [p];
+        const p = JSON.parse(selectedParticipants);
+        inputRef.current?.mentionSelected(
+          p.map((item: any) => {
+            return {
+              id: item.id,
+              name: item.name ?? item.id,
+            };
+          })
+        );
       } catch {}
     }
-    return undefined;
-  };
-  const { top, bottom } = useSafeAreaInsets();
-  console.log('test:zuoyu:ConversationDetailScreen');
+  }, [selectedParticipants, operateType]);
+
+  React.useEffect(() => {
+    console.log('test:zuoyu:ConversationDetailScreen:2', selectedContacts, operateType);
+    if (selectedContacts && operateType === 'share_card') {
+      try {
+        const p = JSON.parse(selectedContacts);
+        listRef.current?.addSendMessage?.({
+          type: 'card',
+          userId: p.userId,
+          userName: p.nickName,
+          userAvatar: p.avatar,
+        });
+      } catch {}
+    }
+  }, [selectedContacts, operateType]);
+
   return (
     <SafeAreaView
       style={{
@@ -48,21 +79,34 @@ export function ConversationDetailScreen(props: Props) {
         convType={convType}
         convName={convName}
         input={{
+          ref: inputRef,
           props: {
             top,
             bottom,
-            onInputMention: (groupId: string) => {
-              // todo : select group member.
-              console.log('test:zuoyu:SelectSingleParticipant:', groupId);
-              navigation.push('SelectSingleParticipant', {
+            // onInputMention: (groupId: string) => {
+            //   // todo : select group member.
+            //   console.log('test:zuoyu:SelectSingleParticipant:', groupId);
+            //   navigation.push('SelectSingleParticipant', {
+            //     params: {
+            //       groupId,
+            //     },
+            //   });
+            // },
+            onClickedCardMenu: () => {
+              // todo: select contact. need contact list screen
+              navigation.push('ShareContact', {
                 params: {
-                  groupId,
+                  convId,
+                  convType,
+                  convName,
+                  operateType: 'share_card',
                 },
               });
             },
           },
         }}
         list={{
+          ref: listRef,
           props: {
             onClickedItem: (
               id: string,
@@ -93,7 +137,6 @@ export function ConversationDetailScreen(props: Props) {
           // todo: maybe need update
           navigation.goBack();
         }}
-        selectedParticipant={getSelected()}
       />
     </SafeAreaView>
   );

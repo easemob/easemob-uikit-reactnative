@@ -213,6 +213,26 @@ export function ContactList(props: ContactListProps) {
           containerStyle={{ paddingHorizontal: 12 }}
         />
       );
+    } else if (contactType === 'share-contact') {
+      return (
+        <TopNavigationBar
+          Left={
+            <Pressable
+              style={{ flexDirection: 'row' }}
+              onPress={() => {
+                onBack?.();
+              }}
+            >
+              <Text paletteType={'label'} textType={'medium'}>
+                {'Cancel'}
+              </Text>
+            </Pressable>
+          }
+          Right={<View style={{ width: 32, height: 32 }} />}
+          Title={TopNavigationBarTitle({ text: 'share contact card' })}
+          containerStyle={{ paddingHorizontal: 12 }}
+        />
+      );
     } else {
       return null;
     }

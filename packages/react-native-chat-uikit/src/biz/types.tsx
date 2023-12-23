@@ -27,7 +27,8 @@ export type ContactType =
   | 'contact-list'
   | 'new-conversation'
   | 'create-group'
-  | 'add-group-member';
+  | 'add-group-member'
+  | 'share-contact';
 export type GroupParticipantType =
   | 'common'
   | 'delete'
@@ -40,6 +41,7 @@ export type SearchType =
   | 'new-conversation'
   | 'create-group'
   | 'add-group-member'
+  | 'share-contact'
   | 'group-list'
   | 'group-member-list'
   | 'request-list';

@@ -11,6 +11,9 @@ export function SearchContactScreen(props: Props) {
   const searchType = ((route.params as any)?.params as any)
     ?.searchType as SearchType;
   const groupId = ((route.params as any)?.params as any)?.groupId;
+  const convId = ((route.params as any)?.params as any)?.convId;
+  const convType = ((route.params as any)?.params as any)?.convType;
+  const convName = ((route.params as any)?.params as any)?.convName;
   return (
     <SafeAreaView
       style={{
@@ -50,6 +53,22 @@ export function SearchContactScreen(props: Props) {
             });
           } else {
             navigation.goBack();
+          }
+        }}
+        onClicked={(data) => {
+          console.log('test:zuoyu:SearchContactScreen:clicked', data);
+          if (searchType === 'share-contact') {
+            // todo: go back 2 times
+            // navigation.pop(2);
+            navigation.navigate('ConversationDetail', {
+              params: {
+                convId,
+                convType,
+                convName,
+                selectedContacts: JSON.stringify(data),
+                operateType: 'share_card',
+              },
+            });
           }
         }}
         searchType={searchType}

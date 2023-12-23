@@ -1,5 +1,3 @@
-import type { SearchType } from 'react-native-chat-uikit';
-
 export type RootParamsList = {
   TopMenu: {
     option?: {} | undefined;
@@ -31,7 +29,7 @@ export type RootParamsList = {
   };
   SearchContact: {
     option?: {} | undefined;
-    params?: { searchType: SearchType; groupId?: string } | undefined;
+    params?: {} | undefined;
   };
   GroupList: {
     option?: {} | undefined;
@@ -98,6 +96,10 @@ export type RootParamsList = {
     params?: {} | undefined;
   };
   VideoMessagePreview: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  ShareContact: {
     option?: {} | undefined;
     params?: {} | undefined;
   };
@@ -209,6 +211,10 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   VideoMessagePreview: {
+    option: undefined,
+    params: undefined,
+  },
+  ShareContact: {
     option: undefined,
     params: undefined,
   },

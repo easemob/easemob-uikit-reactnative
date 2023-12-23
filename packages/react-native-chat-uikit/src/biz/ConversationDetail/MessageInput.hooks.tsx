@@ -46,6 +46,7 @@ export function useMessageInput(
     convId,
     onEditMessageFinished: propsOnEditMessageFinished,
     // onInputMention: propsOnInputMention,
+    onClickedCardMenu: propsOnClickedCardMenu,
   } = props;
   const { keyboardHeight, keyboardCurrentHeight } = useKeyboardHeight();
   const inputRef = React.useRef<RNTextInput>({} as any);
@@ -364,9 +365,7 @@ export function useMessageInput(
     propsOnClickedSend?.(props);
   };
   const onSelectSendCard = () => {
-    propsOnClickedSend?.({
-      type: 'card',
-    });
+    propsOnClickedCardMenu?.();
   };
 
   const onShowMoreMenu = () => {

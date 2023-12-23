@@ -19,16 +19,8 @@ import type {
 import { useCreateConversationDirectory } from './useCreateConversationDirectory';
 
 export function useConversationDetail(props: ConversationDetailProps) {
-  const {
-    convId,
-    convType,
-    convName,
-    testMode,
-    input,
-    list,
-    onInitialized,
-    selectedParticipant,
-  } = props;
+  const { convId, convType, convName, testMode, input, list, onInitialized } =
+    props;
   const permissionsRef = React.useRef(false);
 
   const messageInputRef = React.useRef<MessageInputRef>({} as any);
@@ -96,19 +88,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
   React.useEffect(() => {
     createDirectoryIfNotExisted(convId);
   }, [convId, createDirectoryIfNotExisted]);
-
-  React.useEffect(() => {
-    if (selectedParticipant) {
-      _messageInputRef.current?.mentionSelected?.(
-        selectedParticipant.map((v) => {
-          return {
-            id: v.id,
-            name: v.name ?? v.id,
-          };
-        })
-      );
-    }
-  }, [_messageInputRef, selectedParticipant]);
 
   const onClickedSend = React.useCallback(
     (

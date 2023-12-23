@@ -41,6 +41,7 @@ import {
   SearchConversationScreen,
   SearchGroupScreen,
   SelectSingleParticipantScreen,
+  ShareContactScreen,
   TopMenuScreen,
   VideoMessagePreviewScreen,
 } from './screens';
@@ -350,6 +351,13 @@ export function App() {
                 headerShown: false,
               }}
               component={VideoMessagePreviewScreen}
+            />
+            <Root.Screen
+              name={'ShareContact'}
+              options={{
+                headerShown: false,
+              }}
+              component={ShareContactScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

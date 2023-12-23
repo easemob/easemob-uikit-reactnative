@@ -21,5 +21,6 @@ export * from './SearchConversationScreen';
 export * from './SearchGroupParticipantScreen';
 export * from './SearchGroupScreen';
 export * from './SelectSingleParticipantScreen';
+export * from './ShareContactScreen';
 export * from './TopMenuScreen';
 export * from './VideoMessagePreviewScreen';

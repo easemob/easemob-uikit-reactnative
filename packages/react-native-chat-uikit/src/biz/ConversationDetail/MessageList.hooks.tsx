@@ -19,6 +19,7 @@ import {
   useChatListener,
 } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
+import { g_not_existed_url } from '../../const';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
@@ -659,8 +660,8 @@ export function useMessageList(
           if (msg.body.type === ChatMessageType.CUSTOM) {
             const body = msg.body as ChatCustomMessageBody;
             if (body.event === gCustomMessageCardEventType) {
-              modelType = 'system';
-            } else if (body.event === gCustomMessageRecallEventType) {
+              modelType = 'message';
+            } else {
               modelType = 'system';
             }
           }
@@ -1223,16 +1224,16 @@ export function useMessageList(
         );
         onFinished?.(msg);
       } else if (value.type === 'card') {
+        const card = value as SendCardProps;
         const msg = ChatMessage.createCustomMessage(
           convId,
           gCustomMessageCardEventType,
           convType as number as ChatMessageChatType,
           {
             params: {
-              userId: convId,
-              nickname: convId,
-              avatar:
-                'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+              userId: card.userId,
+              nickname: card.userName ?? card.userId,
+              avatar: card.userAvatar ?? g_not_existed_url,
             },
           }
         );
@@ -1271,7 +1272,7 @@ export function useMessageList(
             msgType: quoteMsg.body.type,
           },
         };
-        console.log('test:zuoyu:card:', msg);
+        console.log('test:zuoyu:quote:', msg);
         onAddData(
           {
             id: msg.msgId.toString(),

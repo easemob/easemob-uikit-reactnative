@@ -1,6 +1,5 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
-import type { GroupParticipantModel } from 'src/chat';
 
 import type {
   PropsWithBack,
@@ -39,6 +38,7 @@ export type MessageInputProps = PropsWithError &
      * Only groups are available.
      */
     onInputMention?: (groupId: string) => void;
+    onClickedCardMenu?: () => void;
   };
 export type MessageInputState = 'normal' | 'emoji' | 'voice' | 'keyboard';
 
@@ -71,7 +71,6 @@ export type ConversationDetailProps = PropsWithError &
       ref?: React.RefObject<MessageListRef>;
     };
     containerStyle?: StyleProp<ViewStyle>;
-    selectedParticipant?: GroupParticipantModel[];
   };
 
 export type SendType =
@@ -121,7 +120,11 @@ export type SendSystemProps = SendBasicProps & {
   msg: ChatMessage;
 };
 
-export type SendCardProps = SendBasicProps & {};
+export type SendCardProps = SendBasicProps & {
+  userId: string;
+  userName?: string;
+  userAvatar?: string;
+};
 
 export type MessageBubbleType = 'system' | 'time' | 'message';
 export type MessageLayoutType = 'left' | 'right';
