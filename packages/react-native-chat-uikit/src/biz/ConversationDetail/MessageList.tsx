@@ -6,6 +6,7 @@ import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
+import { BottomSheetMessageReport } from '../MessageReport';
 import {
   EmptyPlaceholder,
   ErrorPlaceholder,
@@ -44,6 +45,9 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       maxListHeight,
       setMaxListHeight,
       reachedThreshold,
+      reportRef,
+      onReportMessage,
+      reportData,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -126,6 +130,11 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           onRequestModalClose={onRequestModalClose}
         />
         <Alert ref={alertRef} />
+        <BottomSheetMessageReport
+          ref={reportRef}
+          data={reportData}
+          onReport={onReportMessage}
+        />
       </View>
     );
   }

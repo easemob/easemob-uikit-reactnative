@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { StyleProp, View, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
 
 import type { IconNameType } from '../../assets';
 import { getElement, useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
+import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 
 type TopNavigationBarProps<LeftProps, RightProps> = {
@@ -67,13 +68,20 @@ export function TopNavigationBarRight({
     },
   });
   return (
-    <View>
-      <IconButton
-        iconName={iconName}
-        onPress={onClicked}
+    <Pressable
+      style={{
+        width: 36,
+        height: 36,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      onPress={onClicked}
+    >
+      <Icon
+        name={iconName}
         style={{ height: 24, width: 24, tintColor: getColor('bg') }}
       />
-    </View>
+    </Pressable>
   );
 }
 export function TopNavigationBarRightList({

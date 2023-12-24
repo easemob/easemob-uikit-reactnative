@@ -2029,6 +2029,25 @@ export abstract class ChatServiceImpl
       event: 'setMessageRead',
     });
   }
+
+  reportMessage(params: {
+    messageId: string;
+    tag: string;
+    reason: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    const { messageId, tag, reason } = params;
+    this.tryCatch({
+      promise: this.client.chatManager.reportMessage(messageId, tag, reason),
+      event: 'reportMessage',
+      onFinished: async () => {
+        params.onResult?.({ isOk: true });
+      },
+      onError: () => {
+        params.onResult?.({ isOk: false });
+      },
+    });
+  }
 }
 
 export class ChatServicePrivateImpl extends ChatServiceImpl {

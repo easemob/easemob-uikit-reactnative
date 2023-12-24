@@ -63,7 +63,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
                 onBack?.();
               }}
             />
-            <Avatar url={g_not_existed_url} size={24} />
+            <Avatar url={g_not_existed_url} size={32} />
             <View style={{ marginLeft: 10 }}>
               <Text
                 textType={'medium'}

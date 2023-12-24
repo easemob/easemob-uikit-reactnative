@@ -26,7 +26,12 @@ import type {
   BottomSheetNameMenuRef,
   InitMenuItemsType,
 } from '../BottomSheetMenu';
+import { gReportMessageList } from '../const';
 import { useFlatList } from '../List';
+import type {
+  BottomSheetMessageReportRef,
+  ReportItemModel,
+} from '../MessageReport';
 import type { UseFlatListReturn } from '../types';
 import type {
   MessageAddPosition,
@@ -65,6 +70,10 @@ export function useMessageList(
   maxListHeight: number;
   setMaxListHeight: React.Dispatch<React.SetStateAction<number>>;
   reachedThreshold: number;
+  onShowReportMessage: (model: MessageModel) => void;
+  onReportMessage: (result?: ReportItemModel) => void;
+  reportData: ReportItemModel[];
+  reportRef: React.RefObject<BottomSheetMessageReportRef>;
 } {
   const {
     convId,
@@ -74,6 +83,7 @@ export function useMessageList(
     onLongPressItem: propsOnLongPress,
     onQuoteMessageForInput: propsOnQuoteMessageForInput,
     onEditMessageForInput: propsOnEditMessageForInput,
+    reportMessageCustomList = gReportMessageList,
   } = props;
   const { tr } = useI18nContext();
   const flatListProps = useFlatList<MessageListItemProps>({
@@ -100,6 +110,20 @@ export function useMessageList(
   // !!! https://github.com/facebook/react-native/issues/14312
   // !!! only android, FlatList onEndReached no work android
   const [reachedThreshold] = React.useState(0.5);
+  const reportDataRef = React.useRef<ReportItemModel[]>(
+    reportMessageCustomList.map((d, i) => {
+      return {
+        id: i.toString(),
+        title: d,
+        checked: false,
+      };
+    })
+  );
+  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const reportRef = React.useRef<BottomSheetMessageReportRef>(null);
+  const alertRef = React.useRef<AlertRef>(null);
+  const inverted = React.useRef(true).current;
+  const currentReportMessageRef = React.useRef<MessageModel>();
 
   const init = async () => {
     if (testMode === 'only-ui') {
@@ -486,12 +510,9 @@ export function useMessageList(
     }
   };
 
-  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
   const onRequestModalClose = () => {
     menuRef.current?.startHide?.();
   };
-  const alertRef = React.useRef<AlertRef>(null);
-  const inverted = React.useRef(true).current;
 
   const updateMessageVoiceUIState = React.useCallback(
     (model: MessageModel) => {
@@ -730,6 +751,31 @@ export function useMessageList(
     [im, onDelMessageToUI]
   );
 
+  const onShowReportMessage = React.useCallback((model: MessageModel) => {
+    currentReportMessageRef.current = model;
+    reportRef.current?.startShow?.();
+  }, []);
+
+  const onReportMessage = React.useCallback(
+    (result?: ReportItemModel) => {
+      if (result) {
+        const msg = currentReportMessageRef.current?.msg;
+        if (msg) {
+          im.reportMessage({
+            messageId: msg.msgId,
+            tag: result.title,
+            reason: tr(result.title),
+            onResult: () => {
+              currentReportMessageRef.current = undefined;
+              reportRef.current?.startHide?.();
+            },
+          });
+        }
+      }
+    },
+    [im, tr]
+  );
+
   const onShowLongPressMenu = (
     _id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
@@ -800,7 +846,9 @@ export function useMessageList(
           isHigh: false,
           icon: 'envelope',
           onClicked: () => {
-            menuRef.current?.startHide?.(() => {});
+            menuRef.current?.startHide?.(() => {
+              onShowReportMessage(msgModel);
+            });
           },
         });
       }
@@ -1397,5 +1445,9 @@ export function useMessageList(
     setMaxListHeight,
     reachedThreshold,
     onMore: onRequestHistoryMessage,
+    onReportMessage,
+    onShowReportMessage,
+    reportData: reportDataRef.current,
+    reportRef,
   };
 }

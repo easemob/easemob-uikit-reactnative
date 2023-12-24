@@ -466,6 +466,12 @@ export interface MessageServices {
     convType: ChatConversationType;
     msgId: string;
   }): void;
+  reportMessage(params: {
+    messageId: string;
+    tag: string;
+    reason: string;
+    onResult: ResultCallback<void>;
+  }): void;
 }
 
 export interface GroupServices {

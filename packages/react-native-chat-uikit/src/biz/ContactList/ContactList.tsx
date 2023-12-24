@@ -96,14 +96,7 @@ export function ContactList(props: ContactListProps) {
         <TopNavigationBar
           Left={
             <View style={{ flexDirection: 'row' }}>
-              <IconButton
-                iconName={'chevron_left'}
-                style={{ width: 24, height: 24 }}
-                onPress={() => {
-                  // todo: left
-                }}
-              />
-              <Avatar url={g_not_existed_url} size={24} />
+              <Avatar url={g_not_existed_url} size={32} />
             </View>
           }
           Right={TopNavigationBarRight}
