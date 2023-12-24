@@ -2,6 +2,9 @@ import * as React from 'react';
 
 import { useChatContext } from '../../chat';
 import { useLifecycle } from '../../hook';
+import type { AlertRef } from '../../ui/Alert';
+import type { SimpleToastRef } from '../../ui/Toast';
+import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import type { ContactInfoProps } from './types';
 
 export function useContactInfo(props: ContactInfoProps) {
@@ -17,6 +20,9 @@ export function useContactInfo(props: ContactInfoProps) {
   const [userName, setUserName] = React.useState(propsUserName);
   const [userAvatar, setUserAvatar] = React.useState(propsUserAvatar);
   const [isContact, setIsContact] = React.useState(propsIsContact);
+  const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const alertRef = React.useRef<AlertRef>({} as any);
+  const toastRef = React.useRef<SimpleToastRef>({} as any);
   const im = useChatContext();
   useLifecycle(
     React.useCallback(
@@ -71,6 +77,50 @@ export function useContactInfo(props: ContactInfoProps) {
         im.sendError({ error: e });
       });
   };
+
+  const onRequestModalClose = () => {
+    menuRef.current?.startHide?.();
+  };
+
+  const onMoreMenu = () => {
+    menuRef.current?.startShowWithProps({
+      onRequestModalClose: onRequestModalClose,
+      layoutType: 'center',
+      hasCancel: true,
+      initItems: [
+        {
+          name: 'Delete Contact',
+          isHigh: true,
+          onClicked: () => {
+            menuRef.current?.startHide?.(() => {
+              alertRef.current?.alertWithInit({
+                title: 'Delete Contact',
+                message: 'Are you sure you want to delete this contact?',
+                buttons: [
+                  {
+                    text: 'Cancel',
+                    onPress: () => {
+                      alertRef.current?.close?.();
+                    },
+                  },
+                  {
+                    text: 'Confirm',
+                    isPreferred: true,
+                    onPress: () => {
+                      alertRef.current?.close?.(() => {
+                        im.removeContact({ userId, onResult: () => {} });
+                      });
+                    },
+                  },
+                ],
+              });
+            });
+          },
+        },
+      ],
+    });
+  };
+
   return {
     ...props,
     doNotDisturb,
@@ -80,5 +130,10 @@ export function useContactInfo(props: ContactInfoProps) {
     userAvatar,
     userId,
     isContact,
+    menuRef,
+    onRequestModalClose,
+    onMore: onMoreMenu,
+    alertRef,
+    toastRef,
   };
 }

@@ -72,6 +72,19 @@ export function useGroupInfo(
               }
             },
           });
+          im.getConversation({
+            convId: groupId,
+            convType: ChatConversationType.GroupChat,
+            createIfNotExist: true,
+            fromNative: true,
+          })
+            .then((result) => {
+              console.log('test:zuoyu:conversation:', result);
+              if (result) {
+                setDoNotDisturb(result.doNotDisturb);
+              }
+            })
+            .catch();
         }
       },
       [im, groupId, ownerId]

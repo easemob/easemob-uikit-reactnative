@@ -4,11 +4,14 @@ import { Pressable, View } from 'react-native';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
+import { Alert } from '../../ui/Alert';
 import { BlockButton, CmnButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
 import { Text } from '../../ui/Text';
+import { SimpleToast } from '../../ui/Toast';
 import { Avatar } from '../Avatar';
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { ListItem } from '../ListItem';
 import { TopNavigationBar } from '../TopNavigationBar';
 import { useContactInfo } from './ContactInfo.hooks';
@@ -17,7 +20,6 @@ import type { ContactInfoProps } from './types';
 export function ContactInfo(props: ContactInfoProps) {
   const {
     onBack,
-    onMore,
     hasAudioCall = false,
     hasSendMessage = true,
     hasVideoCall = false,
@@ -34,6 +36,11 @@ export function ContactInfo(props: ContactInfoProps) {
     onSendMessage,
     onAudioCall,
     onVideoCall,
+    alertRef,
+    menuRef,
+    toastRef,
+    onRequestModalClose,
+    onMore,
   } = useContactInfo(props);
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -235,6 +242,13 @@ export function ContactInfo(props: ContactInfoProps) {
           />
         </View>
       )}
+
+      <Alert ref={alertRef} />
+      <BottomSheetNameMenu
+        onRequestModalClose={onRequestModalClose}
+        ref={menuRef}
+      />
+      <SimpleToast propsRef={toastRef} />
     </View>
   );
 }

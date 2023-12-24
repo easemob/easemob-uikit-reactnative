@@ -530,12 +530,8 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
           });
         },
         onContactDeleted: async (userId: string) => {
-          im.removeContact({
-            userId,
-            onResult: () => {
-              removeContact(userId);
-            },
-          });
+          console.log('test:zuoyu:onContactDeleted:', userId);
+          removeContact(userId);
         },
       } as ChatServiceListener;
     }, [addContact, im, removeContact])

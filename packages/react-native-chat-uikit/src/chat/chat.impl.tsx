@@ -966,23 +966,69 @@ export abstract class ChatServiceImpl
 
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void {
     if (this._contactList.size > 0) {
-      params.onResult({
-        isOk: true,
-        value: Array.from(this._contactList.values()),
+      this.tryCatch({
+        promise: this.client.contactManager.getAllContacts(),
+        event: 'getAllContacts',
+        onFinished: async (value) => {
+          const list = new Map() as Map<string, ContactModel>;
+          value.forEach(async (v) => {
+            const conv = this._contactList.get(v.userId);
+            if (conv) {
+              list.set(v.userId, mergeObjects(v, conv));
+            } else {
+              list.set(v.userId, { ...v });
+            }
+          });
+
+          if (this._contactDataRequestCallback) {
+            this._contactDataRequestCallback({
+              ids: Array.from(list.values())
+                .filter(
+                  (v) => v.nickName === undefined || v.nickName === v.userId
+                )
+                .map((v) => v.userId),
+              result: async (data?: DataModel[], error?: UIKitError) => {
+                if (data) {
+                  data.forEach((value) => {
+                    const contact = list.get(value.id);
+                    if (contact) {
+                      contact.nickName = value.name;
+                      contact.avatar = value.avatar;
+                    }
+                  });
+                }
+
+                this._contactList = list;
+
+                params.onResult({
+                  isOk: true,
+                  value: Array.from(this._contactList.values()).map((v) => v),
+                  error,
+                });
+              },
+            });
+          } else {
+            this._contactList = list;
+
+            params.onResult({
+              isOk: true,
+              value: Array.from(this._contactList.values()).map((v) => v),
+            });
+          }
+        },
+        onError: (e) => {
+          params.onResult({ isOk: false, error: e });
+        },
       });
       return;
     }
     this.tryCatch({
-      promise: this.client.contactManager.getAllContacts(),
-      event: 'getAllContacts',
+      promise: this.client.contactManager.fetchAllContacts(),
+      event: 'fetchAllContacts',
       onFinished: async (value) => {
         value.forEach(async (v) => {
           this._contactList.set(v.userId, {
             ...v,
-            nickName:
-              v.remark === undefined || v.remark.length === 0
-                ? v.userId
-                : v.remark,
           });
         });
 
@@ -1099,6 +1145,9 @@ export abstract class ChatServiceImpl
       promise: this.client.contactManager.deleteContact(params.userId),
       event: 'deleteContact',
       onFinished: async () => {
+        this._listeners.forEach((v) => {
+          v.onContactDeleted?.(params.userId);
+        });
         params.onResult({
           isOk: true,
         });

@@ -209,7 +209,7 @@ export type ConversationModel = {
 };
 
 export type ContactModel = Record<Keyof<ChatContact>, string> & {
-  nickName: string;
+  nickName?: string;
   avatar?: string;
   checked?: boolean;
   disable?: boolean;

@@ -251,12 +251,14 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
             }
             RightIcon={
               <View>
-                <CommonSwitch
-                  height={31}
-                  width={51}
-                  value={doNotDisturb}
-                  onValueChange={onDoNotDisturb}
-                />
+                {doNotDisturb !== undefined ? (
+                  <CommonSwitch
+                    height={31}
+                    width={51}
+                    value={doNotDisturb}
+                    onValueChange={onDoNotDisturb}
+                  />
+                ) : null}
               </View>
             }
           />
