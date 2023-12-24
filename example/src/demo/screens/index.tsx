@@ -7,6 +7,7 @@ export * from './ConversationDetailScreen';
 export * from './ConversationListScreen';
 export * from './CreateGroupScreen';
 export * from './DelGroupParticipantScreen';
+export * from './EditInfoScreen';
 export * from './GroupInfoScreen';
 export * from './GroupListScreen';
 export * from './GroupParticipantInfoScreen';

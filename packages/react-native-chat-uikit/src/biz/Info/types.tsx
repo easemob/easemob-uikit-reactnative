@@ -24,22 +24,27 @@ export type ContactInfoProps = InfoProps & {
   userAvatar?: string;
   isContact?: boolean;
 };
+export type GroupInfoRef = {
+  setGroupName: (groupId: string, groupName?: string) => void;
+  setGroupDescription: (groupId: string, desc?: string) => void;
+  setGroupMyRemark: (groupId: string, remark?: string) => void;
+};
 export type GroupInfoProps = InfoProps & {
   groupId: string;
   ownerId?: string;
   groupName?: string;
   groupAvatar?: string;
   groupDescription?: string;
+  groupMyRemark?: string;
   groupType?: ChatGroupStyle;
   onParticipant?: (groupId: string) => void;
-  onGroupMyRemark?: (groupId: string) => void;
-  onGroupName?: (groupId: string) => void;
-  onGroupDescription?: (groupId: string) => void;
-  onGroupAvatar?: (groupId: string) => void;
+  onGroupMyRemark?: (groupId: string, remark?: string) => void;
+  onGroupName?: (groupId: string, groupName?: string) => void;
+  onGroupDescription?: (groupId: string, desc?: string) => void;
+  onGroupAvatar?: (groupId: string, avatar?: string) => void;
   onClickedChangeGroupOwner?: (groupId: string, ownerId: string) => void;
   onGroupDestroy?: (groupId: string) => void;
   onGroupQuit?: (groupId: string) => void;
-  onGroupUpdateMyRemark?: (groupId: string) => void;
 };
 export type GroupParticipantInfoProps = InfoProps & {
   groupId: string;

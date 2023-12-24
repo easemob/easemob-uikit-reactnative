@@ -521,7 +521,7 @@ export interface GroupServices {
   setGroupName(params: {
     groupId: string;
     groupNewName: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   setGroupDescription(params: {
     groupId: string;

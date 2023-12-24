@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleProp, View, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
 
 import { getElement, useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
@@ -55,7 +55,7 @@ export function ListItem<
 
   return (
     <View>
-      <View
+      <Pressable
         style={[
           {
             height: 53.5,
@@ -64,13 +64,13 @@ export function ListItem<
           },
           containerStyle,
         ]}
-        onTouchEnd={onClicked}
+        onPress={onClicked}
       >
         {getElement(LeftName, LeftNameProps)}
         <View style={{ flexGrow: 1 }} />
         {getElement(RightText, RightTextProps)}
         {getElement(RightIcon, RightIconProps)}
-      </View>
+      </Pressable>
       {enableDivider === true ? (
         <View
           style={{

@@ -1,22 +1,31 @@
 import * as React from 'react';
 import { ChatConversationType } from 'react-native-chat-sdk';
 
-import { useChatContext } from '../../chat';
+import {
+  ChatServiceListener,
+  GroupModel,
+  useChatContext,
+  useChatListener,
+} from '../../chat';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
-import type { GroupInfoProps } from './types';
+import type { GroupInfoProps, GroupInfoRef } from './types';
 
-export function useGroupInfo(props: GroupInfoProps) {
+export function useGroupInfo(
+  props: GroupInfoProps,
+  ref?: React.ForwardedRef<GroupInfoRef>
+) {
   const {
     groupId,
     ownerId,
     groupName: propsGroupName,
     groupAvatar: propsGroupAvatar,
     groupDescription: propsGroupDescription,
+    groupMyRemark: propsGroupMyRemark,
     doNotDisturb: propsDoNotDisturb,
     onClearChat: propsOnClearChat,
     onGroupName: propsOnGroupName,
@@ -27,7 +36,6 @@ export function useGroupInfo(props: GroupInfoProps) {
     onClickedChangeGroupOwner,
     onGroupDestroy,
     onGroupQuit,
-    onGroupUpdateMyRemark,
   } = props;
   const im = useChatContext();
   const { tr } = useI18nContext();
@@ -41,6 +49,7 @@ export function useGroupInfo(props: GroupInfoProps) {
   const [groupDescription, setGroupDescription] = React.useState(
     propsGroupDescription
   );
+  const [groupMyRemark, setGroupMyRemark] = React.useState(propsGroupMyRemark);
   const [groupMemberCount, setGroupMemberCount] = React.useState(0);
   useLifecycle(
     React.useCallback(
@@ -56,6 +65,7 @@ export function useGroupInfo(props: GroupInfoProps) {
                 setGroupName(value.value?.groupName);
                 setGroupAvatar(value.value.groupAvatar);
                 setGroupMemberCount(value.value.memberCount ?? 0);
+                setGroupMyRemark(value.value?.myRemark);
                 ownerIdRef.current = value.value.owner;
               }
             },
@@ -110,7 +120,7 @@ export function useGroupInfo(props: GroupInfoProps) {
   };
   const onGroupName = () => {
     if (propsOnGroupName) {
-      propsOnGroupName(groupId);
+      propsOnGroupName(groupId, groupName);
       return;
     }
     alertRef.current.alertWithInit({
@@ -147,7 +157,7 @@ export function useGroupInfo(props: GroupInfoProps) {
   };
   const onGroupAvatar = (newGroupAvatar: string) => {
     if (propsOnGroupName) {
-      propsOnGroupName(groupId);
+      propsOnGroupName(groupId, groupAvatar);
       return;
     }
     im.getGroupInfo({
@@ -172,7 +182,7 @@ export function useGroupInfo(props: GroupInfoProps) {
   };
   const onGroupDescription = () => {
     if (propsOnGroupDescription) {
-      propsOnGroupDescription(groupId);
+      propsOnGroupDescription(groupId, groupDescription);
       return;
     }
     alertRef.current.alertWithInit({
@@ -209,7 +219,7 @@ export function useGroupInfo(props: GroupInfoProps) {
   };
   const onGroupMyRemark = () => {
     if (propsOnGroupMyRemark) {
-      propsOnGroupMyRemark(groupId);
+      propsOnGroupMyRemark(groupId, groupMyRemark);
       return;
     }
     alertRef.current.alertWithInit({
@@ -243,7 +253,7 @@ export function useGroupInfo(props: GroupInfoProps) {
                 memberId: im.userId,
                 groupMyRemark: text,
                 onResult: () => {
-                  onGroupUpdateMyRemark?.(groupId);
+                  // todo:
                 },
               });
             }
@@ -369,6 +379,61 @@ export function useGroupInfo(props: GroupInfoProps) {
       });
     }
   };
+
+  const listener = React.useMemo(() => {
+    return {
+      onGroupInfoChanged: (group: GroupModel) => {
+        if (group.groupId === groupId) {
+          setGroupName(group.groupName);
+          setGroupAvatar(group.groupAvatar);
+          setGroupDescription(group.description);
+          setGroupMemberCount(group.memberCount ?? 0);
+        }
+      },
+    } as ChatServiceListener;
+  }, [groupId]);
+  useChatListener(listener);
+
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        setGroupName: (groupId: string, groupNewName?: string) => {
+          console.log('test:zuoyu:setGroupName', groupName, groupNewName);
+          if (groupNewName === undefined || groupName === groupNewName) {
+            return;
+          }
+          im.setGroupName({
+            groupId,
+            groupNewName: groupNewName,
+            onResult: () => {},
+          });
+        },
+        setGroupDescription: (groupId: string, desc?: string) => {
+          if (desc === undefined || desc === groupDescription) {
+            return;
+          }
+          im.setGroupDescription({
+            groupId,
+            groupDescription: desc,
+            onResult: () => {},
+          });
+        },
+        setGroupMyRemark: (groupId: string, remark?: string) => {
+          if (remark === undefined || remark === groupMyRemark) {
+            return;
+          }
+          im.setGroupMyRemark({
+            groupId,
+            memberId: im.userId ?? '',
+            groupMyRemark: remark,
+            onResult: () => {},
+          });
+        },
+      };
+    },
+    [groupDescription, groupMyRemark, groupName, im]
+  );
 
   return {
     ...props,

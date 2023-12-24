@@ -1502,7 +1502,7 @@ export abstract class ChatServiceImpl
   setGroupName(params: {
     groupId: string;
     groupNewName: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.groupManager.changeGroupName(
@@ -1510,20 +1510,22 @@ export abstract class ChatServiceImpl
         params.groupNewName
       ),
       event: 'setGroupName',
-      onFinished: async () => {
-        const group = this._groupList.get(params.groupId);
-        this._listeners.forEach((v) => {
-          if (group) {
-            v.onGroupInfoChanged?.({
-              ...group,
-              groupName: params.groupNewName,
+      onFinished: params.onResult
+        ? async () => {
+            const group = this._groupList.get(params.groupId);
+            this._listeners.forEach((v) => {
+              if (group) {
+                v.onGroupInfoChanged?.({
+                  ...group,
+                  groupName: params.groupNewName,
+                });
+              }
+            });
+            params.onResult?.({
+              isOk: true,
             });
           }
-        });
-        params.onResult({
-          isOk: true,
-        });
-      },
+        : undefined,
     });
   }
   setGroupDescription(params: {

@@ -28,6 +28,7 @@ import {
   ConversationListScreen,
   CreateGroupScreen,
   DelGroupParticipantScreen,
+  EditInfoScreen,
   GroupInfoScreen,
   GroupListScreen,
   GroupParticipantInfoScreen,
@@ -358,6 +359,13 @@ export function App() {
                 headerShown: false,
               }}
               component={ShareContactScreen}
+            />
+            <Root.Screen
+              name={'EditInfo'}
+              options={{
+                headerShown: false,
+              }}
+              component={EditInfoScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

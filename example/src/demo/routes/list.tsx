@@ -103,6 +103,10 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  EditInfo: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
 };
 export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
@@ -215,6 +219,10 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   ShareContact: {
+    option: undefined,
+    params: undefined,
+  },
+  EditInfo: {
     option: undefined,
     params: undefined,
   },
