@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { useWindowDimensions } from 'react-native';
 
-import type { TabPageHeaderRef } from './TabPageHeader';
+import type { TabPageProps, TabPageRef } from './TabPage';
+import type { TabPageBodyRef, TabPageHeaderRef } from './types';
 
 export const calculateIndex = (params: {
   width: number;
@@ -44,3 +46,41 @@ export const useHeaderStartScrolling = (
     },
   };
 };
+
+export function useTabPageAPI(
+  props: TabPageProps,
+  ref?: React.ForwardedRef<TabPageRef>
+) {
+  const { header, width: initWidth, initIndex = 0 } = props;
+  const { HeaderProps } = header;
+  const { titles: headerTitles } = HeaderProps;
+  const headerRef = React.useRef<TabPageHeaderRef>({} as any);
+  const bodyRef = React.useRef<TabPageBodyRef>({} as any);
+  const count = headerTitles.length;
+  const { width: winWidth } = useWindowDimensions();
+  const width = initWidth ?? winWidth;
+  const { headerStartScrolling } = useHeaderStartScrolling(
+    count,
+    headerRef,
+    initIndex
+  );
+
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        changeIndex: (index: number, animated?: boolean) => {
+          bodyRef.current?.scrollTo(index, animated);
+          headerStartScrolling(width, width * index);
+        },
+      };
+    },
+    [headerStartScrolling, width]
+  );
+
+  return {
+    headerRef,
+    bodyRef,
+    headerStartScrolling,
+  };
+}

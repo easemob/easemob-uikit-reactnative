@@ -42,7 +42,7 @@ export function TabPageBodyItem(props: TabPageBodyItemProps) {
 }
 
 export type TabPageBodyRef = {
-  scrollTo: (index: number) => void;
+  scrollTo: (index: number, animated?: boolean) => void;
 };
 export type TabPageBodyProps = Omit<
   ScrollViewProps,

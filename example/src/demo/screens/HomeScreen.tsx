@@ -9,6 +9,7 @@ import {
   DataModel,
   DataModelType,
   TabPage,
+  TabPageRef,
   UIKitError,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,6 +20,8 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 
 export function HomeScreen(props: Props) {
   const {} = props;
+  const tabRef = React.useRef<TabPageRef>(null);
+  const currentIndexRef = React.useRef<number>(0);
   return (
     <SafeAreaView
       style={
@@ -27,7 +30,17 @@ export function HomeScreen(props: Props) {
         }
       }
     >
+      {/* <View
+        style={{ height: 100, width: '100%' }}
+        onTouchEnd={() => {
+          const tmp = currentIndexRef.current + 1;
+          tabRef.current?.changeIndex(tmp % 3);
+        }}
+      >
+        <Text>{'change index'}</Text>
+      </View> */}
       <TabPage
+        ref={tabRef}
         header={{
           Header: BottomTabBar as any,
           HeaderProps: {
@@ -76,6 +89,7 @@ export function HomeScreen(props: Props) {
         initIndex={0}
         onCurrentIndex={(index) => {
           console.log('test:zuoyu:index', index);
+          currentIndexRef.current = index;
         }}
       />
     </SafeAreaView>
@@ -108,7 +122,15 @@ export function BodyPagesLIST({
   currentIndex: number;
 }) {
   console.log('test:BodyPagesLIST:', index, currentIndex);
-  return <View style={{ flexGrow: 1, backgroundColor: 'red' }} />;
+  return (
+    <View
+      style={{
+        flexGrow: 1,
+        backgroundColor: 'red',
+        // height: 400,
+      }}
+    />
+  );
 }
 
 type HomeTabConversationListScreenProps = {};
@@ -124,6 +146,7 @@ function HomeTabConversationListScreen(
       containerStyle={{
         flexGrow: 1,
         // backgroundColor: 'red',
+        // height: 400,
       }}
       onRequestData={(params: {
         ids: string[];
@@ -197,6 +220,7 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
       containerStyle={{
         flexGrow: 1,
         // backgroundColor: 'red',
+        // height: 400,
       }}
       onRequestData={(params: {
         ids: string[];
