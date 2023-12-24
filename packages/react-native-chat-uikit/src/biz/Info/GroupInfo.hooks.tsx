@@ -51,6 +51,7 @@ export function useGroupInfo(
   );
   const [groupMyRemark, setGroupMyRemark] = React.useState(propsGroupMyRemark);
   const [groupMemberCount, setGroupMemberCount] = React.useState(0);
+  const [isOwner, setIsOwner] = React.useState(false);
   useLifecycle(
     React.useCallback(
       (state: any) => {
@@ -67,6 +68,7 @@ export function useGroupInfo(
                 setGroupMemberCount(value.value.memberCount ?? 0);
                 setGroupMyRemark(value.value?.myRemark);
                 ownerIdRef.current = value.value.owner;
+                setIsOwner(im.userId === value.value.owner);
               }
             },
           });
@@ -361,12 +363,15 @@ export function useGroupInfo(
                       text: tr('Confirm'),
                       isPreferred: true,
                       onPress: () => {
-                        alertRef.current.close?.();
-                        im.destroyGroup({
-                          groupId,
-                          onResult: () => {
+                        alertRef.current.close?.(() => {
+                          if (onGroupDestroy) {
                             onGroupDestroy?.(groupId);
-                          },
+                          } else {
+                            im.destroyGroup({
+                              groupId,
+                              onResult: () => {},
+                            });
+                          }
                         });
                       },
                     },
@@ -455,5 +460,6 @@ export function useGroupInfo(
     menuRef,
     onMore: onMoreMenu,
     groupMemberCount,
+    isOwner,
   };
 }

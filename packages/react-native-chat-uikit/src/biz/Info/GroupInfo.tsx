@@ -48,6 +48,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
       onSendMessage,
       onVideoCall,
       onAudioCall,
+      isOwner,
     } = useGroupInfo(props, ref);
     const { tr } = useI18nContext();
     const { colors } = usePaletteContext();
@@ -272,56 +273,61 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               </Text>
             }
           />
-          <View
-            style={{
-              height: 12,
-              width: '100%',
-              backgroundColor: getColor('bg2'),
-            }}
-          />
-          <ListItem
-            onClicked={onGroupName}
-            containerStyle={{ paddingHorizontal: 16 }}
-            LeftName={
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('group name')}
-              </Text>
-            }
-            RightText={
-              <Text
-                textType={'large'}
-                paletteType={'label'}
-                style={{ color: getColor('t1') }}
-              >
-                {groupName}
-              </Text>
-            }
-          />
-          <ListItem
-            onClicked={onGroupDescription}
-            containerStyle={{ paddingHorizontal: 16 }}
-            LeftName={
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('group description')}
-              </Text>
-            }
-            RightIcon={
-              <View>
-                <Icon
-                  name={'chevron_right'}
-                  style={{ height: 20, width: 20 }}
-                />
-              </View>
-            }
-          />
+
+          {isOwner === true ? (
+            <>
+              <View
+                style={{
+                  height: 12,
+                  width: '100%',
+                  backgroundColor: getColor('bg2'),
+                }}
+              />
+              <ListItem
+                onClicked={onGroupName}
+                containerStyle={{ paddingHorizontal: 16 }}
+                LeftName={
+                  <Text
+                    textType={'medium'}
+                    paletteType={'title'}
+                    style={{ color: getColor('fg') }}
+                  >
+                    {tr('group name')}
+                  </Text>
+                }
+                RightText={
+                  <Text
+                    textType={'large'}
+                    paletteType={'label'}
+                    style={{ color: getColor('t1') }}
+                  >
+                    {groupName}
+                  </Text>
+                }
+              />
+              <ListItem
+                onClicked={onGroupDescription}
+                containerStyle={{ paddingHorizontal: 16 }}
+                LeftName={
+                  <Text
+                    textType={'medium'}
+                    paletteType={'title'}
+                    style={{ color: getColor('fg') }}
+                  >
+                    {tr('group description')}
+                  </Text>
+                }
+                RightIcon={
+                  <View>
+                    <Icon
+                      name={'chevron_right'}
+                      style={{ height: 20, width: 20 }}
+                    />
+                  </View>
+                }
+              />
+            </>
+          ) : null}
         </ScrollView>
 
         <Alert ref={alertRef} />

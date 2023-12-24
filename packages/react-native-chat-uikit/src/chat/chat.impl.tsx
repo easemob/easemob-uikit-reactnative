@@ -1172,7 +1172,7 @@ export abstract class ChatServiceImpl
     pageNum: number;
     onResult: ResultCallback<GroupModel[]>;
   }): void {
-    this.client.groupManager.getJoinedGroups();
+    // this.client.groupManager.getJoinedGroups();
     this.tryCatch({
       promise: this.client.groupManager.fetchJoinedGroupsFromServer(
         params.pageSize,
@@ -1346,13 +1346,15 @@ export abstract class ChatServiceImpl
       ),
       event: 'getGroupInfoFromServer',
       onFinished: (value) => {
-        const localGroup = this._groupList.get(params.groupId);
         if (value) {
+          const localGroup = this._groupList.get(params.groupId);
           const group = this.toUIGroup(value);
-          this._groupList.set(
-            group.groupId,
-            mergeObjects(group, localGroup ?? ({} as any))
-          );
+          if (localGroup) {
+            this._groupList.set(group.groupId, mergeObjects(group, localGroup));
+          } else {
+            this._groupList.set(group.groupId, group);
+          }
+
           params.onResult({
             isOk: true,
             value: group,
@@ -1486,16 +1488,22 @@ export abstract class ChatServiceImpl
   }
   destroyGroup(params: {
     groupId: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.groupManager.destroyGroup(params.groupId),
       event: 'destroyGroup',
-      onFinished: async () => {
-        params.onResult({
-          isOk: true,
-        });
-      },
+      onFinished: params.onResult
+        ? async () => {
+            this._groupList.delete(params.groupId);
+            this._listeners.forEach((v) => {
+              v?.onDestroyed?.({ groupId: params.groupId });
+            });
+            params.onResult?.({
+              isOk: true,
+            });
+          }
+        : undefined,
     });
   }
 

@@ -1,8 +1,10 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
+  ChatServiceListener,
   GroupInfo,
   GroupInfoRef,
+  useChatListener,
   useI18nContext,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -35,6 +37,31 @@ export function GroupInfoScreen(props: Props) {
       groupInfoRef.current?.setGroupMyRemark?.(groupId, data);
     }
   };
+
+  const listener = React.useRef<ChatServiceListener>({
+    onQuitGroup: (gid: string) => {
+      if (gid === groupId) {
+        navigation.goBack();
+      }
+    },
+    onDestroyed: (params: { groupId: string }) => {
+      if (params.groupId === groupId) {
+        navigation.goBack();
+      }
+    },
+    onOwnerChanged: (params: {
+      groupId: string;
+      newOwner: string;
+      oldOwner: string;
+    }) => {
+      console.log('test:zuoyu:onOwnerChanged', params);
+      if (params.groupId === groupId) {
+        navigation.goBack();
+      }
+    },
+  });
+  useChatListener(listener.current);
+
   return (
     <SafeAreaView
       style={{
@@ -53,9 +80,9 @@ export function GroupInfoScreen(props: Props) {
         onParticipant={(groupId) => {
           navigation.push('GroupParticipantList', { params: { groupId } });
         }}
-        onGroupDestroy={() => {
-          navigation.goBack();
-        }}
+        // onGroupDestroy={() => {
+        //   navigation.goBack();
+        // }}
         onGroupQuit={() => {
           navigation.goBack();
         }}

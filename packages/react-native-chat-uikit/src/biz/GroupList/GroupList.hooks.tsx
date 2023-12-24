@@ -64,12 +64,16 @@ export function useGroupList(
     setData([...dataRef.current]);
   };
 
-  const init = () => {
+  const requestList = (pageNum: number) => {
     if (testMode === 'only-ui') {
     } else {
+      if (pageNum === 0) {
+        currentPageNumberRef.current = 0;
+        dataRef.current = [];
+      }
       im.getPageGroups({
         pageSize: gGroupListPageNumber,
-        pageNum: currentPageNumberRef.current,
+        pageNum: pageNum,
         onResult: (result) => {
           const { isOk, value, error } = result;
           if (isOk === true) {
@@ -82,6 +86,14 @@ export function useGroupList(
               });
               addData(list);
             }
+            if (value) {
+              if (value?.length < gGroupListPageNumber) {
+                isNoMoreRef.current = true;
+                onNoMore?.();
+              } else {
+                currentPageNumberRef.current = pageNum + 1;
+              }
+            }
           } else {
             if (error) {
               im.sendError({ error });
@@ -91,40 +103,17 @@ export function useGroupList(
       });
     }
   };
+
+  const init = () => {
+    console.log('test:zuoyu:groupList:init');
+    requestList(0);
+  };
   const onMore = () => {
     if (isNoMoreRef.current === true) {
       return;
     }
-    im.getPageGroups({
-      pageSize: gGroupListPageNumber,
-      pageNum: currentPageNumberRef.current + 1,
-      onResult: (result) => {
-        const { isOk, value, error } = result;
-        if (isOk === true) {
-          if (value) {
-            const list = value.map((item) => {
-              return {
-                id: item.groupId,
-                data: item,
-              } as GroupListItemProps;
-            });
-            addData(list);
-          }
-          if (value) {
-            if (value?.length < gGroupListPageNumber) {
-              isNoMoreRef.current = true;
-              onNoMore?.();
-            } else {
-              ++currentPageNumberRef.current;
-            }
-          }
-        } else {
-          if (error) {
-            im.sendError({ error });
-          }
-        }
-      },
-    });
+    console.log('test:zuoyu:groupList:onMore');
+    requestList(currentPageNumberRef.current);
   };
   const onVisibleItems = (_items: GroupListItemProps[]) => {};
 

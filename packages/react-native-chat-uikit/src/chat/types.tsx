@@ -516,7 +516,7 @@ export interface GroupServices {
   quitGroup(params: { groupId: string; onResult?: ResultCallback<void> }): void;
   destroyGroup(params: {
     groupId: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   setGroupName(params: {
     groupId: string;

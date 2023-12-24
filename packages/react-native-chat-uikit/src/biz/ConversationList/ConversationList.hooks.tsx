@@ -183,11 +183,19 @@ export function useConversationList(
     testMode,
   ]);
 
+  const onRemoveById = React.useCallback(
+    async (convId: string) => {
+      await im.removeConversation({ convId: convId });
+      dataRef.current = dataRef.current.filter((item) => item.id !== convId);
+      onSetData(dataRef.current);
+    },
+    [dataRef, im, onSetData]
+  );
+
   const onRemove = async (conv: ConversationModel) => {
-    await im.removeConversation({ convId: conv.convId });
-    dataRef.current = dataRef.current.filter((item) => item.id !== conv.convId);
-    onSetData(dataRef.current);
+    onRemoveById(conv.convId);
   };
+
   const onPin = async (conv: ConversationModel) => {
     try {
       const isPinned = !conv.isPinned;
@@ -380,8 +388,19 @@ export function useConversationList(
         console.log('test:zuoyu:conv:list:onConversationChanged:', conv);
         onUpdateData(conv);
       },
+
+      onMemberRemoved: (params: { groupId: string; groupName?: string }) => {
+        // todo: remove conversation item.
+        onRemoveById(params.groupId);
+      },
+      onDestroyed: (params: { groupId: string; groupName?: string }) => {
+        onRemoveById(params.groupId);
+      },
+      onQuitGroup: (groupId) => {
+        onRemoveById(groupId);
+      },
     } as ChatServiceListener;
-  }, [dataRef, im, init, onSetData, onUpdateData]);
+  }, [dataRef, im, init, onRemoveById, onSetData, onUpdateData]);
 
   useChatListener(listener);
 
