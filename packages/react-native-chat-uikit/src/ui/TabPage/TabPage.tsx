@@ -4,17 +4,18 @@ import { Platform, useWindowDimensions, View } from 'react-native';
 import { ErrorCode, UIKitError } from '../../error';
 import { gHeaderHeight, gIndicatorHeight } from './TabPage.const';
 import { useHeaderStartScrolling } from './TabPage.hooks';
-import {
-  TabPageBody,
+import { TabPageBody } from './TabPageBody';
+import { TabPageBodyLIST } from './TabPageBody.LIST';
+import { TabPageBodyT } from './TabPageBody.T';
+import { TabPageHeader } from './TabPageHeader';
+import type {
+  TabPageBodyLISTProps,
   TabPageBodyProps,
-  type TabPageBodyRef,
-} from './TabPageBody';
-import { TabPageBodyT, TabPageBodyTProps } from './TabPageBody.T';
-import {
-  TabPageHeader,
-  type TabPageHeaderProps,
-  type TabPageHeaderRef,
-} from './TabPageHeader';
+  TabPageBodyRef,
+  TabPageBodyTProps,
+  TabPageHeaderProps,
+  TabPageHeaderRef,
+} from './types';
 
 export type OmitTabPageHeaderProps = Omit<
   TabPageHeaderProps,
@@ -26,6 +27,15 @@ type OmitTabPageBodyProps = Omit<
 >;
 type OmitTabPageBodyTProps = Omit<
   TabPageBodyTProps,
+  | 'propsRef'
+  | 'height'
+  | 'width'
+  | 'childrenCount'
+  | 'initIndex'
+  | 'onCurrentIndex'
+>;
+type OmitTabPageBodyLISTProps = Omit<
+  TabPageBodyLISTProps,
   | 'propsRef'
   | 'height'
   | 'width'
@@ -49,6 +59,11 @@ export type TabPageProps = {
         type: 'TabPageBodyT';
         Body?: typeof TabPageBodyT;
         BodyProps: OmitTabPageBodyTProps;
+      }
+    | {
+        type: 'TabPageBodyLIST';
+        Body?: typeof TabPageBodyLIST;
+        BodyProps: OmitTabPageBodyLISTProps;
       };
   height?: number;
   width?: number;
@@ -77,12 +92,19 @@ const _TabPage = (props: TabPageProps) => {
     ...BodyOtherProps
   } = BodyProps as OmitTabPageBodyProps;
   const {
-    RenderChildren,
-    RenderChildrenProps,
+    RenderChildren: RenderChildrenT,
+    RenderChildrenProps: RenderChildrenPropsT,
     onMomentumScrollEnd: onMomentumScrollEndT,
     scrollEventThrottle: scrollEventThrottleT,
     ...BodyOtherPropsT
   } = BodyProps as OmitTabPageBodyTProps;
+  const {
+    RenderChildren: RenderChildrenLIST,
+    RenderChildrenProps: RenderChildrenPropsLIST,
+    onMomentumScrollEnd: onMomentumScrollEndLIST,
+    scrollEventThrottle: scrollEventThrottleLIST,
+    ...BodyOtherPropsLIST
+  } = BodyProps as OmitTabPageBodyLISTProps;
   const { width: winWidth } = useWindowDimensions();
   const headerRef = React.useRef<TabPageHeaderRef>({} as any);
   const bodyRef = React.useRef<TabPageBodyRef>({} as any);
@@ -90,6 +112,7 @@ const _TabPage = (props: TabPageProps) => {
   const _TabPageHeader = Header ?? TabPageHeader;
   const _TabPageBody = (Body as typeof TabPageBody) ?? TabPageBody;
   const _TabPageBodyT = (Body as typeof TabPageBodyT) ?? TabPageBodyT;
+  const _TabPageBodyLIST = (Body as typeof TabPageBodyLIST) ?? TabPageBodyLIST;
   const width = initWidth ?? winWidth;
   const { headerStartScrolling } = useHeaderStartScrolling(
     count,
@@ -150,7 +173,7 @@ const _TabPage = (props: TabPageProps) => {
           onCurrentIndex={onCurrentIndex}
           {...BodyOtherProps}
         />
-      ) : (
+      ) : bodyType === 'TabPageBodyT' ? (
         <_TabPageBodyT
           propsRef={bodyRef}
           onMomentumScrollEnd={(e) => {
@@ -164,11 +187,31 @@ const _TabPage = (props: TabPageProps) => {
           }
           width={width}
           childrenCount={count}
-          RenderChildren={RenderChildren}
-          RenderChildrenProps={RenderChildrenProps}
+          RenderChildren={RenderChildrenT}
+          RenderChildrenProps={RenderChildrenPropsT}
           initIndex={initIndex}
           onCurrentIndex={onCurrentIndex}
           {...BodyOtherPropsT}
+        />
+      ) : (
+        <_TabPageBodyLIST
+          propsRef={bodyRef}
+          onMomentumScrollEnd={(e) => {
+            // !!! On the android platform, when using `scrollTo`, this callback is not triggered. shit.
+            onMomentumScrollEndLIST?.(e);
+            headerStartScrolling(width, e.nativeEvent.contentOffset.x);
+          }}
+          scrollEventThrottle={scrollEventThrottleLIST ?? 16}
+          height={
+            height ? height - (gHeaderHeight + gIndicatorHeight) : undefined
+          }
+          width={width}
+          childrenCount={count}
+          RenderChildren={RenderChildrenLIST}
+          RenderChildrenProps={RenderChildrenPropsLIST}
+          initIndex={initIndex}
+          onCurrentIndex={onCurrentIndex}
+          {...BodyOtherPropsLIST}
         />
       )}
 

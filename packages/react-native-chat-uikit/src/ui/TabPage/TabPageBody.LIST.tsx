@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { ScrollView, useWindowDimensions, View } from 'react-native';
 
+import { ErrorCode, UIKitError } from '../../error';
 import { useDelayExecTask } from '../../hook';
 import { timeoutTask } from '../../utils';
 import { gAnimatedDuration } from './TabPage.const';
 import { calculateIndex } from './TabPage.hooks';
-import type { TabPageBodyTProps } from './types';
+import type {
+  TabPageBodyLISTContentProps,
+  TabPageBodyLISTProps,
+} from './types';
 
-export function TabPageBodyT<Props extends {} = {}>(
-  props: TabPageBodyTProps<Props>
+export function TabPageBodyLIST<Props extends {} = {}>(
+  props: TabPageBodyLISTProps<Props>
 ) {
   const {
     style,
@@ -24,6 +28,7 @@ export function TabPageBodyT<Props extends {} = {}>(
     onCurrentIndex,
     onScroll: propsScroll,
     onMomentumScrollEnd: propsOnMomentumScrollEnd,
+    enableCurrentIndex,
     ...others
   } = props;
   const ref = React.useRef<ScrollView>({} as any);
@@ -45,6 +50,16 @@ export function TabPageBodyT<Props extends {} = {}>(
       onCurrentIndex?.(index);
     }
   );
+
+  if (childrenCount !== RenderChildren.length) {
+    throw new UIKitError({
+      code: ErrorCode.common,
+      desc: 'TabPageBodyLIST: childrenCount !== RenderChildren.length, please check.',
+    });
+  }
+
+  // const TabPageBodyContentMemo =
+  //   React.memo<TabPageBodyLISTContentProps>(TabPageBodyContent);
 
   return (
     <View
@@ -86,18 +101,47 @@ export function TabPageBodyT<Props extends {} = {}>(
         }}
         {...others}
       >
-        {Array.from({ length: childrenCount }, (_, i) => i).map((index, i) => {
-          return (
-            <View key={i} style={{ width: w }}>
-              <RenderChildren
-                {...RenderChildrenProps}
-                index={index}
-                currentIndex={currentIndex}
-              />
-            </View>
-          );
-        })}
+        {enableCurrentIndex === true ? (
+          <TabPageBodyContentMemo
+            width={w}
+            RenderChildren={RenderChildren as any}
+            RenderChildrenProps={RenderChildrenProps}
+            currentIndex={currentIndex}
+          />
+        ) : (
+          <TabPageBodyContentMemo
+            width={w}
+            RenderChildren={RenderChildren as any}
+            RenderChildrenProps={RenderChildrenProps}
+          />
+        )}
       </ScrollView>
     </View>
   );
 }
+
+export function TabPageBodyContent<Props extends {} = {}>(
+  props: TabPageBodyLISTContentProps<Props>
+): JSX.Element[] {
+  const { RenderChildren, RenderChildrenProps, width, currentIndex } = props;
+  // return <View></View>;
+  return RenderChildren.map((RenderChild, i) => {
+    return (
+      <View key={i} style={{ width: width }}>
+        {currentIndex !== undefined ? (
+          <RenderChild
+            {...RenderChildrenProps}
+            index={i}
+            currentIndex={currentIndex}
+          />
+        ) : (
+          <RenderChild {...RenderChildrenProps} index={i} />
+        )}
+      </View>
+    );
+  });
+}
+
+export const TabPageBodyContentMemo = React.memo<TabPageBodyLISTContentProps>(
+  TabPageBodyContent as any
+);

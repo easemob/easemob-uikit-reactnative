@@ -1,12 +1,9 @@
 import * as React from 'react';
 import {
   Animated,
-  StyleProp,
-  TextStyle,
   // TouchableOpacity,
   useWindowDimensions,
   View,
-  ViewStyle,
 } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
@@ -20,30 +17,7 @@ import {
   gIndicatorWidth,
 } from './TabPage.const';
 import { useTabPageHeaderAnimation2 } from './TabPageHeader.hooks';
-
-export type TabPageHeaderRef = {
-  toLeft: (movedCount: number) => void;
-  toRight: (movedCount: number) => void;
-};
-export type TabPageHeaderProps = {
-  propRef: React.RefObject<TabPageHeaderRef>;
-  onClicked?: (index: number) => void;
-  titles: string[];
-  width?: number;
-  indicatorStyle?: StyleProp<ViewStyle>;
-  /**
-   * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
-   */
-  containerStyle?: StyleProp<ViewStyle>;
-  content?: {
-    style?: StyleProp<TextStyle>;
-    /**
-     * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
-     */
-    containerStyle?: StyleProp<ViewStyle>;
-  };
-  initIndex?: number;
-};
+import type { TabPageHeaderProps } from './types';
 
 export function TabPageHeader(props: TabPageHeaderProps) {
   const {

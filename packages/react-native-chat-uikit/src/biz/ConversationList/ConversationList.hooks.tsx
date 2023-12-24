@@ -409,6 +409,7 @@ export function useConversationList(
   }, [init]);
 
   return {
+    ...flatListProps,
     listType,
     listState,
     data,

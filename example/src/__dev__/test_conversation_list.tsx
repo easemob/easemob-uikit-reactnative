@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   BottomTabBar,
+  ContactList,
   ConversationList,
   DataModel,
   DataModelType,
@@ -112,6 +113,28 @@ export function BodyPagesT({
   currentIndex: number;
 }) {
   console.log('test:BodyPagesT:', index, currentIndex);
+  if (index === 0) {
+    return (
+      <ConversationList
+        testMode={'only-ui'}
+        containerStyle={{
+          flexGrow: 1,
+          backgroundColor: 'green',
+        }}
+      />
+    );
+  } else if (index === 1) {
+    return (
+      <ContactList
+        testMode={'only-ui'}
+        containerStyle={{
+          flexGrow: 1,
+          backgroundColor: 'blue',
+        }}
+        contactType={'contact-list'}
+      />
+    );
+  }
   return (
     <ConversationList
       testMode={'only-ui'}
@@ -125,7 +148,13 @@ export function BodyPagesT({
 
 export function CL2() {
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={
+        {
+          // backgroundColor: 'red',
+        }
+      }
+    >
       <TabPage
         header={{
           Header: BottomTabBar as any,
@@ -170,7 +199,7 @@ export function CL2() {
 export default function TestConversationList() {
   return (
     <GlobalContainer appKey={''}>
-      <CL3 />
+      <CL2 />
     </GlobalContainer>
   );
 }

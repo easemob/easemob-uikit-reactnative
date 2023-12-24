@@ -1,47 +1,10 @@
 import * as React from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
-import {
-  ScrollView,
-  ScrollViewProps,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import { ScrollView, useWindowDimensions, View } from 'react-native';
 
 import { useDelayExecTask } from '../../hook';
 import { calculateIndex } from './TabPage.hooks';
+import type { TabPageBodyProps } from './types';
 
-export type TabPageBodyItemProps = ScrollViewProps;
-export function TabPageBodyItem(props: TabPageBodyItemProps) {
-  const { style, children, ...others } = props;
-  return (
-    <ScrollView style={[style]} {...others}>
-      {children}
-    </ScrollView>
-  );
-}
-
-export type TabPageBodyRef = {
-  scrollTo: (index: number) => void;
-};
-export type TabPageBodyProps = Omit<
-  ScrollViewProps,
-  | 'pagingEnabled'
-  | 'showsHorizontalScrollIndicator'
-  | 'bounces'
-  | 'horizontal'
-  | 'children'
-> & {
-  propsRef: React.RefObject<TabPageBodyRef>;
-  children: React.ReactNode[];
-  height?: number;
-  width?: number;
-  /**
-   * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
-   */
-  containerStyle?: StyleProp<ViewStyle>;
-  initIndex?: number;
-  onCurrentIndex?: (currentIndex: number) => void;
-};
 export function TabPageBody(props: TabPageBodyProps) {
   const {
     style,

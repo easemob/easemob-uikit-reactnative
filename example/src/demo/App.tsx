@@ -33,6 +33,7 @@ import {
   GroupListScreen,
   GroupParticipantInfoScreen,
   GroupParticipantListScreen,
+  HomeScreen,
   ImageMessagePreviewScreen,
   LoginListScreen,
   LoginScreen,
@@ -48,13 +49,18 @@ import {
 } from './screens';
 
 const env = require('../env');
+const demoType = env.demoType;
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
 SplashScreen.preventAutoHideAsync();
 
 export function App() {
-  const [initialRouteName] = React.useState('TopMenu' as RootParamsName);
+  const [initialRouteName] = React.useState(
+    demoType === 2
+      ? ('TopMenu' as RootParamsName)
+      : ('TopMenu' as RootParamsName)
+  );
   const palette = usePresetPalette();
   const dark = useDarkTheme(palette);
   const light = useLightTheme(palette);
@@ -191,6 +197,13 @@ export function App() {
                 headerShown: true,
               }}
               component={TopMenuScreen}
+            />
+            <Root.Screen
+              name={'Home'}
+              options={{
+                headerShown: false,
+              }}
+              component={HomeScreen}
             />
             <Root.Screen
               name={'Config'}
