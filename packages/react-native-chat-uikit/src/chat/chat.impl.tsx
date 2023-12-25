@@ -170,6 +170,7 @@ export abstract class ChatServiceImpl
     userName: string;
     userAvatarURL?: string | undefined;
     gender?: number;
+    sign?: string;
     usePassword?: boolean;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
@@ -179,6 +180,7 @@ export abstract class ChatServiceImpl
       userName,
       userAvatarURL,
       gender,
+      sign,
       result,
       usePassword,
     } = params;
@@ -206,6 +208,7 @@ export abstract class ChatServiceImpl
         avatarURL: userAvatarURL,
         userId: userId,
         gender: gender,
+        sign: sign,
       } as UserServiceData;
 
       Services.dcs.init(
@@ -423,6 +426,7 @@ export abstract class ChatServiceImpl
       remark: user.nickName ?? user.userId,
       avatarURL: user.avatarUrl,
       gender: user.gender,
+      sign: user.sign,
       from: from,
     };
   }
@@ -1758,10 +1762,11 @@ export abstract class ChatServiceImpl
           Array.from(value.values()).forEach(async (v) => {
             const user = this.toUserData(v);
             const localUser = this._userList.get(v.userId);
-            this._userList.set(
-              user.userId,
-              mergeObjects<UserServiceData>(user, localUser ?? ({} as any))
-            );
+            if (localUser) {
+              this._userList.set(user.userId, mergeObjects(user, localUser));
+            } else {
+              this._userList.set(user.userId, user);
+            }
           });
           if (this._userList.has(params.userId)) {
             params.onResult({
@@ -1824,6 +1829,7 @@ export abstract class ChatServiceImpl
       nickName: self.userName,
       avatarUrl: self.avatarURL,
       gender: self.gender,
+      sign: self.sign,
     };
     this.tryCatch({
       promise: this.client.userManager.updateOwnUserInfo(p),
@@ -2042,6 +2048,61 @@ export abstract class ChatServiceImpl
       event: 'reportMessage',
       onFinished: async () => {
         params.onResult?.({ isOk: true });
+      },
+      onError: () => {
+        params.onResult?.({ isOk: false });
+      },
+    });
+  }
+
+  subPresence(params: {
+    userIds: string[];
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.presenceManager.subscribe(
+        params.userIds,
+        60 * 60 * 24 * 3
+      ),
+      event: 'subPresence',
+    });
+  }
+  unSubPresence(params: {
+    userIds: string[];
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.presenceManager.unsubscribe(params.userIds),
+      event: 'unSubPresence',
+    });
+  }
+  publishPresence(params: {
+    status: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.presenceManager.publishPresence(params.status),
+      event: 'publishPresence',
+      onFinished: () => {
+        params.onResult?.({ isOk: true });
+      },
+    });
+  }
+  fetchPresence(params: {
+    userIds: string[];
+    onResult: ResultCallback<string[]>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.presenceManager.fetchPresenceStatus(params.userIds),
+      event: 'fetchPresence',
+      onFinished: (result) => {
+        params.onResult?.({
+          isOk: true,
+          value:
+            result.map((v) => {
+              return v.statusDescription;
+            }) ?? [],
+        });
       },
       onError: () => {
         params.onResult?.({ isOk: false });

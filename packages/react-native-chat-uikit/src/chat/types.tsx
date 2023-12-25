@@ -80,6 +80,10 @@ export type UserServiceData = {
    */
   gender?: number;
   /**
+   * User sign.
+   */
+  sign?: string;
+  /**
    * User from information.
    */
   from?: {
@@ -570,12 +574,32 @@ export interface GroupServices {
   }): void;
 }
 
+export interface PresenceServices {
+  subPresence(params: {
+    userIds: string[];
+    onResult: ResultCallback<void>;
+  }): void;
+  unSubPresence(params: {
+    userIds: string[];
+    onResult: ResultCallback<void>;
+  }): void;
+  publishPresence(params: {
+    status: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  fetchPresence(params: {
+    userIds: string[];
+    onResult: ResultCallback<string[]>;
+  }): void;
+}
+
 export interface ChatService
   extends ConversationServices,
     ContactServices,
     GroupServices,
     UserServices,
-    MessageServices {
+    MessageServices,
+    PresenceServices {
   /**
    * Add listener.
    * @param listener {@link ChatServiceListener}
@@ -646,6 +670,7 @@ export interface ChatService
     userName?: string;
     userAvatarURL?: string;
     gender?: number;
+    sign?: string;
     usePassword?: boolean;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;

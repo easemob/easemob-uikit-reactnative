@@ -3,6 +3,8 @@ import type { ChatGroupStyle } from 'react-native-chat-sdk';
 
 import type { PropsWithBack } from '../types';
 
+export type UserState = 'online' | 'offline' | 'busy' | 'leave' | 'no-disturb';
+
 export type InfoProps = PropsWithBack & {
   onMore?: () => void;
   hasSendMessage?: boolean;
@@ -54,4 +56,9 @@ export type GroupParticipantInfoProps = InfoProps & {
   isContact?: boolean;
   userRemark?: string;
   onGroupParticipantRemark?: (groupId: string, memberId: string) => void;
+};
+export type MineInfoProps = InfoProps & {
+  userId: string;
+  userName?: string;
+  userAvatar?: string;
 };

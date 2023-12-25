@@ -5,6 +5,8 @@ import { getElement, useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 
 type ListItemProps<LeftNameProps, RightTextProps, RightIconProps> = {
+  header?: React.ReactElement;
+  tail?: React.ReactElement;
   LeftName?: React.ReactElement<LeftNameProps>;
   LeftNameProps?: LeftNameProps;
   RightText?: React.ReactElement<RightTextProps>;
@@ -32,6 +34,7 @@ export function ListItem<
     RightIconProps,
     onClicked,
     enableDivider = true,
+    header,
   } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -55,6 +58,7 @@ export function ListItem<
 
   return (
     <View>
+      {getElement(header, {})}
       <Pressable
         style={[
           {

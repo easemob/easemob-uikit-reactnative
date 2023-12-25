@@ -8,9 +8,11 @@ import {
   ConversationList,
   DataModel,
   DataModelType,
+  MineInfo,
   TabPage,
   TabPageRef,
   UIKitError,
+  useChatContext,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -77,7 +79,7 @@ export function HomeScreen(props: Props) {
             RenderChildren: [
               HomeTabConversationListScreen,
               HomeTabContactListScreen,
-              BodyPagesLIST,
+              HomeTabMineScreen,
             ],
             RenderChildrenProps: {
               index: 0,
@@ -259,4 +261,16 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
       }}
     />
   );
+}
+
+export type HomeTabMineScreenProps = {};
+function HomeTabMineScreen(props: HomeTabMineScreenProps) {
+  const {} = props;
+  const im = useChatContext();
+
+  if (im.userId) {
+    return <MineInfo userId={im.userId} />;
+  } else {
+    return <View />;
+  }
 }
