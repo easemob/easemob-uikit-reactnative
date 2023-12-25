@@ -4,9 +4,11 @@ import * as React from 'react';
 import {
   ChatServiceListener,
   ContactModel,
+  NewRequestModel,
   useChatContext,
   useChatListener,
 } from '../../chat';
+import type { RequestListListener } from '../../chat/requestList.types';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useSectionList } from '../List';
@@ -27,6 +29,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   UseContactListReturn & {
     selectedMemberCount: number;
     onAddGroupParticipantResult?: () => void;
+    requestCount: number;
   } {
   const {
     onClicked,
@@ -61,6 +64,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   const [selectedMemberCount, setSelectedMemberCount] =
     React.useState<number>(0);
   const choiceType = React.useRef<ChoiceType>('multiple').current;
+  const [requestCount, setRequestCount] = React.useState(0);
 
   const im = useChatContext();
 
@@ -632,6 +636,26 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     onAddGroupParticipantResult?.(list);
   }, [contactType, groupId, im, onAddGroupParticipantResult, sectionsRef]);
 
+  React.useEffect(() => {
+    const listener = {
+      onNewRequestListChanged: (list: NewRequestModel[]) => {
+        setRequestCount(list.length);
+      },
+    } as RequestListListener;
+    im.requestList.addListener('ContactList', listener);
+    return () => {
+      im.requestList.removeListener('ContactList');
+    };
+  }, [im.requestList]);
+
+  React.useEffect(() => {
+    im.requestList.getRequestList({
+      onResult: (result) => {
+        setRequestCount(result.value?.length ?? 0);
+      },
+    });
+  }, [im.requestList]);
+
   return {
     ...sectionProps,
     onIndexSelected,
@@ -645,6 +669,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     onClickedCreateGroup: onCreateGroupCallback,
     selectedMemberCount,
     onAddGroupParticipantResult: onAddGroupParticipantCallback,
+    requestCount,
   };
 }
 

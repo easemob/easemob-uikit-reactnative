@@ -56,6 +56,16 @@ export function ContactListScreen(props: Props) {
             navigation.push('ContactInfo', { params: { userId: data.userId } });
           }
         }}
+        onClickedGroupList={() => {
+          navigation.navigate('GroupList', {
+            params: {},
+          });
+        }}
+        onClickedNewRequest={() => {
+          navigation.navigate('NewRequests', {
+            params: {},
+          });
+        }}
       />
     </SafeAreaView>
   );

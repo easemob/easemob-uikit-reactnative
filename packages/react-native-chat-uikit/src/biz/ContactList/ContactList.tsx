@@ -40,12 +40,14 @@ export function ContactList(props: ContactListProps) {
   const {
     containerStyle,
     contactType,
-    isHasGroupList,
-    isHasNewRequest,
+    isHasGroupList = true,
+    isHasNewRequest = true,
     onContextMenuMoreActions,
     onSearch,
     onBack,
     onNavigationBarMoreActions,
+    onClickedNewRequest,
+    onClickedGroupList,
   } = props;
   const {
     ref,
@@ -69,6 +71,7 @@ export function ContactList(props: ContactListProps) {
     onClickedCreateGroup,
     selectedMemberCount,
     onAddGroupParticipantResult,
+    requestCount,
   } = useContactList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -238,11 +241,9 @@ export function ContactList(props: ContactListProps) {
           {isHasNewRequest === true ? (
             <ContactItem
               name={'new request'}
-              count={<Badges count={0} />}
+              count={<Badges count={requestCount} />}
               hasArrow={true}
-              onClicked={() => {
-                // todo: new invite
-              }}
+              onClicked={onClickedNewRequest}
             />
           ) : null}
           {isHasGroupList === true ? (
@@ -254,9 +255,7 @@ export function ContactList(props: ContactListProps) {
                 </Text>
               }
               hasArrow={true}
-              onClicked={() => {
-                // todo: new invite
-              }}
+              onClicked={onClickedGroupList}
             />
           ) : null}
           {onContextMenuMoreActions}

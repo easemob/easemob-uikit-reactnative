@@ -66,6 +66,8 @@ export type ContactListProps = ListRequestProps<DataModel> &
     onAddGroupParticipantResult?: (added: ContactModel[]) => void;
     selectedData?: ContactModel[]; // todo: changed to selectedData
     groupId?: string;
+    onClickedNewRequest?: () => void;
+    onClickedGroupList?: () => void;
   };
 
 export type SearchContactProps = ListRequestProps<DataModel> &

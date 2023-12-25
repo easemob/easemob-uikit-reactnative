@@ -264,6 +264,16 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
           });
         }
       }}
+      onClickedGroupList={() => {
+        navigation.navigate('GroupList', {
+          params: {},
+        });
+      }}
+      onClickedNewRequest={() => {
+        navigation.navigate('NewRequests', {
+          params: {},
+        });
+      }}
     />
   );
 }
