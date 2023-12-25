@@ -1371,10 +1371,7 @@ export abstract class ChatServiceImpl
     }
   }
 
-  fetchJoinedGroupCount(params: {
-    groupId: string;
-    onResult: ResultCallback<number>;
-  }): void {
+  fetchJoinedGroupCount(params: { onResult: ResultCallback<number> }): void {
     this.tryCatch({
       promise: this.client.groupManager.fetchJoinedGroupCount(),
       event: 'fetchJoinedGroupCount',

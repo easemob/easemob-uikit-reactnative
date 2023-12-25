@@ -72,6 +72,7 @@ export function ContactList(props: ContactListProps) {
     selectedMemberCount,
     onAddGroupParticipantResult,
     requestCount,
+    groupCount,
   } = useContactList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -251,7 +252,7 @@ export function ContactList(props: ContactListProps) {
               name={'group list'}
               count={
                 <Text paletteType={'label'} textType={'medium'}>
-                  {'0'}
+                  {groupCount}
                 </Text>
               }
               hasArrow={true}

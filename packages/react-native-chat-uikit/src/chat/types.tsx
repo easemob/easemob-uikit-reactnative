@@ -506,10 +506,7 @@ export interface GroupServices {
     checked: boolean;
     onResult: ResultCallback<void>;
   }): void;
-  fetchJoinedGroupCount(params: {
-    groupId: string;
-    onResult: ResultCallback<number>;
-  }): void;
+  fetchJoinedGroupCount(params: { onResult: ResultCallback<number> }): void;
   getGroupInfo(params: {
     groupId: string;
     onResult: ResultCallback<GroupModel>;

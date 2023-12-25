@@ -30,6 +30,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     selectedMemberCount: number;
     onAddGroupParticipantResult?: () => void;
     requestCount: number;
+    groupCount: number;
   } {
   const {
     onClicked,
@@ -65,6 +66,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     React.useState<number>(0);
   const choiceType = React.useRef<ChoiceType>('multiple').current;
   const [requestCount, setRequestCount] = React.useState(0);
+  const [groupCount, setGroupCount] = React.useState(0);
 
   const im = useChatContext();
 
@@ -436,6 +438,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
             },
           });
         }
+        onChangeGroupCount();
       }
     }
   };
@@ -636,17 +639,48 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     onAddGroupParticipantResult?.(list);
   }, [contactType, groupId, im, onAddGroupParticipantResult, sectionsRef]);
 
+  const onChangeGroupCount = React.useCallback(() => {
+    im.fetchJoinedGroupCount({
+      onResult: (result) => {
+        if (result.isOk === true && result.value) {
+          setGroupCount(result.value);
+        }
+      },
+    });
+  }, [im]);
+
   React.useEffect(() => {
     const listener = {
       onNewRequestListChanged: (list: NewRequestModel[]) => {
         setRequestCount(list.length);
+      },
+      onAutoAcceptInvitation: (_params: {
+        groupId: string;
+        inviter: string;
+        inviteMessage?: string;
+      }) => {
+        onChangeGroupCount();
+      },
+      onCreateGroup: () => {
+        onChangeGroupCount();
+      },
+
+      onMemberRemoved: (_params: { groupId: string; groupName?: string }) => {
+        // todo: remove conversation item.
+        onChangeGroupCount();
+      },
+      onDestroyed: (_params: { groupId: string; groupName?: string }) => {
+        onChangeGroupCount();
+      },
+      onQuitGroup: () => {
+        onChangeGroupCount();
       },
     } as RequestListListener;
     im.requestList.addListener('ContactList', listener);
     return () => {
       im.requestList.removeListener('ContactList');
     };
-  }, [im.requestList]);
+  }, [im.requestList, onChangeGroupCount]);
 
   React.useEffect(() => {
     im.requestList.getRequestList({
@@ -670,6 +704,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     selectedMemberCount,
     onAddGroupParticipantResult: onAddGroupParticipantCallback,
     requestCount,
+    groupCount,
   };
 }
 
