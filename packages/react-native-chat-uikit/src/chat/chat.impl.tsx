@@ -24,7 +24,7 @@ import {
 import { ConversationStorage } from '../db/storage';
 import { ErrorCode, UIKitError } from '../error';
 import { Services } from '../services';
-import { asyncTask, mergeObjects } from '../utils';
+import { asyncTask, getCurTs, mergeObjects } from '../utils';
 import { gGroupMemberMyRemark } from './const';
 import { MessageCacheManagerImpl } from './messageManager';
 import type { MessageCacheManager } from './messageManager.types';
@@ -2084,6 +2084,21 @@ export abstract class ChatServiceImpl
       promise: this.client.presenceManager.publishPresence(params.status),
       event: 'publishPresence',
       onFinished: () => {
+        const userId = this.userId;
+        const status = params.status;
+        if (userId) {
+          this._listeners.forEach((v) => {
+            v.onPresenceStatusChanged?.([
+              new ChatPresence({
+                publisher: userId,
+                statusDescription: status,
+                lastTime: getCurTs('s').toString(),
+                expiryTime: (60 * 60 * 24 * 3).toString(),
+                statusDetails: new Map(),
+              }),
+            ]);
+          });
+        }
         params.onResult?.({ isOk: true });
       },
     });
