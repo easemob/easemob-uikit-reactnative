@@ -148,6 +148,9 @@ export function App() {
           appKey: env.appKey,
           debugModel: env.isDevMode,
           autoLogin: false,
+          autoAcceptGroupInvitation: true,
+          requireAck: true,
+          requireDeliveryAck: true,
         }}
         palette={palette}
         theme={theme}

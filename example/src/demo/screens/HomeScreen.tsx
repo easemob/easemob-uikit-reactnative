@@ -1,5 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
 import {
@@ -140,8 +143,8 @@ function HomeTabConversationListScreen(
   props: HomeTabConversationListScreenProps
 ) {
   const {} = props;
-  const { navigation } =
-    useNavigation<NativeStackScreenProps<RootScreenParamsList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
 
   return (
     <ConversationList
@@ -190,7 +193,7 @@ function HomeTabConversationListScreen(
         );
       }}
       onSearch={() => {
-        navigation.push('SearchConversation', {});
+        navigation.navigate('SearchConversation', {});
       }}
       onClicked={(data) => {
         if (data === undefined) {
@@ -199,7 +202,7 @@ function HomeTabConversationListScreen(
         const convId = data?.convId;
         const convType = data?.convType;
         const convName = data?.convName;
-        navigation.push('ConversationDetail', {
+        navigation?.navigate?.('ConversationDetail', {
           params: {
             convId,
             convType,
@@ -213,8 +216,8 @@ function HomeTabConversationListScreen(
 export type HomeTabContactListScreenProps = {};
 function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
   const {} = props;
-  const { navigation } =
-    useNavigation<NativeStackScreenProps<RootScreenParamsList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
 
   return (
     <ContactList
@@ -256,7 +259,9 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
       }}
       onClicked={(data) => {
         if (data?.userId) {
-          navigation.push('ContactInfo', { params: { userId: data.userId } });
+          navigation.navigate('ContactInfo', {
+            params: { userId: data.userId },
+          });
         }
       }}
     />
