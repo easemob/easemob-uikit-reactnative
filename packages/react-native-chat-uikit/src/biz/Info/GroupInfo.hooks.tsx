@@ -85,6 +85,17 @@ export function useGroupInfo(
               }
             })
             .catch();
+          if (im.userId) {
+            im.getGroupMyRemark({
+              groupId,
+              memberId: im.userId,
+              onResult: (value) => {
+                if (value.isOk && value.value) {
+                  setGroupMyRemark(value.value);
+                }
+              },
+            });
+          }
         }
       },
       [im, groupId, ownerId]
