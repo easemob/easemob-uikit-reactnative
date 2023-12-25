@@ -25,8 +25,7 @@ import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
 import { Services } from '../../services';
 import { usePaletteContext } from '../../theme';
-import { IconButton } from '../../ui/Button';
-import { Image, LoadingIcon } from '../../ui/Image';
+import { Icon, Image, LoadingIcon } from '../../ui/Image';
 import {
   getFileDirectory,
   getFileExtension,
@@ -128,7 +127,7 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
         ) : null}
       </Pressable>
 
-      <View
+      <Pressable
         style={{
           position: 'absolute',
           width: 44,
@@ -138,14 +137,14 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
           justifyContent: 'center',
           alignItems: 'center',
         }}
-        onTouchEnd={onClicked}
+        onPress={onClicked}
         // pointerEvents={'none'}
       >
-        <IconButton
-          iconName={'chevron_left'}
+        <Icon
+          name={'chevron_left'}
           style={{ height: 24, width: 24, tintColor: getColor('fg') }}
         />
-      </View>
+      </Pressable>
     </View>
   );
 }

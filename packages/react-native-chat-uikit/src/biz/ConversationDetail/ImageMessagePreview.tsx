@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { StyleProp, useWindowDimensions, View, ViewStyle } from 'react-native';
+import {
+  Pressable,
+  StyleProp,
+  useWindowDimensions,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {
   ChatDownloadStatus,
   ChatImageMessageBody,
@@ -13,7 +19,7 @@ import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { g_not_existed_url } from '../../const';
 import { ErrorCode, UIKitError } from '../../error';
 import { Services } from '../../services';
-import { IconButton } from '../../ui/Button';
+import { Icon } from '../../ui/Image';
 import { ImageUrl, localUrlEscape } from '../../utils';
 import { ImagePreview } from '../ImagePreview';
 import { useImageSize } from './useImageSize';
@@ -53,7 +59,7 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
         }}
         imageStyle={{ ...size }}
       />
-      <View
+      <Pressable
         style={{
           position: 'absolute',
           width: 44,
@@ -64,14 +70,11 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
           alignItems: 'center',
           backgroundColor: 'red',
         }}
-        onTouchEnd={onClicked}
+        onPress={onClicked}
         // pointerEvents={'none'}
       >
-        <IconButton
-          iconName={'chevron_left'}
-          style={{ height: 24, width: 24 }}
-        />
-      </View>
+        <Icon name={'chevron_left'} style={{ height: 24, width: 24 }} />
+      </Pressable>
     </View>
   );
 }

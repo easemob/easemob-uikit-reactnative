@@ -132,9 +132,9 @@ export function TopNavigationBarTitle({ text }: { text: string }) {
     <View style={{ justifyContent: 'center' }}>
       <Text
         style={{
-          fontSize: 24,
+          fontSize: 22,
           fontWeight: '400',
-          lineHeight: 24,
+          lineHeight: 22,
           fontStyle: 'normal',
           alignSelf: 'center',
           color: getColor('title'),

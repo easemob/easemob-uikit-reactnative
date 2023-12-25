@@ -22,6 +22,7 @@ import {
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
 } from '../../chat';
+import { userInfoFromMessage } from '../../chat/utils';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
@@ -99,7 +100,7 @@ export function MessageText(props: MessageTextProps) {
       ? 'edited'
       : ('no-editable' as MessageEditableStateType);
   if (isSupport !== true) {
-    content = tr('not-support-message');
+    content = tr('_uikit_msg_tip_not_support');
   }
 
   return (
@@ -124,7 +125,7 @@ export function MessageText(props: MessageTextProps) {
               ),
             }}
           >
-            {tr('edited')}
+            {tr('_uikit_msg_edit')}
           </SingleLineText>
         </View>
       ) : null}
@@ -1054,8 +1055,10 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
       : 12;
 
   const getContent = (msg?: ChatMessage) => {
+    const user = userInfoFromMessage(msg);
     switch (msg?.body.type) {
       case ChatMessageType.TXT: {
+        const body = msg?.body as ChatTextMessageBody;
         return (
           <View>
             <SingleLineText
@@ -1067,7 +1070,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 ),
               }}
             >
-              {'name'}
+              {user?.userName ?? user?.userId ?? msg.from}
             </SingleLineText>
             <Text
               textType={'medium'}
@@ -1079,7 +1082,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 ),
               }}
             >
-              {'content'}
+              {body.content}
             </Text>
           </View>
         );
@@ -1097,7 +1100,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                   ),
                 }}
               >
-                {'name'}
+                {user?.userName ?? user?.userId ?? msg.from}
               </SingleLineText>
               <View style={{ flexDirection: 'row' }}>
                 <Icon
@@ -1136,6 +1139,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         );
       }
       case ChatMessageType.VOICE: {
+        const body = msg?.body as ChatVoiceMessageBody;
         return (
           <View>
             <SingleLineText
@@ -1147,7 +1151,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 ),
               }}
             >
-              {'name'}
+              {user?.userName ?? user?.userId ?? msg.from}
             </SingleLineText>
             <View style={{ flexDirection: 'row' }}>
               <Icon
@@ -1170,7 +1174,19 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                   ),
                 }}
               >
-                {tr("voice: ${0}'", 45)}
+                {tr('voice')}
+                <Text
+                  textType={'medium'}
+                  paletteType={'label'}
+                  numberOfLines={2}
+                  style={{
+                    color: getColor(
+                      layoutType === 'left' ? 'left_text' : 'right_text'
+                    ),
+                  }}
+                >
+                  {`: ${Math.floor(body.duration / 1000)}`}
+                </Text>
               </Text>
             </View>
           </View>
@@ -1189,7 +1205,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                   ),
                 }}
               >
-                {'name'}
+                {user?.userName ?? user?.userId ?? msg.from}
               </SingleLineText>
               <View style={{ flexDirection: 'row' }}>
                 <Icon
@@ -1228,6 +1244,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         );
       }
       case ChatMessageType.FILE: {
+        const body = msg?.body as ChatFileMessageBody;
         return (
           <View>
             <SingleLineText
@@ -1239,7 +1256,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 ),
               }}
             >
-              {'name'}
+              {user?.userName ?? user?.userId ?? msg.from}
             </SingleLineText>
             <View style={{ flexDirection: 'row' }}>
               <Icon
@@ -1257,12 +1274,26 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 paletteType={'label'}
                 numberOfLines={2}
                 style={{
+                  width: '90%',
                   color: getColor(
                     layoutType === 'left' ? 'left_text' : 'right_text'
                   ),
                 }}
               >
-                {tr("file: ${0}'", 'filename')}
+                {tr('file')}
+                <Text
+                  textType={'medium'}
+                  paletteType={'label'}
+                  numberOfLines={2}
+                  style={{
+                    color: getColor(
+                      layoutType === 'left' ? 'left_text' : 'right_text'
+                    ),
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  {`: ${body.displayName}`}
+                </Text>
               </Text>
             </View>
           </View>
@@ -1279,7 +1310,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
               ),
             }}
           >
-            {tr('not-support-message')}
+            {tr('_uikit_msg_tip_not_support')}
           </Text>
         );
       }
@@ -1318,7 +1349,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             paddingVertical: paddingVertical,
           },
         ]}
-        onTouchEnd={() => _onClicked(originalMsg, msg)}
+        onPress={() => _onClicked(originalMsg, msg)}
       >
         {getContent(msg)}
       </Pressable>

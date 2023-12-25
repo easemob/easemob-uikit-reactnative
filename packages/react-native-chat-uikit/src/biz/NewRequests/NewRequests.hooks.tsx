@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { NewRequestModel, useChatContext } from '../../chat';
 import { useLifecycle } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { useFlatList } from '../List';
 import type { ListItemActions, UseFlatListReturn } from '../types';
 import type { NewRequestsItemProps, UseNewRequestsProps } from './types';
@@ -14,6 +15,7 @@ export function useNewRequests(
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     onButtonClicked?: (data?: NewRequestModel | undefined) => void;
+    tr: (key: string, ...args: any[]) => string;
   } {
   const { onClicked, onButtonClicked, testMode, onSort: propsOnSort } = props;
   const flatListProps = useFlatList<NewRequestsItemProps>({
@@ -22,6 +24,7 @@ export function useNewRequests(
   });
   const { setData, dataRef } = flatListProps;
   const im = useChatContext();
+  const { tr } = useI18nContext();
 
   const onClickedCallback = React.useCallback(
     (data?: NewRequestModel | undefined) => {
@@ -126,5 +129,6 @@ export function useNewRequests(
     ...flatListProps,
     onClicked: onClickedCallback,
     onButtonClicked: onButtonClickedCallback,
+    tr,
   };
 }

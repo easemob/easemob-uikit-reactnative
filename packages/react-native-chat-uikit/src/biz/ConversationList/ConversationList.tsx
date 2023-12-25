@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ListRenderItemInfo, View } from 'react-native';
 
-import { useChatContext } from '../../chat';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
@@ -39,6 +38,8 @@ export function ConversationList(props: ConversationListProps) {
     menuRef,
     onRequestModalClose,
     alertRef,
+    avatarUrl,
+    tr,
   } = useConversationList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -47,7 +48,6 @@ export function ConversationList(props: ConversationListProps) {
       dark: colors.neutral[1],
     },
   });
-  const im = useChatContext();
 
   return (
     <View
@@ -59,7 +59,7 @@ export function ConversationList(props: ConversationListProps) {
       ]}
     >
       <TopNavigationBar
-        Left={<Avatar url={im.user(im.userId)?.avatarURL} size={24} />}
+        Left={<Avatar url={avatarUrl} size={32} />}
         Right={TopNavigationBarRight}
         RightProps={{
           onClicked: () => {
@@ -71,7 +71,7 @@ export function ConversationList(props: ConversationListProps) {
         containerStyle={{ paddingHorizontal: 12 }}
       />
       <SearchStyle
-        title={'Search'}
+        title={tr('search')}
         onPress={() => {
           if (listState === 'normal') {
             onSearch?.();

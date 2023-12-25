@@ -64,7 +64,6 @@ export function EditInfo(props: EditInfoProps) {
 
   const onValue = React.useCallback(
     (t: string) => {
-      console.log('test:zuoyu:', initialData, t);
       if (initialData === t) {
         setDisable(true);
       } else {

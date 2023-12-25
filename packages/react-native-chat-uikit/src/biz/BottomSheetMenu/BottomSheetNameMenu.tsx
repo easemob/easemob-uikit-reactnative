@@ -237,7 +237,7 @@ function useGetListItems(onGetData?: () => any) {
             key={100}
             id={'100'}
             initState={'enabled'}
-            text={tr('Cancel')}
+            text={tr('cancel')}
             onPress={onRequestModalClose}
           />,
         ];

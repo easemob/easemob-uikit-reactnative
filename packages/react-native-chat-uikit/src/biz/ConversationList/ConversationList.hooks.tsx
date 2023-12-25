@@ -9,6 +9,7 @@ import {
   useChatListener,
 } from '../../chat';
 import type { UIKitError } from '../../error';
+import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useFlatList } from '../List';
@@ -21,7 +22,11 @@ import type {
 
 export function useConversationList(
   props: UseConversationListProps
-): UseFlatListReturn<ConversationListItemProps> & UseConversationListReturn {
+): UseFlatListReturn<ConversationListItemProps> &
+  UseConversationListReturn & {
+    avatarUrl: string | undefined;
+    tr: (key: string, ...args: any[]) => string;
+  } {
   const {
     onClicked,
     onLongPressed,
@@ -44,6 +49,8 @@ export function useConversationList(
     isShowAfterLoaded,
     listType,
   } = flatListProps;
+  const [avatarUrl, setAvatarUrl] = React.useState<string>();
+  const { tr } = useI18nContext();
 
   const onSort = React.useCallback(
     (
@@ -136,6 +143,11 @@ export function useConversationList(
       return;
     }
     if (isAutoLoad === true) {
+      const url = im.user(im.userId)?.avatarURL;
+      console.log('test:zuoyu:avatar:url:', url);
+      if (url) {
+        setAvatarUrl(url);
+      }
       im.setOnRequestMultiData(onRequestMultiData);
       const s = await im.loginState();
       if (s === 'logged') {
@@ -275,7 +287,7 @@ export function useConversationList(
     menuRef.current?.startShowWithInit?.(
       [
         {
-          name: conv.doNotDisturb ? 'Unmute' : 'Mute',
+          name: conv.doNotDisturb ? 'unmute' : 'mute',
           isHigh: false,
           onClicked: () => {
             onDisturb(conv);
@@ -283,7 +295,7 @@ export function useConversationList(
           },
         },
         {
-          name: conv.isPinned ? 'Unpin' : 'Pin',
+          name: conv.isPinned ? 'unpin' : 'pin',
           isHigh: false,
           onClicked: () => {
             onPin(conv);
@@ -291,7 +303,7 @@ export function useConversationList(
           },
         },
         {
-          name: 'MakeRead',
+          name: '_uikit_conv_menu_read',
           isHigh: false,
           onClicked: () => {
             onRead(conv);
@@ -299,7 +311,7 @@ export function useConversationList(
           },
         },
         {
-          name: 'Remove',
+          name: '_uikit_conv_menu_delete',
           isHigh: true,
           onClicked: () => {
             menuRef.current?.startHide?.(() => {
@@ -314,16 +326,16 @@ export function useConversationList(
   const alertRef = React.useRef<AlertRef>(null);
   const onShowAlert = (conv: ConversationModel) => {
     alertRef.current?.alertWithInit?.({
-      title: 'Remove this conversation?',
+      title: tr('_uikit_conv_alert_title'),
       buttons: [
         {
-          text: 'Cancel',
+          text: tr('cancel'),
           onPress: () => {
             alertRef.current?.close?.();
           },
         },
         {
-          text: 'Remove',
+          text: tr('remove'),
           isPreferred: true,
           onPress: () => {
             alertRef.current?.close?.();
@@ -420,6 +432,8 @@ export function useConversationList(
     onRequestModalClose,
     menuRef,
     alertRef,
+    avatarUrl,
+    tr,
   };
 }
 

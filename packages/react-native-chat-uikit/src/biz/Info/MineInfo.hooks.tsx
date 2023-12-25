@@ -7,6 +7,7 @@ import {
   useChatListener,
 } from '../../chat';
 import { useLifecycle } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
@@ -29,6 +30,7 @@ export function useMineInfo(props: MineInfoProps) {
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const im = useChatContext();
+  const { tr } = useI18nContext();
   useLifecycle(
     React.useCallback(
       (state: any) => {
@@ -157,5 +159,6 @@ export function useMineInfo(props: MineInfoProps) {
     onClickedState,
     onClickedLogout,
     userState,
+    tr,
   };
 }

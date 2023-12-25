@@ -6,6 +6,7 @@ import {
   useChatContext,
   useChatListener,
 } from '../../chat';
+import { useI18nContext } from '../../i18n';
 import { gGroupListPageNumber } from '../const';
 import { useFlatList } from '../List';
 import type { ListItemActions, UseFlatListReturn } from '../types';
@@ -17,7 +18,9 @@ export function useGroupList(
   Omit<
     ListItemActions<GroupModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > {
+  > & {
+    tr: (key: string, ...args: any[]) => string;
+  } {
   const { testMode, onClicked, onNoMore } = props;
   const flatListProps = useFlatList<GroupListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
@@ -29,6 +32,7 @@ export function useGroupList(
   const im = useChatContext();
   const currentPageNumberRef = React.useRef(0);
   const isNoMoreRef = React.useRef(false);
+  const { tr } = useI18nContext();
 
   const onClickedCallback = React.useCallback(
     (data?: GroupModel | undefined) => {
@@ -105,14 +109,12 @@ export function useGroupList(
   };
 
   const init = () => {
-    console.log('test:zuoyu:groupList:init');
     requestList(0);
   };
   const onMore = () => {
     if (isNoMoreRef.current === true) {
       return;
     }
-    console.log('test:zuoyu:groupList:onMore');
     requestList(currentPageNumberRef.current);
   };
   const onVisibleItems = (_items: GroupListItemProps[]) => {};
@@ -188,5 +190,6 @@ export function useGroupList(
     ...flatListProps,
     onMore,
     onClicked: onClickedCallback,
+    tr,
   };
 }

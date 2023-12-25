@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AlertButton, View } from 'react-native';
 
 import { useGetStyleProps } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { BorderButton, CmnButton } from '../Button';
 import type { AlertProps } from './types';
@@ -11,6 +12,7 @@ export function useAlert(props: AlertProps) {
   const [value, onChangeText] = React.useState('');
   const [textCount, setTextCount] = React.useState(0);
   const [_props, setProps] = React.useState(props);
+  const { tr } = useI18nContext();
   const { cornerRadius: corner } = useThemeContext();
   const { cornerRadius } = usePaletteContext();
   const { getBorderRadius } = useGetStyleProps();
@@ -79,7 +81,7 @@ export function useAlert(props: AlertProps) {
     return [
       _getButton(
         CmnButton,
-        { text: 'Confirm', onPress: onRequestModalClose },
+        { text: tr('confirm'), onPress: onRequestModalClose },
         99
       ),
     ];

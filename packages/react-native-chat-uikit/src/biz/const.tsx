@@ -11,4 +11,7 @@ export const gReportMessageList = [
   'Hate speech or graphic violence',
   'Promote terrorism',
   'Harassment or bullying',
+  'Suicide or self harm',
+  'False information',
+  'Others',
 ];

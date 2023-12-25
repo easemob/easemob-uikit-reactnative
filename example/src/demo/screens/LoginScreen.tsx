@@ -87,7 +87,7 @@ export function LoginScreen(props: Props) {
             im.login({
               userId: id,
               userToken: token,
-              userName: id,
+              userName: `${id}name`,
               userAvatarURL:
                 'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/cat-512.png',
               gender: 1,

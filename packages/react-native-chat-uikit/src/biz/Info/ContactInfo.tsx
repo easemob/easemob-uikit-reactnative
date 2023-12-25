@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
-import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { BlockButton, CmnButton } from '../../ui/Button';
@@ -41,8 +40,8 @@ export function ContactInfo(props: ContactInfoProps) {
     toastRef,
     onRequestModalClose,
     onMore,
+    tr,
   } = useContactInfo(props);
-  const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -135,7 +134,7 @@ export function ContactInfo(props: ContactInfoProps) {
               {hasSendMessage ? (
                 <BlockButton
                   iconName={'bubble_fill'}
-                  text={tr('send message')}
+                  text={tr('_uikit_info_send_msg')}
                   containerStyle={{ height: 62, width: 114 }}
                   onPress={() => {
                     onSendMessage?.(userId);
@@ -145,7 +144,7 @@ export function ContactInfo(props: ContactInfoProps) {
               {hasAudioCall ? (
                 <BlockButton
                   iconName={'phone_pick'}
-                  text={tr('audio call')}
+                  text={tr('_uikit_info_send_audio')}
                   containerStyle={{ height: 62, width: 114 }}
                   onPress={() => {
                     onAudioCall?.(userId);
@@ -155,7 +154,7 @@ export function ContactInfo(props: ContactInfoProps) {
               {hasVideoCall ? (
                 <BlockButton
                   iconName={'video_camera'}
-                  text={tr('video call')}
+                  text={tr('_uikit_info_send_video')}
                   containerStyle={{ height: 62, width: 114 }}
                   onPress={() => {
                     onVideoCall?.(userId);
@@ -168,23 +167,6 @@ export function ContactInfo(props: ContactInfoProps) {
       </View>
       {isContact === true ? (
         <>
-          {/* <ListItem
-        containerStyle={{ paddingHorizontal: 16 }}
-        LeftName={
-          <Text
-            textType={'medium'}
-            paletteType={'title'}
-            style={{ color: getColor('fg') }}
-          >
-            {tr('remark')}
-          </Text>
-        }
-        RightIcon={
-          <View>
-            <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
-          </View>
-        }
-      /> */}
           <View style={{ height: 20 }} />
           <View
             style={{
@@ -201,7 +183,7 @@ export function ContactInfo(props: ContactInfoProps) {
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
-                {tr('message no disturb')}
+                {tr('_uikit_info_not_disturb')}
               </Text>
             }
             RightIcon={
@@ -226,7 +208,7 @@ export function ContactInfo(props: ContactInfoProps) {
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
-                {tr('clear message')}
+                {tr('_uikit_info_clear_msg')}
               </Text>
             }
           />
@@ -237,7 +219,7 @@ export function ContactInfo(props: ContactInfoProps) {
             sizesType={'large'}
             radiusType={'small'}
             contentType={'only-text'}
-            text={tr('Add Contact')}
+            text={tr('_uikit_info_button_add_contact')}
             style={{ width: 180, height: 50 }}
           />
         </View>

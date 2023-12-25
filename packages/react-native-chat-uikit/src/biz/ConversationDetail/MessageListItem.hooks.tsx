@@ -333,9 +333,14 @@ export function getSystemTip(
         from: string;
         fromName: string;
       };
-      return tr(content.text, content.fromName ?? content.from);
-    } catch (error) {}
-    return tr('recall a message');
+      return tr(
+        content.text,
+        content.self === content.from,
+        content.fromName ?? content.from
+      );
+    } catch (error) {
+      return tr('_uikit_msg_tip_recall');
+    }
   } else if (body.event === gCustomMessageCreateGroupEventType) {
     return 'create group';
   }

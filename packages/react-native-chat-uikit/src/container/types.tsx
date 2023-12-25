@@ -1,5 +1,4 @@
-import type { ChatOptionsType } from 'src/chat';
-
+import type { ChatOptionsType } from '../chat';
 import type { ConversationDetailType } from '../config';
 import type { CreateStringSet, LanguageCode } from '../i18n';
 import type {
@@ -61,6 +60,9 @@ export type GlobalContainerProps = React.PropsWithChildren<{
    * IM initialization is completed.
    */
   onInitialized?: () => void;
+  /**
+   * reserve.
+   */
   services?: {
     clipboard?: ClipboardService | undefined;
     media?: MediaService | undefined;

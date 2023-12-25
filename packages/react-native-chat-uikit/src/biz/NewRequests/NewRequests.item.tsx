@@ -3,6 +3,7 @@ import { Pressable, View } from 'react-native';
 
 import { getNewRequest } from '../../chat/utils';
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { CmnButton } from '../../ui/Button';
 import { SingleLineText } from '../../ui/Text';
@@ -11,6 +12,7 @@ import type { NewRequestsItemProps } from './types';
 
 export function NewRequestsItem(props: NewRequestsItemProps) {
   const { onClicked, onButtonClicked, data } = props;
+  const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -75,7 +77,7 @@ export function NewRequestsItem(props: NewRequestsItemProps) {
             radiusType={'small'}
             contentType={'only-text'}
             style={{ height: 28, width: 74 }}
-            text={'add'}
+            text={tr('add')}
             onPress={() => {
               onButtonClicked?.(data);
             }}

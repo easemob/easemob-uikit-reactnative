@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { g_not_existed_url } from '../../const';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
@@ -49,6 +48,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
     onQuoteMessageForInput,
     onEditMessageForInput,
     onEditMessageFinished,
+    avatarUrl,
   } = useConversationDetail(props);
 
   const navigationBar = () => {
@@ -63,7 +63,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
                 onBack?.();
               }}
             />
-            <Avatar url={g_not_existed_url} size={32} />
+            <Avatar url={avatarUrl} size={32} />
             <View style={{ marginLeft: 10 }}>
               <Text
                 textType={'medium'}
@@ -77,7 +77,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
                 paletteType={'label'}
                 style={{ color: getColor('text_enable') }}
               >
-                {tr('State')}
+                {tr('state')}
               </Text>
             </View>
           </View>

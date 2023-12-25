@@ -27,6 +27,7 @@ export function GroupList(props: GroupListProps) {
     onViewableItemsChanged,
     listState,
     onClicked,
+    tr,
   } = useGroupList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -53,14 +54,14 @@ export function GroupList(props: GroupListProps) {
             onPress={onBack}
           >
             <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
-            <Text>{'Group List'}</Text>
+            <Text>{tr('_uikit_group_title')}</Text>
           </Pressable>
         }
         Right={<View style={{ width: 32, height: 32 }} />}
         containerStyle={{ paddingHorizontal: 12 }}
       />
       <SearchStyle
-        title={'Search'}
+        title={tr('search')}
         onPress={() => {
           onSearch?.();
         }}

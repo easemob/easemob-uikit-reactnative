@@ -5,7 +5,7 @@ import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { gMessageReportItemHeight } from './MessageReport.const';
 import type { ReportItemModel } from './types';
 
@@ -48,9 +48,19 @@ export function MessageReportItem(props: MessageReportItemProps) {
         justifyContent: 'center',
       }}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <View style={{ marginVertical: 10 }}>
-          <Text
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
+      >
+        <View
+          style={{
+            marginVertical: 10,
+            maxWidth: '90%',
+          }}
+        >
+          <SingleLineText
             textType={'medium'}
             paletteType={'title'}
             style={{
@@ -58,7 +68,7 @@ export function MessageReportItem(props: MessageReportItemProps) {
             }}
           >
             {tr(title)}
-          </Text>
+          </SingleLineText>
         </View>
         <View style={{ flex: 1 }} />
         <IconButton

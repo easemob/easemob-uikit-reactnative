@@ -39,6 +39,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     onDelParticipant,
     alertRef,
     onCheckClicked,
+    tr,
   } = useGroupParticipantList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -74,7 +75,9 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
                 textType={'medium'}
                 paletteType={'label'}
                 style={{ color: getColor('text') }}
-              >{`Remove Group Participant`}</Text>
+              >
+                {tr('_uikit_group_alert_del_member_title')}
+              </Text>
             </Pressable>
           }
           Right={
@@ -90,7 +93,9 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
                     deleteCount === 0 ? 'text_disable' : 'text_enable'
                   ),
                 }}
-              >{`Delete(${deleteCount})`}</Text>
+              >
+                {tr('_uikit_group_del_member_button', deleteCount)}
+              </Text>
             </Pressable>
           }
           containerStyle={{ paddingHorizontal: 12 }}
@@ -109,7 +114,9 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
                 textType={'medium'}
                 paletteType={'label'}
                 style={{ color: getColor('text') }}
-              >{`Change owner`}</Text>
+              >
+                {tr('_uikit_group_change_owner_title')}
+              </Text>
             </Pressable>
           }
           Right={<View style={{ width: 1, height: 1 }} />}
@@ -145,7 +152,9 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
               onPress={onBack}
             >
               <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
-              <Text>{`Group Participant List (${participantCount})`}</Text>
+              <Text>
+                {tr('_uikit_group_member_list_title', participantCount)}
+              </Text>
             </Pressable>
           }
           Right={
@@ -182,7 +191,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
       {navigationBar()}
 
       {/* <SearchStyle
-        title={'Search'}
+        title={tr('search')}
         onPress={() => {
           onSearch?.();
         }}

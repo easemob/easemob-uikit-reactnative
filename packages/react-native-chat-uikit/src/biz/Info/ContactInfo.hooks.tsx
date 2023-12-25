@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { useChatContext } from '../../chat';
 import { useLifecycle } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
@@ -24,6 +25,7 @@ export function useContactInfo(props: ContactInfoProps) {
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const im = useChatContext();
+  const { tr } = useI18nContext();
   useLifecycle(
     React.useCallback(
       (state: any) => {
@@ -89,22 +91,22 @@ export function useContactInfo(props: ContactInfoProps) {
       hasCancel: true,
       initItems: [
         {
-          name: 'Delete Contact',
+          name: '_uikit_info_menu_del_contact',
           isHigh: true,
           onClicked: () => {
             menuRef.current?.startHide?.(() => {
               alertRef.current?.alertWithInit({
                 title: 'Delete Contact',
-                message: 'Are you sure you want to delete this contact?',
+                message: tr('_uikit_info_alert_content', userName ?? userId),
                 buttons: [
                   {
-                    text: 'Cancel',
+                    text: tr('cancel'),
                     onPress: () => {
                       alertRef.current?.close?.();
                     },
                   },
                   {
-                    text: 'Confirm',
+                    text: tr('confirm'),
                     isPreferred: true,
                     onPress: () => {
                       alertRef.current?.close?.(() => {
@@ -135,5 +137,6 @@ export function useContactInfo(props: ContactInfoProps) {
     onMore: onMoreMenu,
     alertRef,
     toastRef,
+    tr,
   };
 }

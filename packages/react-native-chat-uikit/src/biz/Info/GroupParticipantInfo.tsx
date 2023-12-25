@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
-import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Alert, AlertRef } from '../../ui/Alert';
 import { BlockButton, CmnButton } from '../../ui/Button';
@@ -35,9 +34,8 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
     userAvatar,
     onCopyId,
     toastRef,
-    onRemark,
+    tr,
   } = useGroupParticipantInfo(props);
-  const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -103,17 +101,9 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
           {userName ?? userId}
         </Text>
         <View style={{ height: 4 }} />
-        {/* <Text
-          textType={'medium'}
-          paletteType={'label'}
-          style={{ color: getColor('t2') }}
-        >
-          {'Sign'}
-        </Text>
-        <View style={{ height: 4 }} /> */}
-        <View
+        <Pressable
           style={{ flexDirection: 'row', alignItems: 'center' }}
-          onTouchEnd={onCopyId}
+          onPress={onCopyId}
         >
           <Text
             textType={'small'}
@@ -126,14 +116,14 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
             name={'doc_on_doc'}
             style={{ width: 16, height: 16, tintColor: getColor('t3') }}
           />
-        </View>
+        </Pressable>
         <View style={{ height: 20 }} />
         {isContact === true ? (
           <CmnButton
             sizesType={'large'}
             radiusType={'small'}
             contentType={'only-text'}
-            text={tr('Add Contact')}
+            text={tr('_uikit_info_button_add_contact')}
           />
         ) : (
           <View
@@ -146,21 +136,21 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
             {hasSendMessage ? (
               <BlockButton
                 iconName={'bubble_fill'}
-                text={tr('send message')}
+                text={tr('_uikit_info_send_msg')}
                 containerStyle={{ height: 62, width: 114 }}
               />
             ) : null}
             {hasAudioCall ? (
               <BlockButton
                 iconName={'phone_pick'}
-                text={tr('audio call')}
+                text={tr('_uikit_info_send_audio')}
                 containerStyle={{ height: 62, width: 114 }}
               />
             ) : null}
             {hasVideoCall ? (
               <BlockButton
                 iconName={'video_camera'}
-                text={tr('video call')}
+                text={tr('_uikit_info_send_video')}
                 containerStyle={{ height: 62, width: 114 }}
               />
             ) : null}
@@ -170,7 +160,6 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
       {isContact === true ? null : (
         <>
           <ListItem
-            onClicked={onRemark}
             containerStyle={{ paddingHorizontal: 16 }}
             LeftName={
               <Text
@@ -178,34 +167,7 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
-                {tr('remark')}
-              </Text>
-            }
-            RightIcon={
-              <View>
-                <Icon
-                  name={'chevron_right'}
-                  style={{ height: 20, width: 20 }}
-                />
-              </View>
-            }
-          />
-          <View
-            style={{
-              height: 12,
-              width: '100%',
-              backgroundColor: getColor('bg2'),
-            }}
-          />
-          <ListItem
-            containerStyle={{ paddingHorizontal: 16 }}
-            LeftName={
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('message no disturb')}
+                {tr('_uikit_info_not_disturb')}
               </Text>
             }
             RightIcon={
@@ -228,7 +190,7 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
-                {tr('clear message')}
+                {tr('_uikit_info_clear_msg')}
               </Text>
             }
           />

@@ -9,6 +9,7 @@ import {
   useChatListener,
 } from '../../chat';
 import type { RequestListListener } from '../../chat/requestList.types';
+import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useSectionList } from '../List';
@@ -31,6 +32,8 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     onAddGroupParticipantResult?: () => void;
     requestCount: number;
     groupCount: number;
+    avatarUrl: string | undefined;
+    tr: (key: string, ...args: any[]) => string;
   } {
   const {
     onClicked,
@@ -67,6 +70,8 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   const choiceType = React.useRef<ChoiceType>('multiple').current;
   const [requestCount, setRequestCount] = React.useState(0);
   const [groupCount, setGroupCount] = React.useState(0);
+  const [avatarUrl, setAvatarUrl] = React.useState<string>();
+  const { tr } = useI18nContext();
 
   const im = useChatContext();
 
@@ -344,6 +349,11 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
       onSetData(testList);
       return;
     }
+    const url = im.user(im.userId)?.avatarURL;
+    console.log('test:zuoyu:avatar:url:', url);
+    if (url) {
+      setAvatarUrl(url);
+    }
     if (isAutoLoad === true) {
       if (isClearState === undefined || isClearState === true) {
         if (contactType === 'create-group') {
@@ -454,7 +464,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     menuRef.current?.startShowWithProps?.({
       initItems: [
         {
-          name: 'New Conversation',
+          name: '_uikit_contact_menu_new_conv',
           isHigh: false,
           icon: 'bubble_fill',
           onClicked: () => {
@@ -463,7 +473,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
           },
         },
         {
-          name: 'Add Contact',
+          name: '_uikit_contact_menu_add_contact',
           isHigh: false,
           icon: 'person_add_fill',
           onClicked: () => {
@@ -472,18 +482,18 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
                 onClickedNewContact();
               } else {
                 alertRef.current?.alertWithInit?.({
-                  title: 'Add Contact',
-                  message: 'Add contacts by user ID.',
+                  title: tr('_uikit_contact_alert_title'),
+                  message: tr('_uikit_contact_alert_content'),
                   supportInput: true,
                   buttons: [
                     {
-                      text: 'Cancel',
+                      text: tr('cancel'),
                       onPress: () => {
                         alertRef.current?.close?.();
                       },
                     },
                     {
-                      text: 'Add',
+                      text: tr('add'),
                       isPreferred: true,
                       onPress: (value) => {
                         alertRef.current?.close?.();
@@ -505,7 +515,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
           },
         },
         {
-          name: 'Create Group',
+          name: '_uikit_contact_menu_create_group',
           isHigh: false,
           icon: 'person_double_fill',
           onClicked: () => {
@@ -705,6 +715,8 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     onAddGroupParticipantResult: onAddGroupParticipantCallback,
     requestCount,
     groupCount,
+    avatarUrl,
+    tr,
   };
 }
 

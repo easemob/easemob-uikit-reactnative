@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { UIKIT_VERSION } from 'react-native-chat-uikit';
 
 import { useColors } from '../../hook';
-import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { Text1Button } from '../../ui/Button';
@@ -29,8 +28,8 @@ export function MineInfo(props: MineInfoProps) {
     userSign,
     onClickedState,
     onClickedLogout,
+    tr,
   } = useMineInfo(props);
-  const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -123,7 +122,7 @@ export function MineInfo(props: MineInfoProps) {
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
-              {tr('online state')}
+              {tr('online_state')}
             </Text>
           </View>
         }

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 import { useColors } from '../../hook';
-import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { BlockButton } from '../../ui/Button';
@@ -49,8 +48,8 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
       onVideoCall,
       onAudioCall,
       isOwner,
+      tr,
     } = useGroupInfo(props, ref);
-    const { tr } = useI18nContext();
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
       bg: {
@@ -128,9 +127,9 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               {groupDescription ?? 'test description'}
             </Text>
             <View style={{ height: 4 }} />
-            <View
+            <Pressable
               style={{ flexDirection: 'row', alignItems: 'center' }}
-              onTouchEnd={onCopyId}
+              onPress={onCopyId}
             >
               <Text
                 textType={'small'}
@@ -143,7 +142,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                 name={'doc_on_doc'}
                 style={{ width: 16, height: 16, tintColor: getColor('t3') }}
               />
-            </View>
+            </Pressable>
 
             <View style={{ height: 20 }} />
             <View
@@ -156,7 +155,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               {hasSendMessage ? (
                 <BlockButton
                   iconName={'bubble_fill'}
-                  text={tr('send message')}
+                  text={tr('_uikit_info_send_msg')}
                   containerStyle={{ height: 62, width: 114 }}
                   onPress={() => onSendMessage?.(groupId)}
                 />
@@ -164,7 +163,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               {hasAudioCall ? (
                 <BlockButton
                   iconName={'phone_pick'}
-                  text={tr('audio call')}
+                  text={tr('_uikit_info_send_audio')}
                   containerStyle={{ height: 62, width: 114 }}
                   onPress={() => onAudioCall?.(groupId)}
                 />
@@ -172,7 +171,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               {hasVideoCall ? (
                 <BlockButton
                   iconName={'video_camera'}
-                  text={tr('video call')}
+                  text={tr('_uikit_info_send_video')}
                   containerStyle={{ height: 62, width: 114 }}
                   onPress={() => onVideoCall?.(groupId)}
                 />
@@ -189,7 +188,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
-                {tr('participant')}
+                {tr('_uikit_info_item_member')}
               </Text>
             }
             RightText={
@@ -226,7 +225,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
-                {tr('my nickname in group')}
+                {tr('_uikit_info_item_my_remark')}
               </Text>
             }
             RightIcon={
@@ -246,7 +245,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
-                {tr('message no disturb')}
+                {tr('_uikit_info_not_disturb')}
               </Text>
             }
             RightIcon={
@@ -271,7 +270,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
-                {tr('clear message')}
+                {tr('_uikit_info_clear_msg')}
               </Text>
             }
           />
@@ -294,7 +293,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                     paletteType={'title'}
                     style={{ color: getColor('fg') }}
                   >
-                    {tr('group name')}
+                    {tr('_uikit_info_item_group_name')}
                   </Text>
                 }
                 RightText={
@@ -316,7 +315,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                     paletteType={'title'}
                     style={{ color: getColor('fg') }}
                   >
-                    {tr('group description')}
+                    {tr('_uikit_info_item_group_desc')}
                   </Text>
                 }
                 RightIcon={

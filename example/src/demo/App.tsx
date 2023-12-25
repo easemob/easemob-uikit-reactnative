@@ -17,6 +17,7 @@ import {
   usePresetPalette,
 } from 'react-native-chat-uikit';
 
+import { createStringSetCn, createStringSetEn, ToastView } from './common';
 import type { RootParamsList, RootParamsName } from './routes';
 import {
   AddGroupParticipantScreen,
@@ -154,8 +155,15 @@ export function App() {
         }}
         palette={palette}
         theme={theme}
-        language={'en'}
+        language={'zh-Hans'}
         // fontFamily={fontFamily}
+        languageExtensionFactory={(language) => {
+          if (language === 'zh-Hans') {
+            return createStringSetCn();
+          } else {
+            return createStringSetEn();
+          }
+        }}
         onInitialized={() => {
           console.log('dev:onInitialized:');
           isContainerReadyRef.current = true;
@@ -389,6 +397,7 @@ export function App() {
           </Root.Navigator>
         </NavigationContainer>
         <TestListener />
+        <ToastView />
       </GlobalContainer>
     </React.StrictMode>
   );

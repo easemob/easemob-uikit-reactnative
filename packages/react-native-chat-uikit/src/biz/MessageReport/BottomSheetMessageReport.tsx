@@ -117,7 +117,7 @@ export const BottomSheetMessageReport = React.forwardRef<
         <TabPage
           header={{
             HeaderProps: {
-              titles: [tr('Report')],
+              titles: [tr('_uikit_report_title')],
             },
           }}
           body={{

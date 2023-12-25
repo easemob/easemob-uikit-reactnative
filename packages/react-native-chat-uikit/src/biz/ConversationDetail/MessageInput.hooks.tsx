@@ -382,7 +382,7 @@ export function useMessageInput(
     menuRef.current?.startShowWithProps?.({
       initItems: [
         {
-          name: 'Select Picture',
+          name: '_uikit_chat_input_long_press_menu_picture',
           isHigh: false,
           icon: 'img',
           onClicked: () => {
@@ -396,7 +396,7 @@ export function useMessageInput(
           },
         },
         {
-          name: 'Select Video',
+          name: '_uikit_chat_input_long_press_menu_video',
           isHigh: false,
           icon: 'triangle_in_rectangle',
           onClicked: () => {
@@ -411,7 +411,7 @@ export function useMessageInput(
           },
         },
         {
-          name: 'Select Camera',
+          name: '_uikit_chat_input_long_press_menu_camera',
           isHigh: false,
           icon: 'camera_fill',
           onClicked: () => {
@@ -425,7 +425,7 @@ export function useMessageInput(
           },
         },
         {
-          name: 'Select File',
+          name: '_uikit_chat_input_long_press_menu_file',
           isHigh: false,
           icon: 'folder',
           onClicked: () => {
@@ -439,7 +439,7 @@ export function useMessageInput(
           },
         },
         {
-          name: 'Select Card',
+          name: '_uikit_chat_input_long_press_menu_card',
           isHigh: false,
           icon: 'person_single_fill',
           onClicked: () => {

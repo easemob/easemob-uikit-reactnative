@@ -72,17 +72,16 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
       return;
     }
     alertRef.current.alertWithInit({
-      title: tr('clear_chat'),
-      message: tr('clear_chat_confirm'),
+      message: tr('_uikit_info_alert_clear_chat_title'),
       buttons: [
         {
-          text: tr('Cancel'),
+          text: tr('cancel'),
           onPress: () => {
             alertRef.current.close();
           },
         },
         {
-          text: tr('Confirm'),
+          text: tr('confirm'),
           isPreferred: true,
           onPress: () => {
             alertRef.current.close();
@@ -129,5 +128,6 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     toastRef,
     onRemark,
     isContact,
+    tr,
   };
 }

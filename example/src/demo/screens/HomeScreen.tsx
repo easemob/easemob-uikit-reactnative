@@ -16,6 +16,7 @@ import {
   TabPageRef,
   UIKitError,
   useChatContext,
+  useI18nContext,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -27,6 +28,7 @@ export function HomeScreen(props: Props) {
   const {} = props;
   const tabRef = React.useRef<TabPageRef>(null);
   const currentIndexRef = React.useRef<number>(0);
+  const { tr } = useI18nContext();
   return (
     <SafeAreaView
       style={
@@ -52,15 +54,15 @@ export function HomeScreen(props: Props) {
             titles: ['1', '2', '3'],
             items: [
               {
-                title: 'tab_conv_list',
+                title: tr('_demo_tab_conv_list'),
                 icon: 'bubble_fill',
               },
               {
-                title: 'tab_contact_list',
+                title: tr('_demo_tab_contact_list'),
                 icon: 'person_double_fill',
               },
               {
-                title: 'tab_mine',
+                title: tr('_demo_tab_mine'),
                 icon: 'person_single_fill',
               },
             ],

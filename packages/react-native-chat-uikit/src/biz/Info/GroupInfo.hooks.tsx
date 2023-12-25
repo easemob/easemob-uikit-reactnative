@@ -120,17 +120,16 @@ export function useGroupInfo(
       return;
     }
     alertRef.current.alertWithInit({
-      title: tr('clear_chat'),
-      message: tr('clear_chat_confirm'),
+      message: tr('_uikit_info_alert_clear_chat_title'),
       buttons: [
         {
-          text: tr('Cancel'),
+          text: tr('cancel'),
           onPress: () => {
             alertRef.current.close();
           },
         },
         {
-          text: tr('Confirm'),
+          text: tr('confirm'),
           isPreferred: true,
           onPress: () => {
             alertRef.current.close();
@@ -150,20 +149,19 @@ export function useGroupInfo(
       return;
     }
     alertRef.current.alertWithInit({
-      title: tr('group_name'),
-      message: tr('group_name_confirm'),
+      message: tr('_uikit_info_alert_modify_group_name'),
       supportInput: true,
       supportInputStatistics: true,
       inputMaxCount: 200,
       buttons: [
         {
-          text: tr('Cancel'),
+          text: tr('cancel'),
           onPress: () => {
             alertRef.current.close();
           },
         },
         {
-          text: tr('Confirm'),
+          text: tr('confirm'),
           isPreferred: true,
           onPress: (text) => {
             alertRef.current.close();
@@ -212,20 +210,19 @@ export function useGroupInfo(
       return;
     }
     alertRef.current.alertWithInit({
-      title: tr('group_description'),
-      message: tr('group_description_confirm'),
+      message: tr('_uikit_info_alert_modify_group_desc'),
       supportInput: true,
       supportInputStatistics: true,
       inputMaxCount: 200,
       buttons: [
         {
-          text: tr('Cancel'),
+          text: tr('cancel'),
           onPress: () => {
             alertRef.current.close();
           },
         },
         {
-          text: tr('Confirm'),
+          text: tr('confirm'),
           isPreferred: true,
           onPress: (text) => {
             alertRef.current.close();
@@ -249,21 +246,20 @@ export function useGroupInfo(
       return;
     }
     alertRef.current.alertWithInit({
-      title: tr('my_remark'),
-      message: tr('my_remark_confirm'),
+      message: tr('_uikit_info_alert_modify_group_remark'),
       supportInput: true,
       supportInputStatistics: true,
       inputMaxCount: 200,
       // isSaveInput: true,
       buttons: [
         {
-          text: tr('Cancel'),
+          text: tr('cancel'),
           onPress: () => {
             alertRef.current.close();
           },
         },
         {
-          text: tr('Confirm'),
+          text: tr('confirm'),
           isPreferred: true,
           onPress: (text) => {
             alertRef.current.close();
@@ -324,8 +320,8 @@ export function useGroupInfo(
             onClicked: () => {
               menuRef.current.startHide(() => {
                 alertRef.current.alertWithInit({
-                  title: tr('quit_group'),
-                  message: tr('quit_group_confirm'),
+                  title: tr('_uikit_info_alert_quit_group_title'),
+                  message: tr('_uikit_info_alert_quit_group_content'),
                   buttons: [
                     {
                       text: tr('cancel'),
@@ -360,7 +356,7 @@ export function useGroupInfo(
         layoutType: 'center',
         initItems: [
           {
-            name: tr('change_group_owner'),
+            name: tr('_uikit_info_menu_change_group_owner'),
             isHigh: false,
             onClicked: () => {
               menuRef.current.startHide(() => {
@@ -369,22 +365,22 @@ export function useGroupInfo(
             },
           },
           {
-            name: tr('destroy_group'),
+            name: tr('_uikit_info_menu_destroy_group'),
             isHigh: true,
             onClicked: () => {
               menuRef.current.startHide(() => {
                 alertRef.current.alertWithInit({
-                  title: tr('confirm destroy group?'),
-                  message: tr('confirm group and remove message'),
+                  title: tr('_uikit_info_alert_destroy_group_title'),
+                  message: tr('_uikit_info_alert_destroy_group_content'),
                   buttons: [
                     {
-                      text: tr('Cancel'),
+                      text: tr('cancel'),
                       onPress: () => {
                         alertRef.current.close?.();
                       },
                     },
                     {
-                      text: tr('Confirm'),
+                      text: tr('confirm'),
                       isPreferred: true,
                       onPress: () => {
                         alertRef.current.close?.(() => {
@@ -428,7 +424,6 @@ export function useGroupInfo(
     () => {
       return {
         setGroupName: (groupId: string, groupNewName?: string) => {
-          console.log('test:zuoyu:setGroupName', groupName, groupNewName);
           if (groupNewName === undefined || groupName === groupNewName) {
             return;
           }
@@ -485,5 +480,6 @@ export function useGroupInfo(
     onMore: onMoreMenu,
     groupMemberCount,
     isOwner,
+    tr,
   };
 }

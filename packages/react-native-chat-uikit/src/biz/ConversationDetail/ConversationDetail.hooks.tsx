@@ -36,6 +36,8 @@ export function useConversationDetail(props: ConversationDetailProps) {
     ? { ...list.props, convId, convType, testMode }
     : { convId, convType, testMode };
 
+  const [avatarUrl, setAvatarUrl] = React.useState<string>();
+
   usePermissions({
     onResult: (isSuccess) => {
       permissionsRef.current = isSuccess;
@@ -58,6 +60,9 @@ export function useConversationDetail(props: ConversationDetailProps) {
       }
       im.setCurrentConversation({ conv });
       im.setConversationRead({ convId, convType });
+      if (conv.convAvatar && conv.convAvatar.length > 0) {
+        setAvatarUrl(conv.convAvatar);
+      }
     }
   }, [convId, convName, convType, im]);
 
@@ -146,5 +151,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
     onQuoteMessageForInput,
     onEditMessageForInput,
     onEditMessageFinished,
+    avatarUrl,
   };
 }

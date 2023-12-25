@@ -114,7 +114,7 @@ export function useMessageList(
     reportMessageCustomList.map((d, i) => {
       return {
         id: i.toString(),
-        title: d,
+        title: tr(d),
         checked: false,
       };
     })
@@ -788,7 +788,7 @@ export function useMessageList(
     if (model.modelType === 'message') {
       if (msgModel.msg.body.type === ChatMessageType.TXT) {
         initItems.push({
-          name: tr('Copy Text Message'),
+          name: tr('_uikit_chat_list_long_press_menu_copy'),
           isHigh: false,
           icon: 'doc_on_doc',
           onClicked: () => {
@@ -809,7 +809,7 @@ export function useMessageList(
       ) {
         if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
           initItems.push({
-            name: tr('Quote Message'),
+            name: tr('_uikit_chat_list_long_press_menu_replay'),
             isHigh: false,
             icon: 'arrowshape_left',
             onClicked: () => {
@@ -828,7 +828,7 @@ export function useMessageList(
           const textBody = msgModel.msg.body as ChatTextMessageBody;
           if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
             initItems.push({
-              name: tr('Edit Text Message'),
+              name: tr('_uikit_chat_list_long_press_menu_edit'),
               isHigh: false,
               icon: 'img',
               onClicked: () => {
@@ -842,7 +842,7 @@ export function useMessageList(
       }
       if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
         initItems.push({
-          name: tr('Report Message'),
+          name: tr('_uikit_chat_list_long_press_menu_report'),
           isHigh: false,
           icon: 'envelope',
           onClicked: () => {
@@ -853,7 +853,7 @@ export function useMessageList(
         });
       }
       initItems.push({
-        name: tr('Delete Message'),
+        name: tr('_uikit_chat_list_long_press_menu_delete'),
         isHigh: false,
         icon: 'trash',
         onClicked: () => {
@@ -875,7 +875,7 @@ export function useMessageList(
           msgModel.msg.from === im.userId
         ) {
           initItems.push({
-            name: tr('Recall Message'),
+            name: tr('_uikit_chat_list_long_press_menu_recall'),
             isHigh: false,
             icon: 'arrow_Uturn_anti_clockwise',
             onClicked: () => {
@@ -968,7 +968,7 @@ export function useMessageList(
         {
           params: {
             recall: JSON.stringify({
-              text: '${0} recalled a message.',
+              text: '_uikit_msg_tip_recall',
               self: im.userId,
               from: msg.from,
               fromName: msg.from,

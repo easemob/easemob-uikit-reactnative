@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 
-import { g_not_existed_url } from '../../const';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
@@ -73,6 +72,8 @@ export function ContactList(props: ContactListProps) {
     onAddGroupParticipantResult,
     requestCount,
     groupCount,
+    avatarUrl,
+    tr,
   } = useContactList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -100,7 +101,7 @@ export function ContactList(props: ContactListProps) {
         <TopNavigationBar
           Left={
             <View style={{ flexDirection: 'row' }}>
-              <Avatar url={g_not_existed_url} size={32} />
+              <Avatar url={avatarUrl} size={32} />
             </View>
           }
           Right={TopNavigationBarRight}
@@ -129,12 +130,12 @@ export function ContactList(props: ContactListProps) {
               }}
             >
               <Text paletteType={'label'} textType={'medium'}>
-                {'Cancel'}
+                {tr('cancel')}
               </Text>
             </Pressable>
           }
           Right={<View style={{ width: 32, height: 32 }} />}
-          Title={TopNavigationBarTitle({ text: 'New Conversation' })}
+          Title={TopNavigationBarTitle({ text: tr('_uikit_new_conv_title') })}
           containerStyle={{ paddingHorizontal: 12 }}
         />
       );
@@ -155,7 +156,7 @@ export function ContactList(props: ContactListProps) {
                 textType={'medium'}
                 style={{ color: getColor('text') }}
               >
-                {'Create Group'}
+                {tr('_uikit_create_group_title')}
               </Text>
             </View>
           }
@@ -166,7 +167,7 @@ export function ContactList(props: ContactListProps) {
                 textType={'medium'}
                 style={{ color: getColor('text_enable') }}
               >
-                {`Create(${selectedCount})`}
+                {tr('_uikit_create_group_button', selectedCount)}
               </Text>
             </Pressable>
           }
@@ -191,7 +192,7 @@ export function ContactList(props: ContactListProps) {
                 textType={'medium'}
                 style={{ color: getColor('text') }}
               >
-                {'Add Group Member'}
+                {tr('_uikit_add_group_member_title')}
               </Text>
             </View>
           }
@@ -202,7 +203,7 @@ export function ContactList(props: ContactListProps) {
                 textType={'medium'}
                 style={{ color: getColor('text_enable') }}
               >
-                {`Add(${selectedMemberCount})`}
+                {tr('_uikit_add_group_member_button', selectedMemberCount)}
               </Text>
             </Pressable>
           }
@@ -221,12 +222,12 @@ export function ContactList(props: ContactListProps) {
               }}
             >
               <Text paletteType={'label'} textType={'medium'}>
-                {'Cancel'}
+                {tr('cancel')}
               </Text>
             </Pressable>
           }
           Right={<View style={{ width: 32, height: 32 }} />}
-          Title={TopNavigationBarTitle({ text: 'share contact card' })}
+          Title={TopNavigationBarTitle({ text: tr('_uikit_share_card_title') })}
           containerStyle={{ paddingHorizontal: 12 }}
         />
       );
@@ -241,7 +242,7 @@ export function ContactList(props: ContactListProps) {
         <>
           {isHasNewRequest === true ? (
             <ContactItem
-              name={'new request'}
+              name={tr('_uikit_contact_new_request')}
               count={<Badges count={requestCount} />}
               hasArrow={true}
               onClicked={onClickedNewRequest}
@@ -249,7 +250,7 @@ export function ContactList(props: ContactListProps) {
           ) : null}
           {isHasGroupList === true ? (
             <ContactItem
-              name={'group list'}
+              name={tr('_uikit_contact_group_list')}
               count={
                 <Text paletteType={'label'} textType={'medium'}>
                   {groupCount}
@@ -280,7 +281,7 @@ export function ContactList(props: ContactListProps) {
       {navigationBar()}
 
       <SearchStyle
-        title={'Search'}
+        title={tr('search')}
         onPress={() => {
           onSearch?.();
         }}

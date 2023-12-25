@@ -26,7 +26,6 @@ export function CreateGroup(props: CreateGroupProps) {
           groupName: getCurTs().toString(),
           inviteMembers: data.map((item) => item.userId),
           onResult: (result) => {
-            console.log('CreateGroup', result);
             propsOnCreateGroupResult?.(result);
           },
         });

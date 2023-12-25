@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Dimensions, View } from 'react-native';
 import {
+  ChatFileMessageBody,
   ChatImageMessageBody,
   ChatMessage,
   ChatMessageType,
@@ -9,6 +10,7 @@ import {
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 
+import { userInfoFromMessage } from '../../chat/utils';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
@@ -68,7 +70,9 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
         </SingleLineText>
       );
     } else if (msg.body.type === ChatMessageType.FILE) {
-      maxWidth = maxWidth * 0.6;
+      maxWidth = maxWidth * 0.8;
+      const body = msg.body as ChatFileMessageBody;
+      console.log('test:zuoyu:file:', maxWidth, body.displayName);
       return (
         <View style={{ flexDirection: 'row', maxWidth: maxWidth }}>
           <Icon
@@ -82,16 +86,7 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
               color: getColor('t2'),
             }}
           >
-            {tr('attachment ')}
-          </SingleLineText>
-          <SingleLineText
-            textType={'small'}
-            paletteType={'label'}
-            style={{
-              color: getColor('t2'),
-            }}
-          >
-            {tr('file name')}
+            {tr('_uikit_chat_input_quote_file', body.displayName.substring(0))}
           </SingleLineText>
         </View>
       );
@@ -169,13 +164,22 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
 
   const getContentThumb = (msg: ChatMessage) => {
     if (msg.body.type === ChatMessageType.IMAGE) {
+      console.log('test:zuoyu:image:thumb:', msg.body);
       const body = msg.body as ChatImageMessageBody;
+      // return body.thumbnailRemotePath.startsWith('http')
+      //   ? body.thumbnailRemotePath
+      //   : body.thumbnailLocalPath;
       return body.thumbnailLocalPath;
     } else if (msg.body.type === ChatMessageType.VIDEO) {
       const body = msg.body as ChatVideoMessageBody;
       return body.thumbnailLocalPath;
     }
     return null;
+  };
+
+  const getUserName = (msg: ChatMessage) => {
+    const user = userInfoFromMessage(msg);
+    return user?.userName ?? user?.userId ?? msg.from;
   };
 
   return (
@@ -198,7 +202,18 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
             maxWidth: '70%',
           }}
         >
-          {tr('you are quote a message')}
+          {tr('_uikit_chat_input_quote_title_1')}
+          <SingleLineText
+            textType={'small'}
+            paletteType={'label'}
+            style={{
+              color: getColor('t1'),
+              fontWeight: '500',
+              maxWidth: '60%',
+            }}
+          >
+            {getUserName(propsMsg)}
+          </SingleLineText>
         </SingleLineText>
         {getContent(propsMsg)}
       </View>

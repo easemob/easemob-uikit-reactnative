@@ -126,7 +126,7 @@ export function MessageReport(props: MessageReportProps) {
           sizesType={'large'}
           radiusType={'large'}
           contentType={'only-text'}
-          text={tr('Cancel')}
+          text={tr('cancel')}
           style={{ width: '42%', height: 40 }}
           onPress={onCancel}
         />
@@ -134,7 +134,7 @@ export function MessageReport(props: MessageReportProps) {
           sizesType={'large'}
           radiusType={'large'}
           contentType={'only-text'}
-          text={tr('Report')}
+          text={tr('report')}
           style={{ width: '42%', height: 40 }}
           onPress={() => {
             onReport?.(

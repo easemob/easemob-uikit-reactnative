@@ -32,6 +32,7 @@ export function NewRequests(props: NewRequestsProps) {
     listState,
     onClicked,
     onButtonClicked,
+    tr,
   } = useNewRequests(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -69,7 +70,7 @@ export function NewRequests(props: NewRequestsProps) {
               textType={'medium'}
               style={{ color: getColor('text') }}
             >
-              {'new request'}
+              {tr('_uikit_new_quest_title')}
             </Text>
           </View>
         }
@@ -84,7 +85,7 @@ export function NewRequests(props: NewRequestsProps) {
         containerStyle={{ paddingHorizontal: 12 }}
       />
       <SearchStyle
-        title={'Search'}
+        title={tr('search')}
         onPress={() => {
           // todo: search
         }}

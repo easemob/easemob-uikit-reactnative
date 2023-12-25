@@ -29,6 +29,7 @@ export function useGroupParticipantList(
     onDelParticipant?: () => void;
     deleteCount: number;
     alertRef: React.MutableRefObject<AlertRef>;
+    tr: (key: string, ...args: any[]) => string;
   } {
   const {
     onClicked,
@@ -55,16 +56,19 @@ export function useGroupParticipantList(
     (data?: GroupParticipantModel | undefined) => {
       if (participantType === 'change-owner') {
         alertRef.current.alertWithInit({
-          message: tr('Transfer group owner to xx'),
+          message: tr(
+            '_uikit_group_alert_change_owner_title',
+            data?.name ?? data?.id
+          ),
           buttons: [
             {
-              text: tr('Cancel'),
+              text: tr('cancel'),
               onPress: () => {
                 alertRef.current.close?.();
               },
             },
             {
-              text: tr('Confirm'),
+              text: tr('confirm'),
               isPreferred: true,
               onPress: () => {
                 alertRef.current.close?.();
@@ -217,16 +221,16 @@ export function useGroupParticipantList(
         })
         .map((item) => item.data);
       alertRef.current.alertWithInit({
-        message: 'Confirm to delete selected members?',
+        message: tr('_uikit_group_alert_del_member_title'),
         buttons: [
           {
-            text: 'Cancel',
+            text: 'cancel',
             onPress: () => {
               alertRef.current?.close?.();
             },
           },
           {
-            text: 'Confirm',
+            text: 'confirm',
             isPreferred: true,
             onPress: () => {
               alertRef.current.close?.();
@@ -236,7 +240,7 @@ export function useGroupParticipantList(
         ],
       });
     }
-  }, [dataRef, onDelParticipant, participantType]);
+  }, [dataRef, onDelParticipant, participantType, tr]);
 
   const addData = (gid: string, memberId: string) => {
     if (gid === groupId) {
@@ -294,5 +298,6 @@ export function useGroupParticipantList(
     deleteCount,
     onDelParticipant: onDelParticipantCallback,
     alertRef,
+    tr,
   };
 }
