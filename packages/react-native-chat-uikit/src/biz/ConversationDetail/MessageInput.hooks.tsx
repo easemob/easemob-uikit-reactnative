@@ -62,8 +62,10 @@ export function useMessageInput(
     React.useState<IconNameType>('plus_in_circle');
   const valueRef = React.useRef('');
   const rawValue = React.useRef('');
+  /// !!! tell me why? inputBarState
   const [inputBarState, setInputBarState] =
     React.useState<MessageInputState>('normal');
+  const inputBarStateRef = React.useRef<MessageInputState>('normal');
   const hasLayoutAnimation = React.useRef(false);
   const voiceBarRef = React.useRef<BottomVoiceBarRef>({} as any);
   const voiceBarStateRef = React.useRef<VoiceBarState>('idle');
@@ -74,8 +76,17 @@ export function useMessageInput(
   const msgModelRef = React.useRef<MessageModel>();
   const mentionListRef = React.useRef<{ id: string; name: string }[]>([]);
 
+  const onSetInputBarState = (state: MessageInputState) => {
+    inputBarStateRef.current = state;
+    setInputBarState(state);
+  };
+
   const _onValue = (v: string) => {
-    if (v.length > 0 && inputBarState === 'keyboard') {
+    if (
+      v.length > 0 &&
+      (inputBarStateRef.current === 'keyboard' ||
+        inputBarStateRef.current === 'emoji')
+    ) {
       setSendIconName('airplane');
     } else {
       setSendIconName('plus_in_circle');
@@ -88,7 +99,7 @@ export function useMessageInput(
       isClosedEmoji.current = true;
       isClosedKeyboard.current = true;
       isClosedVoiceBar.current = true;
-      setInputBarState('normal');
+      onSetInputBarState('normal');
       setEmojiIconName('face');
       closeEmojiList();
       closeVoiceBar();
@@ -97,7 +108,7 @@ export function useMessageInput(
       isClosedEmoji.current = false;
       isClosedKeyboard.current = true;
       isClosedVoiceBar.current = true;
-      setInputBarState('emoji');
+      onSetInputBarState('emoji');
       setEmojiIconName('keyboard2');
       closeKeyboard();
       closeVoiceBar();
@@ -106,14 +117,14 @@ export function useMessageInput(
       isClosedEmoji.current = true;
       isClosedKeyboard.current = true;
       isClosedVoiceBar.current = false;
-      setInputBarState('voice');
+      onSetInputBarState('voice');
       setEmojiIconName('face');
       closeKeyboard();
       closeEmojiList();
       showVoiceBar();
     } else if (nextState === 'keyboard') {
       isClosedKeyboard.current = false;
-      setInputBarState('keyboard');
+      onSetInputBarState('keyboard');
       setEmojiIconName('face');
       if (Platform.OS !== 'ios') {
         isClosedEmoji.current = true;
