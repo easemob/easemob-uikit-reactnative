@@ -177,7 +177,13 @@ export function CL2() {
 
 export default function TestGroupList() {
   return (
-    <GlobalContainer appKey={''}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+    >
       <CL />
     </GlobalContainer>
   );

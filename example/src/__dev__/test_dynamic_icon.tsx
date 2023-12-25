@@ -88,7 +88,15 @@ export default function TestDynamicIcon() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer appKey={''} palette={p} theme={t}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+      palette={p}
+      theme={t}
+    >
       <Test1 />
       {/* <View style={{ height: 50 }} /> */}
     </GlobalContainer>

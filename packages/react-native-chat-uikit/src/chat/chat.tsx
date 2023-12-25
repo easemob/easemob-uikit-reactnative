@@ -2,7 +2,7 @@ import React from 'react';
 
 import { once2 } from '../utils';
 import { getChatService as _getChatService } from './chat.impl';
-import type { ChatService, ChatServiceInit } from './types';
+import type { ChatOptionsType, ChatService, ChatServiceInit } from './types';
 
 /**
  * Context of the IM.
@@ -29,9 +29,9 @@ type ChatContextProps = React.PropsWithChildren<{
  * It can only be initialized once. Even if it is initialized multiple times, parameters modified in time will not take effect again. The reason is that `CHAT SDK` uses the native platform.
  */
 export function ChatContextProvider({ value, children }: ChatContextProps) {
-  const { appKey, debugMode, autoLogin = false, im, onInitialized } = value;
+  const { options, im, onInitialized } = value;
   const _im = im ?? _getChatService();
-  initChat(_im, appKey, debugMode, autoLogin, onInitialized);
+  initChat(_im, options, onInitialized);
   return <ChatContext.Provider value={_im}>{children}</ChatContext.Provider>;
 }
 
@@ -54,18 +54,10 @@ export function getChatService(): ChatService {
 }
 
 const initChat = once2(
-  (
-    im: ChatService,
-    appKey: string,
-    debugMode: boolean,
-    autoLogin: boolean,
-    onInitialized?: () => void
-  ) => {
-    console.log('test:zuoyu:initChat:1');
+  (im: ChatService, options: ChatOptionsType, onInitialized?: () => void) => {
+    console.log('test:zuoyu:initChat:1', options);
     im.init({
-      appKey: appKey,
-      debugMode: debugMode,
-      autoLogin: autoLogin,
+      options: options,
       result: ({ isOk, error }) => {
         if (isOk === false) {
           if (error) im.sendError({ error: error });

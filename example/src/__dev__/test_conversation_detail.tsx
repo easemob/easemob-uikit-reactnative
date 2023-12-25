@@ -136,7 +136,15 @@ export default function TestConversationDetail() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer appKey={'sdf'} palette={p} theme={t}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+      palette={p}
+      theme={t}
+    >
       <ConvDetail />
       {/* <View style={{ height: 50 }} /> */}
     </GlobalContainer>

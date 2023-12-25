@@ -89,7 +89,13 @@ export function CalcuCount() {
 
 export default function TestUtils() {
   return (
-    <GlobalContainer appKey={''}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+    >
       <CalcuCount />
     </GlobalContainer>
   );

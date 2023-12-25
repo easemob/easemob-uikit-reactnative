@@ -5,6 +5,9 @@ export type Undefinable<T> = T | undefined;
 export type PartialNullable<T> = {
   [P in keyof T]?: T[P] | null | undefined;
 };
+export type PartialUndefinable<T> = {
+  [P in keyof T]?: T[P] | undefined;
+};
 export type PromiseType<T> = (...args: any[]) => Promise<T>;
 export type UnPromisify<T> = T extends PromiseType<infer U> ? U : never;
 export type KeyValue<K, V> = {

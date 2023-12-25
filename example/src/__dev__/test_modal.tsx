@@ -139,7 +139,15 @@ export default function test_modal() {
   const dark = createDarkTheme(palette);
   const theme = light ? light : dark;
   return (
-    <GlobalContainer appKey="sdf" palette={palette} theme={theme}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+      palette={palette}
+      theme={theme}
+    >
       <TestSlideModal />
     </GlobalContainer>
   );

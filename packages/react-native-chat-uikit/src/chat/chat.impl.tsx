@@ -32,6 +32,7 @@ import { RequestListImpl } from './requestList';
 import type { RequestList } from './requestList.types';
 import {
   ChatEventType,
+  ChatOptionsType,
   ChatService,
   ChatServiceListener,
   ContactModel,
@@ -115,23 +116,17 @@ export abstract class ChatServiceImpl
   }
 
   async init(params: {
-    appKey: string;
-    debugMode?: boolean;
-    autoLogin?: boolean;
+    options: ChatOptionsType;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
-    const { appKey, debugMode, autoLogin } = params;
+    const { options } = params;
+    const { appKey } = options;
     this._convStorage = new ConversationStorage({ appKey: appKey });
     // !!! hot-reload no pass, into catch codes
     this._request = new RequestListImpl(this);
     this._messageManager = new MessageCacheManagerImpl(this);
-    const options = new ChatOptions({
-      appKey,
-      debugModel: debugMode,
-      autoLogin,
-    });
     try {
-      await this.client.init(options);
+      await this.client.init(new ChatOptions({ ...options }));
       params.result?.({ isOk: true });
     } catch (error) {
       params.result?.({

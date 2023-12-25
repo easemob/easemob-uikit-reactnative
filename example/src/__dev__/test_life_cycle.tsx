@@ -105,7 +105,13 @@ export class CL3 extends React.PureComponent<{ id: string }> {
 
 export default function TestLifeCycle() {
   return (
-    <GlobalContainer appKey={''}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+    >
       <CL />
     </GlobalContainer>
   );

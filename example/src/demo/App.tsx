@@ -144,8 +144,11 @@ export function App() {
   return (
     <React.StrictMode>
       <GlobalContainer
-        appKey={env.appKey}
-        isDevMode={env.isDevMode}
+        options={{
+          appKey: env.appKey,
+          debugModel: env.isDevMode,
+          autoLogin: false,
+        }}
         palette={palette}
         theme={theme}
         language={'en'}

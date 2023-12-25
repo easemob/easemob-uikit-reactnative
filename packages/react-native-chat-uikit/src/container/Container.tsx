@@ -31,12 +31,11 @@ For example: if `chat uikit sdk` and `chat uikit sdk` are integrated at the same
  */
 export function GlobalContainer(props: GlobalContainerProps) {
   const {
-    appKey,
+    options,
     children,
     language,
     languageBuiltInFactory,
     languageExtensionFactory,
-    isDevMode = false,
     palette,
     theme,
     fontFamily,
@@ -69,14 +68,13 @@ export function GlobalContainer(props: GlobalContainerProps) {
           >
             <ChatContextProvider
               value={{
-                appKey,
-                debugMode: isDevMode,
+                options: options,
                 onInitialized: onInitialized,
               }}
             >
               <ConfigContextProvider
                 value={{
-                  isDevMode,
+                  isDevMode: options.debugModel,
                   enableCompare: false,
                   enableCheckType: false,
                   languageCode: getTranslateLanguage(language),

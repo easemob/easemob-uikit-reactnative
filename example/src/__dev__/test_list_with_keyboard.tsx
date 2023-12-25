@@ -218,7 +218,15 @@ export default function TestListWithKeyboard() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer appKey={''} palette={p} theme={t}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+      palette={p}
+      theme={t}
+    >
       <Test2 />
     </GlobalContainer>
   );

@@ -49,7 +49,13 @@ export function TestGroupParticipantInfo() {
 
 export default function TestInfo() {
   return (
-    <GlobalContainer appKey={''}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+    >
       <TestGroupParticipantInfo />
     </GlobalContainer>
   );

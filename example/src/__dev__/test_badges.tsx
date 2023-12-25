@@ -13,7 +13,13 @@ export function TB() {
 
 export default function TestBadge() {
   return (
-    <GlobalContainer appKey={''}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+    >
       <TB />
     </GlobalContainer>
   );

@@ -236,7 +236,13 @@ const styles = StyleSheet.create({
 
 export default function TestSectionListRn() {
   return (
-    <GlobalContainer appKey={''}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+    >
       <SL />
     </GlobalContainer>
   );

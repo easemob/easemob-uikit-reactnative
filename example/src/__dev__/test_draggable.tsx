@@ -245,7 +245,15 @@ export default function TestDraggable() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer appKey={''} palette={p} theme={t}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+      palette={p}
+      theme={t}
+    >
       <TestMyDraggable />
     </GlobalContainer>
   );

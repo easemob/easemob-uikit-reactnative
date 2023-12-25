@@ -173,7 +173,13 @@ export function CL2() {
 
 export default function TestContactList() {
   return (
-    <GlobalContainer appKey={''}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+    >
       <CL />
     </GlobalContainer>
   );

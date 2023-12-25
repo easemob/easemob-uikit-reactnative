@@ -95,7 +95,13 @@ export function Test1() {
 
 export default function TestClosure() {
   return (
-    <GlobalContainer appKey={'sdf'}>
+    <GlobalContainer
+      options={{
+        appKey: 'sdf',
+        debugModel: true,
+        autoLogin: false,
+      }}
+    >
       <Test1 />
     </GlobalContainer>
   );

@@ -1,3 +1,5 @@
+import type { ChatOptionsType } from 'src/chat';
+
 import type { ConversationDetailType } from '../config';
 import type { CreateStringSet, LanguageCode } from '../i18n';
 import type {
@@ -16,13 +18,9 @@ import type { ReleaseArea } from '../types';
  */
 export type GlobalContainerProps = React.PropsWithChildren<{
   /**
-   * The application key.
+   * Initialization parameters, the parameters that must be filled in include `appKey`, `debugModel`, `autoLogin`.
    */
-  appKey: string;
-  /**
-   * Whether to enable the development mode.
-   */
-  isDevMode?: boolean;
+  options: ChatOptionsType;
   /**
    * The language code.
    */

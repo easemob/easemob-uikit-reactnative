@@ -11,12 +11,13 @@ import type {
   ChatMessageEventListener,
   ChatMessageStatusCallback,
   ChatMultiDeviceEventListener,
+  ChatOptions,
   ChatPresenceEventListener,
   ChatSearchDirection,
 } from 'react-native-chat-sdk';
 
 import type { UIKitError } from '../error';
-import type { Keyof, PartialNullable } from '../types';
+import type { Keyof, PartialNullable, PartialUndefinable } from '../types';
 import type { MessageCacheManager } from './messageManager.types';
 import type { RequestList } from './requestList.types';
 
@@ -627,16 +628,14 @@ export interface ChatService
    *
    * @params
    * - appKey: Agora appKey.
-   * - debugMode: Whether to enable debug mode.
+   * - debugModel: Whether to enable debug mode.
    * - autoLogin: Whether to automatically log in after initialization.
    * - result: The result after performing the operation. If failed, an error object is returned.
    *
    * @noThrows {@link UIKitError}
    */
   init(params: {
-    appKey: string;
-    debugMode?: boolean;
-    autoLogin?: boolean;
+    options: ChatOptionsType;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
 
@@ -755,22 +754,18 @@ export interface ChatService
   get messageManager(): MessageCacheManager;
 }
 
+type ChatOptionsType1 = PartialUndefinable<ChatOptions>;
+export type ChatOptionsType = ChatOptionsType1 & {
+  appKey: string;
+  autoLogin: boolean;
+  debugModel: boolean;
+};
+
 /**
  * ChatServiceInit is the initialization parameters of ChatService.
  */
 export type ChatServiceInit = {
-  /**
-   * Agora appKey.
-   */
-  appKey: string;
-  /**
-   * Whether to enable debug mode.
-   */
-  debugMode?: boolean;
-  /**
-   * Whether to automatically log in after initialization.
-   */
-  autoLogin?: boolean;
+  options: ChatOptionsType;
   /**
    * IM initialization is completed.
    */
