@@ -1841,6 +1841,19 @@ export abstract class ChatServiceImpl
     });
   }
 
+  resendMessage(params: {
+    message: ChatMessage;
+    callback: ChatMessageStatusCallback;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.resendMessage(
+        params.message,
+        params.callback
+      ),
+      event: 'resendMessage',
+    });
+  }
+
   recallMessage(params: {
     message: ChatMessage;
     onResult: ResultCallback<void>;

@@ -74,6 +74,10 @@ export function useMessageList(
     id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
   ) => void;
+  onClickedItemState?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
   inverted: boolean;
   maxListHeight: number;
   setMaxListHeight: React.Dispatch<React.SetStateAction<number>>;
@@ -575,6 +579,36 @@ export function useMessageList(
       }
     },
     [dataRef, setData]
+  );
+
+  const onTryResendMessage = React.useCallback(
+    (msg: ChatMessage) => {
+      if (msg.direction !== ChatMessageDirection.SEND) {
+        return;
+      }
+      const tmp = { ...msg } as ChatMessage;
+      tmp.status = ChatMessageStatus.CREATE;
+      onUpdateMessageToUI(tmp, 'send');
+      im.messageManager.resendMessage(tmp);
+    },
+    [im.messageManager, onUpdateMessageToUI]
+  );
+
+  const onClickedItemState = React.useCallback(
+    (
+      _id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel
+    ) => {
+      console.log('test:zuoyu:onClickedItemState');
+      if (model.modelType !== 'message') {
+        return;
+      }
+      const msgModel = model as MessageModel;
+      if (msgModel.msg.status === ChatMessageStatus.FAIL) {
+        onTryResendMessage(msgModel.msg);
+      }
+    },
+    [onTryResendMessage]
   );
 
   const onEditMessage = React.useCallback(
@@ -1515,5 +1549,6 @@ export function useMessageList(
     reportRef,
     onClickedItemAvatar,
     onClickedItemQuote,
+    onClickedItemState,
   };
 }

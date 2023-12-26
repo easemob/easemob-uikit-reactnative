@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { once2 } from '../utils';
+// import { once2 } from '../utils';
 import { getChatService as _getChatService } from './chat.impl';
-import type { ChatOptionsType, ChatService, ChatServiceInit } from './types';
+import type { ChatService, ChatServiceInit } from './types';
 
 /**
  * Context of the IM.
@@ -31,7 +31,20 @@ type ChatContextProps = React.PropsWithChildren<{
 export function ChatContextProvider({ value, children }: ChatContextProps) {
   const { options, im, onInitialized } = value;
   const _im = im ?? _getChatService();
-  initChat(_im, options, onInitialized);
+  // initChat(_im, options, onInitialized);
+  React.useEffect(() => {
+    _im.init({
+      options: options,
+      result: ({ isOk, error }) => {
+        if (isOk === false) {
+          if (error) _im.sendError({ error: error });
+        } else {
+          onInitialized?.();
+          _im.sendFinished({ event: 'init' });
+        }
+      },
+    });
+  }, [_im, onInitialized, options]);
   return <ChatContext.Provider value={_im}>{children}</ChatContext.Provider>;
 }
 
@@ -53,19 +66,19 @@ export function getChatService(): ChatService {
   return _getChatService();
 }
 
-const initChat = once2(
-  (im: ChatService, options: ChatOptionsType, onInitialized?: () => void) => {
-    console.log('test:zuoyu:initChat:1', options);
-    im.init({
-      options: options,
-      result: ({ isOk, error }) => {
-        if (isOk === false) {
-          if (error) im.sendError({ error: error });
-        } else {
-          onInitialized?.();
-          im.sendFinished({ event: 'undefined' });
-        }
-      },
-    });
-  }
-);
+// const initChat = once2(
+//   (im: ChatService, options: ChatOptionsType, onInitialized?: () => void) => {
+//     console.log('test:zuoyu:initChat:1', options);
+//     im.init({
+//       options: options,
+//       result: ({ isOk, error }) => {
+//         if (isOk === false) {
+//           if (error) im.sendError({ error: error });
+//         } else {
+//           onInitialized?.();
+//           im.sendFinished({ event: 'undefined' });
+//         }
+//       },
+//     });
+//   }
+// );

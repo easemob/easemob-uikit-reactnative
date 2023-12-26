@@ -50,6 +50,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       reportData,
       onClickedItemAvatar,
       onClickedItemQuote,
+      onClickedItemState,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -103,6 +104,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
                   onLongPress={onLongPressItem}
                   onAvatarClicked={onClickedItemAvatar}
                   onQuoteClicked={onClickedItemQuote}
+                  onStateClicked={onClickedItemState}
                 />
               );
             }}

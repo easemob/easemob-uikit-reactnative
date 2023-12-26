@@ -17,6 +17,7 @@ export interface MessageCacheManager
   emitSendMessageChanged(msg: ChatMessage): void;
   emitAttachmentChanged(msg: ChatMessage): void;
   sendMessage(msg: ChatMessage): Promise<void>;
+  resendMessage(msg: ChatMessage): Promise<void>;
   downloadAttachment(msg: ChatMessage): Promise<void>;
   loadHistoryMessage(params: {
     convId: string;

@@ -15,6 +15,10 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  Home: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
   ConversationList: {
     option?: {} | undefined;
     params?: {} | undefined;
@@ -104,10 +108,6 @@ export type RootParamsList = {
     params?: {} | undefined;
   };
   EditInfo: {
-    option?: {} | undefined;
-    params?: {} | undefined;
-  };
-  Home: {
     option?: {} | undefined;
     params?: {} | undefined;
   };
@@ -138,6 +138,10 @@ export const SCREEN_LIST: RootParamsList = {
     option: undefined,
     params: undefined,
   },
+  Home: {
+    option: undefined,
+    params: undefined,
+  },
   ConversationList: {
     option: undefined,
     params: undefined,
@@ -227,10 +231,6 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   EditInfo: {
-    option: undefined,
-    params: undefined,
-  },
-  Home: {
     option: undefined,
     params: undefined,
   },

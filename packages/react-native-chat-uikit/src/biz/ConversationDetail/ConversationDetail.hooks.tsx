@@ -66,7 +66,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
       createIfNotExist: true,
       fromNative: true,
     });
-    console.log('test:zuoyu:setconver:', conv);
+    console.log('dev:ConversationDetail:', conv);
     if (conv) {
       if (conv.convType === ChatConversationType.PeerChat) {
         im.getUserInfo({
@@ -87,7 +87,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
         im.getGroupInfo({
           groupId: conv.convId,
           onResult: (result) => {
-            console.log('test:zuoyu:gourp:', result);
             if (result.isOk === true && result.value) {
               conv.convName = result.value.groupName ?? result.value.groupId;
               ownerIdRef.current = result.value.owner;

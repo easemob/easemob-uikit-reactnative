@@ -916,9 +916,10 @@ export type StateViewProps = {
   isVisible?: boolean;
   layoutType: MessageLayoutType;
   state: MessageStateType;
+  onClicked?: () => void;
 };
 export function StateView(props: StateViewProps) {
-  const { isVisible = true, layoutType, state } = props;
+  const { isVisible = true, layoutType, state, onClicked } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     common: {
@@ -941,12 +942,13 @@ export function StateView(props: StateViewProps) {
   const iconName = React.useMemo(() => getStateIcon(state), [state]);
   const iconColor = React.useMemo(() => getStateIconColor(state), [state]);
   return (
-    <View
+    <Pressable
       style={{
         display: isVisible === true ? 'flex' : 'none',
         paddingLeft: layoutType === 'left' ? 4 : undefined,
         paddingRight: layoutType === 'left' ? undefined : 4,
       }}
+      onPress={onClicked}
     >
       <View style={{ flexGrow: 1 }} />
       {isStop === true ? (
@@ -969,7 +971,7 @@ export function StateView(props: StateViewProps) {
           }}
         />
       )}
-    </View>
+    </Pressable>
   );
 }
 
@@ -1373,6 +1375,7 @@ export function MessageView(props: MessageViewProps) {
     timeIsVisible = true,
     onQuoteClicked,
     onAvatarClicked,
+    onStateClicked,
     ...others
   } = props;
   const { layoutType } = model;
@@ -1388,6 +1391,11 @@ export function MessageView(props: MessageViewProps) {
   const onClickedAvatar = React.useCallback(() => {
     onAvatarClicked?.(model.msg.msgId, model);
   }, [model, onAvatarClicked]);
+
+  const onClickedState = React.useCallback(() => {
+    console.log('test:zuoyu:onClickedState:');
+    onStateClicked?.(model.msg.msgId, model);
+  }, [model, onStateClicked]);
 
   return (
     <View
@@ -1438,7 +1446,11 @@ export function MessageView(props: MessageViewProps) {
             {...others}
           />
           {state !== 'none' ? (
-            <StateView layoutType={layoutType} state={state} />
+            <StateView
+              layoutType={layoutType}
+              state={state}
+              onClicked={onClickedState}
+            />
           ) : null}
         </View>
         {timeIsVisible ? (

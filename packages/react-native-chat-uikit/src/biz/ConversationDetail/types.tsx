@@ -185,6 +185,10 @@ export type MessageListItemActionsProps = {
     id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
   ) => void;
+  onStateClicked?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
 };
 export type MessageListItemProps = MessageListItemActionsProps & {
   /**

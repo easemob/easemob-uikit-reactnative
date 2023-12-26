@@ -177,6 +177,28 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     this._sendList.set(msg.localMsgId, { msg });
     this._client.sendMessage({ message: msg, callback: callback });
   }
+  async resendMessage(msg: ChatMessage): Promise<void> {
+    const callback: ChatMessageStatusCallback = {
+      onSuccess: (message) => {
+        const isExisted = this._sendList.get(message.localMsgId);
+        if (isExisted) {
+          this.emitSendMessageChanged(message);
+          this._sendList.delete(message.localMsgId);
+        }
+      },
+      onError: (localMsgId, _error) => {
+        const isExisted = this._sendList.get(localMsgId);
+        if (isExisted) {
+          const msg = { ...isExisted.msg } as ChatMessage;
+          msg.status = ChatMessageStatus.FAIL;
+          this.emitSendMessageChanged(msg);
+          this._sendList.delete(localMsgId);
+        }
+      },
+    };
+    this._sendList.set(msg.localMsgId, { msg: msg });
+    this._client.resendMessage({ message: msg, callback: callback });
+  }
 
   async downloadAttachment(msg: ChatMessage) {
     if (
