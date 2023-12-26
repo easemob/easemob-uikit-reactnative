@@ -41,6 +41,7 @@ export function ContactInfo(props: ContactInfoProps) {
     onRequestModalClose,
     onMore,
     tr,
+    isSelf,
   } = useContactInfo(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -86,7 +87,14 @@ export function ContactInfo(props: ContactInfoProps) {
           </Pressable>
         }
         Right={
-          <Pressable style={{ width: 32, height: 32 }} onPress={onMore}>
+          <Pressable
+            style={{
+              width: 32,
+              height: 32,
+              display: isSelf === true ? 'none' : 'flex',
+            }}
+            onPress={onMore}
+          >
             <Icon
               name={'ellipsis_vertical'}
               style={{ height: 24, width: 24 }}
@@ -213,7 +221,7 @@ export function ContactInfo(props: ContactInfoProps) {
             }
           />
         </>
-      ) : (
+      ) : isSelf !== true ? (
         <View style={{ alignItems: 'center', marginTop: 20 }}>
           <CmnButton
             sizesType={'large'}
@@ -223,7 +231,7 @@ export function ContactInfo(props: ContactInfoProps) {
             style={{ width: 180, height: 50 }}
           />
         </View>
-      )}
+      ) : null}
 
       <Alert ref={alertRef} />
       <BottomSheetNameMenu

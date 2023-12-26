@@ -28,6 +28,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     input,
     list,
     onInitialized,
+    onClickedAvatar: propsOnClickedAvatar,
   } = props;
   const permissionsRef = React.useRef(false);
 
@@ -47,6 +48,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     propsConvName
   );
   const [convAvatar, setConvAvatar] = React.useState<string>();
+  const ownerIdRef = React.useRef<string>();
 
   usePermissions({
     onResult: (isSuccess) => {
@@ -66,39 +68,38 @@ export function useConversationDetail(props: ConversationDetailProps) {
     });
     console.log('test:zuoyu:setconver:', conv);
     if (conv) {
-      if (conv.convName === undefined || conv.convId === conv.convName) {
-        if (conv.convType === ChatConversationType.PeerChat) {
-          im.getUserInfo({
-            userId: conv.convId,
-            onResult: (result) => {
-              if (result.isOk === true && result.value) {
-                conv.convName = result.value?.userName ?? result.value?.remark;
-                setConvName(result.value?.userName ?? result.value?.remark);
-                if (result.value?.avatarURL) {
-                  conv.convAvatar = result.value.avatarURL;
-                  setConvAvatar(result.value.avatarURL);
-                }
-                im.messageManager.setCurrentConvId({ ...conv });
+      if (conv.convType === ChatConversationType.PeerChat) {
+        im.getUserInfo({
+          userId: conv.convId,
+          onResult: (result) => {
+            if (result.isOk === true && result.value) {
+              conv.convName = result.value?.userName ?? result.value?.remark;
+              setConvName(result.value?.userName ?? result.value?.remark);
+              if (result.value?.avatarURL) {
+                conv.convAvatar = result.value.avatarURL;
+                setConvAvatar(result.value.avatarURL);
               }
-            },
-          });
-        } else if (conv.convType === ChatConversationType.GroupChat) {
-          im.getGroupInfo({
-            groupId: conv.convId,
-            onResult: (result) => {
-              console.log('test:zuoyu:gourp:', result);
-              if (result.isOk === true && result.value) {
-                conv.convName = result.value.groupName ?? result.value.groupId;
-                setConvName(result.value.groupName ?? result.value.groupId);
-                if (result.value.groupAvatar) {
-                  conv.convAvatar = result.value.groupAvatar;
-                  setConvAvatar(result.value.groupAvatar);
-                }
-                im.messageManager.setCurrentConvId({ ...conv });
+              im.messageManager.setCurrentConvId({ ...conv });
+            }
+          },
+        });
+      } else if (conv.convType === ChatConversationType.GroupChat) {
+        im.getGroupInfo({
+          groupId: conv.convId,
+          onResult: (result) => {
+            console.log('test:zuoyu:gourp:', result);
+            if (result.isOk === true && result.value) {
+              conv.convName = result.value.groupName ?? result.value.groupId;
+              ownerIdRef.current = result.value.owner;
+              setConvName(result.value.groupName ?? result.value.groupId);
+              if (result.value.groupAvatar) {
+                conv.convAvatar = result.value.groupAvatar;
+                setConvAvatar(result.value.groupAvatar);
               }
-            },
-          });
-        }
+              im.messageManager.setCurrentConvId({ ...conv });
+            }
+          },
+        });
       }
       im.setCurrentConversation({ conv });
       im.setConversationRead({ convId, convType });
@@ -179,6 +180,14 @@ export function useConversationDetail(props: ConversationDetailProps) {
     [_messageListRef]
   );
 
+  const onClickedAvatar = React.useCallback(() => {
+    propsOnClickedAvatar?.({
+      convId: convId,
+      convType: convType,
+      ownerId: ownerIdRef.current,
+    });
+  }, [convId, convType, propsOnClickedAvatar]);
+
   return {
     onClickedSend,
     _messageInputRef,
@@ -192,5 +201,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
     onEditMessageFinished,
     convName,
     convAvatar,
+    onClickedAvatar,
   };
 }

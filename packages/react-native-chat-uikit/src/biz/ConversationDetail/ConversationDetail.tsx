@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -50,6 +50,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
     onEditMessageFinished,
     convName,
     convAvatar,
+    onClickedAvatar,
   } = useConversationDetail(props);
 
   const navigationBar = () => {
@@ -64,7 +65,10 @@ export function ConversationDetail(props: ConversationDetailProps) {
                 onBack?.();
               }}
             />
-            <Avatar url={convAvatar} size={32} />
+            <Pressable onPress={onClickedAvatar}>
+              <Avatar url={convAvatar} size={32} />
+            </Pressable>
+
             <View
               style={{
                 marginLeft: 10,

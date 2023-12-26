@@ -71,6 +71,11 @@ export type ConversationDetailProps = PropsWithError &
       ref?: React.RefObject<MessageListRef>;
     };
     containerStyle?: StyleProp<ViewStyle>;
+    onClickedAvatar?: (params: {
+      convId: string;
+      convType: ChatConversationType;
+      ownerId?: string;
+    }) => void;
   };
 
 export type SendType =
@@ -219,6 +224,14 @@ export type MessageListProps = PropsWithError &
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => void;
     onLongPressItem?: (
+      id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel
+    ) => void;
+    onClickedItemAvatar?: (
+      id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel
+    ) => void;
+    onClickedItemQuote?: (
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => void;

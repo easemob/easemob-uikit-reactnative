@@ -21,6 +21,7 @@ export function useContactInfo(props: ContactInfoProps) {
   const [userName, setUserName] = React.useState(propsUserName);
   const [userAvatar, setUserAvatar] = React.useState(propsUserAvatar);
   const [isContact, setIsContact] = React.useState(propsIsContact);
+  const [isSelf, setIsSelf] = React.useState(false);
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
@@ -30,28 +31,36 @@ export function useContactInfo(props: ContactInfoProps) {
     React.useCallback(
       (state: any) => {
         if (state === 'load') {
-          im.getConversation({
-            convId: userId,
-            convType: 0,
-            createIfNotExist: true,
-          })
-            .then((value) => {
-              setDoNotDisturb(value?.doNotDisturb ?? false);
-            })
-            .catch((e) => {
-              im.sendError({ error: e });
-            });
-
-          im.getContact({
-            userId: userId,
-            onResult: (value) => {
-              if (value) {
-                setUserAvatar(value.value?.avatar);
-                setUserName(value.value?.nickName);
-              }
-            },
-          });
           setIsContact(im.isContact({ userId }));
+          setIsSelf(im.userId === userId);
+
+          if (im.userId !== userId) {
+            im.getConversation({
+              convId: userId,
+              convType: 0,
+              createIfNotExist: true,
+            })
+              .then((value) => {
+                setDoNotDisturb(value?.doNotDisturb ?? false);
+              })
+              .catch((e) => {
+                im.sendError({ error: e });
+              });
+
+            im.getContact({
+              userId: userId,
+              onResult: (value) => {
+                if (value) {
+                  setUserAvatar(value.value?.avatar);
+                  setUserName(value.value?.nickName);
+                }
+              },
+            });
+          } else {
+            const user = im.user(im.userId);
+            setUserAvatar(user?.avatarURL);
+            setUserName(user?.userName);
+          }
         }
       },
       [im, userId]
@@ -138,5 +147,6 @@ export function useContactInfo(props: ContactInfoProps) {
     alertRef,
     toastRef,
     tr,
+    isSelf,
   };
 }

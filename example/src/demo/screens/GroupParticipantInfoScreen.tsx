@@ -10,6 +10,7 @@ export function GroupParticipantInfoScreen(props: Props) {
   const { route } = props;
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const userId = ((route.params as any)?.params as any)?.userId;
+  console.log('test:zuoyu:GroupParticipantInfoScreen', route.params);
   return (
     <SafeAreaView
       style={{

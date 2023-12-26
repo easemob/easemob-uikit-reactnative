@@ -1372,6 +1372,7 @@ export function MessageView(props: MessageViewProps) {
     nameIsVisible = true,
     timeIsVisible = true,
     onQuoteClicked,
+    onAvatarClicked,
     ...others
   } = props;
   const { layoutType } = model;
@@ -1383,6 +1384,11 @@ export function MessageView(props: MessageViewProps) {
   const bubblePadding = 12;
   const hasTriangle = true;
   const isQuote = isQuoteMessage(model.msg, model.msgQuote);
+
+  const onClickedAvatar = React.useCallback(() => {
+    onAvatarClicked?.(model.msg.msgId, model);
+  }, [model, onAvatarClicked]);
+
   return (
     <View
       style={{
@@ -1421,7 +1427,9 @@ export function MessageView(props: MessageViewProps) {
           }}
         >
           {avatarIsVisible ? (
-            <AvatarView layoutType={layoutType} avatar={avatar} />
+            <Pressable onPress={onClickedAvatar}>
+              <AvatarView layoutType={layoutType} avatar={avatar} />
+            </Pressable>
           ) : null}
           <MessageBubble
             model={model}

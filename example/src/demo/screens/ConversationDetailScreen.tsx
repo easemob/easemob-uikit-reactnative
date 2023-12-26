@@ -1,6 +1,10 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ChatMessageType } from 'react-native-chat-sdk';
+import {
+  ChatConversationType,
+  ChatMessageChatType,
+  ChatMessageType,
+} from 'react-native-chat-sdk';
 import {
   ConversationDetail,
   MessageInputRef,
@@ -8,6 +12,7 @@ import {
   MessageModel,
   SystemMessageModel,
   TimeMessageModel,
+  useChatContext,
 } from 'react-native-chat-uikit';
 import {
   SafeAreaView,
@@ -30,6 +35,8 @@ export function ConversationDetailScreen(props: Props) {
   const listRef = React.useRef<MessageListRef>({} as any);
   const inputRef = React.useRef<MessageInputRef>({} as any);
   const { top, bottom } = useSafeAreaInsets();
+  const im = useChatContext();
+  console.log('test:zuoyu:ConversationDetailScreen', route.params);
 
   React.useEffect(() => {
     if (selectedParticipants && operateType === 'mention') {
@@ -128,11 +135,64 @@ export function ConversationDetailScreen(props: Props) {
                 });
               }
             },
+            onClickedItemAvatar: (id, model) => {
+              console.log('onClickedItemAvatar', id, model);
+              if (model.modelType !== 'message') {
+                return;
+              }
+              const msgModel = model as MessageModel;
+              const userId = msgModel.msg.from;
+
+              const userType = msgModel.msg.chatType as number;
+              if (userType === ChatMessageChatType.PeerChat) {
+                navigation.navigate('ContactInfo', {
+                  params: { userId: userId },
+                });
+              } else if (userType === ChatMessageChatType.GroupChat) {
+                const groupId = msgModel.msg.conversationId;
+                const selfId = im.userId;
+                if (selfId === im.userId) {
+                  navigation.navigate('ContactInfo', {
+                    params: {
+                      userId: userId,
+                    },
+                  });
+                } else {
+                  navigation.navigate('GroupParticipantInfo', {
+                    params: {
+                      groupId: groupId,
+                      userId: userId,
+                    },
+                  });
+                }
+              }
+            },
           },
         }}
         onBack={() => {
           // todo: maybe need update
           navigation.goBack();
+        }}
+        onClickedAvatar={(params: {
+          convId: string;
+          convType: ChatConversationType;
+          ownerId?: string | undefined;
+        }) => {
+          if (params.convType === ChatConversationType.PeerChat) {
+            navigation.navigate({
+              name: 'ContactInfo',
+              params: { params: { userId: params.convId } },
+              merge: true,
+            });
+          } else if (params.convType === ChatConversationType.GroupChat) {
+            navigation.navigate({
+              name: 'GroupInfo',
+              params: {
+                params: { groupId: params.convId, ownerId: params.ownerId },
+              },
+              merge: true,
+            });
+          }
         }}
       />
     </SafeAreaView>
