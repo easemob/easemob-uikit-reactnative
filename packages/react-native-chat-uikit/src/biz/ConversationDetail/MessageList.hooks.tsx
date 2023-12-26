@@ -306,8 +306,12 @@ export function useMessageList(
     [dataRef, setData]
   );
 
-  const onAddMessageList = React.useCallback(
-    async (msgs: ChatMessage[], position: MessageAddPosition) => {
+  const onAddMessageListToUI = React.useCallback(
+    async (
+      msgs: ChatMessage[],
+      position: MessageAddPosition,
+      onFinished?: (items: MessageListItemProps[]) => void
+    ) => {
       const list = msgs.reverse().map(async (msg) => {
         const getModel = async () => {
           let modelType = 'message';
@@ -355,6 +359,7 @@ export function useMessageList(
         dataRef.current = [...dataRef.current, ...l];
       }
       setData([...dataRef.current]);
+      onFinished?.(l as MessageListItemProps[]);
     },
     [dataRef, im, setData]
   );
@@ -599,9 +604,8 @@ export function useMessageList(
         },
         'bottom'
       );
-      scrollToEnd();
     },
-    [im.userId, onAddData, scrollToEnd]
+    [im.userId, onAddData]
   );
 
   const createRecallMessageTip = React.useCallback(
@@ -697,22 +701,19 @@ export function useMessageList(
     [createRecallMessageTip, im, onDelMessageToUI, onRecallMessageToUI]
   );
 
-  const onSetMessageRead = React.useCallback(
+  const onSendRecvMessageReadAck = React.useCallback(
     (msg: ChatMessage) => {
       if (
         msg.chatType === ChatMessageChatType.PeerChat &&
         msg.direction === ChatMessageDirection.RECEIVE &&
-        msg.hasReadAck === true &&
-        msg.hasRead === false
+        msg.hasReadAck === false
       ) {
-        im.setMessageRead({
-          convId,
-          convType,
-          msgId: msg.msgId,
+        im.messageManager.sendMessageReadAck({
+          message: msg,
         });
       }
     },
-    [convId, convType, im]
+    [im]
   );
 
   React.useEffect(() => {
@@ -723,7 +724,8 @@ export function useMessageList(
       onRecvMessage: (msg: ChatMessage) => {
         if (msg.conversationId === convId) {
           onAddMessageToUI(msg);
-          onSetMessageRead(msg);
+          onSendRecvMessageReadAck(msg);
+          scrollToEnd();
         }
       },
       onRecvMessageStatusChanged: (msg: ChatMessage) => {
@@ -750,8 +752,9 @@ export function useMessageList(
     onAddMessageToUI,
     onRecallMessage,
     onRecallMessageToUI,
-    onSetMessageRead,
+    onSendRecvMessageReadAck,
     onUpdateMessageToUI,
+    scrollToEnd,
   ]);
 
   const addSendMessageToUI = React.useCallback(
@@ -1016,7 +1019,14 @@ export function useMessageList(
               startMsgIdRef.current = msgs[0]!.msgId.toString();
             }
           }
-          onAddMessageList(msgs, pos);
+          onAddMessageListToUI(msgs, pos, (list) => {
+            list.map((v) => {
+              if (v.model.modelType === 'message') {
+                const msgModel = v.model as MessageModel;
+                onSendRecvMessageReadAck(msgModel.msg);
+              }
+            });
+          });
           if (pos === 'top') {
             isNeedScrollToEndRef.current = false;
           }
@@ -1033,10 +1043,11 @@ export function useMessageList(
     },
     [
       addSendMessageToUI,
-      onAddMessageList,
+      onAddMessageListToUI,
       onDelMessage,
       onEditMessage,
       onRecallMessage,
+      onSendRecvMessageReadAck,
       onUpdateMessageToUI,
       scrollToEnd,
       sendMessageToServer,
@@ -1044,7 +1055,7 @@ export function useMessageList(
   );
 
   const init = React.useCallback(async () => {
-    console.log('test:zuoyu:init:conv_list:');
+    console.log('test:zuoyu:MessageList:init:');
     if (testMode === 'only-ui') {
       const textMsg = ChatMessage.createTextMessage(
         'xxx',
@@ -1435,26 +1446,41 @@ export function useMessageList(
   }, [dataRef, isAutoLoad, setData, testMode]);
 
   const onRequestHistoryMessage = React.useCallback(() => {
-    console.log('test:zuoyu:first:', startMsgIdRef.current);
+    console.log('test:zuoyu:MessageList:onRequestHistoryMessage:');
     im.messageManager.loadHistoryMessage({
       convId,
       convType,
       startMsgId: startMsgIdRef.current,
       onResult: (msgs) => {
-        console.log('test:zuoyu:first:result:', startMsgIdRef.current);
+        console.log(
+          'test:zuoyu:MessageList:onRequestHistoryMessage:',
+          startMsgIdRef.current
+        );
         if (msgs.length > 0) {
           const newStartMsgId = msgs[0]!.msgId.toString();
-          console.log();
           if (newStartMsgId === startMsgIdRef.current) {
             return;
           }
           startMsgIdRef.current = msgs[0]!.msgId.toString();
-          onAddMessageList(msgs, 'top');
+          onAddMessageListToUI(msgs, 'top', (list) => {
+            list.map((v) => {
+              if (v.model.modelType === 'message') {
+                const msgModel = v.model as MessageModel;
+                onSendRecvMessageReadAck(msgModel.msg);
+              }
+            });
+          });
         }
         isNeedScrollToEndRef.current = false;
       },
     });
-  }, [convId, convType, im.messageManager, onAddMessageList]);
+  }, [
+    convId,
+    convType,
+    im.messageManager,
+    onAddMessageListToUI,
+    onSendRecvMessageReadAck,
+  ]);
 
   React.useEffect(() => {
     init();
@@ -1464,7 +1490,7 @@ export function useMessageList(
     convType,
     im.messageManager,
     init,
-    onAddMessageList,
+    onAddMessageListToUI,
     onRequestHistoryMessage,
   ]);
 

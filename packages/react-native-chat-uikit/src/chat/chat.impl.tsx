@@ -119,6 +119,7 @@ export abstract class ChatServiceImpl
     options: ChatOptionsType;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
+    console.log('dev:chat:init');
     const { options } = params;
     const { appKey } = options;
     this._convStorage = new ConversationStorage({ appKey: appKey });
@@ -127,6 +128,7 @@ export abstract class ChatServiceImpl
     this._messageManager = new MessageCacheManagerImpl(this);
     try {
       await this.client.init(new ChatOptions({ ...options }));
+      console.log('test:zuoyu:init:opt:', this.client.options);
       params.result?.({ isOk: true });
     } catch (error) {
       params.result?.({
@@ -2028,6 +2030,21 @@ export abstract class ChatServiceImpl
         params.msgId
       ),
       event: 'setMessageRead',
+    });
+  }
+
+  sendMessageReadAck(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.sendMessageReadAck(params.message),
+      event: 'sendMessageReadAck',
+      onFinished: async () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
     });
   }
 

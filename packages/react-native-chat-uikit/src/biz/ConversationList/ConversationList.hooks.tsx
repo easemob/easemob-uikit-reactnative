@@ -367,7 +367,6 @@ export function useConversationList(
               } else {
                 item.data.unreadMessageCount = undefined;
               }
-              console.log('test:zuoyu:data:', item.data);
               item.data = { ...item.data };
               break;
             }

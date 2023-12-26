@@ -34,6 +34,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   _downloadList: Map<string, { msg: ChatMessage }>;
   _conv?: ConversationModel;
   constructor(client: ChatService) {
+    console.log('dev:MessageCacheManager:constructor');
     this._client = client;
     this._userListener = new Map();
     this._sendList = new Map();
@@ -52,8 +53,12 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   }
   emitSendMessageChanged(msg: ChatMessage) {
     this._userListener.forEach((v) => {
-      console.log('test:zouyu:emitSendMessageChanged:', msg);
       v.onSendMessageChanged?.(msg);
+    });
+  }
+  emitRecvMessageStateChanged(msg: ChatMessage) {
+    this._userListener.forEach((v) => {
+      v.onRecvMessageStatusChanged?.(msg);
     });
   }
   emitAttachmentChanged(msg: ChatMessage) {
@@ -62,8 +67,14 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     });
   }
   init() {
+    console.log('dev:MessageCacheManager:init');
     this._listener = {
       onMessagesReceived: (messages: Array<ChatMessage>) => {
+        console.log(
+          'dev:MessageCacheManager:onMessagesReceived',
+          messages.length,
+          this._userListener?.size
+        );
         messages.forEach((msg) => {
           this._userListener.forEach((v) => {
             v.onRecvMessage?.(msg);
@@ -128,6 +139,21 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   }
   setCurrentConvId(conv: ConversationModel): void {
     this._conv = conv;
+  }
+  sendMessageReadAck(params: { message: ChatMessage }): void {
+    this._client.sendMessageReadAck({
+      message: params.message,
+      onResult: (result) => {
+        if (result.isOk === true) {
+          console.log('test:zouyu:sendMessageReadAck:success:', result);
+          const hasReadAck = params.message.hasReadAck;
+          if (hasReadAck !== true) {
+            const tmp = { ...params.message, hasReadAck: true } as ChatMessage;
+            this.emitRecvMessageStateChanged(tmp);
+          }
+        }
+      },
+    });
   }
   async sendMessage(msg: ChatMessage): Promise<void> {
     const callback: ChatMessageStatusCallback = {

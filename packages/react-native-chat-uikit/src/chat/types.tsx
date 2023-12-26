@@ -471,6 +471,10 @@ export interface MessageServices {
     convType: ChatConversationType;
     msgId: string;
   }): void;
+  sendMessageReadAck(params: {
+    message: ChatMessage;
+    onResult: ResultCallback<void>;
+  }): void;
   reportMessage(params: {
     messageId: string;
     tag: string;

@@ -24,4 +24,5 @@ export interface MessageCacheManager
     startMsgId: string;
     onResult: (msgs: ChatMessage[]) => void;
   }): void;
+  sendMessageReadAck(params: { message: ChatMessage }): void;
 }
