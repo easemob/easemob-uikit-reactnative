@@ -7,20 +7,26 @@ import * as React from 'react';
 import { View } from 'react-native';
 import {
   BottomTabBar,
+  ChatServiceListener,
   ContactList,
   ConversationList,
   DataModel,
   DataModelType,
+  DisconnectReasonType,
   MineInfo,
   TabPage,
   TabPageRef,
   UIKitError,
   useChatContext,
+  useChatListener,
   useI18nContext,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
+
+const env = require('../../env');
+const demoType = env.demoType;
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 
@@ -283,10 +289,44 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
 export type HomeTabMineScreenProps = {};
 function HomeTabMineScreen(props: HomeTabMineScreenProps) {
   const {} = props;
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
   const im = useChatContext();
+  const [userId, setUserId] = React.useState<string>();
 
-  if (im.userId) {
-    return <MineInfo userId={im.userId} />;
+  useChatListener(
+    React.useMemo(() => {
+      return {
+        onConnected: (): void => {
+          setUserId(im.userId);
+        },
+        onDisconnected: (reason: DisconnectReasonType): void => {
+          if (reason === DisconnectReasonType.others) {
+            return;
+          }
+          setUserId(undefined);
+        },
+      } as ChatServiceListener;
+    }, [im.userId])
+  );
+
+  React.useEffect(() => {
+    if (im.userId) {
+      setUserId(im.userId);
+    }
+  }, [im.userId]);
+
+  if (userId) {
+    return (
+      <MineInfo
+        userId={userId}
+        onClickedLogout={() => {
+          if (demoType === 3) {
+            navigation.replace('Login', {});
+          }
+        }}
+      />
+    );
   } else {
     return <View />;
   }

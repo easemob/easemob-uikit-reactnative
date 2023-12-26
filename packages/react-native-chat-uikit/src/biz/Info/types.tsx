@@ -61,4 +61,5 @@ export type MineInfoProps = InfoProps & {
   userId: string;
   userName?: string;
   userAvatar?: string;
+  onClickedLogout?: () => void;
 };

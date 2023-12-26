@@ -60,6 +60,7 @@ export function MineInfo(props: MineInfoProps) {
         {
           flexGrow: 1,
           backgroundColor: getColor('bg'),
+          // backgroundColor: 'red',
         },
         containerStyle,
       ]}

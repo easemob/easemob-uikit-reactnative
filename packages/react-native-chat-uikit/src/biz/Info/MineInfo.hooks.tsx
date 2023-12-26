@@ -20,6 +20,7 @@ export function useMineInfo(props: MineInfoProps) {
     userAvatar: propsUserAvatar,
     doNotDisturb: propsDoNotDisturb,
     onClearChat: propsOnClearChat,
+    onClickedLogout: propsOnClickedLogout,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(propsUserName);
@@ -72,17 +73,11 @@ export function useMineInfo(props: MineInfoProps) {
       });
   };
 
-  const onClickedState = () => {
-    onShowStateMenu();
-  };
-
-  const onClickedLogout = () => {};
-
   const onRequestModalClose = () => {
     menuRef.current?.startHide?.();
   };
 
-  const onShowStateMenu = () => {
+  const onShowStateMenu = React.useCallback(() => {
     menuRef.current?.startShowWithProps({
       onRequestModalClose: onRequestModalClose,
       layoutType: 'center',
@@ -126,7 +121,15 @@ export function useMineInfo(props: MineInfoProps) {
         },
       ],
     });
-  };
+  }, [im]);
+
+  const onClickedState = React.useCallback(() => {
+    onShowStateMenu();
+  }, [onShowStateMenu]);
+
+  const onClickedLogout = React.useCallback(() => {
+    propsOnClickedLogout?.();
+  }, [propsOnClickedLogout]);
 
   const listener = React.useMemo(() => {
     return {

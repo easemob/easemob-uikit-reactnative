@@ -182,6 +182,7 @@ export abstract class ChatServiceImpl
       usePassword,
     } = params;
     try {
+      console.log('test:zuoyu:login:', params);
       const version = require('react-native-chat-sdk/src/version');
       const list = version.default.split('.');
       const major = parseInt(list[0]!, 10);

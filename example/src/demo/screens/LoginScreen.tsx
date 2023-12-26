@@ -9,14 +9,19 @@ import {
 
 import type { RootScreenParamsList } from '../routes';
 
+const account = require('../../env').account as {
+  id: string;
+  token: string;
+}[];
+let gId = account[0]?.id;
+let gToken = account[0]?.token;
+let gIsPass = false;
+
+const demoType = require('../../env').demoType;
+
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LoginScreen(props: Props) {
-  const {} = props;
-
-  const account = require('../../env').account as {
-    id: string;
-    token: string;
-  }[];
+  const { navigation } = props;
 
   const im = useChatContext();
   useChatListener(
@@ -35,9 +40,22 @@ export function LoginScreen(props: Props) {
   const [s, setS] = React.useState<'' | 'success' | 'failed' | 'logouted'>('');
   const [s2, setS2] = React.useState<string>('');
   const [reason, setReason] = React.useState<string>('');
-  const [id, setId] = React.useState(account[0]?.id);
-  const [isPass, setIsPass] = React.useState(false);
-  const [token, setToken] = React.useState(account[0]?.token);
+  const [id, setId] = React.useState(gId);
+  const [isPass, setIsPass] = React.useState(gIsPass);
+  const [token, setToken] = React.useState(gToken);
+
+  const onToken = (t: string) => {
+    gToken = t;
+    setToken(t);
+  };
+  const onId = (t: string) => {
+    gId = t;
+    setId(t);
+  };
+  const onIsPass = (t: boolean) => {
+    gIsPass = t;
+    setIsPass(t);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -54,21 +72,24 @@ export function LoginScreen(props: Props) {
       <View style={{ height: 10 }} />
       <TextInput
         placeholder={'Please enter ID.'}
-        style={{ height: 40, backgroundColor: '#fff8dc' }}
+        style={{ height: 40, backgroundColor: '#fff8dc', borderRadius: 4 }}
+        containerStyle={{ paddingHorizontal: 10 }}
         value={id}
-        onChangeText={setId}
+        onChangeText={onId}
       />
       <View style={{ height: 10 }} />
       <TextInput
         placeholder={'Please enter Token or password.'}
-        style={{ height: 40, backgroundColor: '#fff8dc' }}
+        style={{ backgroundColor: '#fff8dc', borderRadius: 4 }}
+        containerStyle={{ paddingHorizontal: 10 }}
+        multiline={true}
         value={token}
-        onChangeText={setToken}
+        onChangeText={onToken}
       />
       <View style={{ height: 10 }} />
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text>{'Whether to use a password to log in.'}</Text>
-        <Switch value={isPass} onValueChange={setIsPass} />
+        <Switch value={isPass} onValueChange={onIsPass} />
       </View>
       <View style={{ height: 10 }} />
       <TouchableOpacity
@@ -92,10 +113,16 @@ export function LoginScreen(props: Props) {
                 'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/cat-512.png',
               gender: 1,
               sign: 'Discussing heroes over wine.',
+              usePassword: isPass,
               result: ({ isOk, error }) => {
                 setS(isOk === true ? 'success' : 'failed');
                 if (error) {
                   setReason(error.toString());
+                }
+                if (demoType === 3) {
+                  if (isOk === true) {
+                    navigation.replace('Home', {});
+                  }
                 }
               },
             });

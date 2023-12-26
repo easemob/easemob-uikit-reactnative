@@ -58,9 +58,7 @@ SplashScreen?.preventAutoHideAsync();
 
 export function App() {
   const [initialRouteName] = React.useState(
-    demoType === 2
-      ? ('TopMenu' as RootParamsName)
-      : ('TopMenu' as RootParamsName)
+    demoType === 2 ? ('TopMenu' as RootParamsName) : ('Login' as RootParamsName)
   );
   const palette = usePresetPalette();
   const dark = useDarkTheme(palette);
