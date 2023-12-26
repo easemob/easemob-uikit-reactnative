@@ -80,6 +80,7 @@ export const MessageInput = React.forwardRef<
     editRef,
     onEditMessageFinished,
     quoteMsg,
+    onClickedEmojiSend,
   } = useMessageInput(props, ref);
 
   return (
@@ -242,7 +243,7 @@ export const MessageInput = React.forwardRef<
           }}
           onFace={onClickedFaceListItem}
           onDel={onClickedDelButton}
-          onSend={onClickedSend}
+          onSend={onClickedEmojiSend}
         />
         {/* <DelButtonMemo
           getColor={getColor}

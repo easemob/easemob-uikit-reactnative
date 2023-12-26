@@ -333,7 +333,20 @@ export function useMessageInput(
     menuRef.current?.startHide?.();
   };
 
+  const onClickedEmojiSend = React.useCallback(() => {
+    // !!! warning: valueRef.current is not the latest value
+    console.log('test:zuoyu:onClickedEmojiSend');
+    const content = valueRef.current;
+    propsOnClickedSend?.({
+      type: 'text',
+      content: content,
+    });
+    onClickedClearButton();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onClickedSend = () => {
+    console.log('test:zuoyu:onClickedSend', sendIconName);
     if (sendIconName === 'airplane') {
       const content = valueRef.current;
       if (quoteMessageRef.current !== undefined) {
@@ -622,5 +635,6 @@ export function useMessageInput(
     editRef,
     onEditMessageFinished,
     quoteMsg: quoteMessageRef.current?.msg,
+    onClickedEmojiSend,
   };
 }
