@@ -5,7 +5,7 @@ import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
-import { Text } from '../../ui/Text';
+import { SingleLineText, Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import {
   TopNavigationBar,
@@ -15,7 +15,7 @@ import { useConversationDetail } from './ConversationDetail.hooks';
 import type { ConversationDetailProps } from './types';
 
 export function ConversationDetail(props: ConversationDetailProps) {
-  const { containerStyle, onBack, convId, convName } = props;
+  const { containerStyle, onBack, convId } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -48,7 +48,8 @@ export function ConversationDetail(props: ConversationDetailProps) {
     onQuoteMessageForInput,
     onEditMessageForInput,
     onEditMessageFinished,
-    avatarUrl,
+    convName,
+    convAvatar,
   } = useConversationDetail(props);
 
   const navigationBar = () => {
@@ -63,15 +64,20 @@ export function ConversationDetail(props: ConversationDetailProps) {
                 onBack?.();
               }}
             />
-            <Avatar url={avatarUrl} size={32} />
-            <View style={{ marginLeft: 10 }}>
-              <Text
+            <Avatar url={convAvatar} size={32} />
+            <View
+              style={{
+                marginLeft: 10,
+                maxWidth: '60%',
+              }}
+            >
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('text') }}
               >
                 {convName ?? convId}
-              </Text>
+              </SingleLineText>
               <Text
                 textType={'extraSmall'}
                 paletteType={'label'}

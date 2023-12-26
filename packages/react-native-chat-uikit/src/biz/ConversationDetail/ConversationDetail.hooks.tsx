@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ChatConversationType } from 'react-native-chat-sdk';
 
 import { useChatContext } from '../../chat';
 import { usePermissions } from '../../hook';
@@ -19,8 +20,15 @@ import type {
 import { useCreateConversationDirectory } from './useCreateConversationDirectory';
 
 export function useConversationDetail(props: ConversationDetailProps) {
-  const { convId, convType, convName, testMode, input, list, onInitialized } =
-    props;
+  const {
+    convId,
+    convType,
+    convName: propsConvName,
+    testMode,
+    input,
+    list,
+    onInitialized,
+  } = props;
   const permissionsRef = React.useRef(false);
 
   const messageInputRef = React.useRef<MessageInputRef>({} as any);
@@ -35,8 +43,10 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const messageListProps = list?.props
     ? { ...list.props, convId, convType, testMode }
     : { convId, convType, testMode };
-
-  const [avatarUrl, setAvatarUrl] = React.useState<string>();
+  const [convName, setConvName] = React.useState<string | undefined>(
+    propsConvName
+  );
+  const [convAvatar, setConvAvatar] = React.useState<string>();
 
   usePermissions({
     onResult: (isSuccess) => {
@@ -54,17 +64,46 @@ export function useConversationDetail(props: ConversationDetailProps) {
       createIfNotExist: true,
       fromNative: true,
     });
+    console.log('test:zuoyu:setconver:', conv);
     if (conv) {
-      if (conv.convName === undefined) {
-        conv.convName = convName;
+      if (conv.convName === undefined || conv.convId === conv.convName) {
+        if (conv.convType === ChatConversationType.PeerChat) {
+          im.getUserInfo({
+            userId: conv.convId,
+            onResult: (result) => {
+              if (result.isOk === true && result.value) {
+                conv.convName = result.value?.userName ?? result.value?.remark;
+                setConvName(result.value?.userName ?? result.value?.remark);
+                if (result.value?.avatarURL) {
+                  conv.convAvatar = result.value.avatarURL;
+                  setConvAvatar(result.value.avatarURL);
+                }
+                im.messageManager.setCurrentConvId({ ...conv });
+              }
+            },
+          });
+        } else if (conv.convType === ChatConversationType.GroupChat) {
+          im.getGroupInfo({
+            groupId: conv.convId,
+            onResult: (result) => {
+              console.log('test:zuoyu:gourp:', result);
+              if (result.isOk === true && result.value) {
+                conv.convName = result.value.groupName ?? result.value.groupId;
+                setConvName(result.value.groupName ?? result.value.groupId);
+                if (result.value.groupAvatar) {
+                  conv.convAvatar = result.value.groupAvatar;
+                  setConvAvatar(result.value.groupAvatar);
+                }
+                im.messageManager.setCurrentConvId({ ...conv });
+              }
+            },
+          });
+        }
       }
       im.setCurrentConversation({ conv });
       im.setConversationRead({ convId, convType });
-      if (conv.convAvatar && conv.convAvatar.length > 0) {
-        setAvatarUrl(conv.convAvatar);
-      }
     }
-  }, [convId, convName, convType, im]);
+  }, [convId, convType, im]);
 
   React.useEffect(() => {
     const conv = im.getCurrentConversation();
@@ -151,6 +190,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     onQuoteMessageForInput,
     onEditMessageForInput,
     onEditMessageFinished,
-    avatarUrl,
+    convName,
+    convAvatar,
   };
 }

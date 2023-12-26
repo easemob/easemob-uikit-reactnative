@@ -29,8 +29,19 @@ export function CreateGroupScreen(props: Props) {
           });
         }}
         selectedData={data}
-        onCreateGroupResult={() => {
-          navigation.goBack();
+        onCreateGroupResult={(result) => {
+          if (result.isOk === true) {
+            navigation.pop();
+            navigation.navigate('ConversationDetail', {
+              params: {
+                convId: result.value?.groupId,
+                convType: 1,
+                convName: result.value?.groupName,
+              },
+            });
+          } else {
+            navigation.goBack();
+          }
         }}
       />
     </SafeAreaView>

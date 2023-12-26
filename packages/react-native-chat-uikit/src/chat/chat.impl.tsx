@@ -1508,6 +1508,9 @@ export abstract class ChatServiceImpl
           value: value,
         });
       },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
     });
   }
 

@@ -342,7 +342,15 @@ export function getSystemTip(
       return tr('_uikit_msg_tip_recall');
     }
   } else if (body.event === gCustomMessageCreateGroupEventType) {
-    return 'create group';
+    try {
+      const content = JSON.parse(body.params?.recall as any) as {
+        text: string;
+        self: string;
+      };
+      return tr(content.text);
+    } catch (error) {
+      return tr('_uikit_msg_tip_create_group_success');
+    }
   }
   return '';
 }

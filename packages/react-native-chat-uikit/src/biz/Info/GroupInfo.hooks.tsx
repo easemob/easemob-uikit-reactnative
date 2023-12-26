@@ -79,7 +79,6 @@ export function useGroupInfo(
             fromNative: true,
           })
             .then((result) => {
-              console.log('test:zuoyu:conversation:', result);
               if (result) {
                 setDoNotDisturb(result.doNotDisturb);
               }

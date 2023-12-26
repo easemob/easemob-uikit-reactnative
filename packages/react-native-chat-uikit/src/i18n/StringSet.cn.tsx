@@ -38,6 +38,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_group_alert_change_owner_title': (name) => `转让群主身份给${name}`,
     '_uikit_group_alert_del_member_title': (names) =>
       `确认删除${names}等选中成员？`,
+    '_uikit_group_create_name': '的群聊',
 
     '_uikit_chat_input_quote_file': (name) => `附件 ${name}`,
     '_uikit_chat_input_quote_title_1': '正在回复',
@@ -58,6 +59,7 @@ export function createStringSetCn(): StringSet {
       isSelf === true ? `你撤回了一条消息` : `${name}撤回了一条消息`,
     '_uikit_msg_tip_not_support': '不支持的消息类型',
     '_uikit_msg_edit': '已编辑',
+    '_uikit_msg_tip_create_group_success': '创建群聊成功',
 
     '_uikit_info_send_msg': '发消息',
     '_uikit_info_send_audio': '音频通话',

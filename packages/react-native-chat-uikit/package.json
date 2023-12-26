@@ -11,6 +11,7 @@
     "assets",
     "src",
     "src/version.ts",
+    "src/config.local.ts",
     "lib",
     "android",
     "ios",
