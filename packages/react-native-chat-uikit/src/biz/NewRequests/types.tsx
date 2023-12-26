@@ -6,6 +6,7 @@ import type {
   ListItemProps,
   ListItemRequestProps,
   ListRequestProps,
+  PropsWithBack,
   PropsWithError,
   PropsWithTest,
 } from '../types';
@@ -13,6 +14,7 @@ import type {
 export type NewRequestsProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
+  PropsWithBack &
   Omit<
     ListItemActions<NewRequestModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'

@@ -25,6 +25,9 @@ export function NewConversationScreen(props: Props) {
             params: { searchType: 'new-conversation' },
           });
         }}
+        onBack={() => {
+          navigation.goBack();
+        }}
       />
     </SafeAreaView>
   );

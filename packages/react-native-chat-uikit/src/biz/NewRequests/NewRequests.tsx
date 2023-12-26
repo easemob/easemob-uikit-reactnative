@@ -20,7 +20,7 @@ import type { NewRequestsItemProps, NewRequestsProps } from './types';
 const FlatList = FlatListFactory<NewRequestsItemProps>();
 
 export function NewRequests(props: NewRequestsProps) {
-  const { containerStyle } = props;
+  const { containerStyle, onBack } = props;
   const {
     data,
     refreshing,
@@ -62,7 +62,7 @@ export function NewRequests(props: NewRequestsProps) {
               iconName={'chevron_left'}
               style={{ width: 24, height: 24 }}
               onPress={() => {
-                // todo: left
+                onBack?.();
               }}
             />
             <Text

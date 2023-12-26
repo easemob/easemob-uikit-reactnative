@@ -85,6 +85,9 @@ export function GroupParticipantListScreen(props: Props) {
         onClickedDelParticipant={() => {
           navigation.push('DelGroupParticipant', { params: { groupId } });
         }}
+        onBack={() => {
+          navigation.goBack();
+        }}
       />
     </SafeAreaView>
   );

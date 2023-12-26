@@ -25,6 +25,9 @@ export function NewRequestScreen(props: Props) {
             navigation.push('ContactInfo', { params: { userId: data.id } });
           }
         }}
+        onBack={() => {
+          navigation.goBack();
+        }}
       />
     </SafeAreaView>
   );

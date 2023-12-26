@@ -6,7 +6,12 @@ import { ContactList, ContactListProps } from '../ContactList';
 
 export type AddGroupParticipantProps = Pick<
   ContactListProps,
-  'containerStyle' | 'onClicked' | 'onSearch' | 'groupId' | 'selectedData'
+  | 'containerStyle'
+  | 'onClicked'
+  | 'onSearch'
+  | 'groupId'
+  | 'selectedData'
+  | 'onBack'
 > & {
   onAddedResult?: ResultCallback<void>;
 };

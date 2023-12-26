@@ -4,7 +4,7 @@ import { ContactList, ContactListProps } from '../ContactList';
 
 export type NewConversationProps = Pick<
   ContactListProps,
-  'containerStyle' | 'onClicked' | 'onSearch'
+  'containerStyle' | 'onClicked' | 'onSearch' | 'onBack'
 >;
 export function NewConversation(props: NewConversationProps) {
   return <ContactList contactType={'new-conversation'} {...props} />;

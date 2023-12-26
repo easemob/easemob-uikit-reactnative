@@ -46,6 +46,9 @@ export function ContactInfoScreen(props: Props) {
             },
           });
         }}
+        onBack={() => {
+          navigation.goBack();
+        }}
       />
     </SafeAreaView>
   );

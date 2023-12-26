@@ -43,6 +43,9 @@ export function CreateGroupScreen(props: Props) {
             navigation.goBack();
           }
         }}
+        onBack={() => {
+          navigation.goBack();
+        }}
       />
     </SafeAreaView>
   );

@@ -76,6 +76,9 @@ export function GroupListScreen(props: Props) {
             });
           }
         }}
+        onBack={() => {
+          navigation.goBack();
+        }}
       />
     </SafeAreaView>
   );

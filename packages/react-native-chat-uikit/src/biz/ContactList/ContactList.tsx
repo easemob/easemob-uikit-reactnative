@@ -148,7 +148,7 @@ export function ContactList(props: ContactListProps) {
                 iconName={'chevron_left'}
                 style={{ width: 24, height: 24 }}
                 onPress={() => {
-                  // todo: left
+                  onBack?.();
                 }}
               />
               <Text
@@ -184,7 +184,7 @@ export function ContactList(props: ContactListProps) {
                 iconName={'chevron_left'}
                 style={{ width: 24, height: 24 }}
                 onPress={() => {
-                  // todo: left
+                  onBack?.();
                 }}
               />
               <Text

@@ -35,6 +35,9 @@ export function AddGroupParticipantScreen(props: Props) {
           console.log('onAddedResult');
           navigation.goBack();
         }}
+        onBack={() => {
+          navigation.goBack();
+        }}
       />
     </SafeAreaView>
   );

@@ -134,6 +134,9 @@ export function GroupInfoScreen(props: Props) {
             },
           });
         }}
+        onBack={() => {
+          navigation.goBack();
+        }}
       />
     </SafeAreaView>
   );
