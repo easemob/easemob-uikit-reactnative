@@ -9,7 +9,7 @@ import type {
   NotificationService,
   PermissionService,
 } from '../services';
-import type { Palette, Theme } from '../theme';
+import type { CornerRadiusPaletteType, Palette, Theme } from '../theme';
 import type { ReleaseArea } from '../types';
 
 /**
@@ -56,6 +56,25 @@ export type GlobalContainerProps = React.PropsWithChildren<{
    * The conversation detail config.
    */
   conversationDetail?: ConversationDetailType;
+  /**
+   * Avatar option.
+   */
+  avatar?: {
+    borderRadiusStyle?: CornerRadiusPaletteType;
+    localIcon?: number | undefined;
+  };
+  /**
+   * Input component option.
+   */
+  input?: {
+    borderRadiusStyle?: CornerRadiusPaletteType;
+  };
+  /**
+   * Alert component option.
+   */
+  alert?: {
+    borderRadiusStyle?: CornerRadiusPaletteType;
+  };
   /**
    * IM initialization is completed.
    */

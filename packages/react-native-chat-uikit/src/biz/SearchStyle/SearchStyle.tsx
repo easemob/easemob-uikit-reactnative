@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
-import { useColors } from '../../hook';
+import { useColors, useGetStyleProps } from '../../hook';
 import { useI18nContext } from '../../i18n';
-import { usePaletteContext } from '../../theme';
+import { usePaletteContext, useThemeContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 
@@ -13,7 +13,9 @@ export type SearchStyleProps = {
 };
 export function SearchStyle(props: SearchStyleProps) {
   const { title, onPress } = props;
-  const { colors } = usePaletteContext();
+  const { colors, cornerRadius } = usePaletteContext();
+  const { cornerRadius: corner } = useThemeContext();
+  const { getBorderRadius } = useGetStyleProps();
   const { getColor } = useColors({
     backgroundColor: {
       light: colors.neutral[95],
@@ -38,7 +40,11 @@ export function SearchStyle(props: SearchStyleProps) {
         <View
           style={{
             flexDirection: 'row',
-            borderRadius: 18,
+            borderRadius: getBorderRadius({
+              height: 36,
+              crt: corner.input,
+              cr: cornerRadius,
+            }),
             height: 36,
             paddingVertical: 7,
             width: '100%',

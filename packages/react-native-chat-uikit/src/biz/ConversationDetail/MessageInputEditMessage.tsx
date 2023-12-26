@@ -247,7 +247,7 @@ export const MessageInputEditMessage = React.forwardRef<
                   // width: '100%',
                   minHeight: 22,
                   backgroundColor: getColor('bg2'),
-                  borderRadius: 4,
+                  // borderRadius: 4,
                 }}
                 onFocus={onFocus}
                 onBlur={onBlur}

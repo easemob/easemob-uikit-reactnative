@@ -74,7 +74,7 @@ export function Search(props: SearchProps) {
             containerStyle={{
               backgroundColor: getColor('backgroundColor2'),
               justifyContent: 'center',
-              borderRadius: 18,
+              // borderRadius: 18,
               height: 36,
             }}
             style={{

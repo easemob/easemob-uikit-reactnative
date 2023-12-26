@@ -162,10 +162,10 @@ export const MessageInput = React.forwardRef<
               <View
                 style={{
                   flexDirection: 'row',
-                  paddingHorizontal: 16,
-                  paddingVertical: 7,
-                  backgroundColor: getColor('input_bg'),
-                  borderRadius: 18,
+                  // paddingHorizontal: 16,
+                  // paddingVertical: 7,
+                  // backgroundColor: getColor('input_bg'),
+                  // borderRadius: 18,
                 }}
               >
                 <TextInput
@@ -184,6 +184,10 @@ export const MessageInput = React.forwardRef<
                   containerStyle={{
                     width: '100%',
                     minHeight: 22,
+                    paddingHorizontal: 16,
+                    paddingVertical: 7,
+                    backgroundColor: getColor('input_bg'),
+                    // borderRadius: 18,
                   }}
                   onFocus={onFocus}
                   onBlur={onBlur}

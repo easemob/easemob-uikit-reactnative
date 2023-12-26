@@ -42,6 +42,9 @@ export function GlobalContainer(props: GlobalContainerProps) {
     releaseArea,
     onInitialized,
     conversationDetail,
+    avatar,
+    input,
+    alert,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -53,6 +56,9 @@ export function GlobalContainer(props: GlobalContainerProps) {
     theme: theme,
     palette: palette ?? _palette,
     releaseArea: _releaseArea,
+    avatar,
+    input,
+    alert,
   });
 
   return (

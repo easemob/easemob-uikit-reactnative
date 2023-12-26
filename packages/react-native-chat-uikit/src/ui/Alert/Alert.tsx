@@ -172,12 +172,12 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 containerStyle={{
                   backgroundColor: getColor('bg2'),
                   justifyContent: 'center',
-                  borderRadius: getBorderRadius({
-                    height: 48,
-                    crt: corner.input,
-                    cr: cornerRadius,
-                    style: containerStyle,
-                  }),
+                  // borderRadius: getBorderRadius({
+                  //   height: 48,
+                  //   crt: corner.input,
+                  //   cr: cornerRadius,
+                  //   style: containerStyle,
+                  // }),
                   minHeight: 48,
                   width: '100%',
                 }}

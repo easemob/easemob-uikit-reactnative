@@ -50,7 +50,11 @@ export function useGetStyleProps() {
         style?: StyleProp<ViewStyle | ImageStyle>;
       }) => {
         const { height, crt, cr, style } = params;
-        const borderRadius = (style as any)?.borderRadius;
+        const borderRadius = getPropValueFromStyleT(
+          style,
+          'borderRadius'
+        )?.borderRadius;
+        // const borderRadius = (style as any)?.borderRadius;
         if (borderRadius === undefined) {
           switch (crt) {
             case 'extraSmall':

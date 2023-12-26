@@ -1,4 +1,5 @@
 import type { LanguageCode } from '../i18n';
+import type { CornerRadiusPaletteType } from '../theme';
 
 export type ConversationDetailType = {
   bubble?: {

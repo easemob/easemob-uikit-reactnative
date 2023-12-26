@@ -9,6 +9,8 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { useGetStyleProps } from '../../hook';
+import { usePaletteContext, useThemeContext } from '../../theme';
 import { Text } from '../Text';
 
 export type TextInputProps = RNTextInputProps & {
@@ -57,6 +59,9 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       onChangeText,
       ...others
     } = props;
+    const { cornerRadius: corner } = useThemeContext();
+    const { cornerRadius } = usePaletteContext();
+    const { getBorderRadius } = useGetStyleProps();
 
     const getMaxHeight = () => {
       if (multiline === true && numberOfLines && unitHeight) {
@@ -98,7 +103,20 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
     };
 
     return (
-      <View style={[containerStyle, getStyle()]}>
+      <View
+        style={[
+          {
+            borderRadius: getBorderRadius({
+              height: 36,
+              crt: corner.avatar,
+              cr: cornerRadius,
+              style: containerStyle,
+            }),
+          },
+          containerStyle,
+          getStyle(),
+        ]}
+      >
         <RNTextInput
           ref={ref}
           multiline={multiline}

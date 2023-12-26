@@ -11,7 +11,12 @@ import VideoComponent from 'react-native-video';
 
 import { CreateStringSet, LanguageCode, languageCodes } from '../i18n';
 import { Services } from '../services';
-import { Palette, Theme, useLightTheme } from '../theme';
+import {
+  CornerRadiusPaletteType,
+  Palette,
+  Theme,
+  useLightTheme,
+} from '../theme';
 import type { ReleaseArea } from '../types';
 import { getSystemLanguage } from '../utils';
 import type { GlobalContainerProps } from './types';
@@ -47,7 +52,7 @@ export const getI18nLanguage = (
     ret = getDefaultLanguage();
   }
 
-  console.log('dev:language:', ret);
+  console.log('dev:language:i18n:', ret);
   return ret;
 };
 
@@ -59,7 +64,7 @@ export const getTranslateLanguage = (language?: LanguageCode): LanguageCode => {
     ret = getDefaultLanguage();
   }
 
-  console.log('dev:language:', ret);
+  console.log('dev:language:tl:', ret);
   return ret;
 };
 
@@ -67,7 +72,7 @@ export const getReleaseArea = (releaseArea?: ReleaseArea): ReleaseArea => {
   if (releaseArea) {
     return releaseArea;
   }
-  let ret = require('../config.local').releaseArea as ReleaseArea;
+  let ret = require('../config.local').release_area as ReleaseArea;
   if (ret !== 'global' && ret !== 'china') {
     ret = 'global';
   }
@@ -75,16 +80,62 @@ export const getReleaseArea = (releaseArea?: ReleaseArea): ReleaseArea => {
   return ret;
 };
 
+export const getAvatarRadiusStyle = (params: { releaseArea?: ReleaseArea }) => {
+  if (params.releaseArea === 'china') {
+    return 'small' as CornerRadiusPaletteType;
+  } else {
+    return 'extraLarge' as CornerRadiusPaletteType;
+  }
+};
+
+export const getInputRadiusStyle = (params: { releaseArea?: ReleaseArea }) => {
+  if (params.releaseArea === 'china') {
+    return 'small' as CornerRadiusPaletteType;
+  } else {
+    return 'extraLarge' as CornerRadiusPaletteType;
+  }
+};
+
+export const getAlertRadiusStyle = (params: { releaseArea?: ReleaseArea }) => {
+  if (params.releaseArea === 'china') {
+    return 'small' as CornerRadiusPaletteType;
+  } else {
+    return 'large' as CornerRadiusPaletteType;
+  }
+};
+
 export const useGetTheme = (params: {
   palette: Palette;
   theme?: Theme;
   releaseArea?: ReleaseArea;
+  avatar?: {
+    borderRadiusStyle?: CornerRadiusPaletteType;
+    localIcon?: number | undefined;
+  };
+  input?: {
+    borderRadiusStyle?: CornerRadiusPaletteType;
+  };
+  alert?: {
+    borderRadiusStyle?: CornerRadiusPaletteType;
+  };
 }) => {
-  const { palette, theme, releaseArea } = params;
+  const { palette, theme, releaseArea, avatar, input, alert } = params;
   const light = useLightTheme(palette, releaseArea);
   if (theme) {
+    theme.cornerRadius.avatar =
+      avatar?.borderRadiusStyle ?? getAvatarRadiusStyle({ releaseArea });
+    theme.cornerRadius.input =
+      input?.borderRadiusStyle ?? getInputRadiusStyle({ releaseArea });
+    theme.cornerRadius.alert =
+      alert?.borderRadiusStyle ?? getAlertRadiusStyle({ releaseArea });
     return theme;
   } else {
+    light.cornerRadius.avatar =
+      avatar?.borderRadiusStyle ?? getAvatarRadiusStyle({ releaseArea });
+    light.cornerRadius.input =
+      input?.borderRadiusStyle ?? getInputRadiusStyle({ releaseArea });
+    light.cornerRadius.alert =
+      alert?.borderRadiusStyle ?? getAlertRadiusStyle({ releaseArea });
     return light;
   }
 };
