@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import type { IconNameType } from '../../assets';
 import { getElement, useColors } from '../../hook';
@@ -8,19 +8,8 @@ import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
+import type { TopNavigationBarProps } from './types';
 
-type TopNavigationBarProps<LeftProps, RightProps> = {
-  Title?: React.ReactElement;
-  Left?: React.ComponentType<LeftProps> | React.ReactElement | null | undefined;
-  LeftProps?: LeftProps;
-  Right?:
-    | React.ComponentType<RightProps>
-    | React.ReactElement
-    | null
-    | undefined;
-  RightProps?: RightProps;
-  containerStyle?: StyleProp<ViewStyle>;
-};
 export function TopNavigationBar<LeftProps = any, RightProps = any>(
   props: TopNavigationBarProps<LeftProps, RightProps>
 ) {

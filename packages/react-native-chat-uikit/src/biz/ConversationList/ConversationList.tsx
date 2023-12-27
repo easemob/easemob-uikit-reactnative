@@ -40,6 +40,7 @@ export function ConversationList(props: ConversationListProps) {
     alertRef,
     avatarUrl,
     tr,
+    onShowConversationListMoreActions,
   } = useConversationList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -62,9 +63,7 @@ export function ConversationList(props: ConversationListProps) {
         Left={<Avatar url={avatarUrl} size={32} />}
         Right={TopNavigationBarRight}
         RightProps={{
-          onClicked: () => {
-            // todo: right
-          },
+          onClicked: onShowConversationListMoreActions,
           iconName: 'plus_in_circle',
         }}
         Title={TopNavigationBarTitle({ text: 'Chat' })}

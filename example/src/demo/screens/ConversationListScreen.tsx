@@ -92,6 +92,15 @@ export function ConversationListScreen(props: Props) {
             },
           });
         }}
+        onClickedNewGroup={() => {
+          navigation.navigate('CreateGroup', {});
+        }}
+        onClickedNewConversation={() => {
+          navigation.navigate('NewConversation', {});
+        }}
+        // onClickedNewContact={() => {
+        //   // todo:
+        // }}
       />
     </SafeAreaView>
   );

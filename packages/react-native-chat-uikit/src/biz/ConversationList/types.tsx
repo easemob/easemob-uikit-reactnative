@@ -41,6 +41,9 @@ export type ConversationListProps = ListRequestProps<DataModel> &
       prevProps: ConversationListItemProps,
       nextProps: ConversationListItemProps
     ) => number;
+    onClickedNewConversation?: () => void;
+    onClickedNewGroup?: () => void;
+    onClickedNewContact?: () => void;
   };
 export type SearchConversationProps = ListRequestProps<DataModel> &
   PropsWithTest &

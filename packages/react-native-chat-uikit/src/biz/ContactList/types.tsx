@@ -59,8 +59,6 @@ export type ContactListProps = ListRequestProps<DataModel> &
       nextProps: ContactListItemProps
     ) => number;
     onNavigationBarMoreActions?: () => void;
-    onClickedNewConversation?: () => void;
-    onClickedNewGroup?: () => void;
     onClickedNewContact?: () => void;
     onCreateGroupResultValue?: (data?: ContactModel[]) => void;
     onAddGroupParticipantResult?: (added: ContactModel[]) => void;
@@ -90,7 +88,6 @@ export type UseContactListReturn = Omit<
 > & {
   onRequestModalClose: () => void;
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  onShowMenu?: () => void;
   alertRef: React.RefObject<AlertRef>;
   onCheckClicked?: ((data?: ContactModel) => void) | undefined;
   selectedCount?: number;

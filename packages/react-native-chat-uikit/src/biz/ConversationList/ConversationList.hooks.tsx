@@ -13,6 +13,10 @@ import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useFlatList } from '../List';
+import {
+  useConversationListMoreActions,
+  useConversationLongPressActions,
+} from '../TopNavigationBar';
 import type { UseFlatListReturn } from '../types';
 import type {
   ConversationListItemProps,
@@ -26,6 +30,7 @@ export function useConversationList(
   UseConversationListReturn & {
     avatarUrl: string | undefined;
     tr: (key: string, ...args: any[]) => string;
+    onShowConversationListMoreActions: () => void;
   } {
   const {
     onClicked,
@@ -33,6 +38,9 @@ export function useConversationList(
     testMode,
     onRequestMultiData,
     onSort: propsOnSort,
+    onClickedNewContact,
+    onClickedNewConversation,
+    onClickedNewGroup,
   } = props;
   const flatListProps = useFlatList<ConversationListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
@@ -51,6 +59,16 @@ export function useConversationList(
   } = flatListProps;
   const [avatarUrl, setAvatarUrl] = React.useState<string>();
   const { tr } = useI18nContext();
+  const alertRef = React.useRef<AlertRef>(null);
+  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const { onShowConversationListMoreActions, onRequestMenuClose } =
+    useConversationListMoreActions({
+      alertRef,
+      menuRef,
+      onClickedNewContact,
+      onClickedNewConversation,
+      onClickedNewGroup,
+    });
 
   const onSort = React.useCallback(
     (
@@ -74,7 +92,8 @@ export function useConversationList(
         if (onLongPressed) {
           onLongPressed(data);
         } else {
-          onShowMenu(data);
+          // onShowMenu(data);
+          onShowConversationLongPressActions(data);
         }
       }
     }
@@ -279,72 +298,15 @@ export function useConversationList(
     }
   };
 
-  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
-  const onRequestModalClose = () => {
-    menuRef.current?.startHide?.();
-  };
-  const onShowMenu = (conv: ConversationModel) => {
-    menuRef.current?.startShowWithInit?.(
-      [
-        {
-          name: conv.doNotDisturb ? 'unmute' : 'mute',
-          isHigh: false,
-          onClicked: () => {
-            onDisturb(conv);
-            menuRef.current?.startHide?.();
-          },
-        },
-        {
-          name: conv.isPinned ? 'unpin' : 'pin',
-          isHigh: false,
-          onClicked: () => {
-            onPin(conv);
-            menuRef.current?.startHide?.();
-          },
-        },
-        {
-          name: '_uikit_conv_menu_read',
-          isHigh: false,
-          onClicked: () => {
-            onRead(conv);
-            menuRef.current?.startHide?.();
-          },
-        },
-        {
-          name: '_uikit_conv_menu_delete',
-          isHigh: true,
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              onShowAlert(conv);
-            });
-          },
-        },
-      ],
-      { title: conv.convName }
-    );
-  };
-  const alertRef = React.useRef<AlertRef>(null);
-  const onShowAlert = (conv: ConversationModel) => {
-    alertRef.current?.alertWithInit?.({
-      title: tr('_uikit_conv_alert_title'),
-      buttons: [
-        {
-          text: tr('cancel'),
-          onPress: () => {
-            alertRef.current?.close?.();
-          },
-        },
-        {
-          text: tr('remove'),
-          isPreferred: true,
-          onPress: () => {
-            alertRef.current?.close?.();
-            onRemove(conv);
-          },
-        },
-      ],
+  const { onShowConversationLongPressActions } =
+    useConversationLongPressActions({
+      menuRef,
+      alertRef,
+      onDisturb,
+      onPin,
+      onRead,
+      onRemove,
     });
-  };
 
   const listener = React.useMemo(() => {
     return {
@@ -428,11 +390,12 @@ export function useConversationList(
     onPin,
     onDisturb,
     onRead,
-    onRequestModalClose,
+    onRequestModalClose: onRequestMenuClose,
     menuRef,
     alertRef,
     avatarUrl,
     tr,
+    onShowConversationListMoreActions,
   };
 }
 

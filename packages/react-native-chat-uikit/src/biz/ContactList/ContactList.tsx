@@ -62,7 +62,7 @@ export function ContactList(props: ContactListProps) {
     onIndexSelected,
     onRequestModalClose,
     menuRef,
-    onShowMenu,
+    onClickedNewContact,
     alertRef,
     onClicked,
     onCheckClicked,
@@ -110,7 +110,7 @@ export function ContactList(props: ContactListProps) {
               if (onNavigationBarMoreActions) {
                 onNavigationBarMoreActions();
               } else {
-                onShowMenu?.();
+                onClickedNewContact?.();
               }
             },
             iconName: 'person_add',

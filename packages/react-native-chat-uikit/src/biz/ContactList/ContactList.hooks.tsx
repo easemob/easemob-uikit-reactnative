@@ -14,6 +14,7 @@ import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
+import { useContactListMoreActions } from '../TopNavigationBar';
 import type { ChoiceType, UseSectionListReturn } from '../types';
 import { g_index_alphabet_range } from './const';
 import type {
@@ -34,15 +35,14 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     groupCount: number;
     avatarUrl: string | undefined;
     tr: (key: string, ...args: any[]) => string;
+    onClickedNewContact?: () => void;
   } {
   const {
     onClicked,
     testMode,
     onRequestData,
     onSort: propsOnSort,
-    onClickedNewContact,
-    onClickedNewConversation,
-    onClickedNewGroup,
+    onClickedNewContact: propsOnClickedNewContact,
     onCreateGroupResultValue,
     contactType,
     selectedData,
@@ -72,8 +72,12 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   const [groupCount, setGroupCount] = React.useState(0);
   const [avatarUrl, setAvatarUrl] = React.useState<string>();
   const { tr } = useI18nContext();
-
   const im = useChatContext();
+  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const alertRef = React.useRef<AlertRef>(null);
+  const onRequestModalClose = () => {
+    menuRef.current?.startHide?.();
+  };
 
   const onSort = React.useCallback(
     (
@@ -453,86 +457,6 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     }
   };
 
-  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
-  const onRequestModalClose = () => {
-    menuRef.current?.startHide?.();
-  };
-  const onShowMenu = () => {
-    if (contactType !== 'contact-list') {
-      return;
-    }
-    menuRef.current?.startShowWithProps?.({
-      initItems: [
-        {
-          name: '_uikit_contact_menu_new_conv',
-          isHigh: false,
-          icon: 'bubble_fill',
-          onClicked: () => {
-            menuRef.current?.startHide?.();
-            onClickedNewConversation?.();
-          },
-        },
-        {
-          name: '_uikit_contact_menu_add_contact',
-          isHigh: false,
-          icon: 'person_add_fill',
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              if (onClickedNewContact) {
-                onClickedNewContact();
-              } else {
-                alertRef.current?.alertWithInit?.({
-                  title: tr('_uikit_contact_alert_title'),
-                  message: tr('_uikit_contact_alert_content'),
-                  supportInput: true,
-                  buttons: [
-                    {
-                      text: tr('cancel'),
-                      onPress: () => {
-                        alertRef.current?.close?.();
-                      },
-                    },
-                    {
-                      text: tr('add'),
-                      isPreferred: true,
-                      onPress: (value) => {
-                        alertRef.current?.close?.();
-                        if (value) {
-                          im.addNewContact({
-                            useId: value.trim(),
-                            reason: 'add contact',
-                            onResult: (_result) => {
-                              // todo:
-                            },
-                          });
-                        }
-                      },
-                    },
-                  ],
-                });
-              }
-            });
-          },
-        },
-        {
-          name: '_uikit_contact_menu_create_group',
-          isHigh: false,
-          icon: 'person_double_fill',
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              onClickedNewGroup?.();
-            });
-          },
-        },
-      ],
-      onRequestModalClose: onRequestModalClose,
-      layoutType: 'left',
-      hasCancel: false,
-    });
-  };
-
-  const alertRef = React.useRef<AlertRef>(null);
-
   useChatListener(
     React.useMemo(() => {
       return {
@@ -659,6 +583,18 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     });
   }, [im]);
 
+  const { onShowContactListMoreActions } = useContactListMoreActions({
+    menuRef,
+    alertRef,
+  });
+  const onClickedNewContact = React.useCallback(() => {
+    if (propsOnClickedNewContact) {
+      propsOnClickedNewContact();
+    } else {
+      onShowContactListMoreActions();
+    }
+  }, [onShowContactListMoreActions, propsOnClickedNewContact]);
+
   React.useEffect(() => {
     const listener = {
       onNewRequestListChanged: (list: NewRequestModel[]) => {
@@ -704,8 +640,8 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     ...sectionProps,
     onIndexSelected,
     onRequestModalClose,
+    onClickedNewContact,
     menuRef,
-    onShowMenu,
     alertRef,
     onClicked: onClickedCallback,
     onCheckClicked: onCheckClickedCallback,

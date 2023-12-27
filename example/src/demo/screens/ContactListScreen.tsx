@@ -55,16 +55,6 @@ export function ContactListScreen(props: Props) {
             params: { searchType: 'contact-list' },
           });
         }}
-        onClickedNewGroup={() => {
-          navigation.navigate('CreateGroup', {
-            params: { searchType: 'create-group' },
-          });
-        }}
-        onClickedNewConversation={() => {
-          navigation.navigate('NewConversation', {
-            params: { searchType: 'new-conversation' },
-          });
-        }}
         onClicked={(data) => {
           if (data?.userId) {
             navigation.push('ContactInfo', { params: { userId: data.userId } });
@@ -80,6 +70,7 @@ export function ContactListScreen(props: Props) {
             params: {},
           });
         }}
+        // onClickedNewContact={() => {}}
       />
     </SafeAreaView>
   );
