@@ -156,7 +156,13 @@ export function ContactListItemHeader(
           },
         ]}
       >
-        <SingleLineText paletteType={'title'} textType={'small'}>
+        <SingleLineText
+          paletteType={'title'}
+          textType={'small'}
+          style={{
+            color: getColor('t2'),
+          }}
+        >
           {indexTitle}
         </SingleLineText>
       </View>
@@ -167,6 +173,17 @@ export const ContactListItemHeaderMemo = React.memo(ContactListItemHeader);
 
 export function ContactItem(props: ContactItemProps) {
   const { icon, name, count, hasArrow, onClicked } = props;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    icon: {
+      light: colors.neutral[6],
+      dark: colors.neutral[5],
+    },
+  });
   return (
     <ListItem
       LeftName={
@@ -183,7 +200,13 @@ export function ContactItem(props: ContactItemProps) {
             </>
           ) : null}
 
-          <SingleLineText paletteType={'title'} textType={'medium'}>
+          <SingleLineText
+            paletteType={'title'}
+            textType={'medium'}
+            style={{
+              color: getColor('bg'),
+            }}
+          >
             {name}
           </SingleLineText>
         </View>
@@ -191,7 +214,14 @@ export function ContactItem(props: ContactItemProps) {
       RightText={count}
       RightIcon={
         hasArrow ? (
-          <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+          <Icon
+            name={'chevron_right'}
+            style={{
+              height: 20,
+              width: 20,
+              tintColor: getColor('icon'),
+            }}
+          />
         ) : undefined
       }
       onClicked={onClicked}

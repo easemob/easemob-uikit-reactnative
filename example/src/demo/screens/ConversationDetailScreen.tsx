@@ -13,6 +13,8 @@ import {
   SystemMessageModel,
   TimeMessageModel,
   useChatContext,
+  useColors,
+  usePaletteContext,
 } from 'react-native-chat-uikit';
 import {
   SafeAreaView,
@@ -36,6 +38,13 @@ export function ConversationDetailScreen(props: Props) {
   const inputRef = React.useRef<MessageInputRef>({} as any);
   const { top, bottom } = useSafeAreaInsets();
   const im = useChatContext();
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
   console.log('test:zuoyu:ConversationDetailScreen', route.params);
 
   React.useEffect(() => {
@@ -71,7 +80,7 @@ export function ConversationDetailScreen(props: Props) {
   return (
     <SafeAreaView
       style={{
-        // backgroundColor: 'green',
+        backgroundColor: getColor('bg'),
         flex: 1,
       }}
     >

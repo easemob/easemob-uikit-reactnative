@@ -180,14 +180,14 @@ export const MessageInput = React.forwardRef<
                     fontWeight: '400',
                     lineHeight: 22,
                     fontFamily: fontFamily,
-                    color: getColor('input_text'),
+                    // color: getColor('input_text'),
                   }}
                   containerStyle={{
                     width: '100%',
                     minHeight: 22,
                     paddingHorizontal: 16,
                     paddingVertical: 7,
-                    backgroundColor: getColor('input_bg'),
+                    // backgroundColor: getColor('input_bg'),
                     // borderRadius: 18,
                   }}
                   onFocus={onFocus}

@@ -1,6 +1,10 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ImageMessagePreview } from 'react-native-chat-uikit';
+import {
+  ImageMessagePreview,
+  useColors,
+  usePaletteContext,
+} from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
@@ -8,11 +12,18 @@ import type { RootScreenParamsList } from '../routes';
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ImageMessagePreviewScreen(props: Props) {
   const { navigation, route } = props;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
   const msgId = ((route.params as any)?.params as any)?.msgId;
   return (
     <SafeAreaView
       style={{
-        // backgroundColor: 'green',
+        backgroundColor: getColor('bg'),
         flex: 1,
       }}
     >

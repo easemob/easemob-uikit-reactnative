@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { useGetStyleProps } from '../../hook';
+import { useColors, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { Text } from '../Text';
 
@@ -60,8 +60,18 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       ...others
     } = props;
     const { cornerRadius: corner } = useThemeContext();
-    const { cornerRadius } = usePaletteContext();
+    const { cornerRadius, colors } = usePaletteContext();
     const { getBorderRadius } = useGetStyleProps();
+    const { getColor } = useColors({
+      bg: {
+        light: colors.neutral[95],
+        dark: colors.neutral[2],
+      },
+      fg: {
+        light: colors.neutral[1],
+        dark: colors.neutral[98],
+      },
+    });
 
     const getMaxHeight = () => {
       if (multiline === true && numberOfLines && unitHeight) {
@@ -112,6 +122,7 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
               cr: cornerRadius,
               style: containerStyle,
             }),
+            backgroundColor: getColor('bg'),
           },
           containerStyle,
           getStyle(),
@@ -121,7 +132,12 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
           ref={ref}
           multiline={multiline}
           numberOfLines={numberOfLines}
-          style={style}
+          style={[
+            {
+              color: getColor('fg'),
+            },
+            style,
+          ]}
           onContentSizeChange={(e) => {
             onContentSizeChange?.(e);
             if (Platform.OS !== 'ios') {

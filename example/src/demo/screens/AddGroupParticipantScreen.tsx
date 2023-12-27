@@ -1,6 +1,10 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { AddGroupParticipant } from 'react-native-chat-uikit';
+import {
+  AddGroupParticipant,
+  useColors,
+  usePaletteContext,
+} from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
@@ -12,10 +16,17 @@ export function AddGroupParticipantScreen(props: Props) {
     ? JSON.parse(((route.params as any)?.params as any)?.data)
     : undefined;
   const groupId = ((route.params as any)?.params as any)?.groupId;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
   return (
     <SafeAreaView
       style={{
-        // backgroundColor: 'green',
+        backgroundColor: getColor('bg'),
         flex: 1,
       }}
     >

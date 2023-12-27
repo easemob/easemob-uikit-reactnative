@@ -20,7 +20,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
     },
     pin_bg: {
       light: colors.neutral[9],
-      dark: colors.neutral[6],
+      dark: colors.neutral[2],
     },
     t1: {
       light: colors.neutral[1],
@@ -67,20 +67,32 @@ export function ConversationListItem(props: ConversationListItemProps) {
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <SingleLineText paletteType={'title'} textType={'medium'}>
+            <SingleLineText
+              paletteType={'title'}
+              textType={'medium'}
+              style={{ color: getColor('t1') }}
+            >
               {data.convName ?? data.convId}
             </SingleLineText>
             {data.doNotDisturb === true ? (
               <Icon name={'bell_slash'} style={{ height: 20, width: 20 }} />
             ) : null}
           </View>
-          <SingleLineText paletteType={'body'} textType={'medium'}>
+          <SingleLineText
+            paletteType={'body'}
+            textType={'medium'}
+            style={{ color: getColor('t2') }}
+          >
             {getMessageSnapshot(data.lastMessage)}
           </SingleLineText>
         </View>
         <View style={{ flex: 1 }} />
         <View style={{ flexDirection: 'column' }}>
-          <SingleLineText paletteType={'body'} textType={'small'}>
+          <SingleLineText
+            paletteType={'body'}
+            textType={'small'}
+            style={{ color: getColor('t2') }}
+          >
             {getMessageFormatTime(data.lastMessage, data.pinnedTime)}
           </SingleLineText>
           <View

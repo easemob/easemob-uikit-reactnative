@@ -1,6 +1,10 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { EditInfo } from 'react-native-chat-uikit';
+import {
+  EditInfo,
+  useColors,
+  usePaletteContext,
+} from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
@@ -13,10 +17,18 @@ export function EditInfoScreen(props: Props) {
   const initialData = ((route.params as any)?.params as any)?.initialData;
   const maxLength = ((route.params as any)?.params as any)?.maxLength;
   const goBack = ((route.params as any)?.params as any)?.goBack;
+  // const testRef = ((route.params as any)?.params as any)?.testRef;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
   return (
     <SafeAreaView
       style={{
-        // backgroundColor: 'green',
+        backgroundColor: getColor('bg'),
         flex: 1,
       }}
     >
@@ -37,6 +49,9 @@ export function EditInfoScreen(props: Props) {
           // navigation.setParams({});
           goBack?.(data);
           navigation.goBack();
+          // navigation.setParams({ params: { data } });
+          // testRef.current = data;
+          // navigation.goBack();
         }}
       />
     </SafeAreaView>

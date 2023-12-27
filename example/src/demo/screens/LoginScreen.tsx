@@ -72,16 +72,21 @@ export function LoginScreen(props: Props) {
       <View style={{ height: 10 }} />
       <TextInput
         placeholder={'Please enter ID.'}
-        style={{ height: 40, backgroundColor: '#fff8dc', borderRadius: 4 }}
-        containerStyle={{ paddingHorizontal: 10 }}
+        style={{
+          height: 40,
+          backgroundColor: '#fff8dc',
+          color: 'black',
+          borderRadius: 4,
+        }}
+        containerStyle={{ marginHorizontal: 10 }}
         value={id}
         onChangeText={onId}
       />
       <View style={{ height: 10 }} />
       <TextInput
         placeholder={'Please enter Token or password.'}
-        style={{ backgroundColor: '#fff8dc', borderRadius: 4 }}
-        containerStyle={{ paddingHorizontal: 10 }}
+        style={{ backgroundColor: '#fff8dc', color: 'black', borderRadius: 4 }}
+        containerStyle={{ marginHorizontal: 10 }}
         multiline={true}
         value={token}
         onChangeText={onToken}

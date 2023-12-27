@@ -19,7 +19,9 @@ import {
   UIKitError,
   useChatContext,
   useChatListener,
+  useColors,
   useI18nContext,
+  usePaletteContext,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -35,13 +37,18 @@ export function HomeScreen(props: Props) {
   const tabRef = React.useRef<TabPageRef>(null);
   const currentIndexRef = React.useRef<number>(0);
   const { tr } = useI18nContext();
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
   return (
     <SafeAreaView
-      style={
-        {
-          // backgroundColor: 'red',
-        }
-      }
+      style={{
+        backgroundColor: getColor('bg'),
+      }}
     >
       {/* <View
         style={{ height: 100, width: '100%' }}

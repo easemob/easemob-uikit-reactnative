@@ -1028,7 +1028,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
     },
     right_bg: {
       light: colors.neutral[95],
-      dark: colors.neutral[6],
+      dark: colors.neutral[2],
     },
     left_name: {
       light: colors.neutralSpecial[6],

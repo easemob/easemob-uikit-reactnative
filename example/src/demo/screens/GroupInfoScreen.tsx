@@ -5,7 +5,9 @@ import {
   GroupInfo,
   GroupInfoRef,
   useChatListener,
+  useColors,
   useI18nContext,
+  usePaletteContext,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -15,10 +17,18 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function GroupInfoScreen(props: Props) {
   const { navigation, route } = props;
   const { tr } = useI18nContext();
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
   const editTypeRef = React.useRef<string>();
   const groupInfoRef = React.useRef<GroupInfoRef>({} as any);
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
+  const testRef = React.useRef<string>();
   console.log('test:zuoyu:GroupInfoScreen', route.params);
   // const goBack2 = React.useCallback(
   //   (data: any) => {
@@ -27,7 +37,13 @@ export function GroupInfoScreen(props: Props) {
   //   },
   //   [groupId]
   // );
+
+  // React.useEffect(() => {
+  //   console.log('test:zuoyu:11123:', testRef.current);
+  // }, [testRef.current]);
+
   const goBack = (data: any) => {
+    // !!! warning: react navigation
     console.log('test:zuoyu:GroupInfoScreen:goBack', data);
     if (editTypeRef.current === 'groupName') {
       groupInfoRef.current?.setGroupName?.(groupId, data);
@@ -65,7 +81,7 @@ export function GroupInfoScreen(props: Props) {
   return (
     <SafeAreaView
       style={{
-        // backgroundColor: 'green',
+        backgroundColor: getColor('bg'),
         flex: 1,
       }}
     >
@@ -95,6 +111,7 @@ export function GroupInfoScreen(props: Props) {
               convId: groupId,
               convType: 1,
               convName: groupId,
+              testRef,
             },
           });
         }}
@@ -107,6 +124,7 @@ export function GroupInfoScreen(props: Props) {
               initialData: groupName,
               maxLength: 128,
               goBack: goBack,
+              testRef,
             },
           });
         }}
@@ -131,6 +149,7 @@ export function GroupInfoScreen(props: Props) {
               initialData: groupMyRemark,
               maxLength: 128,
               goBack: goBack,
+              testRef,
             },
           });
         }}
