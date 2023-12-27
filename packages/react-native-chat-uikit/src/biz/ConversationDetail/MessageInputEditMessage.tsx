@@ -123,6 +123,10 @@ export const MessageInputEditMessage = React.forwardRef<
     },
   });
   const isShow = React.useRef(false);
+  // !!! needs improvement
+  const pseudoMsg = React.useMemo(() => {
+    return ChatMessage.createTextMessage('xxx', '', 0);
+  }, []);
   const {
     updateMsg,
     msg: updatedMsg,
@@ -134,7 +138,7 @@ export const MessageInputEditMessage = React.forwardRef<
     disable,
     onEdited,
   } = useMessageInputEditMessage({
-    msg: initMsg ?? ChatMessage.createTextMessage('xxx', '', 0),
+    msg: initMsg ?? pseudoMsg,
     onEditMessageFinished,
   });
 
