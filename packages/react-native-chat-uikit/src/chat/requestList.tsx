@@ -25,6 +25,8 @@ import type {
 } from './types';
 import { getNewRequest } from './utils';
 
+let gListener: ChatServiceListener | undefined;
+
 export type RequestListListener = {
   onNewRequestListChanged: (list: NewRequestModel[]) => void;
 };
@@ -37,7 +39,7 @@ export class RequestListImpl implements RequestList {
   constructor(client: ChatService) {
     this._client = client;
     this._userList = new Map();
-    this.init();
+    // this.init();
   }
   destructor() {
     this.unInit();
@@ -56,75 +58,78 @@ export class RequestListImpl implements RequestList {
       );
     }
   }
+  bindOnContactInvited(userId: string): void {
+    const isExisted = this._newRequestList.findIndex((v) => {
+      const t2 = v.msg?.body.type === ChatMessageType.CUSTOM;
+      if (t2 === true) {
+        const body = v.msg?.body as ChatCustomMessageBody;
+        const t3 = body.event === gNewRequestConversationMsgEventType;
+        const t1 = v.msg?.attributes[gNewRequestConversationUserId] === userId;
+        return t1 === true && t3 === true;
+      }
+      return false;
+    });
+    if (isExisted !== -1) {
+      return;
+    }
+    const newMsg = ChatMessage.createCustomMessage(
+      gNewRequestConversationId,
+      gNewRequestConversationMsgEventType
+    );
+    newMsg.attributes[gNewRequestConversationUserId] = userId;
+    newMsg.attributes[gNewRequestConversationUserName] = userId;
+    newMsg.attributes[gNewRequestConversationUserAvatar] = '';
+    newMsg.attributes[gNewRequestConversationState] =
+      'pending' as NewRequestStateType;
+    newMsg.attributes[
+      gNewRequestConversationTip
+    ] = `requests to add you as a friend.`;
+
+    const item = getNewRequest(newMsg);
+    if (item) {
+      this._newRequestList.unshift(item);
+    }
+
+    this._client.insertMessage({
+      message: newMsg,
+      onResult: () => {
+        this.emitNewRequestListChanged();
+      },
+    });
+  }
+  bindOnFriendRequestAccepted(userId: string): void {
+    for (const request of this._newRequestList) {
+      if (request.id === userId) {
+        request.state = 'accepted';
+        this.updateRequest(request);
+        break;
+      }
+    }
+  }
+  bindOnFriendRequestDeclined(userId: string): void {
+    for (const request of this._newRequestList) {
+      if (request.id === userId) {
+        request.state = 'declined';
+        this.updateRequest(request);
+        break;
+      }
+    }
+  }
   init() {
-    this._listener = {
-      onContactInvited: (userId: string): void => {
-        const isExisted = this._newRequestList.findIndex((v) => {
-          const t2 = v.msg?.body.type === ChatMessageType.CUSTOM;
-          if (t2 === true) {
-            const body = v.msg?.body as ChatCustomMessageBody;
-            const t3 = body.event === gNewRequestConversationMsgEventType;
-            const t1 =
-              v.msg?.attributes[gNewRequestConversationUserId] === userId;
-            return t1 === true && t3 === true;
-          }
-          return false;
-        });
-        if (isExisted !== -1) {
-          return;
-        }
-        const newMsg = ChatMessage.createCustomMessage(
-          gNewRequestConversationId,
-          gNewRequestConversationMsgEventType
-        );
-        newMsg.attributes[gNewRequestConversationUserId] = userId;
-        newMsg.attributes[gNewRequestConversationUserName] = userId;
-        newMsg.attributes[gNewRequestConversationUserAvatar] = '';
-        newMsg.attributes[gNewRequestConversationState] =
-          'pending' as NewRequestStateType;
-        newMsg.attributes[
-          gNewRequestConversationTip
-        ] = `requests to add you as a friend.`;
-
-        const item = getNewRequest(newMsg);
-        if (item) {
-          this._newRequestList.unshift(item);
-        }
-
-        this._client.insertMessage({
-          message: newMsg,
-          onResult: () => {
-            this.emitNewRequestListChanged();
-          },
-        });
-      },
-
-      onFriendRequestAccepted: (userId: string): void => {
-        for (const request of this._newRequestList) {
-          if (request.id === userId) {
-            request.state = 'accepted';
-            this.updateRequest(request);
-            break;
-          }
-        }
-      },
-
-      onFriendRequestDeclined: (userId: string): void => {
-        for (const request of this._newRequestList) {
-          if (request.id === userId) {
-            request.state = 'declined';
-            this.updateRequest(request);
-            break;
-          }
-        }
-      },
+    if (gListener) {
+      this._client.removeListener(gListener);
+    }
+    gListener = {
+      onContactInvited: this.bindOnContactInvited.bind(this),
+      onFriendRequestAccepted: this.bindOnFriendRequestAccepted.bind(this),
+      onFriendRequestDeclined: this.bindOnFriendRequestDeclined.bind(this),
     };
-    this._client.addListener(this._listener);
+    this._client.addListener(gListener);
   }
   unInit() {
-    if (this._listener) {
-      this._client.removeListener(this._listener);
-      this._listener = undefined;
+    if (gListener) {
+      this._client.removeListener(gListener);
+      gListener = undefined;
     }
     this._client = undefined as any;
     this._newRequestList = [];

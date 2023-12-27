@@ -1,20 +1,27 @@
 import {
   ChatClient,
+  ChatConnectEventListener,
   ChatContact,
+  ChatContactEventListener,
   ChatConversation,
   ChatConversationType,
+  ChatCustomEventListener,
   ChatGroup,
+  ChatGroupEventListener,
   ChatGroupMessageAck,
   ChatGroupOptions,
   ChatGroupStyle,
   ChatMessage,
+  ChatMessageEventListener,
   ChatMessageReactionEvent,
   ChatMessageStatusCallback,
   ChatMessageThreadEvent,
   ChatMessageType,
   ChatMultiDeviceEvent,
+  ChatMultiDeviceEventListener,
   ChatOptions,
   ChatPresence,
+  ChatPresenceEventListener,
   ChatPushRemindType,
   ChatSearchDirection,
   ChatSilentModeParamType,
@@ -48,6 +55,14 @@ import {
   UserServiceData,
 } from './types';
 import { setUserInfoToMessage, userInfoFromMessage } from './utils';
+
+let gConnectListener: ChatConnectEventListener;
+let gMessageListener: ChatMessageEventListener;
+let gGroupListener: ChatGroupEventListener;
+let gMultiDeviceListener: ChatMultiDeviceEventListener;
+let gCustomListener: ChatCustomEventListener;
+let gContactListener: ChatContactEventListener;
+let gPresenceListener: ChatPresenceEventListener;
 
 export abstract class ChatServiceImpl
   implements ChatService, ConversationServices
@@ -115,6 +130,10 @@ export abstract class ChatServiceImpl
     this._contactState.clear();
   }
 
+  abstract _initListener(): void;
+  abstract _unInitListener(): void;
+  abstract _clearListener(): void;
+
   async init(params: {
     options: ChatOptionsType;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
@@ -122,13 +141,20 @@ export abstract class ChatServiceImpl
     console.log('dev:chat:init');
     const { options } = params;
     const { appKey } = options;
-    this._convStorage = new ConversationStorage({ appKey: appKey });
-    // !!! hot-reload no pass, into catch codes
-    this._request = new RequestListImpl(this);
-    this._messageManager = new MessageCacheManagerImpl(this);
+
     try {
       await this.client.init(new ChatOptions({ ...options }));
-      console.log('test:zuoyu:init:opt:', this.client.options);
+      console.log('dev:chat:opt:', this.client.options);
+
+      this._convStorage = new ConversationStorage({ appKey: appKey });
+      // !!! hot-reload no pass, into catch codes
+      this._request = new RequestListImpl(this);
+      this._messageManager = new MessageCacheManagerImpl(this);
+      this._unInitListener();
+      this._initListener();
+      this._request.init();
+      this._messageManager.init();
+
       params.result?.({ isOk: true });
     } catch (error) {
       params.result?.({
@@ -2155,10 +2181,11 @@ export abstract class ChatServiceImpl
 export class ChatServicePrivateImpl extends ChatServiceImpl {
   constructor() {
     super();
-    this._initListener();
+    // this._initListener();
   }
 
   _initListener() {
+    console.log('dev:chat:initListener');
     this._initConnectListener();
     this._initMessageListener();
     this._initGroupListener();
@@ -2168,9 +2195,29 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
     this._initPresenceListener();
     this._initExtraListener();
   }
+  _unInitListener() {
+    console.log('dev:chat:unInitListener');
+    this.client.removeConnectionListener(gConnectListener);
+    this.client.chatManager.removeMessageListener(gMessageListener);
+    this.client.groupManager.removeGroupListener(gGroupListener);
+    this.client.removeMultiDeviceListener(gMultiDeviceListener);
+    this.client.removeCustomListener(gCustomListener);
+    this.client.contactManager.removeContactListener(gContactListener);
+    this.client.presenceManager.removePresenceListener(gPresenceListener);
+  }
+  _clearListener() {
+    console.log('dev:chat:clearListener');
+    this.client.removeAllConnectionListener();
+    this.client.chatManager.removeAllMessageListener();
+    this.client.groupManager.removeAllGroupListener();
+    this.client.removeAllMultiDeviceListener();
+    this.client.removeAllCustomListener();
+    this.client.contactManager.removeAllContactListener();
+    this.client.presenceManager.removeAllPresenceListener();
+  }
+
   _initConnectListener() {
-    // this.client.removeAllConnectionListener();
-    this.client.addConnectionListener({
+    gConnectListener = {
       onConnected: () => {
         this._listeners.forEach((v) => {
           v.onConnected?.();
@@ -2237,13 +2284,14 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
           v.onDisconnected?.(DisconnectReasonType.user_authentication_failed);
         });
       },
-    });
+    };
+    this.client.addConnectionListener(gConnectListener);
   }
 
   _initMessageListener() {
-    // this.client.chatManager.removeAllMessageListener();
-    this.client.chatManager.addMessageListener({
+    gMessageListener = {
       onMessagesReceived: (messages: Array<ChatMessage>): void => {
+        console.log('dev:chat:onMessagesReceived:', this._listeners.size);
         this._listeners.forEach((v) => {
           v.onMessagesReceived?.(messages);
         });
@@ -2325,12 +2373,12 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
           );
         });
       },
-    });
+    };
+    this.client.chatManager.addMessageListener(gMessageListener);
   }
 
   _initGroupListener() {
-    // this.client.groupManager.removeAllGroupListener();
-    this.client.groupManager.addGroupListener({
+    gGroupListener = {
       onInvitationReceived: (params: {
         groupId: string;
         inviter: string;
@@ -2525,12 +2573,12 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
           v.onMemberAttributesChanged?.(params);
         });
       },
-    });
+    };
+    this.client.groupManager.addGroupListener(gGroupListener);
   }
 
   _initMultiDeviceListener() {
-    // this.client.removeAllMultiDeviceListener();
-    this.client.addMultiDeviceListener({
+    gMultiDeviceListener = {
       onContactEvent: (
         event?: ChatMultiDeviceEvent,
         target?: string,
@@ -2572,21 +2620,21 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
           v.onConversationEvent?.(event, convId, convType);
         });
       },
-    });
+    };
+    this.client.addMultiDeviceListener(gMultiDeviceListener);
   }
   _initCustomListener() {
-    // this.client.removeAllCustomListener();
-    this.client.addCustomListener({
+    gCustomListener = {
       onDataReceived: (params: any): void => {
         this._listeners.forEach((v) => {
           v.onDataReceived?.(params);
         });
       },
-    });
+    };
+    this.client.addCustomListener(gCustomListener);
   }
   _initContactListener() {
-    // this.client.contactManager.removeAllContactListener();
-    this.client.contactManager.addContactListener({
+    gContactListener = {
       onContactAdded: (userName: string): void => {
         this._listeners.forEach((v) => {
           v.onContactAdded?.(userName);
@@ -2612,17 +2660,18 @@ export class ChatServicePrivateImpl extends ChatServiceImpl {
           v.onFriendRequestDeclined?.(userName);
         });
       },
-    });
+    };
+    this.client.contactManager.addContactListener(gContactListener);
   }
   _initPresenceListener() {
-    // this.client.presenceManager.removeAllPresenceListener();
-    this.client.presenceManager.addPresenceListener({
+    gPresenceListener = {
       onPresenceStatusChanged: (list: Array<ChatPresence>): void => {
         this._listeners.forEach((v) => {
           v.onPresenceStatusChanged?.(list);
         });
       },
-    });
+    };
+    this.client.presenceManager.addPresenceListener(gPresenceListener);
   }
 
   _initExtraListener() {}

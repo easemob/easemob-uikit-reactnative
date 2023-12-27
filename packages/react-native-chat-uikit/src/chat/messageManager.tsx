@@ -26,6 +26,8 @@ export type MessageManagerListener = {
   onRecallMessage?: (msg: ChatMessage, byUserId: string) => void;
 };
 
+let gListener: ChatServiceListener | undefined;
+
 export class MessageCacheManagerImpl implements MessageCacheManager {
   _client: ChatService;
   _listener?: ChatServiceListener;
@@ -39,16 +41,18 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     this._userListener = new Map();
     this._sendList = new Map();
     this._downloadList = new Map();
-    this.init();
+    // this.init();
   }
   destructor() {
     this.unInit();
   }
 
   addListener(key: string, listener: MessageManagerListener) {
+    console.log('dev:MessageCacheManager:addListener');
     this._userListener.set(key, listener);
   }
   removeListener(key: string) {
+    console.log('dev:MessageCacheManager:removeListener');
     this._userListener.delete(key);
   }
   emitSendMessageChanged(msg: ChatMessage) {
@@ -66,71 +70,71 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       v.onMessageAttachmentChanged?.(msg);
     });
   }
+  bindOnMessagesReceived(messages: Array<ChatMessage>) {
+    messages.forEach((msg) => {
+      this._userListener.forEach((v) => {
+        v.onRecvMessage?.(msg);
+      });
+    });
+  }
+  bindOnMessagesRead(messages: Array<ChatMessage>) {
+    messages.forEach((msg) => {
+      this._userListener.forEach((v) => {
+        v.onRecvMessageStatusChanged?.(msg);
+      });
+    });
+  }
+  bindOnGroupMessageRead(_groupMessageAcks: Array<ChatGroupMessageAck>): void {
+    // todo: get message for group
+    // groupMessageAcks.forEach((ack) => {
+    //   this._userListener.forEach((v) => {
+    //     v.onRecvMessageStatusChanged?.(ack.message);
+    //   });
+    // });
+  }
+  bindOnMessagesDelivered(messages: Array<ChatMessage>): void {
+    messages.forEach((msg) => {
+      this._userListener.forEach((v) => {
+        v.onRecvMessageStatusChanged?.(msg);
+      });
+    });
+  }
+  bindOnMessagesRecalled(messages: Array<ChatMessage>): void {
+    messages.forEach((msg) => {
+      this._userListener.forEach((v) => {
+        v.onRecallMessage?.(msg, msg.from);
+      });
+    });
+  }
+  bindOnMessageContentChanged(
+    message: ChatMessage,
+    lastModifyOperatorId: string,
+    _lastModifyTime: number
+  ): void {
+    this._userListener.forEach((v) => {
+      v.onRecvMessageContentChanged?.(message, lastModifyOperatorId);
+    });
+  }
+
   init() {
     console.log('dev:MessageCacheManager:init');
-    this._listener = {
-      onMessagesReceived: (messages: Array<ChatMessage>) => {
-        console.log(
-          'dev:MessageCacheManager:onMessagesReceived',
-          messages.length,
-          this._userListener?.size
-        );
-        messages.forEach((msg) => {
-          this._userListener.forEach((v) => {
-            v.onRecvMessage?.(msg);
-          });
-        });
-      },
-
-      onMessagesRead: (messages: Array<ChatMessage>) => {
-        messages.forEach((msg) => {
-          this._userListener.forEach((v) => {
-            v.onRecvMessageStatusChanged?.(msg);
-          });
-        });
-      },
-
-      onGroupMessageRead: (_groupMessageAcks: Array<ChatGroupMessageAck>) => {
-        // todo: get message for group
-        // groupMessageAcks.forEach((ack) => {
-        //   this._userListener.forEach((v) => {
-        //     v.onRecvMessageStatusChanged?.(ack.message);
-        //   });
-        // });
-      },
-
-      onMessagesDelivered: (messages: Array<ChatMessage>) => {
-        messages.forEach((msg) => {
-          this._userListener.forEach((v) => {
-            v.onRecvMessageStatusChanged?.(msg);
-          });
-        });
-      },
-
-      onMessagesRecalled: (messages: Array<ChatMessage>) => {
-        messages.forEach((msg) => {
-          this._userListener.forEach((v) => {
-            v.onRecallMessage?.(msg, msg.from);
-          });
-        });
-      },
-
-      onMessageContentChanged: (
-        message: ChatMessage,
-        lastModifyOperatorId: string,
-        _lastModifyTime: number
-      ) => {
-        this._userListener.forEach((v) => {
-          v.onRecvMessageContentChanged?.(message, lastModifyOperatorId);
-        });
-      },
+    if (gListener) {
+      this._client.removeListener(gListener);
+    }
+    gListener = {
+      onMessagesReceived: this.bindOnMessagesReceived.bind(this),
+      onMessagesRead: this.bindOnMessagesRead.bind(this),
+      onGroupMessageRead: this.bindOnGroupMessageRead.bind(this),
+      onMessagesDelivered: this.bindOnMessagesDelivered.bind(this),
+      onMessagesRecalled: this.bindOnMessagesRecalled.bind(this),
+      onMessageContentChanged: this.bindOnMessageContentChanged.bind(this),
     };
-    this._client.addListener(this._listener);
+    this._client.addListener(gListener);
   }
   unInit() {
-    if (this._listener) {
-      this._client.removeListener(this._listener);
-      this._listener = undefined;
+    if (gListener) {
+      this._client.removeListener(gListener);
+      gListener = undefined;
     }
     this._client = undefined as any;
     this._userListener.clear();

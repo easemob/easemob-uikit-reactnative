@@ -753,6 +753,7 @@ export function useMessageList(
   React.useEffect(() => {
     const listener = {
       onSendMessageChanged: (msg: ChatMessage) => {
+        console.log('test:zuoyu:onSendMessageChanged');
         onUpdateMessageToUI(msg, 'send');
       },
       onRecvMessage: (msg: ChatMessage) => {

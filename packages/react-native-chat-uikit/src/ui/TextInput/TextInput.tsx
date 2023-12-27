@@ -152,6 +152,7 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
             }
           }}
           onChangeText={_onChangeText}
+          autoCapitalize={'none'}
           {...others}
         />
         {statistics ? (
