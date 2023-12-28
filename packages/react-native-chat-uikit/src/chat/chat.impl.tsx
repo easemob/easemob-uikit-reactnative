@@ -1,27 +1,16 @@
 import {
   ChatClient,
-  ChatConnectEventListener,
   ChatContact,
-  ChatContactEventListener,
   ChatConversation,
   ChatConversationType,
-  ChatCustomEventListener,
   ChatGroup,
-  ChatGroupEventListener,
-  ChatGroupMessageAck,
   ChatGroupOptions,
   ChatGroupStyle,
   ChatMessage,
-  ChatMessageEventListener,
-  ChatMessageReactionEvent,
   ChatMessageStatusCallback,
-  ChatMessageThreadEvent,
   ChatMessageType,
-  ChatMultiDeviceEvent,
-  ChatMultiDeviceEventListener,
   ChatOptions,
   ChatPresence,
-  ChatPresenceEventListener,
   ChatPushRemindType,
   ChatSearchDirection,
   ChatSilentModeParamType,
@@ -32,12 +21,13 @@ import { ConversationStorage } from '../db/storage';
 import { ErrorCode, UIKitError } from '../error';
 import { Services } from '../services';
 import { asyncTask, getCurTs, mergeObjects } from '../utils';
+import { ChatServiceListenerImpl } from './chat.listener';
 import { gGroupMemberMyRemark } from './const';
 import { MessageCacheManagerImpl } from './messageManager';
 import type { MessageCacheManager } from './messageManager.types';
 import { RequestListImpl } from './requestList';
 import type { RequestList } from './requestList.types';
-import {
+import type {
   ChatEventType,
   ChatOptionsType,
   ChatService,
@@ -47,7 +37,6 @@ import {
   ConversationServices,
   DataModel,
   DataModelType,
-  DisconnectReasonType,
   GroupModel,
   GroupParticipantModel,
   ResultCallback,
@@ -56,18 +45,10 @@ import {
 } from './types';
 import { setUserInfoToMessage, userInfoFromMessage } from './utils';
 
-let gConnectListener: ChatConnectEventListener;
-let gMessageListener: ChatMessageEventListener;
-let gGroupListener: ChatGroupEventListener;
-let gMultiDeviceListener: ChatMultiDeviceEventListener;
-let gCustomListener: ChatCustomEventListener;
-let gContactListener: ChatContactEventListener;
-let gPresenceListener: ChatPresenceEventListener;
-
-export abstract class ChatServiceImpl
+export class ChatServiceImpl
+  extends ChatServiceListenerImpl
   implements ChatService, ConversationServices
 {
-  _listeners: Set<ChatServiceListener>;
   _user?: UserServiceData;
   _userList: Map<string, UserServiceData>;
   _convStorage?: ConversationStorage;
@@ -75,8 +56,8 @@ export abstract class ChatServiceImpl
   _contactList: Map<string, ContactModel>;
   _groupList: Map<string, GroupModel>;
   _groupMemberList: Map<string, Map<string, GroupParticipantModel>>;
-  _request?: RequestList;
-  _messageManager?: MessageCacheManager;
+  _request: RequestList;
+  _messageManager: MessageCacheManager;
   _contactState: Map<string, Map<string, boolean>>;
   _currentConversation?: ConversationModel;
   _convDataRequestCallback?: (params: {
@@ -100,28 +81,25 @@ export abstract class ChatServiceImpl
     | undefined;
 
   constructor() {
-    this._listeners = new Set();
+    console.log('dev:chat:constructor:');
+    super();
     this._userList = new Map();
     this._convList = new Map();
     this._contactList = new Map();
     this._groupList = new Map();
     this._groupMemberList = new Map();
     this._contactState = new Map();
-    // this._request = new RequestListImpl(this);
-    // this._messageManager = new MessageCacheManagerImpl(this);
+    this._request = new RequestListImpl(this);
+    this._messageManager = new MessageCacheManagerImpl(this);
   }
 
-  destructor() {
-    this._convStorage?.destructor();
-    this._reset();
-    // this._request.destructor();
-    this._request = undefined as any;
-    // this._messageManager.destructor();
-    this._messageManager = undefined as any;
-  }
+  // !!! warning: no need
+  // destructor() {
+  // }
 
-  _reset(): void {
-    this.clearListener();
+  reset(): void {
+    console.log('dev:chat:reset:');
+    // this.clearListener(); // !!! warn: no clear.
     this._userList.clear();
     this._convList.clear();
     this._contactList.clear();
@@ -129,10 +107,6 @@ export abstract class ChatServiceImpl
     this._groupMemberList.clear();
     this._contactState.clear();
   }
-
-  abstract _initListener(): void;
-  abstract _unInitListener(): void;
-  abstract _clearListener(): void;
 
   async init(params: {
     options: ChatOptionsType;
@@ -148,9 +122,8 @@ export abstract class ChatServiceImpl
 
       this._convStorage = new ConversationStorage({ appKey: appKey });
       // !!! hot-reload no pass, into catch codes
-      this._request = new RequestListImpl(this);
-      this._messageManager = new MessageCacheManagerImpl(this);
-      this._unInitListener();
+      // this._request = new RequestListImpl(this);
+      // this._messageManager = new MessageCacheManagerImpl(this);
       this._initListener();
       this._request.init();
       this._messageManager.init();
@@ -166,25 +139,45 @@ export abstract class ChatServiceImpl
       });
     }
   }
-  async unInit(): Promise<void> {
-    return this._reset();
-  }
 
   addListener(listener: ChatServiceListener): void {
-    this._listeners.add(listener);
+    super.addListener(listener);
   }
   removeListener(listener: ChatServiceListener): void {
-    this._listeners.delete(listener);
+    super.removeListener(listener);
   }
   clearListener(): void {
-    this._listeners.clear();
+    super.clearListener();
   }
 
-  abstract _fromChatError(error: any): string | undefined;
-  abstract _createUserDir(): Promise<void>;
+  _fromChatError(error: any): string | undefined {
+    let e: string | undefined;
+    try {
+      e = JSON.stringify(error);
+    } catch (ee) {
+      if (typeof error === 'string') {
+        e = error;
+      } else {
+        e = ee?.toString?.();
+      }
+    }
+    return e;
+  }
+
+  async _createUserDir(): Promise<void> {
+    try {
+      const isExisted = await Services.dcs.isExistedUserDir();
+      if (isExisted !== true) {
+        await Services.dcs.createUserDir();
+      }
+    } catch (e) {
+      console.warn('createUserDir:', e);
+      // todo: show alert
+    }
+  }
 
   get client(): ChatClient {
-    return ChatClient.getInstance();
+    return super.client;
   }
 
   async login(params: {
@@ -208,7 +201,8 @@ export abstract class ChatServiceImpl
       usePassword,
     } = params;
     try {
-      console.log('test:zuoyu:login:', params);
+      console.log('dev:chat:login:', params);
+      this.reset();
       const version = require('react-native-chat-sdk/src/version');
       const list = version.default.split('.');
       const major = parseInt(list[0]!, 10);
@@ -244,6 +238,8 @@ export abstract class ChatServiceImpl
       this.client.getCurrentUsername();
       this.updateSelfInfo({ self: this._user, onResult: () => {} });
 
+      console.log('test:zuoyu:login:finish:1', params);
+
       result?.({ isOk: true });
     } catch (error: any) {
       if (error?.code === 200) {
@@ -266,6 +262,7 @@ export abstract class ChatServiceImpl
         this.client.getCurrentUsername();
         this.updateSelfInfo({ self: this._user, onResult: () => {} });
       }
+      console.log('test:zuoyu:login:finish:2', params, error);
       result?.({
         isOk: false,
         error: new UIKitError({
@@ -279,10 +276,11 @@ export abstract class ChatServiceImpl
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     try {
+      console.log('dev:chat:logout:');
       await this.client.logout();
       params.result?.({ isOk: true });
       this._user = undefined;
-      this._reset();
+      this.reset();
     } catch (error) {
       params.result?.({
         isOk: false,
@@ -372,12 +370,12 @@ export abstract class ChatServiceImpl
   }
 
   sendError(params: { error: UIKitError; from?: string; extra?: any }): void {
-    this._listeners.forEach((v) => {
+    this.listeners.forEach((v) => {
       asyncTask(() => v.onError?.(params));
     });
   }
   sendFinished(params: { event: ChatEventType; extra?: any }): void {
-    this._listeners.forEach((v) => {
+    this.listeners.forEach((v) => {
       asyncTask(() => v.onFinished?.(params));
     });
   }
@@ -791,7 +789,7 @@ export abstract class ChatServiceImpl
     });
     if (conv) {
       conv.isPinned = params.isPin;
-      this._listeners.forEach((v) => {
+      this.listeners.forEach((v) => {
         v.onConversationChanged?.(conv);
       });
     }
@@ -824,7 +822,7 @@ export abstract class ChatServiceImpl
     });
     if (conv) {
       conv.doNotDisturb = params.doNotDisturb;
-      this._listeners.forEach((v) => {
+      this.listeners.forEach((v) => {
         v.onConversationChanged?.(conv);
       });
     }
@@ -850,7 +848,7 @@ export abstract class ChatServiceImpl
     console.log('test:zuoyu:setConversationRead', conv);
     if (conv) {
       conv.unreadMessageCount = 0;
-      this._listeners.forEach((v) => {
+      this.listeners.forEach((v) => {
         v.onConversationChanged?.(conv);
       });
     }
@@ -878,7 +876,7 @@ export abstract class ChatServiceImpl
     });
     if (conv) {
       conv.ext = params.ext;
-      this._listeners.forEach((v) => {
+      this.listeners.forEach((v) => {
         v.onConversationChanged?.(conv);
       });
     }
@@ -897,7 +895,7 @@ export abstract class ChatServiceImpl
     });
     if (conv) {
       conv.lastMessage = params.lastMessage;
-      this._listeners.forEach((v) => {
+      this.listeners.forEach((v) => {
         v.onConversationChanged?.(conv);
       });
     }
@@ -1173,7 +1171,7 @@ export abstract class ChatServiceImpl
       promise: this.client.contactManager.deleteContact(params.userId),
       event: 'deleteContact',
       onFinished: async () => {
-        this._listeners.forEach((v) => {
+        this.listeners.forEach((v) => {
           v.onContactDeleted?.(params.userId);
         });
         params.onResult({
@@ -1529,7 +1527,7 @@ export abstract class ChatServiceImpl
         if (group) {
           this._groupList.set(group.groupId, group);
         }
-        this._listeners.forEach((v) => {
+        this.listeners.forEach((v) => {
           v.onCreateGroup?.(this.toUIGroup(value));
         });
         params.onResult({
@@ -1553,7 +1551,7 @@ export abstract class ChatServiceImpl
       onFinished: params.onResult
         ? async () => {
             this._groupList.delete(params.groupId);
-            this._listeners.forEach((v) => {
+            this.listeners.forEach((v) => {
               v?.onQuitGroup?.(params.groupId);
             });
             params.onResult?.({
@@ -1573,7 +1571,7 @@ export abstract class ChatServiceImpl
       onFinished: params.onResult
         ? async () => {
             this._groupList.delete(params.groupId);
-            this._listeners.forEach((v) => {
+            this.listeners.forEach((v) => {
               v?.onDestroyed?.({ groupId: params.groupId });
             });
             params.onResult?.({
@@ -1598,7 +1596,7 @@ export abstract class ChatServiceImpl
       onFinished: params.onResult
         ? async () => {
             const group = this._groupList.get(params.groupId);
-            this._listeners.forEach((v) => {
+            this.listeners.forEach((v) => {
               if (group) {
                 v.onGroupInfoChanged?.({
                   ...group,
@@ -1626,7 +1624,7 @@ export abstract class ChatServiceImpl
       event: 'setGroupDescription',
       onFinished: async () => {
         const group = this._groupList.get(params.groupId);
-        this._listeners.forEach((v) => {
+        this.listeners.forEach((v) => {
           if (group) {
             v.onGroupInfoChanged?.({
               ...group,
@@ -1735,7 +1733,7 @@ export abstract class ChatServiceImpl
       onFinished: async () => {
         for (const memberId of params.members) {
           this._groupMemberList.get(params.groupId)?.delete(memberId);
-          this._listeners.forEach((v) => {
+          this.listeners.forEach((v) => {
             v?.onMemberExited?.({
               groupId: params.groupId,
               member: memberId,
@@ -2139,7 +2137,7 @@ export abstract class ChatServiceImpl
         const userId = this.userId;
         const status = params.status;
         if (userId) {
-          this._listeners.forEach((v) => {
+          this.listeners.forEach((v) => {
             v.onPresenceStatusChanged?.([
               new ChatPresence({
                 publisher: userId,
@@ -2178,545 +2176,11 @@ export abstract class ChatServiceImpl
   }
 }
 
-export class ChatServicePrivateImpl extends ChatServiceImpl {
-  constructor() {
-    super();
-    // this._initListener();
-  }
-
-  _initListener() {
-    console.log('dev:chat:initListener');
-    this._initConnectListener();
-    this._initMessageListener();
-    this._initGroupListener();
-    this._initMultiDeviceListener();
-    this._initCustomListener();
-    this._initContactListener();
-    this._initPresenceListener();
-    this._initExtraListener();
-  }
-  _unInitListener() {
-    console.log('dev:chat:unInitListener');
-    this.client.removeConnectionListener(gConnectListener);
-    this.client.chatManager.removeMessageListener(gMessageListener);
-    this.client.groupManager.removeGroupListener(gGroupListener);
-    this.client.removeMultiDeviceListener(gMultiDeviceListener);
-    this.client.removeCustomListener(gCustomListener);
-    this.client.contactManager.removeContactListener(gContactListener);
-    this.client.presenceManager.removePresenceListener(gPresenceListener);
-  }
-  _clearListener() {
-    console.log('dev:chat:clearListener');
-    this.client.removeAllConnectionListener();
-    this.client.chatManager.removeAllMessageListener();
-    this.client.groupManager.removeAllGroupListener();
-    this.client.removeAllMultiDeviceListener();
-    this.client.removeAllCustomListener();
-    this.client.contactManager.removeAllContactListener();
-    this.client.presenceManager.removeAllPresenceListener();
-  }
-
-  _initConnectListener() {
-    gConnectListener = {
-      onConnected: () => {
-        this._listeners.forEach((v) => {
-          v.onConnected?.();
-        });
-      },
-      onDisconnected: () => {
-        this._listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.others);
-        });
-      },
-      onTokenWillExpire: () => {
-        this._listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.token_will_expire);
-        });
-      },
-      onTokenDidExpire: () => {
-        this._listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.token_did_expire);
-        });
-      },
-      onAppActiveNumberReachLimit: () => {
-        this._listeners.forEach((v) => {
-          v.onDisconnected?.(
-            DisconnectReasonType.app_active_number_reach_limit
-          );
-        });
-      },
-      onUserDidLoginFromOtherDevice: () => {
-        this._listeners.forEach((v) => {
-          v.onDisconnected?.(
-            DisconnectReasonType.user_did_login_from_other_device
-          );
-        });
-      },
-      onUserDidRemoveFromServer: () => {
-        this._listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.user_did_remove_from_server);
-        });
-      },
-      onUserDidForbidByServer: () => {
-        this._listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.user_did_forbid_by_server);
-        });
-      },
-      onUserDidChangePassword: () => {
-        this._listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.user_did_change_password);
-        });
-      },
-      onUserDidLoginTooManyDevice: () => {
-        this._listeners.forEach((v) => {
-          v.onDisconnected?.(
-            DisconnectReasonType.user_did_login_too_many_device
-          );
-        });
-      },
-      onUserKickedByOtherDevice: () => {
-        this._listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.user_kicked_by_other_device);
-        });
-      },
-      onUserAuthenticationFailed: () => {
-        this._listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.user_authentication_failed);
-        });
-      },
-    };
-    this.client.addConnectionListener(gConnectListener);
-  }
-
-  _initMessageListener() {
-    gMessageListener = {
-      onMessagesReceived: (messages: Array<ChatMessage>): void => {
-        console.log('dev:chat:onMessagesReceived:', this._listeners.size);
-        this._listeners.forEach((v) => {
-          v.onMessagesReceived?.(messages);
-        });
-      },
-      onCmdMessagesReceived: (messages: Array<ChatMessage>): void => {
-        this._listeners.forEach((v) => {
-          v.onCmdMessagesReceived?.(messages);
-        });
-      },
-      onMessagesRead: (messages: Array<ChatMessage>): void => {
-        this._listeners.forEach((v) => {
-          v.onMessagesRead?.(messages);
-        });
-      },
-      onGroupMessageRead: (
-        groupMessageAcks: Array<ChatGroupMessageAck>
-      ): void => {
-        this._listeners.forEach((v) => {
-          v.onGroupMessageRead?.(groupMessageAcks);
-        });
-      },
-      onMessagesDelivered: (messages: Array<ChatMessage>): void => {
-        this._listeners.forEach((v) => {
-          v.onMessagesDelivered?.(messages);
-        });
-      },
-      onMessagesRecalled: (messages: Array<ChatMessage>): void => {
-        this._listeners.forEach((v) => {
-          v.onMessagesRecalled?.(messages);
-        });
-      },
-      onConversationsUpdate: (): void => {
-        this._listeners.forEach((v) => {
-          v.onConversationsUpdate?.();
-        });
-      },
-      onConversationRead: (from: string, to?: string): void => {
-        this._listeners.forEach((v) => {
-          v.onConversationRead?.(from, to);
-        });
-      },
-      onMessageReactionDidChange: (
-        list: Array<ChatMessageReactionEvent>
-      ): void => {
-        this._listeners.forEach((v) => {
-          v.onMessageReactionDidChange?.(list);
-        });
-      },
-      onChatMessageThreadCreated: (event: ChatMessageThreadEvent): void => {
-        this._listeners.forEach((v) => {
-          v.onChatMessageThreadCreated?.(event);
-        });
-      },
-      onChatMessageThreadUpdated: (event: ChatMessageThreadEvent): void => {
-        this._listeners.forEach((v) => {
-          v.onChatMessageThreadUpdated?.(event);
-        });
-      },
-      onChatMessageThreadDestroyed: (event: ChatMessageThreadEvent): void => {
-        this._listeners.forEach((v) => {
-          v.onChatMessageThreadDestroyed?.(event);
-        });
-      },
-      onChatMessageThreadUserRemoved: (event: ChatMessageThreadEvent): void => {
-        this._listeners.forEach((v) => {
-          v.onChatMessageThreadUserRemoved?.(event);
-        });
-      },
-      onMessageContentChanged: (
-        message: ChatMessage,
-        lastModifyOperatorId: string,
-        lastModifyTime: number
-      ): void => {
-        this._listeners.forEach((v) => {
-          v.onMessageContentChanged?.(
-            message,
-            lastModifyOperatorId,
-            lastModifyTime
-          );
-        });
-      },
-    };
-    this.client.chatManager.addMessageListener(gMessageListener);
-  }
-
-  _initGroupListener() {
-    gGroupListener = {
-      onInvitationReceived: (params: {
-        groupId: string;
-        inviter: string;
-        groupName: string;
-        reason?: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onInvitationReceived?.(params);
-        });
-      },
-      onRequestToJoinReceived: (params: {
-        groupId: string;
-        applicant: string;
-        groupName?: string;
-        reason?: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onRequestToJoinReceived?.(params);
-        });
-      },
-      onRequestToJoinAccepted: (params: {
-        groupId: string;
-        accepter: string;
-        groupName?: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onRequestToJoinAccepted?.(params);
-        });
-      },
-      onRequestToJoinDeclined: (params: {
-        groupId: string;
-        decliner: string;
-        groupName?: string;
-        applicant?: string;
-        reason?: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onRequestToJoinDeclined?.(params);
-        });
-      },
-      onInvitationAccepted: (params: {
-        groupId: string;
-        invitee: string;
-        reason?: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onInvitationAccepted?.(params);
-        });
-      },
-      onInvitationDeclined: (params: {
-        groupId: string;
-        invitee: string;
-        reason?: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onInvitationDeclined?.(params);
-        });
-      },
-      onMemberRemoved: (params: {
-        groupId: string;
-        groupName?: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onMemberRemoved?.(params);
-        });
-      },
-      onDestroyed: (params: { groupId: string; groupName?: string }): void => {
-        this._listeners.forEach((v) => {
-          v.onDestroyed?.(params);
-        });
-      },
-      onAutoAcceptInvitation: (params: {
-        groupId: string;
-        inviter: string;
-        inviteMessage?: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onAutoAcceptInvitation?.(params);
-        });
-      },
-      onMuteListAdded: (params: {
-        groupId: string;
-        mutes: Array<string>;
-        muteExpire?: number;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onMuteListAdded?.(params);
-        });
-      },
-      onMuteListRemoved: (params: {
-        groupId: string;
-        mutes: Array<string>;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onMuteListRemoved?.(params);
-        });
-      },
-      onAdminAdded: (params: { groupId: string; admin: string }): void => {
-        this._listeners.forEach((v) => {
-          v.onAdminAdded?.(params);
-        });
-      },
-      onAdminRemoved: (params: { groupId: string; admin: string }): void => {
-        this._listeners.forEach((v) => {
-          v.onAdminRemoved?.(params);
-        });
-      },
-      onOwnerChanged: (params: {
-        groupId: string;
-        newOwner: string;
-        oldOwner: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onOwnerChanged?.(params);
-        });
-      },
-      onMemberJoined: (params: { groupId: string; member: string }): void => {
-        this._listeners.forEach((v) => {
-          v.onMemberJoined?.(params);
-        });
-      },
-      onMemberExited: (params: { groupId: string; member: string }): void => {
-        this._listeners.forEach((v) => {
-          v.onMemberExited?.(params);
-        });
-      },
-      onAnnouncementChanged: (params: {
-        groupId: string;
-        announcement: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onAnnouncementChanged?.(params);
-        });
-      },
-      onSharedFileAdded: (params: {
-        groupId: string;
-        sharedFile: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onSharedFileAdded?.(params);
-        });
-      },
-      onSharedFileDeleted: (params: {
-        groupId: string;
-        fileId: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onSharedFileDeleted?.(params);
-        });
-      },
-      onAllowListAdded: (params: {
-        groupId: string;
-        members: Array<string>;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onAllowListAdded?.(params);
-        });
-      },
-      onAllowListRemoved: (params: {
-        groupId: string;
-        members: Array<string>;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onAllowListRemoved?.(params);
-        });
-      },
-      onAllGroupMemberMuteStateChanged: (params: {
-        groupId: string;
-        isAllMuted: boolean;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onAllGroupMemberMuteStateChanged?.(params);
-        });
-      },
-      onDetailChanged: (group: ChatGroup): void => {
-        this._listeners.forEach((v) => {
-          v.onDetailChanged?.(group);
-        });
-      },
-      onStateChanged: (group: ChatGroup): void => {
-        this._listeners.forEach((v) => {
-          v.onStateChanged?.(group);
-        });
-      },
-      onMemberAttributesChanged: (params: {
-        groupId: string;
-        member: string;
-        attributes: any;
-        operator: string;
-      }): void => {
-        this._listeners.forEach((v) => {
-          v.onMemberAttributesChanged?.(params);
-        });
-      },
-    };
-    this.client.groupManager.addGroupListener(gGroupListener);
-  }
-
-  _initMultiDeviceListener() {
-    gMultiDeviceListener = {
-      onContactEvent: (
-        event?: ChatMultiDeviceEvent,
-        target?: string,
-        ext?: string
-      ): void => {
-        this._listeners.forEach((v) => {
-          v.onContactEvent?.(event, target, ext);
-        });
-      },
-      onGroupEvent: (
-        event?: ChatMultiDeviceEvent,
-        target?: string,
-        usernames?: Array<string>
-      ): void => {
-        this._listeners.forEach((v) => {
-          v.onGroupEvent?.(event, target, usernames);
-        });
-      },
-      onThreadEvent: (
-        event?: ChatMultiDeviceEvent,
-        target?: string,
-        usernames?: Array<string>
-      ): void => {
-        this._listeners.forEach((v) => {
-          v.onThreadEvent?.(event, target, usernames);
-        });
-      },
-      onMessageRemoved: (convId?: string, deviceId?: string): void => {
-        this._listeners.forEach((v) => {
-          v.onMessageRemoved?.(convId, deviceId);
-        });
-      },
-      onConversationEvent: (
-        event?: ChatMultiDeviceEvent,
-        convId?: string,
-        convType?: ChatConversationType
-      ): void => {
-        this._listeners.forEach((v) => {
-          v.onConversationEvent?.(event, convId, convType);
-        });
-      },
-    };
-    this.client.addMultiDeviceListener(gMultiDeviceListener);
-  }
-  _initCustomListener() {
-    gCustomListener = {
-      onDataReceived: (params: any): void => {
-        this._listeners.forEach((v) => {
-          v.onDataReceived?.(params);
-        });
-      },
-    };
-    this.client.addCustomListener(gCustomListener);
-  }
-  _initContactListener() {
-    gContactListener = {
-      onContactAdded: (userName: string): void => {
-        this._listeners.forEach((v) => {
-          v.onContactAdded?.(userName);
-        });
-      },
-      onContactDeleted: (userName: string): void => {
-        this._listeners.forEach((v) => {
-          v.onContactDeleted?.(userName);
-        });
-      },
-      onContactInvited: (userName: string, reason?: string): void => {
-        this._listeners.forEach((v) => {
-          v.onContactInvited?.(userName, reason);
-        });
-      },
-      onFriendRequestAccepted: (userName: string): void => {
-        this._listeners.forEach((v) => {
-          v.onFriendRequestAccepted?.(userName);
-        });
-      },
-      onFriendRequestDeclined: (userName: string): void => {
-        this._listeners.forEach((v) => {
-          v.onFriendRequestDeclined?.(userName);
-        });
-      },
-    };
-    this.client.contactManager.addContactListener(gContactListener);
-  }
-  _initPresenceListener() {
-    gPresenceListener = {
-      onPresenceStatusChanged: (list: Array<ChatPresence>): void => {
-        this._listeners.forEach((v) => {
-          v.onPresenceStatusChanged?.(list);
-        });
-      },
-    };
-    this.client.presenceManager.addPresenceListener(gPresenceListener);
-  }
-
-  _initExtraListener() {}
-
-  _fromChatError(error: any): string | undefined {
-    let e: string | undefined;
-    try {
-      e = JSON.stringify(error);
-    } catch (ee) {
-      if (typeof error === 'string') {
-        e = error;
-      } else {
-        e = ee?.toString?.();
-      }
-    }
-    return e;
-  }
-
-  async _createUserDir(): Promise<void> {
-    try {
-      const isExisted = await Services.dcs.isExistedUserDir();
-      if (isExisted !== true) {
-        await Services.dcs.createUserDir();
-      }
-    } catch (e) {
-      console.warn('createUserDir:', e);
-      // todo: show alert
-    }
-  }
-}
-
 let gIMService: ChatService;
 
 export function getChatService(): ChatService {
   if (gIMService === undefined) {
-    gIMService = new ChatServicePrivateImpl();
+    gIMService = new ChatServiceImpl();
   }
   return gIMService;
 }
-
-// export class IMServicePrivateImplTest extends ChatServicePrivateImpl {
-//   constructor() {
-//     super();
-//   }
-//   test() {
-//     this._clearMuter();
-//   }
-// }

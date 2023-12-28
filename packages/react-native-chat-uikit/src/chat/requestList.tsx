@@ -39,10 +39,27 @@ export class RequestListImpl implements RequestList {
   constructor(client: ChatService) {
     this._client = client;
     this._userList = new Map();
-    // this.init();
   }
-  destructor() {
+
+  init() {
     this.unInit();
+    gListener = {
+      onContactInvited: this.bindOnContactInvited.bind(this),
+      onFriendRequestAccepted: this.bindOnFriendRequestAccepted.bind(this),
+      onFriendRequestDeclined: this.bindOnFriendRequestDeclined.bind(this),
+    };
+    this._client.addListener(gListener);
+  }
+  unInit() {
+    this.reset();
+    if (gListener) {
+      this._client.removeListener(gListener);
+      gListener = undefined;
+    }
+  }
+  reset() {
+    this._newRequestList = [];
+    this._userList.clear();
   }
 
   addListener(key: string, listener: RequestListListener) {
@@ -115,26 +132,7 @@ export class RequestListImpl implements RequestList {
       }
     }
   }
-  init() {
-    if (gListener) {
-      this._client.removeListener(gListener);
-    }
-    gListener = {
-      onContactInvited: this.bindOnContactInvited.bind(this),
-      onFriendRequestAccepted: this.bindOnFriendRequestAccepted.bind(this),
-      onFriendRequestDeclined: this.bindOnFriendRequestDeclined.bind(this),
-    };
-    this._client.addListener(gListener);
-  }
-  unInit() {
-    if (gListener) {
-      this._client.removeListener(gListener);
-      gListener = undefined;
-    }
-    this._client = undefined as any;
-    this._newRequestList = [];
-    this._userList.clear();
-  }
+
   getRequestList(params: {
     onResult: ResultCallback<NewRequestModel[]>;
   }): void {

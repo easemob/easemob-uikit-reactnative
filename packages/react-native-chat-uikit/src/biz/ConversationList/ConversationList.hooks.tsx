@@ -163,7 +163,6 @@ export function useConversationList(
     }
     if (isAutoLoad === true) {
       const url = im.user(im.userId)?.avatarURL;
-      console.log('test:zuoyu:avatar:url:', url);
       if (url) {
         setAvatarUrl(url);
       }

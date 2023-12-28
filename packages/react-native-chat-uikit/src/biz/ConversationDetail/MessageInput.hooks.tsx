@@ -335,7 +335,6 @@ export function useMessageInput(
 
   const onClickedEmojiSend = React.useCallback(() => {
     // !!! warning: valueRef.current is not the latest value
-    console.log('test:zuoyu:onClickedEmojiSend');
     const content = valueRef.current;
     propsOnClickedSend?.({
       type: 'text',
@@ -346,7 +345,6 @@ export function useMessageInput(
   }, []);
 
   const onClickedSend = () => {
-    console.log('test:zuoyu:onClickedSend', sendIconName);
     if (sendIconName === 'airplane') {
       const content = valueRef.current;
       if (quoteMessageRef.current !== undefined) {

@@ -29,22 +29,18 @@ export function GroupInfoScreen(props: Props) {
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
   const testRef = React.useRef<string>();
-  console.log('test:zuoyu:GroupInfoScreen', route.params);
   // const goBack2 = React.useCallback(
   //   (data: any) => {
-  //     console.log('test:zuoyu:GroupInfoScreen:goBack', data);
   //     groupInfoRef.current?.setGroupName?.(groupId, data);
   //   },
   //   [groupId]
   // );
 
   // React.useEffect(() => {
-  //   console.log('test:zuoyu:11123:', testRef.current);
   // }, [testRef.current]);
 
   const goBack = (data: any) => {
     // !!! warning: react navigation
-    console.log('test:zuoyu:GroupInfoScreen:goBack', data);
     if (editTypeRef.current === 'groupName') {
       groupInfoRef.current?.setGroupName?.(groupId, data);
     } else if (editTypeRef.current === 'groupDescription') {
@@ -70,7 +66,6 @@ export function GroupInfoScreen(props: Props) {
       newOwner: string;
       oldOwner: string;
     }) => {
-      console.log('test:zuoyu:onOwnerChanged', params);
       if (params.groupId === groupId) {
         navigation.goBack();
       }

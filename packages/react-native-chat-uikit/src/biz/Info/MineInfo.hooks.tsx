@@ -134,7 +134,6 @@ export function useMineInfo(props: MineInfoProps) {
   const listener = React.useMemo(() => {
     return {
       onPresenceStatusChanged: (list: ChatPresence[]) => {
-        console.log('test:zuoyu:onPresenceStatusChanged', list.length);
         if (list && list.length > 0) {
           const presence = list[0];
           if (presence?.publisher === userId) {

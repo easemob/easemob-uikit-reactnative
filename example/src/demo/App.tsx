@@ -10,6 +10,7 @@ import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
 import {
   GlobalContainer,
+  LanguageCode,
   useChatListener,
   useDarkTheme,
   useLightTheme,
@@ -140,39 +141,59 @@ export function App() {
     }
   }
 
+  const options = React.useMemo(() => {
+    return {
+      appKey: env.appKey,
+      debugModel: env.isDevMode,
+      autoLogin: false,
+      autoAcceptGroupInvitation: true,
+      requireAck: true,
+      requireDeliveryAck: true,
+    };
+  }, []);
+
+  // const options2 = {
+  //   appKey: env.appKey,
+  //   debugModel: env.isDevMode,
+  //   autoLogin: false,
+  //   autoAcceptGroupInvitation: true,
+  //   requireAck: true,
+  //   requireDeliveryAck: true,
+  // };
+
+  const onInitialized = React.useCallback(() => {
+    console.log('dev:onInitialized:');
+    isContainerReadyRef.current = true;
+    if (
+      isFontReadyRef.current === true &&
+      isNavigationReadyRef.current === true &&
+      isContainerReadyRef.current === true
+    ) {
+      onReady(true);
+    }
+  }, []);
+
+  const languageExtensionFactory = React.useCallback(
+    (language: LanguageCode) => {
+      if (language === 'zh-Hans') {
+        return createStringSetCn();
+      } else {
+        return createStringSetEn();
+      }
+    },
+    []
+  );
+
   return (
     <React.StrictMode>
       <GlobalContainer
-        options={{
-          appKey: env.appKey,
-          debugModel: env.isDevMode,
-          autoLogin: false,
-          autoAcceptGroupInvitation: true,
-          requireAck: true,
-          requireDeliveryAck: true,
-        }}
+        options={options}
         palette={palette}
         theme={theme}
         language={'zh-Hans'}
         // fontFamily={fontFamily}
-        languageExtensionFactory={(language) => {
-          if (language === 'zh-Hans') {
-            return createStringSetCn();
-          } else {
-            return createStringSetEn();
-          }
-        }}
-        onInitialized={() => {
-          console.log('dev:onInitialized:');
-          isContainerReadyRef.current = true;
-          if (
-            isFontReadyRef.current === true &&
-            isNavigationReadyRef.current === true &&
-            isContainerReadyRef.current === true
-          ) {
-            onReady(true);
-          }
-        }}
+        languageExtensionFactory={languageExtensionFactory}
+        onInitialized={onInitialized}
       >
         <NavigationContainer
           onStateChange={(state: NavigationState | undefined) => {

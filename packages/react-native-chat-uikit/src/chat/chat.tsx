@@ -16,7 +16,7 @@ ChatContext.displayName = 'UIKitIMContext';
  * Properties of the IM context.
  */
 type ChatContextProps = React.PropsWithChildren<{
-  value: ChatServiceInit & { im?: ChatService };
+  value: ChatServiceInit;
 }>;
 
 /**
@@ -29,8 +29,8 @@ type ChatContextProps = React.PropsWithChildren<{
  * It can only be initialized once. Even if it is initialized multiple times, parameters modified in time will not take effect again. The reason is that `CHAT SDK` uses the native platform.
  */
 export function ChatContextProvider({ value, children }: ChatContextProps) {
-  const { options, im, onInitialized } = value;
-  const _im = im ?? _getChatService();
+  const { options, onInitialized } = value;
+  const _im = _getChatService();
   // initChat(_im, options, onInitialized);
   React.useEffect(() => {
     _im.init({

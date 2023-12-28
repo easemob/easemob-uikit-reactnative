@@ -53,7 +53,6 @@ export function useCreateGroup(props: CreateGroupProps) {
     (data?: ContactModel[]) => {
       if (data && data.length > 0) {
         const groupName = generateGroupName(data);
-        console.log('test:zuoyu:create_group:', data, groupName);
         im.CreateGroup({
           groupName: groupName,
           inviteMembers: data.map((item) => item.userId),

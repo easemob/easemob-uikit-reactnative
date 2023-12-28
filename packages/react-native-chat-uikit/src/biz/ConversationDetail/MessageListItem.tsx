@@ -1393,7 +1393,6 @@ export function MessageView(props: MessageViewProps) {
   }, [model, onAvatarClicked]);
 
   const onClickedState = React.useCallback(() => {
-    console.log('test:zuoyu:onClickedState:');
     onStateClicked?.(model.msg.msgId, model);
   }, [model, onStateClicked]);
 

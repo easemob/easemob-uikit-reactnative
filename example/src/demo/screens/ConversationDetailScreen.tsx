@@ -45,7 +45,6 @@ export function ConversationDetailScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
-  console.log('test:zuoyu:ConversationDetailScreen', route.params);
 
   React.useEffect(() => {
     if (selectedParticipants && operateType === 'mention') {

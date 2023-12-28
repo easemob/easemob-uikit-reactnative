@@ -90,7 +90,6 @@ export function useListBasic<ItemT>(
     }, 1000);
   }, [propsOnRefresh]);
   const onMore = React.useCallback(() => {
-    console.log('test:zuoyu:onmore:');
     propsOnLoadMore?.();
   }, [propsOnLoadMore]);
 

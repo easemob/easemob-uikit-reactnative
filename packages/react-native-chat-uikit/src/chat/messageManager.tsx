@@ -41,14 +41,37 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     this._userListener = new Map();
     this._sendList = new Map();
     this._downloadList = new Map();
-    // this.init();
   }
-  destructor() {
+  init() {
     this.unInit();
+    console.log('dev:MessageCacheManager:init');
+    gListener = {
+      onMessagesReceived: this.bindOnMessagesReceived.bind(this),
+      onMessagesRead: this.bindOnMessagesRead.bind(this),
+      onGroupMessageRead: this.bindOnGroupMessageRead.bind(this),
+      onMessagesDelivered: this.bindOnMessagesDelivered.bind(this),
+      onMessagesRecalled: this.bindOnMessagesRecalled.bind(this),
+      onMessageContentChanged: this.bindOnMessageContentChanged.bind(this),
+    };
+    this._client.addListener(gListener);
+  }
+  unInit() {
+    this.reset();
+    console.log('dev:MessageCacheManager:unInit');
+    if (gListener) {
+      this._client.removeListener(gListener);
+      gListener = undefined;
+    }
+  }
+  reset() {
+    console.log('dev:MessageCacheManager:reset');
+    this._userListener.clear();
+    this._sendList.clear();
+    this._downloadList.clear();
   }
 
   addListener(key: string, listener: MessageManagerListener) {
-    console.log('dev:MessageCacheManager:addListener');
+    console.log('dev:MessageCacheManager:addListener', key);
     this._userListener.set(key, listener);
   }
   removeListener(key: string) {
@@ -71,6 +94,11 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     });
   }
   bindOnMessagesReceived(messages: Array<ChatMessage>) {
+    console.log(
+      'dev:MessageCacheManager:bindOnMessagesReceived',
+      messages.length,
+      this._userListener?.size
+    );
     messages.forEach((msg) => {
       this._userListener.forEach((v) => {
         v.onRecvMessage?.(msg);
@@ -116,32 +144,8 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     });
   }
 
-  init() {
-    console.log('dev:MessageCacheManager:init');
-    if (gListener) {
-      this._client.removeListener(gListener);
-    }
-    gListener = {
-      onMessagesReceived: this.bindOnMessagesReceived.bind(this),
-      onMessagesRead: this.bindOnMessagesRead.bind(this),
-      onGroupMessageRead: this.bindOnGroupMessageRead.bind(this),
-      onMessagesDelivered: this.bindOnMessagesDelivered.bind(this),
-      onMessagesRecalled: this.bindOnMessagesRecalled.bind(this),
-      onMessageContentChanged: this.bindOnMessageContentChanged.bind(this),
-    };
-    this._client.addListener(gListener);
-  }
-  unInit() {
-    if (gListener) {
-      this._client.removeListener(gListener);
-      gListener = undefined;
-    }
-    this._client = undefined as any;
-    this._userListener.clear();
-    this._sendList.clear();
-    this._downloadList.clear();
-  }
   setCurrentConvId(conv: ConversationModel): void {
+    console.log('dev:MessageCacheManager:', conv);
     this._conv = conv;
   }
   sendMessageReadAck(params: { message: ChatMessage }): void {

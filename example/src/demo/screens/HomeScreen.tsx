@@ -108,7 +108,6 @@ export function HomeScreen(props: Props) {
         headerPosition="down"
         initIndex={0}
         onCurrentIndex={(index) => {
-          console.log('test:zuoyu:index', index);
           currentIndexRef.current = index;
         }}
       />
@@ -262,16 +261,16 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
           params: { searchType: 'contact-list' },
         });
       }}
-      onClickedNewGroup={() => {
-        navigation.navigate('CreateGroup', {
-          params: { searchType: 'create-group' },
-        });
-      }}
-      onClickedNewConversation={() => {
-        navigation.navigate('NewConversation', {
-          params: { searchType: 'new-conversation' },
-        });
-      }}
+      // onClickedNewGroup={() => {
+      //   navigation.navigate('CreateGroup', {
+      //     params: { searchType: 'create-group' },
+      //   });
+      // }}
+      // onClickedNewConversation={() => {
+      //   navigation.navigate('NewConversation', {
+      //     params: { searchType: 'new-conversation' },
+      //   });
+      // }}
       onClicked={(data) => {
         if (data?.userId) {
           navigation.navigate('ContactInfo', {

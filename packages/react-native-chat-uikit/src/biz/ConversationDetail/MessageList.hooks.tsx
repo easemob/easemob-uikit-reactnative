@@ -599,7 +599,6 @@ export function useMessageList(
       _id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
-      console.log('test:zuoyu:onClickedItemState');
       if (model.modelType !== 'message') {
         return;
       }
@@ -753,7 +752,6 @@ export function useMessageList(
   React.useEffect(() => {
     const listener = {
       onSendMessageChanged: (msg: ChatMessage) => {
-        console.log('test:zuoyu:onSendMessageChanged');
         onUpdateMessageToUI(msg, 'send');
       },
       onRecvMessage: (msg: ChatMessage) => {

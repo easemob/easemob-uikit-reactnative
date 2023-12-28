@@ -354,7 +354,6 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
       return;
     }
     const url = im.user(im.userId)?.avatarURL;
-    console.log('test:zuoyu:avatar:url:', url);
     if (url) {
       setAvatarUrl(url);
     }
@@ -471,7 +470,6 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
           });
         },
         onContactDeleted: async (userId: string) => {
-          console.log('test:zuoyu:onContactDeleted:', userId);
           removeContact(userId);
         },
       } as ChatServiceListener;
