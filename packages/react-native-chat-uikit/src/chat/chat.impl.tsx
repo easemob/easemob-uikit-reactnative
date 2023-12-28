@@ -289,9 +289,12 @@ export class ChatServiceImpl
     }
   }
   async autoLogin(params: {
-    userName: string;
-    userAvatarURL?: string | undefined;
+    userId: string;
+    userToken: string;
+    userName?: string;
+    userAvatarURL?: string;
     gender?: number;
+    sign?: string;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     if (this.client.options?.autoLogin !== true) {
@@ -307,11 +310,12 @@ export class ChatServiceImpl
           this._convStorage?.setCurrentId(userId);
 
           this._user = {
-            userName: params.userName,
+            userName: params.userId,
             remark: params.userName,
             avatarURL: params.userAvatarURL,
             userId: userId,
             gender: params.gender,
+            sign: params.sign,
           } as UserServiceData;
 
           Services.dcs.init(
@@ -319,6 +323,7 @@ export class ChatServiceImpl
           );
 
           await this._createUserDir();
+          this.client.getCurrentUsername();
 
           params.result?.({ isOk: true });
         } else {

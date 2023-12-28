@@ -17,7 +17,7 @@ import type {
 } from 'react-native-chat-sdk';
 
 import type { UIKitError } from '../error';
-import type { Keyof, PartialNullable, PartialUndefinable } from '../types';
+import type { Keyof, PartialUndefinable } from '../types';
 import type { MessageCacheManager } from './messageManager.types';
 import type { RequestList } from './requestList.types';
 
@@ -116,27 +116,30 @@ export interface ConnectServiceListener {
   onDisconnected?(reason: DisconnectReasonType): void;
 }
 
-export type MessageServiceListener = PartialNullable<ChatMessageEventListener>;
+export type MessageServiceListener =
+  PartialUndefinable<ChatMessageEventListener>;
 
 export type ConversationListener = {
   onConversationChanged?: (conv: ConversationModel) => void;
 };
 
-export type GroupServiceListener = PartialNullable<ChatGroupEventListener> & {
-  onGroupInfoChanged?: (group: GroupModel) => void;
-  onCreateGroup?: (group: GroupModel) => void;
-  onQuitGroup?: (groupId: string) => void;
-};
+export type GroupServiceListener =
+  PartialUndefinable<ChatGroupEventListener> & {
+    onGroupInfoChanged?: (group: GroupModel) => void;
+    onCreateGroup?: (group: GroupModel) => void;
+    onQuitGroup?: (groupId: string) => void;
+  };
 
-export type ContactServiceListener = PartialNullable<ChatContactEventListener>;
+export type ContactServiceListener =
+  PartialUndefinable<ChatContactEventListener>;
 
 export type PresenceServiceListener =
-  PartialNullable<ChatPresenceEventListener>;
+  PartialUndefinable<ChatPresenceEventListener>;
 
-export type CustomServiceListener = PartialNullable<ChatCustomEventListener>;
+export type CustomServiceListener = PartialUndefinable<ChatCustomEventListener>;
 
 export type MultiDeviceStateListener =
-  PartialNullable<ChatMultiDeviceEventListener>;
+  PartialUndefinable<ChatMultiDeviceEventListener>;
 
 export interface ErrorServiceListener {
   onError?(params: { error: UIKitError; from?: string; extra?: any }): void;
@@ -387,6 +390,8 @@ export interface ContactServices {
   }): void;
   /**
    * Save state for multi-page components.
+   *
+   * **Note** At present, routing is implemented in the application layer, so it is troublesome to transfer complex objects through attribute layers. Therefore, data synchronization and exchange are performed through the bottom layer.
    */
   setContactCheckedState(params: {
     key: string;
@@ -463,9 +468,11 @@ export interface MessageServices {
   }): void;
   /**
    * Get the user information from the message.
-   * @param msg the message.
    */
   userInfoFromMessage(msg?: ChatMessage): UserServiceData | undefined;
+  /**
+   * Set the user information to the message.
+   */
   setUserInfoToMessage(params: {
     msg: ChatMessage;
     user: UserServiceData;
@@ -581,18 +588,30 @@ export interface GroupServices {
 }
 
 export interface PresenceServices {
+  /**
+   * Subscribe to user status.
+   */
   subPresence(params: {
     userIds: string[];
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Unsubscribe to user status.
+   */
   unSubPresence(params: {
     userIds: string[];
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Publish user status.
+   */
   publishPresence(params: {
     status: string;
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Get the status of the specified user list.
+   */
   fetchPresence(params: {
     userIds: string[];
     onResult: ResultCallback<string[]>;
@@ -618,6 +637,8 @@ export interface ChatService
   removeListener(listener: ChatServiceListener): void;
   /**
    * Clear all listeners.
+   *
+   * **Note** Please use this interface with caution, as it may result in deleting other listeners and failing to receive notifications.
    */
   clearListener(): void;
 
@@ -695,9 +716,12 @@ export interface ChatService
    * - result: The result after performing the operation. If failed, an error object is returned.
    */
   autoLogin(params: {
-    userName: string;
-    userAvatarURL?: string | undefined;
+    userId: string;
+    userToken: string;
+    userName?: string;
+    userAvatarURL?: string;
     gender?: number;
+    sign?: string;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
   /**
@@ -753,11 +777,26 @@ export interface ChatService
    */
   sendFinished(params: { event: ChatEventType; extra?: any }): void;
 
+  /**
+   * This is the cache list of new notifications. When the new notification component has not been loaded and the notification is received, the cache will be automatically updated. Keep data updated when new notification components are loaded.
+   */
   get requestList(): RequestList;
+
+  /**
+   * This is the message cache manager, which is mainly responsible for caching notifications of received messages and distributing notifications when the session details page has not been loaded. Monitor message sending status updates when sending messages.
+   */
   get messageManager(): MessageCacheManager;
 }
 
 type ChatOptionsType1 = PartialUndefinable<ChatOptions>;
+/**
+ * ChatOptionsType is the initialization parameters of ChatService.
+ *
+ * appKey, autoLogin and debugModel is required.
+ *
+ * This parameter option is consistent with `Agora Chat SDK`.
+ *
+ */
 export type ChatOptionsType = ChatOptionsType1 & {
   appKey: string;
   autoLogin: boolean;
@@ -770,7 +809,7 @@ export type ChatOptionsType = ChatOptionsType1 & {
 export type ChatServiceInit = {
   options: ChatOptionsType;
   /**
-   * IM initialization is completed.
+   * IM initialization is completed callback notification.
    */
   onInitialized?: () => void;
 };

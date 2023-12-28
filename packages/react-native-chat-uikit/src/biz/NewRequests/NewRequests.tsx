@@ -61,9 +61,7 @@ export function NewRequests(props: NewRequestsProps) {
             <IconButton
               iconName={'chevron_left'}
               style={{ width: 24, height: 24 }}
-              onPress={() => {
-                onBack?.();
-              }}
+              onPress={onBack}
             />
             <Text
               paletteType={'title'}

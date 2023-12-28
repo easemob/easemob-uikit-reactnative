@@ -61,9 +61,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
             <IconButton
               iconName={'chevron_left'}
               style={{ width: 24, height: 24 }}
-              onPress={() => {
-                onBack?.();
-              }}
+              onPress={onBack}
             />
             <Pressable onPress={onClickedAvatar}>
               <Avatar url={convAvatar} size={32} />

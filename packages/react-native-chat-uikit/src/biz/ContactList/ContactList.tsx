@@ -123,12 +123,7 @@ export function ContactList(props: ContactListProps) {
       return (
         <TopNavigationBar
           Left={
-            <Pressable
-              style={{ flexDirection: 'row' }}
-              onPress={() => {
-                onBack?.();
-              }}
-            >
+            <Pressable style={{ flexDirection: 'row' }} onPress={onBack}>
               <Text paletteType={'label'} textType={'medium'}>
                 {tr('cancel')}
               </Text>
@@ -147,9 +142,7 @@ export function ContactList(props: ContactListProps) {
               <IconButton
                 iconName={'chevron_left'}
                 style={{ width: 24, height: 24 }}
-                onPress={() => {
-                  onBack?.();
-                }}
+                onPress={onBack}
               />
               <Text
                 paletteType={'title'}
@@ -183,9 +176,7 @@ export function ContactList(props: ContactListProps) {
               <IconButton
                 iconName={'chevron_left'}
                 style={{ width: 24, height: 24 }}
-                onPress={() => {
-                  onBack?.();
-                }}
+                onPress={onBack}
               />
               <Text
                 paletteType={'title'}
@@ -215,12 +206,7 @@ export function ContactList(props: ContactListProps) {
       return (
         <TopNavigationBar
           Left={
-            <Pressable
-              style={{ flexDirection: 'row' }}
-              onPress={() => {
-                onBack?.();
-              }}
-            >
+            <Pressable style={{ flexDirection: 'row' }} onPress={onBack}>
               <Text paletteType={'label'} textType={'medium'}>
                 {tr('cancel')}
               </Text>
