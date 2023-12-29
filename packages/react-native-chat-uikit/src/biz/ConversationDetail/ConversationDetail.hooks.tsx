@@ -73,8 +73,11 @@ export function useConversationDetail(props: ConversationDetailProps) {
           userId: conv.convId,
           onResult: (result) => {
             if (result.isOk === true && result.value) {
-              conv.convName = result.value?.userName ?? result.value?.remark;
-              setConvName(result.value?.userName ?? result.value?.remark);
+              conv.convName =
+                result.value?.userName && result.value?.userName.length > 0
+                  ? result.value?.userName
+                  : result.value?.userId;
+              setConvName(conv.convName);
               if (result.value?.avatarURL) {
                 conv.convAvatar = result.value.avatarURL;
                 setConvAvatar(result.value.avatarURL);
@@ -88,9 +91,12 @@ export function useConversationDetail(props: ConversationDetailProps) {
           groupId: conv.convId,
           onResult: (result) => {
             if (result.isOk === true && result.value) {
-              conv.convName = result.value.groupName ?? result.value.groupId;
+              conv.convName =
+                result.value.groupName && result.value?.groupName.length > 0
+                  ? result.value?.groupName
+                  : result.value.groupId;
               ownerIdRef.current = result.value.owner;
-              setConvName(result.value.groupName ?? result.value.groupId);
+              setConvName(conv.convName);
               if (result.value.groupAvatar) {
                 conv.convAvatar = result.value.groupAvatar;
                 setConvAvatar(result.value.groupAvatar);

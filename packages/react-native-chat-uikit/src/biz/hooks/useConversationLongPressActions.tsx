@@ -14,7 +14,7 @@ export type ConversationLongPressActionsProps = {
 export function useConversationLongPressActions(
   props: ConversationLongPressActionsProps
 ) {
-  console.log('test:zuoyu:useConversationLongPressActions');
+  // console.log('test:zuoyu:useConversationLongPressActions');
   const { menuRef, alertRef, onDisturb, onPin, onRead, onRemove } = props;
   const { tr } = useI18nContext();
   const onShowMenu = (conv: ConversationModel) => {

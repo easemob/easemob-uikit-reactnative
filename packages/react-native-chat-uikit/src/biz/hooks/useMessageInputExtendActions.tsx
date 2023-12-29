@@ -52,7 +52,7 @@ export function useMessageInputExtendActions(
     onSelectSendFile,
     onSelectSendCard,
   } = props;
-  console.log('test:zuoyu:useMessageInputExtendActions', props);
+  // console.log('test:zuoyu:useMessageInputExtendActions', props);
   const { closeMenu } = useCloseMenu({ menuRef });
   const onShowMenu = () => {
     menuRef.current?.startShowWithProps?.({

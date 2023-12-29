@@ -11,7 +11,7 @@ export type useMineInfoActionsProps = {
 };
 export function useMineInfoActions(props: useMineInfoActionsProps) {
   const { menuRef, alertRef } = props;
-  console.log('test:zuoyu:useMineInfoActions', props);
+  // console.log('test:zuoyu:useMineInfoActions', props);
   const { closeMenu } = useCloseMenu({ menuRef });
   const {} = useCloseAlert({ alertRef });
   const {} = useI18nContext();

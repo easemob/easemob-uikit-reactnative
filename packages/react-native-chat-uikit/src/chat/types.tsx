@@ -4,9 +4,8 @@ import type {
   ChatContactEventListener,
   ChatConversationType,
   ChatCustomEventListener,
+  ChatGroup,
   ChatGroupEventListener,
-  ChatGroupOptions,
-  ChatGroupPermissionType,
   ChatMessage,
   ChatMessageEventListener,
   ChatMessageStatusCallback,
@@ -17,7 +16,7 @@ import type {
 } from 'react-native-chat-sdk';
 
 import type { UIKitError } from '../error';
-import type { Keyof, PartialUndefinable } from '../types';
+import type { PartialUndefinable } from '../types';
 import type { MessageCacheManager } from './messageManager.types';
 import type { RequestList } from './requestList.types';
 
@@ -67,7 +66,7 @@ export type UserServiceData = {
   /**
    * User name.
    */
-  userName: string;
+  userName?: string;
   /**
    * User remark.
    */
@@ -215,59 +214,28 @@ export type ConversationModel = {
    */
   lastMessage?: ChatMessage;
 };
-
-export type ContactModel = Record<Keyof<ChatContact>, string> & {
+type _ContactModel = PartialUndefinable<ChatContact>;
+export type ContactModel = _ContactModel & {
+  userId: string;
   nickName?: string;
   avatar?: string;
   checked?: boolean;
   disable?: boolean;
 };
 
-export type GroupModel = {
+type _GroupModel = Omit<
+  PartialUndefinable<ChatGroup>,
+  'memberList' | 'adminList' | 'blockList' | 'muteList'
+>;
+export type GroupModel = _GroupModel & {
   /**
    * The group ID.
    */
   groupId: string;
   /**
-   * The group name.
-   */
-  groupName?: string;
-  /**
-   * The group description.
-   */
-  description?: string;
-  /**
-   * The user ID of the group owner.
+   * The group owner ID.
    */
   owner: string;
-  /**
-   * The content of the group announcement.
-   */
-  announcement?: string;
-  /**
-   * The member count of the group.
-   */
-  memberCount?: number;
-  /**
-   * Whether group messages are blocked.
-   * - `true`: Yes.
-   * - `false`: No.
-   */
-  messageBlocked?: boolean;
-  /**
-   * Whether all group members are muted.
-   * - `true`: Yes.
-   * - `false`: No.
-   */
-  isAllMemberMuted?: boolean;
-  /**
-   * The role of the current user in the group.
-   */
-  permissionType: ChatGroupPermissionType;
-  /**
-   * The group options.
-   */
-  options?: ChatGroupOptions;
   /**
    * The group avatar url.
    */
@@ -535,7 +503,7 @@ export interface GroupServices {
     groupId: string;
     onResult: ResultCallback<GroupModel>;
   }): void;
-  CreateGroup(params: {
+  createGroup(params: {
     groupName: string;
     groupDescription?: string;
     inviteMembers: string[];

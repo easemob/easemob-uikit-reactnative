@@ -23,7 +23,7 @@ export function useConversationListMoreActions(
     menuRef,
     alertRef,
   } = props;
-  console.log('test:zuoyu:useConversationListMoreActions', props);
+  // console.log('test:zuoyu:useConversationListMoreActions', props);
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
   const im = useChatContext();

@@ -458,8 +458,8 @@ export class ChatServiceImpl
   ): UserServiceData {
     return {
       userId: user.userId,
-      userName: user.nickName ?? user.userId,
-      remark: user.nickName ?? user.userId,
+      userName: user.nickName,
+      remark: user.nickName,
       avatarURL: user.avatarUrl,
       gender: user.gender,
       sign: user.sign,
@@ -491,26 +491,20 @@ export class ChatServiceImpl
     } as ConversationModel;
   }
 
-  async toUIContact(contact: ChatContact): Promise<ContactModel> {
+  toUIContact(contact: ChatContact): ContactModel {
+    const others = this._contactList.get(contact.userId);
     return {
+      ...others,
       userId: contact.userId,
       remark: contact.remark,
-      nickName:
-        this._contactList.get(contact.userId)?.nickName ??
-        contact.remark ??
-        contact.userId,
-      avatar: this._contactList.get(contact.userId)?.avatar,
     };
   }
 
   toUIGroup(group: ChatGroup): GroupModel {
+    const others = this._groupList.get(group.groupId);
     return {
+      ...others,
       ...group,
-      groupId: group.groupId,
-      groupName: group.groupName,
-      permissionType: group.permissionType,
-      owner: group.owner,
-      groupAvatar: this._groupList.get(group.groupId)?.groupAvatar,
     };
   }
 
@@ -1007,7 +1001,7 @@ export class ChatServiceImpl
           value.forEach(async (v) => {
             const conv = this._contactList.get(v.userId);
             if (conv) {
-              list.set(v.userId, mergeObjects(v, conv));
+              list.set(v.userId, mergeObjects<ContactModel>(v, conv));
             } else {
               list.set(v.userId, { ...v });
             }
@@ -1105,6 +1099,7 @@ export class ChatServiceImpl
 
   getContact(params: {
     userId: string;
+    useUserData?: boolean;
     onResult: ResultCallback<ContactModel | undefined>;
   }): void {
     this.tryCatch({
@@ -1113,9 +1108,7 @@ export class ChatServiceImpl
       onFinished: async (value) => {
         if (value) {
           const contact = await this.toUIContact(value);
-          this._contactList.set(contact.userId, contact);
-
-          if (this._contactDataRequestCallback) {
+          if (this._contactDataRequestCallback && params.useUserData) {
             this._contactDataRequestCallback({
               ids: [params.userId],
               result: async (data?: DataModel[], error?: UIKitError) => {
@@ -1272,25 +1265,26 @@ export class ChatServiceImpl
           this._groupDataRequestCallback({
             ids: Array.from(this._groupList.values())
               .filter(
-                (v) => v.groupName === undefined || v.groupName === v.groupId
+                (v) =>
+                  v.groupName === undefined ||
+                  v.groupName === v.groupId ||
+                  v.groupName.length === 0
               )
               .map((v) => v.groupId),
             result: async (data?: DataModel[], error?: UIKitError) => {
               if (data) {
-                data.forEach((value) => {
-                  const group = this._groupList.get(value.id);
+                data.forEach((item) => {
+                  const group = this._groupList.get(item.id);
                   if (group) {
-                    group.groupName = value.name;
-                    group.groupAvatar = value.avatar;
+                    group.groupName = item.name;
+                    group.groupAvatar = item.avatar;
                   }
                 });
               }
 
               params.onResult({
                 isOk: true,
-                value: Array.from(value).map(
-                  (v) => this._groupList.get(v.groupId)!
-                ),
+                value: Array.from(value).map((v) => this.toUIGroup(v)),
                 error,
               });
             },
@@ -1298,9 +1292,7 @@ export class ChatServiceImpl
         } else {
           params.onResult({
             isOk: true,
-            value: Array.from(value).map(
-              (v) => this._groupList.get(v.groupId)!
-            ),
+            value: Array.from(value).map((v) => this.toUIGroup(v)),
           });
         }
       },
@@ -1338,7 +1330,7 @@ export class ChatServiceImpl
         value.list?.forEach(async (v) => {
           memberList.set(v, { id: v });
         });
-        this._groupMemberList.set(params.groupId, memberList);
+
         cursor = value.cursor;
         if (
           cursor.length === 0 ||
@@ -1366,6 +1358,31 @@ export class ChatServiceImpl
               break;
             }
           }
+        }
+
+        this._groupMemberList.set(params.groupId, memberList);
+
+        if (this._groupParticipantDataRequestCallback) {
+          this._groupParticipantDataRequestCallback({
+            ids: Array.from(memberList.values()).map((v) => v.id),
+            result: async (data?: DataModel[], error?: UIKitError) => {
+              if (data) {
+                data.forEach((item) => {
+                  const member = memberList.get(item.id);
+                  if (member) {
+                    member.nickName = item.name;
+                    member.avatar = item.avatar;
+                  }
+                });
+              }
+
+              params.onResult({
+                isOk: true,
+                value: Array.from(memberList.values()),
+                error,
+              });
+            },
+          });
         }
 
         params.onResult({
@@ -1469,53 +1486,34 @@ export class ChatServiceImpl
             ),
             event: 'getGroupInfo',
             onFinished: (value) => {
-              const localGroup = this._groupList.get(params.groupId);
               if (value) {
                 const group = this.toUIGroup(value);
-                this._groupList.set(
-                  group.groupId,
-                  mergeObjects(group, localGroup ?? ({} as any))
-                );
                 params.onResult({
                   isOk: true,
                   value: group,
                 });
               } else {
                 params.onResult({
-                  isOk: true,
-                  value: localGroup,
+                  isOk: false,
                 });
               }
             },
           });
         } else {
-          const localGroup = this._groupList.get(params.groupId);
-          if (value) {
-            const group = this.toUIGroup(value);
-            this._groupList.set(
-              group.groupId,
-              mergeObjects(group, localGroup ?? ({} as any))
-            );
-            params.onResult({
-              isOk: true,
-              value: group,
-            });
-          } else {
-            params.onResult({
-              isOk: true,
-              value: localGroup,
-            });
-          }
+          params.onResult({
+            isOk: true,
+            value: this.toUIGroup(value),
+          });
         }
       },
     });
   }
 
-  CreateGroup(params: {
+  createGroup(params: {
     groupName: string;
     groupDescription?: string;
     inviteMembers: string[];
-    onResult: ResultCallback<ChatGroup>;
+    onResult: ResultCallback<GroupModel>;
   }): void {
     this.tryCatch({
       promise: this.client.groupManager.createGroup(
@@ -1530,6 +1528,34 @@ export class ChatServiceImpl
       ),
       event: 'createGroup',
       onFinished: async (value) => {
+        if (value && value.groupId.length > 0) {
+          this._groupList.set(value.groupId, { ...value });
+          if (this._groupDataRequestCallback) {
+            this._groupDataRequestCallback({
+              ids: [value.groupId],
+              result: (data) => {
+                if (data) {
+                  data.forEach((item) => {
+                    const group = this._groupList.get(item.id);
+                    if (group) {
+                      group.groupName = item.name;
+                      group.groupAvatar = item.avatar;
+                    }
+                  });
+                }
+                params.onResult({
+                  isOk: true,
+                  value: this.toUIGroup(value),
+                });
+              },
+            });
+          } else {
+            params.onResult({
+              isOk: true,
+              value: this.toUIGroup(value),
+            });
+          }
+        }
         const group = this.toUIGroup(value);
         if (group) {
           this._groupList.set(group.groupId, group);

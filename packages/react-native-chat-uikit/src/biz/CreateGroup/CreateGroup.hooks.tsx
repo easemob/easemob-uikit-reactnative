@@ -53,7 +53,7 @@ export function useCreateGroup(props: CreateGroupProps) {
     (data?: ContactModel[]) => {
       if (data && data.length > 0) {
         const groupName = generateGroupName(data);
-        im.CreateGroup({
+        im.createGroup({
           groupName: groupName,
           inviteMembers: data.map((item) => item.userId),
           onResult: (result) => {

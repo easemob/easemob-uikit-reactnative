@@ -11,7 +11,7 @@ export function useContactListMoreActions(
   props: useContactListMoreActionsProps
 ) {
   const { alertRef } = props;
-  console.log('test:zuoyu:useContactListMoreActions', props);
+  // console.log('test:zuoyu:useContactListMoreActions', props);
   const { tr } = useI18nContext();
   const im = useChatContext();
   const onShowAlert = () => {

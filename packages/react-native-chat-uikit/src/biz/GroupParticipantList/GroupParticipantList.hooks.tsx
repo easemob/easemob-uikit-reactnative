@@ -145,6 +145,7 @@ export function useGroupParticipantList(
     } else {
       im.getGroupAllMembers({
         groupId: groupId,
+        isReset: true,
         onResult: (result) => {
           const { isOk, value, error } = result;
           if (isOk === true) {
