@@ -60,24 +60,31 @@ export class ChatServiceImpl
   _messageManager: MessageCacheManager;
   _contactState: Map<string, Map<string, boolean>>;
   _currentConversation?: ConversationModel;
+  _silentModeList: Map<string, { convId: string; doNotDisturb?: boolean }>;
   _convDataRequestCallback?: (params: {
     ids: Map<DataModelType, string[]>;
     result: (
       data?: Map<DataModelType, any[]> | undefined,
       error?: UIKitError
-    ) => void;
+    ) => void | Promise<void>;
   }) => void;
   _contactDataRequestCallback:
     | ((params: {
         ids: string[];
         result: (data?: any[], error?: UIKitError) => void;
-      }) => void)
+      }) => void | Promise<void>)
     | undefined;
   _groupDataRequestCallback:
     | ((params: {
         ids: string[];
         result: (data?: any[], error?: UIKitError) => void;
-      }) => void)
+      }) => void | Promise<void>)
+    | undefined;
+  _groupParticipantDataRequestCallback:
+    | ((params: {
+        ids: string[];
+        result: (data?: any[], error?: UIKitError) => void;
+      }) => void | Promise<void>)
     | undefined;
 
   constructor() {
@@ -89,6 +96,7 @@ export class ChatServiceImpl
     this._groupList = new Map();
     this._groupMemberList = new Map();
     this._contactState = new Map();
+    this._silentModeList = new Map();
     this._request = new RequestListImpl(this);
     this._messageManager = new MessageCacheManagerImpl(this);
   }
@@ -106,6 +114,7 @@ export class ChatServiceImpl
     this._groupList.clear();
     this._groupMemberList.clear();
     this._contactState.clear();
+    this._silentModeList.clear();
   }
 
   async init(params: {
@@ -458,14 +467,11 @@ export class ChatServiceImpl
     };
   }
 
+  getDoNotDisturbFromCache(convId: string) {
+    return this._silentModeList.get(convId)?.doNotDisturb;
+  }
+
   async toUIConversation(conv: ChatConversation): Promise<ConversationModel> {
-    const getDoNotDisturb = async () => {
-      if (conv.ext?.doNotDisturb !== undefined) {
-        return conv.ext.doNotDisturb as boolean;
-      } else {
-        return await this.getDoNotDisturb(conv.convId, conv.convType);
-      }
-    };
     return {
       convId: conv.convId,
       convType: conv.convType,
@@ -481,7 +487,7 @@ export class ChatServiceImpl
         conv.convId,
         conv.convType
       ),
-      doNotDisturb: await getDoNotDisturb(),
+      doNotDisturb: this.getDoNotDisturbFromCache(conv.convId),
     } as ConversationModel;
   }
 
@@ -526,6 +532,15 @@ export class ChatServiceImpl
     this._groupDataRequestCallback = callback;
   }
 
+  setGroupParticipantOnRequestData<DataT>(
+    callback?: (params: {
+      ids: string[];
+      result: (data?: DataT[], error?: UIKitError) => void;
+    }) => void | Promise<void>
+  ): void {
+    this._groupParticipantDataRequestCallback = callback;
+  }
+
   setOnRequestMultiData<DataT>(
     callback?: (params: {
       ids: Map<DataModelType, string[]>;
@@ -557,6 +572,16 @@ export class ChatServiceImpl
       console.log('test:zuoyu:1', isFinished);
       if (isFinished === true) {
         const list = await this.client.chatManager.getAllConversations();
+        const list2 = await this._convStorage?.getAllConversation();
+        if (list2 && list2?.length > 0) {
+          console.log('test:zuoyu:11:');
+          list2?.forEach((v) => {
+            this._silentModeList.set(v.convId, {
+              convId: v.convId,
+              doNotDisturb: v.doNotDisturb,
+            });
+          });
+        }
         const ret = list.map(async (v) => {
           this._convList.set(v.convId, await this.toUIConversation(v));
         });
@@ -573,7 +598,6 @@ export class ChatServiceImpl
         pinList.list?.forEach((v) => {
           map.set(v.convId, {
             ...v,
-            ext: v.ext ?? { doNotDisturb: false },
           } as ChatConversation);
         });
         cursor = '';
@@ -586,31 +610,9 @@ export class ChatServiceImpl
           list.list?.forEach((v) => {
             map.set(v.convId, {
               ...v,
-              ext: v.ext ?? { doNotDisturb: false },
             } as ChatConversation);
           });
           console.log('test:zuoyu:3:', list);
-
-          if (list.list && list.list.length > 0) {
-            const silentList =
-              await this.client.pushManager.fetchSilentModeForConversations(
-                list.list.map((v) => {
-                  return {
-                    convId: v.convId,
-                    convType: v.convType,
-                  } as any;
-                })
-              );
-            silentList.forEach((v) => {
-              const conv = map.get(v.conversationId);
-              if (conv) {
-                conv.ext.doNotDisturb =
-                  v.remindType === ChatPushRemindType.MENTION_ONLY ||
-                  v.remindType === ChatPushRemindType.NONE;
-              }
-            });
-            console.log('test:zuoyu:4:', silentList);
-          }
 
           if (
             list.cursor.length === 0 ||
@@ -621,8 +623,39 @@ export class ChatServiceImpl
             break;
           }
         }
+
+        if (map.size > 0) {
+          const silentList =
+            await this.client.pushManager.fetchSilentModeForConversations(
+              Array.from(map.values()).map((v) => {
+                return {
+                  convId: v.convId,
+                  convType: v.convType,
+                } as any;
+              })
+            );
+          silentList.forEach((v) => {
+            this._silentModeList.set(v.conversationId, {
+              convId: v.conversationId,
+              doNotDisturb:
+                v.remindType === ChatPushRemindType.MENTION_ONLY ||
+                v.remindType === ChatPushRemindType.NONE,
+            });
+          });
+          if (this._silentModeList.size > 0) {
+            await this._convStorage?.setAllConversation(
+              Array.from(this._silentModeList.values()).map((item) => {
+                return {
+                  convId: item.convId,
+                  doNotDisturb: item.doNotDisturb,
+                } as ConversationModel;
+              })
+            );
+          }
+          console.log('test:zuoyu:4:', silentList, this._silentModeList);
+        }
+
         await this._convStorage?.setFinishedForFetchList(true);
-        await this._convStorage?.setAllConversation(Array.from(map.values()));
         console.log('test:zuoyu:6:');
 
         const ret = Array.from(map.values()).map(async (v) => {
@@ -645,7 +678,8 @@ export class ChatServiceImpl
                     v.convType === ChatConversationType.PeerChat &&
                     (v.convId === v.convName ||
                       v.convName === undefined ||
-                      v.convName === null) &&
+                      v.convName === null ||
+                      v.convName.length === 0) &&
                     v.convAvatar === undefined
                 )
                 .map((v) => v.convId),
@@ -658,7 +692,8 @@ export class ChatServiceImpl
                     v.convType === ChatConversationType.GroupChat &&
                     (v.convId === v.convName ||
                       v.convName === undefined ||
-                      v.convName === null) &&
+                      v.convName === null ||
+                      v.convName.length === 0) &&
                     v.convAvatar === undefined
                 )
                 .map((v) => v.convId),
@@ -827,6 +862,18 @@ export class ChatServiceImpl
     });
     if (conv) {
       conv.doNotDisturb = params.doNotDisturb;
+      this._silentModeList.set(conv.convId, {
+        convId: conv.convId,
+        doNotDisturb: params.doNotDisturb,
+      });
+      await this._convStorage?.setAllConversation(
+        Array.from(this._silentModeList.values()).map((item) => {
+          return {
+            convId: item.convId,
+            doNotDisturb: item.doNotDisturb,
+          } as ConversationModel;
+        })
+      );
       this.listeners.forEach((v) => {
         v.onConversationChanged?.(conv);
       });
@@ -903,51 +950,6 @@ export class ChatServiceImpl
       this.listeners.forEach((v) => {
         v.onConversationChanged?.(conv);
       });
-    }
-  }
-  async updateConversation(params: { conv: ConversationModel }): Promise<void> {
-    const _conv = this._convList.get(params.conv.convId);
-    if (_conv) {
-      if (_conv.isPinned !== params.conv.isPinned && params.conv.isPinned) {
-        this.setConversationPin({
-          convId: params.conv.convId,
-          convType: params.conv.convType,
-          isPin: params.conv.isPinned,
-        });
-      }
-      if (_conv.unreadMessageCount !== params.conv.unreadMessageCount) {
-        this.setConversationRead({
-          convId: params.conv.convId,
-          convType: params.conv.convType,
-        });
-      }
-      if (
-        _conv.doNotDisturb !== params.conv.doNotDisturb &&
-        params.conv.doNotDisturb
-      ) {
-        this.setConversationSilentMode({
-          convId: params.conv.convId,
-          convType: params.conv.convType,
-          doNotDisturb: params.conv.doNotDisturb,
-        });
-      }
-      if (
-        _conv.lastMessage !== params.conv.lastMessage &&
-        params.conv.lastMessage
-      ) {
-        this.setConversationMsg({
-          convId: params.conv.convId,
-          convType: params.conv.convType,
-          lastMessage: params.conv.lastMessage,
-        });
-      }
-      if (_conv.ext !== params.conv.ext && params.conv.ext) {
-        this.client.chatManager.setConversationExtension(
-          params.conv.convId,
-          params.conv.convType,
-          params.conv.ext
-        );
-      }
     }
   }
   getConversationMessageCount(

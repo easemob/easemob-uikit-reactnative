@@ -70,7 +70,7 @@ export type ListItemRequestProps<DataT> = {
   onRequestData?: (params: {
     id: string;
     result: (data?: DataT, error?: UIKitError) => void;
-  }) => void;
+  }) => void | Promise<void>;
 };
 
 export type ListRequestProps<DataT> = {
@@ -83,7 +83,7 @@ export type ListRequestProps<DataT> = {
   onRequestData?: (params: {
     ids: string[];
     result: (data?: DataT[], error?: UIKitError) => void;
-  }) => void;
+  }) => void | Promise<void>;
   /**
    * @description Get data information in batches. If it cannot be obtained, a single acquisition will be attempted during rendering. {@link ListItemRequestProps.onRequestData}
    * @params params -
@@ -93,7 +93,7 @@ export type ListRequestProps<DataT> = {
   onRequestMultiData?: (params: {
     ids: Map<DataModelType, string[]>;
     result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
-  }) => void;
+  }) => void | Promise<void>;
 };
 
 export type UseListBasicReturn<ItemT> = {

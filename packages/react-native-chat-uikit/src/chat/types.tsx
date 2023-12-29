@@ -300,7 +300,7 @@ export interface ConversationServices {
     callback?: (params: {
       ids: Map<DataModelType, string[]>;
       result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
-    }) => void
+    }) => void | Promise<void>
   ): void;
   setCurrentConversation(params: { conv?: ConversationModel }): void;
   getCurrentConversation(): ConversationModel | undefined;
@@ -343,7 +343,6 @@ export interface ConversationServices {
     convType: ChatConversationType;
     lastMessage: ChatMessage;
   }): Promise<void>;
-  updateConversation(params: { conv: ConversationModel }): Promise<void>;
   getConversationMessageCount(
     convId: string,
     convType: ChatConversationType
@@ -363,7 +362,7 @@ export interface ContactServices {
     callback?: (params: {
       ids: string[];
       result: (data?: DataT[], error?: UIKitError) => void;
-    }) => void
+    }) => void | Promise<void>
   ): void;
   isContact(params: { userId: string }): boolean;
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void;
@@ -499,7 +498,13 @@ export interface GroupServices {
     callback?: (params: {
       ids: string[];
       result: (data?: DataT[], error?: UIKitError) => void;
-    }) => void
+    }) => void | Promise<void>
+  ): void;
+  setGroupParticipantOnRequestData<DataT>(
+    callback?: (params: {
+      ids: string[];
+      result: (data?: DataT[], error?: UIKitError) => void;
+    }) => void | Promise<void>
   ): void;
   getPageGroups(params: {
     pageSize: number;

@@ -41,7 +41,7 @@ export function ConversationListScreen(props: Props) {
         }) => {
           params?.result([{ id: 'xx', name: 'test', avatar: '' }]);
         }}
-        onRequestMultiData={(params: {
+        onRequestMultiData={async (params: {
           ids: Map<DataModelType, string[]>;
           result: (
             data?: Map<DataModelType, DataModel[]>,
