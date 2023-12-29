@@ -6,7 +6,6 @@ import {
   ChatMessageDirection,
   ChatMessageStatus,
   ChatMessageType,
-  ChatTextMessageBody,
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 
@@ -21,12 +20,11 @@ import { g_not_existed_url } from '../../const';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
-import { getCurTs, localUrlEscape, playUrl, timeoutTask } from '../../utils';
-import type {
-  BottomSheetNameMenuRef,
-  InitMenuItemsType,
-} from '../BottomSheetMenu';
+import { localUrlEscape, playUrl, timeoutTask } from '../../utils';
+import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { gReportMessageList } from '../const';
+import { useCloseMenu } from '../hooks/useCloseMenu';
+import { useMessageLongPressActions } from '../hooks/useMessageLongPressActions';
 import { useFlatList } from '../List';
 import type {
   BottomSheetMessageReportRef,
@@ -138,10 +136,7 @@ export function useMessageList(
   const alertRef = React.useRef<AlertRef>(null);
   const inverted = React.useRef(true).current;
   const currentReportMessageRef = React.useRef<MessageModel>();
-
-  const onRequestModalClose = () => {
-    menuRef.current?.startHide?.();
-  };
+  const { closeMenu } = useCloseMenu({ menuRef });
 
   const updateMessageVoiceUIState = React.useCallback(
     (model: MessageModel) => {
@@ -259,7 +254,7 @@ export function useMessageList(
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
       propsOnLongPress?.(id, model);
-      onShowLongPressMenu(id, model);
+      onShowMessageLongPressActions(id, model);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [propsOnLongPress]
@@ -429,129 +424,6 @@ export function useMessageList(
     },
     [im, tr]
   );
-
-  const onShowLongPressMenu = (
-    _id: string,
-    model: SystemMessageModel | TimeMessageModel | MessageModel
-  ) => {
-    if (model.modelType !== 'message') {
-      return;
-    }
-    const initItems = [] as InitMenuItemsType[];
-    const msgModel = model as MessageModel;
-    if (model.modelType === 'message') {
-      if (msgModel.msg.body.type === ChatMessageType.TXT) {
-        initItems.push({
-          name: tr('_uikit_chat_list_long_press_menu_copy'),
-          isHigh: false,
-          icon: 'doc_on_doc',
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              const body = msgModel.msg.body as ChatTextMessageBody;
-              Services.cbs.setString(body.content);
-              // todo: toast
-            });
-          },
-        });
-      }
-      if (
-        msgModel.msg.body.type === ChatMessageType.TXT ||
-        msgModel.msg.body.type === ChatMessageType.VOICE ||
-        msgModel.msg.body.type === ChatMessageType.IMAGE ||
-        msgModel.msg.body.type === ChatMessageType.VIDEO ||
-        msgModel.msg.body.type === ChatMessageType.FILE
-      ) {
-        if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
-          initItems.push({
-            name: tr('_uikit_chat_list_long_press_menu_replay'),
-            isHigh: false,
-            icon: 'arrowshape_left',
-            onClicked: () => {
-              menuRef.current?.startHide?.(() => {
-                propsOnQuoteMessageForInput?.(model as MessageModel);
-              });
-            },
-          });
-        }
-      }
-      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
-        if (
-          msgModel.msg.body.type === ChatMessageType.TXT &&
-          msgModel.msg.from === im.userId
-        ) {
-          const textBody = msgModel.msg.body as ChatTextMessageBody;
-          if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
-            initItems.push({
-              name: tr('_uikit_chat_list_long_press_menu_edit'),
-              isHigh: false,
-              icon: 'img',
-              onClicked: () => {
-                menuRef.current?.startHide?.(() => {
-                  propsOnEditMessageForInput?.(model as MessageModel);
-                });
-              },
-            });
-          }
-        }
-      }
-      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
-        initItems.push({
-          name: tr('_uikit_chat_list_long_press_menu_report'),
-          isHigh: false,
-          icon: 'envelope',
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              onShowReportMessage(msgModel);
-            });
-          },
-        });
-      }
-      initItems.push({
-        name: tr('_uikit_chat_list_long_press_menu_delete'),
-        isHigh: false,
-        icon: 'trash',
-        onClicked: () => {
-          menuRef.current?.startHide?.(() => {
-            onDelMessage(msgModel.msg);
-          });
-        },
-      });
-      if (
-        msgModel.msg.body.type === ChatMessageType.TXT ||
-        msgModel.msg.body.type === ChatMessageType.VOICE ||
-        msgModel.msg.body.type === ChatMessageType.IMAGE ||
-        msgModel.msg.body.type === ChatMessageType.VIDEO ||
-        msgModel.msg.body.type === ChatMessageType.FILE
-      ) {
-        // todo: max time limit
-        if (
-          msgModel.msg.status === ChatMessageStatus.SUCCESS &&
-          msgModel.msg.from === im.userId
-        ) {
-          initItems.push({
-            name: tr('_uikit_chat_list_long_press_menu_recall'),
-            isHigh: false,
-            icon: 'arrow_Uturn_anti_clockwise',
-            onClicked: () => {
-              menuRef.current?.startHide?.(() => {
-                const msgModel = model as MessageModel;
-                onRecallMessage(msgModel.msg, 'send');
-              });
-            },
-          });
-        }
-      }
-    }
-    if (initItems.length === 0) {
-      return;
-    }
-    menuRef.current?.startShowWithProps?.({
-      initItems: initItems,
-      onRequestModalClose: onRequestModalClose,
-      layoutType: 'left',
-      hasCancel: true,
-    });
-  };
 
   const onUpdateMessageToUI = React.useCallback(
     (msg: ChatMessage, fromType: 'send' | 'recv') => {
@@ -734,6 +606,16 @@ export function useMessageList(
     [createRecallMessageTip, im, onDelMessageToUI, onRecallMessageToUI]
   );
 
+  const { onShowMessageLongPressActions } = useMessageLongPressActions({
+    menuRef,
+    alertRef,
+    onQuoteMessageForInput: propsOnQuoteMessageForInput,
+    onEditMessageForInput: propsOnEditMessageForInput,
+    onShowReportMessage: onShowReportMessage,
+    onDelMessage,
+    onRecallMessage: onRecallMessage,
+  });
+
   const onSendRecvMessageReadAck = React.useCallback(
     (msg: ChatMessage) => {
       if (
@@ -748,47 +630,6 @@ export function useMessageList(
     },
     [im]
   );
-
-  React.useEffect(() => {
-    const listener = {
-      onSendMessageChanged: (msg: ChatMessage) => {
-        onUpdateMessageToUI(msg, 'send');
-      },
-      onRecvMessage: (msg: ChatMessage) => {
-        if (msg.conversationId === convId) {
-          onAddMessageToUI(msg);
-          onSendRecvMessageReadAck(msg);
-          scrollToEnd();
-        }
-      },
-      onRecvMessageStatusChanged: (msg: ChatMessage) => {
-        onUpdateMessageToUI(msg, 'recv');
-      },
-      onRecvMessageContentChanged: (msg: ChatMessage, _byUserId: string) => {
-        onUpdateMessageToUI(msg, 'recv');
-      },
-      onRecallMessage: (msg: ChatMessage, _byUserId: string) => {
-        if (msg.conversationId === convId) {
-          onRecallMessage(msg, 'recv');
-        }
-      },
-    } as MessageManagerListener;
-    console.log('test:zuoyu:addlistener', convId);
-    im.messageManager.addListener(convId, listener);
-    return () => {
-      console.log('test:zuoyu:removeListener', convId);
-      im.messageManager.removeListener(convId);
-    };
-  }, [
-    convId,
-    im.messageManager,
-    onAddMessageToUI,
-    onRecallMessage,
-    onRecallMessageToUI,
-    onSendRecvMessageReadAck,
-    onUpdateMessageToUI,
-    scrollToEnd,
-  ]);
 
   const addSendMessageToUI = React.useCallback(
     (
@@ -1014,6 +855,57 @@ export function useMessageList(
     [im]
   );
 
+  const init = React.useCallback(async () => {
+    console.log('test:zuoyu:MessageList:init:');
+    if (testMode === 'only-ui') {
+      return;
+    }
+    if (isAutoLoad === true) {
+      isNeedScrollToEndRef.current = false;
+      currentVoicePlayingRef.current = undefined;
+      startMsgIdRef.current = '';
+      dataRef.current = [];
+      setData([...dataRef.current]);
+    }
+  }, [dataRef, isAutoLoad, setData, testMode]);
+
+  const onRequestHistoryMessage = React.useCallback(() => {
+    console.log('test:zuoyu:MessageList:onRequestHistoryMessage:');
+    im.messageManager.loadHistoryMessage({
+      convId,
+      convType,
+      startMsgId: startMsgIdRef.current,
+      onResult: (msgs) => {
+        console.log(
+          'test:zuoyu:MessageList:onRequestHistoryMessage:',
+          startMsgIdRef.current
+        );
+        if (msgs.length > 0) {
+          const newStartMsgId = msgs[0]!.msgId.toString();
+          if (newStartMsgId === startMsgIdRef.current) {
+            return;
+          }
+          startMsgIdRef.current = msgs[0]!.msgId.toString();
+          onAddMessageListToUI(msgs, 'top', (list) => {
+            list.map((v) => {
+              if (v.model.modelType === 'message') {
+                const msgModel = v.model as MessageModel;
+                onSendRecvMessageReadAck(msgModel.msg);
+              }
+            });
+          });
+        }
+        isNeedScrollToEndRef.current = false;
+      },
+    });
+  }, [
+    convId,
+    convType,
+    im.messageManager,
+    onAddMessageListToUI,
+    onSendRecvMessageReadAck,
+  ]);
+
   React.useImperativeHandle(
     ref,
     () => {
@@ -1087,432 +979,45 @@ export function useMessageList(
     ]
   );
 
-  const init = React.useCallback(async () => {
-    console.log('test:zuoyu:MessageList:init:');
-    if (testMode === 'only-ui') {
-      const textMsg = ChatMessage.createTextMessage(
-        'xxx',
-        'you are welcome. 1',
-        0
-      );
-      const textMsg2 = ChatMessage.createTextMessage(
-        'xxx',
-        'you are welcome. 2',
-        0
-      );
-      const textMsg3 = ChatMessage.createTextMessage(
-        'xxx',
-        'you are welcome. 1',
-        0
-      );
-      const voiceMsg = ChatMessage.createVoiceMessage(
-        'xxx',
-        '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.aac',
-        0,
-        {
-          duration: 60000,
-        }
-      );
-      textMsg.attributes = {
-        [gMessageAttributeQuote]: textMsg2.msgId,
-      };
-      textMsg3.attributes = {
-        [gMessageAttributeQuote]: voiceMsg.msgId,
-      };
-      const textMsg4 = ChatMessage.createTextMessage(
-        'xxx',
-        'you are welcome. 1',
-        0
-      );
-      const fileMsg = ChatMessage.createFileMessage(
-        'xxx',
-        '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
-        0,
-        {
-          displayName: 'sdf',
-          fileSize: 300,
-        }
-      );
-      textMsg4.attributes = {
-        [gMessageAttributeQuote]: fileMsg.msgId,
-      };
-      const textMsg5 = ChatMessage.createTextMessage(
-        'xxx',
-        'you are welcome. 1',
-        0
-      );
-      const imageMsg = ChatMessage.createImageMessage(
-        'xxx',
-        '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.jpeg',
-        0,
-        {
-          displayName: 'sdf',
-          thumbnailLocalPath:
-            '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
-          width: 300,
-          height: 300,
-          fileSize: 200,
-        }
-      );
-      textMsg5.attributes = {
-        [gMessageAttributeQuote]: imageMsg.msgId,
-      };
-      const textMsg6 = ChatMessage.createTextMessage(
-        'xxx',
-        'you are welcome. 1',
-        0
-      );
-      const videoMsg = ChatMessage.createVideoMessage(
-        'xxx',
-        '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.mp4',
-        0,
-        {
-          displayName: 'sdf',
-          thumbnailLocalPath:
-            '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
-          duration: 3000,
-          width: 300,
-          height: 300,
-        }
-      );
-      textMsg6.attributes = {
-        [gMessageAttributeQuote]: videoMsg.msgId,
-      };
-      dataRef.current = [
-        {
-          id: '1',
-          model: {
-            userId: 'xxx',
-            userAvatar:
-              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-            modelType: 'message',
-            layoutType: 'right',
-            msg: ChatMessage.createTextMessage('xxx', 'you are welcome. ', 0),
-          },
-        } as MessageListItemProps,
-        // {
-        //   id: '13',
-        //   model: {
-        //     userId: 'xxx',
-        //     userAvatar:
-        //       'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-        //     modelType: 'message',
-        //     layoutType: 'right',
-        //     msg: textMsg,
-        //     msgQuote: textMsg2,
-        //   },
-        // } as MessageListItemProps,
-        // {
-        //   id: '14',
-        //   model: {
-        //     userId: 'xxx',
-        //     userAvatar:
-        //       'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-        //     modelType: 'message',
-        //     layoutType: 'left',
-        //     msg: textMsg,
-        //     msgQuote: textMsg2,
-        //   },
-        // } as MessageListItemProps,
-        // {
-        //   id: '15',
-        //   model: {
-        //     userId: 'xxx',
-        //     userAvatar:
-        //       'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-        //     modelType: 'message',
-        //     layoutType: 'right',
-        //     msg: textMsg3,
-        //     msgQuote: voiceMsg,
-        //   },
-        // } as MessageListItemProps,
-        // {
-        //   id: '16',
-        //   model: {
-        //     userId: 'xxx',
-        //     userAvatar:
-        //       'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-        //     modelType: 'message',
-        //     layoutType: 'left',
-        //     msg: textMsg4,
-        //     msgQuote: fileMsg,
-        //   },
-        // } as MessageListItemProps,
-        // {
-        //   id: '17',
-        //   model: {
-        //     userId: 'xxx',
-        //     userAvatar:
-        //       'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-        //     modelType: 'message',
-        //     layoutType: 'left',
-        //     msg: textMsg5,
-        //     msgQuote: imageMsg,
-        //   },
-        // } as MessageListItemProps,
-        {
-          id: '18',
-          model: {
-            userId: 'xxx',
-            userAvatar:
-              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-            modelType: 'message',
-            layoutType: 'right',
-            msg: textMsg6,
-            msgQuote: videoMsg,
-          },
-        } as MessageListItemProps,
-        {
-          id: '2',
-          model: {
-            userId: 'xxx',
-            modelType: 'system',
-            msg: ChatMessage.createCustomMessage(
-              'xxx',
-              gCustomMessageRecallEventType,
-              0,
-              {
-                params: {
-                  recall: JSON.stringify({
-                    text: '${0} recalled a message.',
-                    self: 'im.userId',
-                    from: 'msg.from',
-                    fromName: 'msg.from',
-                  }),
-                },
-              }
-            ),
-          },
-        } as MessageListItemProps,
-        {
-          id: '3',
-          model: {
-            userId: 'xxx',
-            modelType: 'time',
-            timestamp: getCurTs(),
-          },
-        } as MessageListItemProps,
-        {
-          id: '4',
-          model: {
-            userId: 'xxx',
-            modelType: 'message',
-            layoutType: 'left',
-            msg: ChatMessage.createCmdMessage('xxx', 'test', 0),
-          },
-        } as MessageListItemProps,
-        {
-          id: '5',
-          model: {
-            userId: 'xxx',
-            modelType: 'message',
-            layoutType: 'left',
-            msg: ChatMessage.createVoiceMessage(
-              'xxx',
-              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.aac',
-              0,
-              {
-                duration: 60000,
-              }
-            ),
-            isVoicePlaying: false,
-          },
-        } as MessageListItemProps,
-        {
-          id: '6',
-          model: {
-            userId: 'xxx',
-            modelType: 'message',
-            layoutType: 'right',
-            msg: ChatMessage.createVoiceMessage(
-              'xxx',
-              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.aac',
-              0,
-              {
-                duration: 1000,
-              }
-            ),
-            isVoicePlaying: false,
-          },
-        } as MessageListItemProps,
-        // {
-        //   id: '7',
-        //   model: {
-        //     userId: 'xxx',
-        //     modelType: 'message',
-        //     layoutType: 'right',
-        //     msg: ChatMessage.createImageMessage(
-        //       'xxx',
-        //       '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.jpeg',
-        //       0,
-        //       {
-        //         displayName: 'sdf',
-        //         thumbnailLocalPath:
-        //           '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
-        //         width: 300,
-        //         height: 300,
-        //         fileSize: 200,
-        //       }
-        //     ),
-        //   },
-        // } as MessageListItemProps,
-        // {
-        //   id: '8',
-        //   model: {
-        //     userId: 'xxx',
-        //     modelType: 'message',
-        //     layoutType: 'left',
-        //     msg: ChatMessage.createVideoMessage(
-        //       'xxx',
-        //       '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-15757929042.mp4',
-        //       0,
-        //       {
-        //         displayName: 'sdf',
-        //         thumbnailLocalPath:
-        //           '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
-        //         duration: 3000,
-        //         width: 300,
-        //         height: 300,
-        //       }
-        //     ),
-        //   },
-        // } as MessageListItemProps,
-        {
-          id: '9',
-          model: {
-            userId: 'xxx',
-            modelType: 'message',
-            layoutType: 'left',
-            msg: ChatMessage.createFileMessage(
-              'xxx',
-              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
-              0,
-              {
-                displayName: 'sdf',
-                fileSize: 300,
-              }
-            ),
-          },
-        } as MessageListItemProps,
-        {
-          id: '10',
-          model: {
-            userId: 'xxx',
-            userAvatar:
-              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-            modelType: 'message',
-            layoutType: 'right',
-            msg: ChatMessage.createFileMessage(
-              'xxx',
-              '/var/mobile/Containers/Data/Application/FD16F232-7D26-4A6B-8472-9A2C06BEE4DC/Library/Caches/thumbnails/thumb-1575792904.jpeg',
-              0,
-              {
-                displayName: 'sdf',
-                fileSize: 300,
-              }
-            ),
-          },
-        } as MessageListItemProps,
-        {
-          id: '11',
-          model: {
-            userId: 'xxx',
-            userAvatar:
-              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-            modelType: 'message',
-            layoutType: 'left',
-            msg: ChatMessage.createCustomMessage(
-              'xxx',
-              gCustomMessageCardEventType,
-              0,
-              {
-                params: {
-                  userId: 'userId',
-                  nickname: 'nickname',
-                  avatar:
-                    'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-                },
-              }
-            ),
-          },
-        } as MessageListItemProps,
-        {
-          id: '12',
-          model: {
-            userId: 'xxx',
-            userAvatar:
-              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-            modelType: 'message',
-            layoutType: 'right',
-            msg: ChatMessage.createCustomMessage(
-              'xxx',
-              gCustomMessageCardEventType,
-              0,
-              {
-                params: {
-                  userId: 'userId',
-                  nickname: 'nickname',
-                  avatar:
-                    'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-                },
-              }
-            ),
-          },
-        } as MessageListItemProps,
-      ];
-      dataRef.current.map((d) => {
-        if (d.model.modelType === 'message') {
-          const msgModel = d.model as MessageModel;
-          msgModel.msg.status = ChatMessageStatus.SUCCESS;
-        }
-      });
-      setData(dataRef.current);
-      return;
-    }
-    if (isAutoLoad === true) {
-      isNeedScrollToEndRef.current = false;
-      currentVoicePlayingRef.current = undefined;
-      startMsgIdRef.current = '';
-      dataRef.current = [];
-      setData([...dataRef.current]);
-    }
-  }, [dataRef, isAutoLoad, setData, testMode]);
-
-  const onRequestHistoryMessage = React.useCallback(() => {
-    console.log('test:zuoyu:MessageList:onRequestHistoryMessage:');
-    im.messageManager.loadHistoryMessage({
-      convId,
-      convType,
-      startMsgId: startMsgIdRef.current,
-      onResult: (msgs) => {
-        console.log(
-          'test:zuoyu:MessageList:onRequestHistoryMessage:',
-          startMsgIdRef.current
-        );
-        if (msgs.length > 0) {
-          const newStartMsgId = msgs[0]!.msgId.toString();
-          if (newStartMsgId === startMsgIdRef.current) {
-            return;
-          }
-          startMsgIdRef.current = msgs[0]!.msgId.toString();
-          onAddMessageListToUI(msgs, 'top', (list) => {
-            list.map((v) => {
-              if (v.model.modelType === 'message') {
-                const msgModel = v.model as MessageModel;
-                onSendRecvMessageReadAck(msgModel.msg);
-              }
-            });
-          });
-        }
-        isNeedScrollToEndRef.current = false;
+  React.useEffect(() => {
+    const listener = {
+      onSendMessageChanged: (msg: ChatMessage) => {
+        onUpdateMessageToUI(msg, 'send');
       },
-    });
+      onRecvMessage: (msg: ChatMessage) => {
+        if (msg.conversationId === convId) {
+          onAddMessageToUI(msg);
+          onSendRecvMessageReadAck(msg);
+          scrollToEnd();
+        }
+      },
+      onRecvMessageStatusChanged: (msg: ChatMessage) => {
+        onUpdateMessageToUI(msg, 'recv');
+      },
+      onRecvMessageContentChanged: (msg: ChatMessage, _byUserId: string) => {
+        onUpdateMessageToUI(msg, 'recv');
+      },
+      onRecallMessage: (msg: ChatMessage, _byUserId: string) => {
+        if (msg.conversationId === convId) {
+          onRecallMessage(msg, 'recv');
+        }
+      },
+    } as MessageManagerListener;
+    console.log('test:zuoyu:addlistener', convId);
+    im.messageManager.addListener(convId, listener);
+    return () => {
+      console.log('test:zuoyu:removeListener', convId);
+      im.messageManager.removeListener(convId);
+    };
   }, [
     convId,
-    convType,
     im.messageManager,
-    onAddMessageListToUI,
+    onAddMessageToUI,
+    onRecallMessage,
+    onRecallMessageToUI,
     onSendRecvMessageReadAck,
+    onUpdateMessageToUI,
+    scrollToEnd,
   ]);
 
   React.useEffect(() => {
@@ -1532,7 +1037,7 @@ export function useMessageList(
     listType,
     listState,
     data,
-    onRequestModalClose,
+    onRequestModalClose: closeMenu,
     menuRef,
     alertRef,
     onClickedItem,

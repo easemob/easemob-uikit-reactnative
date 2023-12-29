@@ -12,11 +12,10 @@ import type { UIKitError } from '../../error';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { useCloseMenu } from '../hooks/useCloseMenu';
+import { useConversationListMoreActions } from '../hooks/useConversationListMoreActions';
+import { useConversationLongPressActions } from '../hooks/useConversationLongPressActions';
 import { useFlatList } from '../List';
-import {
-  useConversationListMoreActions,
-  useConversationLongPressActions,
-} from '../TopNavigationBar';
 import type { UseFlatListReturn } from '../types';
 import type {
   ConversationListItemProps,
@@ -61,14 +60,14 @@ export function useConversationList(
   const { tr } = useI18nContext();
   const alertRef = React.useRef<AlertRef>(null);
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
-  const { onShowConversationListMoreActions, onRequestMenuClose } =
-    useConversationListMoreActions({
-      alertRef,
-      menuRef,
-      onClickedNewContact,
-      onClickedNewConversation,
-      onClickedNewGroup,
-    });
+  const { closeMenu } = useCloseMenu({ menuRef });
+  const { onShowConversationListMoreActions } = useConversationListMoreActions({
+    alertRef,
+    menuRef,
+    onClickedNewContact,
+    onClickedNewConversation,
+    onClickedNewGroup,
+  });
 
   const onSort = React.useCallback(
     (
@@ -389,7 +388,7 @@ export function useConversationList(
     onPin,
     onDisturb,
     onRead,
-    onRequestModalClose: onRequestMenuClose,
+    onRequestModalClose: closeMenu,
     menuRef,
     alertRef,
     avatarUrl,

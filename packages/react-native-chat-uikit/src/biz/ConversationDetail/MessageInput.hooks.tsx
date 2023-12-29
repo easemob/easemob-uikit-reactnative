@@ -11,10 +11,12 @@ import emoji from 'twemoji';
 import type { IconNameType } from '../../assets';
 // import { useDispatchContext } from '../../dispatch';
 import { useDelayExecTask, useKeyboardHeight } from '../../hook';
+import type { AlertRef } from '../../ui/Alert';
 import { timeoutTask } from '../../utils';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 // import { gVoiceBarHeight } from '../const';
 import { FACE_ASSETS_UTF16 } from '../EmojiList';
+import { useMessageInputExtendActions } from '../hooks/useMessageInputExtendActions';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
 import type { MessageInputEditMessageRef } from './MessageInputEditMessage';
 import type {
@@ -75,6 +77,7 @@ export function useMessageInput(
   const editRef = React.useRef<MessageInputEditMessageRef>({} as any);
   const msgModelRef = React.useRef<MessageModel>();
   const mentionListRef = React.useRef<{ id: string; name: string }[]>([]);
+  const alertRef = React.useRef<AlertRef>(null);
 
   const onSetInputBarState = (state: MessageInputState) => {
     inputBarStateRef.current = state;
@@ -318,7 +321,7 @@ export function useMessageInput(
     voiceBarRef.current?.startShow?.();
   }, []);
 
-  const onRequestModalClose = () => {
+  const onCloseVoiceBar = () => {
     if (voiceBarStateRef.current === 'recording') {
       return;
     }
@@ -368,7 +371,7 @@ export function useMessageInput(
         timeoutTask(0, closeKeyboard);
       }
     } else {
-      onShowMoreMenu();
+      onShowMessageInputExtendActions();
     }
   };
 
@@ -389,82 +392,19 @@ export function useMessageInput(
     propsOnClickedCardMenu?.();
   };
 
-  const onShowMoreMenu = () => {
-    menuRef.current?.startShowWithProps?.({
-      initItems: [
-        {
-          name: '_uikit_chat_input_long_press_menu_picture',
-          isHigh: false,
-          icon: 'img',
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              selectOnePicture({
-                onResult: (params) => {
-                  onSelectSendImage(params);
-                },
-              });
-            });
-          },
-        },
-        {
-          name: '_uikit_chat_input_long_press_menu_video',
-          isHigh: false,
-          icon: 'triangle_in_rectangle',
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              selectOneShortVideo({
-                convId: convId,
-                onResult: (params) => {
-                  onSelectSendVideo(params);
-                },
-              });
-            });
-          },
-        },
-        {
-          name: '_uikit_chat_input_long_press_menu_camera',
-          isHigh: false,
-          icon: 'camera_fill',
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              selectCamera({
-                onResult: (params) => {
-                  onSelectSendImage(params);
-                },
-              });
-            });
-          },
-        },
-        {
-          name: '_uikit_chat_input_long_press_menu_file',
-          isHigh: false,
-          icon: 'folder',
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              selectFile({
-                onResult: (params) => {
-                  onSelectSendFile(params);
-                },
-              });
-            });
-          },
-        },
-        {
-          name: '_uikit_chat_input_long_press_menu_card',
-          isHigh: false,
-          icon: 'person_single_fill',
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              onSelectSendCard();
-            });
-          },
-        },
-      ],
-      onRequestModalClose: onRequestModalClose,
-      layoutType: 'left',
-      hasCancel: true,
-    });
-  };
+  const { onShowMessageInputExtendActions } = useMessageInputExtendActions({
+    menuRef,
+    convId,
+    alertRef,
+    selectOnePicture,
+    selectCamera,
+    selectFile,
+    selectOneShortVideo,
+    onSelectSendCard,
+    onSelectSendFile,
+    onSelectSendImage,
+    onSelectSendVideo,
+  });
 
   const onVoiceFailed = React.useCallback(
     (error: { reason: string; error: any }) => {
@@ -619,7 +559,7 @@ export function useMessageInput(
     inputBarState,
     changeInputBarState,
     voiceBarRef,
-    onRequestModalClose,
+    onCloseVoiceBar,
     onVoiceStateChange,
     onSelectSendVoice,
     onRequestModalCloseMenu,

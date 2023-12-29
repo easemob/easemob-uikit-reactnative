@@ -65,7 +65,7 @@ export const MessageInput = React.forwardRef<
     emojiIconName,
     onFocus,
     onBlur,
-    onRequestModalClose,
+    onCloseVoiceBar,
     voiceBarRef,
     onSelectSendVoice,
     onVoiceStateChange,
@@ -254,7 +254,7 @@ export const MessageInput = React.forwardRef<
       {/* <VoiceBar height={voiceHeight} /> */}
       <BottomVoiceBar
         ref={voiceBarRef}
-        onRequestModalClose={onRequestModalClose}
+        onRequestModalClose={onCloseVoiceBar}
         onClickedSendButton={onSelectSendVoice}
         onState={onVoiceStateChange}
         onFailed={onVoiceFailed}

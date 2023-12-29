@@ -6,6 +6,7 @@ import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { useContactInfoActions } from '../hooks/useContactInfoActions';
 import type { ContactInfoProps } from './types';
 
 export function useContactInfo(props: ContactInfoProps) {
@@ -25,6 +26,10 @@ export function useContactInfo(props: ContactInfoProps) {
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
+  const { onShowContactInfoActions } = useContactInfoActions({
+    menuRef,
+    alertRef,
+  });
   const im = useChatContext();
   const { tr } = useI18nContext();
   useLifecycle(
@@ -94,42 +99,7 @@ export function useContactInfo(props: ContactInfoProps) {
   };
 
   const onMoreMenu = () => {
-    menuRef.current?.startShowWithProps({
-      onRequestModalClose: onRequestModalClose,
-      layoutType: 'center',
-      hasCancel: true,
-      initItems: [
-        {
-          name: '_uikit_info_menu_del_contact',
-          isHigh: true,
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              alertRef.current?.alertWithInit({
-                title: 'Delete Contact',
-                message: tr('_uikit_info_alert_content', userName ?? userId),
-                buttons: [
-                  {
-                    text: tr('cancel'),
-                    onPress: () => {
-                      alertRef.current?.close?.();
-                    },
-                  },
-                  {
-                    text: tr('confirm'),
-                    isPreferred: true,
-                    onPress: () => {
-                      alertRef.current?.close?.(() => {
-                        im.removeContact({ userId, onResult: () => {} });
-                      });
-                    },
-                  },
-                ],
-              });
-            });
-          },
-        },
-      ],
-    });
+    onShowContactInfoActions(userId, userName);
   };
 
   return {

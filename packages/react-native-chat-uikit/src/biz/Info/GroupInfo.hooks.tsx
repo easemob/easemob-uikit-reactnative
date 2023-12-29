@@ -13,6 +13,7 @@ import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { useGroupInfoActions } from '../hooks/useGroupInfoActions';
 import type { GroupInfoProps, GroupInfoRef } from './types';
 
 export function useGroupInfo(
@@ -52,6 +53,13 @@ export function useGroupInfo(
   const [groupMyRemark, setGroupMyRemark] = React.useState(propsGroupMyRemark);
   const [groupMemberCount, setGroupMemberCount] = React.useState(0);
   const [isOwner, setIsOwner] = React.useState(false);
+  const { onShowGroupInfoActions } = useGroupInfoActions({
+    menuRef,
+    alertRef,
+    onGroupQuit,
+    onClickedChangeGroupOwner,
+    onGroupDestroy,
+  });
   useLifecycle(
     React.useCallback(
       (state: any) => {
@@ -307,101 +315,7 @@ export function useGroupInfo(
   };
 
   const onMoreMenu = () => {
-    if (im.userId !== ownerIdRef.current) {
-      menuRef.current.startShowWithProps({
-        onRequestModalClose: onRequestModalClose,
-        hasCancel: true,
-        layoutType: 'center',
-        initItems: [
-          {
-            name: tr('quit_group'),
-            isHigh: true,
-            onClicked: () => {
-              menuRef.current.startHide(() => {
-                alertRef.current.alertWithInit({
-                  title: tr('_uikit_info_alert_quit_group_title'),
-                  message: tr('_uikit_info_alert_quit_group_content'),
-                  buttons: [
-                    {
-                      text: tr('cancel'),
-                      onPress: () => {
-                        alertRef.current.close();
-                      },
-                    },
-                    {
-                      text: tr('Quit'),
-                      isPreferred: true,
-                      onPress: () => {
-                        alertRef.current.close();
-                        im.quitGroup({
-                          groupId,
-                          onResult: () => {
-                            onGroupQuit?.(groupId);
-                          },
-                        });
-                      },
-                    },
-                  ],
-                });
-              });
-            },
-          },
-        ],
-      });
-    } else {
-      menuRef.current.startShowWithProps({
-        onRequestModalClose: onRequestModalClose,
-        hasCancel: true,
-        layoutType: 'center',
-        initItems: [
-          {
-            name: tr('_uikit_info_menu_change_group_owner'),
-            isHigh: false,
-            onClicked: () => {
-              menuRef.current.startHide(() => {
-                onClickedChangeGroupOwner?.(groupId, ownerIdRef.current);
-              });
-            },
-          },
-          {
-            name: tr('_uikit_info_menu_destroy_group'),
-            isHigh: true,
-            onClicked: () => {
-              menuRef.current.startHide(() => {
-                alertRef.current.alertWithInit({
-                  title: tr('_uikit_info_alert_destroy_group_title'),
-                  message: tr('_uikit_info_alert_destroy_group_content'),
-                  buttons: [
-                    {
-                      text: tr('cancel'),
-                      onPress: () => {
-                        alertRef.current.close?.();
-                      },
-                    },
-                    {
-                      text: tr('confirm'),
-                      isPreferred: true,
-                      onPress: () => {
-                        alertRef.current.close?.(() => {
-                          if (onGroupDestroy) {
-                            onGroupDestroy?.(groupId);
-                          } else {
-                            im.destroyGroup({
-                              groupId,
-                              onResult: () => {},
-                            });
-                          }
-                        });
-                      },
-                    },
-                  ],
-                });
-              });
-            },
-          },
-        ],
-      });
-    }
+    onShowGroupInfoActions(im.userId ?? '', ownerIdRef.current, groupId);
   };
 
   const listener = React.useMemo(() => {

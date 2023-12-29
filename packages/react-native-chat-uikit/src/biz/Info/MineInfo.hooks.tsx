@@ -11,6 +11,7 @@ import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { useMineInfoActions } from '../hooks/useMineInfoActions';
 import type { MineInfoProps, UserState } from './types';
 
 export function useMineInfo(props: MineInfoProps) {
@@ -30,6 +31,7 @@ export function useMineInfo(props: MineInfoProps) {
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
+  const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
   const im = useChatContext();
   const { tr } = useI18nContext();
   useLifecycle(
@@ -77,55 +79,9 @@ export function useMineInfo(props: MineInfoProps) {
     menuRef.current?.startHide?.();
   };
 
-  const onShowStateMenu = React.useCallback(() => {
-    menuRef.current?.startShowWithProps({
-      onRequestModalClose: onRequestModalClose,
-      layoutType: 'center',
-      hasCancel: true,
-      initItems: [
-        {
-          name: 'Online',
-          isHigh: false,
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              im.publishPresence({ status: 'online', onResult: () => {} });
-            });
-          },
-        },
-        {
-          name: 'Busy',
-          isHigh: false,
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              im.publishPresence({ status: 'busy', onResult: () => {} });
-            });
-          },
-        },
-        {
-          name: 'Leave',
-          isHigh: false,
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              im.publishPresence({ status: 'leave', onResult: () => {} });
-            });
-          },
-        },
-        {
-          name: 'Not Disturb',
-          isHigh: false,
-          onClicked: () => {
-            menuRef.current?.startHide?.(() => {
-              im.publishPresence({ status: 'no-disturb', onResult: () => {} });
-            });
-          },
-        },
-      ],
-    });
-  }, [im]);
-
   const onClickedState = React.useCallback(() => {
-    onShowStateMenu();
-  }, [onShowStateMenu]);
+    onShowMineInfoActions();
+  }, [onShowMineInfoActions]);
 
   const onClickedLogout = React.useCallback(() => {
     propsOnClickedLogout?.();

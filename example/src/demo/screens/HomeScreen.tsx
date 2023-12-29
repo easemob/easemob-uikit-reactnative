@@ -224,6 +224,12 @@ function HomeTabConversationListScreen(
           },
         });
       }}
+      onClickedNewGroup={() => {
+        navigation?.navigate?.('CreateGroup', {});
+      }}
+      onClickedNewConversation={() => {
+        navigation?.navigate?.('NewConversation', {});
+      }}
     />
   );
 }

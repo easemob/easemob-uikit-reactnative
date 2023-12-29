@@ -12,9 +12,10 @@ import type { RequestListListener } from '../../chat/requestList.types';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { useCloseMenu } from '../hooks/useCloseMenu';
+import { useContactListMoreActions } from '../hooks/useContactListMoreActions';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
-import { useContactListMoreActions } from '../TopNavigationBar';
 import type { ChoiceType, UseSectionListReturn } from '../types';
 import { g_index_alphabet_range } from './const';
 import type {
@@ -75,9 +76,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   const im = useChatContext();
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
-  const onRequestModalClose = () => {
-    menuRef.current?.startHide?.();
-  };
+  const { closeMenu } = useCloseMenu({ menuRef });
 
   const onSort = React.useCallback(
     (
@@ -353,6 +352,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
       onSetData(testList);
       return;
     }
+    console.log('test:zuoyu:contact_list:init', contactType, isAutoLoad);
     const url = im.user(im.userId)?.avatarURL;
     if (url) {
       setAvatarUrl(url);
@@ -441,6 +441,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
                       contactType: contactType,
                     } as ContactListItemProps;
                   });
+                  console.log('test:zuoyu:list:', list);
                   onSetData(list);
                 }
               } else {
@@ -637,7 +638,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   return {
     ...sectionProps,
     onIndexSelected,
-    onRequestModalClose,
+    onRequestModalClose: closeMenu,
     onClickedNewContact,
     menuRef,
     alertRef,
