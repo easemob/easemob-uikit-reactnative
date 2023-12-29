@@ -12,3 +12,9 @@ export type TopNavigationBarProps<LeftProps, RightProps> = {
   RightProps?: RightProps;
   containerStyle?: StyleProp<ViewStyle>;
 };
+
+export type TopNavigationBarComponentType<LeftProps, RightProps> =
+  React.ComponentType<TopNavigationBarProps<LeftProps, RightProps>>;
+
+export type TopNavigationBarElementType<LeftProps, RightProps> =
+  React.ReactElement<TopNavigationBarProps<LeftProps, RightProps>>;

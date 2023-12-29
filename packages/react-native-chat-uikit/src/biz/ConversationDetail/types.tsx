@@ -1,6 +1,7 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
 
+import type { TopNavigationBarElementType } from '../TopNavigationBar';
 import type {
   PropsWithBack,
   PropsWithError,
@@ -76,6 +77,8 @@ export type ConversationDetailProps = PropsWithError &
       convType: ChatConversationType;
       ownerId?: string;
     }) => void;
+    ConversationDetailNavigationBar?: TopNavigationBarElementType<any, any>;
+    enableNavigationBar?: boolean;
   };
 
 export type SendType =

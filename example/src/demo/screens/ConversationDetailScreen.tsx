@@ -202,6 +202,10 @@ export function ConversationDetailScreen(props: Props) {
             });
           }
         }}
+        // ConversationDetailNavigationBar={
+        //   <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />
+        // }
+        // enableNavigationBar={true}
       />
     </SafeAreaView>
   );
