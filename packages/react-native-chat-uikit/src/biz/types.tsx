@@ -21,7 +21,14 @@ export type PropsWithBack = {
 export type PropsWithCancel = {
   onCancel?: (data?: any) => void;
 };
-export type PropsWithSearch = { onSearch?: (data?: any) => void };
+export type PropsWithSearch = {
+  enableSearch?: boolean;
+  onSearch?: (data?: any) => void;
+};
+export type PropsWithNavigationBar = {
+  NavigationBar?: React.ReactElement;
+  enableNavigationBar?: boolean;
+};
 
 export type ContactType =
   | 'contact-list'

@@ -25,7 +25,13 @@ import type { ConversationListItemProps, ConversationListProps } from './types';
 const FlatList = FlatListFactory<ConversationListItemProps>();
 
 export function ConversationList(props: ConversationListProps) {
-  const { containerStyle, onSearch } = props;
+  const {
+    containerStyle,
+    onSearch,
+    enableSearch,
+    enableNavigationBar,
+    NavigationBar: propsNavigationBar,
+  } = props;
   const {
     data,
     refreshing,
@@ -59,24 +65,32 @@ export function ConversationList(props: ConversationListProps) {
         containerStyle,
       ]}
     >
-      <TopNavigationBar
-        Left={<Avatar url={avatarUrl} size={32} />}
-        Right={TopNavigationBarRight}
-        RightProps={{
-          onClicked: onShowConversationListMoreActions,
-          iconName: 'plus_in_circle',
-        }}
-        Title={TopNavigationBarTitle({ text: 'Chat' })}
-        containerStyle={{ paddingHorizontal: 12 }}
-      />
-      <SearchStyle
-        title={tr('search')}
-        onPress={() => {
-          if (listState === 'normal') {
-            onSearch?.();
-          }
-        }}
-      />
+      {enableNavigationBar !== false ? (
+        propsNavigationBar ? (
+          <>{propsNavigationBar}</>
+        ) : (
+          <TopNavigationBar
+            Left={<Avatar url={avatarUrl} size={32} />}
+            Right={TopNavigationBarRight}
+            RightProps={{
+              onClicked: onShowConversationListMoreActions,
+              iconName: 'plus_in_circle',
+            }}
+            Title={TopNavigationBarTitle({ text: 'Chat' })}
+            containerStyle={{ paddingHorizontal: 12 }}
+          />
+        )
+      ) : null}
+      {enableSearch !== false ? (
+        <SearchStyle
+          title={tr('search')}
+          onPress={() => {
+            if (listState === 'normal') {
+              onSearch?.();
+            }
+          }}
+        />
+      ) : null}
       <View
         style={{
           flex: 1,

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   DefaultSectionT,
-  Pressable,
   //   SectionList as RNSectionList,
   SectionListData,
   SectionListRenderItemInfo,
@@ -11,26 +10,20 @@ import {
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
-import { IconButton } from '../../ui/Button';
 import { SectionListFactory } from '../../ui/SectionList';
 import { Text } from '../../ui/Text';
-import { Avatar } from '../Avatar';
 import { Badges } from '../Badges';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import type { IndexModel } from '../ListIndex';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
-import {
-  TopNavigationBar,
-  TopNavigationBarRight,
-  TopNavigationBarTitle,
-} from '../TopNavigationBar';
 import { useContactList } from './ContactList.hooks';
 import {
   ContactListItemHeaderMemo,
   ContactListItemMemo,
 } from './ContactList.item';
 import { ContactItem } from './ContactList.item';
+import { _ContactListNavigationBar } from './ContactList.navi';
 import type { ContactListItemProps, ContactListProps } from './types';
 
 const SectionList = SectionListFactory<ContactListItemProps, IndexModel>();
@@ -47,6 +40,9 @@ export function ContactList(props: ContactListProps) {
     onNavigationBarMoreActions,
     onClickedNewRequest,
     onClickedGroupList,
+    enableNavigationBar,
+    NavigationBar: propsNavigationBar,
+    enableSearch,
   } = props;
   const {
     ref,
@@ -95,133 +91,6 @@ export function ContactList(props: ContactListProps) {
     },
   });
 
-  const navigationBar = () => {
-    if (contactType === 'contact-list') {
-      return (
-        <TopNavigationBar
-          Left={
-            <View style={{ flexDirection: 'row' }}>
-              <Avatar url={avatarUrl} size={32} />
-            </View>
-          }
-          Right={TopNavigationBarRight}
-          RightProps={{
-            onClicked: () => {
-              if (onNavigationBarMoreActions) {
-                onNavigationBarMoreActions();
-              } else {
-                onClickedNewContact?.();
-              }
-            },
-            iconName: 'person_add',
-          }}
-          Title={TopNavigationBarTitle({ text: 'Contacts' })}
-          containerStyle={{ paddingHorizontal: 12 }}
-        />
-      );
-    } else if (contactType === 'new-conversation') {
-      return (
-        <TopNavigationBar
-          Left={
-            <Pressable style={{ flexDirection: 'row' }} onPress={onBack}>
-              <Text paletteType={'label'} textType={'medium'}>
-                {tr('cancel')}
-              </Text>
-            </Pressable>
-          }
-          Right={<View style={{ width: 32, height: 32 }} />}
-          Title={TopNavigationBarTitle({ text: tr('_uikit_new_conv_title') })}
-          containerStyle={{ paddingHorizontal: 12 }}
-        />
-      );
-    } else if (contactType === 'create-group') {
-      return (
-        <TopNavigationBar
-          Left={
-            <View style={{ flexDirection: 'row' }}>
-              <IconButton
-                iconName={'chevron_left'}
-                style={{ width: 24, height: 24 }}
-                onPress={onBack}
-              />
-              <Text
-                paletteType={'title'}
-                textType={'medium'}
-                style={{ color: getColor('text') }}
-              >
-                {tr('_uikit_create_group_title')}
-              </Text>
-            </View>
-          }
-          Right={
-            <Pressable onPress={onClickedCreateGroup}>
-              <Text
-                paletteType={'label'}
-                textType={'medium'}
-                style={{ color: getColor('text_enable') }}
-              >
-                {tr('_uikit_create_group_button', selectedCount)}
-              </Text>
-            </Pressable>
-          }
-          Title={TopNavigationBarTitle({ text: '' })}
-          containerStyle={{ paddingHorizontal: 12 }}
-        />
-      );
-    } else if (contactType === 'add-group-member') {
-      return (
-        <TopNavigationBar
-          Left={
-            <View style={{ flexDirection: 'row' }}>
-              <IconButton
-                iconName={'chevron_left'}
-                style={{ width: 24, height: 24 }}
-                onPress={onBack}
-              />
-              <Text
-                paletteType={'title'}
-                textType={'medium'}
-                style={{ color: getColor('text') }}
-              >
-                {tr('_uikit_add_group_member_title')}
-              </Text>
-            </View>
-          }
-          Right={
-            <Pressable onPress={onAddGroupParticipantResult}>
-              <Text
-                paletteType={'label'}
-                textType={'medium'}
-                style={{ color: getColor('text_enable') }}
-              >
-                {tr('_uikit_add_group_member_button', selectedMemberCount)}
-              </Text>
-            </Pressable>
-          }
-          Title={TopNavigationBarTitle({ text: '' })}
-          containerStyle={{ paddingHorizontal: 12 }}
-        />
-      );
-    } else if (contactType === 'share-contact') {
-      return (
-        <TopNavigationBar
-          Left={
-            <Pressable style={{ flexDirection: 'row' }} onPress={onBack}>
-              <Text paletteType={'label'} textType={'medium'}>
-                {tr('cancel')}
-              </Text>
-            </Pressable>
-          }
-          Right={<View style={{ width: 32, height: 32 }} />}
-          Title={TopNavigationBarTitle({ text: tr('_uikit_share_card_title') })}
-          containerStyle={{ paddingHorizontal: 12 }}
-        />
-      );
-    } else {
-      return null;
-    }
-  };
-
   const items = () => {
     if (contactType === 'contact-list') {
       return (
@@ -264,14 +133,29 @@ export function ContactList(props: ContactListProps) {
         containerStyle,
       ]}
     >
-      {navigationBar()}
+      {enableNavigationBar !== false ? (
+        <_ContactListNavigationBar
+          contactType={contactType}
+          selectedCount={selectedCount}
+          selectedMemberCount={selectedMemberCount}
+          avatarUrl={avatarUrl}
+          onNavigationBarMoreActions={onNavigationBarMoreActions}
+          onClickedNewContact={onClickedNewContact}
+          onBack={onBack}
+          onClickedCreateGroup={onClickedCreateGroup}
+          onAddGroupParticipantResult={onAddGroupParticipantResult}
+          NavigationBar={propsNavigationBar}
+        />
+      ) : null}
 
-      <SearchStyle
-        title={tr('search')}
-        onPress={() => {
-          onSearch?.();
-        }}
-      />
+      {enableSearch !== false ? (
+        <SearchStyle
+          title={tr('search')}
+          onPress={() => {
+            onSearch?.();
+          }}
+        />
+      ) : null}
 
       {items()}
 

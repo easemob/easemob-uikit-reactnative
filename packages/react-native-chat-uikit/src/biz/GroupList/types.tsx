@@ -11,6 +11,7 @@ import type {
   PropsWithCancel,
   PropsWithError,
   PropsWithInit,
+  PropsWithNavigationBar,
   PropsWithSearch,
   PropsWithTest,
 } from '../types';
@@ -21,6 +22,7 @@ export type GroupListProps = ListRequestProps<DataModel> &
   PropsWithInit &
   PropsWithBack &
   PropsWithSearch &
+  PropsWithNavigationBar &
   Omit<
     ListItemActions<GroupModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'

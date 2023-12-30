@@ -16,16 +16,17 @@ import { IconButton } from '../../ui/Button';
 import { Text } from '../../ui/Text';
 import { TextInput } from '../../ui/TextInput';
 import { TopNavigationBar } from '../TopNavigationBar';
-import type { PropsWithBack } from '../types';
+import type { PropsWithBack, PropsWithNavigationBar } from '../types';
 
-export type EditInfoProps = PropsWithBack & {
-  backName: string;
-  saveName: string;
-  maxLength?: number;
-  initialData: string;
-  onSave?: (data: string) => void;
-  containerStyle: StyleProp<ViewStyle>;
-};
+export type EditInfoProps = PropsWithBack &
+  PropsWithNavigationBar & {
+    backName: string;
+    saveName: string;
+    maxLength?: number;
+    initialData: string;
+    onSave?: (data: string) => void;
+    containerStyle: StyleProp<ViewStyle>;
+  };
 export function EditInfo(props: EditInfoProps) {
   const {
     containerStyle,
@@ -35,6 +36,8 @@ export function EditInfo(props: EditInfoProps) {
     maxLength = 128,
     initialData,
     onSave,
+    enableNavigationBar,
+    NavigationBar: propsNavigationBar,
   } = props;
   const {} = useI18nContext();
   const inputRef = React.useRef<RNTextInput>(null);
@@ -92,46 +95,52 @@ export function EditInfo(props: EditInfoProps) {
         containerStyle,
       ]}
     >
-      <TopNavigationBar
-        Left={
-          <View style={{ flexDirection: 'row' }}>
-            <IconButton
-              iconName={'chevron_left'}
-              style={{ width: 24, height: 24, tintColor: getColor('t1') }}
-              onPress={onBack}
-            />
-            <Text
-              textType={'medium'}
-              paletteType={'title'}
-              style={{
-                color: getColor('t1'),
-              }}
-            >
-              {backName}
-            </Text>
-          </View>
-        }
-        Right={
-          <Pressable
-            disabled={disable}
-            style={{}}
-            onPress={() => {
-              onSave?.(value);
-            }}
-          >
-            <Text
-              textType={'medium'}
-              paletteType={'label'}
-              style={{
-                color: getColor(disable !== true ? 't1' : 't2'),
-              }}
-            >
-              {saveName}
-            </Text>
-          </Pressable>
-        }
-        containerStyle={{ paddingHorizontal: 12 }}
-      />
+      {enableNavigationBar !== false ? (
+        propsNavigationBar ? (
+          <>{propsNavigationBar}</>
+        ) : (
+          <TopNavigationBar
+            Left={
+              <View style={{ flexDirection: 'row' }}>
+                <IconButton
+                  iconName={'chevron_left'}
+                  style={{ width: 24, height: 24, tintColor: getColor('t1') }}
+                  onPress={onBack}
+                />
+                <Text
+                  textType={'medium'}
+                  paletteType={'title'}
+                  style={{
+                    color: getColor('t1'),
+                  }}
+                >
+                  {backName}
+                </Text>
+              </View>
+            }
+            Right={
+              <Pressable
+                disabled={disable}
+                style={{}}
+                onPress={() => {
+                  onSave?.(value);
+                }}
+              >
+                <Text
+                  textType={'medium'}
+                  paletteType={'label'}
+                  style={{
+                    color: getColor(disable !== true ? 't1' : 't2'),
+                  }}
+                >
+                  {saveName}
+                </Text>
+              </Pressable>
+            }
+            containerStyle={{ paddingHorizontal: 12 }}
+          />
+        )
+      ) : null}
       <KeyboardAvoidingView style={{ paddingHorizontal: 12 }}>
         <TextInput
           ref={inputRef}

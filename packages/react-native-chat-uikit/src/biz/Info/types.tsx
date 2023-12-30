@@ -1,24 +1,25 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { ChatGroupStyle } from 'react-native-chat-sdk';
 
-import type { PropsWithBack } from '../types';
+import type { PropsWithBack, PropsWithNavigationBar } from '../types';
 
 export type UserState = 'online' | 'offline' | 'busy' | 'leave' | 'no-disturb';
 
-export type InfoProps = PropsWithBack & {
-  onMore?: () => void;
-  hasSendMessage?: boolean;
-  hasAudioCall?: boolean;
-  hasVideoCall?: boolean;
-  onClearChat?: () => void;
-  doNotDisturb?: boolean;
-  onDoNotDisturb?: (isDisturb: boolean) => void;
-  containerStyle?: StyleProp<ViewStyle>;
-  onSendMessage?: (id: string) => void;
-  onAudioCall?: (id: string) => void;
-  onVideoCall?: (id: string) => void;
-  onCopyId?: (id: string) => void;
-};
+export type InfoProps = PropsWithBack &
+  PropsWithNavigationBar & {
+    onMore?: () => void;
+    hasSendMessage?: boolean;
+    hasAudioCall?: boolean;
+    hasVideoCall?: boolean;
+    onClearChat?: () => void;
+    doNotDisturb?: boolean;
+    onDoNotDisturb?: (isDisturb: boolean) => void;
+    containerStyle?: StyleProp<ViewStyle>;
+    onSendMessage?: (id: string) => void;
+    onAudioCall?: (id: string) => void;
+    onVideoCall?: (id: string) => void;
+    onCopyId?: (id: string) => void;
+  };
 
 export type ContactInfoProps = InfoProps & {
   userId: string;

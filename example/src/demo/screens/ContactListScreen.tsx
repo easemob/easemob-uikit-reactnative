@@ -70,6 +70,10 @@ export function ContactListScreen(props: Props) {
             params: {},
           });
         }}
+        // NavigationBar={
+        //   <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />
+        // }
+        // enableNavigationBar={true}
         // onClickedNewContact={() => {}}
       />
     </SafeAreaView>

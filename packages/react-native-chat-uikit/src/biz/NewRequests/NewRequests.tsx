@@ -20,7 +20,13 @@ import type { NewRequestsItemProps, NewRequestsProps } from './types';
 const FlatList = FlatListFactory<NewRequestsItemProps>();
 
 export function NewRequests(props: NewRequestsProps) {
-  const { containerStyle, onBack } = props;
+  const {
+    containerStyle,
+    onBack,
+    enableSearch = false,
+    enableNavigationBar,
+    NavigationBar: propsNavigationBar,
+  } = props;
   const {
     data,
     refreshing,
@@ -55,39 +61,47 @@ export function NewRequests(props: NewRequestsProps) {
         containerStyle,
       ]}
     >
-      <TopNavigationBar
-        Left={
-          <View style={{ flexDirection: 'row' }}>
-            <IconButton
-              iconName={'chevron_left'}
-              style={{ width: 24, height: 24 }}
-              onPress={onBack}
-            />
-            <Text
-              paletteType={'title'}
-              textType={'medium'}
-              style={{ color: getColor('text') }}
-            >
-              {tr('_uikit_new_quest_title')}
-            </Text>
-          </View>
-        }
-        Right={TopNavigationBarRight}
-        RightProps={{
-          onClicked: () => {
+      {enableNavigationBar !== false ? (
+        propsNavigationBar ? (
+          <>{propsNavigationBar}</>
+        ) : (
+          <TopNavigationBar
+            Left={
+              <View style={{ flexDirection: 'row' }}>
+                <IconButton
+                  iconName={'chevron_left'}
+                  style={{ width: 24, height: 24 }}
+                  onPress={onBack}
+                />
+                <Text
+                  paletteType={'title'}
+                  textType={'medium'}
+                  style={{ color: getColor('text') }}
+                >
+                  {tr('_uikit_new_quest_title')}
+                </Text>
+              </View>
+            }
+            Right={TopNavigationBarRight}
+            RightProps={{
+              onClicked: () => {
+                // todo:
+              },
+              iconName: 'person_add',
+            }}
+            Title={TopNavigationBarTitle({ text: '' })}
+            containerStyle={{ paddingHorizontal: 12 }}
+          />
+        )
+      ) : null}
+      {enableSearch !== false ? (
+        <SearchStyle
+          title={tr('search')}
+          onPress={() => {
             // todo:
-          },
-          iconName: 'person_add',
-        }}
-        Title={TopNavigationBarTitle({ text: '' })}
-        containerStyle={{ paddingHorizontal: 12 }}
-      />
-      <SearchStyle
-        title={tr('search')}
-        onPress={() => {
-          // todo: search
-        }}
-      />
+          }}
+        />
+      ) : null}
       <View style={{ flex: 1 }}>
         <FlatList
           ref={ref}

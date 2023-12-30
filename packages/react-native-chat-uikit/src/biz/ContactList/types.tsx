@@ -15,6 +15,7 @@ import type {
   PropsWithCancel,
   PropsWithError,
   PropsWithInit,
+  PropsWithNavigationBar,
   PropsWithSearch,
   PropsWithTest,
   SearchType,
@@ -45,6 +46,7 @@ export type ContactListProps = ListRequestProps<DataModel> &
   PropsWithInit &
   PropsWithBack &
   PropsWithSearch &
+  PropsWithNavigationBar &
   Omit<
     ListItemActions<ContactModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'

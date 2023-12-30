@@ -13,6 +13,7 @@ import type {
   PropsWithCancel,
   PropsWithError,
   PropsWithInit,
+  PropsWithNavigationBar,
   PropsWithSearch,
   PropsWithTest,
 } from '../types';
@@ -32,6 +33,7 @@ export type ConversationListProps = ListRequestProps<DataModel> &
   PropsWithInit &
   PropsWithBack &
   PropsWithSearch &
+  PropsWithNavigationBar &
   Omit<
     ListItemActions<ConversationModel>,
     'onToRightSlide' | 'onToLeftSlide'

@@ -25,6 +25,8 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
     onClearChat,
     containerStyle,
     isContact = false,
+    enableNavigationBar,
+    NavigationBar,
   } = props;
   const {
     doNotDisturb,
@@ -71,25 +73,31 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
         containerStyle,
       ]}
     >
-      <TopNavigationBar
-        Left={
-          <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center' }}
-            onPress={onBack}
-          >
-            <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
-          </Pressable>
-        }
-        Right={
-          <Pressable style={{ width: 32, height: 32 }} onPress={onMore}>
-            <Icon
-              name={'ellipsis_vertical'}
-              style={{ height: 24, width: 24 }}
-            />
-          </Pressable>
-        }
-        containerStyle={{ paddingHorizontal: 12 }}
-      />
+      {enableNavigationBar !== false ? (
+        NavigationBar ? (
+          <>{NavigationBar}</>
+        ) : (
+          <TopNavigationBar
+            Left={
+              <Pressable
+                style={{ flexDirection: 'row', alignItems: 'center' }}
+                onPress={onBack}
+              >
+                <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+              </Pressable>
+            }
+            Right={
+              <Pressable style={{ width: 32, height: 32 }} onPress={onMore}>
+                <Icon
+                  name={'ellipsis_vertical'}
+                  style={{ height: 24, width: 24 }}
+                />
+              </Pressable>
+            }
+            containerStyle={{ paddingHorizontal: 12 }}
+          />
+        )
+      ) : null}
       <View style={{ alignItems: 'center', paddingTop: 20 }}>
         <Avatar size={100} url={userAvatar} />
         <View style={{ height: 12 }} />

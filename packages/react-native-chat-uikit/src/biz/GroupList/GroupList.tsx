@@ -16,7 +16,14 @@ import type { GroupListItemProps, GroupListProps } from './types';
 const FlatList = FlatListFactory<GroupListItemProps>();
 
 export function GroupList(props: GroupListProps) {
-  const { containerStyle, onBack, onSearch } = props;
+  const {
+    containerStyle,
+    onBack,
+    onSearch,
+    enableSearch,
+    enableNavigationBar,
+    NavigationBar,
+  } = props;
   const {
     data,
     refreshing,
@@ -47,25 +54,33 @@ export function GroupList(props: GroupListProps) {
         containerStyle,
       ]}
     >
-      <TopNavigationBar
-        Left={
-          <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center' }}
-            onPress={onBack}
-          >
-            <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
-            <Text>{tr('_uikit_group_title')}</Text>
-          </Pressable>
-        }
-        Right={<View style={{ width: 32, height: 32 }} />}
-        containerStyle={{ paddingHorizontal: 12 }}
-      />
-      <SearchStyle
-        title={tr('search')}
-        onPress={() => {
-          onSearch?.();
-        }}
-      />
+      {enableNavigationBar !== false ? (
+        NavigationBar ? (
+          <>{NavigationBar}</>
+        ) : (
+          <TopNavigationBar
+            Left={
+              <Pressable
+                style={{ flexDirection: 'row', alignItems: 'center' }}
+                onPress={onBack}
+              >
+                <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+                <Text>{tr('_uikit_group_title')}</Text>
+              </Pressable>
+            }
+            Right={<View style={{ width: 32, height: 32 }} />}
+            containerStyle={{ paddingHorizontal: 12 }}
+          />
+        )
+      ) : null}
+      {enableSearch !== false ? (
+        <SearchStyle
+          title={tr('search')}
+          onPress={() => {
+            onSearch?.();
+          }}
+        />
+      ) : null}
 
       <View style={{ flex: 1 }}>
         <FlatList
