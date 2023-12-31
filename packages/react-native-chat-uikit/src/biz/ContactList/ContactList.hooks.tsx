@@ -31,12 +31,12 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
 > &
   UseContactListReturn & {
     selectedMemberCount: number;
-    onAddGroupParticipantResult?: () => void;
     requestCount: number;
     groupCount: number;
     avatarUrl: string | undefined;
     tr: (key: string, ...args: any[]) => string;
     onClickedNewContact?: () => void;
+    onClickedAddGroupParticipant?: () => void;
   } {
   const {
     onClicked,
@@ -543,7 +543,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     onCreateGroupResultValue?.(list);
   }, [contactType, onCreateGroupResultValue, sectionsRef]);
 
-  const onAddGroupParticipantCallback = React.useCallback(() => {
+  const onClickedAddGroupParticipant = React.useCallback(() => {
     if (contactType !== 'add-group-member') {
       return;
     }
@@ -647,7 +647,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     selectedCount,
     onClickedCreateGroup: onCreateGroupCallback,
     selectedMemberCount,
-    onAddGroupParticipantResult: onAddGroupParticipantCallback,
+    onClickedAddGroupParticipant,
     requestCount,
     groupCount,
     avatarUrl,

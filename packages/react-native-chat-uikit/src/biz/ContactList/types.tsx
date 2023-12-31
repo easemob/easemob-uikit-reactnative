@@ -40,19 +40,25 @@ export type ContactListItemProps = ListItemProps &
     onCheckClicked?: ((data?: ContactModel) => void) | undefined;
   };
 
+export type ContactListNavigationBarProps = PropsWithBack &
+  PropsWithNavigationBar & {
+    contactType: ContactType;
+    onClickedNewContact?: () => void;
+    onCreateGroupResultValue?: (data?: ContactModel[]) => void;
+    onAddGroupParticipantResult?: (added: ContactModel[]) => void;
+    selectedData?: ContactModel[]; // todo: changed to selectedData
+  };
 export type ContactListProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
   PropsWithInit &
-  PropsWithBack &
   PropsWithSearch &
-  PropsWithNavigationBar &
+  ContactListNavigationBarProps &
   Omit<
     ListItemActions<ContactModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
-    contactType: ContactType;
     isHasNewRequest?: boolean;
     isHasGroupList?: boolean;
     onContextMenuMoreActions?: React.ReactElement<ContactItemProps>[];
@@ -60,11 +66,6 @@ export type ContactListProps = ListRequestProps<DataModel> &
       prevProps: ContactListItemProps,
       nextProps: ContactListItemProps
     ) => number;
-    onNavigationBarMoreActions?: () => void;
-    onClickedNewContact?: () => void;
-    onCreateGroupResultValue?: (data?: ContactModel[]) => void;
-    onAddGroupParticipantResult?: (added: ContactModel[]) => void;
-    selectedData?: ContactModel[]; // todo: changed to selectedData
     groupId?: string;
     onClickedNewRequest?: () => void;
     onClickedGroupList?: () => void;

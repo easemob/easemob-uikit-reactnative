@@ -46,7 +46,7 @@ export function TopNavigationBarRight({
   onClicked,
   iconName,
 }: {
-  onClicked: () => void;
+  onClicked?: () => void;
   iconName: IconNameType;
 }) {
   const { colors } = usePaletteContext();

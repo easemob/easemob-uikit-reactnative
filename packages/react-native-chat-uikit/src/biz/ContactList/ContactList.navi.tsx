@@ -12,19 +12,14 @@ import {
   TopNavigationBarRight,
   TopNavigationBarTitle,
 } from '../TopNavigationBar';
-import type { ContactType } from '../types';
+import type { ContactListNavigationBarProps } from './types';
 
-type _ContactListNavigationBarProps = {
+type _ContactListNavigationBarProps = ContactListNavigationBarProps & {
   selectedCount?: number;
   selectedMemberCount?: number;
-  contactType: ContactType;
   avatarUrl?: string;
-  onNavigationBarMoreActions?: () => void;
-  onClickedNewContact?: () => void;
-  onBack?: () => void;
+  onClickedAddGroupParticipant?: () => void;
   onClickedCreateGroup?: () => void;
-  onAddGroupParticipantResult?: () => void;
-  NavigationBar?: React.ReactElement;
 };
 export const _ContactListNavigationBar = (
   props: _ContactListNavigationBarProps
@@ -32,12 +27,11 @@ export const _ContactListNavigationBar = (
   const {
     contactType,
     avatarUrl,
-    onNavigationBarMoreActions,
     onClickedNewContact,
     onBack,
     onClickedCreateGroup,
     selectedCount,
-    onAddGroupParticipantResult,
+    onClickedAddGroupParticipant,
     selectedMemberCount,
     NavigationBar,
   } = props;
@@ -76,13 +70,7 @@ export const _ContactListNavigationBar = (
         }
         Right={TopNavigationBarRight}
         RightProps={{
-          onClicked: () => {
-            if (onNavigationBarMoreActions) {
-              onNavigationBarMoreActions();
-            } else {
-              onClickedNewContact?.();
-            }
-          },
+          onClicked: onClickedNewContact,
           iconName: 'person_add',
         }}
         Title={TopNavigationBarTitle({ text: 'Contacts' })}
@@ -158,7 +146,7 @@ export const _ContactListNavigationBar = (
           </View>
         }
         Right={
-          <Pressable onPress={onAddGroupParticipantResult}>
+          <Pressable onPress={onClickedAddGroupParticipant}>
             <Text
               paletteType={'label'}
               textType={'medium'}

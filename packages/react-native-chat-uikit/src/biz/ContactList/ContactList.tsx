@@ -37,7 +37,6 @@ export function ContactList(props: ContactListProps) {
     onContextMenuMoreActions,
     onSearch,
     onBack,
-    onNavigationBarMoreActions,
     onClickedNewRequest,
     onClickedGroupList,
     enableNavigationBar,
@@ -65,7 +64,7 @@ export function ContactList(props: ContactListProps) {
     selectedCount,
     onClickedCreateGroup,
     selectedMemberCount,
-    onAddGroupParticipantResult,
+    onClickedAddGroupParticipant,
     requestCount,
     groupCount,
     avatarUrl,
@@ -139,11 +138,10 @@ export function ContactList(props: ContactListProps) {
           selectedCount={selectedCount}
           selectedMemberCount={selectedMemberCount}
           avatarUrl={avatarUrl}
-          onNavigationBarMoreActions={onNavigationBarMoreActions}
           onClickedNewContact={onClickedNewContact}
           onBack={onBack}
           onClickedCreateGroup={onClickedCreateGroup}
-          onAddGroupParticipantResult={onAddGroupParticipantResult}
+          onClickedAddGroupParticipant={onClickedAddGroupParticipant}
           NavigationBar={propsNavigationBar}
         />
       ) : null}

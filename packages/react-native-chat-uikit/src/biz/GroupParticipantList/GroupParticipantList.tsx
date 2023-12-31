@@ -17,7 +17,8 @@ import type {
 const FlatList = FlatListFactory<GroupParticipantListItemProps>();
 
 export function GroupParticipantList(props: GroupParticipantListProps) {
-  const { containerStyle, onBack, participantType } = props;
+  const { containerStyle, onBack, participantType, enableNavigationBar } =
+    props;
   const {
     data,
     refreshing,
@@ -35,7 +36,6 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     onDelParticipant,
     alertRef,
     onCheckClicked,
-    tr,
   } = useGroupParticipantList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -67,16 +67,17 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
         containerStyle,
       ]}
     >
-      <_GroupParticipantListNavigationBar
-        participantType={participantType}
-        onBack={onBack}
-        tr={tr}
-        onDelParticipant={onDelParticipant}
-        deleteCount={deleteCount}
-        participantCount={participantCount}
-        onClickedAddParticipant={onClickedAddParticipant}
-        onClickedDelParticipant={onClickedDelParticipant}
-      />
+      {enableNavigationBar !== false ? (
+        <_GroupParticipantListNavigationBar
+          participantType={participantType}
+          onBack={onBack}
+          onDelParticipant={onDelParticipant}
+          deleteCount={deleteCount}
+          participantCount={participantCount}
+          onClickedAddParticipant={onClickedAddParticipant}
+          onClickedDelParticipant={onClickedDelParticipant}
+        />
+      ) : null}
 
       <View style={{ flex: 1 }}>
         <FlatList

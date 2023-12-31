@@ -2,36 +2,34 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { TopNavigationBar } from '../TopNavigationBar';
-import type { GroupParticipantType } from '../types';
+import type { GroupParticipantListNavigationBarProps } from './types';
 
-type _GroupParticipantListNavigationBarProps = {
-  participantType?: GroupParticipantType;
-  onBack?: (data?: any) => void;
-  tr: (key: string, ...args: any[]) => string;
-  onDelParticipant?: () => void;
-  deleteCount?: number;
-  participantCount?: number;
-  onClickedAddParticipant?: () => void;
-  onClickedDelParticipant?: () => void;
-};
+type _GroupParticipantListNavigationBarProps =
+  GroupParticipantListNavigationBarProps & {
+    onDelParticipant?: () => void;
+    deleteCount?: number;
+    participantCount?: number;
+  };
 export const _GroupParticipantListNavigationBar = (
   props: _GroupParticipantListNavigationBarProps
 ) => {
   const {
     participantType,
     onBack,
-    tr,
     onDelParticipant,
     deleteCount,
     participantCount,
     onClickedAddParticipant,
     onClickedDelParticipant,
+    NavigationBar,
   } = props;
+  const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -51,6 +49,10 @@ export const _GroupParticipantListNavigationBar = (
       dark: colors.error[6],
     },
   });
+
+  if (NavigationBar) {
+    return <>{NavigationBar}</>;
+  }
 
   if (participantType === 'delete') {
     return (

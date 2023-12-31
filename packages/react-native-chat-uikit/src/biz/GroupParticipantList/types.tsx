@@ -11,27 +11,49 @@ import type {
   PropsWithBack,
   PropsWithError,
   PropsWithInit,
+  PropsWithNavigationBar,
   PropsWithSearch,
   PropsWithTest,
 } from '../types';
 
+/**
+ * Properties of the group member list navigation bar. The navigation bar supports operations such as displaying the member list, adding members, deleting members, and changing the group owner.
+ */
+export type GroupParticipantListNavigationBarProps = PropsWithBack &
+  PropsWithNavigationBar & {
+    /**
+     * Group member list type. Classification is mainly based on actual usage scenarios. Currently, it includes displaying the group member list, deleting members, changing the group owner, etc.
+     */
+    participantType?: GroupParticipantType;
+    /**
+     * Under the group member list, add member callback notifications. `participantType = 'common'` {@link GroupParticipantType}
+     */
+    onClickedAddParticipant?: () => void;
+    /**
+     * Under the group member list, delete member callback notifications. `participantType = 'common'` {@link GroupParticipantType}
+     */
+    onClickedDelParticipant?: () => void;
+    /**
+     * Callback notification for deleting group members.
+     */
+    onDelParticipant?: (data?: GroupParticipantModel[]) => void;
+    /**
+     * Callback notification for changing the group owner.
+     */
+    onChangeOwner?: (data?: GroupParticipantModel) => void;
+  };
 export type GroupParticipantListProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
   PropsWithInit &
-  PropsWithBack &
   PropsWithSearch &
+  GroupParticipantListNavigationBarProps &
   Omit<
     ListItemActions<GroupParticipantModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     groupId: string;
-    participantType?: GroupParticipantType;
     containerStyle?: StyleProp<ViewStyle>;
-    onClickedAddParticipant?: () => void;
-    onClickedDelParticipant?: () => void;
-    onDelParticipant?: (data?: GroupParticipantModel[]) => void;
-    onChangeOwner?: (data?: GroupParticipantModel) => void;
   };
 
 export type GroupParticipantListItemProps = ListItemProps &
