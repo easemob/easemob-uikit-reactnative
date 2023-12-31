@@ -705,7 +705,7 @@ export class ChatServiceImpl
                 });
               });
             }
-            console.log('test:zuoyu:8:', data, this._convList);
+            // console.log('test:zuoyu:8:', data, this._convList);
 
             onResult({
               isOk: true,
@@ -1555,6 +1555,7 @@ export class ChatServiceImpl
               value: this.toUIGroup(value),
             });
           }
+          return;
         }
         const group = this.toUIGroup(value);
         if (group) {
