@@ -701,7 +701,7 @@ export function useMessageList(
           v.localPath,
           convType as number as ChatMessageChatType,
           {
-            duration: v.duration,
+            duration: Math.round((v.duration ?? 0) / 1000),
             fileSize: v.fileSize,
             displayName: v.displayName ?? '',
           }
