@@ -13,7 +13,7 @@ import {
   TopNavigationBarRightList,
 } from '../TopNavigationBar';
 
-export type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
+type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
   convId: string;
   convName?: string;
   convAvatar?: string;

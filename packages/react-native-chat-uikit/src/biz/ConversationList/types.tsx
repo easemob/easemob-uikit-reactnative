@@ -63,8 +63,10 @@ export type UseConversationListReturn = {
   onDisturb: (conv: ConversationModel) => void;
   onRead: (conv: ConversationModel) => void;
   onRequestModalClose: () => void;
+  onShowConversationListMoreActions: () => void;
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
+  avatarUrl?: string | undefined;
 };
 export type UseConversationListProps = ConversationListProps;
 export type UseSearchConversationProps = SearchConversationProps;

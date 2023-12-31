@@ -1,6 +1,10 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
-import type { DataModel, GroupParticipantModel } from '../../chat';
+import type {
+  DataModel,
+  GroupParticipantModel,
+  ResultCallback,
+} from '../../chat';
 import type { DefaultComponentModel } from '../ListSearch';
 import type {
   GroupParticipantType,
@@ -77,6 +81,14 @@ export type SearchGroupParticipantProps = ListRequestProps<DataModel> &
     containerStyle?: StyleProp<ViewStyle>;
     onCancel?: () => void;
   };
+
+export type SelectSingleParticipantProps = Pick<
+  GroupParticipantListProps,
+  'groupId' | 'containerStyle' | 'onBack' | 'onClicked' | 'onError' | 'testMode'
+> & {
+  onSelectResult?: ResultCallback<GroupParticipantModel>;
+};
+
 export type UseGroupParticipantListProps = GroupParticipantListProps;
 export type UseSearchGroupParticipantProps = SearchGroupParticipantProps;
 export type GroupParticipantSearchModel = GroupParticipantModel &

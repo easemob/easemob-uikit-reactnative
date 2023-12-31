@@ -245,13 +245,7 @@ export const MessageInput = React.forwardRef<
           onDel={onClickedDelButton}
           onSend={onClickedEmojiSend}
         />
-        {/* <DelButtonMemo
-          getColor={getColor}
-          emojiHeight={emojiHeight}
-          onClicked={onClickedDelButton}
-        /> */}
       </View>
-      {/* <VoiceBar height={voiceHeight} /> */}
       <BottomVoiceBar
         ref={voiceBarRef}
         onRequestModalClose={onCloseVoiceBar}

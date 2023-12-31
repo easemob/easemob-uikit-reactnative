@@ -30,13 +30,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   ListIndexProps
 > &
   UseContactListReturn & {
-    selectedMemberCount: number;
-    requestCount: number;
-    groupCount: number;
-    avatarUrl: string | undefined;
     tr: (key: string, ...args: any[]) => string;
-    onClickedNewContact?: () => void;
-    onClickedAddGroupParticipant?: () => void;
   } {
   const {
     onClicked,
@@ -352,7 +346,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
       onSetData(testList);
       return;
     }
-    console.log('test:zuoyu:contact_list:init', contactType, isAutoLoad);
+    console.log('dev:ContactList:init', contactType, isAutoLoad);
     const url = im.user(im.userId)?.avatarURL;
     if (url) {
       setAvatarUrl(url);

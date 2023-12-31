@@ -3,10 +3,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  StyleProp,
   TextInput as RNTextInput,
   View,
-  ViewStyle,
 } from 'react-native';
 
 import { useColors } from '../../hook';
@@ -16,17 +14,8 @@ import { IconButton } from '../../ui/Button';
 import { Text } from '../../ui/Text';
 import { TextInput } from '../../ui/TextInput';
 import { TopNavigationBar } from '../TopNavigationBar';
-import type { PropsWithBack, PropsWithNavigationBar } from '../types';
+import type { EditInfoProps } from './types';
 
-export type EditInfoProps = PropsWithBack &
-  PropsWithNavigationBar & {
-    backName: string;
-    saveName: string;
-    maxLength?: number;
-    initialData: string;
-    onSave?: (data: string) => void;
-    containerStyle: StyleProp<ViewStyle>;
-  };
 export function EditInfo(props: EditInfoProps) {
   const {
     containerStyle,

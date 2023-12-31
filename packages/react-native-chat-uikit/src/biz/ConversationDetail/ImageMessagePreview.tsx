@@ -20,8 +20,8 @@ import { g_not_existed_url } from '../../const';
 import { ErrorCode, UIKitError } from '../../error';
 import { Services } from '../../services';
 import { Icon } from '../../ui/Image';
+import { ImagePreview } from '../../ui/ImagePreview';
 import { ImageUrl, localUrlEscape } from '../../utils';
-import { ImagePreview } from '../ImagePreview';
 import { useImageSize } from './useImageSize';
 
 export type ImageMessagePreviewProps = {

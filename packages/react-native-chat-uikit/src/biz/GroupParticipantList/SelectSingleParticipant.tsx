@@ -1,15 +1,9 @@
 import * as React from 'react';
 
-import type { GroupParticipantModel, ResultCallback } from '../../chat';
+import type { GroupParticipantModel } from '../../chat';
 import { GroupParticipantList } from './GroupParticipantList';
-import type { GroupParticipantListProps } from './types';
+import type { SelectSingleParticipantProps } from './types';
 
-export type SelectSingleParticipantProps = Pick<
-  GroupParticipantListProps,
-  'groupId' | 'containerStyle' | 'onBack' | 'onClicked' | 'onError' | 'testMode'
-> & {
-  onSelectResult?: ResultCallback<GroupParticipantModel>;
-};
 export function SelectSingleParticipant(props: SelectSingleParticipantProps) {
   const { onSelectResult } = props;
   const onSelectedSingle = React.useCallback(

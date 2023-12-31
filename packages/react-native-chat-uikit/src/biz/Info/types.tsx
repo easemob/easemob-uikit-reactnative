@@ -64,3 +64,13 @@ export type MineInfoProps = InfoProps & {
   userAvatar?: string;
   onClickedLogout?: () => void;
 };
+
+export type EditInfoProps = PropsWithBack &
+  PropsWithNavigationBar & {
+    backName: string;
+    saveName: string;
+    maxLength?: number;
+    initialData: string;
+    onSave?: (data: string) => void;
+    containerStyle: StyleProp<ViewStyle>;
+  };

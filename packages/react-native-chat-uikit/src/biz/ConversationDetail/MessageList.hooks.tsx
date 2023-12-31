@@ -47,44 +47,13 @@ import type {
   SendVoiceProps,
   SystemMessageModel,
   TimeMessageModel,
+  UseMessageListReturn,
 } from './types';
 
 export function useMessageList(
   props: MessageListProps,
   ref?: React.ForwardedRef<MessageListRef>
-): UseFlatListReturn<MessageListItemProps> & {
-  onRequestModalClose: () => void;
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  alertRef: React.RefObject<AlertRef>;
-  onClickedItem: (
-    id: string,
-    model: SystemMessageModel | TimeMessageModel | MessageModel
-  ) => void;
-  onLongPressItem?: (
-    id: string,
-    model: SystemMessageModel | TimeMessageModel | MessageModel
-  ) => void;
-  onClickedItemAvatar?: (
-    id: string,
-    model: SystemMessageModel | TimeMessageModel | MessageModel
-  ) => void;
-  onClickedItemQuote?: (
-    id: string,
-    model: SystemMessageModel | TimeMessageModel | MessageModel
-  ) => void;
-  onClickedItemState?: (
-    id: string,
-    model: SystemMessageModel | TimeMessageModel | MessageModel
-  ) => void;
-  inverted: boolean;
-  maxListHeight: number;
-  setMaxListHeight: React.Dispatch<React.SetStateAction<number>>;
-  reachedThreshold: number;
-  onShowReportMessage: (model: MessageModel) => void;
-  onReportMessage: (result?: ReportItemModel) => void;
-  reportData: ReportItemModel[];
-  reportRef: React.RefObject<BottomSheetMessageReportRef>;
-} {
+): UseFlatListReturn<MessageListItemProps> & UseMessageListReturn {
   const {
     convId,
     convType,

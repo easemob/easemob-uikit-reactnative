@@ -94,8 +94,14 @@ export type UseContactListReturn = Omit<
   alertRef: React.RefObject<AlertRef>;
   onCheckClicked?: ((data?: ContactModel) => void) | undefined;
   selectedCount?: number;
+  selectedMemberCount: number;
+  requestCount: number;
+  groupCount: number;
+  avatarUrl: string | undefined;
   onClickedNewGroup?: () => void;
   onClickedCreateGroup?: () => void;
+  onClickedNewContact?: () => void;
+  onClickedAddGroupParticipant?: () => void;
 };
 
 export type ContactSearchModel = ContactModel &

@@ -14,7 +14,7 @@ import type {
 
 export type DefaultComponentModel = {
   id: string;
-  name: string;
+  name?: string;
 };
 
 export type ListSearchItemComponent<

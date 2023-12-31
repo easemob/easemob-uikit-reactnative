@@ -1,6 +1,17 @@
-import type { StyleProp, ViewStyle } from 'react-native';
+import type {
+  StyleProp,
+  TextInput as RNTextInput,
+  ViewStyle,
+} from 'react-native';
 import type { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
 
+import type { IconNameType } from '../../assets';
+import type { AlertRef } from '../../ui/Alert';
+import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import type {
+  BottomSheetMessageReportRef,
+  ReportItemModel,
+} from '../MessageReport';
 import type { TopNavigationBarElementType } from '../TopNavigationBar';
 import type {
   PropsWithBack,
@@ -9,6 +20,8 @@ import type {
   PropsWithSearch,
   PropsWithTest,
 } from '../types';
+import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
+import type { MessageInputEditMessageRef } from './MessageInputEditMessage';
 
 export type MessageInputRef = {
   close: () => void;
@@ -247,3 +260,72 @@ export type MessageListProps = PropsWithError &
     containerStyle?: StyleProp<ViewStyle>;
     reportMessageCustomList?: { key: string; value: string }[];
   };
+export type UseMessageListReturn = {
+  menuRef: React.RefObject<BottomSheetNameMenuRef>;
+  alertRef: React.RefObject<AlertRef>;
+  onRequestModalClose: () => void;
+  onClickedItem: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
+  onLongPressItem?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
+  onClickedItemAvatar?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
+  onClickedItemQuote?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
+  onClickedItemState?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
+  inverted: boolean;
+  maxListHeight: number;
+  setMaxListHeight: React.Dispatch<React.SetStateAction<number>>;
+  reachedThreshold: number;
+  onShowReportMessage: (model: MessageModel) => void;
+  onReportMessage: (result?: ReportItemModel) => void;
+  reportData: ReportItemModel[];
+  reportRef: React.RefObject<BottomSheetMessageReportRef>;
+};
+export type UseMessageInputReturn = {
+  inputRef: React.MutableRefObject<RNTextInput>;
+  voiceBarRef: React.MutableRefObject<BottomVoiceBarRef>;
+  menuRef: React.RefObject<BottomSheetNameMenuRef>;
+  editRef: React.MutableRefObject<MessageInputEditMessageRef>;
+  value: string;
+  emojiHeight: number;
+  emojiIconName: IconNameType;
+  inputBarState: MessageInputState;
+  sendIconName: IconNameType;
+  showQuote: boolean;
+  quoteMsg?: ChatMessage | undefined;
+  setValue: (
+    text: string,
+    op?: 'add_face' | 'del_face' | 'del_c',
+    face?: string
+  ) => void;
+  onClickedFaceListItem: (face: string) => void;
+  onClickedDelButton: () => void;
+  onClickedClearButton: () => void;
+  onClickedEmojiButton: () => void;
+  onClickedVoiceButton: () => void;
+  onCloseVoiceBar: () => void;
+  onVoiceStateChange: (state: VoiceBarState) => void;
+  changeInputBarState: (nextState: MessageInputState) => void;
+  onSelectSendVoice: (props: SendVoiceProps) => void;
+  onFocus: () => void;
+  onBlur: () => void;
+  onRequestModalCloseMenu: () => void;
+  onClickedSend: () => void;
+  onVoiceFailed: (error: { reason: string; error: any }) => void;
+  onHideQuoteMessage: () => void;
+  onRequestModalCloseEdit: () => void;
+  onEditMessageFinished: (msgId: string, text: string) => void;
+  onClickedEmojiSend: () => void;
+};

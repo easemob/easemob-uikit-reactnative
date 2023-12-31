@@ -28,6 +28,7 @@ import type {
   SendImageProps,
   SendVideoProps,
   SendVoiceProps,
+  UseMessageInputReturn,
 } from './types';
 import {
   selectCamera,
@@ -39,7 +40,7 @@ import {
 export function useMessageInput(
   props: MessageInputProps,
   ref?: React.ForwardedRef<MessageInputRef>
-) {
+): UseMessageInputReturn {
   const {
     bottom,
     onClickedSend: propsOnClickedSend,
@@ -54,7 +55,6 @@ export function useMessageInput(
   const inputRef = React.useRef<RNTextInput>({} as any);
   const [_value, _setValue] = React.useState('');
   const [emojiHeight, _setEmojiHeight] = React.useState(0);
-  const [voiceHeight, _setVoiceHeight] = React.useState(0);
   const isClosedEmoji = React.useRef(true);
   const isClosedKeyboard = React.useRef(true);
   const isClosedVoiceBar = React.useRef(true);
@@ -292,13 +292,6 @@ export function useMessageInput(
     },
     [setLayoutAnimation]
   );
-  // const setVoiceHeight = React.useCallback(
-  //   (h: number) => {
-  //     setLayoutAnimation();
-  //     _setVoiceHeight(h);
-  //   },
-  //   [setLayoutAnimation]
-  // );
 
   const closeKeyboard = React.useCallback(() => {
     Keyboard.dismiss();
@@ -539,21 +532,14 @@ export function useMessageInput(
   return {
     value: _value,
     setValue: setInputValue,
-    valueRef: valueRef,
     onClickedFaceListItem,
     onClickedDelButton,
     onClickedClearButton,
     onClickedEmojiButton,
     onClickedVoiceButton,
-    closeKeyboard,
     inputRef,
-    setEmojiHeight,
-    voiceHeight,
     emojiHeight,
-    isClosedEmoji,
-    isClosedKeyboard,
     emojiIconName,
-    setIconName: setEmojiIconName,
     onFocus,
     onBlur,
     inputBarState,

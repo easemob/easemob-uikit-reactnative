@@ -27,9 +27,7 @@ export function useConversationList(
   props: UseConversationListProps
 ): UseFlatListReturn<ConversationListItemProps> &
   UseConversationListReturn & {
-    avatarUrl: string | undefined;
     tr: (key: string, ...args: any[]) => string;
-    onShowConversationListMoreActions: () => void;
   } {
   const {
     onClicked,

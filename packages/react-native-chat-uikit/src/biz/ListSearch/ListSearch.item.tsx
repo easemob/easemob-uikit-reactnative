@@ -71,7 +71,7 @@ export function DefaultListSearchItem<
             paddingLeft: 12,
           }}
           keyword={keyword}
-          content={data.name}
+          content={data.name ?? data.id}
         />
       </View>
 
@@ -173,7 +173,7 @@ export function StateListSearchItem(
             paddingLeft: 12,
           }}
           keyword={keyword}
-          content={data.name}
+          content={data.name ?? data.userId}
         />
       </View>
 
