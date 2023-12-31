@@ -185,14 +185,6 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
             const body = result.body as ChatImageMessageBody;
             const h = body.height ?? winHeight;
             const w = body.width ?? winWidth;
-            console.log(
-              'test:zuoyu:size:',
-              h,
-              w,
-              getImageSize(h, w, winHeight, winWidth),
-              winHeight,
-              winWidth
-            );
             setSize(getImageSize(h, w, winHeight, winWidth));
 
             const isExisted = await Services.dcs.isExistedFile(body.localPath);
@@ -219,7 +211,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
   );
 
   const onVideoError = React.useCallback((error: LoadError) => {
-    console.warn('test:zuoyu:video error: ', error);
+    console.warn('dev:video error: ', error);
   }, []);
 
   const onClickedVideo = React.useCallback(() => {
@@ -291,7 +283,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
               setThumbnailUrl(undefined);
               onGenerateThumbnail(msg);
             } else if (body.fileStatus === ChatDownloadStatus.FAILED) {
-              console.log('test:zuoyu:download failed');
+              console.log('dev:download failed');
             }
           }
         }

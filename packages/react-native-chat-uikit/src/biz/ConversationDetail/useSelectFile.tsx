@@ -1,5 +1,3 @@
-import { Platform } from 'react-native';
-
 import { Services } from '../../services';
 import { getFileExtension, localUrl, timeoutTask, uuid } from '../../utils';
 import type { SendFileProps, SendImageProps, SendVideoProps } from './types';
@@ -14,12 +12,10 @@ export function selectOnePicture(params: {
     Services.ms
       .openMediaLibrary({ selectionLimit: 1, mediaType: 'photo' })
       .then((result) => {
-        console.log('openMediaLibrary:', Platform.OS, result);
         if (result === undefined || result === null || result.length === 0) {
           params.onCancel?.();
           return;
         }
-        console.log('openMediaLibrary:', Platform.OS, result[0]?.type);
         params.onResult({
           localPath: result[0]!.uri,
           fileSize: result[0]!.size,
@@ -46,19 +42,16 @@ export function selectOneShortVideo(params: {
     Services.ms
       .openMediaLibrary({ selectionLimit: 1, mediaType: 'video' })
       .then(async (result) => {
-        console.log('openMediaLibrary:', Platform.OS, result);
         if (result === undefined || result === null || result.length === 0) {
           params.onCancel?.();
           return;
         }
-        console.log('openMediaLibrary:', Platform.OS, result[0]?.type);
         let thumbLocalPath;
         try {
           thumbLocalPath = await Services.ms.getVideoThumbnail({
             url: result[0]!.uri,
           });
         } catch (error) {
-          console.warn('dev:getVideoThumbnail', error);
           params.onError?.(error);
           return;
         }
@@ -66,9 +59,17 @@ export function selectOneShortVideo(params: {
         let localPath = localUrl(
           Services.dcs.getFileDir(params.convId, uuid())
         );
+
         const extension = getFileExtension(thumbLocalPath!);
         localPath = localPath + extension;
-        console.log('test:zuoyu:video:file:', localPath, thumbLocalPath);
+        if (thumbLocalPath) {
+          await Services.ms.saveFromLocal({
+            targetPath: localPath,
+            localPath: thumbLocalPath,
+          });
+          thumbLocalPath = localPath;
+        }
+
         params.onResult({
           localPath: result[0]!.uri,
           fileSize: result[0]!.size,
@@ -97,12 +98,10 @@ export function selectCamera(params: {
     Services.ms
       .openCamera({ cameraType: 'back', mediaType: 'photo' })
       .then(async (result) => {
-        console.log('openMediaLibrary:', Platform.OS, result);
         if (result === undefined || result === null) {
           params.onCancel?.();
           return;
         }
-        console.log('openMediaLibrary:', Platform.OS, result?.type);
         params.onResult({
           localPath: result.uri,
           fileSize: result.size,
@@ -128,8 +127,7 @@ export function selectFile(params: {
     Services.ms
       .openDocument({})
       .then((result) => {
-        console.log('openDocument:', Platform.OS, result);
-        if (result !== undefined && result !== null) {
+        if (result) {
           params.onResult({
             localPath: result.uri,
             fileSize: result.size,

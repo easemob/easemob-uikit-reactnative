@@ -247,7 +247,7 @@ export class ChatServiceImpl
       this.client.getCurrentUsername();
       this.updateSelfInfo({ self: this._user, onResult: () => {} });
 
-      console.log('test:zuoyu:login:finish:1', params);
+      console.log('dev:login:finish:1', params);
 
       result?.({ isOk: true });
     } catch (error: any) {
@@ -271,7 +271,7 @@ export class ChatServiceImpl
         this.client.getCurrentUsername();
         this.updateSelfInfo({ self: this._user, onResult: () => {} });
       }
-      console.log('test:zuoyu:login:finish:2', params, error);
+      console.log('dev:login:finish:2', params, error);
       result?.({
         isOk: false,
         error: new UIKitError({
@@ -563,12 +563,10 @@ export class ChatServiceImpl
     try {
       const map = new Map<string, ChatConversation>();
       const isFinished = await this._convStorage?.isFinishedForFetchList();
-      console.log('test:zuoyu:1', isFinished);
       if (isFinished === true) {
         const list = await this.client.chatManager.getAllConversations();
         const list2 = await this._convStorage?.getAllConversation();
         if (list2 && list2?.length > 0) {
-          console.log('test:zuoyu:11:');
           list2?.forEach((v) => {
             this._silentModeList.set(v.convId, {
               convId: v.convId,
@@ -588,7 +586,6 @@ export class ChatServiceImpl
             cursor,
             pageSize
           );
-        console.log('test:zuoyu:2:', pinList);
         pinList.list?.forEach((v) => {
           map.set(v.convId, {
             ...v,
@@ -606,14 +603,12 @@ export class ChatServiceImpl
               ...v,
             } as ChatConversation);
           });
-          console.log('test:zuoyu:3:', list);
 
           if (
             list.cursor.length === 0 ||
             (list.list && list.list?.length < pageSize) ||
             list.list === undefined
           ) {
-            console.log('test:zuoyu:5:');
             break;
           }
         }
@@ -646,11 +641,9 @@ export class ChatServiceImpl
               })
             );
           }
-          console.log('test:zuoyu:4:', silentList, this._silentModeList);
         }
 
         await this._convStorage?.setFinishedForFetchList(true);
-        console.log('test:zuoyu:6:');
 
         const ret = Array.from(map.values()).map(async (v) => {
           const conv = await this.toUIConversation(v);
@@ -658,7 +651,6 @@ export class ChatServiceImpl
           return conv;
         });
         await Promise.all(ret);
-        console.log('test:zuoyu:7:', this._convList);
       }
 
       if (this._convDataRequestCallback) {
@@ -705,7 +697,6 @@ export class ChatServiceImpl
                 });
               });
             }
-            // console.log('test:zuoyu:8:', data, this._convList);
 
             onResult({
               isOk: true,
@@ -715,14 +706,12 @@ export class ChatServiceImpl
           },
         });
       } else {
-        console.log('test:zuoyu:9:');
         onResult({
           isOk: true,
           value: Array.from(this._convList.values()),
         });
       }
     } catch (e) {
-      console.log('test:zuoyu:10:error:', e);
       onResult({
         isOk: false,
         error: new UIKitError({
@@ -891,7 +880,6 @@ export class ChatServiceImpl
       convType: params.convType,
       fromNative: true,
     });
-    console.log('test:zuoyu:setConversationRead', conv);
     if (conv) {
       conv.unreadMessageCount = 0;
       this.listeners.forEach((v) => {

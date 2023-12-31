@@ -20,7 +20,6 @@ export function useGroupInfoActions(props: useGroupInfoActionsProps) {
     onClickedChangeGroupOwner,
     onGroupDestroy,
   } = props;
-  // console.log('test:zuoyu:useGroupInfoActions', props);
   const { closeMenu } = useCloseMenu({ menuRef });
   const { closeAlert } = useCloseAlert({ alertRef });
   const { tr } = useI18nContext();

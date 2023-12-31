@@ -346,7 +346,7 @@ export function useMessageInput(
       if (quoteMessageRef.current !== undefined) {
         // !!! only support text message for quote
         propsOnClickedSend?.({
-          type: 'quote',
+          type: 'text',
           content: content,
           quote: quoteMessageRef.current,
         });
@@ -405,7 +405,7 @@ export function useMessageInput(
       try {
         e.error = JSON.stringify(error);
       } catch {}
-      console.warn('test:zuoyu:voice:failed:', e);
+      console.warn('dev:voice:failed:', e);
     },
     []
   );
@@ -442,7 +442,6 @@ export function useMessageInput(
   );
 
   React.useEffect(() => {
-    console.log('test:zuoyu:height:', keyboardCurrentHeight, emojiHeight);
     if (
       (keyboardCurrentHeight > 0 && emojiHeight === 0) ||
       (emojiHeight > 0 && keyboardCurrentHeight === 0) ||
@@ -520,14 +519,6 @@ export function useMessageInput(
       mentionListRef.current = [];
     }
   }, []);
-
-  // console.log(
-  //   'test:zuoyu:showVoiceBar:outer',
-  //   voiceHeight,
-  //   emojiHeight,
-  //   keyboardHeight,
-  //   inputBarState
-  // );
 
   return {
     value: _value,

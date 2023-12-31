@@ -31,10 +31,7 @@ export type ContactItemProps = {
 
 export type ContactListItemProps = ListItemProps &
   ListItemRequestProps<DataModel> &
-  Omit<
-    ListItemActions<ContactModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > & {
+  Omit<ListItemActions<ContactModel>, 'onToRightSlide' | 'onToLeftSlide'> & {
     section: ContactModel;
     contactType: ContactType;
     onCheckClicked?: ((data?: ContactModel) => void) | undefined;
@@ -54,10 +51,7 @@ export type ContactListProps = ListRequestProps<DataModel> &
   PropsWithInit &
   PropsWithSearch &
   ContactListNavigationBarProps &
-  Omit<
-    ListItemActions<ContactModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > & {
+  Omit<ListItemActions<ContactModel>, 'onToRightSlide' | 'onToLeftSlide'> & {
     containerStyle?: StyleProp<ViewStyle>;
     isHasNewRequest?: boolean;
     isHasGroupList?: boolean;
@@ -87,7 +81,7 @@ export type SearchContactProps = ListRequestProps<DataModel> &
 
 export type UseContactListReturn = Omit<
   ListItemActions<ContactModel>,
-  'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  'onToRightSlide' | 'onToLeftSlide'
 > & {
   onRequestModalClose: () => void;
   menuRef: React.RefObject<BottomSheetNameMenuRef>;

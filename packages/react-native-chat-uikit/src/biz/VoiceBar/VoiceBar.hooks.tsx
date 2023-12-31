@@ -125,11 +125,6 @@ export function useVoiceBar(props: VoiceBarProps) {
           localPath = localPath + extension;
           voiceFilePathRef.current = localPath;
           voiceFileNameRef.current = voiceFileNameRef.current + extension;
-          console.log(
-            'test:zuoyu:voice:file:',
-            localPath,
-            voiceFileNameRef.current
-          );
           Services.ms
             .saveFromLocal({
               targetPath: localPath,

@@ -7,7 +7,6 @@ export type useCloseMenuProps = {
 };
 export function useCloseMenu(props: useCloseMenuProps) {
   const { menuRef } = props;
-  //   console.log('test:zuoyu:useCloseMenu', props);
   const closeMenu = React.useCallback(
     (onFinished?: () => void) => {
       menuRef.current?.startHide?.(() => {

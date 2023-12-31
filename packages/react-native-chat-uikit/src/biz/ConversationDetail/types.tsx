@@ -102,8 +102,7 @@ export type SendType =
   | 'video'
   | 'time'
   | 'system'
-  | 'card'
-  | 'quote';
+  | 'card';
 export type SendBasicProps = {
   type: SendType;
   quote?: MessageModel;
@@ -181,7 +180,7 @@ export type TimeMessageModel = BasicModel & {
 export type MessageModel = BasicModel &
   VoiceModel & {
     msg: ChatMessage;
-    msgQuote?: ChatMessage;
+    quoteMsg?: ChatMessage;
   };
 
 export type MessageListItemActionsProps = {

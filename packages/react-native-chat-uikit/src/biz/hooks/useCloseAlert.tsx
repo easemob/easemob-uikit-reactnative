@@ -7,7 +7,6 @@ export type useCloseAlertProps = {
 };
 export function useCloseAlert(props: useCloseAlertProps) {
   const { alertRef } = props;
-  // console.log('test:zuoyu:useCloseAlert', props);
   const closeAlert = React.useCallback(
     (onFinished?: () => void) => {
       alertRef.current?.close?.(() => {

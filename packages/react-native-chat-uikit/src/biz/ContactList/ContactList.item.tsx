@@ -12,7 +12,7 @@ import { ListItem } from '../ListItem';
 import type { ContactItemProps, ContactListItemProps } from './types';
 
 export function ContactListItem(props: ContactListItemProps) {
-  const { section, onClicked, onCheckClicked } = props;
+  const { section, onClicked, onCheckClicked, onLongPressed } = props;
   const { checked, disable } = section;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -63,6 +63,9 @@ export function ContactListItem(props: ContactListItemProps) {
           } else {
             onClicked?.(section);
           }
+        }}
+        onLongPress={() => {
+          onLongPressed?.(section);
         }}
       >
         {checked !== undefined ? (

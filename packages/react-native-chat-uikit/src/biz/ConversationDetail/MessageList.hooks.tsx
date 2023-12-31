@@ -31,6 +31,7 @@ import type {
   ReportItemModel,
 } from '../MessageReport';
 import type { UseFlatListReturn } from '../types';
+import { getQuoteAttribute } from './MessageListItem.hooks';
 import type {
   MessageAddPosition,
   MessageListItemProps,
@@ -311,7 +312,7 @@ export function useMessageList(
               modelType: 'message',
               layoutType: msg.from === im.userId ? 'right' : 'left',
               msg: msg,
-              msgQuote: quoteMsg,
+              quoteMsg: quoteMsg,
             } as MessageModel;
           }
         };
@@ -467,7 +468,7 @@ export function useMessageList(
   );
 
   const onAddMessageToUI = React.useCallback(
-    (msg: ChatMessage) => {
+    (msg: ChatMessage, quoteMsg?: ChatMessage) => {
       onAddData(
         {
           id: msg.msgId.toString(),
@@ -476,6 +477,7 @@ export function useMessageList(
             modelType: 'message',
             layoutType: msg.from === im.userId ? 'right' : 'left',
             msg: msg,
+            quoteMsg: quoteMsg,
           },
           containerStyle: getStyle(),
         },
@@ -617,13 +619,25 @@ export function useMessageList(
 
       onFinished?: (msg: ChatMessage) => void
     ) => {
+      let msg: ChatMessage | undefined;
       if (value.type === 'text') {
         const v = value as SendTextProps;
-        const msg = ChatMessage.createTextMessage(
+        msg = ChatMessage.createTextMessage(
           convId,
           v.content,
           convType as number as ChatMessageChatType
         );
+        const quoteMsg = value.quote?.msg;
+        if (quoteMsg) {
+          msg.attributes = {
+            [gMessageAttributeQuote]: {
+              msgID: quoteMsg.msgId,
+              msgPreview: 'rn',
+              msgSender: quoteMsg.from,
+              msgType: quoteMsg.body.type,
+            },
+          };
+        }
         onAddData(
           {
             id: msg.msgId.toString(),
@@ -632,15 +646,15 @@ export function useMessageList(
               modelType: 'message',
               layoutType: 'right',
               msg: msg,
+              quoteMsg: quoteMsg,
             },
             containerStyle: getStyle(),
           },
           'bottom'
         );
-        onFinished?.(msg);
       } else if (value.type === 'image') {
         const v = value as SendImageProps;
-        const msg = ChatMessage.createImageMessage(
+        msg = ChatMessage.createImageMessage(
           convId,
           v.localPath,
           convType as number as ChatMessageChatType,
@@ -651,7 +665,6 @@ export function useMessageList(
             displayName: v.displayName ?? '',
           }
         );
-        console.log('test:zuoyu:image:', msg);
         onAddData(
           {
             id: msg.msgId.toString(),
@@ -665,10 +678,9 @@ export function useMessageList(
           },
           'bottom'
         );
-        onFinished?.(msg);
       } else if (value.type === 'voice') {
         const v = value as SendVoiceProps;
-        const msg = ChatMessage.createVoiceMessage(
+        msg = ChatMessage.createVoiceMessage(
           convId,
           v.localPath,
           convType as number as ChatMessageChatType,
@@ -678,7 +690,6 @@ export function useMessageList(
             displayName: v.displayName ?? '',
           }
         );
-        console.log('test:zuoyu:voice:', msg);
         onAddData(
           {
             id: msg.msgId.toString(),
@@ -692,10 +703,9 @@ export function useMessageList(
           },
           'bottom'
         );
-        onFinished?.(msg);
       } else if (value.type === 'video') {
         const v = value as SendVideoProps;
-        const msg = ChatMessage.createVideoMessage(
+        msg = ChatMessage.createVideoMessage(
           convId,
           v.localPath,
           convType as number as ChatMessageChatType,
@@ -708,7 +718,6 @@ export function useMessageList(
             height: v.videoHeight,
           }
         );
-        console.log('test:zuoyu:video:', msg);
         onAddData(
           {
             id: msg.msgId.toString(),
@@ -722,10 +731,9 @@ export function useMessageList(
           },
           'bottom'
         );
-        onFinished?.(msg);
       } else if (value.type === 'file') {
         const v = value as SendFileProps;
-        const msg = ChatMessage.createFileMessage(
+        msg = ChatMessage.createFileMessage(
           convId,
           v.localPath,
           convType as number as ChatMessageChatType,
@@ -734,7 +742,6 @@ export function useMessageList(
             displayName: v.displayName ?? '',
           }
         );
-        console.log('test:zuoyu:video:', msg);
         onAddData(
           {
             id: msg.msgId.toString(),
@@ -748,10 +755,9 @@ export function useMessageList(
           },
           'bottom'
         );
-        onFinished?.(msg);
       } else if (value.type === 'card') {
         const card = value as SendCardProps;
-        const msg = ChatMessage.createCustomMessage(
+        msg = ChatMessage.createCustomMessage(
           convId,
           gCustomMessageCardEventType,
           convType as number as ChatMessageChatType,
@@ -763,7 +769,6 @@ export function useMessageList(
             },
           }
         );
-        console.log('test:zuoyu:card:', msg);
         onAddData(
           {
             id: msg.msgId.toString(),
@@ -777,45 +782,11 @@ export function useMessageList(
           },
           'bottom'
         );
-        onFinished?.(msg);
-      } else if (value.type === 'quote') {
-        // !!! only support text quote message.
-        const quote = value as SendTextProps;
-        if (quote.quote === undefined || quote.quote === null) {
-          return;
-        }
-        const quoteMsg = quote.quote.msg;
-        const msg = ChatMessage.createTextMessage(
-          convId,
-          quote.content,
-          convType as number as ChatMessageChatType
-        );
-        msg.attributes = {
-          [gMessageAttributeQuote]: {
-            msgID: quoteMsg.msgId,
-            msgPreview: 'rn',
-            msgSender: quoteMsg.from,
-            msgType: quoteMsg.body.type,
-          },
-        };
-        console.log('test:zuoyu:quote:', msg);
-        onAddData(
-          {
-            id: msg.msgId.toString(),
-            model: {
-              userId: msg.from,
-              modelType: 'message',
-              layoutType: 'right',
-              msg: msg,
-              msgQuote: quote.quote.msg,
-            },
-            containerStyle: getStyle(),
-          },
-          'bottom'
-        );
-        onFinished?.(msg);
       }
-      scrollToEnd();
+      if (msg) {
+        onFinished?.(msg);
+        scrollToEnd();
+      }
     },
     [convId, convType, onAddData, scrollToEnd]
   );
@@ -828,7 +799,6 @@ export function useMessageList(
   );
 
   const init = React.useCallback(async () => {
-    console.log('test:zuoyu:MessageList:init:');
     if (testMode === 'only-ui') {
       return;
     }
@@ -842,16 +812,11 @@ export function useMessageList(
   }, [dataRef, isAutoLoad, setData, testMode]);
 
   const onRequestHistoryMessage = React.useCallback(() => {
-    console.log('test:zuoyu:MessageList:onRequestHistoryMessage:');
     im.messageManager.loadHistoryMessage({
       convId,
       convType,
       startMsgId: startMsgIdRef.current,
       onResult: (msgs) => {
-        console.log(
-          'test:zuoyu:MessageList:onRequestHistoryMessage:',
-          startMsgIdRef.current
-        );
         if (msgs.length > 0) {
           const newStartMsgId = msgs[0]!.msgId.toString();
           if (newStartMsgId === startMsgIdRef.current) {
@@ -956,9 +921,18 @@ export function useMessageList(
       onSendMessageChanged: (msg: ChatMessage) => {
         onUpdateMessageToUI(msg, 'send');
       },
-      onRecvMessage: (msg: ChatMessage) => {
+      onRecvMessage: async (msg: ChatMessage) => {
         if (msg.conversationId === convId) {
-          onAddMessageToUI(msg);
+          const quoteAttributes = getQuoteAttribute(msg);
+          if (quoteAttributes) {
+            const quoteMsg = await im.getMessage({
+              messageId: quoteAttributes.msgID,
+            });
+            onAddMessageToUI(msg, quoteMsg);
+          } else {
+            onAddMessageToUI(msg);
+          }
+
           onSendRecvMessageReadAck(msg);
           scrollToEnd();
         }
@@ -975,14 +949,13 @@ export function useMessageList(
         }
       },
     } as MessageManagerListener;
-    console.log('test:zuoyu:addlistener', convId);
     im.messageManager.addListener(convId, listener);
     return () => {
-      console.log('test:zuoyu:removeListener', convId);
       im.messageManager.removeListener(convId);
     };
   }, [
     convId,
+    im,
     im.messageManager,
     onAddMessageToUI,
     onRecallMessage,

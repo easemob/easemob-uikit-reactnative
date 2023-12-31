@@ -8,7 +8,6 @@ export class DirCacheServiceImplement implements DirCacheService {
   }
   init(useId: string): void {
     this.useId = useId;
-    console.log('test:zuoyu:init:', useId);
   }
   unInit(): void {
     this.useId = undefined;

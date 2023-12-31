@@ -14,10 +14,8 @@ export function useChatListener(listener: ChatServiceListener) {
     React.useCallback(
       (state: 'load' | 'unload') => {
         if (state === 'load') {
-          console.log('test:zuoyu:load');
           im.addListener(listener);
         } else if (state === 'unload') {
-          console.log('test:zuoyu:unload');
           im.removeListener(listener);
         }
       },

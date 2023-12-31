@@ -180,7 +180,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
 
   const onEditMessageFinished = React.useCallback(
     (model: MessageModel) => {
-      console.log('test:zuoyu:editor:finished', model);
       _messageListRef.current?.editMessageFinished?.(model);
     },
     [_messageListRef]

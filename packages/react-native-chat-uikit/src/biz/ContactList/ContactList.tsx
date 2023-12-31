@@ -60,6 +60,7 @@ export function ContactList(props: ContactListProps) {
     onClickedNewContact,
     alertRef,
     onClicked,
+    onLongPressed,
     onCheckClicked,
     selectedCount,
     onClickedCreateGroup,
@@ -180,6 +181,7 @@ export function ContactList(props: ContactListProps) {
               <ContactListItemMemo
                 {...item}
                 onClicked={onClicked}
+                onLongPressed={onLongPressed}
                 onCheckClicked={onCheckClicked}
               />
             );

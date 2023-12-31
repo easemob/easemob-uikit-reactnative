@@ -40,7 +40,6 @@ export function useMessageLongPressActions(
     onDelMessage,
     onRecallMessage,
   } = props;
-  // console.log('test:zuoyu:useMessageLongPressActions', props);
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
   const im = useChatContext();

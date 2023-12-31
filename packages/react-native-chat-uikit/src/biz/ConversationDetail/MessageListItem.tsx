@@ -201,7 +201,6 @@ export function MessageImage(props: MessageImageProps) {
     msg.status;
     getImageThumbUrl(msg)
       .then((url) => {
-        console.log('test:zuoyu:url:image:', url);
         setThumbUrl(url);
       })
       .catch();
@@ -214,47 +213,6 @@ export function MessageImage(props: MessageImageProps) {
       iconName={'img'}
     />
   );
-  // return (
-  //   <DefaultImage
-  //     source={{
-  //       uri: url3,
-  //     }}
-  //     style={[
-  //       {
-  //         width: width,
-  //         height: height,
-  //         borderRadius: 4,
-  //       },
-  //     ]}
-  //     defaultSource={ICON_ASSETS.img('3x')}
-  //     defaultStyle={{
-  //       width: 64,
-  //       height: 64,
-  //       // backgroundColor: 'blue',
-  //     }}
-  //     defaultContainerStyle={{
-  //       width: width,
-  //       height: height,
-  //       // backgroundColor: 'red',
-  //       justifyContent: 'center',
-  //       alignItems: 'center',
-  //     }}
-  //   />
-  // );
-  // return (
-  //   <RNImage
-  //     style={{ width: width, height: height }}
-  //     // url={thumbUrl}
-  //     // size={width}
-  //     source={{ uri: url5 }}
-  //     onError={(e) => {
-  //       console.log('test:zuoyu:error:', e.nativeEvent.error);
-  //     }}
-  //     onLoad={(e) => {
-  //       console.log('test:zuoyu:onLoad:', e.nativeEvent.source);
-  //     }}
-  //   />
-  // );
 }
 
 export type MessageVoiceProps = MessageBasicProps & {
@@ -1011,7 +969,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
     maxWidth,
     onQuoteClicked,
   } = props;
-  const { layoutType, msgQuote: msg, msg: originalMsg } = model;
+  const { layoutType, quoteMsg, msg: originalMsg } = model;
   const { paddingHorizontal, paddingVertical } = React.useMemo(() => {
     return {
       paddingHorizontal: 12,
@@ -1351,9 +1309,9 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             paddingVertical: paddingVertical,
           },
         ]}
-        onPress={() => _onClicked(originalMsg, msg)}
+        onPress={() => _onClicked(originalMsg, quoteMsg)}
       >
-        {getContent(msg)}
+        {getContent(quoteMsg)}
       </Pressable>
     </View>
   );
@@ -1386,7 +1344,7 @@ export function MessageView(props: MessageViewProps) {
   const avatar = avatarIsVisible === true ? model.userAvatar : undefined;
   const bubblePadding = 12;
   const hasTriangle = true;
-  const isQuote = isQuoteMessage(model.msg, model.msgQuote);
+  const isQuote = isQuoteMessage(model.msg, model.quoteMsg);
 
   const onClickedAvatar = React.useCallback(() => {
     onAvatarClicked?.(model.msg.msgId, model);

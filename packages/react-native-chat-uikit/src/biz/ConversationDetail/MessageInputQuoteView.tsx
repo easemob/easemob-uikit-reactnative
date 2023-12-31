@@ -72,7 +72,6 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
     } else if (msg.body.type === ChatMessageType.FILE) {
       maxWidth = maxWidth * 0.8;
       const body = msg.body as ChatFileMessageBody;
-      console.log('test:zuoyu:file:', maxWidth, body.displayName);
       return (
         <View style={{ flexDirection: 'row', maxWidth: maxWidth }}>
           <Icon
@@ -164,7 +163,6 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
 
   const getContentThumb = (msg: ChatMessage) => {
     if (msg.body.type === ChatMessageType.IMAGE) {
-      console.log('test:zuoyu:image:thumb:', msg.body);
       const body = msg.body as ChatImageMessageBody;
       // return body.thumbnailRemotePath.startsWith('http')
       //   ? body.thumbnailRemotePath

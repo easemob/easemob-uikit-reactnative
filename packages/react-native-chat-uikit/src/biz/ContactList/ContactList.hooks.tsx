@@ -34,6 +34,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   } {
   const {
     onClicked,
+    onLongPressed,
     testMode,
     onRequestData,
     onSort: propsOnSort,
@@ -93,6 +94,15 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
       }
     },
     [onClicked]
+  );
+
+  const onLongPressCallback = React.useCallback(
+    (data?: ContactModel | undefined) => {
+      if (onLongPressed) {
+        onLongPressed(data);
+      }
+    },
+    [onLongPressed]
   );
 
   const calculateGroupCount = React.useCallback(() => {
@@ -435,7 +445,6 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
                       contactType: contactType,
                     } as ContactListItemProps;
                   });
-                  console.log('test:zuoyu:list:', list);
                   onSetData(list);
                 }
               } else {
@@ -637,6 +646,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     menuRef,
     alertRef,
     onClicked: onClickedCallback,
+    onLongPressed: onLongPressCallback,
     onCheckClicked: onCheckClickedCallback,
     selectedCount,
     onClickedCreateGroup: onCreateGroupCallback,

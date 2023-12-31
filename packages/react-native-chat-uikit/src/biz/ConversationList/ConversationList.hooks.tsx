@@ -344,17 +344,13 @@ export function useConversationList(
         onSetData(dataRef.current);
       },
       onConversationsUpdate: () => {
-        console.log('test:zuoyu:conv:list:onConversationsUpdate:');
         init();
       },
-      onConversationRead: (from, to) => {
-        console.log('test:zuoyu:conv:list:onConversationRead:', from, to);
-      },
+      onConversationRead: () => {},
       onMessageContentChanged: () => {
         // todo:
       },
       onConversationChanged: (conv: ConversationModel) => {
-        console.log('test:zuoyu:conv:list:onConversationChanged:', conv);
         onUpdateData(conv);
       },
 

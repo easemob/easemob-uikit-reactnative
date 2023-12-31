@@ -68,7 +68,6 @@ export function getChatService(): ChatService {
 
 // const initChat = once2(
 //   (im: ChatService, options: ChatOptionsType, onInitialized?: () => void) => {
-//     console.log('test:zuoyu:initChat:1', options);
 //     im.init({
 //       options: options,
 //       result: ({ isOk, error }) => {

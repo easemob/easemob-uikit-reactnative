@@ -10,7 +10,6 @@ export type useContactInfoActionsProps = {
 };
 export function useContactInfoActions(props: useContactInfoActionsProps) {
   const { menuRef, alertRef } = props;
-  // console.log('test:zuoyu:useContactInfoActions', props);
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
   const im = useChatContext();

@@ -317,6 +317,18 @@ export function isQuoteMessage(msg: ChatMessage, _msgQuote?: ChatMessage) {
   return quote !== undefined;
 }
 
+export function getQuoteAttribute(msg: ChatMessage, _msgQuote?: ChatMessage) {
+  const quoteAttributes = msg.attributes?.[gMessageAttributeQuote] as
+    | {
+        msgID: string;
+        msgPreview: string;
+        msgSender: string;
+        msgType: ChatMessageType;
+      }
+    | undefined;
+  return quoteAttributes;
+}
+
 export function getSystemTip(
   msg: ChatMessage,
   tr: (key: string, ...args: any[]) => string
