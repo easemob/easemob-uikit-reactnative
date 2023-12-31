@@ -175,6 +175,7 @@ export function ConversationDetailScreen(props: Props) {
                 }
               }
             },
+            // reportMessageCustomList: [{ key: '1', value: 'test' }],
           },
         }}
         onBack={() => {

@@ -126,7 +126,8 @@ export function useMessageList(
     reportMessageCustomList.map((d, i) => {
       return {
         id: i.toString(),
-        title: tr(d),
+        tag: d.key,
+        title: tr(d.value),
         checked: false,
       };
     })
@@ -412,7 +413,7 @@ export function useMessageList(
         if (msg) {
           im.reportMessage({
             messageId: msg.msgId,
-            tag: result.title,
+            tag: result.tag,
             reason: tr(result.title),
             onResult: () => {
               currentReportMessageRef.current = undefined;

@@ -245,5 +245,5 @@ export type MessageListProps = PropsWithError &
     onQuoteMessageForInput?: (model: MessageModel) => void;
     onEditMessageForInput?: (model: MessageModel) => void;
     containerStyle?: StyleProp<ViewStyle>;
-    reportMessageCustomList?: string[];
+    reportMessageCustomList?: { key: string; value: string }[];
   };

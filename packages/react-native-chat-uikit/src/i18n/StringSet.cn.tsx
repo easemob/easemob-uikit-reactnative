@@ -101,7 +101,7 @@ export function createStringSetCn(): StringSet {
     'Harassment or bullying': '骚扰或欺凌',
     'Suicide or self harm': '自杀或自残',
     'False information': '虚假信息',
-    'Others': '其他',
+    'Others': '其它',
 
     // common
     'search': '搜索',

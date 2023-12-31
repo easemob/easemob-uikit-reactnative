@@ -314,7 +314,7 @@ export function MessageVoice(props: MessageVoiceProps) {
       ];
     }
   }, [layoutType]);
-  const seconds = Math.floor(duration / 1000);
+  const seconds = duration;
 
   React.useEffect(() => {
     if (propsIsPlay === true) {
