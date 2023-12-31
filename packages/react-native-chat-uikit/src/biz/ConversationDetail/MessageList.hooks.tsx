@@ -487,8 +487,10 @@ export function useMessageList(
     (msg: ChatMessage) => {
       im.editMessage({
         message: msg,
-        onResult: () => {
-          onUpdateMessageToUI(msg, 'recv');
+        onResult: (result) => {
+          if (result.isOk === true && result.value) {
+            onUpdateMessageToUI(result.value, 'recv');
+          }
         },
       });
     },

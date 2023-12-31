@@ -2000,6 +2000,11 @@ export class ChatServiceImpl
           value: msg,
         });
       },
+      onError: () => {
+        params.onResult({
+          isOk: false,
+        });
+      },
     });
   }
 
