@@ -42,7 +42,7 @@ export function ConversationList(props: ConversationListProps) {
     onViewableItemsChanged,
     listState,
     menuRef,
-    onRequestModalClose,
+    onRequestCloseMenu,
     alertRef,
     avatarUrl,
     tr,
@@ -131,7 +131,7 @@ export function ConversationList(props: ConversationListProps) {
 
       <BottomSheetNameMenu
         ref={menuRef}
-        onRequestModalClose={onRequestModalClose}
+        onRequestModalClose={onRequestCloseMenu}
       />
       <Alert ref={alertRef} />
     </View>

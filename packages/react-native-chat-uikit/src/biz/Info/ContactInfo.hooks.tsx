@@ -94,7 +94,7 @@ export function useContactInfo(props: ContactInfoProps) {
       });
   };
 
-  const onRequestModalClose = () => {
+  const onRequestCloseMenu = () => {
     menuRef.current?.startHide?.();
   };
 
@@ -112,7 +112,7 @@ export function useContactInfo(props: ContactInfoProps) {
     userId,
     isContact,
     menuRef,
-    onRequestModalClose,
+    onRequestCloseMenu,
     onMore: onMoreMenu,
     alertRef,
     toastRef,

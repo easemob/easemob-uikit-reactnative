@@ -38,7 +38,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       listState,
       menuRef,
       alertRef,
-      onRequestModalClose,
+      onRequestCloseMenu,
       onClickedItem,
       onLongPressItem,
       inverted,
@@ -46,7 +46,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       setMaxListHeight,
       reachedThreshold,
       reportRef,
-      onReportMessage,
+      reportMessage,
       reportData,
       onClickedItemAvatar,
       onClickedItemQuote,
@@ -133,13 +133,13 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
 
         <BottomSheetNameMenu
           ref={menuRef}
-          onRequestModalClose={onRequestModalClose}
+          onRequestModalClose={onRequestCloseMenu}
         />
         <Alert ref={alertRef} />
         <BottomSheetMessageReport
           ref={reportRef}
           data={reportData}
-          onReport={onReportMessage}
+          onReport={reportMessage}
         />
       </View>
     );

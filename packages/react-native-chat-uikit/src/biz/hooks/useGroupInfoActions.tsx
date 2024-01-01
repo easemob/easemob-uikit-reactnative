@@ -124,5 +124,7 @@ export function useGroupInfoActions(props: useGroupInfoActionsProps) {
 
   return {
     onShowGroupInfoActions: onShowMenu,
+    menuRef,
+    alertRef,
   };
 }

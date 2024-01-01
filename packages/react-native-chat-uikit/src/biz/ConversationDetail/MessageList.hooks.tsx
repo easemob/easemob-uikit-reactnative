@@ -359,7 +359,7 @@ export function useMessageList(
     [dataRef, setData]
   );
 
-  const onDelMessage = React.useCallback(
+  const deleteMessageCallback = React.useCallback(
     (msg: ChatMessage) => {
       im.removeMessage({
         message: msg,
@@ -371,12 +371,12 @@ export function useMessageList(
     [im, onDelMessageToUI]
   );
 
-  const onShowReportMessage = React.useCallback((model: MessageModel) => {
+  const showReportMessageCallback = React.useCallback((model: MessageModel) => {
     currentReportMessageRef.current = model;
     reportRef.current?.startShow?.();
   }, []);
 
-  const onReportMessage = React.useCallback(
+  const reportMessageCallback = React.useCallback(
     (result?: ReportItemModel) => {
       if (result) {
         const msg = currentReportMessageRef.current?.msg;
@@ -424,7 +424,7 @@ export function useMessageList(
     [dataRef, setData]
   );
 
-  const onTryResendMessage = React.useCallback(
+  const resendMessageCallback = React.useCallback(
     (msg: ChatMessage) => {
       if (msg.direction !== ChatMessageDirection.SEND) {
         return;
@@ -447,13 +447,13 @@ export function useMessageList(
       }
       const msgModel = model as MessageModel;
       if (msgModel.msg.status === ChatMessageStatus.FAIL) {
-        onTryResendMessage(msgModel.msg);
+        resendMessageCallback(msgModel.msg);
       }
     },
-    [onTryResendMessage]
+    [resendMessageCallback]
   );
 
-  const onEditMessage = React.useCallback(
+  const editMessageCallback = React.useCallback(
     (msg: ChatMessage) => {
       im.editMessage({
         message: msg,
@@ -547,7 +547,7 @@ export function useMessageList(
     [onAddData]
   );
 
-  const onRecallMessage = React.useCallback(
+  const recallMessageCallback = React.useCallback(
     (msg: ChatMessage, fromType: 'send' | 'recv') => {
       const newMsg = createRecallMessageTip(msg);
       if (fromType === 'send') {
@@ -585,12 +585,12 @@ export function useMessageList(
     alertRef,
     onQuoteMessageForInput: propsOnQuoteMessageForInput,
     onEditMessageForInput: propsOnEditMessageForInput,
-    onShowReportMessage: onShowReportMessage,
-    onDelMessage,
-    onRecallMessage: onRecallMessage,
+    showReportMessage: showReportMessageCallback,
+    deleteMessage: deleteMessageCallback,
+    recallMessage: recallMessageCallback,
   });
 
-  const onSendRecvMessageReadAck = React.useCallback(
+  const sendRecvMessageReadAckCallback = React.useCallback(
     (msg: ChatMessage) => {
       if (
         msg.chatType === ChatMessageChatType.PeerChat &&
@@ -827,7 +827,7 @@ export function useMessageList(
             list.map((v) => {
               if (v.model.modelType === 'message') {
                 const msgModel = v.model as MessageModel;
-                onSendRecvMessageReadAck(msgModel.msg);
+                sendRecvMessageReadAckCallback(msgModel.msg);
               }
             });
           });
@@ -840,7 +840,7 @@ export function useMessageList(
     convType,
     im.messageManager,
     onAddMessageListToUI,
-    onSendRecvMessageReadAck,
+    sendRecvMessageReadAckCallback,
   ]);
 
   React.useImperativeHandle(
@@ -864,10 +864,10 @@ export function useMessageList(
           });
         },
         removeMessage: (msg: ChatMessage) => {
-          onDelMessage(msg);
+          deleteMessageCallback(msg);
         },
         recallMessage: (msg: ChatMessage) => {
-          onRecallMessage(msg, 'send');
+          recallMessageCallback(msg, 'send');
         },
         updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => {
           onUpdateMessageToUI(updatedMsg, fromType);
@@ -885,7 +885,7 @@ export function useMessageList(
             list.map((v) => {
               if (v.model.modelType === 'message') {
                 const msgModel = v.model as MessageModel;
-                onSendRecvMessageReadAck(msgModel.msg);
+                sendRecvMessageReadAckCallback(msgModel.msg);
               }
             });
           });
@@ -899,17 +899,17 @@ export function useMessageList(
           }
         },
         editMessageFinished: (model) => {
-          onEditMessage(model.msg);
+          editMessageCallback(model.msg);
         },
       };
     },
     [
       addSendMessageToUI,
       onAddMessageListToUI,
-      onDelMessage,
-      onEditMessage,
-      onRecallMessage,
-      onSendRecvMessageReadAck,
+      deleteMessageCallback,
+      editMessageCallback,
+      recallMessageCallback,
+      sendRecvMessageReadAckCallback,
       onUpdateMessageToUI,
       scrollToEnd,
       sendMessageToServer,
@@ -933,7 +933,7 @@ export function useMessageList(
             onAddMessageToUI(msg);
           }
 
-          onSendRecvMessageReadAck(msg);
+          sendRecvMessageReadAckCallback(msg);
           scrollToEnd();
         }
       },
@@ -945,7 +945,7 @@ export function useMessageList(
       },
       onRecallMessage: (msg: ChatMessage, _byUserId: string) => {
         if (msg.conversationId === convId) {
-          onRecallMessage(msg, 'recv');
+          recallMessageCallback(msg, 'recv');
         }
       },
     } as MessageManagerListener;
@@ -958,9 +958,9 @@ export function useMessageList(
     im,
     im.messageManager,
     onAddMessageToUI,
-    onRecallMessage,
+    recallMessageCallback,
     onRecallMessageToUI,
-    onSendRecvMessageReadAck,
+    sendRecvMessageReadAckCallback,
     onUpdateMessageToUI,
     scrollToEnd,
   ]);
@@ -982,7 +982,7 @@ export function useMessageList(
     listType,
     listState,
     data,
-    onRequestModalClose: closeMenu,
+    onRequestCloseMenu: closeMenu,
     menuRef,
     alertRef,
     onClickedItem,
@@ -992,8 +992,8 @@ export function useMessageList(
     setMaxListHeight,
     reachedThreshold,
     onMore: onRequestHistoryMessage,
-    onReportMessage,
-    onShowReportMessage,
+    reportMessage: reportMessageCallback,
+    showReportMessage: showReportMessageCallback,
     reportData: reportDataRef.current,
     reportRef,
     onClickedItemAvatar,

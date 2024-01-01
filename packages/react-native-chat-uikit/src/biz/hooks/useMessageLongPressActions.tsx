@@ -25,9 +25,9 @@ export type useMessageLongPressActionsProps = {
   alertRef: React.RefObject<AlertRef>;
   onQuoteMessageForInput?: (model: MessageModel) => void;
   onEditMessageForInput?: (model: MessageModel) => void;
-  onShowReportMessage?: (model: MessageModel) => void;
-  onDelMessage?: (msg: ChatMessage) => void;
-  onRecallMessage?: (msg: ChatMessage, fromType: 'send' | 'recv') => void;
+  showReportMessage?: (model: MessageModel) => void;
+  deleteMessage?: (msg: ChatMessage) => void;
+  recallMessage?: (msg: ChatMessage, fromType: 'send' | 'recv') => void;
 };
 export function useMessageLongPressActions(
   props: useMessageLongPressActionsProps
@@ -36,9 +36,9 @@ export function useMessageLongPressActions(
     menuRef,
     onQuoteMessageForInput,
     onEditMessageForInput,
-    onShowReportMessage,
-    onDelMessage,
-    onRecallMessage,
+    showReportMessage,
+    deleteMessage,
+    recallMessage,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
@@ -114,7 +114,7 @@ export function useMessageLongPressActions(
           icon: 'envelope',
           onClicked: () => {
             closeMenu(() => {
-              onShowReportMessage?.(msgModel);
+              showReportMessage?.(msgModel);
             });
           },
         });
@@ -125,7 +125,7 @@ export function useMessageLongPressActions(
         icon: 'trash',
         onClicked: () => {
           closeMenu(() => {
-            onDelMessage?.(msgModel.msg);
+            deleteMessage?.(msgModel.msg);
           });
         },
       });
@@ -148,7 +148,7 @@ export function useMessageLongPressActions(
             onClicked: () => {
               closeMenu(() => {
                 const msgModel = model as MessageModel;
-                onRecallMessage?.(msgModel.msg, 'send');
+                recallMessage?.(msgModel.msg, 'send');
               });
             },
           });

@@ -55,7 +55,7 @@ export function ContactList(props: ContactListProps) {
     listState,
     AlphabeticIndex,
     onIndexSelected,
-    onRequestModalClose,
+    onRequestCloseMenu,
     menuRef,
     onClickedNewContact,
     alertRef,
@@ -219,7 +219,7 @@ export function ContactList(props: ContactListProps) {
 
       <BottomSheetNameMenu
         ref={menuRef}
-        onRequestModalClose={onRequestModalClose}
+        onRequestModalClose={onRequestCloseMenu}
       />
       <Alert ref={alertRef} />
     </View>

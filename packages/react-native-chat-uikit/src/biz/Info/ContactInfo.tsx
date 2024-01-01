@@ -40,7 +40,7 @@ export function ContactInfo(props: ContactInfoProps) {
     alertRef,
     menuRef,
     toastRef,
-    onRequestModalClose,
+    onRequestCloseMenu,
     onMore,
     tr,
     isSelf,
@@ -243,7 +243,7 @@ export function ContactInfo(props: ContactInfoProps) {
 
       <Alert ref={alertRef} />
       <BottomSheetNameMenu
-        onRequestModalClose={onRequestModalClose}
+        onRequestModalClose={onRequestCloseMenu}
         ref={menuRef}
       />
       <SimpleToast propsRef={toastRef} />

@@ -24,7 +24,7 @@ export function MineInfo(props: MineInfoProps) {
     alertRef,
     menuRef,
     toastRef,
-    onRequestModalClose,
+    onRequestCloseMenu,
     userSign,
     onClickedState,
     onClickedLogout,
@@ -209,7 +209,7 @@ export function MineInfo(props: MineInfoProps) {
 
       <Alert ref={alertRef} />
       <BottomSheetNameMenu
-        onRequestModalClose={onRequestModalClose}
+        onRequestModalClose={onRequestCloseMenu}
         ref={menuRef}
       />
       <SimpleToast propsRef={toastRef} />

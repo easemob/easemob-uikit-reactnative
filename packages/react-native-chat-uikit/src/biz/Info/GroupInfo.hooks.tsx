@@ -310,7 +310,7 @@ export function useGroupInfo(
     }
   };
 
-  const onRequestModalClose = () => {
+  const onRequestCloseMenu = () => {
     menuRef.current?.startHide?.();
   };
 
@@ -388,7 +388,7 @@ export function useGroupInfo(
     toastRef,
     onCopyId,
     onParticipant,
-    onRequestModalClose,
+    onRequestCloseMenu,
     menuRef,
     onMore: onMoreMenu,
     groupMemberCount,

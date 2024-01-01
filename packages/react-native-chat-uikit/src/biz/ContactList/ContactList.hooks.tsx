@@ -641,7 +641,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   return {
     ...sectionProps,
     onIndexSelected,
-    onRequestModalClose: closeMenu,
+    onRequestCloseMenu: closeMenu,
     onClickedNewContact,
     menuRef,
     alertRef,

@@ -5,6 +5,7 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { useGroupParticipantList } from './GroupParticipantList.hooks';
 import { GroupParticipantListItemMemo } from './GroupParticipantList.item';
@@ -36,6 +37,8 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     onDelParticipant,
     alertRef,
     onCheckClicked,
+    menuRef,
+    onRequestCloseMenu,
   } = useGroupParticipantList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -121,6 +124,10 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
           }
         />
       </View>
+      <BottomSheetNameMenu
+        ref={menuRef}
+        onRequestModalClose={onRequestCloseMenu}
+      />
       <Alert ref={alertRef} />
     </View>
   );

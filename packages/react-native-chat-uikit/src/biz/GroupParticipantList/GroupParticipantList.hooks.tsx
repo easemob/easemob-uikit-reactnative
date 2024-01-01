@@ -8,11 +8,14 @@ import {
 } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
+import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useFlatList } from '../List';
 import type { ListItemActions, UseFlatListReturn } from '../types';
 import type {
   GroupParticipantListItemProps,
   UseGroupParticipantListProps,
+  UseGroupParticipantListReturn,
 } from './types';
 
 export function useGroupParticipantList(
@@ -21,16 +24,8 @@ export function useGroupParticipantList(
   Omit<
     ListItemActions<GroupParticipantModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > & {
-    participantCount: number;
-    onCheckClicked?: ((data?: GroupParticipantModel) => void) | undefined;
-    onClickedAddParticipant?: () => void;
-    onClickedDelParticipant?: () => void;
-    onDelParticipant?: () => void;
-    deleteCount: number;
-    alertRef: React.MutableRefObject<AlertRef>;
-    tr: (key: string, ...args: any[]) => string;
-  } {
+  > &
+  UseGroupParticipantListReturn {
   const {
     onClicked,
     testMode,
@@ -45,9 +40,11 @@ export function useGroupParticipantList(
     onInit: () => init(),
   });
   const { setData, dataRef } = flatListProps;
-  const alertRef = React.useRef<AlertRef>({} as any);
   const [participantCount, setParticipantCount] = React.useState(0);
   const [deleteCount, setDeleteCount] = React.useState(0);
+  const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const alertRef = React.useRef<AlertRef>({} as any);
+  const { closeMenu } = useCloseMenu({ menuRef });
 
   const im = useChatContext();
   const { tr } = useI18nContext();
@@ -299,6 +296,7 @@ export function useGroupParticipantList(
     deleteCount,
     onDelParticipant: onDelParticipantCallback,
     alertRef,
-    tr,
+    menuRef,
+    onRequestCloseMenu: closeMenu,
   };
 }

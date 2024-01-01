@@ -62,7 +62,7 @@ export type UseConversationListReturn = {
   onPin: (conv: ConversationModel) => void;
   onDisturb: (conv: ConversationModel) => void;
   onRead: (conv: ConversationModel) => void;
-  onRequestModalClose: () => void;
+  onRequestCloseMenu: () => void;
   onShowConversationListMoreActions: () => void;
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;

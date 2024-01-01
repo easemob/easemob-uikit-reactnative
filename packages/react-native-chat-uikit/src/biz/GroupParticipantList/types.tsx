@@ -5,6 +5,8 @@ import type {
   GroupParticipantModel,
   ResultCallback,
 } from '../../chat';
+import type { AlertRef } from '../../ui/Alert';
+import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import type { DefaultComponentModel } from '../ListSearch';
 import type {
   GroupParticipantType,
@@ -87,6 +89,18 @@ export type SelectSingleParticipantProps = Pick<
   'groupId' | 'containerStyle' | 'onBack' | 'onClicked' | 'onError' | 'testMode'
 > & {
   onSelectResult?: ResultCallback<GroupParticipantModel>;
+};
+
+export type UseGroupParticipantListReturn = {
+  participantCount: number;
+  onCheckClicked?: ((data?: GroupParticipantModel) => void) | undefined;
+  onClickedAddParticipant?: () => void;
+  onClickedDelParticipant?: () => void;
+  onDelParticipant?: () => void;
+  deleteCount: number;
+  alertRef: React.MutableRefObject<AlertRef>;
+  onRequestCloseMenu: () => void;
+  menuRef: React.RefObject<BottomSheetNameMenuRef>;
 };
 
 export type UseGroupParticipantListProps = GroupParticipantListProps;

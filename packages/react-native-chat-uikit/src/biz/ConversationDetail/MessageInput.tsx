@@ -70,13 +70,13 @@ export const MessageInput = React.forwardRef<
     onSelectSendVoice,
     onVoiceStateChange,
     menuRef,
-    onRequestModalCloseMenu,
+    onRequestCloseMenu,
     sendIconName,
     onClickedSend,
     onVoiceFailed,
     showQuote,
     onHideQuoteMessage,
-    onRequestModalCloseEdit,
+    onRequestCloseEdit,
     editRef,
     onEditMessageFinished,
     quoteMsg,
@@ -255,12 +255,12 @@ export const MessageInput = React.forwardRef<
       />
       <BottomSheetNameMenu
         ref={menuRef}
-        onRequestModalClose={onRequestModalCloseMenu}
+        onRequestModalClose={onRequestCloseMenu}
       />
       <MessageInputEditMessage
         ref={editRef}
         top={top}
-        onRequestModalClose={onRequestModalCloseEdit}
+        onRequestModalClose={onRequestCloseEdit}
         onEditMessageFinished={onEditMessageFinished}
       />
     </>

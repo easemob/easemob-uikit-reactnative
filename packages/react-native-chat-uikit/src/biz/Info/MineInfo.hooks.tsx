@@ -75,7 +75,7 @@ export function useMineInfo(props: MineInfoProps) {
       });
   };
 
-  const onRequestModalClose = () => {
+  const onRequestCloseMenu = () => {
     menuRef.current?.startHide?.();
   };
 
@@ -110,7 +110,7 @@ export function useMineInfo(props: MineInfoProps) {
     userAvatar,
     userId,
     menuRef,
-    onRequestModalClose,
+    onRequestCloseMenu,
     alertRef,
     toastRef,
     userSign,

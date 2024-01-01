@@ -325,7 +325,7 @@ export function useMessageInput(
     voiceBarStateRef.current = state;
   };
 
-  const onRequestModalCloseMenu = () => {
+  const onRequestCloseMenu = () => {
     menuRef.current?.startHide?.();
   };
 
@@ -419,7 +419,7 @@ export function useMessageInput(
     setShowQuote(false);
   }, []);
 
-  const onRequestModalCloseEdit = React.useCallback(() => {
+  const onRequestCloseEdit = React.useCallback(() => {
     editRef.current?.startHide?.();
   }, []);
 
@@ -539,14 +539,14 @@ export function useMessageInput(
     onCloseVoiceBar,
     onVoiceStateChange,
     onSelectSendVoice,
-    onRequestModalCloseMenu,
+    onRequestCloseMenu,
     menuRef,
     sendIconName,
     onClickedSend,
     onVoiceFailed,
     showQuote,
     onHideQuoteMessage,
-    onRequestModalCloseEdit,
+    onRequestCloseEdit,
     editRef,
     onEditMessageFinished,
     quoteMsg: quoteMessageRef.current?.msg,

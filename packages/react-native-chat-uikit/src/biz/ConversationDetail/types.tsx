@@ -262,7 +262,7 @@ export type MessageListProps = PropsWithError &
 export type UseMessageListReturn = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
-  onRequestModalClose: () => void;
+  onRequestCloseMenu: () => void;
   onClickedItem: (
     id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
@@ -287,8 +287,8 @@ export type UseMessageListReturn = {
   maxListHeight: number;
   setMaxListHeight: React.Dispatch<React.SetStateAction<number>>;
   reachedThreshold: number;
-  onShowReportMessage: (model: MessageModel) => void;
-  onReportMessage: (result?: ReportItemModel) => void;
+  showReportMessage: (model: MessageModel) => void;
+  reportMessage: (result?: ReportItemModel) => void;
   reportData: ReportItemModel[];
   reportRef: React.RefObject<BottomSheetMessageReportRef>;
 };
@@ -320,11 +320,11 @@ export type UseMessageInputReturn = {
   onSelectSendVoice: (props: SendVoiceProps) => void;
   onFocus: () => void;
   onBlur: () => void;
-  onRequestModalCloseMenu: () => void;
+  onRequestCloseMenu: () => void;
   onClickedSend: () => void;
   onVoiceFailed: (error: { reason: string; error: any }) => void;
   onHideQuoteMessage: () => void;
-  onRequestModalCloseEdit: () => void;
+  onRequestCloseEdit: () => void;
   onEditMessageFinished: (msgId: string, text: string) => void;
   onClickedEmojiSend: () => void;
 };

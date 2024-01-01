@@ -83,7 +83,7 @@ export type UseContactListReturn = Omit<
   ListItemActions<ContactModel>,
   'onToRightSlide' | 'onToLeftSlide'
 > & {
-  onRequestModalClose: () => void;
+  onRequestCloseMenu: () => void;
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
   onCheckClicked?: ((data?: ContactModel) => void) | undefined;

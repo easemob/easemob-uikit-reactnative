@@ -382,7 +382,7 @@ export function useConversationList(
     onPin,
     onDisturb,
     onRead,
-    onRequestModalClose: closeMenu,
+    onRequestCloseMenu: closeMenu,
     menuRef,
     alertRef,
     avatarUrl,

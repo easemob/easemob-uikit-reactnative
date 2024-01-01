@@ -43,7 +43,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
       onCopyId,
       onParticipant,
       menuRef,
-      onRequestModalClose,
+      onRequestCloseMenu,
       onMore,
       groupMemberCount,
       onSendMessage,
@@ -344,7 +344,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
 
         <Alert ref={alertRef} />
         <BottomSheetNameMenu
-          onRequestModalClose={onRequestModalClose}
+          onRequestModalClose={onRequestCloseMenu}
           ref={menuRef}
         />
         <SimpleToast propsRef={toastRef} />
