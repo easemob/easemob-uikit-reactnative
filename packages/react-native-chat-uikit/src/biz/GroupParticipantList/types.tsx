@@ -60,6 +60,7 @@ export type GroupParticipantListProps = ListRequestProps<DataModel> &
   > & {
     groupId: string;
     containerStyle?: StyleProp<ViewStyle>;
+    ListItemRender?: GroupParticipantListItemComponentType;
   };
 
 export type GroupParticipantListItemProps = ListItemProps &
@@ -71,6 +72,10 @@ export type GroupParticipantListItemProps = ListItemProps &
     data: GroupParticipantModel;
     onCheckClicked?: ((data?: GroupParticipantModel) => void) | undefined;
   };
+
+export type GroupParticipantListItemComponentType =
+  | React.ComponentType<GroupParticipantListItemProps>
+  | React.ExoticComponent<GroupParticipantListItemProps>;
 
 export type SearchGroupParticipantProps = ListRequestProps<DataModel> &
   PropsWithTest &
@@ -101,6 +106,7 @@ export type UseGroupParticipantListReturn = {
   alertRef: React.MutableRefObject<AlertRef>;
   onRequestCloseMenu: () => void;
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
+  ListItemRender: GroupParticipantListItemComponentType;
 };
 
 export type UseGroupParticipantListProps = GroupParticipantListProps;

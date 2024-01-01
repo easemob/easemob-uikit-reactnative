@@ -16,6 +16,19 @@ import type {
   PropsWithTest,
 } from '../types';
 
+export type GroupListItemProps = ListItemProps &
+  ListItemRequestProps<DataModel> &
+  Omit<
+    ListItemActions<GroupModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > & {
+    data: GroupModel;
+  };
+
+export type GroupListItemComponentType =
+  | React.ComponentType<GroupListItemProps>
+  | React.ExoticComponent<GroupListItemProps>;
+
 export type GroupListProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
@@ -29,6 +42,7 @@ export type GroupListProps = ListRequestProps<DataModel> &
   > & {
     containerStyle?: StyleProp<ViewStyle>;
     onNoMore?: () => void;
+    ListItemRender?: GroupListItemComponentType;
   };
 export type SearchGroupProps = ListRequestProps<DataModel> &
   PropsWithTest &
@@ -41,13 +55,6 @@ export type SearchGroupProps = ListRequestProps<DataModel> &
     containerStyle?: StyleProp<ViewStyle>;
   };
 export type UseGroupListProps = GroupListProps;
-export type GroupListItemProps = ListItemProps &
-  ListItemRequestProps<DataModel> &
-  Omit<
-    ListItemActions<GroupModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > & {
-    data: GroupModel;
-  };
+
 export type GroupSearchModel = GroupModel & DefaultComponentModel;
 export type UseSearchGroupProps = SearchGroupProps;

@@ -12,7 +12,9 @@ import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useFlatList } from '../List';
 import type { ListItemActions, UseFlatListReturn } from '../types';
+import { GroupParticipantListItemMemo } from './GroupParticipantList.item';
 import type {
+  GroupParticipantListItemComponentType,
   GroupParticipantListItemProps,
   UseGroupParticipantListProps,
   UseGroupParticipantListReturn,
@@ -35,6 +37,7 @@ export function useGroupParticipantList(
     onClickedDelParticipant,
     onDelParticipant,
     onChangeOwner,
+    ListItemRender: propsListItemRender,
   } = props;
   const flatListProps = useFlatList<GroupParticipantListItemProps>({
     onInit: () => init(),
@@ -45,6 +48,9 @@ export function useGroupParticipantList(
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const { closeMenu } = useCloseMenu({ menuRef });
+  const ListItemRenderRef = React.useRef<GroupParticipantListItemComponentType>(
+    propsListItemRender ?? GroupParticipantListItemMemo
+  );
 
   const im = useChatContext();
   const { tr } = useI18nContext();
@@ -298,5 +304,6 @@ export function useGroupParticipantList(
     alertRef,
     menuRef,
     onRequestCloseMenu: closeMenu,
+    ListItemRender: ListItemRenderRef.current,
   };
 }

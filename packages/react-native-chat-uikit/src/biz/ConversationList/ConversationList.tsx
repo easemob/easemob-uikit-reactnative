@@ -19,7 +19,6 @@ import {
   TopNavigationBarTitle,
 } from '../TopNavigationBar';
 import { useConversationList } from './ConversationList.hooks';
-import { ConversationListItemMemo } from './ConversationList.item';
 import type { ConversationListItemProps, ConversationListProps } from './types';
 
 const FlatList = FlatListFactory<ConversationListItemProps>();
@@ -47,6 +46,7 @@ export function ConversationList(props: ConversationListProps) {
     avatarUrl,
     tr,
     onShowConversationListMoreActions,
+    ListItemRender,
   } = useConversationList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -105,7 +105,7 @@ export function ConversationList(props: ConversationListProps) {
           onRefresh={onRefresh}
           renderItem={(info: ListRenderItemInfo<ConversationListItemProps>) => {
             const { item } = info;
-            return <ConversationListItemMemo {...item} />;
+            return <ListItemRender {...item} />;
           }}
           keyExtractor={(item: ConversationListItemProps) => {
             return item.id;

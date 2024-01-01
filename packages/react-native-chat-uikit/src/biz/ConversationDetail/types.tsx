@@ -90,7 +90,7 @@ export type ConversationDetailProps = PropsWithError &
       convType: ChatConversationType;
       ownerId?: string;
     }) => void;
-    ConversationDetailNavigationBar?: TopNavigationBarElementType<any, any>;
+    NavigationBar?: TopNavigationBarElementType<any, any>;
     enableNavigationBar?: boolean;
   };
 
@@ -213,6 +213,10 @@ export type MessageListItemProps = MessageListItemActionsProps & {
   model: SystemMessageModel | TimeMessageModel | MessageModel;
   containerStyle?: StyleProp<ViewStyle>;
 };
+export type MessageListItemComponentType =
+  | React.ComponentType<MessageListItemProps>
+  | React.ExoticComponent<MessageListItemProps>;
+
 export type MessageAddPosition = 'top' | 'bottom';
 export type MessageListRef = {
   addSendMessage: (
@@ -258,6 +262,7 @@ export type MessageListProps = PropsWithError &
     onEditMessageForInput?: (model: MessageModel) => void;
     containerStyle?: StyleProp<ViewStyle>;
     reportMessageCustomList?: { key: string; value: string }[];
+    ListItemRender?: MessageListItemComponentType;
   };
 export type UseMessageListReturn = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
@@ -291,6 +296,7 @@ export type UseMessageListReturn = {
   reportMessage: (result?: ReportItemModel) => void;
   reportData: ReportItemModel[];
   reportRef: React.RefObject<BottomSheetMessageReportRef>;
+  ListItemRender: MessageListItemComponentType;
 };
 export type UseMessageInputReturn = {
   inputRef: React.MutableRefObject<RNTextInput>;

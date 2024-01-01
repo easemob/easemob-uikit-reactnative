@@ -14,7 +14,6 @@ import {
   TopNavigationBarTitle,
 } from '../TopNavigationBar';
 import { useNewRequests } from './NewRequests.hooks';
-import { NewRequestsItemMemo } from './NewRequests.item';
 import type { NewRequestsItemProps, NewRequestsProps } from './types';
 
 const FlatList = FlatListFactory<NewRequestsItemProps>();
@@ -39,6 +38,7 @@ export function NewRequests(props: NewRequestsProps) {
     onClicked,
     onButtonClicked,
     tr,
+    ListItemRender,
   } = useNewRequests(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -113,7 +113,7 @@ export function NewRequests(props: NewRequestsProps) {
           renderItem={(info: ListRenderItemInfo<NewRequestsItemProps>) => {
             const { item } = info;
             return (
-              <NewRequestsItemMemo
+              <ListItemRender
                 {...item}
                 onClicked={onClicked}
                 onButtonClicked={onButtonClicked}

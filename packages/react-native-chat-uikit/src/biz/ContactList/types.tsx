@@ -1,9 +1,10 @@
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { SectionListData, StyleProp, ViewStyle } from 'react-native';
 
 import type { IconNameType } from '../../assets';
 import type { ContactModel, DataModel } from '../../chat';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import type { IndexModel } from '../ListIndex';
 import type { DefaultComponentModel } from '../ListSearch';
 import type {
   ContactType,
@@ -36,6 +37,12 @@ export type ContactListItemProps = ListItemProps &
     contactType: ContactType;
     onCheckClicked?: ((data?: ContactModel) => void) | undefined;
   };
+export type ContactListItemComponentType =
+  | React.ComponentType<ContactListItemProps>
+  | React.ExoticComponent<ContactListItemProps>;
+export type ContactListItemHeaderComponentType =
+  | React.ComponentType<SectionListData<ContactListItemProps, IndexModel>>
+  | React.ExoticComponent<SectionListData<ContactListItemProps, IndexModel>>;
 
 export type ContactListNavigationBarProps = PropsWithBack &
   PropsWithNavigationBar & {
@@ -63,6 +70,8 @@ export type ContactListProps = ListRequestProps<DataModel> &
     groupId?: string;
     onClickedNewRequest?: () => void;
     onClickedGroupList?: () => void;
+    ListItemRender?: ContactListItemComponentType;
+    ListItemHeaderRender?: ContactListItemHeaderComponentType;
   };
 
 export type SearchContactProps = ListRequestProps<DataModel> &
@@ -96,6 +105,8 @@ export type UseContactListReturn = Omit<
   onClickedCreateGroup?: () => void;
   onClickedNewContact?: () => void;
   onClickedAddGroupParticipant?: () => void;
+  ListItemRender: ContactListItemComponentType;
+  ListItemHeaderRender: ContactListItemHeaderComponentType;
 };
 
 export type ContactSearchModel = ContactModel &

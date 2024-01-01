@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+// import { Text, View } from 'react-native';
 import {
   ChatConversationType,
   ChatMessageChatType,
@@ -176,6 +177,20 @@ export function ConversationDetailScreen(props: Props) {
               }
             },
             // reportMessageCustomList: [{ key: '1', value: 'test' }],
+            // ListItemRender: () => {
+            //   return (
+            //     <View style={{ height: 100, backgroundColor: 'red' }}>
+            //       <Text>{'test'}</Text>
+            //     </View>
+            //   );
+            // },
+            // ListItemRender: React.memo(() => {
+            //   return (
+            //     <View style={{ height: 100, backgroundColor: 'red' }}>
+            //       <Text>{'test'}</Text>
+            //     </View>
+            //   );
+            // }),
           },
         }}
         onBack={() => {

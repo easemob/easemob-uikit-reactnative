@@ -27,6 +27,10 @@ export type ConversationListItemProps = ListItemProps &
     data: ConversationModel;
   };
 
+export type ConversationListItemComponentType =
+  | React.ComponentType<ConversationListItemProps>
+  | React.ExoticComponent<ConversationListItemProps>;
+
 export type ConversationListProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
@@ -46,6 +50,7 @@ export type ConversationListProps = ListRequestProps<DataModel> &
     onClickedNewConversation?: () => void;
     onClickedNewGroup?: () => void;
     onClickedNewContact?: () => void;
+    ListItemRender?: ConversationListItemComponentType;
   };
 export type SearchConversationProps = ListRequestProps<DataModel> &
   PropsWithTest &
@@ -67,6 +72,7 @@ export type UseConversationListReturn = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
   avatarUrl?: string | undefined;
+  ListItemRender: ConversationListItemComponentType;
 };
 export type UseConversationListProps = ConversationListProps;
 export type UseSearchConversationProps = SearchConversationProps;

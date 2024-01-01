@@ -18,7 +18,13 @@ import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
 import type { ChoiceType, UseSectionListReturn } from '../types';
 import { g_index_alphabet_range } from './const';
+import {
+  ContactListItemHeaderMemo,
+  ContactListItemMemo,
+} from './ContactList.item';
 import type {
+  ContactListItemComponentType,
+  ContactListItemHeaderComponentType,
   ContactListItemProps,
   ContactListProps,
   UseContactListReturn,
@@ -44,6 +50,8 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     selectedData,
     groupId,
     onAddGroupParticipantResult,
+    ListItemRender: propsListItemRender,
+    ListItemHeaderRender: propsListItemHeaderRender,
   } = props;
   const sectionProps = useSectionList<
     ContactListItemProps,
@@ -72,6 +80,13 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
+  const ListItemRenderRef = React.useRef<ContactListItemComponentType>(
+    propsListItemRender ?? ContactListItemMemo
+  );
+  const ListItemHeaderRenderRef =
+    React.useRef<ContactListItemHeaderComponentType>(
+      propsListItemHeaderRender ?? ContactListItemHeaderMemo
+    );
 
   const onSort = React.useCallback(
     (
@@ -656,6 +671,8 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     groupCount,
     avatarUrl,
     tr,
+    ListItemRender: ListItemRenderRef.current,
+    ListItemHeaderRender: ListItemHeaderRenderRef.current,
   };
 }
 

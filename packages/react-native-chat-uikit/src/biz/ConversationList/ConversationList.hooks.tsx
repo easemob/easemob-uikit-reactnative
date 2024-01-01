@@ -17,7 +17,9 @@ import { useConversationListMoreActions } from '../hooks/useConversationListMore
 import { useConversationLongPressActions } from '../hooks/useConversationLongPressActions';
 import { useFlatList } from '../List';
 import type { UseFlatListReturn } from '../types';
+import { ConversationListItemMemo } from './ConversationList.item';
 import type {
+  ConversationListItemComponentType,
   ConversationListItemProps,
   UseConversationListProps,
   UseConversationListReturn,
@@ -38,6 +40,7 @@ export function useConversationList(
     onClickedNewContact,
     onClickedNewConversation,
     onClickedNewGroup,
+    ListItemRender: propsListItemRender,
   } = props;
   const flatListProps = useFlatList<ConversationListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
@@ -59,6 +62,9 @@ export function useConversationList(
   const alertRef = React.useRef<AlertRef>(null);
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
+  const ListItemRenderRef = React.useRef<ConversationListItemComponentType>(
+    propsListItemRender ?? ConversationListItemMemo
+  );
   const { onShowConversationListMoreActions } = useConversationListMoreActions({
     alertRef,
     menuRef,
@@ -388,6 +394,7 @@ export function useConversationList(
     avatarUrl,
     tr,
     onShowConversationListMoreActions,
+    ListItemRender: ListItemRenderRef.current,
   };
 }
 

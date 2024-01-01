@@ -10,7 +10,6 @@ import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
 import { TopNavigationBar } from '../TopNavigationBar';
 import { useGroupList } from './GroupList.hooks';
-import { GroupListItemMemo } from './GroupList.item';
 import type { GroupListItemProps, GroupListProps } from './types';
 
 const FlatList = FlatListFactory<GroupListItemProps>();
@@ -35,6 +34,7 @@ export function GroupList(props: GroupListProps) {
     listState,
     onClicked,
     tr,
+    ListItemRender,
   } = useGroupList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -97,7 +97,7 @@ export function GroupList(props: GroupListProps) {
           onRefresh={onRefresh}
           renderItem={(info: ListRenderItemInfo<GroupListItemProps>) => {
             const { item } = info;
-            return <GroupListItemMemo {...item} onClicked={onClicked} />;
+            return <ListItemRender {...item} onClicked={onClicked} />;
           }}
           keyExtractor={(item: GroupListItemProps) => {
             return item.id;

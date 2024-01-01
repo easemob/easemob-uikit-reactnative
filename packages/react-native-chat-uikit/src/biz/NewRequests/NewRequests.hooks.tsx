@@ -5,7 +5,13 @@ import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { useFlatList } from '../List';
 import type { ListItemActions, UseFlatListReturn } from '../types';
-import type { NewRequestsItemProps, UseNewRequestsProps } from './types';
+import { NewRequestsItemMemo } from './NewRequests.item';
+import type {
+  NewRequestsItemComponentType,
+  NewRequestsItemProps,
+  UseNewRequestsProps,
+  UseNewRequestsReturn,
+} from './types';
 
 export function useNewRequests(
   props: UseNewRequestsProps
@@ -13,11 +19,17 @@ export function useNewRequests(
   Omit<
     ListItemActions<NewRequestModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > & {
-    onButtonClicked?: (data?: NewRequestModel | undefined) => void;
+  > &
+  UseNewRequestsReturn & {
     tr: (key: string, ...args: any[]) => string;
   } {
-  const { onClicked, onButtonClicked, testMode, onSort: propsOnSort } = props;
+  const {
+    onClicked,
+    onButtonClicked,
+    testMode,
+    onSort: propsOnSort,
+    ListItemRender: propsListItemRender,
+  } = props;
   const flatListProps = useFlatList<NewRequestsItemProps>({
     listState: 'normal',
     onInit: () => init(),
@@ -25,6 +37,9 @@ export function useNewRequests(
   const { setData, dataRef } = flatListProps;
   const im = useChatContext();
   const { tr } = useI18nContext();
+  const ListItemRenderRef = React.useRef<NewRequestsItemComponentType>(
+    propsListItemRender ?? NewRequestsItemMemo
+  );
 
   const onClickedCallback = React.useCallback(
     (data?: NewRequestModel | undefined) => {
@@ -130,5 +145,6 @@ export function useNewRequests(
     onClicked: onClickedCallback,
     onButtonClicked: onButtonClickedCallback,
     tr,
+    ListItemRender: ListItemRenderRef.current,
   };
 }

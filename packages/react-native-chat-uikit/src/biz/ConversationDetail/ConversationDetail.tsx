@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import { useConversationDetail } from './ConversationDetail.hooks';
-import { _ConversationDetailNavigationBar } from './ConversationDetail.navi';
+import { ConversationDetailNavigationBar } from './ConversationDetail.navi';
 import type { ConversationDetailProps } from './types';
 
 export function ConversationDetail(props: ConversationDetailProps) {
@@ -11,7 +11,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
     onBack,
     convId,
     enableNavigationBar = true,
-    ConversationDetailNavigationBar,
+    NavigationBar: propsNavigationBar,
   } = props;
 
   const {
@@ -33,13 +33,13 @@ export function ConversationDetail(props: ConversationDetailProps) {
   return (
     <View style={[{ flexGrow: 1 }, containerStyle]}>
       {enableNavigationBar === true ? (
-        <_ConversationDetailNavigationBar
+        <ConversationDetailNavigationBar
           convId={convId}
           convName={convName}
           convAvatar={convAvatar}
           onBack={onBack}
           onClickedAvatar={onClickedAvatar}
-          NavigationBar={ConversationDetailNavigationBar}
+          NavigationBar={propsNavigationBar}
         />
       ) : null}
       <_MessageList

@@ -8,8 +8,7 @@ import { FlatListFactory } from '../../ui/FlatList';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { useGroupParticipantList } from './GroupParticipantList.hooks';
-import { GroupParticipantListItemMemo } from './GroupParticipantList.item';
-import { _GroupParticipantListNavigationBar } from './GroupParticipantList.navi';
+import { GroupParticipantListNavigationBar } from './GroupParticipantList.navi';
 import type {
   GroupParticipantListItemProps,
   GroupParticipantListProps,
@@ -39,6 +38,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     onCheckClicked,
     menuRef,
     onRequestCloseMenu,
+    ListItemRender,
   } = useGroupParticipantList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -71,7 +71,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
       ]}
     >
       {enableNavigationBar !== false ? (
-        <_GroupParticipantListNavigationBar
+        <GroupParticipantListNavigationBar
           participantType={participantType}
           onBack={onBack}
           onDelParticipant={onDelParticipant}
@@ -99,7 +99,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
           ) => {
             const { item } = info;
             return (
-              <GroupParticipantListItemMemo
+              <ListItemRender
                 {...item}
                 onClicked={onClicked}
                 onCheckClicked={onCheckClicked}

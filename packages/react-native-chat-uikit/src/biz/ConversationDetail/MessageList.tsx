@@ -13,7 +13,6 @@ import {
   LoadingPlaceholder,
 } from '../Placeholder';
 import { useMessageList } from './MessageList.hooks';
-import { MessageListItemMemo } from './MessageListItem';
 import type {
   MessageListItemProps,
   MessageListProps,
@@ -51,6 +50,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onClickedItemAvatar,
       onClickedItemQuote,
       onClickedItemState,
+      ListItemRender,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -98,7 +98,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             renderItem={(info: ListRenderItemInfo<MessageListItemProps>) => {
               const { item } = info;
               return (
-                <MessageListItemMemo
+                <ListItemRender
                   {...item}
                   onClicked={onClickedItem}
                   onLongPress={onLongPressItem}

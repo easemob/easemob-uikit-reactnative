@@ -31,9 +31,11 @@ import type {
   ReportItemModel,
 } from '../MessageReport';
 import type { UseFlatListReturn } from '../types';
+import { MessageListItemMemo } from './MessageListItem';
 import { getQuoteAttribute } from './MessageListItem.hooks';
 import type {
   MessageAddPosition,
+  MessageListItemComponentType,
   MessageListItemProps,
   MessageListProps,
   MessageListRef,
@@ -66,6 +68,7 @@ export function useMessageList(
     reportMessageCustomList = gReportMessageList,
     onClickedItemAvatar: propsOnClickedItemAvatar,
     onClickedItemQuote: propsOnClickedItemQuote,
+    ListItemRender: propsListItemRender,
   } = props;
   const { tr } = useI18nContext();
   const flatListProps = useFlatList<MessageListItemProps>({
@@ -108,6 +111,9 @@ export function useMessageList(
   const inverted = React.useRef(true).current;
   const currentReportMessageRef = React.useRef<MessageModel>();
   const { closeMenu } = useCloseMenu({ menuRef });
+  const MessageListItemRef = React.useRef<MessageListItemComponentType>(
+    propsListItemRender ?? MessageListItemMemo
+  );
 
   const updateMessageVoiceUIState = React.useCallback(
     (model: MessageModel) => {
@@ -999,5 +1005,6 @@ export function useMessageList(
     onClickedItemAvatar,
     onClickedItemQuote,
     onClickedItemState,
+    ListItemRender: MessageListItemRef.current,
   };
 }

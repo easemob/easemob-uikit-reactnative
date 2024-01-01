@@ -18,12 +18,8 @@ import type { IndexModel } from '../ListIndex';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
 import { useContactList } from './ContactList.hooks';
-import {
-  ContactListItemHeaderMemo,
-  ContactListItemMemo,
-} from './ContactList.item';
 import { ContactItem } from './ContactList.item';
-import { _ContactListNavigationBar } from './ContactList.navi';
+import { ContactListNavigationBar } from './ContactList.navi';
 import type { ContactListItemProps, ContactListProps } from './types';
 
 const SectionList = SectionListFactory<ContactListItemProps, IndexModel>();
@@ -70,6 +66,8 @@ export function ContactList(props: ContactListProps) {
     groupCount,
     avatarUrl,
     tr,
+    ListItemRender,
+    ListItemHeaderRender,
   } = useContactList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -134,7 +132,7 @@ export function ContactList(props: ContactListProps) {
       ]}
     >
       {enableNavigationBar !== false ? (
-        <_ContactListNavigationBar
+        <ContactListNavigationBar
           contactType={contactType}
           selectedCount={selectedCount}
           selectedMemberCount={selectedMemberCount}
@@ -178,7 +176,7 @@ export function ContactList(props: ContactListProps) {
           ) => {
             const { item } = info;
             return (
-              <ContactListItemMemo
+              <ListItemRender
                 {...item}
                 onClicked={onClicked}
                 onLongPressed={onLongPressed}
@@ -193,7 +191,7 @@ export function ContactList(props: ContactListProps) {
             section: SectionListData<ContactListItemProps, IndexModel>;
           }) => {
             const { section } = info;
-            return <ContactListItemHeaderMemo {...section} />;
+            return <ListItemHeaderRender {...section} />;
           }}
           onEndReached={onMore}
           viewabilityConfig={viewabilityConfig}

@@ -10,7 +10,12 @@ import { useI18nContext } from '../../i18n';
 import { gGroupListPageNumber } from '../const';
 import { useFlatList } from '../List';
 import type { ListItemActions, UseFlatListReturn } from '../types';
-import type { GroupListItemProps, UseGroupListProps } from './types';
+import { GroupListItemMemo } from './GroupList.item';
+import type {
+  GroupListItemComponentType,
+  GroupListItemProps,
+  UseGroupListProps,
+} from './types';
 
 export function useGroupList(
   props: UseGroupListProps
@@ -20,8 +25,14 @@ export function useGroupList(
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     tr: (key: string, ...args: any[]) => string;
+    ListItemRender: GroupListItemComponentType;
   } {
-  const { testMode, onClicked, onNoMore } = props;
+  const {
+    testMode,
+    onClicked,
+    onNoMore,
+    ListItemRender: propsListItemRender,
+  } = props;
   const flatListProps = useFlatList<GroupListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
     onInit: () => init(),
@@ -33,6 +44,9 @@ export function useGroupList(
   const currentPageNumberRef = React.useRef(0);
   const isNoMoreRef = React.useRef(false);
   const { tr } = useI18nContext();
+  const ListItemRenderRef = React.useRef<GroupListItemComponentType>(
+    propsListItemRender ?? GroupListItemMemo
+  );
 
   const onClickedCallback = React.useCallback(
     (data?: GroupModel | undefined) => {
@@ -191,5 +205,6 @@ export function useGroupList(
     onMore,
     onClicked: onClickedCallback,
     tr,
+    ListItemRender: ListItemRenderRef.current,
   };
 }

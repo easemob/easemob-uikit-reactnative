@@ -21,7 +21,7 @@ type _ContactListNavigationBarProps = ContactListNavigationBarProps & {
   onClickedAddGroupParticipant?: () => void;
   onClickedCreateGroup?: () => void;
 };
-export const _ContactListNavigationBar = (
+export const ContactListNavigationBar = (
   props: _ContactListNavigationBarProps
 ) => {
   const {

@@ -16,7 +16,7 @@ type _GroupParticipantListNavigationBarProps =
     deleteCount?: number;
     participantCount?: number;
   };
-export const _GroupParticipantListNavigationBar = (
+export const GroupParticipantListNavigationBar = (
   props: _GroupParticipantListNavigationBarProps
 ) => {
   const {

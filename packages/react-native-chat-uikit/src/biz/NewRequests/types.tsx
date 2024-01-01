@@ -13,6 +13,20 @@ import type {
   PropsWithTest,
 } from '../types';
 
+export type NewRequestsItemProps = ListItemProps &
+  ListItemRequestProps<DataModel> &
+  Omit<
+    ListItemActions<NewRequestModel>,
+    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+  > & {
+    data: NewRequestModel;
+    onButtonClicked?: (data?: NewRequestModel | undefined) => void;
+  };
+
+export type NewRequestsItemComponentType =
+  | React.ComponentType<NewRequestsItemProps>
+  | React.ExoticComponent<NewRequestsItemProps>;
+
 export type NewRequestsProps = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
@@ -29,14 +43,10 @@ export type NewRequestsProps = ListRequestProps<DataModel> &
       prevProps: NewRequestsItemProps,
       nextProps: NewRequestsItemProps
     ) => number;
+    ListItemRender?: NewRequestsItemComponentType;
   };
 export type UseNewRequestsProps = NewRequestsProps;
-export type NewRequestsItemProps = ListItemProps &
-  ListItemRequestProps<DataModel> &
-  Omit<
-    ListItemActions<NewRequestModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > & {
-    data: NewRequestModel;
-    onButtonClicked?: (data?: NewRequestModel | undefined) => void;
-  };
+export type UseNewRequestsReturn = {
+  onButtonClicked?: (data?: NewRequestModel | undefined) => void;
+  ListItemRender: NewRequestsItemComponentType;
+};

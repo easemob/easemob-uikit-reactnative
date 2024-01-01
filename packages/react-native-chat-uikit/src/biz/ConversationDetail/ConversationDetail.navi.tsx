@@ -21,7 +21,7 @@ type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
   onClickedAvatar?: () => void;
   NavigationBar?: TopNavigationBarElementType<LeftProps, RightProps>;
 };
-export const _ConversationDetailNavigationBar = <LeftProps, RightProps>(
+export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   props: _ConversationDetailNavigationBarProps<LeftProps, RightProps>
 ): JSX.Element => {
   const {
