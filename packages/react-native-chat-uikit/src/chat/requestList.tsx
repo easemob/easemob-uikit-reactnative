@@ -1,7 +1,9 @@
 import {
+  ChatConversationType,
   ChatCustomMessageBody,
   ChatMessage,
   ChatMessageType,
+  ChatMultiDeviceEvent,
   ChatSearchDirection,
 } from 'react-native-chat-sdk';
 
@@ -47,6 +49,7 @@ export class RequestListImpl implements RequestList {
       onContactInvited: this.bindOnContactInvited.bind(this),
       onFriendRequestAccepted: this.bindOnFriendRequestAccepted.bind(this),
       onFriendRequestDeclined: this.bindOnFriendRequestDeclined.bind(this),
+      onConversationEvent: this.bindOnConversationEvent.bind(this),
     };
     this._client.addListener(gListener);
   }
@@ -129,6 +132,27 @@ export class RequestListImpl implements RequestList {
         request.state = 'declined';
         this.updateRequest(request);
         break;
+      }
+    }
+  }
+  bindOnConversationEvent(
+    event?: ChatMultiDeviceEvent,
+    convId?: string,
+    _convType?: ChatConversationType
+  ): void {
+    if (event === ChatMultiDeviceEvent.CONTACT_ACCEPT) {
+      for (const request of this._newRequestList) {
+        if (request.id === convId) {
+          this.removeRequest(request);
+          break;
+        }
+      }
+    } else if (event === ChatMultiDeviceEvent.CONTACT_DECLINE) {
+      for (const request of this._newRequestList) {
+        if (request.id === convId) {
+          this.removeRequest(request);
+          break;
+        }
       }
     }
   }

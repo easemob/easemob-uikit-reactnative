@@ -1,6 +1,15 @@
 import * as React from 'react';
-import { ChatMessageType } from 'react-native-chat-sdk';
+import {
+  ChatConversationType,
+  ChatMessageType,
+  ChatMultiDeviceEvent,
+} from 'react-native-chat-sdk';
 
+// import type { ChatMultiDeviceEvent as ChatMultiDeviceEventType } from 'react-native-chat-sdk';
+// import {
+//   ChatMessageType,
+//   type ChatMultiDeviceEvent,
+// } from 'react-native-chat-sdk';
 import {
   ChatServiceListener,
   ConversationModel,
@@ -229,76 +238,110 @@ export function useConversationList(
     onRemoveById(conv.convId);
   };
 
-  const onPin = async (conv: ConversationModel) => {
-    try {
-      const isPinned = !conv.isPinned;
-      let isExist = false;
-      for (const item of dataRef.current) {
-        if (item.data.convId === conv.convId) {
-          item.data.isPinned = isPinned;
-          item.data = { ...item.data };
-          isExist = true;
-          break;
+  const onPin = React.useCallback(
+    async (conv: ConversationModel) => {
+      try {
+        const isPinned = !conv.isPinned;
+        let isExist = false;
+        for (const item of dataRef.current) {
+          if (item.data.convId === conv.convId) {
+            item.data.isPinned = isPinned;
+            item.data = { ...item.data };
+            isExist = true;
+            break;
+          }
         }
-      }
-      if (isExist === true) {
-        await im.setConversationPin({
-          convId: conv.convId,
-          convType: conv.convType,
-          isPin: isPinned,
-        });
-        // onSetData(dataRef.current);
-      }
-    } catch (error) {
-      im.sendError({ error: error as UIKitError });
-    }
-  };
-  const onDisturb = async (conv: ConversationModel) => {
-    try {
-      const isDisturb = !conv.doNotDisturb;
-      let isExist = false;
-      for (const item of dataRef.current) {
-        if (item.data.convId === conv.convId) {
-          item.data.doNotDisturb = isDisturb;
-          item.data = { ...item.data };
-          isExist = true;
-          break;
+        if (isExist === true) {
+          await im.setConversationPin({
+            convId: conv.convId,
+            convType: conv.convType,
+            isPin: isPinned,
+          });
+          // onSetData(dataRef.current);
         }
+      } catch (error) {
+        im.sendError({ error: error as UIKitError });
       }
-      if (isExist === true) {
-        await im.setConversationSilentMode({
-          convId: conv.convId,
-          convType: conv.convType,
-          doNotDisturb: isDisturb,
-        });
-        // onSetData(dataRef.current);
-      }
-    } catch (error) {
-      im.sendError({ error: error as UIKitError });
-    }
-  };
-  const onRead = (conv: ConversationModel) => {
-    try {
-      let isExist = false;
-      for (const item of dataRef.current) {
-        if (item.data.convId === conv.convId) {
-          item.data.unreadMessageCount = 0;
-          item.data = { ...item.data };
-          isExist = true;
-          break;
+    },
+    [dataRef, im]
+  );
+  const onDisturb = React.useCallback(
+    async (conv: ConversationModel) => {
+      try {
+        const isDisturb = !conv.doNotDisturb;
+        let isExist = false;
+        for (const item of dataRef.current) {
+          if (item.data.convId === conv.convId) {
+            item.data.doNotDisturb = isDisturb;
+            item.data = { ...item.data };
+            isExist = true;
+            break;
+          }
         }
+        if (isExist === true) {
+          await im.setConversationSilentMode({
+            convId: conv.convId,
+            convType: conv.convType,
+            doNotDisturb: isDisturb,
+          });
+          // onSetData(dataRef.current);
+        }
+      } catch (error) {
+        im.sendError({ error: error as UIKitError });
       }
-      if (isExist === true) {
-        im.setConversationRead({
-          convId: conv.convId,
-          convType: conv.convType,
-        });
-        // onSetData(dataRef.current);
+    },
+    [dataRef, im]
+  );
+  const onRead = React.useCallback(
+    (conv: ConversationModel) => {
+      try {
+        let isExist = false;
+        for (const item of dataRef.current) {
+          if (item.data.convId === conv.convId) {
+            item.data.unreadMessageCount = 0;
+            item.data = { ...item.data };
+            isExist = true;
+            break;
+          }
+        }
+        if (isExist === true) {
+          im.setConversationRead({
+            convId: conv.convId,
+            convType: conv.convType,
+          });
+          // onSetData(dataRef.current);
+        }
+      } catch (error) {
+        im.sendError({ error: error as UIKitError });
       }
-    } catch (error) {
-      im.sendError({ error: error as UIKitError });
-    }
-  };
+    },
+    [dataRef, im]
+  );
+
+  const pinConv = React.useCallback(
+    (convId: string, convType: number) => {
+      const conv = dataRef.current.find((item) => {
+        return item.data.convId === convId && item.data.convType === convType;
+      });
+      console.log('test:zuoyu:pinConv:', conv);
+      if (conv && conv.data.isPinned !== true) {
+        onPin(conv.data);
+      }
+    },
+    [dataRef, onPin]
+  );
+  const unPinConv = React.useCallback(
+    (convId: string, convType: number) => {
+      const conv = dataRef.current.find((item) => {
+        return item.data.convId === convId && item.data.convType === convType;
+      });
+      console.log('test:zuoyu:unPinConv:', conv);
+      if (conv && conv.data.isPinned === true) {
+        onPin(conv.data);
+      }
+    },
+    [dataRef, onPin]
+  );
 
   const { onShowConversationLongPressActions } =
     useConversationLongPressActions({
@@ -370,8 +413,37 @@ export function useConversationList(
       onQuitGroup: (groupId) => {
         onRemoveById(groupId);
       },
+
+      onConversationEvent: (
+        event?: ChatMultiDeviceEvent,
+        convId?: string,
+        convType?: ChatConversationType
+      ) => {
+        if (event === ChatMultiDeviceEvent.CONVERSATION_DELETED) {
+          if (convId) {
+            onRemoveById(convId);
+          }
+        } else if (event === ChatMultiDeviceEvent.CONVERSATION_PINNED) {
+          if (convId && convType !== undefined) {
+            pinConv(convId, convType);
+          }
+        } else if (event === ChatMultiDeviceEvent.CONVERSATION_UNPINNED) {
+          if (convId && convType !== undefined) {
+            unPinConv(convId, convType);
+          }
+        }
+      },
     } as ChatServiceListener;
-  }, [dataRef, im, init, onRemoveById, onSetData, onUpdateData]);
+  }, [
+    dataRef,
+    im,
+    init,
+    onRemoveById,
+    onSetData,
+    onUpdateData,
+    pinConv,
+    unPinConv,
+  ]);
 
   useChatListener(listener);
 

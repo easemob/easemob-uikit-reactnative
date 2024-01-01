@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ChatMultiDeviceEvent } from 'react-native-chat-sdk';
 
 import {
   ChatServiceListener,
@@ -196,6 +197,33 @@ export function useGroupList(
     onDetailChanged: (_group) => {},
     onQuitGroup: (groupId) => {
       removeGroup(groupId);
+    },
+    onGroupEvent: (
+      event?: ChatMultiDeviceEvent,
+      target?: string,
+      _usernames?: Array<string>
+    ): void => {
+      if (event === ChatMultiDeviceEvent.GROUP_CREATE) {
+        if (target) {
+          addGroup({ groupId: target, inviter: '' });
+        }
+      } else if (event === ChatMultiDeviceEvent.GROUP_DESTROY) {
+        if (target) {
+          removeGroup(target);
+        }
+      } else if (event === ChatMultiDeviceEvent.GROUP_JOIN) {
+        if (target) {
+          addGroup({ groupId: target, inviter: '' });
+        }
+      } else if (event === ChatMultiDeviceEvent.GROUP_LEAVE) {
+        if (target) {
+          removeGroup(target);
+        }
+      } else if (event === ChatMultiDeviceEvent.GROUP_INVITE_ACCEPT) {
+        if (target) {
+          addGroup({ groupId: target, inviter: '' });
+        }
+      }
     },
   });
   useChatListener(listenerRef.current);

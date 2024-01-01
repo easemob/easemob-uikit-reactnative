@@ -25,8 +25,8 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
-  const [userName, _setUserName] = React.useState(propsUserName);
-  const [userAvatar, _setUserAvatar] = React.useState(propsUserAvatar);
+  const [userName, setUserName] = React.useState(propsUserName);
+  const [userAvatar, setUserAvatar] = React.useState(propsUserAvatar);
   const [userRemark, _setUserRemark] = React.useState(propsUserRemark);
   const [isContact, setIsContact] = React.useState(propsIsContact);
   const im = useChatContext();
@@ -41,8 +41,8 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
             userId,
             onResult: (value) => {
               if (value) {
-                _setUserAvatar(value.value?.avatarURL);
-                _setUserName(value.value?.userName);
+                setUserAvatar(value.value?.avatarURL);
+                setUserName(value.value?.userName);
               }
             },
           });

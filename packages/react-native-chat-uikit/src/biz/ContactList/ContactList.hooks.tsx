@@ -1,4 +1,8 @@
 import * as React from 'react';
+import {
+  ChatConversationType,
+  ChatMultiDeviceEvent,
+} from 'react-native-chat-sdk';
 
 // import { DeviceEventEmitter } from 'react-native';
 import {
@@ -490,6 +494,17 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
         },
         onContactDeleted: async (userId: string) => {
           removeContact(userId);
+        },
+        onConversationEvent: (
+          event?: ChatMultiDeviceEvent,
+          convId?: string,
+          _convType?: ChatConversationType
+        ) => {
+          if (event === ChatMultiDeviceEvent.CONTACT_REMOVE) {
+            if (convId) {
+              removeContact(convId);
+            }
+          }
         },
       } as ChatServiceListener;
     }, [addContact, im, removeContact])
