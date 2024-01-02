@@ -1,4 +1,5 @@
 export * from './colorConverter';
+export * from './emojiConvert';
 export * from './file';
 export * from './format';
 export * from './function';

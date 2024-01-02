@@ -6,7 +6,7 @@ import {
   ChatTextMessageBody,
 } from 'react-native-chat-sdk';
 
-import { formatTs2 } from '../utils';
+import { emoji, formatTs2 } from '../utils';
 import {
   gMessageAttributeUserInfo,
   gNewRequestConversationMsgEventType,
@@ -65,13 +65,14 @@ export function getMessageSnapshot(msg?: ChatMessage): string {
   }
   switch (msg.body.type) {
     case ChatMessageType.TXT: {
+      const content = emoji.toCodePointText(
+        (msg.body as ChatTextMessageBody).content
+      );
       if (msg.chatType === ChatMessageChatType.GroupChat) {
         const user = userInfoFromMessage(msg);
-        return `${user?.userName ?? user?.userId ?? msg.from}: ${
-          (msg.body as ChatTextMessageBody).content
-        }`;
+        return `${user?.userName ?? user?.userId ?? msg.from}: ${content}`;
       } else {
-        return (msg.body as ChatTextMessageBody).content;
+        return content;
       }
     }
 

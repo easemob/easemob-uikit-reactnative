@@ -1,7 +1,7 @@
 import _emoji from 'twemoji';
 
-import { FACE_ASSETS } from '../../assets';
-import { FACE_ASSETS_UTF16 } from './EmojiList.const';
+import { FACE_ASSETS } from '../assets';
+import { FACE_ASSETS_UTF16 } from '../biz/EmojiList/EmojiList.const';
 
 /**
  * Convert text into emoji text.
