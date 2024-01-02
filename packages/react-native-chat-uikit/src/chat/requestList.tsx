@@ -17,7 +17,7 @@ import {
   gNewRequestConversationUserId,
   gNewRequestConversationUserName,
 } from './const';
-import type { RequestList } from './requestList.types';
+import type { RequestList, RequestListListener } from './requestList.types';
 import type {
   ChatService,
   ChatServiceListener,
@@ -28,10 +28,6 @@ import type {
 import { getNewRequest } from './utils';
 
 let gListener: ChatServiceListener | undefined;
-
-export type RequestListListener = {
-  onNewRequestListChanged: (list: NewRequestModel[]) => void;
-};
 
 export class RequestListImpl implements RequestList {
   _client: ChatService;

@@ -5,10 +5,18 @@ import type { ConversationModel } from './types';
 
 export type MessageManagerListener = {
   onSendMessageChanged?: (msg: ChatMessage) => void;
+  onSendMessageBefore?: (msg: ChatMessage) => void;
+  onRecallMessageBefore?: (msg: ChatMessage) => void;
+  onRecallMessageResult?: (params: {
+    isOk: boolean;
+    orgMsg?: ChatMessage;
+    tipMsg?: ChatMessage;
+  }) => void;
   onRecvMessage?: (msg: ChatMessage) => void;
   onRecvMessageStatusChanged?: (msg: ChatMessage) => void;
   onRecvMessageContentChanged?: (msg: ChatMessage, byUserId: string) => void;
-  onRecallMessage?: (msg: ChatMessage, byUserId: string) => void;
+  onMessageAttachmentChanged?: (msg: ChatMessage) => void;
+  onRecvRecallMessage?: (orgMsg: ChatMessage, tipMsg: ChatMessage) => void;
 };
 
 export interface MessageCacheManager
@@ -18,6 +26,7 @@ export interface MessageCacheManager
   emitAttachmentChanged(msg: ChatMessage): void;
   sendMessage(msg: ChatMessage): Promise<void>;
   resendMessage(msg: ChatMessage): Promise<void>;
+  recallMessage(msg: ChatMessage): Promise<void>;
   downloadAttachment(msg: ChatMessage): Promise<void>;
   loadHistoryMessage(params: {
     convId: string;
@@ -26,4 +35,5 @@ export interface MessageCacheManager
     onResult: (msgs: ChatMessage[]) => void;
   }): void;
   sendMessageReadAck(params: { message: ChatMessage }): void;
+  createRecallMessageTip(msg: ChatMessage): ChatMessage;
 }

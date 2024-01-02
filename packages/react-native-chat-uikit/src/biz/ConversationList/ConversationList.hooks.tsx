@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   ChatConversationType,
+  ChatMessage,
   ChatMessageType,
   ChatMultiDeviceEvent,
 } from 'react-native-chat-sdk';
@@ -17,6 +18,7 @@ import {
   useChatContext,
   useChatListener,
 } from '../../chat';
+import type { MessageManagerListener } from '../../chat/messageManager.types';
 import type { UIKitError } from '../../error';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
@@ -353,33 +355,38 @@ export function useConversationList(
       onRemove,
     });
 
+  const onMessage = React.useCallback(
+    (msgs: ChatMessage[]) => {
+      for (const msg of msgs) {
+        for (const item of dataRef.current) {
+          if (item.data.convId === msg.conversationId) {
+            item.data.lastMessage = msg;
+            if (item.data.doNotDisturb !== true) {
+              if (im.getCurrentConversation()?.convId === msg.conversationId) {
+                item.data.unreadMessageCount = 0;
+              } else {
+                if (item.data.unreadMessageCount === undefined) {
+                  item.data.unreadMessageCount = 0;
+                }
+                item.data.unreadMessageCount += 1;
+              }
+            } else {
+              item.data.unreadMessageCount = undefined;
+            }
+            item.data = { ...item.data };
+            break;
+          }
+        }
+      }
+      onSetData(dataRef.current);
+    },
+    [dataRef, im, onSetData]
+  );
+
   const listener = React.useMemo(() => {
     return {
       onMessagesReceived: (msgs) => {
-        for (const msg of msgs) {
-          for (const item of dataRef.current) {
-            if (item.data.convId === msg.conversationId) {
-              item.data.lastMessage = msg;
-              if (item.data.doNotDisturb !== true) {
-                if (
-                  im.getCurrentConversation()?.convId === msg.conversationId
-                ) {
-                  item.data.unreadMessageCount = 0;
-                } else {
-                  if (item.data.unreadMessageCount === undefined) {
-                    item.data.unreadMessageCount = 0;
-                  }
-                  item.data.unreadMessageCount += 1;
-                }
-              } else {
-                item.data.unreadMessageCount = undefined;
-              }
-              item.data = { ...item.data };
-              break;
-            }
-          }
-        }
-        onSetData(dataRef.current);
+        onMessage(msgs);
       },
       onMessagesRecalled: async (msgs) => {
         for (const msg of msgs) {
@@ -436,8 +443,8 @@ export function useConversationList(
     } as ChatServiceListener;
   }, [
     dataRef,
-    im,
     init,
+    onMessage,
     onRemoveById,
     onSetData,
     onUpdateData,
@@ -446,6 +453,32 @@ export function useConversationList(
   ]);
 
   useChatListener(listener);
+
+  React.useEffect(() => {
+    const listener = {
+      onSendMessageChanged: (msg: ChatMessage) => {
+        onMessage([msg]);
+      },
+      onRecvRecallMessage: (_orgMsg: ChatMessage, tipMsg: ChatMessage) => {
+        onMessage([tipMsg]);
+      },
+      onRecallMessageResult: (params: {
+        isOk: boolean;
+        orgMsg?: ChatMessage;
+        tipMsg?: ChatMessage;
+      }) => {
+        if (params.isOk === true) {
+          if (params.orgMsg && params.tipMsg) {
+            onMessage([params.tipMsg]);
+          }
+        }
+      },
+    } as MessageManagerListener;
+    im.messageManager.addListener('conv_list', listener);
+    return () => {
+      im.messageManager.removeListener('conv_list');
+    };
+  }, [im.messageManager, onMessage]);
 
   React.useEffect(() => {
     init();

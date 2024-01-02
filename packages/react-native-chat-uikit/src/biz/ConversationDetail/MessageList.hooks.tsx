@@ -16,7 +16,6 @@ import {
 
 import {
   gCustomMessageCardEventType,
-  gCustomMessageRecallEventType,
   gMessageAttributeQuote,
   useChatContext,
 } from '../../chat';
@@ -628,39 +627,15 @@ export function useMessageList(
     [im.userId, onAddData]
   );
 
-  const createRecallMessageTip = React.useCallback(
-    (msg: ChatMessage) => {
-      const tip = ChatMessage.createCustomMessage(
-        msg.conversationId,
-        gCustomMessageRecallEventType,
-        msg.chatType,
-        {
-          params: {
-            recall: JSON.stringify({
-              text: '_uikit_msg_tip_recall',
-              self: im.userId,
-              from: msg.from,
-              fromName: msg.from,
-            }),
-          },
-        }
-      );
-      // tip.localTime = msg.localTime;
-      // tip.serverTime = msg.serverTime;
-      return tip;
-    },
-    [im.userId]
-  );
-
   const onRecallMessageToUI = React.useCallback(
-    (newMsg: ChatMessage) => {
+    (tipMsg: ChatMessage) => {
       onAddData(
         {
-          id: newMsg.msgId.toString(),
+          id: tipMsg.msgId.toString(),
           model: {
-            userId: newMsg.from,
+            userId: tipMsg.from,
             modelType: 'system',
-            msg: newMsg,
+            msg: tipMsg,
           } as SystemMessageModel,
           containerStyle: getStyle(),
         },
@@ -670,37 +645,19 @@ export function useMessageList(
     [onAddData]
   );
 
-  const recallMessageCallback = React.useCallback(
-    (msg: ChatMessage, fromType: 'send' | 'recv') => {
-      const newMsg = createRecallMessageTip(msg);
-      if (fromType === 'send') {
-        im.recallMessage({
-          message: msg,
-          onResult: (value) => {
-            if (value.isOk === true) {
-              onDelMessageToUI(msg);
-              im.insertMessage({
-                message: newMsg,
-                onResult: () => {
-                  onRecallMessageToUI(newMsg);
-                },
-              });
-            } else {
-              // todo: recall failed.
-            }
-          },
-        });
-      } else {
-        onDelMessageToUI(msg);
-        im.insertMessage({
-          message: newMsg,
-          onResult: () => {
-            onRecallMessageToUI(newMsg);
-          },
-        });
-      }
+  const onRecvRecallMessage = React.useCallback(
+    (orgMsg: ChatMessage, tipMsg: ChatMessage) => {
+      onDelMessageToUI(orgMsg);
+      onRecallMessageToUI(tipMsg);
     },
-    [createRecallMessageTip, im, onDelMessageToUI, onRecallMessageToUI]
+    [onDelMessageToUI, onRecallMessageToUI]
+  );
+
+  const recallMessageCallback = React.useCallback(
+    (msg: ChatMessage) => {
+      im.messageManager.recallMessage(msg);
+    },
+    [im]
   );
 
   const { onShowMessageLongPressActions } = useMessageLongPressActions({
@@ -989,7 +946,7 @@ export function useMessageList(
           deleteMessageCallback(msg);
         },
         recallMessage: (msg: ChatMessage) => {
-          recallMessageCallback(msg, 'send');
+          recallMessageCallback(msg);
         },
         updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => {
           onUpdateMessageToUI(updatedMsg, fromType);
@@ -1068,12 +1025,28 @@ export function useMessageList(
       onRecvMessageContentChanged: (msg: ChatMessage, _byUserId: string) => {
         onUpdateMessageToUI(msg, 'recv');
       },
-      onRecallMessage: (msg: ChatMessage, _byUserId: string) => {
-        if (msg.conversationId === convId) {
+      onRecvRecallMessage: (orgMsg: ChatMessage, tipMsg: ChatMessage) => {
+        if (orgMsg.conversationId === convId) {
           if (recvMessageAutoScroll === true) {
             setNeedScroll(true);
           }
-          recallMessageCallback(msg, 'recv');
+          onRecvRecallMessage(orgMsg, tipMsg);
+        }
+      },
+      onRecallMessageResult: (params: {
+        isOk: boolean;
+        orgMsg?: ChatMessage;
+        tipMsg?: ChatMessage;
+      }) => {
+        if (params.isOk === true) {
+          if (params.orgMsg && params.tipMsg) {
+            if (params.orgMsg.conversationId === convId) {
+              if (recvMessageAutoScroll === true) {
+                setNeedScroll(true);
+              }
+              onRecvRecallMessage(params.orgMsg, params.tipMsg);
+            }
+          }
         }
       },
     } as MessageManagerListener;
@@ -1085,8 +1058,8 @@ export function useMessageList(
     convId,
     im,
     onAddMessageToUI,
+    onRecvRecallMessage,
     onUpdateMessageToUI,
-    recallMessageCallback,
     recvMessageAutoScroll,
     sendRecvMessageReadAckCallback,
     setNeedScroll,

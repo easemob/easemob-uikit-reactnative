@@ -10,21 +10,16 @@ import {
   ChatSearchDirection,
 } from 'react-native-chat-sdk';
 
-import type { MessageCacheManager } from './messageManager.types';
+import { gCustomMessageRecallEventType } from './const';
+import type {
+  MessageCacheManager,
+  MessageManagerListener,
+} from './messageManager.types';
 import type {
   ChatService,
   ChatServiceListener,
   ConversationModel,
 } from './types';
-
-export type MessageManagerListener = {
-  onSendMessageChanged?: (msg: ChatMessage) => void;
-  onRecvMessage?: (msg: ChatMessage) => void;
-  onRecvMessageStatusChanged?: (msg: ChatMessage) => void;
-  onRecvMessageContentChanged?: (msg: ChatMessage, byUserId: string) => void;
-  onMessageAttachmentChanged?: (msg: ChatMessage) => void;
-  onRecallMessage?: (msg: ChatMessage, byUserId: string) => void;
-};
 
 let gListener: ChatServiceListener | undefined;
 
@@ -83,6 +78,25 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       v.onSendMessageChanged?.(msg);
     });
   }
+  emitSendMessageBefore(msg: ChatMessage) {
+    this._userListener.forEach((v) => {
+      v.onSendMessageBefore?.(msg);
+    });
+  }
+  emitRecallMessageBefore(msg: ChatMessage) {
+    this._userListener.forEach((v) => {
+      v.onRecallMessageBefore?.(msg);
+    });
+  }
+  emitRecallMessageChanged(params: {
+    isOk: boolean;
+    orgMsg?: ChatMessage;
+    tipMsg?: ChatMessage;
+  }) {
+    this._userListener.forEach((v) => {
+      v.onRecallMessageResult?.(params);
+    });
+  }
   emitRecvMessageStateChanged(msg: ChatMessage) {
     this._userListener.forEach((v) => {
       v.onRecvMessageStatusChanged?.(msg);
@@ -129,8 +143,14 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   }
   bindOnMessagesRecalled(messages: Array<ChatMessage>): void {
     messages.forEach((msg) => {
-      this._userListener.forEach((v) => {
-        v.onRecallMessage?.(msg, msg.from);
+      const tipMsg = this.createRecallMessageTip(msg);
+      this._client.insertMessage({
+        message: tipMsg,
+        onResult: () => {
+          this._userListener.forEach((v) => {
+            v.onRecvRecallMessage?.(msg, tipMsg);
+          });
+        },
       });
     });
   }
@@ -183,6 +203,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       },
     };
     this._sendList.set(msg.localMsgId, { msg });
+    this.emitSendMessageBefore(msg);
     this._client.sendMessage({ message: msg, callback: callback });
   }
   async resendMessage(msg: ChatMessage): Promise<void> {
@@ -205,7 +226,53 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       },
     };
     this._sendList.set(msg.localMsgId, { msg: msg });
+    this.emitSendMessageBefore(msg);
     this._client.resendMessage({ message: msg, callback: callback });
+  }
+
+  createRecallMessageTip(msg: ChatMessage): ChatMessage {
+    const tip = ChatMessage.createCustomMessage(
+      msg.conversationId,
+      gCustomMessageRecallEventType,
+      msg.chatType,
+      {
+        params: {
+          recall: JSON.stringify({
+            text: '_uikit_msg_tip_recall',
+            self: this._client.userId,
+            from: msg.from,
+            fromName: msg.from,
+          }),
+        },
+      }
+    );
+    // tip.localTime = msg.localTime;
+    // tip.serverTime = msg.serverTime;
+    return tip;
+  }
+
+  async recallMessage(msg: ChatMessage): Promise<void> {
+    this.emitRecallMessageBefore(msg);
+    this._client.recallMessage({
+      message: msg,
+      onResult: (value) => {
+        if (value.isOk === true) {
+          const tipMsg = this.createRecallMessageTip(msg);
+          this._client.insertMessage({
+            message: tipMsg,
+            onResult: (result) => {
+              this.emitRecallMessageChanged({
+                isOk: result.isOk,
+                orgMsg: msg,
+                tipMsg: tipMsg,
+              });
+            },
+          });
+        } else {
+          this.emitRecallMessageChanged({ isOk: false });
+        }
+      },
+    });
   }
 
   async downloadAttachment(msg: ChatMessage) {
