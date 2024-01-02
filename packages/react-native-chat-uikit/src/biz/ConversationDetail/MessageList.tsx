@@ -51,6 +51,13 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onClickedItemQuote,
       onClickedItemState,
       ListItemRender,
+      scrollEventThrottle,
+      onMomentumScrollEnd,
+      onScroll,
+      onScrollBeginDrag,
+      onScrollEndDrag,
+      onLayout,
+      bounces,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -89,12 +96,14 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
         >
           <FlatList
             ref={flatListRef}
+            onLayout={onLayout}
             // style={{ flexGrow: 1 }}
             // contentContainerStyle={{ flexGrow: 1 }}
             data={data}
             refreshing={refreshing}
             onRefresh={onRefresh}
             inverted={inverted}
+            scrollEventThrottle={scrollEventThrottle}
             renderItem={(info: ListRenderItemInfo<MessageListItemProps>) => {
               const { item } = info;
               return (
@@ -115,6 +124,16 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             onEndReachedThreshold={reachedThreshold}
             viewabilityConfig={viewabilityConfig}
             onViewableItemsChanged={onViewableItemsChanged}
+            onMomentumScrollEnd={onMomentumScrollEnd}
+            onScroll={onScroll}
+            onScrollEndDrag={onScrollEndDrag}
+            onScrollBeginDrag={onScrollBeginDrag}
+            bounces={bounces}
+            // !!! This effect does not work well when inserting the first element without scrolling.
+            // maintainVisibleContentPosition={{
+            //   minIndexForVisible: 0,
+            //   autoscrollToTopThreshold: 10,
+            // }}
             ListEmptyComponent={EmptyPlaceholder}
             ListErrorComponent={
               listState === 'error' ? (

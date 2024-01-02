@@ -1,4 +1,9 @@
 import * as React from 'react';
+import type {
+  LayoutChangeEvent,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+} from 'react-native';
 import {
   ChatCustomMessageBody,
   ChatMessage,
@@ -17,6 +22,7 @@ import {
 } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { g_not_existed_url } from '../../const';
+import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
@@ -69,6 +75,7 @@ export function useMessageList(
     onClickedItemAvatar: propsOnClickedItemAvatar,
     onClickedItemQuote: propsOnClickedItemQuote,
     ListItemRender: propsListItemRender,
+    recvMessageAutoScroll = false,
   } = props;
   const { tr } = useI18nContext();
   const flatListProps = useFlatList<MessageListItemProps>({
@@ -77,7 +84,6 @@ export function useMessageList(
     // onLoadMore: () => onRequestHistoryMessage(),
   });
   const {
-    data,
     dataRef,
     setData,
     isAutoLoad,
@@ -86,7 +92,14 @@ export function useMessageList(
     ref: listRef,
   } = flatListProps;
 
-  const isNeedScrollToEndRef = React.useRef(false);
+  const preBottomDataRef = React.useRef<MessageListItemProps>();
+  const scrollEventThrottle = React.useRef(16).current;
+  const needScrollRef = React.useRef(true);
+  const userScrollGestureRef = React.useRef(false);
+  const isBottomRef = React.useRef(true);
+  const isTopRef = React.useRef(true);
+  const heightRef = React.useRef(0);
+  const bounces = React.useRef(true).current;
   const currentVoicePlayingRef = React.useRef<MessageModel | undefined>();
   const im = useChatContext();
   const startMsgIdRef = React.useRef('');
@@ -114,6 +127,134 @@ export function useMessageList(
   const MessageListItemRef = React.useRef<MessageListItemComponentType>(
     propsListItemRender ?? MessageListItemMemo
   );
+
+  const setNeedScroll = React.useCallback((needScroll: boolean) => {
+    needScrollRef.current = needScroll;
+  }, []);
+  const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
+    userScrollGestureRef.current = isUserScroll;
+  }, []);
+
+  const needScrollToBottom = React.useCallback(() => {
+    if (needScrollRef.current === true) {
+      return true;
+    }
+    return false;
+  }, []);
+
+  const scrollToBottom = React.useCallback(
+    (animated?: boolean) => {
+      if (needScrollToBottom() === true) {
+        timeoutTask(0, () => {
+          listRef?.current?.scrollToIndex?.({ index: 0, animated });
+        });
+      }
+    },
+    [listRef, needScrollToBottom]
+  );
+
+  const scrollTo = React.useCallback(
+    (index: number, animated?: boolean) => {
+      if (needScrollToBottom() === true) {
+        timeoutTask(0, () => {
+          listRef?.current?.scrollToIndex?.({ index, animated });
+        });
+      }
+    },
+    [listRef, needScrollToBottom]
+  );
+
+  const onSetData = React.useCallback(
+    (items: MessageListItemProps[]) => {
+      if (needScrollToBottom() === true) {
+        if (items.length > 0) {
+          preBottomDataRef.current = items[0];
+        }
+        setData([...items]);
+      } else {
+        const index = items.findIndex((d) => {
+          if (d.id === preBottomDataRef.current?.id) {
+            return true;
+          }
+          return false;
+        });
+        if (index !== -1) {
+          // todo: 获取数组指定位置后的元素，并返回
+          const tmp = items.slice(index);
+          setData([...tmp]);
+        } else {
+          setData([...items]);
+        }
+      }
+    },
+    [needScrollToBottom, setData]
+  );
+
+  // !!! Both gestures and scrolling methods are triggered on the ios platform. However, the android platform only has gesture triggering.
+  const onMomentumScrollEnd = React.useCallback(() => {}, []);
+
+  const { delayExecTask } = useDelayExecTask(
+    500,
+    React.useCallback(
+      (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const y = event.nativeEvent.contentOffset.y;
+        if (y < 10) {
+          setNeedScroll(true);
+          const preId = preBottomDataRef.current?.id;
+          onSetData(dataRef.current);
+          const index = dataRef.current.findIndex((d) => {
+            if (d.id === preId) {
+              return true;
+            }
+            return false;
+          });
+          if (index !== -1) {
+            scrollTo(index, false);
+          }
+        } else {
+          setNeedScroll(false);
+        }
+      },
+      [dataRef, onSetData, scrollTo, setNeedScroll]
+    )
+  );
+
+  const onScroll = React.useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const y = event.nativeEvent.contentOffset.y;
+      if (y + heightRef.current > event.nativeEvent.contentSize.height - 10) {
+        isTopRef.current = true;
+      } else {
+        isTopRef.current = false;
+      }
+      if (y < 10) {
+        isBottomRef.current = true;
+      } else {
+        isBottomRef.current = false;
+      }
+      if (userScrollGestureRef.current === true) {
+        delayExecTask({ ...event });
+      }
+    },
+    [delayExecTask]
+  );
+
+  const onScrollEndDrag = React.useCallback(
+    (_event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      setUserScrollGesture(false);
+    },
+    [setUserScrollGesture]
+  );
+  const onScrollBeginDrag = React.useCallback(
+    (_event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      setUserScrollGesture(true);
+    },
+    [setUserScrollGesture]
+  );
+
+  const onLayout = React.useCallback((event: LayoutChangeEvent) => {
+    heightRef.current = event.nativeEvent.layout.height;
+  }, []);
 
   const updateMessageVoiceUIState = React.useCallback(
     (model: MessageModel) => {
@@ -146,9 +287,9 @@ export function useMessageList(
           }
         }
       });
-      setData([...dataRef.current]);
+      onSetData(dataRef.current);
     },
-    [dataRef, setData]
+    [dataRef, onSetData]
   );
 
   const startVoicePlay = React.useCallback(
@@ -261,14 +402,6 @@ export function useMessageList(
     return undefined;
   };
 
-  const scrollToEnd = React.useCallback(() => {
-    if (isNeedScrollToEndRef.current === true) {
-      timeoutTask(0, () => {
-        listRef?.current?.scrollToIndex?.({ index: 0 });
-      });
-    }
-  }, [listRef]);
-
   const onAddData = React.useCallback(
     (d: MessageListItemProps, pos: MessageAddPosition) => {
       if (pos === 'bottom') {
@@ -276,10 +409,9 @@ export function useMessageList(
       } else {
         dataRef.current = [...dataRef.current, d];
       }
-
-      setData(dataRef.current);
+      onSetData(dataRef.current);
     },
-    [dataRef, setData]
+    [dataRef, onSetData]
   );
 
   const onAddMessageListToUI = React.useCallback(
@@ -334,10 +466,10 @@ export function useMessageList(
       } else {
         dataRef.current = [...dataRef.current, ...l];
       }
-      setData([...dataRef.current]);
+      onSetData(dataRef.current);
       onFinished?.(l as MessageListItemProps[]);
     },
-    [dataRef, im, setData]
+    [dataRef, im, onSetData]
   );
 
   const onDelMessageToUI = React.useCallback(
@@ -359,10 +491,13 @@ export function useMessageList(
       });
       if (index !== -1) {
         dataRef.current.splice(index, 1);
-        setData([...dataRef.current]);
+        if (index === 0) {
+          preBottomDataRef.current = dataRef.current[0];
+        }
+        onSetData(dataRef.current);
       }
     },
-    [dataRef, setData]
+    [dataRef, onSetData]
   );
 
   const deleteMessageCallback = React.useCallback(
@@ -424,10 +559,10 @@ export function useMessageList(
         return false;
       });
       if (isExisted) {
-        setData([...dataRef.current]);
+        onSetData(dataRef.current);
       }
     },
-    [dataRef, setData]
+    [dataRef, onSetData]
   );
 
   const resendMessageCallback = React.useCallback(
@@ -519,24 +654,6 @@ export function useMessageList(
 
   const onRecallMessageToUI = React.useCallback(
     (newMsg: ChatMessage) => {
-      // let isExisted = false;
-      // for (const v of dataRef.current) {
-      //   if (v.model.modelType === 'message') {
-      //     const msgModel = v.model as MessageModel;
-      //     if (newMsg.msgId === msgModel.msg.msgId) {
-      //       v.model = { modelType: 'system', msg: newMsg } as MessageModel;
-      //       v.onClicked = undefined;
-      //       v.onLongPress = undefined;
-      //       v.containerStyle = undefined;
-      //       isExisted = true;
-      //       break;
-      //     }
-      //   }
-      // }
-      // if (isExisted === true) {
-      //   setData([...dataRef.current]);
-      // }
-
       onAddData(
         {
           id: newMsg.msgId.toString(),
@@ -791,10 +908,10 @@ export function useMessageList(
       }
       if (msg) {
         onFinished?.(msg);
-        scrollToEnd();
+        scrollToBottom();
       }
     },
-    [convId, convType, onAddData, scrollToEnd]
+    [convId, convType, onAddData, scrollToBottom]
   );
 
   const sendMessageToServer = React.useCallback(
@@ -809,13 +926,13 @@ export function useMessageList(
       return;
     }
     if (isAutoLoad === true) {
-      isNeedScrollToEndRef.current = false;
+      setNeedScroll(true);
+      setUserScrollGesture(false);
       currentVoicePlayingRef.current = undefined;
       startMsgIdRef.current = '';
       dataRef.current = [];
-      setData([...dataRef.current]);
     }
-  }, [dataRef, isAutoLoad, setData, testMode]);
+  }, [dataRef, isAutoLoad, setNeedScroll, setUserScrollGesture, testMode]);
 
   const onRequestHistoryMessage = React.useCallback(() => {
     im.messageManager.loadHistoryMessage({
@@ -838,7 +955,6 @@ export function useMessageList(
             });
           });
         }
-        isNeedScrollToEndRef.current = false;
       },
     });
   }, [
@@ -864,7 +980,7 @@ export function useMessageList(
             | SendSystemProps
             | SendCardProps
         ) => {
-          isNeedScrollToEndRef.current = true;
+          setNeedScroll(true);
           addSendMessageToUI(value, (msg) => {
             sendMessageToServer(msg);
           });
@@ -895,30 +1011,31 @@ export function useMessageList(
               }
             });
           });
-          if (pos === 'top') {
-            isNeedScrollToEndRef.current = false;
-          }
         },
-        onInputHeightChange: (height: number) => {
-          if (height > 0) {
-            scrollToEnd();
-          }
+        onInputHeightChange: (_height: number) => {
+          // if (height > 0) {
+          //   scrollToBottom();
+          // }
         },
         editMessageFinished: (model) => {
           editMessageCallback(model.msg);
+        },
+        scrollToBottom: () => {
+          scrollToBottom();
         },
       };
     },
     [
       addSendMessageToUI,
-      onAddMessageListToUI,
       deleteMessageCallback,
       editMessageCallback,
-      recallMessageCallback,
-      sendRecvMessageReadAckCallback,
+      onAddMessageListToUI,
       onUpdateMessageToUI,
-      scrollToEnd,
+      recallMessageCallback,
+      scrollToBottom,
       sendMessageToServer,
+      sendRecvMessageReadAckCallback,
+      setNeedScroll,
     ]
   );
 
@@ -929,6 +1046,9 @@ export function useMessageList(
       },
       onRecvMessage: async (msg: ChatMessage) => {
         if (msg.conversationId === convId) {
+          if (recvMessageAutoScroll === true) {
+            setNeedScroll(true);
+          }
           const quoteAttributes = getQuoteAttribute(msg);
           if (quoteAttributes) {
             const quoteMsg = await im.getMessage({
@@ -940,7 +1060,6 @@ export function useMessageList(
           }
 
           sendRecvMessageReadAckCallback(msg);
-          scrollToEnd();
         }
       },
       onRecvMessageStatusChanged: (msg: ChatMessage) => {
@@ -951,6 +1070,9 @@ export function useMessageList(
       },
       onRecallMessage: (msg: ChatMessage, _byUserId: string) => {
         if (msg.conversationId === convId) {
+          if (recvMessageAutoScroll === true) {
+            setNeedScroll(true);
+          }
           recallMessageCallback(msg, 'recv');
         }
       },
@@ -962,32 +1084,23 @@ export function useMessageList(
   }, [
     convId,
     im,
-    im.messageManager,
     onAddMessageToUI,
-    recallMessageCallback,
-    onRecallMessageToUI,
-    sendRecvMessageReadAckCallback,
     onUpdateMessageToUI,
-    scrollToEnd,
+    recallMessageCallback,
+    recvMessageAutoScroll,
+    sendRecvMessageReadAckCallback,
+    setNeedScroll,
   ]);
 
   React.useEffect(() => {
     init();
     onRequestHistoryMessage();
-  }, [
-    convId,
-    convType,
-    im.messageManager,
-    init,
-    onAddMessageListToUI,
-    onRequestHistoryMessage,
-  ]);
+  }, [convId, convType, im.messageManager, init, onRequestHistoryMessage]);
 
   return {
     ...flatListProps,
     listType,
     listState,
-    data,
     onRequestCloseMenu: closeMenu,
     menuRef,
     alertRef,
@@ -1006,5 +1119,12 @@ export function useMessageList(
     onClickedItemQuote,
     onClickedItemState,
     ListItemRender: MessageListItemRef.current,
+    scrollEventThrottle,
+    onMomentumScrollEnd,
+    onScrollEndDrag,
+    onScrollBeginDrag,
+    onScroll,
+    onLayout,
+    bounces,
   };
 }

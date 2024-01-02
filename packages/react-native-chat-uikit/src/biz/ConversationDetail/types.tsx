@@ -1,4 +1,7 @@
 import type {
+  LayoutChangeEvent,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   StyleProp,
   TextInput as RNTextInput,
   ViewStyle,
@@ -236,6 +239,7 @@ export type MessageListRef = {
   loadHistoryMessage: (msgs: ChatMessage[], pos: MessageAddPosition) => void;
   onInputHeightChange: (height: number) => void;
   editMessageFinished: (model: MessageModel) => void;
+  scrollToBottom: () => void;
 };
 export type MessageListProps = PropsWithError &
   PropsWithTest & {
@@ -263,6 +267,12 @@ export type MessageListProps = PropsWithError &
     containerStyle?: StyleProp<ViewStyle>;
     reportMessageCustomList?: { key: string; value: string }[];
     ListItemRender?: MessageListItemComponentType;
+    /**
+     * Whether to automatically scroll to the latest message when receiving a message.
+     *
+     * Default is false.
+     */
+    recvMessageAutoScroll?: boolean;
   };
 export type UseMessageListReturn = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
@@ -297,6 +307,13 @@ export type UseMessageListReturn = {
   reportData: ReportItemModel[];
   reportRef: React.RefObject<BottomSheetMessageReportRef>;
   ListItemRender: MessageListItemComponentType;
+  scrollEventThrottle: number;
+  onMomentumScrollEnd: () => void;
+  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  onScrollEndDrag: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  onScrollBeginDrag: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  onLayout: (event: LayoutChangeEvent) => void;
+  bounces: boolean;
 };
 export type UseMessageInputReturn = {
   inputRef: React.MutableRefObject<RNTextInput>;
