@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
+import { MessageContextProvider } from '../Context';
 import { useConversationDetail } from './ConversationDetail.hooks';
 import { ConversationDetailNavigationBar } from './ConversationDetail.navi';
 import type { ConversationDetailProps } from './types';
@@ -30,7 +31,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
     onClickedAvatar,
   } = useConversationDetail(props);
 
-  return (
+  const getContent = () => (
     <View style={[{ flexGrow: 1 }, containerStyle]}>
       {enableNavigationBar === true ? (
         <ConversationDetailNavigationBar
@@ -62,5 +63,9 @@ export function ConversationDetail(props: ConversationDetailProps) {
       />
       {/* <MessageInput ref={messageInputRef} /> */}
     </View>
+  );
+
+  return (
+    <MessageContextProvider value={{}}>{getContent()}</MessageContextProvider>
   );
 }

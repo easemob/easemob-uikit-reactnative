@@ -22,7 +22,7 @@ import { Services } from '../../services';
 import { Icon } from '../../ui/Image';
 import { ImagePreview } from '../../ui/ImagePreview';
 import { ImageUrl, localUrlEscape } from '../../utils';
-import { useImageSize } from './useImageSize';
+import { useImageSize } from '../hooks/useImageSize';
 
 export type ImageMessagePreviewProps = {
   msgId: string;

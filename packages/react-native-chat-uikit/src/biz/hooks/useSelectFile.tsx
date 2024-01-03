@@ -1,6 +1,10 @@
 import { Services } from '../../services';
 import { getFileExtension, localUrl, timeoutTask, uuid } from '../../utils';
-import type { SendFileProps, SendImageProps, SendVideoProps } from './types';
+import type {
+  SendFileProps,
+  SendImageProps,
+  SendVideoProps,
+} from '../ConversationDetail/types';
 
 export function selectOnePicture(params: {
   onResult: (params: SendImageProps) => void;

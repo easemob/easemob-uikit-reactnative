@@ -21,6 +21,7 @@ import {
   useChatContext,
 } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
+import { userInfoFromMessage } from '../../chat/utils';
 import { g_not_existed_url } from '../../const';
 import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -29,6 +30,7 @@ import type { AlertRef } from '../../ui/Alert';
 import { emoji, localUrlEscape, playUrl, timeoutTask } from '../../utils';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { gReportMessageList } from '../const';
+import { useMessageContext } from '../Context';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useMessageLongPressActions } from '../hooks/useMessageLongPressActions';
 import { useFlatList } from '../List';
@@ -76,6 +78,7 @@ export function useMessageList(
     onClickedItemQuote: propsOnClickedItemQuote,
     ListItemRender: propsListItemRender,
     recvMessageAutoScroll = false,
+    enableListItemUserInfoUpdateFromMessage = false,
   } = props;
   const { tr } = useI18nContext();
   const flatListProps = useFlatList<MessageListItemProps>({
@@ -127,6 +130,7 @@ export function useMessageList(
   const MessageListItemRef = React.useRef<MessageListItemComponentType>(
     propsListItemRender ?? MessageListItemMemo
   );
+  const { dispatchUserInfo } = useMessageContext();
 
   const setNeedScroll = React.useCallback((needScroll: boolean) => {
     needScrollRef.current = needScroll;
@@ -635,8 +639,23 @@ export function useMessageList(
         },
         'bottom'
       );
+
+      if (
+        enableListItemUserInfoUpdateFromMessage === true &&
+        msg.direction === ChatMessageDirection.RECEIVE
+      ) {
+        const userInfo = userInfoFromMessage(msg);
+        if (userInfo) {
+          dispatchUserInfo({ ...userInfo, userAvatar: userInfo.avatarURL });
+        }
+      }
     },
-    [im.userId, onAddData]
+    [
+      dispatchUserInfo,
+      enableListItemUserInfoUpdateFromMessage,
+      im.userId,
+      onAddData,
+    ]
   );
 
   const onRecallMessageToUI = React.useCallback(
@@ -1111,5 +1130,6 @@ export function useMessageList(
     onScroll,
     onLayout,
     bounces,
+    enableListItemUserInfoUpdateFromMessage,
   };
 }

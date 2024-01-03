@@ -3,6 +3,7 @@ import { ChatConversationType } from 'react-native-chat-sdk';
 
 import { useChatContext } from '../../chat';
 import { usePermissions } from '../../hook';
+import { useCreateConversationDirectory } from '../hooks/useCreateConversationDirectory';
 import { MessageInput } from './MessageInput';
 import { MessageList } from './MessageList';
 import type {
@@ -17,7 +18,6 @@ import type {
   SendVideoProps,
   SendVoiceProps,
 } from './types';
-import { useCreateConversationDirectory } from './useCreateConversationDirectory';
 
 export function useConversationDetail(props: ConversationDetailProps) {
   const {

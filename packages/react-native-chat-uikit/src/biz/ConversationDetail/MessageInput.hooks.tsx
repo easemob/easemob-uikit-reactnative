@@ -17,6 +17,12 @@ import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 // import { gVoiceBarHeight } from '../const';
 import { FACE_ASSETS_UTF16 } from '../EmojiList';
 import { useMessageInputExtendActions } from '../hooks/useMessageInputExtendActions';
+import {
+  selectCamera,
+  selectFile,
+  selectOnePicture,
+  selectOneShortVideo,
+} from '../hooks/useSelectFile';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
 import type { MessageInputEditMessageRef } from './MessageInputEditMessage';
 import type {
@@ -30,12 +36,6 @@ import type {
   SendVoiceProps,
   UseMessageInputReturn,
 } from './types';
-import {
-  selectCamera,
-  selectFile,
-  selectOnePicture,
-  selectOneShortVideo,
-} from './useSelectFile';
 
 export function useMessageInput(
   props: MessageInputProps,

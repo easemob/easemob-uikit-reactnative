@@ -33,7 +33,7 @@ import {
   localUrlEscape,
   uuid,
 } from '../../utils';
-import { useImageSize } from './useImageSize';
+import { useImageSize } from '../hooks/useImageSize';
 
 export type VideoMessagePreviewProps = {
   msgId: string;

@@ -10,6 +10,7 @@ import {
   ChatCustomMessageBody,
   ChatFileMessageBody,
   ChatMessage,
+  ChatMessageDirection,
   ChatMessageType,
   ChatTextMessageBody,
   ChatVoiceMessageBody,
@@ -36,6 +37,7 @@ import { SingleLineText, Text } from '../../ui/Text';
 import { emoji } from '../../utils';
 import { Avatar } from '../Avatar';
 import { gMaxVoiceDuration } from '../const';
+import { useMessageContext } from '../Context';
 import {
   getFileSize,
   getFormatTime,
@@ -76,6 +78,8 @@ import type {
   SystemMessageModel,
   TimeMessageModel,
 } from './types';
+
+let gEnableListItemUserInfoUpdateFromMessage: boolean | undefined = false;
 
 export function MessageText(props: MessageTextProps) {
   const { layoutType, msg, isSupport } = props;
@@ -1341,12 +1345,19 @@ export function MessageView(props: MessageViewProps) {
   const { layoutType } = model;
   const state = getMessageState(model.msg);
   const maxWidth = Dimensions.get('window').width * 0.6;
-  const userName = model.userName ?? model.userId;
   const time = model.msg.localTime ?? model.msg.serverTime;
-  const avatar = avatarIsVisible === true ? model.userAvatar : undefined;
   const bubblePadding = 12;
   const hasTriangle = true;
   const isQuote = isQuoteMessage(model.msg, model.quoteMsg);
+  const { addListener } = useMessageContext();
+  // const userName = model.userName ?? model.userId;
+  const [userName, setUserName] = React.useState<string>(
+    model.userName ?? model.userId
+  );
+  // const avatar = avatarIsVisible === true ? model.userAvatar : undefined;
+  const [userAvatar, setUserAvatar] = React.useState<string | undefined>(
+    avatarIsVisible === true ? model.userAvatar : undefined
+  );
 
   const onClickedAvatar = React.useCallback(() => {
     onAvatarClicked?.(model.msg.msgId, model);
@@ -1355,6 +1366,27 @@ export function MessageView(props: MessageViewProps) {
   const onClickedState = React.useCallback(() => {
     onStateClicked?.(model.msg.msgId, model);
   }, [model, onStateClicked]);
+
+  React.useEffect(() => {
+    const deleter =
+      gEnableListItemUserInfoUpdateFromMessage === true &&
+      model.msg.direction === ChatMessageDirection.RECEIVE
+        ? addListener(
+            (params: {
+              userId: string;
+              userName?: string | undefined;
+              userAvatar?: string | undefined;
+            }) => {
+              console.log('test:zuoyu:name:', params);
+              setUserName(params.userName ?? params.userId);
+              setUserAvatar(
+                avatarIsVisible === true ? model.userAvatar : undefined
+              );
+            }
+          )
+        : null;
+    return () => deleter?.();
+  }, [addListener, avatarIsVisible, model.msg, model.userAvatar]);
 
   return (
     <View
@@ -1396,7 +1428,7 @@ export function MessageView(props: MessageViewProps) {
           {avatarIsVisible ? (
             <AvatarView
               layoutType={layoutType}
-              avatar={avatar}
+              avatar={userAvatar}
               onAvatarClicked={onClickedAvatar}
             />
           ) : null}
@@ -1492,7 +1524,9 @@ export function TimeTipView(props: TimeTipViewProps) {
 }
 
 export function MessageListItem(props: MessageListItemProps) {
-  const { model, ...others } = props;
+  const { model, enableListItemUserInfoUpdateFromMessage, ...others } = props;
+  gEnableListItemUserInfoUpdateFromMessage =
+    enableListItemUserInfoUpdateFromMessage;
   const { modelType } = model;
   return (
     <View

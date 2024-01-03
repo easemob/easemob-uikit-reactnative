@@ -57,9 +57,13 @@ export function createTheme(params: createThemeParams): Theme {
       themeType: themeType,
     }),
     cornerRadius: {
-      avatar: releaseArea === 'china' ? 'small' : 'extraLarge',
-      alert: releaseArea === 'china' ? 'small' : 'large',
-      input: releaseArea === 'china' ? 'small' : 'extraLarge',
+      avatar: releaseArea === 'china' ? 'extraSmall' : 'extraLarge',
+      alert: releaseArea === 'china' ? 'extraSmall' : 'large',
+      input: releaseArea === 'china' ? 'extraSmall' : 'extraLarge',
+      bubble:
+        releaseArea === 'china'
+          ? ['extraSmall']
+          : ['extraSmall', 'medium', 'extraLarge'],
     },
   };
 }
