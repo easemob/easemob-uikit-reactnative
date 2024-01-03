@@ -39,7 +39,16 @@ export function ConversationListScreen(props: Props) {
           ids: string[];
           result: (data?: DataModel[], error?: UIKitError) => void;
         }) => {
-          params?.result([{ id: 'xx', name: 'test', avatar: '' }]);
+          params?.result(
+            params.ids.map((v) => {
+              return {
+                id: v,
+                name: v + 'name',
+                avatar:
+                  'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+              };
+            })
+          );
         }}
         onRequestMultiData={async (params: {
           ids: Map<DataModelType, string[]>;
