@@ -21,9 +21,9 @@ import {
   gMessageAttributeQuote,
 } from '../../chat';
 import { userInfoFromMessage } from '../../chat/utils';
-import { useColors } from '../../hook';
+import { useColors, useGetStyleProps } from '../../hook';
 import { useI18nContext } from '../../i18n';
-import { usePaletteContext } from '../../theme';
+import { usePaletteContext, useThemeContext } from '../../theme';
 import {
   DefaultImage,
   DynamicIcon,
@@ -142,7 +142,9 @@ export function MessageText(props: MessageTextProps) {
 export function MessageDefaultImage(props: MessageDefaultImageProps) {
   const { url, width, height, thumbHeight, thumbWidth, iconName, onError } =
     props;
-  const { colors } = usePaletteContext();
+  const { colors, cornerRadius } = usePaletteContext();
+  const { cornerRadius: corner } = useThemeContext();
+  const { getBorderRadius } = useGetStyleProps();
   const { getColor } = useColors({
     bg: {
       light: colors.neutral[8],
@@ -162,7 +164,11 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
         {
           width: width,
           height: height,
-          borderRadius: 4, // todo:
+          borderRadius: getBorderRadius({
+            height: width,
+            crt: corner.bubble[0]!,
+            cr: cornerRadius,
+          }),
         },
       ]}
       defaultSource={ICON_ASSETS[iconName]('3x')}
@@ -177,7 +183,11 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
         backgroundColor: getColor('bg'),
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 4, // todo:
+        borderRadius: getBorderRadius({
+          height: width,
+          crt: corner.bubble[0]!,
+          cr: cornerRadius,
+        }),
       }}
       onError={onError}
     />
@@ -385,7 +395,9 @@ export function MessageFile(props: MessageFileProps) {
     () => getFileSize(body.fileSize),
     [body.fileSize]
   );
-  const { colors } = usePaletteContext();
+  const { colors, cornerRadius } = usePaletteContext();
+  const { cornerRadius: corner } = useThemeContext();
+  const { getBorderRadius } = useGetStyleProps();
   const { getColor } = useColors({
     left_file_bg: {
       light: colors.neutral[100],
@@ -433,7 +445,11 @@ export function MessageFile(props: MessageFileProps) {
           backgroundColor: getColor(
             layoutType === 'left' ? 'left_file_bg' : 'right_file_bg'
           ),
-          borderRadius: 4,
+          borderRadius: getBorderRadius({
+            height: 32,
+            crt: corner.bubble[0]!,
+            cr: cornerRadius,
+          }),
         }}
       >
         <Icon
@@ -570,7 +586,9 @@ export function MessageBubble(props: MessageBubbleProps) {
   );
   const triangleWidth = 5;
   const isSupport = isSupportMessage(msg);
-  const { colors } = usePaletteContext();
+  const { colors, cornerRadius } = usePaletteContext();
+  const { cornerRadius: corner } = useThemeContext();
+  const { getBorderRadius } = useGetStyleProps();
   const { getColor } = useColors({
     left_bg: {
       light: colors.primary[95],
@@ -734,7 +752,11 @@ export function MessageBubble(props: MessageBubbleProps) {
             backgroundColor: getColor(
               layoutType === 'left' ? 'left_bg' : 'right_bg'
             ),
-            borderRadius: 4,
+            borderRadius: getBorderRadius({
+              height: 0,
+              crt: corner.bubble[0]!,
+              cr: cornerRadius,
+            }),
             paddingHorizontal: paddingHorizontal,
             paddingVertical: paddingVertical,
           },
@@ -937,7 +959,9 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
   }, []);
   // const triangleWidth = 5;
   const { tr } = useI18nContext();
-  const { colors } = usePaletteContext();
+  const { colors, cornerRadius } = usePaletteContext();
+  const { cornerRadius: corner } = useThemeContext();
+  const { getBorderRadius } = useGetStyleProps();
   const { getColor } = useColors({
     left_bg: {
       light: colors.neutral[95],
@@ -1048,7 +1072,11 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             </View>
             <View
               style={{
-                borderRadius: 4,
+                borderRadius: getBorderRadius({
+                  height: 36,
+                  crt: corner.bubble[0]!,
+                  cr: cornerRadius,
+                }),
                 width: 36,
                 height: 36,
                 overflow: 'hidden',
@@ -1160,7 +1188,11 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             </View>
             <View
               style={{
-                borderRadius: 4,
+                borderRadius: getBorderRadius({
+                  height: 36,
+                  crt: corner.bubble[0]!,
+                  cr: cornerRadius,
+                }),
                 width: 36,
                 height: 36,
                 overflow: 'hidden',
@@ -1277,7 +1309,11 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             backgroundColor: getColor(
               layoutType === 'left' ? 'left_bg' : 'right_bg'
             ),
-            borderRadius: 4,
+            borderRadius: getBorderRadius({
+              height: 36,
+              crt: corner.bubble[0]!,
+              cr: cornerRadius,
+            }),
             paddingHorizontal: paddingHorizontal,
             paddingVertical: paddingVertical,
           },

@@ -252,6 +252,7 @@ export interface Theme {
     avatar: CornerRadiusPaletteType;
     alert: CornerRadiusPaletteType;
     input: CornerRadiusPaletteType;
+    bubble: CornerRadiusPaletteType[];
   };
 }
 

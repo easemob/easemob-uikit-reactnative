@@ -82,7 +82,7 @@ export const getReleaseArea = (releaseArea?: ReleaseArea): ReleaseArea => {
 
 export const getAvatarRadiusStyle = (params: { releaseArea?: ReleaseArea }) => {
   if (params.releaseArea === 'china') {
-    return 'small' as CornerRadiusPaletteType;
+    return 'extraSmall' as CornerRadiusPaletteType;
   } else {
     return 'extraLarge' as CornerRadiusPaletteType;
   }
@@ -90,7 +90,7 @@ export const getAvatarRadiusStyle = (params: { releaseArea?: ReleaseArea }) => {
 
 export const getInputRadiusStyle = (params: { releaseArea?: ReleaseArea }) => {
   if (params.releaseArea === 'china') {
-    return 'small' as CornerRadiusPaletteType;
+    return 'extraSmall' as CornerRadiusPaletteType;
   } else {
     return 'extraLarge' as CornerRadiusPaletteType;
   }
@@ -98,9 +98,21 @@ export const getInputRadiusStyle = (params: { releaseArea?: ReleaseArea }) => {
 
 export const getAlertRadiusStyle = (params: { releaseArea?: ReleaseArea }) => {
   if (params.releaseArea === 'china') {
-    return 'small' as CornerRadiusPaletteType;
+    return 'extraSmall' as CornerRadiusPaletteType;
   } else {
     return 'large' as CornerRadiusPaletteType;
+  }
+};
+
+export const getBubbleRadiusStyle = (params: { releaseArea?: ReleaseArea }) => {
+  if (params.releaseArea === 'china') {
+    return ['extraSmall' as CornerRadiusPaletteType];
+  } else {
+    return [
+      'extraSmall' as CornerRadiusPaletteType,
+      'medium' as CornerRadiusPaletteType,
+      'large' as CornerRadiusPaletteType,
+    ];
   }
 };
 
@@ -118,8 +130,11 @@ export const useGetTheme = (params: {
   alert?: {
     borderRadiusStyle?: CornerRadiusPaletteType;
   };
+  bubble?: {
+    borderRadiusStyle?: CornerRadiusPaletteType[];
+  };
 }) => {
-  const { palette, theme, releaseArea, avatar, input, alert } = params;
+  const { palette, theme, releaseArea, avatar, input, alert, bubble } = params;
   const light = useLightTheme(palette, releaseArea);
   if (theme) {
     theme.cornerRadius.avatar =
@@ -128,6 +143,8 @@ export const useGetTheme = (params: {
       input?.borderRadiusStyle ?? getInputRadiusStyle({ releaseArea });
     theme.cornerRadius.alert =
       alert?.borderRadiusStyle ?? getAlertRadiusStyle({ releaseArea });
+    theme.cornerRadius.bubble =
+      bubble?.borderRadiusStyle ?? getBubbleRadiusStyle({ releaseArea });
     return theme;
   } else {
     light.cornerRadius.avatar =
@@ -136,6 +153,8 @@ export const useGetTheme = (params: {
       input?.borderRadiusStyle ?? getInputRadiusStyle({ releaseArea });
     light.cornerRadius.alert =
       alert?.borderRadiusStyle ?? getAlertRadiusStyle({ releaseArea });
+    light.cornerRadius.bubble =
+      bubble?.borderRadiusStyle ?? getBubbleRadiusStyle({ releaseArea });
     return light;
   }
 };
