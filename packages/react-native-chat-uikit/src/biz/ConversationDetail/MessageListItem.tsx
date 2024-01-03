@@ -760,20 +760,22 @@ export type AvatarViewProps = {
   isVisible?: boolean;
   layoutType: MessageLayoutType;
   avatar?: string;
+  onAvatarClicked?: () => void;
 };
 export function AvatarView(props: AvatarViewProps) {
-  const { isVisible = true, layoutType, avatar } = props;
+  const { isVisible = true, layoutType, avatar, onAvatarClicked } = props;
   return (
-    <View
+    <Pressable
       style={{
         display: isVisible === true ? 'flex' : 'none',
         paddingLeft: layoutType === 'left' ? undefined : 8,
         paddingRight: layoutType === 'left' ? 8 : undefined,
       }}
+      onPress={onAvatarClicked}
     >
       <View style={{ flexGrow: 1 }} />
       <Avatar size={28} url={avatar} />
-    </View>
+    </Pressable>
   );
 }
 export type NameViewProps = {
@@ -1393,9 +1395,11 @@ export function MessageView(props: MessageViewProps) {
           }}
         >
           {avatarIsVisible ? (
-            <Pressable onPress={onClickedAvatar}>
-              <AvatarView layoutType={layoutType} avatar={avatar} />
-            </Pressable>
+            <AvatarView
+              layoutType={layoutType}
+              avatar={avatar}
+              onAvatarClicked={onClickedAvatar}
+            />
           ) : null}
           <MessageBubble
             model={model}
