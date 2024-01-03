@@ -46,7 +46,7 @@ export function getMessageState(msg: ChatMessage): MessageStateType {
         const r = msg.attributes?.[gMessageAttributeVoiceReadFlag] as
           | boolean
           | undefined;
-        ret = r === true ? 'no-play' : 'none';
+        ret = r !== true ? 'no-play' : 'none';
       }
     }
   } else {

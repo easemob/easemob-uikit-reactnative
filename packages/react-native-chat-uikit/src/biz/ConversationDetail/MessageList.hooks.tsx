@@ -17,6 +17,7 @@ import {
 import {
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
+  gMessageAttributeVoiceReadFlag,
   useChatContext,
 } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
@@ -325,6 +326,17 @@ export function useMessageList(
           updateMessageVoiceUIState(msgModel);
           return;
         }
+
+        const readFlag =
+          msgModel.msg.attributes?.[gMessageAttributeVoiceReadFlag];
+        if (readFlag === undefined) {
+          msgModel.msg.attributes = {
+            ...msgModel.msg.attributes,
+            [gMessageAttributeVoiceReadFlag]: true,
+          };
+          im.updateMessage({ message: msgModel.msg, onResult: () => {} });
+        }
+
         await Services.ms.playAudio({
           url: localUrlEscape(playUrl(localPath)),
           onPlay({ currentPosition, duration }) {
@@ -341,7 +353,7 @@ export function useMessageList(
         updateMessageVoiceUIState(msgModel);
       }
     },
-    [updateMessageVoiceUIState]
+    [im, updateMessageVoiceUIState]
   );
 
   const onClickedItem = React.useCallback(
