@@ -3,10 +3,8 @@ import {
   Dimensions,
   // Image as RNImage,
   Pressable,
-  StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
 } from 'react-native';
 import {
   ChatCustomMessageBody,
@@ -53,25 +51,32 @@ import {
   isSupportMessage,
 } from './MessageListItem.hooks';
 import type {
+  AvatarViewProps,
+  CheckViewProps,
+  MessageBubbleProps,
+  MessageCustomCardProps,
+  MessageDefaultImageProps,
+  MessageFileProps,
+  MessageImageProps,
+  MessageQuoteBubbleProps,
+  MessageTextProps,
+  MessageVideoProps,
+  MessageViewProps,
+  MessageVoiceProps,
+  NameViewProps,
+  StateViewProps,
+  SystemTipViewProps,
+  TimeTipViewProps,
+  TimeViewProps,
+} from './MessageListItem.type';
+import type {
   MessageEditableStateType,
-  MessageLayoutType,
-  MessageListItemActionsProps,
   MessageListItemProps,
   MessageModel,
-  MessageStateType,
   SystemMessageModel,
   TimeMessageModel,
 } from './types';
 
-export type MessageBasicProps = {
-  layoutType: MessageLayoutType;
-  msg: ChatMessage;
-  maxWidth?: number;
-};
-
-export type MessageTextProps = MessageBasicProps & {
-  isSupport: boolean;
-};
 export function MessageText(props: MessageTextProps) {
   const { layoutType, msg, isSupport } = props;
   const { tr } = useI18nContext();
@@ -134,13 +139,6 @@ export function MessageText(props: MessageTextProps) {
   );
 }
 
-export type MessageDefaultImageProps = {
-  url?: string;
-  width: number;
-  height: number;
-  iconName: IconNameType;
-  onError?: () => void;
-};
 export function MessageDefaultImage(props: MessageDefaultImageProps) {
   const { url, width, height, iconName, onError } = props;
   const { colors } = usePaletteContext();
@@ -184,7 +182,6 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
   );
 }
 
-export type MessageImageProps = MessageBasicProps & {};
 export function MessageImage(props: MessageImageProps) {
   const { msg, maxWidth } = props;
   // const url1 =
@@ -216,9 +213,6 @@ export function MessageImage(props: MessageImageProps) {
   );
 }
 
-export type MessageVoiceProps = MessageBasicProps & {
-  isPlay?: boolean;
-};
 export function MessageVoice(props: MessageVoiceProps) {
   const {
     msg,
@@ -321,7 +315,6 @@ export function MessageVoice(props: MessageVoiceProps) {
   );
 }
 
-export type MessageVideoProps = MessageBasicProps & {};
 export function MessageVideo(props: MessageVideoProps) {
   const { msg, maxWidth } = props;
   const [thumbUrl, setThumbUrl] = React.useState<string | undefined>();
@@ -378,7 +371,6 @@ export function MessageVideo(props: MessageVideoProps) {
   );
 }
 
-export type MessageFileProps = MessageBasicProps & {};
 export function MessageFile(props: MessageFileProps) {
   const { msg, maxWidth, layoutType } = props;
   const body = msg.body as ChatFileMessageBody;
@@ -480,7 +472,6 @@ export function MessageFile(props: MessageFileProps) {
   );
 }
 
-export type MessageCustomCardProps = MessageBasicProps & {};
 export function MessageCustomCard(props: MessageCustomCardProps) {
   const { msg, maxWidth, layoutType } = props;
   const body = msg.body as ChatCustomMessageBody;
@@ -557,12 +548,6 @@ export function MessageCustomCard(props: MessageCustomCardProps) {
   );
 }
 
-export type MessageBubbleProps = MessageListItemActionsProps & {
-  hasTriangle?: boolean;
-  model: MessageModel;
-  containerStyle?: StyleProp<ViewStyle>;
-  maxWidth?: number;
-};
 export function MessageBubble(props: MessageBubbleProps) {
   const {
     hasTriangle = true,
@@ -756,12 +741,7 @@ export function MessageBubble(props: MessageBubbleProps) {
     </View>
   );
 }
-export type AvatarViewProps = {
-  isVisible?: boolean;
-  layoutType: MessageLayoutType;
-  avatar?: string;
-  onAvatarClicked?: () => void;
-};
+
 export function AvatarView(props: AvatarViewProps) {
   const { isVisible = true, layoutType, avatar, onAvatarClicked } = props;
   return (
@@ -778,13 +758,7 @@ export function AvatarView(props: AvatarViewProps) {
     </Pressable>
   );
 }
-export type NameViewProps = {
-  isVisible?: boolean;
-  layoutType: MessageLayoutType;
-  name: string;
-  hasAvatar: boolean;
-  hasTriangle: boolean;
-};
+
 export function NameView(props: NameViewProps) {
   const { isVisible = true, layoutType, name, hasAvatar, hasTriangle } = props;
   const { colors } = usePaletteContext();
@@ -823,13 +797,6 @@ export function NameView(props: NameViewProps) {
   );
 }
 
-export type TimeViewProps = {
-  isVisible?: boolean;
-  layoutType: MessageLayoutType;
-  timestamp: number;
-  hasAvatar: boolean;
-  hasTriangle: boolean;
-};
 export function TimeView(props: TimeViewProps) {
   const {
     isVisible = true,
@@ -873,12 +840,6 @@ export function TimeView(props: TimeViewProps) {
   );
 }
 
-export type StateViewProps = {
-  isVisible?: boolean;
-  layoutType: MessageLayoutType;
-  state: MessageStateType;
-  onClicked?: () => void;
-};
 export function StateView(props: StateViewProps) {
   const { isVisible = true, layoutType, state, onClicked } = props;
   const { colors } = usePaletteContext();
@@ -936,10 +897,6 @@ export function StateView(props: StateViewProps) {
   );
 }
 
-export type CheckViewProps = {
-  isVisible?: boolean;
-  layoutType: MessageLayoutType;
-};
 export function CheckView(props: CheckViewProps) {
   const { isVisible = false, layoutType } = props;
   return (
@@ -956,13 +913,6 @@ export function CheckView(props: CheckViewProps) {
   );
 }
 
-export type MessageQuoteBubbleProps = MessageListItemActionsProps & {
-  hasAvatar: boolean;
-  hasTriangle: boolean;
-  model: MessageModel;
-  containerStyle?: StyleProp<ViewStyle>;
-  maxWidth?: number;
-};
 export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
   const {
     hasAvatar,
@@ -1320,13 +1270,6 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
   );
 }
 
-export type MessageViewProps = MessageListItemActionsProps & {
-  isVisible?: boolean;
-  model: MessageModel;
-  avatarIsVisible?: boolean;
-  nameIsVisible?: boolean;
-  timeIsVisible?: boolean;
-};
 export function MessageView(props: MessageViewProps) {
   const {
     isVisible = true,
@@ -1428,10 +1371,6 @@ export function MessageView(props: MessageViewProps) {
   );
 }
 
-export type SystemTipViewProps = {
-  isVisible?: boolean;
-  model: SystemMessageModel;
-};
 export function SystemTipView(props: SystemTipViewProps) {
   const { isVisible = true, model } = props;
   const { msg } = model;
@@ -1464,10 +1403,6 @@ export function SystemTipView(props: SystemTipViewProps) {
   );
 }
 
-export type TimeTipViewProps = {
-  isVisible?: boolean;
-  model: TimeMessageModel;
-};
 export function TimeTipView(props: TimeTipViewProps) {
   const { isVisible = true, model } = props;
   const { timestamp } = model;

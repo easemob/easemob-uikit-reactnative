@@ -10,5 +10,6 @@ export * from './MessageList';
 export * from './MessageList.hooks';
 export * from './MessageListItem';
 export * from './MessageListItem.hooks';
+export * from './MessageListItem.type';
 export * from './types';
 export * from './VideoMessagePreview';
