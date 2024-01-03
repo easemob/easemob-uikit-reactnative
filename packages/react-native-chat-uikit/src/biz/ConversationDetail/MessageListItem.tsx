@@ -1084,7 +1084,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             >
               <Image
                 source={{
-                  uri: 'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+                  uri: user?.avatarURL,
                 }}
                 style={{ width: 36, height: 36 }}
               />
@@ -1200,7 +1200,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             >
               <Image
                 source={{
-                  uri: 'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+                  uri: user?.avatarURL,
                 }}
                 style={{ width: 36, height: 36 }}
               />
