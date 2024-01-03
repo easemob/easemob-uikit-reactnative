@@ -21,7 +21,7 @@ export function DefaultIconImage(props: DefaultIconImageProps) {
       url === undefined ||
       url === null ||
       url.trim().length === 0 ||
-      url.includes('http') === false
+      (url.startsWith('http') === false && url.startsWith('file://') === false)
     );
   };
   const getUrl = (url?: string): string => {
