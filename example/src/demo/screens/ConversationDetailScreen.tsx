@@ -191,6 +191,7 @@ export function ConversationDetailScreen(props: Props) {
             //     </View>
             //   );
             // }),
+            // ListItemRender: MessageListItemMemo,
           },
         }}
         onBack={() => {
