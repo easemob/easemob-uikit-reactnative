@@ -44,3 +44,18 @@ export function passwordRuleCheck(): boolean {
 export function idRuleCheck(): boolean {
   return false;
 }
+
+export function urlIsValid(url?: string): boolean {
+  if (!url) return false;
+  const regex = /^(http|https):\/\/[^ "]+$/;
+  return regex.test(url);
+}
+
+export function pathIsInvalid(url?: string): boolean {
+  return (
+    url === undefined ||
+    url === null ||
+    url.trim().length === 0 ||
+    (url.startsWith('http') === false && url.startsWith('file://') === false)
+  );
+}

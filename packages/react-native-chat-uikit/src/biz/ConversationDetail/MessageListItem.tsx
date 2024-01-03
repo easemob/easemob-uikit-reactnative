@@ -140,7 +140,8 @@ export function MessageText(props: MessageTextProps) {
 }
 
 export function MessageDefaultImage(props: MessageDefaultImageProps) {
-  const { url, width, height, iconName, onError } = props;
+  const { url, width, height, thumbHeight, thumbWidth, iconName, onError } =
+    props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -166,8 +167,8 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
       ]}
       defaultSource={ICON_ASSETS[iconName]('3x')}
       defaultStyle={{
-        width: 64,
-        height: 64,
+        width: thumbWidth,
+        height: thumbHeight,
         tintColor: getColor('fg'),
       }}
       defaultContainerStyle={{
@@ -176,6 +177,7 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
         backgroundColor: getColor('bg'),
         justifyContent: 'center',
         alignItems: 'center',
+        borderRadius: 4, // todo:
       }}
       onError={onError}
     />
@@ -208,6 +210,8 @@ export function MessageImage(props: MessageImageProps) {
       url={thumbUrl}
       width={width}
       height={height}
+      thumbWidth={64}
+      thumbHeight={64}
       iconName={'img'}
     />
   );
@@ -345,6 +349,8 @@ export function MessageVideo(props: MessageVideoProps) {
         url={thumbUrl}
         width={width}
         height={height}
+        thumbWidth={64}
+        thumbHeight={64}
         iconName={'triangle_in_rectangle'}
         onError={() => {
           setShowTriangle(false);
@@ -1040,7 +1046,14 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 </Text>
               </View>
             </View>
-            <View style={{ borderRadius: 4, overflow: 'hidden' }}>
+            <View
+              style={{
+                borderRadius: 4,
+                width: 36,
+                height: 36,
+                overflow: 'hidden',
+              }}
+            >
               <Image
                 source={{
                   uri: 'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
@@ -1145,7 +1158,14 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 </Text>
               </View>
             </View>
-            <View style={{ borderRadius: 4, overflow: 'hidden' }}>
+            <View
+              style={{
+                borderRadius: 4,
+                width: 36,
+                height: 36,
+                overflow: 'hidden',
+              }}
+            >
               <Image
                 source={{
                   uri: 'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',

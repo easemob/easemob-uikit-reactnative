@@ -2,11 +2,9 @@ import * as React from 'react';
 import { Dimensions, View } from 'react-native';
 import {
   ChatFileMessageBody,
-  ChatImageMessageBody,
   ChatMessage,
   ChatMessageType,
   ChatTextMessageBody,
-  ChatVideoMessageBody,
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 
@@ -17,7 +15,8 @@ import { usePaletteContext } from '../../theme';
 import { IconButtonMemo } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { SingleLineText } from '../../ui/Text';
-import { ThumbImage } from '../Avatar';
+import { MessageDefaultImage } from './MessageListItem';
+import { getImageThumbUrl, getVideoThumbUrl } from './MessageListItem.hooks';
 
 export type MessageInputQuoteViewProps = {
   showQuote: boolean;
@@ -46,10 +45,10 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
       dark: colors.neutral[6],
     },
   });
-
-  if (showQuote !== true || propsMsg === undefined) {
-    return null;
-  }
+  const bodyType = React.useRef<ChatMessageType | undefined>(
+    propsMsg?.body.type
+  ).current;
+  const [thumbUrl, setThumbUrl] = React.useState<string | undefined>();
 
   const getContent = (msg: ChatMessage) => {
     let maxWidth = Dimensions.get('window').width;
@@ -161,24 +160,30 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
     return null;
   };
 
-  const getContentThumb = (msg: ChatMessage) => {
+  const getContentThumb = React.useCallback(async (msg: ChatMessage) => {
     if (msg.body.type === ChatMessageType.IMAGE) {
-      const body = msg.body as ChatImageMessageBody;
-      // return body.thumbnailRemotePath.startsWith('http')
-      //   ? body.thumbnailRemotePath
-      //   : body.thumbnailLocalPath;
-      return body.thumbnailLocalPath;
+      const ret = await getImageThumbUrl(msg);
+      setThumbUrl(ret);
     } else if (msg.body.type === ChatMessageType.VIDEO) {
-      const body = msg.body as ChatVideoMessageBody;
-      return body.thumbnailLocalPath;
+      const ret = await getVideoThumbUrl(msg);
+      setThumbUrl(ret);
     }
-    return null;
-  };
+  }, []);
 
   const getUserName = (msg: ChatMessage) => {
     const user = userInfoFromMessage(msg);
     return user?.userName ?? user?.userId ?? msg.from;
   };
+
+  React.useEffect(() => {
+    if (propsMsg) {
+      getContentThumb(propsMsg);
+    }
+  }, [getContentThumb, propsMsg]);
+
+  if (showQuote !== true || propsMsg === undefined) {
+    return null;
+  }
 
   return (
     <View
@@ -216,12 +221,22 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
         {getContent(propsMsg)}
       </View>
 
-      {getContentThumb(propsMsg) !== null ? (
-        <View
-          style={{ padding: 6, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <ThumbImage size={24} url={getContentThumb(propsMsg)!} />
-        </View>
+      {thumbUrl ? (
+        <>
+          <MessageDefaultImage
+            url={thumbUrl}
+            width={36}
+            height={36}
+            thumbWidth={24}
+            thumbHeight={24}
+            iconName={
+              bodyType === ChatMessageType.IMAGE
+                ? 'img'
+                : 'triangle_in_rectangle'
+            }
+          />
+          <View style={{ width: 12 }} />
+        </>
       ) : null}
       <IconButtonMemo
         iconName={'xmark_in_circle_fill'}

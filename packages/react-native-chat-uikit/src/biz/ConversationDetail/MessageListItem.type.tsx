@@ -26,6 +26,8 @@ export type MessageDefaultImageProps = {
   url?: string;
   width: number;
   height: number;
+  thumbWidth: number;
+  thumbHeight: number;
   iconName: IconNameType;
   onError?: () => void;
 };

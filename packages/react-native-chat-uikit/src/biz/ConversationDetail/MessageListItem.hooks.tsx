@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, Image } from 'react-native';
 import {
   ChatCustomMessageBody,
   ChatImageMessageBody,
@@ -251,6 +251,18 @@ export function getImageShowSize(msg: ChatMessage, maxW?: number) {
       height: maxWidth,
     };
   }
+}
+
+export function getImageSizeFromUrl(url: string) {
+  Image.getSize(
+    url,
+    (width: number, height: number) => {
+      console.log('test:zuoyu:getImageSizeFromUrl', width, height);
+    },
+    (error: any) => {
+      console.log('test:zuoyu:getImageSizeFromUrl', error);
+    }
+  );
 }
 
 // export class VoicePlayManager {
