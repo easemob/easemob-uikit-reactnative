@@ -69,23 +69,23 @@ export function useConversationDetail(props: ConversationDetailProps) {
     console.log('dev:ConversationDetail:', conv);
     if (conv) {
       if (conv.convType === ChatConversationType.PeerChat) {
-        im.getUserInfo({
-          userId: conv.convId,
-          onResult: (result) => {
-            if (result.isOk === true && result.value) {
-              conv.convName =
-                result.value?.userName && result.value?.userName.length > 0
-                  ? result.value?.userName
-                  : result.value?.userId;
-              setConvName(conv.convName);
-              if (result.value?.avatarURL) {
-                conv.convAvatar = result.value.avatarURL;
-                setConvAvatar(result.value.avatarURL);
-              }
-              im.messageManager.setCurrentConvId({ ...conv });
-            }
-          },
-        });
+        // im.getUserInfo({
+        //   userId: conv.convId,
+        //   onResult: (result) => {
+        //     if (result.isOk === true && result.value) {
+        //       conv.convName =
+        //         result.value?.userName && result.value?.userName.length > 0
+        //           ? result.value?.userName
+        //           : result.value?.userId;
+        //       setConvName(conv.convName);
+        //       if (result.value?.avatarURL) {
+        //         conv.convAvatar = result.value.avatarURL;
+        //         setConvAvatar(result.value.avatarURL);
+        //       }
+        //       im.messageManager.setCurrentConvId({ ...conv });
+        //     }
+        //   },
+        // });
       } else if (conv.convType === ChatConversationType.GroupChat) {
         im.getGroupInfo({
           groupId: conv.convId,

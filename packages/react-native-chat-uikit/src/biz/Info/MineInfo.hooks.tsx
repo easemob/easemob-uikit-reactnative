@@ -38,15 +38,20 @@ export function useMineInfo(props: MineInfoProps) {
     React.useCallback(
       (state: any) => {
         if (state === 'load') {
-          im.getUserInfo({
-            userId: userId,
-            onResult: (result) => {
-              if (result.isOk && result.value) {
-                setUserName(result.value.userName);
-                setUserSign(result.value.sign);
-              }
-            },
-          });
+          const self = im.user(userId);
+          if (self) {
+            setUserName(self.userName);
+            setUserSign(self.sign);
+          }
+          // im.getUserInfo({
+          //   userId: userId,
+          //   onResult: (result) => {
+          //     if (result.isOk && result.value) {
+          //       setUserName(result.value.userName);
+          //       setUserSign(result.value.sign);
+          //     }
+          //   },
+          // });
         }
       },
       [im, userId]

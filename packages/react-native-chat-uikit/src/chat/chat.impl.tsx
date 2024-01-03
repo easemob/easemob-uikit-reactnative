@@ -245,7 +245,7 @@ export class ChatServiceImpl
       await this._createUserDir();
 
       this.client.getCurrentUsername();
-      this.updateSelfInfo({ self: this._user, onResult: () => {} });
+      // this.updateSelfInfo({ self: this._user, onResult: () => {} });
 
       console.log('dev:login:finish:1', params);
 
@@ -269,7 +269,7 @@ export class ChatServiceImpl
         await this._createUserDir();
 
         this.client.getCurrentUsername();
-        this.updateSelfInfo({ self: this._user, onResult: () => {} });
+        // this.updateSelfInfo({ self: this._user, onResult: () => {} });
       }
       console.log('dev:login:finish:2', params, error);
       result?.({
