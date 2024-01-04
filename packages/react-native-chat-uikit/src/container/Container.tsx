@@ -46,6 +46,7 @@ export function GlobalContainer(props: GlobalContainerProps) {
     input,
     alert,
     formatTime,
+    recallTimeout,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -87,6 +88,7 @@ export function GlobalContainer(props: GlobalContainerProps) {
                   languageCode: getTranslateLanguage(language),
                   fontFamily: fontFamily,
                   formatTime: formatTime,
+                  recallTimeout: recallTimeout,
                   conversationDetail: mergeObjects(
                     conversationDetail as ConversationDetailType,
                     {

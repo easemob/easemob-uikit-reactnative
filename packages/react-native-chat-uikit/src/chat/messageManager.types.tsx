@@ -36,4 +36,5 @@ export interface MessageCacheManager
   }): void;
   sendMessageReadAck(params: { message: ChatMessage }): void;
   createRecallMessageTip(msg: ChatMessage): ChatMessage;
+  setRecallMessageTimeout(recallTimeout?: number): void;
 }

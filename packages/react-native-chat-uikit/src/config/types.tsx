@@ -60,4 +60,10 @@ export type Config = {
      */
     conversationDetailCallback?: (timestamp: number, locale?: Locale) => string;
   };
+  /**
+   * The recall timeout.
+   *
+   * Default value is `120000`. (2 minutes)
+   */
+  recallTimeout?: number;
 };

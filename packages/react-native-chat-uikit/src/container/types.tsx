@@ -77,6 +77,12 @@ export type GlobalContainerProps = React.PropsWithChildren<{
     conversationDetailCallback?: (timestamp: number, locale?: Locale) => string;
   };
   /**
+   * The recall timeout.
+   *
+   * Default value is `120000`. (2 minutes)
+   */
+  recallTimeout?: number;
+  /**
    * The conversation detail config.
    */
   conversationDetail?: ConversationDetailType;

@@ -10,6 +10,8 @@ import {
   ChatSearchDirection,
 } from 'react-native-chat-sdk';
 
+import { ErrorCode, UIKitError } from '../error';
+import { getCurTs } from '../utils';
 import { gCustomMessageRecallEventType } from './const';
 import type {
   MessageCacheManager,
@@ -30,12 +32,14 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   _sendList: Map<string, { msg: ChatMessage }>;
   _downloadList: Map<string, { msg: ChatMessage }>;
   _conv?: ConversationModel;
+  _recallTimeout: number;
   constructor(client: ChatService) {
     console.log('dev:MessageCacheManager:constructor');
     this._client = client;
     this._userListener = new Map();
     this._sendList = new Map();
     this._downloadList = new Map();
+    this._recallTimeout = 120000;
   }
   init() {
     this.unInit();
@@ -173,7 +177,6 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       message: params.message,
       onResult: (result) => {
         if (result.isOk === true) {
-          console.log('test:zouyu:sendMessageReadAck:success:', result);
           const hasReadAck = params.message.hasReadAck;
           if (hasReadAck !== true) {
             const tmp = { ...params.message, hasReadAck: true } as ChatMessage;
@@ -253,6 +256,17 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
 
   async recallMessage(msg: ChatMessage): Promise<void> {
     this.emitRecallMessageBefore(msg);
+    const currentTimestamp = getCurTs();
+    if (msg.localTime + this._recallTimeout < currentTimestamp) {
+      this.emitRecallMessageChanged({ isOk: false });
+      this._client.sendError({
+        error: new UIKitError({
+          code: ErrorCode.common,
+          desc: 'recallMessage',
+        }),
+      });
+      return;
+    }
     this._client.recallMessage({
       message: msg,
       onResult: (value) => {
@@ -270,6 +284,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
           });
         } else {
           this.emitRecallMessageChanged({ isOk: false });
+          this._client.sendError({ error: value.error! });
         }
       },
     });
@@ -332,5 +347,11 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
         }
       },
     });
+  }
+
+  setRecallMessageTimeout(recallTimeout?: number): void {
+    if (recallTimeout) {
+      this._recallTimeout = recallTimeout;
+    }
   }
 }

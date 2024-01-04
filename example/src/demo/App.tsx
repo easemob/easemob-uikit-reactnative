@@ -207,6 +207,7 @@ export function App() {
         languageExtensionFactory={languageExtensionFactory}
         onInitialized={onInitialized}
         // formatTime={formatTime}
+        // recallTimeout={1200}
       >
         <NavigationContainer
           onStateChange={(state: NavigationState | undefined) => {

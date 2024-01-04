@@ -22,6 +22,7 @@ import {
 } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { userInfoFromMessage } from '../../chat/utils';
+import { useConfigContext } from '../../config';
 import { g_not_existed_url } from '../../const';
 import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -131,6 +132,7 @@ export function useMessageList(
     propsListItemRender ?? MessageListItemMemo
   );
   const { dispatchUserInfo } = useMessageContext();
+  const { recallTimeout } = useConfigContext();
 
   const setNeedScroll = React.useCallback((needScroll: boolean) => {
     needScrollRef.current = needScroll;
@@ -921,8 +923,17 @@ export function useMessageList(
       currentVoicePlayingRef.current = undefined;
       startMsgIdRef.current = '';
       dataRef.current = [];
+      im.messageManager.setRecallMessageTimeout(recallTimeout);
     }
-  }, [dataRef, isAutoLoad, setNeedScroll, setUserScrollGesture, testMode]);
+  }, [
+    dataRef,
+    im.messageManager,
+    isAutoLoad,
+    recallTimeout,
+    setNeedScroll,
+    setUserScrollGesture,
+    testMode,
+  ]);
 
   const onRequestHistoryMessage = React.useCallback(() => {
     im.messageManager.loadHistoryMessage({
