@@ -22,6 +22,7 @@ import {
   gMessageAttributeQuote,
 } from '../../chat';
 import { userInfoFromMessage } from '../../chat/utils';
+import { useConfigContext } from '../../config';
 import { useColors, useGetStyleProps } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext, useThemeContext } from '../../theme';
@@ -34,13 +35,12 @@ import {
   LoadingIcon,
 } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
-import { emoji } from '../../utils';
+import { emoji, formatTsForConvDetail } from '../../utils';
 import { Avatar } from '../Avatar';
 import { gMaxVoiceDuration } from '../const';
 import { useMessageContext } from '../Context';
 import {
   getFileSize,
-  getFormatTime,
   getImageShowSize,
   getImageThumbUrl,
   getMessageBubblePadding,
@@ -837,6 +837,7 @@ export function TimeView(props: TimeViewProps) {
     hasAvatar,
     hasTriangle,
   } = props;
+  const { formatTime } = useConfigContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     text: {
@@ -844,7 +845,9 @@ export function TimeView(props: TimeViewProps) {
       dark: colors.neutral[6],
     },
   });
-  const time = getFormatTime(timestamp);
+  const time = formatTime?.conversationDetailCallback
+    ? formatTime.conversationDetailCallback(timestamp)
+    : formatTsForConvDetail(timestamp);
   const paddingWidth =
     hasAvatar === true
       ? hasTriangle === true

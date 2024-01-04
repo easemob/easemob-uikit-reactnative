@@ -46,11 +46,50 @@ export function formatTs2(
       : anchor.getTime();
   const oneDayBefore = n - 24 * 60 * 60 * 1000;
   const todayYear = new Date(n).getFullYear();
-  const oneYearBefore = new Date(todayYear, 1).getTime();
+  const oneYearBefore = new Date(todayYear, 0).getTime();
   if (d < oneYearBefore) {
     return format(date, 'yyyy/MM/dd', { locale });
   } else if (oneYearBefore <= d && d < oneDayBefore) {
     return format(date, 'MM/dd', { locale });
+  } else {
+    return format(date, 'HH:mm', { locale });
+  }
+}
+
+export function formatTsForConvList(
+  date: Date | number,
+  anchor?: Date | number,
+  locale?: Locale
+): string {
+  let d: number = typeof date === 'number' ? date : date.getTime();
+  const n =
+    anchor === undefined
+      ? new Date().getTime()
+      : typeof anchor === 'number'
+      ? anchor
+      : anchor.getTime();
+  const oneDayBefore = n - 24 * 60 * 60 * 1000;
+  if (d < oneDayBefore) {
+    return format(date, 'MMM dd', { locale });
+  } else {
+    return format(date, 'HH:mm', { locale });
+  }
+}
+export function formatTsForConvDetail(
+  date: Date | number,
+  anchor?: Date | number,
+  locale?: Locale
+): string {
+  let d: number = typeof date === 'number' ? date : date.getTime();
+  const n =
+    anchor === undefined
+      ? new Date().getTime()
+      : typeof anchor === 'number'
+      ? anchor
+      : anchor.getTime();
+  const oneDayBefore = n - 24 * 60 * 60 * 1000;
+  if (d < oneDayBefore) {
+    return format(date, 'MMM dd HH:mm', { locale });
   } else {
     return format(date, 'HH:mm', { locale });
   }

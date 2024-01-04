@@ -19,7 +19,7 @@ import {
   gMessageAttributeVoiceReadFlag,
 } from '../../chat';
 import { Services } from '../../services';
-import { formatTs2, ImageUrl, localUrlEscape } from '../../utils';
+import { ImageUrl, localUrlEscape } from '../../utils';
 import type { MessageStateType } from './types';
 
 export function isSupportMessage(msg: ChatMessage) {
@@ -294,9 +294,9 @@ export function getFileSize(size: number) {
   }
 }
 
-export function getFormatTime(time: number) {
-  return formatTs2(time);
-}
+// export function getFormatTime(time: number) {
+//   return formatTsForConvDetail(time);
+// }
 
 export function getMessageBubblePadding(msg: ChatMessage) {
   if (msg.body.type === ChatMessageType.IMAGE) {

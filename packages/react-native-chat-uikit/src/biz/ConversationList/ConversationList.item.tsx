@@ -1,17 +1,21 @@
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
+import type { ChatMessage } from 'react-native-chat-sdk';
 
-import { getMessageFormatTime, getMessageSnapshot } from '../../chat/utils';
+import { getMessageSnapshot } from '../../chat/utils';
+import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { SingleLineText } from '../../ui/Text';
+import { formatTsForConvList } from '../../utils';
 import { Avatar } from '../Avatar';
 import { Badges } from '../Badges';
 import type { ConversationListItemProps } from './types';
 
 export function ConversationListItem(props: ConversationListItemProps) {
   const { onClicked, onLongPressed, data } = props;
+  const { formatTime } = useConfigContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -35,6 +39,21 @@ export function ConversationListItem(props: ConversationListItemProps) {
       dark: colors.neutral[2],
     },
   });
+
+  const getMessageFormatTime = React.useCallback(
+    (msg?: ChatMessage, timestamp?: number): string => {
+      const cb = formatTime?.conversationListCallback;
+      if (msg === undefined && timestamp) {
+        return cb ? cb(timestamp) : formatTsForConvList(timestamp);
+      } else if (msg) {
+        return cb ? cb(msg.localTime) : formatTsForConvList(msg.localTime);
+      } else {
+        return '';
+      }
+    },
+    [formatTime?.conversationListCallback]
+  );
+
   return (
     <Pressable
       style={{

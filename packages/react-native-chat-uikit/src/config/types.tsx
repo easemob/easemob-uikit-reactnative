@@ -1,5 +1,4 @@
 import type { LanguageCode } from '../i18n';
-import type { CornerRadiusPaletteType } from '../theme';
 
 export type ConversationDetailType = {
   bubble?: {
@@ -37,4 +36,28 @@ export type Config = {
    * The conversation detail config.
    */
   conversationDetail?: ConversationDetailType;
+
+  /**
+   * Format timestamp. Users can provide a timestamp format string callback interface for session lists and session details.
+   */
+  formatTime?: {
+    /**
+     * The locale.
+     */
+    locale?: Locale;
+    /**
+     * The conversation list format timestamp callback.
+     * @param timestamp The timestamp.
+     * @param locale The locale.
+     * @returns The format timestamp string.
+     */
+    conversationListCallback?: (timestamp: number, locale?: Locale) => string;
+    /**
+     * The conversation detail format timestamp callback.
+     * @param timestamp The timestamp.
+     * @param locale The locale.
+     * @returns The format timestamp string.
+     */
+    conversationDetailCallback?: (timestamp: number, locale?: Locale) => string;
+  };
 };

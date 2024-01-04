@@ -52,6 +52,30 @@ export type GlobalContainerProps = React.PropsWithChildren<{
    * The release area.
    */
   releaseArea?: ReleaseArea;
+
+  /**
+   * Format timestamp. Users can provide a timestamp format string callback interface for session lists and session details.
+   */
+  formatTime?: {
+    /**
+     * The locale.
+     */
+    locale?: Locale;
+    /**
+     * The conversation list format timestamp callback.
+     * @param timestamp The timestamp.
+     * @param locale The locale.
+     * @returns The format timestamp string.
+     */
+    conversationListCallback?: (timestamp: number, locale?: Locale) => string;
+    /**
+     * The conversation detail format timestamp callback.
+     * @param timestamp The timestamp.
+     * @param locale The locale.
+     * @returns The format timestamp string.
+     */
+    conversationDetailCallback?: (timestamp: number, locale?: Locale) => string;
+  };
   /**
    * The conversation detail config.
    */

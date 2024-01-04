@@ -6,7 +6,7 @@ import {
   ChatTextMessageBody,
 } from 'react-native-chat-sdk';
 
-import { emoji, formatTs2 } from '../utils';
+import { emoji } from '../utils';
 import {
   gMessageAttributeUserInfo,
   gNewRequestConversationMsgEventType,
@@ -93,18 +93,18 @@ export function getMessageSnapshot(msg?: ChatMessage): string {
       return '[unknown]';
   }
 }
-export function getMessageFormatTime(
-  msg?: ChatMessage,
-  timestamp?: number
-): string {
-  if (msg === undefined && timestamp) {
-    return formatTs2(timestamp);
-  } else if (msg) {
-    return formatTs2(msg.localTime);
-  } else {
-    return '';
-  }
-}
+// export function getMessageFormatTime(
+//   msg?: ChatMessage,
+//   timestamp?: number
+// ): string {
+//   if (msg === undefined && timestamp) {
+//     return formatTsForConvList(timestamp);
+//   } else if (msg) {
+//     return formatTsForConvList(msg.localTime);
+//   } else {
+//     return '';
+//   }
+// }
 
 export function getNewRequest(msg?: ChatMessage): NewRequestModel | undefined {
   if (msg === undefined) {

@@ -184,6 +184,18 @@ export function App() {
     []
   );
 
+  // const formatTime = React.useMemo(() => {
+  //   return {
+  //     locale: 'zh-Hans',
+  //     conversationListCallback: (timestamp: number, locale?: Locale) => {
+  //       return new Date(timestamp).getTime();
+  //     },
+  //     conversationDetailCallback: (timestamp: number, locale?: Locale) => {
+  //       return new Date(timestamp).getTime();
+  //     },
+  //   };
+  // }, []);
+
   return (
     <React.StrictMode>
       <GlobalContainer
@@ -194,6 +206,7 @@ export function App() {
         // fontFamily={fontFamily}
         languageExtensionFactory={languageExtensionFactory}
         onInitialized={onInitialized}
+        // formatTime={formatTime}
       >
         <NavigationContainer
           onStateChange={(state: NavigationState | undefined) => {
