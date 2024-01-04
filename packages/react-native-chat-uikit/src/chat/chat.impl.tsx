@@ -1507,7 +1507,7 @@ export class ChatServiceImpl
       promise: this.client.groupManager.createGroup(
         new ChatGroupOptions({
           style: ChatGroupStyle.PrivateMemberCanInvite,
-          maxCount: 2000,
+          maxCount: 1000,
           inviteNeedConfirm: false,
         }),
         params.groupName,
