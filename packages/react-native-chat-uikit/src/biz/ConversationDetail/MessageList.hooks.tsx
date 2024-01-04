@@ -28,7 +28,7 @@ import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
-import { emoji, localUrlEscape, playUrl, timeoutTask } from '../../utils';
+import { localUrlEscape, playUrl, timeoutTask } from '../../utils';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { gReportMessageList } from '../const';
 import { useMessageContext } from '../Context';
@@ -739,7 +739,8 @@ export function useMessageList(
         const v = value as SendTextProps;
         msg = ChatMessage.createTextMessage(
           convId,
-          emoji.fromCodePointText(v.content),
+          // emoji.fromCodePointText(v.content),
+          v.content,
           convType as number as ChatMessageChatType
         );
         const quoteMsg = value.quote?.msg;

@@ -35,7 +35,7 @@ import {
   LoadingIcon,
 } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
-import { emoji, formatTsForConvDetail } from '../../utils';
+import { formatTsForConvDetail } from '../../utils';
 import { Avatar } from '../Avatar';
 import { gMaxVoiceDuration } from '../const';
 import { useMessageContext } from '../Context';
@@ -104,7 +104,8 @@ export function MessageText(props: MessageTextProps) {
     },
   });
   const body = msg.body as ChatTextMessageBody;
-  let content = emoji.toCodePointText(body.content);
+  // const content = emoji.toCodePointText(body.content);
+  let content = body.content;
   const editable =
     body.modifyCount !== undefined && body.modifyCount > 0
       ? 'edited'
