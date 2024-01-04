@@ -9,7 +9,10 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { generateRandomChineseNames } from '../common/names';
 import type { RootScreenParamsList } from '../routes';
+
+export const names = generateRandomChineseNames(10);
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ContactListScreen(props: Props) {
@@ -21,6 +24,7 @@ export function ContactListScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
+  // console.log('test:zuoyu:names:', names);
 
   return (
     <SafeAreaView
@@ -44,6 +48,7 @@ export function ContactListScreen(props: Props) {
             return {
               id: v,
               name: v + 'name',
+              // name: names[Math.floor(Math.random() * names.length)]!,
               avatar:
                 'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
             };

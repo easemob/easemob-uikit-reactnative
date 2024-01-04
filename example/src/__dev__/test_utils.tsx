@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { GlobalContainer, HighText } from 'react-native-chat-uikit';
+import {
+  containsChinese,
+  getPinyinFirsLetter,
+  GlobalContainer,
+  HighText,
+} from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function Split() {
@@ -87,6 +92,48 @@ export function CalcuCount() {
   return <></>;
 }
 
+function generateRandomChineseName() {
+  const familyNames = '赵钱孙李周吴郑王';
+  const givenNames = '伟芳娜秀英敏静亮强磊冰洋勇艳娟涛春花飞跃平刚桂英';
+
+  const randomFamilyName =
+    familyNames[Math.floor(Math.random() * familyNames.length)];
+  const randomGivenName1 =
+    givenNames[Math.floor(Math.random() * givenNames.length)];
+  const randomGivenName2 =
+    givenNames[Math.floor(Math.random() * givenNames.length)];
+
+  return randomFamilyName! + randomGivenName1! + randomGivenName2;
+}
+
+function generateRandomChineseNames(n: number) {
+  const names = [];
+  for (let i = 0; i < n; i++) {
+    names.push(generateRandomChineseName());
+  }
+  return names;
+}
+
+export function TestPinyin() {
+  const text = '汉字';
+  const text2 = 'h汉字';
+  const text3 = 'english';
+  console.log(
+    'test:zuoyu:TestPinyin',
+    text,
+    text2,
+    getPinyinFirsLetter(text).at(0),
+    getPinyinFirsLetter(text2).at(0),
+    text.at(0),
+    text.toLocaleLowerCase().at(0),
+    containsChinese(text),
+    containsChinese(text2),
+    containsChinese(text3)
+  );
+  console.log('test:zuoyu:names:', generateRandomChineseNames(10));
+  return <></>;
+}
+
 export default function TestUtils() {
   return (
     <GlobalContainer
@@ -96,7 +143,7 @@ export default function TestUtils() {
         autoLogin: false,
       }}
     >
-      <CalcuCount />
+      <TestPinyin />
     </GlobalContainer>
   );
 }

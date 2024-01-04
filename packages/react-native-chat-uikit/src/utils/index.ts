@@ -7,6 +7,7 @@ export * from './function';
 export * from './language';
 export * from './mergeObjects';
 export * from './permission';
+export * from './pinyin';
 export * from './platform';
 export * from './Queue';
 export * from './Sequence';

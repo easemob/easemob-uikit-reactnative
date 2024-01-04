@@ -15,6 +15,7 @@ import {
 import type { RequestListListener } from '../../chat/requestList.types';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
+import { containsChinese, getPinyinFirsLetter } from '../../utils';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useContactListMoreActions } from '../hooks/useContactListMoreActions';
@@ -162,6 +163,18 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     setSelectedMemberCount(count);
   }, [contactType, groupId, im, sectionsRef]);
 
+  const getFirst = React.useCallback((str?: string) => {
+    let ret: string | undefined;
+    if (str && str.length > 0) {
+      const first = str[0]!.toLocaleUpperCase();
+      ret = first;
+      if (containsChinese(first)) {
+        ret = getPinyinFirsLetter(first).at(0)?.toLocaleUpperCase();
+      }
+    }
+    return ret;
+  }, []);
+
   const onSetData = React.useCallback(
     (list: ContactListItemProps[]) => {
       if (isSort === true) {
@@ -172,7 +185,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
 
       const sortList: (IndexModel & { data: ContactListItemProps[] })[] = [];
       list.forEach((item) => {
-        const first = item.section.nickName?.[0]?.toLocaleUpperCase();
+        const first = getFirst(item.section.nickName?.[0]?.toLocaleUpperCase());
         const indexTitle = first
           ? g_index_alphabet_range.includes(first)
             ? first
@@ -197,6 +210,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     [
       calculateAddedGroupMemberCount,
       calculateGroupCount,
+      getFirst,
       isSort,
       onSort,
       sectionsRef,
