@@ -1989,9 +1989,10 @@ export class ChatServiceImpl
           value: msg,
         });
       },
-      onError: () => {
+      onError: (e) => {
         params.onResult({
           isOk: false,
+          error: e,
         });
       },
     });

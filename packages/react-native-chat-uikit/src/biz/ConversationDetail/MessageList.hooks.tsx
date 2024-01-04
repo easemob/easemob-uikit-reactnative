@@ -616,6 +616,8 @@ export function useMessageList(
         onResult: (result) => {
           if (result.isOk === true && result.value) {
             onUpdateMessageToUI(result.value, 'recv');
+          } else {
+            im.sendError({ error: result.error!, from: 'editMessage' });
           }
         },
       });
