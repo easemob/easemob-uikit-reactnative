@@ -102,7 +102,7 @@ export function ContactListItem(props: ContactListItemProps) {
             textType={'medium'}
             style={{ color: getColor('t1') }}
           >
-            {section.nickName}
+            {section.nickName ?? section.userId}
           </SingleLineText>
         </View>
       </Pressable>

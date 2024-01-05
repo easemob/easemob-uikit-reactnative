@@ -47,6 +47,7 @@ export function GroupParticipantListScreen(props: Props) {
                 name: v + 'name',
                 avatar:
                   'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+                type: 'user' as DataModelType,
               };
             })
           );
@@ -66,6 +67,7 @@ export function GroupParticipantListScreen(props: Props) {
               // avatar: 'https://i.pravatar.cc/300',
               avatar:
                 'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+              type: 'user' as DataModelType,
             };
           });
           const groupIds = params.ids.get('group');
@@ -75,6 +77,7 @@ export function GroupParticipantListScreen(props: Props) {
               name: id + 'name',
               avatar:
                 'https://cdn0.iconfinder.com/data/icons/user-pictures/100/maturewoman-2-512.png',
+              type: 'group' as DataModelType,
             };
           });
           params?.result(

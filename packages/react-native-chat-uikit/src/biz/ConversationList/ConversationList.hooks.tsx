@@ -180,7 +180,7 @@ export function useConversationList(
       if (url) {
         setAvatarUrl(url);
       }
-      im.setOnRequestMultiData(onRequestMultiData);
+      im.setOnRequestData(onRequestMultiData);
       const s = await im.loginState();
       if (s === 'logged') {
         im.getAllConversations({

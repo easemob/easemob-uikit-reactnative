@@ -48,6 +48,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     onLongPressed,
     testMode,
     onRequestData,
+    onRequestMultiData,
     onSort: propsOnSort,
     onClickedNewContact: propsOnClickedNewContact,
     onCreateGroupResultValue,
@@ -406,6 +407,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
       }
 
       im.setContactOnRequestData(onRequestData);
+      im.setOnRequestData(onRequestMultiData);
       const s = await im.loginState();
       if (s === 'logged') {
         if (contactType === 'add-group-member') {

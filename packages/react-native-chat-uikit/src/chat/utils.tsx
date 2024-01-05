@@ -6,6 +6,7 @@ import {
   ChatTextMessageBody,
 } from 'react-native-chat-sdk';
 
+import { g_not_existed_url } from '../const';
 import { emoji } from '../utils';
 import {
   gMessageAttributeUserInfo,
@@ -18,13 +19,11 @@ import {
 } from './const';
 import type {
   NewRequestModel,
-  UserServiceData,
+  UserData,
   UserServiceDataFromMessage,
 } from './types';
 
-export function userInfoFromMessage(
-  msg?: ChatMessage
-): UserServiceData | undefined {
+export function userInfoFromMessage(msg?: ChatMessage): UserData | undefined {
   if (msg === undefined || msg === null) {
     return undefined;
   }
@@ -34,8 +33,15 @@ export function userInfoFromMessage(
     const ret = {
       userId: msg.from,
       userName: userInfo.nickname,
-      avatarURL: userInfo.avatarURL ?? 'unknown',
-    } as UserServiceData;
+      avatarURL: userInfo.avatarURL ?? g_not_existed_url,
+      from: {
+        type: msg.chatType === ChatMessageChatType.GroupChat ? 'group' : 'user',
+        groupId:
+          msg.chatType === ChatMessageChatType.GroupChat
+            ? msg.conversationId
+            : undefined,
+      },
+    } as UserData;
     return ret;
   }
 
@@ -44,7 +50,7 @@ export function userInfoFromMessage(
 
 export function setUserInfoToMessage(params: {
   msg: ChatMessage;
-  user?: UserServiceData;
+  user?: UserData;
 }): void {
   const { msg, user } = params;
   if (user === undefined || user === null) {
@@ -54,7 +60,7 @@ export function setUserInfoToMessage(params: {
     ...msg.attributes,
     [gMessageAttributeUserInfo]: {
       nickname: user.userName,
-      avatarURL: user.avatarURL ?? 'unknown',
+      avatarURL: user.avatarURL ?? g_not_existed_url,
     } as UserServiceDataFromMessage,
   };
 }

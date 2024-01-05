@@ -47,18 +47,39 @@ export type ResultCallback<T> = (params: {
 
 export type DataModelType = 'user' | 'group';
 export type DataModel = {
+  /**
+   * User ID, group ID or group member ID.
+   */
   id: string;
-  name: string;
-  avatar: string;
+  /**
+   * User name, group name or group member name.
+   */
+  name?: string;
+  /**
+   * User avatar URL, group avatar URL or group member avatar URL.
+   */
+  avatar?: string;
+  /**
+   * There may also be remark for the `user` type that are specific to the current user.
+   */
+  remark?: string;
+  /**
+   * There are only two types: `user` or `groups`. Group members are also `user` types.
+   */
+  type: DataModelType;
+  /**
+   * If it is a group member, set the group ID.
+   */
+  groupId?: string;
 };
 
-export type UserFrom = 'friend' | 'group' | 'black' | 'others';
+export type UserFrom = 'user' | 'group' | 'group-member' | 'others';
 export type NewRequestStateType = 'pending' | 'accepted' | 'declined';
 
 /**
  * The type of user data.
  */
-export type UserServiceData = {
+export type UserData = {
   /**
    * User ID.
    */
@@ -76,18 +97,16 @@ export type UserServiceData = {
    */
   avatarURL?: string;
   /**
-   * User gender. [0, 1, 2]
-   */
-  gender?: number;
-  /**
-   * User sign.
-   */
-  sign?: string;
-  /**
-   * User from information.
+   * The data sources.
    */
   from?: {
+    /**
+     * The type of data sources.
+     */
     type: UserFrom;
+    /**
+     * The group ID. If the data comes from a cloud group member.
+     */
     groupId?: string;
   };
 };
@@ -375,11 +394,11 @@ export interface ContactServices {
 export interface UserServices {
   getUserInfo(params: {
     userId: string;
-    onResult: ResultCallback<UserServiceData | undefined>;
+    onResult: ResultCallback<UserData | undefined>;
   }): void;
   getUsersInfo(params: {
     userIds: string[];
-    onResult: ResultCallback<UserServiceData[]>;
+    onResult: ResultCallback<UserData[]>;
   }): void;
 }
 
@@ -436,14 +455,11 @@ export interface MessageServices {
   /**
    * Get the user information from the message.
    */
-  userInfoFromMessage(msg?: ChatMessage): UserServiceData | undefined;
+  userInfoFromMessage(msg?: ChatMessage): UserData | undefined;
   /**
    * Set the user information to the message.
    */
-  setUserInfoToMessage(params: {
-    msg: ChatMessage;
-    user: UserServiceData;
-  }): void;
+  setUserInfoToMessage(params: { msg: ChatMessage; user: UserData }): void;
   setMessageRead(params: {
     convId: string;
     convType: ChatConversationType;
@@ -470,6 +486,7 @@ export interface GroupServices {
   ): void;
   setGroupParticipantOnRequestData<DataT>(
     callback?: (params: {
+      groupId: string;
       ids: string[];
       result: (data?: DataT[], error?: UIKitError) => void;
     }) => void | Promise<void>
@@ -654,7 +671,6 @@ export interface ChatService
    * - userToken: User token.
    * - userName: User nickname. It is very important to set.
    * - userAvatarURL: User avatar URL.
-   * - gender: User gender. [0, 1, 2]
    * - usePassword: Whether to use password login. If you use password login, you need to set the password. If you use token login, you do not need to set the password.
    * - result: The result after performing the operation. If failed, an error object is returned.
    *
@@ -665,8 +681,6 @@ export interface ChatService
     userToken: string;
     userName?: string;
     userAvatarURL?: string;
-    gender?: number;
-    sign?: string;
     usePassword?: boolean;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
@@ -693,8 +707,6 @@ export interface ChatService
     userToken: string;
     userName?: string;
     userAvatarURL?: string;
-    gender?: number;
-    sign?: string;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
   /**
@@ -726,13 +738,13 @@ export interface ChatService
    * Get the user information from memory.
    * @param userId User ID.
    */
-  user(userId?: string): UserServiceData | undefined;
+  user(userId?: string): UserData | undefined;
 
   /**
    * Set the users information to memory.
-   * @params params {@link UserServiceData}
+   * @params params {@link UserData}
    */
-  setUser(params: { users: UserServiceData[] }): void;
+  setUser(params: { users: UserData[] }): void;
 
   /**
    * Send a error to the listener.
@@ -759,6 +771,32 @@ export interface ChatService
    * This is the message cache manager, which is mainly responsible for caching notifications of received messages and distributing notifications when the session details page has not been loaded. Monitor message sending status updates when sending messages.
    */
   get messageManager(): MessageCacheManager;
+
+  /**
+   * Register UIKit to obtain callback notifications for user or group information. When the session list component, contact component, etc. are loaded, a callback will be initiated to obtain user information. After the user information is completed, if you want to update it, please use `updateRequestData`.
+   */
+  setOnRequestData(
+    callback?:
+      | ((params: {
+          ids: Map<DataModelType, string[]>;
+          result: (
+            data?: Map<DataModelType, DataModel[]>,
+            error?: UIKitError
+          ) => void;
+        }) => void)
+      | ((params: {
+          ids: Map<DataModelType, string[]>;
+          result: (
+            data?: Map<DataModelType, DataModel[]>,
+            error?: UIKitError
+          ) => void;
+        }) => Promise<void>)
+  ): void;
+
+  /**
+   * Actively update user information and take effect in subsequent loaded components.
+   */
+  updateRequestData(params: { data: Map<DataModelType, DataModel[]> }): void;
 }
 
 type ChatOptionsType1 = PartialUndefinable<ChatOptions>;

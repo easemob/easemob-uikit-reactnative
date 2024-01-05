@@ -32,6 +32,7 @@ export function CL() {
                 name: v + 'name',
                 avatar:
                   'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+                type: 'user' as DataModelType,
               };
             })
           );
@@ -46,8 +47,28 @@ export function CL() {
           console.log('test:zuoyu:onRequestMultiData', params);
           params?.result(
             new Map([
-              ['user', [{ id: 'xx', name: 'xx', avatar: '' }]],
-              ['group', [{ id: 'yy', name: 'yy', avatar: '' }]],
+              [
+                'user',
+                [
+                  {
+                    id: 'xx',
+                    name: 'xx',
+                    avatar: '',
+                    type: 'user' as DataModelType,
+                  },
+                ],
+              ],
+              [
+                'group',
+                [
+                  {
+                    id: 'yy',
+                    name: 'yy',
+                    avatar: '',
+                    type: 'group' as DataModelType,
+                  },
+                ],
+              ],
             ])
           );
         }}

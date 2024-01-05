@@ -40,8 +40,8 @@ import type {
   GroupModel,
   GroupParticipantModel,
   ResultCallback,
+  UserData,
   UserFrom,
-  UserServiceData,
 } from './types';
 import { setUserInfoToMessage, userInfoFromMessage } from './utils';
 
@@ -49,8 +49,9 @@ export class ChatServiceImpl
   extends ChatServiceListenerImpl
   implements ChatService, ConversationServices
 {
-  _user?: UserServiceData;
-  _userList: Map<string, UserServiceData>;
+  _user?: UserData;
+  _dataList: Map<string, DataModel>;
+  _userList: Map<string, UserData>;
   _convStorage?: ConversationStorage;
   _convList: Map<string, ConversationModel>;
   _contactList: Map<string, ContactModel>;
@@ -82,14 +83,25 @@ export class ChatServiceImpl
     | undefined;
   _groupParticipantDataRequestCallback:
     | ((params: {
+        groupId: string;
         ids: string[];
         result: (data?: any[], error?: UIKitError) => void;
       }) => void | Promise<void>)
     | undefined;
+  _basicDataRequestCallback?:
+    | ((params: {
+        ids: Map<DataModelType, string[]>;
+        result: (data?: Map<DataModelType, any[]>, error?: UIKitError) => void;
+      }) => void)
+    | ((params: {
+        ids: Map<DataModelType, string[]>;
+        result: (data?: Map<DataModelType, any[]>, error?: UIKitError) => void;
+      }) => Promise<void>);
 
   constructor() {
     console.log('dev:chat:constructor:');
     super();
+    this._dataList = new Map();
     this._userList = new Map();
     this._convList = new Map();
     this._contactList = new Map();
@@ -108,6 +120,7 @@ export class ChatServiceImpl
   reset(): void {
     console.log('dev:chat:reset:');
     // this.clearListener(); // !!! warn: no clear.
+    this._dataList.clear();
     this._userList.clear();
     this._convList.clear();
     this._contactList.clear();
@@ -194,21 +207,11 @@ export class ChatServiceImpl
     userToken: string;
     userName: string;
     userAvatarURL?: string | undefined;
-    gender?: number;
-    sign?: string;
     usePassword?: boolean;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
-    const {
-      userId,
-      userToken,
-      userName,
-      userAvatarURL,
-      gender,
-      sign,
-      result,
-      usePassword,
-    } = params;
+    const { userId, userToken, userName, userAvatarURL, result, usePassword } =
+      params;
     try {
       console.log('dev:chat:login:', params);
       this.reset();
@@ -234,9 +237,7 @@ export class ChatServiceImpl
         remark: userName,
         avatarURL: userAvatarURL,
         userId: userId,
-        gender: gender,
-        sign: sign,
-      } as UserServiceData;
+      } as UserData;
 
       Services.dcs.init(
         `${this.client.options!.appKey.replace('#', '-')}/${userId}`
@@ -259,8 +260,7 @@ export class ChatServiceImpl
           remark: userName,
           avatarURL: userAvatarURL,
           userId: userId,
-          gender: gender,
-        } as UserServiceData;
+        } as UserData;
 
         Services.dcs.init(
           `${this.client.options!.appKey.replace('#', '-')}/${userId}`
@@ -302,8 +302,6 @@ export class ChatServiceImpl
     userToken: string;
     userName?: string;
     userAvatarURL?: string;
-    gender?: number;
-    sign?: string;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     if (this.client.options?.autoLogin !== true) {
@@ -323,9 +321,7 @@ export class ChatServiceImpl
             remark: params.userName,
             avatarURL: params.userAvatarURL,
             userId: userId,
-            gender: params.gender,
-            sign: params.sign,
-          } as UserServiceData;
+          } as UserData;
 
           Services.dcs.init(
             `${this.client.options!.appKey.replace('#', '-')}/${userId}`
@@ -368,7 +364,7 @@ export class ChatServiceImpl
     return this.client.currentUserName as string | undefined;
   }
 
-  user(userId?: string): UserServiceData | undefined {
+  user(userId?: string): UserData | undefined {
     if (this._user?.userId === userId) {
       return this._user;
     } else if (userId) {
@@ -377,7 +373,7 @@ export class ChatServiceImpl
     return undefined;
   }
 
-  setUser(params: { users: UserServiceData[] }): void {
+  setUser(params: { users: UserData[] }): void {
     params.users.forEach((v) => {
       this._userList.set(v.userId, v);
     });
@@ -455,19 +451,29 @@ export class ChatServiceImpl
       type: UserFrom;
       groupId?: string;
     }
-  ): UserServiceData {
+  ): UserData {
     return {
       userId: user.userId,
       userName: user.nickName,
       remark: user.nickName,
       avatarURL: user.avatarUrl,
-      gender: user.gender,
-      sign: user.sign,
       from: from,
     };
   }
 
-  getDoNotDisturbFromCache(convId: string) {
+  _getAvatarFromCache(id: string): string | undefined {
+    return this._dataList.get(id)?.avatar;
+  }
+
+  _getNameFromCache(id: string): string | undefined {
+    const data = this._dataList.get(id);
+    if (data) {
+      return data.remark ?? data.name;
+    }
+    return undefined;
+  }
+
+  _getDoNotDisturbFromCache(convId: string) {
     return this._silentModeList.get(convId)?.doNotDisturb;
   }
 
@@ -487,7 +493,9 @@ export class ChatServiceImpl
         conv.convId,
         conv.convType
       ),
-      doNotDisturb: this.getDoNotDisturbFromCache(conv.convId),
+      doNotDisturb: this._getDoNotDisturbFromCache(conv.convId),
+      convName: this._getNameFromCache(conv.convId),
+      convAvatar: this._getAvatarFromCache(conv.convId),
     } as ConversationModel;
   }
 
@@ -528,6 +536,7 @@ export class ChatServiceImpl
 
   setGroupParticipantOnRequestData<DataT>(
     callback?: (params: {
+      groupId: string;
       ids: string[];
       result: (data?: DataT[], error?: UIKitError) => void;
     }) => void | Promise<void>
@@ -542,6 +551,194 @@ export class ChatServiceImpl
     }) => void
   ): void {
     this._convDataRequestCallback = callback;
+  }
+
+  setOnRequestData(
+    callback?:
+      | ((params: {
+          ids: Map<DataModelType, string[]>;
+          result: (
+            data?: Map<DataModelType, DataModel[]>,
+            error?: UIKitError
+          ) => void;
+        }) => void)
+      | ((params: {
+          ids: Map<DataModelType, string[]>;
+          result: (
+            data?: Map<DataModelType, DataModel[]>,
+            error?: UIKitError
+          ) => void;
+        }) => Promise<void>)
+  ): void {
+    this._basicDataRequestCallback = callback;
+  }
+
+  updateRequestData(params: { data: Map<DataModelType, DataModel[]> }): void {
+    const { data } = params;
+    data.forEach((values) => {
+      values.forEach((value) => {
+        const old = this._dataList.get(value.id);
+        if (old) {
+          this._dataList.set(value.id, {
+            ...old,
+            name: value.name,
+            avatar: value.avatar,
+          });
+        } else {
+          // !!! Values that do not exist will not be updated.
+        }
+      });
+    });
+  }
+
+  async _requestConvData(list: ChatConversation[]): Promise<void> {
+    const ret = new Promise<void>((resolve, reject) => {
+      if (this._basicDataRequestCallback) {
+        const needRequest = new Set<DataModel>();
+        Array.from(list.values()).forEach((v) => {
+          const old = this._dataList.get(v.convId);
+          if (
+            old === undefined ||
+            old.name === undefined ||
+            old.avatar === undefined
+          ) {
+            needRequest.add({
+              id: v.convId,
+              type:
+                v.convType === ChatConversationType.GroupChat
+                  ? 'group'
+                  : 'user',
+              name: undefined,
+              avatar: undefined,
+            });
+            this._dataList.set(v.convId, {
+              id: v.convId,
+              type:
+                v.convType === ChatConversationType.GroupChat
+                  ? 'group'
+                  : 'user',
+            } as DataModel);
+          }
+        });
+        this._basicDataRequestCallback({
+          ids: new Map([
+            [
+              'user',
+              Array.from(needRequest.values())
+                .filter(
+                  (v) =>
+                    (v?.type === 'user' &&
+                      (v.id === v?.name ||
+                        v?.name === undefined ||
+                        v.name === null ||
+                        v.name.length === 0)) ||
+                    (v?.type === 'user' && v?.avatar === undefined)
+                )
+                .map((v) => v.id),
+            ],
+            [
+              'group',
+              Array.from(needRequest.values())
+                .filter(
+                  (v) =>
+                    (v?.type === 'group' &&
+                      (v.id === v?.name ||
+                        v?.name === undefined ||
+                        v.name === null ||
+                        v.name.length === 0)) ||
+                    (v?.type === 'group' && v?.avatar === undefined)
+                )
+                .map((v) => v.id),
+            ],
+          ]),
+          result: (data, error) => {
+            if (data) {
+              data.forEach((values: DataModel[]) => {
+                values.map((value) => {
+                  const conv = this._dataList.get(value.id);
+                  if (conv) {
+                    conv.name = value.name;
+                    conv.avatar = value.avatar;
+                  }
+                });
+              });
+              resolve();
+            } else {
+              reject(error);
+            }
+          },
+        });
+      } else {
+        resolve();
+      }
+    });
+
+    return ret;
+  }
+
+  _requestContactData(list: ContactModel[]): Promise<void> {
+    const ret = new Promise<void>((resolve, reject) => {
+      if (this._basicDataRequestCallback) {
+        const needRequest = new Set<DataModel>();
+        Array.from(list.values()).forEach((v) => {
+          const old = this._dataList.get(v.userId);
+          if (
+            old === undefined ||
+            old.name === undefined ||
+            old.avatar === undefined
+          ) {
+            needRequest.add({
+              id: v.userId,
+              type: 'user',
+              name: undefined,
+              avatar: undefined,
+            });
+            this._dataList.set(v.userId, {
+              id: v.userId,
+              type: 'user' as DataModelType,
+            } as DataModel);
+          }
+        });
+        this._basicDataRequestCallback({
+          ids: new Map([
+            [
+              'user',
+              Array.from(needRequest.values())
+                .filter(
+                  (v) =>
+                    (v?.type === 'user' &&
+                      (v.id === v?.name ||
+                        v?.name === undefined ||
+                        v.name === null ||
+                        v.name.length === 0)) ||
+                    (v?.type === 'user' && v?.avatar === undefined)
+                )
+                .map((v) => v.id),
+            ],
+          ]),
+          result: (data, error) => {
+            if (data) {
+              data.forEach((values: DataModel[]) => {
+                values.map((value) => {
+                  const conv = this._dataList.get(value.id);
+                  if (conv) {
+                    conv.name = value.name;
+                    conv.avatar = value.avatar;
+                  }
+                });
+              });
+              resolve();
+            } else {
+              reject(error);
+            }
+          },
+        });
+      } else {
+        resolve();
+      }
+    });
+
+    return ret;
   }
 
   setCurrentConversation(params: { conv?: ConversationModel }): void {
@@ -574,6 +771,9 @@ export class ChatServiceImpl
             });
           });
         }
+        await this._requestConvData(list);
+        this._convList.clear();
+
         const ret = list.map(async (v) => {
           this._convList.set(v.convId, await this.toUIConversation(v));
         });
@@ -645,6 +845,8 @@ export class ChatServiceImpl
 
         await this._convStorage?.setFinishedForFetchList(true);
 
+        await this._requestConvData(Array.from(map.values()));
+
         const ret = Array.from(map.values()).map(async (v) => {
           const conv = await this.toUIConversation(v);
           this._convList.set(conv.convId, conv);
@@ -653,64 +855,10 @@ export class ChatServiceImpl
         await Promise.all(ret);
       }
 
-      if (this._convDataRequestCallback) {
-        this._convDataRequestCallback({
-          ids: new Map([
-            [
-              'user',
-              Array.from(this._convList.values())
-                .filter(
-                  (v) =>
-                    v.convType === ChatConversationType.PeerChat &&
-                    (v.convId === v.convName ||
-                      v.convName === undefined ||
-                      v.convName === null ||
-                      v.convName.length === 0) &&
-                    v.convAvatar === undefined
-                )
-                .map((v) => v.convId),
-            ],
-            [
-              'group',
-              Array.from(this._convList.values())
-                .filter(
-                  (v) =>
-                    v.convType === ChatConversationType.GroupChat &&
-                    (v.convId === v.convName ||
-                      v.convName === undefined ||
-                      v.convName === null ||
-                      v.convName.length === 0) &&
-                    v.convAvatar === undefined
-                )
-                .map((v) => v.convId),
-            ],
-          ]),
-          result: (data, error) => {
-            if (data) {
-              data.forEach((values: DataModel[]) => {
-                values.map((value) => {
-                  const conv = this._convList.get(value.id);
-                  if (conv) {
-                    conv.convName = value.name;
-                    conv.convAvatar = value.avatar;
-                  }
-                });
-              });
-            }
-
-            onResult({
-              isOk: true,
-              value: Array.from(this._convList.values()),
-              error,
-            });
-          },
-        });
-      } else {
-        onResult({
-          isOk: true,
-          value: Array.from(this._convList.values()),
-        });
-      }
+      onResult({
+        isOk: true,
+        value: Array.from(this._convList.values()),
+      });
     } catch (e) {
       onResult({
         isOk: false,
@@ -995,41 +1143,23 @@ export class ChatServiceImpl
             }
           });
 
-          if (this._contactDataRequestCallback) {
-            this._contactDataRequestCallback({
-              ids: Array.from(list.values())
-                .filter(
-                  (v) => v.nickName === undefined || v.nickName === v.userId
-                )
-                .map((v) => v.userId),
-              result: async (data?: DataModel[], error?: UIKitError) => {
-                if (data) {
-                  data.forEach((value) => {
-                    const contact = list.get(value.id);
-                    if (contact) {
-                      contact.nickName = value.name;
-                      contact.avatar = value.avatar;
-                    }
-                  });
-                }
+          await this._requestContactData(Array.from(list.values()));
+          list.forEach((v) => {
+            const item = this._dataList.get(v.userId);
+            if (item && item.avatar) {
+              v.avatar = item.avatar;
+            }
+            if (item && item.name) {
+              v.nickName = item.name;
+            }
+          });
 
-                this._contactList = list;
+          this._contactList = list;
 
-                params.onResult({
-                  isOk: true,
-                  value: Array.from(this._contactList.values()).map((v) => v),
-                  error,
-                });
-              },
-            });
-          } else {
-            this._contactList = list;
-
-            params.onResult({
-              isOk: true,
-              value: Array.from(this._contactList.values()).map((v) => v),
-            });
-          }
+          params.onResult({
+            isOk: true,
+            value: Array.from(this._contactList.values()).map((v) => v),
+          });
         },
         onError: (e) => {
           params.onResult({ isOk: false, error: e });
@@ -1043,41 +1173,25 @@ export class ChatServiceImpl
       onFinished: async (value) => {
         value.forEach(async (v) => {
           this._contactList.set(v.userId, {
-            ...v,
-          });
+            userId: v.userId,
+          } as ContactModel);
         });
 
-        if (this._contactDataRequestCallback) {
-          this._contactDataRequestCallback({
-            ids: Array.from(this._contactList.values())
-              .filter(
-                (v) => v.nickName === undefined || v.nickName === v.userId
-              )
-              .map((v) => v.userId),
-            result: async (data?: DataModel[], error?: UIKitError) => {
-              if (data) {
-                data.forEach((value) => {
-                  const contact = this._contactList.get(value.id);
-                  if (contact) {
-                    contact.nickName = value.name;
-                    contact.avatar = value.avatar;
-                  }
-                });
-              }
+        await this._requestContactData(Array.from(this._contactList.values()));
+        this._contactList.forEach((v) => {
+          const item = this._dataList.get(v.userId);
+          if (item && item.avatar) {
+            v.avatar = item.avatar;
+          }
+          if (item && item.name) {
+            v.nickName = item.name;
+          }
+        });
 
-              params.onResult({
-                isOk: true,
-                value: Array.from(this._contactList.values()).map((v) => v),
-                error,
-              });
-            },
-          });
-        } else {
-          params.onResult({
-            isOk: true,
-            value: Array.from(this._contactList.values()).map((v) => v),
-          });
-        }
+        params.onResult({
+          isOk: true,
+          value: Array.from(this._contactList.values()).map((v) => v),
+        });
       },
       onError: (e) => {
         params.onResult({ isOk: false, error: e });
@@ -1352,6 +1466,7 @@ export class ChatServiceImpl
 
         if (this._groupParticipantDataRequestCallback) {
           this._groupParticipantDataRequestCallback({
+            groupId: params.groupId,
             ids: Array.from(memberList.values()).map((v) => v.id),
             result: async (data?: DataModel[], error?: UIKitError) => {
               if (data) {
@@ -1789,7 +1904,7 @@ export class ChatServiceImpl
 
   getUserInfo(params: {
     userId: string;
-    onResult: ResultCallback<UserServiceData | undefined>;
+    onResult: ResultCallback<UserData | undefined>;
   }): void {
     if (this._userList.has(params.userId)) {
       params.onResult({
@@ -1832,7 +1947,7 @@ export class ChatServiceImpl
   }
   getUsersInfo(params: {
     userIds: string[];
-    onResult: ResultCallback<UserServiceData[]>;
+    onResult: ResultCallback<UserData[]>;
   }): void {
     this.tryCatch({
       promise: this.client.userManager.fetchUserInfoById(params.userIds),
@@ -1844,14 +1959,14 @@ export class ChatServiceImpl
             const localUser = this._userList.get(v.userId);
             this._userList.set(
               user.userId,
-              mergeObjects<UserServiceData>(user, localUser ?? ({} as any))
+              mergeObjects<UserData>(user, localUser ?? ({} as any))
             );
           });
           params.onResult({
             isOk: true,
             value: params.userIds
               .map((v) => this._userList.get(v))
-              .filter((v) => v !== undefined) as UserServiceData[],
+              .filter((v) => v !== undefined) as UserData[],
           });
         } else {
           params.onResult({
@@ -1864,7 +1979,7 @@ export class ChatServiceImpl
   }
 
   updateSelfInfo(params: {
-    self: UserServiceData;
+    self: UserData;
     onResult: ResultCallback<void>;
   }): void {
     const { self } = params;
@@ -1872,8 +1987,6 @@ export class ChatServiceImpl
       userId: self.userId,
       nickName: self.userName,
       avatarUrl: self.avatarURL,
-      gender: self.gender,
-      sign: self.sign,
     };
     this.tryCatch({
       promise: this.client.userManager.updateOwnUserInfo(p),
@@ -2073,14 +2186,11 @@ export class ChatServiceImpl
     });
   }
 
-  userInfoFromMessage(msg?: ChatMessage): UserServiceData | undefined {
+  userInfoFromMessage(msg?: ChatMessage): UserData | undefined {
     return userInfoFromMessage(msg);
   }
 
-  setUserInfoToMessage(params: {
-    msg: ChatMessage;
-    user?: UserServiceData;
-  }): void {
+  setUserInfoToMessage(params: { msg: ChatMessage; user?: UserData }): void {
     return setUserInfoToMessage(params);
   }
 
