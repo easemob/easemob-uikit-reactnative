@@ -22,9 +22,11 @@ export function NewRequests(props: NewRequestsProps) {
   const {
     containerStyle,
     onBack,
-    enableSearch = false,
-    enableNavigationBar,
-    NavigationBar: propsNavigationBar,
+    navigationBarVisible,
+    customNavigationBar,
+    searchStyleVisible = false,
+    customSearch,
+    onClickedSearch,
   } = props;
   const {
     data,
@@ -61,9 +63,9 @@ export function NewRequests(props: NewRequestsProps) {
         containerStyle,
       ]}
     >
-      {enableNavigationBar !== false ? (
-        propsNavigationBar ? (
-          <>{propsNavigationBar}</>
+      {navigationBarVisible !== false ? (
+        customNavigationBar ? (
+          <>{customNavigationBar}</>
         ) : (
           <TopNavigationBar
             Left={
@@ -94,13 +96,17 @@ export function NewRequests(props: NewRequestsProps) {
           />
         )
       ) : null}
-      {enableSearch !== false ? (
-        <SearchStyle
-          title={tr('search')}
-          onPress={() => {
-            // todo:
-          }}
-        />
+      {searchStyleVisible !== false ? (
+        customSearch ? (
+          <>{customSearch}</>
+        ) : (
+          <SearchStyle
+            title={tr('search')}
+            onPress={() => {
+              onClickedSearch?.();
+            }}
+          />
+        )
       ) : null}
       <View style={{ flex: 1 }}>
         <FlatList

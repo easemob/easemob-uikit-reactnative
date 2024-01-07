@@ -28,6 +28,7 @@ export type useMessageLongPressActionsProps = {
   showReportMessage?: (model: MessageModel) => void;
   deleteMessage?: (msg: ChatMessage) => void;
   recallMessage?: (msg: ChatMessage, fromType: 'send' | 'recv') => void;
+  onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
 };
 export function useMessageLongPressActions(
   props: useMessageLongPressActionsProps
@@ -39,6 +40,7 @@ export function useMessageLongPressActions(
     showReportMessage,
     deleteMessage,
     recallMessage,
+    onInit,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
@@ -50,7 +52,7 @@ export function useMessageLongPressActions(
     if (model.modelType !== 'message') {
       return;
     }
-    const initItems = [] as InitMenuItemsType[];
+    let initItems = [] as InitMenuItemsType[];
     const msgModel = model as MessageModel;
     if (model.modelType === 'message') {
       if (msgModel.msg.body.type === ChatMessageType.TXT) {
@@ -158,6 +160,7 @@ export function useMessageLongPressActions(
     if (initItems.length === 0) {
       return;
     }
+    initItems = onInit ? onInit(initItems) : initItems;
     menuRef.current?.startShowWithProps?.({
       initItems: initItems,
       onRequestModalClose: closeMenu,

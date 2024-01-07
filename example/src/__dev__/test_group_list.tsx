@@ -73,8 +73,8 @@ export function CL() {
             ])
           );
         }}
-        onSearch={() => {
-          console.log('test:zuoyu:onSearch');
+        onClickedSearch={() => {
+          console.log('test:zuoyu:onClickedSearch');
         }}
         onClicked={() => {
           console.log('test:zuoyu:onClicked:13');

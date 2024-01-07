@@ -22,26 +22,21 @@ import type { MessageManagerListener } from '../../chat/messageManager.types';
 import type { UIKitError } from '../../error';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
+import type { FlatListRef } from '../../ui/FlatList';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useConversationListMoreActions } from '../hooks/useConversationListMoreActions';
 import { useConversationLongPressActions } from '../hooks/useConversationLongPressActions';
 import { useFlatList } from '../List';
-import type { UseFlatListReturn } from '../types';
+import type { ListState } from '../types';
 import { ConversationListItemMemo } from './ConversationList.item';
 import type {
   ConversationListItemComponentType,
   ConversationListItemProps,
   UseConversationListProps,
-  UseConversationListReturn,
 } from './types';
 
-export function useConversationList(
-  props: UseConversationListProps
-): UseFlatListReturn<ConversationListItemProps> &
-  UseConversationListReturn & {
-    tr: (key: string, ...args: any[]) => string;
-  } {
+export function useConversationList(props: UseConversationListProps) {
   const {
     onClicked,
     onLongPressed,
@@ -52,12 +47,19 @@ export function useConversationList(
     onClickedNewConversation,
     onClickedNewGroup,
     ListItemRender: propsListItemRender,
+    onStateChanged,
+    propsRef,
+    flatListProps: propsFlatListProps,
+    onInitNavigationBarMenu,
+    onInitBottomMenu,
+    onInitialized,
   } = props;
   const flatListProps = useFlatList<ConversationListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
     // onInit: () => init(),
   });
   const {
+    ref: flatListRef,
     data,
     setData,
     dataRef,
@@ -82,7 +84,17 @@ export function useConversationList(
     onClickedNewContact,
     onClickedNewConversation,
     onClickedNewGroup,
+    onInit: onInitNavigationBarMenu,
   });
+  const im = useChatContext();
+
+  const onSetState = React.useCallback(
+    (state: ListState) => {
+      setListState?.(state);
+      onStateChanged?.(state);
+    },
+    [onStateChanged, setListState]
+  );
 
   const onSort = React.useCallback(
     (
@@ -98,15 +110,12 @@ export function useConversationList(
     [propsOnSort]
   );
 
-  const im = useChatContext();
-
   const onLongPressedRef = React.useRef(
     (data?: ConversationModel | undefined) => {
       if (data) {
         if (onLongPressed) {
           onLongPressed(data);
         } else {
-          // onShowMenu(data);
           onShowConversationLongPressActions(data);
         }
       }
@@ -144,88 +153,95 @@ export function useConversationList(
     [dataRef, onSetData]
   );
 
-  const init = React.useCallback(async () => {
-    if (testMode === 'only-ui') {
-      const array = Array.from({ length: 10 }, (_, index) => ({
-        id: index.toString(),
-      }));
-      const testList = array.map((item, i) => {
-        return {
-          id: item.id,
-          data: {
-            convId: item.id,
-            convType: i % 2 === 0 ? 0 : 1,
-            convAvatar:
-              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-            convName: 'user',
-            unreadMessageCount: 1,
-            isPinned: i % 2 === 0,
-            lastMessage:
-              i % 4 === 0
-                ? undefined
-                : {
-                    localTime: new Date().getTime() + i * 1000 * 60,
-                    body: { type: ChatMessageType.TXT, content: 'hello' },
-                  },
-          },
-          onLongPressed: onLongPressedRef.current,
-          onClicked: onClickedRef.current,
-        } as ConversationListItemProps;
-      });
-      onSetData(testList);
-      return;
-    }
-    if (isAutoLoad === true) {
-      const url = im.user(im.userId)?.avatarURL;
-      if (url) {
-        setAvatarUrl(url);
+  const init = React.useCallback(
+    async (params: { onFinished?: () => void }) => {
+      if (testMode === 'only-ui') {
+        const array = Array.from({ length: 10 }, (_, index) => ({
+          id: index.toString(),
+        }));
+        const testList = array.map((item, i) => {
+          return {
+            id: item.id,
+            data: {
+              convId: item.id,
+              convType: i % 2 === 0 ? 0 : 1,
+              convAvatar:
+                'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+              convName: 'user',
+              unreadMessageCount: 1,
+              isPinned: i % 2 === 0,
+              lastMessage:
+                i % 4 === 0
+                  ? undefined
+                  : {
+                      localTime: new Date().getTime() + i * 1000 * 60,
+                      body: { type: ChatMessageType.TXT, content: 'hello' },
+                    },
+            },
+            onLongPressed: onLongPressedRef.current,
+            onClicked: onClickedRef.current,
+          } as ConversationListItemProps;
+        });
+        onSetData(testList);
+        return;
       }
       im.setOnRequestData(onRequestMultiData);
-      const s = await im.loginState();
-      if (s === 'logged') {
-        im.getAllConversations({
-          onResult: (result) => {
-            const { isOk, value: list, error } = result;
-            if (isOk && list) {
-              dataRef.current = [];
-              if (list) {
-                for (const conv of list) {
-                  if (conv.convId === gNewRequestConversationId) {
-                    continue;
+      if (isAutoLoad === true) {
+        const url = im.user(im.userId)?.avatarURL;
+        if (url) {
+          setAvatarUrl(url);
+        }
+
+        const s = await im.loginState();
+        if (s === 'logged') {
+          im.getAllConversations({
+            onResult: (result) => {
+              const { isOk, value: list, error } = result;
+              if (isOk && list) {
+                dataRef.current = [];
+                if (list) {
+                  for (const conv of list) {
+                    if (conv.convId === gNewRequestConversationId) {
+                      continue;
+                    }
+                    dataRef.current.push({
+                      id: conv.convId,
+                      data: conv,
+                      onLongPressed: onLongPressedRef.current,
+                      onClicked: onClickedRef.current,
+                    });
                   }
-                  dataRef.current.push({
-                    id: conv.convId,
-                    data: conv,
-                    onLongPressed: onLongPressedRef.current,
-                    onClicked: onClickedRef.current,
-                  });
+                  if (isShowAfterLoaded === true) {
+                    onSetData(dataRef.current);
+                  }
                 }
-                if (isShowAfterLoaded === true) {
-                  onSetData(dataRef.current);
+                onSetState('normal');
+                im.sendFinished({ event: 'getAllConversations' });
+              } else {
+                onSetState('error');
+                if (error) {
+                  im.sendError({ error });
                 }
               }
-              setListState?.('normal');
-              im.sendFinished({ event: 'getAllConversations' });
-            } else {
-              setListState?.('error');
-              if (error) {
-                im.sendError({ error });
-              }
-            }
-          },
-        });
+              params.onFinished?.();
+            },
+          });
+        } else {
+          onSetState('error');
+        }
       }
-    }
-  }, [
-    dataRef,
-    im,
-    isAutoLoad,
-    isShowAfterLoaded,
-    onRequestMultiData,
-    onSetData,
-    setListState,
-    testMode,
-  ]);
+    },
+    [
+      dataRef,
+      im,
+      isAutoLoad,
+      isShowAfterLoaded,
+      onRequestMultiData,
+      onSetData,
+      onSetState,
+      testMode,
+    ]
+  );
 
   const onRemoveById = React.useCallback(
     async (convId: string) => {
@@ -243,11 +259,11 @@ export function useConversationList(
   const onPin = React.useCallback(
     async (conv: ConversationModel) => {
       try {
-        const isPinned = !conv.isPinned;
+        const isPinned = conv.isPinned ?? true;
         let isExist = false;
         for (const item of dataRef.current) {
           if (item.data.convId === conv.convId) {
-            item.data.isPinned = isPinned;
+            item.data.isPinned = conv.isPinned;
             item.data = { ...item.data };
             isExist = true;
             break;
@@ -270,7 +286,7 @@ export function useConversationList(
   const onDisturb = React.useCallback(
     async (conv: ConversationModel) => {
       try {
-        const isDisturb = !conv.doNotDisturb;
+        const isDisturb = conv.doNotDisturb ?? true;
         let isExist = false;
         for (const item of dataRef.current) {
           if (item.data.convId === conv.convId) {
@@ -320,14 +336,68 @@ export function useConversationList(
     [dataRef, im]
   );
 
+  const onLastMessage = React.useCallback(
+    (conv: ConversationModel) => {
+      try {
+        let isExist = false;
+        for (const item of dataRef.current) {
+          if (item.data.convId === conv.convId) {
+            item.data.lastMessage = conv.lastMessage;
+            item.data = { ...item.data };
+            isExist = true;
+            break;
+          }
+        }
+        if (isExist === true && conv.lastMessage) {
+          im.setConversationMsg({
+            convId: conv.convId,
+            convType: conv.convType,
+            lastMessage: conv.lastMessage,
+          });
+          // onSetData(dataRef.current);
+        }
+      } catch (error) {
+        im.sendError({ error: error as UIKitError });
+      }
+    },
+    [dataRef, im]
+  );
+
+  const onExt = React.useCallback(
+    (conv: ConversationModel) => {
+      try {
+        let isExist = false;
+        for (const item of dataRef.current) {
+          if (item.data.convId === conv.convId) {
+            item.data.ext = conv.ext;
+            item.data = { ...item.data };
+            isExist = true;
+            break;
+          }
+        }
+        if (isExist === true && conv.ext) {
+          im.setConversationExt({
+            convId: conv.convId,
+            convType: conv.convType,
+            ext: conv.ext,
+          });
+          // onSetData(dataRef.current);
+        }
+      } catch (error) {
+        im.sendError({ error: error as UIKitError });
+      }
+    },
+    [dataRef, im]
+  );
+
   const pinConv = React.useCallback(
     (convId: string, convType: number) => {
       const conv = dataRef.current.find((item) => {
         return item.data.convId === convId && item.data.convType === convType;
       });
-      console.log('test:zuoyu:pinConv:', conv);
+      console.log('test:zuoyu:pinConv:2', conv);
       if (conv && conv.data.isPinned !== true) {
-        onPin(conv.data);
+        onPin({ ...conv.data, isPinned: true });
       }
     },
     [dataRef, onPin]
@@ -337,9 +407,9 @@ export function useConversationList(
       const conv = dataRef.current.find((item) => {
         return item.data.convId === convId && item.data.convType === convType;
       });
-      console.log('test:zuoyu:unPinConv:', conv);
+      console.log('test:zuoyu:unPinConv:2', conv);
       if (conv && conv.data.isPinned === true) {
-        onPin(conv.data);
+        onPin({ ...conv.data, isPinned: false });
       }
     },
     [dataRef, onPin]
@@ -353,6 +423,7 @@ export function useConversationList(
       onPin,
       onRead,
       onRemove,
+      onInit: onInitBottomMenu,
     });
 
   const onMessage = React.useCallback(
@@ -400,7 +471,7 @@ export function useConversationList(
         onSetData(dataRef.current);
       },
       onConversationsUpdate: () => {
-        init();
+        init({ onFinished: onInitialized });
       },
       onConversationRead: () => {},
       onMessageContentChanged: () => {
@@ -444,6 +515,7 @@ export function useConversationList(
   }, [
     dataRef,
     init,
+    onInitialized,
     onMessage,
     onRemoveById,
     onSetData,
@@ -481,11 +553,56 @@ export function useConversationList(
   }, [im.messageManager, onMessage]);
 
   React.useEffect(() => {
-    init();
-  }, [init]);
+    init({ onFinished: onInitialized });
+  }, [init, onInitialized]);
+
+  if (propsRef && propsRef.current) {
+    propsRef.current.closeMenu = () => closeMenu();
+    propsRef.current.deleteItem = (conv) => onRemove(conv);
+    propsRef.current.getAlertRef = () => alertRef;
+    propsRef.current.getMenuRef = () => menuRef;
+    propsRef.current.getFlatListRef = () =>
+      flatListRef as React.RefObject<FlatListRef<ConversationListItemProps>>;
+    propsRef.current.getList = () => dataRef.current.map((item) => item.data);
+    propsRef.current.refreshList = () => {
+      onSetData(dataRef.current);
+    };
+    propsRef.current.reloadList = () => {
+      init({ onFinished: onInitialized });
+    };
+    propsRef.current.showMenu = () => {
+      onShowConversationListMoreActions();
+    };
+    propsRef.current.updateItem = (conv: ConversationModel) => {
+      const isExisted = dataRef.current.find((item) => {
+        return item.data.convId === conv.convId;
+      });
+      if (isExisted) {
+        if (
+          isExisted.data.unreadMessageCount !== conv.unreadMessageCount &&
+          conv.unreadMessageCount === 0
+        ) {
+          onRead(conv);
+        }
+        if (isExisted.data.lastMessage !== conv.lastMessage) {
+          onLastMessage(conv);
+        }
+        if (isExisted.data.doNotDisturb !== conv.doNotDisturb) {
+          onDisturb(conv);
+        }
+        if (isExisted.data.ext !== conv.ext) {
+          onExt(conv);
+        }
+        if (isExisted.data.isPinned !== conv.isPinned) {
+          onPin(conv);
+        }
+      }
+    };
+  }
 
   return {
     ...flatListProps,
+    propsFlatListProps,
     listType,
     listState,
     data,

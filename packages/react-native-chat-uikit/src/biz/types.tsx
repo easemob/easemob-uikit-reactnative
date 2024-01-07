@@ -8,26 +8,69 @@ import type {
 
 import type { DataModelType } from '../chat';
 import type { UIKitError } from '../error';
-import type { FlatListRef } from '../ui/FlatList';
-import type { SectionListRef } from '../ui/SectionList';
+import type { AlertRef } from '../ui/Alert';
+import type { FlatListProps, FlatListRef } from '../ui/FlatList';
+import type { SectionListProps, SectionListRef } from '../ui/SectionList';
+import type {
+  BottomSheetNameMenuRef,
+  InitMenuItemsType,
+} from './BottomSheetMenu';
 
 export type PropsWithTest = { testMode?: 'only-ui' | undefined };
 export type PropsWithError = { onError?: (error: UIKitError) => void };
 export type PropsWithChildren = React.PropsWithChildren<{}>;
-export type PropsWithInit = { onInitialized?: (data?: any) => void };
-export type PropsWithBack = {
-  onBack?: (data?: any) => void;
+export type PropsWithInit<DataT = any> = {
+  onInitialized?: (data?: DataT) => void;
 };
-export type PropsWithCancel = {
-  onCancel?: (data?: any) => void;
+export type PropsWithBack<DataT = any> = {
+  onBack?: (data?: DataT) => void;
 };
-export type PropsWithSearch = {
-  enableSearch?: boolean;
-  onSearch?: (data?: any) => void;
+export type PropsWithCancel<DataT = any> = {
+  onCancel?: (data?: DataT) => void;
+};
+export type PropsWithSearch<DataT = any> = {
+  searchStyleVisible?: boolean;
+  customSearch?: React.ReactElement;
+  onClickedSearch?: (data?: DataT) => void;
 };
 export type PropsWithNavigationBar = {
-  NavigationBar?: React.ReactElement;
-  enableNavigationBar?: boolean;
+  /**
+   * Whether to display the navigation bar.
+   */
+  navigationBarVisible?: boolean;
+  /**
+   * Custom navigation bar.
+   */
+  customNavigationBar?: React.ReactElement;
+};
+export type PropsWithFlatList<ListItemProps> = {
+  /**
+   * Properties of the list component. Currently, direct setting of ref, data, renderItem is not supported.
+   */
+  flatListProps?: Omit<
+    FlatListProps<ListItemProps>,
+    'ref' | 'data' | 'renderItem'
+  >;
+};
+export type PropsWithSectionList<
+  ListItemProps,
+  SectionT extends DefaultSectionT = DefaultSectionT
+> = {
+  /**
+   * Properties of the list component. Currently, direct setting of ref, data, renderItem is not supported.
+   */
+  sectionListProps?: Omit<
+    SectionListProps<ListItemProps, SectionT>,
+    'ref' | 'data' | 'renderItem'
+  >;
+};
+export type PropsWithMenu = {
+  /**
+   * Custom menu items. Supports replacing and appending menu items.
+   * @param initItems Default menu item list.
+   * @returns New menu item list.
+   */
+  onInitMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
 };
 
 export type ContactType =
@@ -103,6 +146,8 @@ export type ListRequestProps<DataT> = {
   }) => void | Promise<void>;
 };
 
+export type ListStateType = 'loading' | 'empty' | 'error' | 'normal';
+
 export type UseListBasicReturn<ItemT> = {
   /**
    * @description The type of list.
@@ -111,7 +156,7 @@ export type UseListBasicReturn<ItemT> = {
   /**
    * @description The state of the list.
    */
-  listState?: 'loading' | 'empty' | 'error' | 'normal';
+  listState?: ListStateType;
   /**
    * Refresh callback.
    */
@@ -232,13 +277,108 @@ export type UseSectionListReturn<
 };
 
 export type ListItemActions<DataT> = {
-  onClicked?: (data?: DataT) => void;
-  onLongPressed?: (data?: DataT) => void;
-  onToRightSlide?: (data?: DataT) => void;
-  onToLeftSlide?: (data?: DataT) => void;
+  /**
+   * Callback notification when a list item is clicked. If the return result is true, execution continues, otherwise it terminates.
+   */
+  onClicked?: ((data?: DataT) => void) | undefined;
+  /**
+   * Callback notification when a list item is long pressed. If the return result is true, execution continues, otherwise it terminates.
+   */
+  onLongPressed?: ((data?: DataT) => void) | undefined;
+  /**
+   * Callback notification when a list item is swiped to the left. If the return result is true, execution continues, otherwise it terminates.
+   */
+  onToRightSlide?: ((data?: DataT) => void) | undefined;
+  /**
+   * Callback notification when a list item is swiped to the right. If the return result is true, execution continues, otherwise it terminates.
+   */
+  onToLeftSlide?: ((data?: DataT) => void) | undefined;
 };
 
 export type DefaultListIndexPropsT = {
+  /**
+   * Header of alphabetical list. For example: A, B, C, etc.
+   */
   indexTitles: ReadonlyArray<string>;
+  /**
+   * Callback notification when the index is selected.
+   */
   onIndexSelected?: (index: number) => void;
+};
+
+export type BasicListRefType<DataModel> = {
+  /**
+   * get data model list.
+   */
+  getList: () => DataModel[];
+  /**
+   * add data model.
+   *
+   * If the operation fails, an error is returned through `ErrorServiceListener.onError`.
+   *
+   * ** To create a new data, you need to send the data through the contact details page, group details page, group member details page, or create a new data through the data extension menu. No direct support is provided here. **
+   */
+  addItem: (items: DataModel) => void;
+  /**
+   * remove data model.
+   *
+   * If the operation fails, an error is returned through `ErrorServiceListener.onError`.
+   *
+   * You can also delete a data by long-pressing the data list item to pop up the menu.
+   */
+  deleteItem: (items: DataModel) => void;
+  /**
+   * update data model.
+   *
+   * If the operation fails, an error is returned through `ErrorServiceListener.onError`.
+   */
+  updateItem: (items: DataModel) => void;
+  /**
+   * clear data model list.
+   *
+   * If the operation fails, an error is returned through `ErrorServiceListener.onError`.
+   */
+  clearItem: () => void;
+  /**
+   * refresh data model list.
+   */
+  refreshList: () => void;
+  /**
+   * reload data model list. Compared with `refreshList`, data will be retrieved from native, which may solve some temporary problems.
+   *
+   * If the operation fails, an error is returned through `ErrorServiceListener.onError`.
+   */
+  reloadList: () => void;
+  /**
+   * Display the session list menu. Menu customization needs to be implemented through `onInitMenu`. If you need complete customization, you can use `menuRef` and `alertRef` directly for more control. Some menus need to pop up a confirmation dialog box, which can be controlled using `alertRef`.
+   */
+  showMenu: () => void;
+  /**
+   * Close the menu.
+   * @param onFinished Close the callback notification after the menu is completed.
+   */
+  closeMenu: (onFinished?: () => void) => void;
+  /**
+   * Gets a reference to the menu component of the content.
+   */
+  getMenuRef: () => React.RefObject<BottomSheetNameMenuRef>;
+  /**
+   * Gets a reference to the alert component of the content.
+   */
+  getAlertRef: () => React.RefObject<AlertRef>;
+};
+
+export type FlatListRefType<DataModel, ListItemProps> =
+  BasicListRefType<DataModel> & {
+    getFlatListRef: () => React.RefObject<FlatListRef<ListItemProps>>;
+  };
+
+export type SectionListRefType<
+  DataModel,
+  ListItemProps,
+  SectionT extends DefaultSectionT = DefaultSectionT
+> = BasicListRefType<DataModel> & {
+  getSectionListRef: () => React.RefObject<
+    SectionListRef<ListItemProps, SectionT>
+  >;
 };

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
+import type { DataModel } from 'src/chat';
 
 import { g_not_existed_url } from '../../const';
 import { useColors } from '../../hook';
@@ -8,11 +9,11 @@ import { IconButton } from '../../ui/Button';
 import { HighText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { ContactSearchModel } from '../ContactList';
-import type { DefaultComponentModel, ListSearchItemProps } from './types';
+import type { ListSearchItemProps } from './types';
 
-export function ListSearchItem<
-  ComponentModel extends DefaultComponentModel = DefaultComponentModel
->(props: ListSearchItemProps<ComponentModel>) {
+export function ListSearchItem<ComponentModel extends DataModel = DataModel>(
+  props: ListSearchItemProps<ComponentModel>
+) {
   const { searchType } = props;
   if (searchType === 'create-group' || searchType === 'add-group-member') {
     const p = props as any as ListSearchItemProps<ContactSearchModel>;
@@ -21,7 +22,7 @@ export function ListSearchItem<
   return <DefaultListSearchItem {...props} />;
 }
 export function DefaultListSearchItem<
-  ComponentModel extends DefaultComponentModel = DefaultComponentModel
+  ComponentModel extends DataModel = DataModel
 >(props: ListSearchItemProps<ComponentModel>) {
   const { data, keyword, onClicked } = props;
   const { colors } = usePaletteContext();
@@ -61,7 +62,7 @@ export function DefaultListSearchItem<
           paddingHorizontal: 16,
         }}
       >
-        <Avatar url={g_not_existed_url} size={50} />
+        <Avatar url={data.avatar} size={50} />
         <HighText
           paletteType={'title'}
           textType={'medium'}

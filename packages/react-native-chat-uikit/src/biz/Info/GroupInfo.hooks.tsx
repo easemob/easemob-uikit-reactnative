@@ -37,6 +37,7 @@ export function useGroupInfo(
     onClickedChangeGroupOwner,
     onGroupDestroy,
     onGroupQuit,
+    onInitMenu,
   } = props;
   const im = useChatContext();
   const { tr } = useI18nContext();
@@ -59,6 +60,7 @@ export function useGroupInfo(
     onGroupQuit,
     onClickedChangeGroupOwner,
     onGroupDestroy,
+    onInit: onInitMenu,
   });
   useLifecycle(
     React.useCallback(

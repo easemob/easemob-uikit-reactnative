@@ -2,6 +2,7 @@ import type {
   ChatClient,
   ChatContact,
   ChatContactEventListener,
+  ChatConversation,
   ChatConversationType,
   ChatCustomEventListener,
   ChatGroup,
@@ -177,7 +178,11 @@ export type ChatServiceListener = ConnectServiceListener &
   ErrorServiceListener &
   ResultServiceListener;
 
-export type ConversationModel = {
+type _ConversationModel = PartialUndefinable<ChatConversation>;
+export type ConversationModel = Pick<
+  _ConversationModel,
+  'ext' | 'isPinned' | 'pinnedTime'
+> & {
   /**
    * The conversation ID.
    */
@@ -186,32 +191,6 @@ export type ConversationModel = {
    * The conversation type.
    */
   convType: ChatConversationType;
-  /**
- * Whether the current conversation is a thread conversation.
- * 
- * - `true`: Yes.
- * - `false`: No.
- *
- * **Note**
-
- * This parameter is valid only for group chat.
- */
-  isChatThread?: boolean;
-  /**
-   * The conversation extension.
-   */
-  ext?: Record<string, string | number | boolean>;
-  /**
-   * Whether the conversation is pinned:
-   *
-   * - `true`: Yes.
-   * - (Default) `false`: No.
-   */
-  isPinned?: boolean;
-  /**
-   * The UNIX timestamp when the conversation is pinned. The unit is millisecond. This value is `0` when the conversation is not pinned.
-   */
-  pinnedTime?: number;
   /**
    * The message unread count.
    */
@@ -364,6 +343,11 @@ export interface ContactServices {
   }): void;
   removeContact(params: {
     userId: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  setContactRemark(params: {
+    userId: string;
+    remark: string;
     onResult: ResultCallback<void>;
   }): void;
   acceptInvitation(params: {
@@ -799,7 +783,7 @@ export interface ChatService
   updateRequestData(params: { data: Map<DataModelType, DataModel[]> }): void;
 }
 
-type ChatOptionsType1 = PartialUndefinable<ChatOptions>;
+type _ChatOptionsType = PartialUndefinable<ChatOptions>;
 /**
  * ChatOptionsType is the initialization parameters of ChatService.
  *
@@ -808,7 +792,7 @@ type ChatOptionsType1 = PartialUndefinable<ChatOptions>;
  * This parameter option is consistent with `Agora Chat SDK`.
  *
  */
-export type ChatOptionsType = ChatOptionsType1 & {
+export type ChatOptionsType = _ChatOptionsType & {
   appKey: string;
   autoLogin: boolean;
   debugModel: boolean;

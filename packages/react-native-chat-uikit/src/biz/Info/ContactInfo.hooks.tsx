@@ -17,6 +17,7 @@ export function useContactInfo(props: ContactInfoProps) {
     doNotDisturb: propsDoNotDisturb,
     onClearChat: propsOnClearChat,
     isContact: propsIsContact,
+    onInitMenu,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(propsUserName);
@@ -29,6 +30,7 @@ export function useContactInfo(props: ContactInfoProps) {
   const { onShowContactInfoActions } = useContactInfoActions({
     menuRef,
     alertRef,
+    onInit: onInitMenu,
   });
   const im = useChatContext();
   const { tr } = useI18nContext();

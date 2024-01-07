@@ -31,7 +31,7 @@ export function NewConversationScreen(props: Props) {
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
-        onSearch={() => {
+        onClickedSearch={() => {
           navigation.navigate('SearchContact', {
             params: { searchType: 'new-conversation' },
           });

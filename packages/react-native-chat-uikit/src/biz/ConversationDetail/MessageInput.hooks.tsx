@@ -50,6 +50,7 @@ export function useMessageInput(
     onEditMessageFinished: propsOnEditMessageFinished,
     // onInputMention: propsOnInputMention,
     onClickedCardMenu: propsOnClickedCardMenu,
+    onInitMenu,
   } = props;
   const { keyboardHeight, keyboardCurrentHeight } = useKeyboardHeight();
   const inputRef = React.useRef<RNTextInput>({} as any);
@@ -397,6 +398,7 @@ export function useMessageInput(
     onSelectSendFile,
     onSelectSendImage,
     onSelectSendVideo,
+    onInit: onInitMenu,
   });
 
   const onVoiceFailed = React.useCallback(

@@ -33,7 +33,7 @@ export const ContactListNavigationBar = (
     selectedCount,
     onClickedAddGroupParticipant,
     selectedMemberCount,
-    NavigationBar,
+    customNavigationBar,
   } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -56,8 +56,8 @@ export const ContactListNavigationBar = (
     },
   });
 
-  if (NavigationBar) {
-    return <>{NavigationBar}</>;
+  if (customNavigationBar) {
+    return <>{customNavigationBar}</>;
   }
 
   if (contactType === 'contact-list') {

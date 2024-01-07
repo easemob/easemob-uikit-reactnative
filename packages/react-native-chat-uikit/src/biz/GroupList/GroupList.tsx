@@ -3,10 +3,16 @@ import { ListRenderItemInfo, Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
+import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
-import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
+import {
+  EmptyPlaceholder,
+  ErrorPlaceholder,
+  LoadingPlaceholder,
+} from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
 import { TopNavigationBar } from '../TopNavigationBar';
 import { useGroupList } from './GroupList.hooks';
@@ -18,10 +24,11 @@ export function GroupList(props: GroupListProps) {
   const {
     containerStyle,
     onBack,
-    onSearch,
-    enableSearch,
-    enableNavigationBar,
-    NavigationBar,
+    navigationBarVisible,
+    customNavigationBar,
+    searchStyleVisible,
+    customSearch,
+    onClickedSearch,
   } = props;
   const {
     data,
@@ -33,9 +40,24 @@ export function GroupList(props: GroupListProps) {
     onViewableItemsChanged,
     listState,
     onClicked,
+    onLongPress,
     tr,
     ListItemRender,
+    menuRef,
+    alertRef,
+    closeMenu,
+    flatListProps,
   } = useGroupList(props);
+  const {
+    style,
+    contentContainerStyle,
+    refreshing: propsRefreshing,
+    onRefresh: propsOnRefresh,
+    onEndReached: propsOnEndReached,
+    viewabilityConfig: propsViewabilityConfig,
+    onViewableItemsChanged: propsOnViewableItemsChanged,
+    ...others
+  } = flatListProps ?? {};
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -54,9 +76,9 @@ export function GroupList(props: GroupListProps) {
         containerStyle,
       ]}
     >
-      {enableNavigationBar !== false ? (
-        NavigationBar ? (
-          <>{NavigationBar}</>
+      {navigationBarVisible !== false ? (
+        customNavigationBar ? (
+          <>{customNavigationBar}</>
         ) : (
           <TopNavigationBar
             Left={
@@ -73,38 +95,53 @@ export function GroupList(props: GroupListProps) {
           />
         )
       ) : null}
-      {enableSearch !== false ? (
-        <SearchStyle
-          title={tr('search')}
-          onPress={() => {
-            onSearch?.();
-          }}
-        />
+      {searchStyleVisible !== false ? (
+        customSearch ? (
+          <>{customSearch}</>
+        ) : (
+          <SearchStyle
+            title={tr('search')}
+            onPress={() => {
+              onClickedSearch?.();
+            }}
+          />
+        )
       ) : null}
 
       <View style={{ flex: 1 }}>
         <FlatList
           ref={ref}
-          style={{ flexGrow: 1 }}
-          contentContainerStyle={{
-            flexGrow: 1,
-            // height: '100%',
-            // height: 400,
-            // backgroundColor: 'yellow',
-          }}
+          style={[{ flexGrow: 1 }, style]}
+          contentContainerStyle={[
+            {
+              flexGrow: 1,
+              // height: '100%',
+              // height: 400,
+              // backgroundColor: 'yellow',
+            },
+            contentContainerStyle,
+          ]}
           data={data}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
+          refreshing={propsRefreshing ?? refreshing}
+          onRefresh={propsOnRefresh ?? onRefresh}
           renderItem={(info: ListRenderItemInfo<GroupListItemProps>) => {
             const { item } = info;
-            return <ListItemRender {...item} onClicked={onClicked} />;
+            return (
+              <ListItemRender
+                {...item}
+                onClicked={onClicked}
+                onLongPressed={onLongPress}
+              />
+            );
           }}
           keyExtractor={(item: GroupListItemProps) => {
             return item.id;
           }}
-          onEndReached={onMore}
-          viewabilityConfig={viewabilityConfig}
-          onViewableItemsChanged={onViewableItemsChanged}
+          onEndReached={propsOnEndReached ?? onMore}
+          viewabilityConfig={propsViewabilityConfig ?? viewabilityConfig}
+          onViewableItemsChanged={
+            propsOnViewableItemsChanged ?? onViewableItemsChanged
+          }
           ListEmptyComponent={EmptyPlaceholder}
           ListErrorComponent={
             listState === 'error' ? (
@@ -115,8 +152,15 @@ export function GroupList(props: GroupListProps) {
               />
             ) : null
           }
+          ListLoadingComponent={
+            listState === 'loading' ? <LoadingPlaceholder /> : null
+          }
+          {...others}
         />
       </View>
+
+      <BottomSheetNameMenu ref={menuRef} onRequestModalClose={closeMenu} />
+      <Alert ref={alertRef} />
     </View>
   );
 }

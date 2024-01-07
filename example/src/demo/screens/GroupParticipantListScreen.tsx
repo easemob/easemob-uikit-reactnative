@@ -87,7 +87,7 @@ export function GroupParticipantListScreen(props: Props) {
             ])
           );
         }}
-        onSearch={() => {
+        onClickedSearch={() => {
           navigation.push('GroupParticipantList', {});
         }}
         onClicked={(data) => {

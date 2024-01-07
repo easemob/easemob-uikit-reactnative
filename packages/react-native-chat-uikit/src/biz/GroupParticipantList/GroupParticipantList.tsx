@@ -17,7 +17,7 @@ import type {
 const FlatList = FlatListFactory<GroupParticipantListItemProps>();
 
 export function GroupParticipantList(props: GroupParticipantListProps) {
-  const { containerStyle, onBack, participantType, enableNavigationBar } =
+  const { containerStyle, onBack, participantType, navigationBarVisible } =
     props;
   const {
     data,
@@ -70,7 +70,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
         containerStyle,
       ]}
     >
-      {enableNavigationBar !== false ? (
+      {navigationBarVisible !== false ? (
         <GroupParticipantListNavigationBar
           participantType={participantType}
           onBack={onBack}

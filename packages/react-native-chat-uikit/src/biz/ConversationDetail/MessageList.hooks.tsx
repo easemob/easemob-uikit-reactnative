@@ -80,6 +80,7 @@ export function useMessageList(
     ListItemRender: propsListItemRender,
     recvMessageAutoScroll = false,
     enableListItemUserInfoUpdateFromMessage = false,
+    onInitMenu,
   } = props;
   const { tr } = useI18nContext();
   const flatListProps = useFlatList<MessageListItemProps>({
@@ -703,6 +704,7 @@ export function useMessageList(
     showReportMessage: showReportMessageCallback,
     deleteMessage: deleteMessageCallback,
     recallMessage: recallMessageCallback,
+    onInit: onInitMenu,
   });
 
   const sendRecvMessageReadAckCallback = React.useCallback(

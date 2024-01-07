@@ -92,7 +92,7 @@ export function ContactListScreen(props: Props) {
             ])
           );
         }}
-        onSearch={() => {
+        onClickedSearch={() => {
           navigation.navigate('SearchContact', {
             params: { searchType: 'contact-list' },
           });

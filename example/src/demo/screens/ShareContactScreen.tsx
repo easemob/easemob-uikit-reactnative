@@ -34,7 +34,7 @@ export function ShareContactScreen(props: Props) {
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
-        onSearch={() => {
+        onClickedSearch={() => {
           navigation.navigate('SearchContact', {
             params: { searchType: 'share-contact', convId, convType, convName },
           });

@@ -23,8 +23,8 @@ export function ContactInfo(props: ContactInfoProps) {
     hasSendMessage = true,
     hasVideoCall = false,
     containerStyle,
-    enableNavigationBar,
-    NavigationBar,
+    navigationBarVisible,
+    customNavigationBar,
   } = props;
   const {
     doNotDisturb,
@@ -79,9 +79,9 @@ export function ContactInfo(props: ContactInfoProps) {
         containerStyle,
       ]}
     >
-      {enableNavigationBar !== false ? (
-        NavigationBar ? (
-          <>{NavigationBar}</>
+      {navigationBarVisible !== false ? (
+        customNavigationBar ? (
+          <>{customNavigationBar}</>
         ) : (
           <TopNavigationBar
             Left={

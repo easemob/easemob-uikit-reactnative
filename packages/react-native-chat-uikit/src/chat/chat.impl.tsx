@@ -1282,6 +1282,22 @@ export class ChatServiceImpl
       },
     });
   }
+  setContactRemark(params: {
+    userId: string;
+    remark: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.contactManager.setContactRemark({
+        userId: params.userId,
+        remark: params.remark,
+      }),
+      event: 'setContactRemark',
+      onFinished: () => {
+        params.onResult({ isOk: true });
+      },
+    });
+  }
   acceptInvitation(params: {
     userId: string;
     onResult: ResultCallback<void>;

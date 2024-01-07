@@ -8,7 +8,7 @@ import { Avatar } from '../Avatar';
 import type { GroupListItemProps } from './types';
 
 export function GroupListItem(props: GroupListItemProps) {
-  const { data, onClicked } = props;
+  const { data, onClicked, onLongPressed } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -35,6 +35,9 @@ export function GroupListItem(props: GroupListItemProps) {
       }}
       onPress={() => {
         onClicked?.(data);
+      }}
+      onLongPress={() => {
+        onLongPressed?.(data);
       }}
     >
       <View

@@ -10,7 +10,10 @@ import type { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
 
 import type { IconNameType } from '../../assets';
 import type { AlertRef } from '../../ui/Alert';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import type {
+  BottomSheetNameMenuRef,
+  InitMenuItemsType,
+} from '../BottomSheetMenu';
 import type {
   BottomSheetMessageReportRef,
   ReportItemModel,
@@ -56,6 +59,7 @@ export type MessageInputProps = PropsWithError &
      */
     onInputMention?: (groupId: string) => void;
     onClickedCardMenu?: () => void;
+    onInitMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
   };
 export type MessageInputState = 'normal' | 'emoji' | 'voice' | 'keyboard';
 
@@ -280,6 +284,7 @@ export type MessageListProps = PropsWithError &
      * Default is false.
      */
     enableListItemUserInfoUpdateFromMessage?: boolean;
+    onInitMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
   };
 export type UseMessageListReturn = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;

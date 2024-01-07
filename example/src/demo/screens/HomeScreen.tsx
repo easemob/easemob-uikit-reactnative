@@ -167,22 +167,6 @@ function HomeTabConversationListScreen(
         // backgroundColor: 'red',
         // height: 400,
       }}
-      onRequestData={(params: {
-        ids: string[];
-        result: (data?: DataModel[], error?: UIKitError) => void;
-      }) => {
-        params?.result(
-          params.ids.map((v) => {
-            return {
-              id: v,
-              name: v + 'name',
-              avatar:
-                'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-              type: 'user' as DataModelType,
-            };
-          })
-        );
-      }}
       onRequestMultiData={(params: {
         ids: Map<DataModelType, string[]>;
         result: (
@@ -218,7 +202,7 @@ function HomeTabConversationListScreen(
           ])
         );
       }}
-      onSearch={() => {
+      onClickedSearch={() => {
         navigation.navigate('SearchConversation', {});
       }}
       onClicked={(data) => {
@@ -259,23 +243,42 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
         // backgroundColor: 'red',
         // height: 400,
       }}
-      onRequestData={(params: {
-        ids: string[];
-        result: (data?: DataModel[], error?: UIKitError) => void;
+      onRequestMultiData={(params: {
+        ids: Map<DataModelType, string[]>;
+        result: (
+          data?: Map<DataModelType, DataModel[]>,
+          error?: UIKitError
+        ) => void;
       }) => {
-        const userIds = params.ids;
-        const users = userIds.map((v) => {
+        const userIds = params.ids.get('user');
+        const users = userIds?.map<DataModel>((id) => {
           return {
-            id: v,
-            name: v + 'name',
+            id,
+            name: id + 'name',
+            // avatar: 'https://i.pravatar.cc/300',
             avatar:
               'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
             type: 'user' as DataModelType,
           };
         });
-        params.result(users ?? []);
+        const groupIds = params.ids.get('group');
+        const groups = groupIds?.map<DataModel>((id) => {
+          return {
+            id,
+            name: id + 'name',
+            avatar:
+              'https://cdn0.iconfinder.com/data/icons/user-pictures/100/maturewoman-2-512.png',
+            type: 'group' as DataModelType,
+          };
+        });
+        params?.result(
+          new Map([
+            ['user', users ?? []],
+            ['group', groups ?? []],
+          ])
+        );
       }}
-      onSearch={() => {
+      onClickedSearch={() => {
         navigation.navigate('SearchContact', {
           params: { searchType: 'contact-list' },
         });

@@ -61,7 +61,6 @@ export function ConversationDetail(props: ConversationDetailProps) {
         }}
         {...messageInputProps}
       />
-      {/* <MessageInput ref={messageInputRef} /> */}
     </View>
   );
 

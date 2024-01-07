@@ -1,16 +1,13 @@
+import { ChatConversationType } from 'react-native-chat-sdk';
+
 import { useChatContext } from '../../chat';
 import { useFlatList } from '../List';
-import type { UseSearchReturn } from '../ListSearch';
-import type { UseFlatListReturn } from '../types';
 import type {
   ConversationSearchModel,
   UseSearchConversationProps,
 } from './types';
 
-export function useSearchConversation(
-  props: UseSearchConversationProps
-): UseFlatListReturn<ConversationSearchModel> &
-  UseSearchReturn<ConversationSearchModel> {
+export function useSearchConversation(props: UseSearchConversationProps) {
   const { onClicked, testMode } = props;
   const flatListProps = useFlatList<ConversationSearchModel>({
     isShowAfterLoaded: false,
@@ -50,7 +47,12 @@ export function useSearchConversation(
                 dataRef.current.push({
                   ...conv,
                   id: conv.convId,
-                  name: conv.convName ?? conv.convId,
+                  name: conv.convName,
+                  avatar: conv.convAvatar,
+                  type:
+                    conv.convType === ChatConversationType.GroupChat
+                      ? 'group'
+                      : 'user',
                 });
               }
               setData([...dataRef.current]);

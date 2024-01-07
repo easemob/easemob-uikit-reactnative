@@ -31,13 +31,14 @@ export function ContactList(props: ContactListProps) {
     isHasGroupList = true,
     isHasNewRequest = true,
     onContextMenuMoreActions,
-    onSearch,
     onBack,
     onClickedNewRequest,
     onClickedGroupList,
-    enableNavigationBar,
-    NavigationBar: propsNavigationBar,
-    enableSearch,
+    navigationBarVisible,
+    customNavigationBar,
+    searchStyleVisible,
+    customSearch,
+    onClickedSearch,
   } = props;
   const {
     ref,
@@ -68,7 +69,18 @@ export function ContactList(props: ContactListProps) {
     tr,
     ListItemRender,
     ListItemHeaderRender,
+    sectionListProps,
   } = useContactList(props);
+  const {
+    style,
+    contentContainerStyle,
+    refreshing: propsRefreshing,
+    onRefresh: propsOnRefresh,
+    onEndReached: propsOnEndReached,
+    viewabilityConfig: propsViewabilityConfig,
+    onViewableItemsChanged: propsOnViewableItemsChanged,
+    ...others
+  } = sectionListProps ?? {};
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -131,7 +143,7 @@ export function ContactList(props: ContactListProps) {
         containerStyle,
       ]}
     >
-      {enableNavigationBar !== false ? (
+      {navigationBarVisible !== false ? (
         <ContactListNavigationBar
           contactType={contactType}
           selectedCount={selectedCount}
@@ -141,17 +153,21 @@ export function ContactList(props: ContactListProps) {
           onBack={onBack}
           onClickedCreateGroup={onClickedCreateGroup}
           onClickedAddGroupParticipant={onClickedAddGroupParticipant}
-          NavigationBar={propsNavigationBar}
+          customNavigationBar={customNavigationBar}
         />
       ) : null}
 
-      {enableSearch !== false ? (
-        <SearchStyle
-          title={tr('search')}
-          onPress={() => {
-            onSearch?.();
-          }}
-        />
+      {searchStyleVisible !== false ? (
+        customSearch ? (
+          <>{customSearch}</>
+        ) : (
+          <SearchStyle
+            title={tr('search')}
+            onPress={() => {
+              onClickedSearch?.();
+            }}
+          />
+        )
       ) : null}
 
       {items()}
@@ -159,15 +175,11 @@ export function ContactList(props: ContactListProps) {
       <View style={{ flex: 1 }}>
         <SectionList
           ref={ref}
-          style={{
-            flexGrow: 1,
-          }}
-          contentContainerStyle={{
-            flexGrow: 1,
-          }}
+          style={[{ flexGrow: 1 }, style]}
+          contentContainerStyle={[{ flexGrow: 1 }, contentContainerStyle]}
           sections={sections}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
+          refreshing={propsRefreshing ?? refreshing}
+          onRefresh={propsOnRefresh ?? onRefresh}
           renderItem={(
             info: SectionListRenderItemInfo<
               ContactListItemProps,
@@ -193,9 +205,11 @@ export function ContactList(props: ContactListProps) {
             const { section } = info;
             return <ListItemHeaderRender {...section} />;
           }}
-          onEndReached={onMore}
-          viewabilityConfig={viewabilityConfig}
-          onViewableItemsChanged={onViewableItemsChanged}
+          onEndReached={propsOnEndReached ?? onMore}
+          viewabilityConfig={propsViewabilityConfig ?? viewabilityConfig}
+          onViewableItemsChanged={
+            propsOnViewableItemsChanged ?? onViewableItemsChanged
+          }
           ListEmptyComponent={EmptyPlaceholder}
           ListErrorComponent={
             listState === 'error' ? (
@@ -206,6 +220,7 @@ export function ContactList(props: ContactListProps) {
               />
             ) : null
           }
+          {...others}
         />
         {AlphabeticIndex ? (
           <AlphabeticIndex

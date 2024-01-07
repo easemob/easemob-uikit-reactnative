@@ -8,7 +8,7 @@ export type AddGroupParticipantProps = Pick<
   ContactListProps,
   | 'containerStyle'
   | 'onClicked'
-  | 'onSearch'
+  | 'onClickedSearch'
   | 'groupId'
   | 'selectedData'
   | 'onBack'

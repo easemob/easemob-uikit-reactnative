@@ -15,13 +15,14 @@ import {
 import type { RequestListListener } from '../../chat/requestList.types';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
+import type { SectionListRef } from '../../ui/SectionList';
 import { containsChinese, getPinyinFirsLetter } from '../../utils';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useContactListMoreActions } from '../hooks/useContactListMoreActions';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
-import type { ChoiceType, UseSectionListReturn } from '../types';
+import type { ChoiceType, ListState } from '../types';
 import { g_index_alphabet_range } from './const';
 import {
   ContactListItemHeaderMemo,
@@ -32,22 +33,13 @@ import type {
   ContactListItemHeaderComponentType,
   ContactListItemProps,
   ContactListProps,
-  UseContactListReturn,
 } from './types';
 
-export function useContactList(props: ContactListProps): UseSectionListReturn<
-  ContactListItemProps,
-  IndexModel,
-  ListIndexProps
-> &
-  UseContactListReturn & {
-    tr: (key: string, ...args: any[]) => string;
-  } {
+export function useContactList(props: ContactListProps) {
   const {
     onClicked,
     onLongPressed,
     testMode,
-    onRequestData,
     onRequestMultiData,
     onSort: propsOnSort,
     onClickedNewContact: propsOnClickedNewContact,
@@ -58,13 +50,17 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     onAddGroupParticipantResult,
     ListItemRender: propsListItemRender,
     ListItemHeaderRender: propsListItemHeaderRender,
+    propsRef,
+    onInitialized,
+    sectionListProps: propsSectionListProps,
+    onStateChanged,
   } = props;
-  const sectionProps = useSectionList<
+  const sectionListProps = useSectionList<
     ContactListItemProps,
     IndexModel,
     ListIndexProps
   >({
-    onInit: () => init(),
+    onInit: () => init({ onFinished: onInitialized }),
   });
   const {
     isSort,
@@ -73,7 +69,8 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     sectionsRef,
     ref: sectionListRef,
     isAutoLoad,
-  } = sectionProps;
+    setListState,
+  } = sectionListProps;
   const [selectedCount, setSelectedCount] = React.useState(0);
   const [selectedMemberCount, setSelectedMemberCount] =
     React.useState<number>(0);
@@ -93,6 +90,14 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     React.useRef<ContactListItemHeaderComponentType>(
       propsListItemHeaderRender ?? ContactListItemHeaderMemo
     );
+
+  const onSetState = React.useCallback(
+    (state: ListState) => {
+      setListState?.(state);
+      onStateChanged?.(state);
+    },
+    [onStateChanged, setListState]
+  );
 
   const onSort = React.useCallback(
     (
@@ -220,7 +225,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     ]
   );
 
-  const addContact = React.useCallback(
+  const addContactToUI = React.useCallback(
     (data: ContactModel) => {
       if (contactType !== 'contact-list') {
         return;
@@ -253,7 +258,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     [contactType, onSetData, sectionsRef]
   );
 
-  const removeContact = React.useCallback(
+  const removeContactToUI = React.useCallback(
     (userId: string) => {
       if (contactType !== 'contact-list') {
         return;
@@ -270,7 +275,7 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     [contactType, sectionsRef, setIndexTitles, setSection]
   );
 
-  const updateContact = React.useCallback(
+  const updateContactToUI = React.useCallback(
     (data: ContactModel) => {
       const list = sectionsRef.current
         .map((section) => {
@@ -326,11 +331,11 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
         if (choiceType === 'single') {
         } else if (choiceType === 'multiple') {
           const tmp = { ...data, checked: !data.checked };
-          updateContact(tmp);
+          updateContactToUI(tmp);
         }
       }
     },
-    [choiceType, contactType, updateContact]
+    [choiceType, contactType, updateContactToUI]
   );
 
   const onIndexSelected = React.useCallback(
@@ -343,7 +348,12 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     [sectionListRef]
   );
 
-  const init = async (isClearState?: boolean) => {
+  const init = async (params: {
+    isClearState?: boolean;
+    onFinished?: () => void;
+  }) => {
+    const { isClearState, onFinished } = params;
+    im.setOnRequestData(onRequestMultiData);
     if (testMode === 'only-ui') {
       const names = [
         'James',
@@ -406,10 +416,9 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
         }
       }
 
-      im.setContactOnRequestData(onRequestData);
-      im.setOnRequestData(onRequestMultiData);
       const s = await im.loginState();
       if (s === 'logged') {
+        onSetState('loading');
         if (contactType === 'add-group-member') {
           im.getAllContacts({
             onResult: (result) => {
@@ -442,8 +451,10 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
                           } as ContactListItemProps;
                         });
                         onSetData(list);
+                        onSetState('normal');
                       } else {
                         if (groupResult.error) {
+                          onSetState('error');
                           im.sendError({ error: groupResult.error });
                         }
                       }
@@ -452,9 +463,11 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
                 }
               } else {
                 if (error) {
+                  onSetState('error');
                   im.sendError({ error });
                 }
               }
+              onFinished?.();
             },
           });
         } else {
@@ -481,16 +494,21 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
                     } as ContactListItemProps;
                   });
                   onSetData(list);
+                  onSetState('normal');
                 }
               } else {
                 if (error) {
+                  onSetState('error');
                   im.sendError({ error });
                 }
               }
+              onFinished?.();
             },
           });
         }
         onChangeGroupCount();
+      } else {
+        onSetState('error');
       }
     }
   };
@@ -503,13 +521,13 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
             userId,
             onResult: (result) => {
               if (result.isOk === true && result.value) {
-                addContact(result.value);
+                addContactToUI(result.value);
               }
             },
           });
         },
         onContactDeleted: async (userId: string) => {
-          removeContact(userId);
+          removeContactToUI(userId);
         },
         onConversationEvent: (
           event?: ChatMultiDeviceEvent,
@@ -518,12 +536,12 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
         ) => {
           if (event === ChatMultiDeviceEvent.CONTACT_REMOVE) {
             if (convId) {
-              removeContact(convId);
+              removeContactToUI(convId);
             }
           }
         },
       } as ChatServiceListener;
-    }, [addContact, im, removeContact])
+    }, [addContactToUI, im, removeContactToUI])
   );
 
   // React.useEffect(() => {
@@ -561,16 +579,6 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   //     sub.remove();
   //   };
   // }, [contactType, sectionsRef]);
-
-  React.useEffect(() => {
-    if (contactType !== 'create-group' && contactType !== 'add-group-member') {
-      return;
-    }
-    if (selectedData && selectedData.length > 0) {
-      init(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contactType, onSetData, sectionsRef, selectedData]);
 
   const onCreateGroupCallback = React.useCallback(() => {
     if (contactType !== 'create-group') {
@@ -643,6 +651,118 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
     }
   }, [onShowContactListMoreActions, propsOnClickedNewContact]);
 
+  const addContact = React.useCallback(
+    (item: ContactModel) => {
+      if (contactType !== 'contact-list') {
+        return;
+      }
+      im.addNewContact({
+        useId: item.userId,
+        reason: 'add contact',
+        onResult: (result) => {
+          if (result.isOk === true) {
+            addContactToUI(item);
+          }
+        },
+      });
+    },
+    [addContactToUI, contactType, im]
+  );
+
+  const removeContact = React.useCallback(
+    (item: ContactModel) => {
+      if (contactType !== 'contact-list') {
+        return;
+      }
+      im.removeContact({
+        userId: item.userId,
+        onResult: (result) => {
+          if (result.isOk === true) {
+            removeContactToUI(item.userId);
+          }
+        },
+      });
+    },
+    [contactType, im, removeContactToUI]
+  );
+
+  const refreshListToUI = React.useCallback(() => {
+    onSetData(
+      sectionsRef.current
+        .map((section) => {
+          return section.data.map((item) => {
+            return item;
+          });
+        })
+        .flat()
+    );
+  }, [onSetData, sectionsRef]);
+
+  const setContactRemark = React.useCallback(
+    (item: ContactModel) => {
+      if (item.remark) {
+        im.setContactRemark({
+          userId: item.userId,
+          remark: item.remark,
+          onResult: (result) => {
+            if (result.isOk === true) {
+              updateContactToUI(item);
+            }
+          },
+        });
+      }
+    },
+    [im, updateContactToUI]
+  );
+
+  if (propsRef?.current) {
+    propsRef.current.addItem = (item) => {
+      addContact(item);
+    };
+    propsRef.current.closeMenu = () => closeMenu();
+    propsRef.current.deleteItem = (item) => {
+      removeContact(item);
+    };
+    propsRef.current.getAlertRef = () => alertRef;
+    propsRef.current.getList = () => {
+      return sectionsRef.current
+        .map((section) => {
+          return section.data.map((item) => {
+            return item.section;
+          });
+        })
+        .flat();
+    };
+    propsRef.current.getMenuRef = () => menuRef;
+    propsRef.current.getSectionListRef = () => {
+      return sectionListRef as React.RefObject<
+        SectionListRef<ContactListItemProps, IndexModel>
+      >;
+    };
+    propsRef.current.refreshList = () => {
+      refreshListToUI();
+    };
+    propsRef.current.reloadList = () => {
+      init({ onFinished: onInitialized });
+    };
+    propsRef.current.showMenu = () => {
+      onShowContactListMoreActions();
+    };
+    propsRef.current.updateItem = (item) => {
+      setContactRemark(item);
+    };
+  }
+
+  React.useEffect(() => {
+    if (contactType !== 'create-group' && contactType !== 'add-group-member') {
+      return;
+    }
+    if (selectedData && selectedData.length > 0) {
+      init({ isClearState: false });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contactType, onSetData, sectionsRef, selectedData]);
+
   React.useEffect(() => {
     const listener = {
       onNewRequestListChanged: (list: NewRequestModel[]) => {
@@ -685,7 +805,9 @@ export function useContactList(props: ContactListProps): UseSectionListReturn<
   }, [im.requestList]);
 
   return {
-    ...sectionProps,
+    ...sectionListProps,
+    sectionListProps: propsSectionListProps,
+    propsSectionListProps,
     onIndexSelected,
     onRequestCloseMenu: closeMenu,
     onClickedNewContact,

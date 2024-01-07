@@ -2,6 +2,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
   ConversationList,
+  ConversationListRef,
   DataModel,
   DataModelType,
   UIKitError,
@@ -22,6 +23,7 @@ export function ConversationListScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
+  const convRef = React.useRef<ConversationListRef>({} as any);
 
   return (
     <SafeAreaView
@@ -31,25 +33,10 @@ export function ConversationListScreen(props: Props) {
       }}
     >
       <ConversationList
+        propsRef={convRef}
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
-        }}
-        onRequestData={(params: {
-          ids: string[];
-          result: (data?: DataModel[], error?: UIKitError) => void;
-        }) => {
-          params?.result(
-            params.ids.map((v) => {
-              return {
-                id: v,
-                name: v + 'name',
-                avatar:
-                  'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-                type: 'user' as DataModelType,
-              };
-            })
-          );
         }}
         onRequestMultiData={async (params: {
           ids: Map<DataModelType, string[]>;
@@ -86,7 +73,7 @@ export function ConversationListScreen(props: Props) {
             ])
           );
         }}
-        onSearch={() => {
+        onClickedSearch={() => {
           navigation.push('SearchConversation', {});
         }}
         onClicked={(data) => {
@@ -110,6 +97,27 @@ export function ConversationListScreen(props: Props) {
         onClickedNewConversation={() => {
           navigation.navigate('NewConversation', {});
         }}
+        // onInitMenu={(menu: InitMenuItemsType[]) => {
+        //   return [
+        //     ...menu,
+        //     {
+        //       name: 'test',
+        //       isHigh: false,
+        //       icon: 'bell',
+        //       onClicked: () => {
+        //         console.log('test');
+        //         const list = convRef.current.getList();
+        //         const first = list[0];
+        //         if (first) {
+        //           convRef.current.updateItem({
+        //             ...first,
+        //             doNotDisturb: !first.doNotDisturb,
+        //           });
+        //         }
+        //       },
+        //     },
+        //   ];
+        // }}
         // onClickedNewContact={() => {
         //   // todo:
         // }}

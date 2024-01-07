@@ -3,7 +3,10 @@ import * as React from 'react';
 import { useChatContext } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import type {
+  BottomSheetNameMenuRef,
+  InitMenuItemsType,
+} from '../BottomSheetMenu';
 import { useCloseMenu } from './useCloseMenu';
 
 export type useConversationListMoreActionsProps = {
@@ -12,6 +15,7 @@ export type useConversationListMoreActionsProps = {
   onClickedNewContact?: () => void;
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
+  onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
 };
 export function useConversationListMoreActions(
   props: useConversationListMoreActionsProps
@@ -22,76 +26,79 @@ export function useConversationListMoreActions(
     onClickedNewContact,
     menuRef,
     alertRef,
+    onInit,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
   const im = useChatContext();
   const onShowMenu = React.useCallback(() => {
+    let items = [
+      {
+        name: '_uikit_contact_menu_new_conv',
+        isHigh: false,
+        icon: 'bubble_fill',
+        onClicked: () => {
+          closeMenu(() => {
+            onClickedNewConversation?.();
+          });
+        },
+      },
+      {
+        name: '_uikit_contact_menu_add_contact',
+        isHigh: false,
+        icon: 'person_add_fill',
+        onClicked: () => {
+          closeMenu(() => {
+            if (onClickedNewContact) {
+              onClickedNewContact();
+            } else {
+              alertRef.current?.alertWithInit?.({
+                title: tr('_uikit_contact_alert_title'),
+                message: tr('_uikit_contact_alert_content'),
+                supportInput: true,
+                buttons: [
+                  {
+                    text: tr('cancel'),
+                    onPress: () => {
+                      alertRef.current?.close?.();
+                    },
+                  },
+                  {
+                    text: tr('add'),
+                    isPreferred: true,
+                    onPress: (value) => {
+                      alertRef.current?.close?.();
+                      if (value) {
+                        im.addNewContact({
+                          useId: value.trim(),
+                          reason: 'add contact',
+                          onResult: (_result) => {
+                            // todo:
+                          },
+                        });
+                      }
+                    },
+                  },
+                ],
+              });
+            }
+          });
+        },
+      },
+      {
+        name: '_uikit_contact_menu_create_group',
+        isHigh: false,
+        icon: 'person_double_fill',
+        onClicked: () => {
+          closeMenu(() => {
+            onClickedNewGroup?.();
+          });
+        },
+      },
+    ] as InitMenuItemsType[];
+    items = onInit ? onInit(items) : items;
     menuRef.current?.startShowWithProps?.({
-      initItems: [
-        {
-          name: '_uikit_contact_menu_new_conv',
-          isHigh: false,
-          icon: 'bubble_fill',
-          onClicked: () => {
-            closeMenu(() => {
-              onClickedNewConversation?.();
-            });
-          },
-        },
-        {
-          name: '_uikit_contact_menu_add_contact',
-          isHigh: false,
-          icon: 'person_add_fill',
-          onClicked: () => {
-            closeMenu(() => {
-              if (onClickedNewContact) {
-                onClickedNewContact();
-              } else {
-                alertRef.current?.alertWithInit?.({
-                  title: tr('_uikit_contact_alert_title'),
-                  message: tr('_uikit_contact_alert_content'),
-                  supportInput: true,
-                  buttons: [
-                    {
-                      text: tr('cancel'),
-                      onPress: () => {
-                        alertRef.current?.close?.();
-                      },
-                    },
-                    {
-                      text: tr('add'),
-                      isPreferred: true,
-                      onPress: (value) => {
-                        alertRef.current?.close?.();
-                        if (value) {
-                          im.addNewContact({
-                            useId: value.trim(),
-                            reason: 'add contact',
-                            onResult: (_result) => {
-                              // todo:
-                            },
-                          });
-                        }
-                      },
-                    },
-                  ],
-                });
-              }
-            });
-          },
-        },
-        {
-          name: '_uikit_contact_menu_create_group',
-          isHigh: false,
-          icon: 'person_double_fill',
-          onClicked: () => {
-            closeMenu(() => {
-              onClickedNewGroup?.();
-            });
-          },
-        },
-      ],
+      initItems: items,
       onRequestModalClose: closeMenu,
       layoutType: 'left',
       hasCancel: false,
@@ -104,6 +111,7 @@ export function useConversationListMoreActions(
     onClickedNewContact,
     onClickedNewConversation,
     onClickedNewGroup,
+    onInit,
     tr,
   ]);
 

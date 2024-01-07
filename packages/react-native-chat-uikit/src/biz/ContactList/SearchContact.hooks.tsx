@@ -5,10 +5,10 @@ import { useChatContext } from '../../chat';
 import { useFlatList } from '../List';
 import type { UseSearchReturn } from '../ListSearch';
 import type { UseFlatListReturn } from '../types';
-import type { ContactSearchModel, UseSearchContactProps } from './types';
+import type { ContactSearchModel, SearchContactProps } from './types';
 
 export function useSearchContact(
-  props: UseSearchContactProps
+  props: SearchContactProps
 ): UseFlatListReturn<ContactSearchModel> &
   UseSearchReturn<ContactSearchModel> & {
     onCancel?: () => void;

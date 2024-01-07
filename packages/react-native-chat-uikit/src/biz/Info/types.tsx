@@ -1,6 +1,7 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { ChatGroupStyle } from 'react-native-chat-sdk';
 
+import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type { PropsWithBack, PropsWithNavigationBar } from '../types';
 
 export type UserState = 'online' | 'offline' | 'busy' | 'leave' | 'no-disturb';
@@ -19,6 +20,7 @@ export type InfoProps = PropsWithBack &
     onAudioCall?: (id: string) => void;
     onVideoCall?: (id: string) => void;
     onCopyId?: (id: string) => void;
+    onInitMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
   };
 
 export type ContactInfoProps = InfoProps & {

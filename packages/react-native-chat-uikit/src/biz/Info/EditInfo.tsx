@@ -25,8 +25,8 @@ export function EditInfo(props: EditInfoProps) {
     maxLength = 128,
     initialData,
     onSave,
-    enableNavigationBar,
-    NavigationBar: propsNavigationBar,
+    navigationBarVisible,
+    customNavigationBar,
   } = props;
   const {} = useI18nContext();
   const inputRef = React.useRef<RNTextInput>(null);
@@ -84,9 +84,9 @@ export function EditInfo(props: EditInfoProps) {
         containerStyle,
       ]}
     >
-      {enableNavigationBar !== false ? (
-        propsNavigationBar ? (
-          <>{propsNavigationBar}</>
+      {navigationBarVisible !== false ? (
+        customNavigationBar ? (
+          <>{customNavigationBar}</>
         ) : (
           <TopNavigationBar
             Left={

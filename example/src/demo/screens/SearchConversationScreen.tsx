@@ -34,6 +34,19 @@ export function SearchConversationScreen(props: Props) {
         onCancel={() => {
           navigation.goBack();
         }}
+        onClicked={(data) => {
+          if (data) {
+            navigation.pop();
+            navigation.push('ConversationDetail', {
+              params: {
+                convId: data?.convId,
+                convType: data?.convType,
+                convName: data?.convName,
+                convAvatar: data?.convAvatar,
+              },
+            });
+          }
+        }}
       />
     </SafeAreaView>
   );

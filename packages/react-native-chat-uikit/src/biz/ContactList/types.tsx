@@ -2,25 +2,33 @@ import type { SectionListData, StyleProp, ViewStyle } from 'react-native';
 
 import type { IconNameType } from '../../assets';
 import type { ContactModel, DataModel } from '../../chat';
-import type { AlertRef } from '../../ui/Alert';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import type { IndexModel } from '../ListIndex';
-import type { DefaultComponentModel } from '../ListSearch';
 import type {
   ContactType,
   ListItemActions,
   ListItemProps,
   ListItemRequestProps,
   ListRequestProps,
+  ListStateType,
   PropsWithBack,
   PropsWithCancel,
   PropsWithError,
   PropsWithInit,
+  PropsWithMenu,
   PropsWithNavigationBar,
   PropsWithSearch,
+  PropsWithSectionList,
   PropsWithTest,
   SearchType,
+  SectionListRefType,
 } from '../types';
+
+export type ContactListItemComponentType =
+  | React.ComponentType<ContactListItemProps>
+  | React.ExoticComponent<ContactListItemProps>;
+export type ContactListItemHeaderComponentType =
+  | React.ComponentType<SectionListData<ContactListItemProps, IndexModel>>
+  | React.ExoticComponent<SectionListData<ContactListItemProps, IndexModel>>;
 
 export type ContactItemProps = {
   icon?: IconNameType;
@@ -37,27 +45,39 @@ export type ContactListItemProps = ListItemProps &
     contactType: ContactType;
     onCheckClicked?: ((data?: ContactModel) => void) | undefined;
   };
-export type ContactListItemComponentType =
-  | React.ComponentType<ContactListItemProps>
-  | React.ExoticComponent<ContactListItemProps>;
-export type ContactListItemHeaderComponentType =
-  | React.ComponentType<SectionListData<ContactListItemProps, IndexModel>>
-  | React.ExoticComponent<SectionListData<ContactListItemProps, IndexModel>>;
 
-export type ContactListNavigationBarProps = PropsWithBack &
-  PropsWithNavigationBar & {
+export type ContactListRef = Omit<
+  SectionListRefType<ContactModel, ContactListItemProps, IndexModel>,
+  'updateItem' | 'clearItem'
+> & {
+  /**
+   * update data model. Contact `remark`, `avatar` and `nickName` can be updated through `onRequestData`. Others cannot be updated.
+   *
+   * If the operation fails, an error is returned through `ErrorServiceListener.onError`.
+   */
+  updateItem: (items: ContactModel) => void;
+};
+
+export type ContactListNavigationBarProps = PropsWithNavigationBar &
+  PropsWithBack & {
     contactType: ContactType;
     onClickedNewContact?: () => void;
     onCreateGroupResultValue?: (data?: ContactModel[]) => void;
     onAddGroupParticipantResult?: (added: ContactModel[]) => void;
     selectedData?: ContactModel[]; // todo: changed to selectedData
   };
-export type ContactListProps = ListRequestProps<DataModel> &
+
+export type ContactListProps = Pick<
+  ListRequestProps<DataModel>,
+  'onRequestMultiData'
+> &
   PropsWithTest &
-  PropsWithError &
   PropsWithInit &
+  PropsWithBack &
   PropsWithSearch &
   ContactListNavigationBarProps &
+  PropsWithSectionList<ContactListItemProps, IndexModel> &
+  PropsWithMenu &
   Omit<ListItemActions<ContactModel>, 'onToRightSlide' | 'onToLeftSlide'> & {
     containerStyle?: StyleProp<ViewStyle>;
     isHasNewRequest?: boolean;
@@ -72,6 +92,11 @@ export type ContactListProps = ListRequestProps<DataModel> &
     onClickedGroupList?: () => void;
     ListItemRender?: ContactListItemComponentType;
     ListItemHeaderRender?: ContactListItemHeaderComponentType;
+    /**
+     * Callback notification of list data status. For example: the session list usually changes from loading state to normal state. If the data request fails, an error state will be reached.
+     */
+    onStateChanged?: (state: ListStateType) => void;
+    propsRef?: React.MutableRefObject<ContactListRef>;
   };
 
 export type SearchContactProps = ListRequestProps<DataModel> &
@@ -88,29 +113,7 @@ export type SearchContactProps = ListRequestProps<DataModel> &
     // onSelectedResult?: (result: Map<string, boolean>) => void;
   };
 
-export type UseContactListReturn = Omit<
-  ListItemActions<ContactModel>,
-  'onToRightSlide' | 'onToLeftSlide'
-> & {
-  onRequestCloseMenu: () => void;
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  alertRef: React.RefObject<AlertRef>;
-  onCheckClicked?: ((data?: ContactModel) => void) | undefined;
-  selectedCount?: number;
-  selectedMemberCount: number;
-  requestCount: number;
-  groupCount: number;
-  avatarUrl: string | undefined;
-  onClickedNewGroup?: () => void;
-  onClickedCreateGroup?: () => void;
-  onClickedNewContact?: () => void;
-  onClickedAddGroupParticipant?: () => void;
-  ListItemRender: ContactListItemComponentType;
-  ListItemHeaderRender: ContactListItemHeaderComponentType;
-};
-
 export type ContactSearchModel = ContactModel &
-  DefaultComponentModel & {
+  DataModel & {
     onCheckClicked?: ((data?: ContactModel) => void) | undefined;
   };
-export type UseSearchContactProps = SearchContactProps;

@@ -25,8 +25,8 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
     onClearChat,
     containerStyle,
     isContact = false,
-    enableNavigationBar,
-    NavigationBar,
+    navigationBarVisible,
+    customNavigationBar,
   } = props;
   const {
     doNotDisturb,
@@ -73,9 +73,9 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
         containerStyle,
       ]}
     >
-      {enableNavigationBar !== false ? (
-        NavigationBar ? (
-          <>{NavigationBar}</>
+      {navigationBarVisible !== false ? (
+        customNavigationBar ? (
+          <>{customNavigationBar}</>
         ) : (
           <TopNavigationBar
             Left={

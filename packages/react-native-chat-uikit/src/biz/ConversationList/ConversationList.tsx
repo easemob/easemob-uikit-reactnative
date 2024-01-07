@@ -26,10 +26,11 @@ const FlatList = FlatListFactory<ConversationListItemProps>();
 export function ConversationList(props: ConversationListProps) {
   const {
     containerStyle,
-    onSearch,
-    enableSearch,
-    enableNavigationBar,
-    NavigationBar: propsNavigationBar,
+    navigationBarVisible,
+    customNavigationBar,
+    searchStyleVisible,
+    customSearch,
+    onClickedSearch,
   } = props;
   const {
     data,
@@ -47,7 +48,18 @@ export function ConversationList(props: ConversationListProps) {
     tr,
     onShowConversationListMoreActions,
     ListItemRender,
+    propsFlatListProps,
   } = useConversationList(props);
+  const {
+    style,
+    contentContainerStyle,
+    refreshing: propsRefreshing,
+    onRefresh: propsOnFresh,
+    onEndReached: propsOnEndReached,
+    viewabilityConfig: propsViewabilityConfig,
+    onViewableItemsChanged: propsOnViewableItemsChanged,
+    ...others
+  } = propsFlatListProps ?? {};
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -65,9 +77,9 @@ export function ConversationList(props: ConversationListProps) {
         containerStyle,
       ]}
     >
-      {enableNavigationBar !== false ? (
-        propsNavigationBar ? (
-          <>{propsNavigationBar}</>
+      {navigationBarVisible !== false ? (
+        customNavigationBar ? (
+          <>{customNavigationBar}</>
         ) : (
           <TopNavigationBar
             Left={<Avatar url={avatarUrl} size={32} />}
@@ -81,15 +93,19 @@ export function ConversationList(props: ConversationListProps) {
           />
         )
       ) : null}
-      {enableSearch !== false ? (
-        <SearchStyle
-          title={tr('search')}
-          onPress={() => {
-            if (listState === 'normal') {
-              onSearch?.();
-            }
-          }}
-        />
+      {searchStyleVisible !== false ? (
+        customSearch ? (
+          <>{customSearch}</>
+        ) : (
+          <SearchStyle
+            title={tr('search')}
+            onPress={() => {
+              if (listState === 'normal') {
+                onClickedSearch?.();
+              }
+            }}
+          />
+        )
       ) : null}
       <View
         style={{
@@ -98,11 +114,11 @@ export function ConversationList(props: ConversationListProps) {
       >
         <FlatList
           ref={ref}
-          style={{ flexGrow: 1 }}
-          contentContainerStyle={{ flexGrow: 1 }}
+          style={[{ flexGrow: 1 }, style]}
+          contentContainerStyle={[{ flexGrow: 1 }, contentContainerStyle]}
           data={data}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
+          refreshing={propsRefreshing ?? refreshing}
+          onRefresh={propsOnFresh ?? onRefresh}
           renderItem={(info: ListRenderItemInfo<ConversationListItemProps>) => {
             const { item } = info;
             return <ListItemRender {...item} />;
@@ -110,9 +126,11 @@ export function ConversationList(props: ConversationListProps) {
           keyExtractor={(item: ConversationListItemProps) => {
             return item.id;
           }}
-          onEndReached={onMore}
-          viewabilityConfig={viewabilityConfig}
-          onViewableItemsChanged={onViewableItemsChanged}
+          onEndReached={propsOnEndReached ?? onMore}
+          viewabilityConfig={propsViewabilityConfig ?? viewabilityConfig}
+          onViewableItemsChanged={
+            propsOnViewableItemsChanged ?? onViewableItemsChanged
+          }
           ListEmptyComponent={EmptyPlaceholder}
           ListErrorComponent={
             listState === 'error' ? (
@@ -126,6 +144,7 @@ export function ConversationList(props: ConversationListProps) {
           ListLoadingComponent={
             listState === 'loading' ? <LoadingPlaceholder /> : null
           }
+          {...others}
         />
       </View>
 

@@ -35,7 +35,7 @@ export function AddGroupParticipantScreen(props: Props) {
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
-        onSearch={() => {
+        onClickedSearch={() => {
           navigation.navigate('SearchContact', {
             params: { searchType: 'add-group-member', groupId },
           });

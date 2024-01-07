@@ -25,8 +25,8 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
       hasSendMessage = true,
       hasVideoCall = true,
       containerStyle,
-      enableNavigationBar,
-      NavigationBar,
+      navigationBarVisible,
+      customNavigationBar,
     } = props;
     const {
       groupName,
@@ -90,9 +90,9 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
           containerStyle,
         ]}
       >
-        {enableNavigationBar !== false ? (
-          NavigationBar ? (
-            <>{NavigationBar}</>
+        {navigationBarVisible !== false ? (
+          customNavigationBar ? (
+            <>{customNavigationBar}</>
           ) : (
             <TopNavigationBar
               Left={
