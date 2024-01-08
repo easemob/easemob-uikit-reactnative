@@ -282,11 +282,12 @@ export class ChatServiceImpl
     }
   }
   async logout(params: {
+    unbindDeviceToken?: boolean;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     try {
       console.log('dev:chat:logout:');
-      await this.client.logout();
+      await this.client.logout(params.unbindDeviceToken);
       params.result?.({ isOk: true });
       this._user = undefined;
       this.reset();
@@ -375,7 +376,11 @@ export class ChatServiceImpl
 
   setUser(params: { users: UserData[] }): void {
     params.users.forEach((v) => {
-      this._userList.set(v.userId, v);
+      if (v.userId === this._user?.userId && v.userId) {
+        this._user = { ...this._user, ...v };
+      } else {
+        this._userList.set(v.userId, v);
+      }
     });
   }
 
@@ -2214,6 +2219,7 @@ export class ChatServiceImpl
     convId: string;
     convType: ChatConversationType;
     msgId: string;
+    onResult: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.chatManager.markMessageAsRead(
@@ -2222,6 +2228,9 @@ export class ChatServiceImpl
         params.msgId
       ),
       event: 'setMessageRead',
+      onFinished: () => {
+        params.onResult({ isOk: true });
+      },
     });
   }
 

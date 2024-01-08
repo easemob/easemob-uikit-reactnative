@@ -186,6 +186,26 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       },
     });
   }
+  setMessageRead(params: {
+    convId: string;
+    convType: ChatConversationType;
+    message: ChatMessage;
+  }): void {
+    this._client.setMessageRead({
+      convId: params.convId,
+      convType: params.convType,
+      msgId: params.message.msgId,
+      onResult: (result) => {
+        if (result.isOk === true) {
+          const hasRead = params.message.hasRead;
+          if (hasRead !== true) {
+            const tmp = { ...params.message, hasRead: true } as ChatMessage;
+            this.emitRecvMessageStateChanged(tmp);
+          }
+        }
+      },
+    });
+  }
   async sendMessage(msg: ChatMessage): Promise<void> {
     const callback: ChatMessageStatusCallback = {
       onSuccess: (message) => {

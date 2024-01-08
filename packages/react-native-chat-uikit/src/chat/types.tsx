@@ -448,6 +448,7 @@ export interface MessageServices {
     convId: string;
     convType: ChatConversationType;
     msgId: string;
+    onResult: ResultCallback<void>;
   }): void;
   sendMessageReadAck(params: {
     message: ChatMessage;
@@ -679,6 +680,7 @@ export interface ChatService
    * @noThrows {@link UIKitError}
    */
   logout(params: {
+    unbindDeviceToken?: boolean;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
   /**

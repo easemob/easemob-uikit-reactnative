@@ -23,7 +23,7 @@ export const MessageInput = React.forwardRef<
   props: React.PropsWithChildren<MessageInputProps>,
   ref?: React.ForwardedRef<MessageInputRef>
 ) {
-  const { top, numberOfLines } = props;
+  const { top, numberOfLines, emojiList } = props;
 
   const testRef = React.useRef<View>(null);
   const { fontFamily } = useConfigContext();
@@ -244,6 +244,7 @@ export const MessageInput = React.forwardRef<
           onFace={onClickedFaceListItem}
           onDel={onClickedDelButton}
           onSend={onClickedEmojiSend}
+          emojiList={emojiList}
         />
       </View>
       <BottomVoiceBar

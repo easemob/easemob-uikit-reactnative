@@ -60,6 +60,12 @@ export type MessageInputProps = PropsWithError &
     onInputMention?: (groupId: string) => void;
     onClickedCardMenu?: () => void;
     onInitMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
+    /**
+     * The list of emoji expressions. The default is {@link FACE_ASSETS}.
+     *
+     * The format needs to be followed. For example: `U+1F641` {@link FACE_ASSETS}. It will replace the built-in emoji  list.
+     */
+    emojiList?: string[];
   };
 export type MessageInputState = 'normal' | 'emoji' | 'voice' | 'keyboard';
 

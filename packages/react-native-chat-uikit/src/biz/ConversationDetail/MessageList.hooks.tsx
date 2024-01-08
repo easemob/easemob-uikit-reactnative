@@ -171,13 +171,20 @@ export function useMessageList(
     [listRef, needScrollToBottom]
   );
 
+  const onReallySetData = React.useCallback(
+    (items: MessageListItemProps[]) => {
+      setData([...items]);
+    },
+    [setData]
+  );
+
   const onSetData = React.useCallback(
     (items: MessageListItemProps[]) => {
       if (needScrollToBottom() === true) {
         if (items.length > 0) {
           preBottomDataRef.current = items[0];
         }
-        setData([...items]);
+        onReallySetData(items);
       } else {
         const index = items.findIndex((d) => {
           if (d.id === preBottomDataRef.current?.id) {
@@ -188,13 +195,13 @@ export function useMessageList(
         if (index !== -1) {
           // todo: 获取数组指定位置后的元素，并返回
           const tmp = items.slice(index);
-          setData([...tmp]);
+          onReallySetData(tmp);
         } else {
-          setData([...items]);
+          onReallySetData(items);
         }
       }
     },
-    [needScrollToBottom, setData]
+    [needScrollToBottom, onReallySetData]
   );
 
   // !!! Both gestures and scrolling methods are triggered on the ios platform. However, the android platform only has gesture triggering.
@@ -721,6 +728,24 @@ export function useMessageList(
     },
     [im]
   );
+
+  // todo: how to do?
+  // const setRecvMessageReadCallback = React.useCallback(
+  //   (msg: ChatMessage) => {
+  //     if (
+  //       msg.chatType === ChatMessageChatType.PeerChat &&
+  //       msg.direction === ChatMessageDirection.RECEIVE &&
+  //       msg.hasRead === false
+  //     ) {
+  //       im.messageManager.setMessageRead({
+  //         convId: convId,
+  //         convType: convType,
+  //         message: msg,
+  //       });
+  //     }
+  //   },
+  //   [convId, convType, im.messageManager]
+  // );
 
   const addSendMessageToUI = React.useCallback(
     (
