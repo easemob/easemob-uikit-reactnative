@@ -11,14 +11,11 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { SectionListFactory } from '../../ui/SectionList';
-import { Text } from '../../ui/Text';
-import { Badges } from '../Badges';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import type { IndexModel } from '../ListIndex';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
 import { useContactList } from './ContactList.hooks';
-import { ContactItem } from './ContactList.item';
 import { ContactListNavigationBar } from './ContactList.navi';
 import type { ContactListItemProps, ContactListProps } from './types';
 
@@ -28,12 +25,7 @@ export function ContactList(props: ContactListProps) {
   const {
     containerStyle,
     contactType,
-    isHasGroupList = true,
-    isHasNewRequest = true,
-    onContextMenuMoreActions,
     onBack,
-    onClickedNewRequest,
-    onClickedGroupList,
     navigationBarVisible,
     customNavigationBar,
     searchStyleVisible,
@@ -70,6 +62,7 @@ export function ContactList(props: ContactListProps) {
     ListItemRender,
     ListItemHeaderRender,
     sectionListProps,
+    contactItems,
   } = useContactList(props);
   const {
     style,
@@ -100,38 +93,6 @@ export function ContactList(props: ContactListProps) {
       dark: colors.primary[6],
     },
   });
-
-  const items = () => {
-    if (contactType === 'contact-list') {
-      return (
-        <>
-          {isHasNewRequest === true ? (
-            <ContactItem
-              name={tr('_uikit_contact_new_request')}
-              count={<Badges count={requestCount} />}
-              hasArrow={true}
-              onClicked={onClickedNewRequest}
-            />
-          ) : null}
-          {isHasGroupList === true ? (
-            <ContactItem
-              name={tr('_uikit_contact_group_list')}
-              count={
-                <Text paletteType={'label'} textType={'medium'}>
-                  {groupCount}
-                </Text>
-              }
-              hasArrow={true}
-              onClicked={onClickedGroupList}
-            />
-          ) : null}
-          {onContextMenuMoreActions}
-        </>
-      );
-    } else {
-      return null;
-    }
-  };
 
   return (
     <View
@@ -170,7 +131,7 @@ export function ContactList(props: ContactListProps) {
         )
       ) : null}
 
-      {items()}
+      {contactItems({ groupCount, requestCount })}
 
       <View style={{ flex: 1 }}>
         <SectionList

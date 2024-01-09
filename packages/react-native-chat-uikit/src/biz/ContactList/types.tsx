@@ -80,9 +80,12 @@ export type ContactListProps = Pick<
   PropsWithMenu &
   Omit<ListItemActions<ContactModel>, 'onToRightSlide' | 'onToLeftSlide'> & {
     containerStyle?: StyleProp<ViewStyle>;
-    isHasNewRequest?: boolean;
-    isHasGroupList?: boolean;
-    onContextMenuMoreActions?: React.ReactElement<ContactItemProps>[];
+    /**
+     * Callback for initializing individual list items. The input is the default component and the updated component is returned.
+     */
+    onInitListItemActions?: (
+      defaultItems: React.ReactElement<ContactItemProps>[]
+    ) => React.ReactElement<ContactItemProps>[];
     onSort?: (
       prevProps: ContactListItemProps,
       nextProps: ContactListItemProps

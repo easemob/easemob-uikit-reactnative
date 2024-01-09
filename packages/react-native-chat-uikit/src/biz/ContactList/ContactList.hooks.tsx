@@ -19,7 +19,9 @@ import type { RequestListListener } from '../../chat/requestList.types';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { SectionListRef } from '../../ui/SectionList';
+import { Text } from '../../ui/Text';
 import { containsChinese, getPinyinFirsLetter } from '../../utils';
+import { Badges } from '../Badges';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useContactListMoreActions } from '../hooks/useContactListMoreActions';
@@ -28,6 +30,7 @@ import type { IndexModel, ListIndexProps } from '../ListIndex';
 import type { ChoiceType, ListState } from '../types';
 import { g_index_alphabet_range } from './const';
 import {
+  ContactItem,
   ContactListItemHeaderMemo,
   ContactListItemMemo,
 } from './ContactList.item';
@@ -57,6 +60,9 @@ export function useContactList(props: ContactListProps) {
     onInitialized,
     sectionListProps: propsSectionListProps,
     onStateChanged,
+    onInitListItemActions: propsOnInitListItemActions,
+    onClickedNewRequest,
+    onClickedGroupList,
   } = props;
   const sectionListProps = useSectionList<
     ContactListItemProps,
@@ -531,6 +537,40 @@ export function useContactList(props: ContactListProps) {
     ]
   );
 
+  const contactItems = React.useCallback(
+    ({
+      requestCount,
+      groupCount,
+    }: {
+      requestCount: number;
+      groupCount: number;
+    }) => {
+      const items = [
+        <ContactItem
+          name={tr('_uikit_contact_new_request')}
+          count={<Badges count={requestCount} />}
+          hasArrow={true}
+          onClicked={onClickedNewRequest}
+        />,
+        <ContactItem
+          name={tr('_uikit_contact_group_list')}
+          count={
+            <Text paletteType={'label'} textType={'medium'}>
+              {groupCount}
+            </Text>
+          }
+          hasArrow={true}
+          onClicked={onClickedGroupList}
+        />,
+      ];
+      const newContactItems = propsOnInitListItemActions
+        ? propsOnInitListItemActions(items)
+        : items;
+      return newContactItems;
+    },
+    [onClickedGroupList, onClickedNewRequest, propsOnInitListItemActions, tr]
+  );
+
   const onAddedContact = React.useCallback(
     (userId: string) => {
       if (contactType !== 'contact-list') {
@@ -782,6 +822,7 @@ export function useContactList(props: ContactListProps) {
     tr,
     ListItemRender: ListItemRenderRef.current,
     ListItemHeaderRender: ListItemHeaderRenderRef.current,
+    contactItems,
   };
 }
 

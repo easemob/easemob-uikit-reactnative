@@ -120,9 +120,15 @@ export type ConversationListProps = Pick<
      */
     propsRef?: React.MutableRefObject<ConversationListRef>;
 
+    /**
+     * Callback notification for initializing the bottom menu for navigation bar.
+     */
     onInitNavigationBarMenu?: (
       initItems: InitMenuItemsType[]
     ) => InitMenuItemsType[];
+    /**
+     * Callback notification for initializing the bottom menu for long press list item.
+     */
     onInitBottomMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
   };
 export type SearchConversationProps = PropsWithTest &
