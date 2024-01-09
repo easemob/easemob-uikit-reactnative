@@ -1,7 +1,7 @@
 import type { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
 
 import type { CommonManager } from './commonManager.types';
-import type { ConversationModel } from './types';
+import type { ConversationModel } from './types.ui';
 
 export type MessageManagerListener = {
   onSendMessageChanged?: (msg: ChatMessage) => void;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { SectionListData } from 'react-native';
 import {
   ChatConversationType,
   ChatMultiDeviceEvent,
@@ -9,6 +10,8 @@ import {
   ChatServiceListener,
   ContactModel,
   NewRequestModel,
+  UIContactListListener,
+  UIListenerType,
   useChatContext,
   useChatListener,
 } from '../../chat';
@@ -60,7 +63,7 @@ export function useContactList(props: ContactListProps) {
     IndexModel,
     ListIndexProps
   >({
-    onInit: () => init({ onFinished: onInitialized }),
+    // onInit: () => init({ onFinished: onInitialized }),
   });
   const {
     isSort,
@@ -91,7 +94,7 @@ export function useContactList(props: ContactListProps) {
       propsListItemHeaderRender ?? ContactListItemHeaderMemo
     );
 
-  const onSetState = React.useCallback(
+  const updateState = React.useCallback(
     (state: ListState) => {
       setListState?.(state);
       onStateChanged?.(state);
@@ -129,6 +132,30 @@ export function useContactList(props: ContactListProps) {
       }
     },
     [onLongPressed]
+  );
+
+  const getFirst = React.useCallback((str?: string) => {
+    let ret: string | undefined;
+    if (str && str.length > 0) {
+      const first = str[0]!.toLocaleUpperCase();
+      ret = first;
+      if (containsChinese(first)) {
+        ret = getPinyinFirsLetter(first).at(0)?.toLocaleUpperCase();
+      }
+    }
+    return ret;
+  }, []);
+
+  const removeDuplicateData = React.useCallback(
+    (list: ContactListItemProps[]) => {
+      const uniqueList = list.filter(
+        (item, index, self) =>
+          index ===
+          self.findIndex((t) => t.section.userId === item.section.userId)
+      );
+      return uniqueList;
+    },
+    []
   );
 
   const calculateGroupCount = React.useCallback(() => {
@@ -169,28 +196,27 @@ export function useContactList(props: ContactListProps) {
     setSelectedMemberCount(count);
   }, [contactType, groupId, im, sectionsRef]);
 
-  const getFirst = React.useCallback((str?: string) => {
-    let ret: string | undefined;
-    if (str && str.length > 0) {
-      const first = str[0]!.toLocaleUpperCase();
-      ret = first;
-      if (containsChinese(first)) {
-        ret = getPinyinFirsLetter(first).at(0)?.toLocaleUpperCase();
-      }
-    }
-    return ret;
-  }, []);
+  const onChangeGroupCount = React.useCallback(() => {
+    im.fetchJoinedGroupCount({
+      onResult: (result) => {
+        if (result.isOk === true && result.value) {
+          setGroupCount(result.value);
+        }
+      },
+    });
+  }, [im]);
 
-  const onSetData = React.useCallback(
+  const refreshToUI = React.useCallback(
     (list: ContactListItemProps[]) => {
       if (isSort === true) {
         list.sort(onSort);
       }
+      const uniqueList = removeDuplicateData(list);
       calculateGroupCount();
       calculateAddedGroupMemberCount();
 
       const sortList: (IndexModel & { data: ContactListItemProps[] })[] = [];
-      list.forEach((item) => {
+      uniqueList.forEach((item) => {
         const first = getFirst(item.section.nickName?.[0]?.toLocaleUpperCase());
         const indexTitle = first
           ? g_index_alphabet_range.includes(first)
@@ -219,71 +245,54 @@ export function useContactList(props: ContactListProps) {
       getFirst,
       isSort,
       onSort,
+      removeDuplicateData,
       sectionsRef,
       setIndexTitles,
       setSection,
     ]
   );
 
-  const addContactToUI = React.useCallback(
-    (data: ContactModel) => {
-      if (contactType !== 'contact-list') {
-        return;
-      }
-      const list = sectionsRef.current
+  const flatList = React.useCallback(
+    (sectionList: SectionListData<ContactListItemProps, IndexModel>[]) => {
+      return sectionList
         .map((section) => {
           return section.data.map((item) => {
             return item;
           });
         })
         .flat();
-      const isExisted = list.find((item) => {
-        if (item.id === data.userId) {
-          item.section = {
-            ...item.section,
-            ...data,
-          };
-          return true;
-        }
-        return false;
-      });
-      if (isExisted === undefined) {
-        list.push({
-          id: data.userId,
-          section: data,
-        } as ContactListItemProps);
-      }
-      onSetData(list);
     },
-    [contactType, onSetData, sectionsRef]
+    []
+  );
+
+  const addContactToUI = React.useCallback(
+    (data: ContactModel) => {
+      const list = flatList(sectionsRef.current);
+      list.push({
+        id: data.userId,
+        section: data,
+      } as ContactListItemProps);
+      refreshToUI(list);
+    },
+    [flatList, refreshToUI, sectionsRef]
   );
 
   const removeContactToUI = React.useCallback(
     (userId: string) => {
-      if (contactType !== 'contact-list') {
-        return;
-      }
       sectionsRef.current = sectionsRef.current.filter((section) => {
         section.data = section.data.filter((item) => {
           return item.section.userId !== userId;
         });
         return section.data.length > 0;
       });
-      setIndexTitles(sectionsRef.current.map((item) => item.indexTitle));
-      setSection(sectionsRef.current);
+      refreshToUI(flatList(sectionsRef.current));
     },
-    [contactType, sectionsRef, setIndexTitles, setSection]
+    [flatList, refreshToUI, sectionsRef]
   );
 
   const updateContactToUI = React.useCallback(
     (data: ContactModel) => {
-      const list = sectionsRef.current
-        .map((section) => {
-          return section.data.map((item) => {
-            return item;
-          });
-        })
-        .flat();
+      const list = flatList(sectionsRef.current);
       const isExisted = list.find((item) => {
         if (item.id === data.userId) {
           item.section = {
@@ -313,10 +322,10 @@ export function useContactList(props: ContactListProps) {
           }
         }
 
-        onSetData(list);
+        refreshToUI(list);
       }
     },
-    [contactType, groupId, im, onSetData, sectionsRef]
+    [contactType, flatList, groupId, im, refreshToUI, sectionsRef]
   );
 
   const onCheckClickedCallback = React.useCallback(
@@ -348,183 +357,202 @@ export function useContactList(props: ContactListProps) {
     [sectionListRef]
   );
 
-  const init = async (params: {
-    isClearState?: boolean;
-    onFinished?: () => void;
-  }) => {
-    const { isClearState, onFinished } = params;
-    im.setOnRequestData(onRequestMultiData);
-    if (testMode === 'only-ui') {
-      const names = [
-        'James',
-        'John',
-        'Robert',
-        'Michael',
-        'William',
-        'David',
-        'Richard',
-        'Joseph',
-        'Thomas',
-        'Charles',
-        'Patricia',
-        'Jennifer',
-        'Linda',
-        'Elizabeth',
-        'Susan',
-        'Jessica',
-        'Sarah',
-        'Karen',
-        'Nancy',
-        'Lisa',
-      ]; // Add more names as needed
+  const init = React.useCallback(
+    async (params: { isClearState?: boolean; onFinished?: () => void }) => {
+      const { isClearState, onFinished } = params;
+      im.setOnRequestData(onRequestMultiData);
+      if (testMode === 'only-ui') {
+        const names = [
+          'James',
+          'John',
+          'Robert',
+          'Michael',
+          'William',
+          'David',
+          'Richard',
+          'Joseph',
+          'Thomas',
+          'Charles',
+          'Patricia',
+          'Jennifer',
+          'Linda',
+          'Elizabeth',
+          'Susan',
+          'Jessica',
+          'Sarah',
+          'Karen',
+          'Nancy',
+          'Lisa',
+        ]; // Add more names as needed
 
-      const generateRandomNames = () => {
-        const randomIndex = Math.floor(Math.random() * names.length);
-        return names[randomIndex];
-      };
-      const array = Array.from({ length: 10 }, (_, index) => ({
-        id: index.toString(),
-      }));
-      const testList = array.map((item) => {
-        return {
-          id: item.id,
-          section: {
-            userId: item.id,
-            remark: item.id + generateRandomNames(),
-            nickName: generateRandomNames(),
-            avatar:
-              'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-          },
-        } as ContactListItemProps;
-      });
-      onSetData(testList);
-      return;
-    }
-    console.log('dev:ContactList:init', contactType, isAutoLoad);
-    const url = im.user(im.userId)?.avatarURL;
-    if (url) {
-      setAvatarUrl(url);
-    }
-    if (isAutoLoad === true) {
-      if (isClearState === undefined || isClearState === true) {
-        if (contactType === 'create-group') {
-          im.clearContactCheckedState({ key: contactType });
-        } else if (contactType === 'add-group-member') {
-          if (groupId) {
-            im.clearContactCheckedState({ key: groupId });
+        const generateRandomNames = () => {
+          const randomIndex = Math.floor(Math.random() * names.length);
+          return names[randomIndex];
+        };
+        const array = Array.from({ length: 10 }, (_, index) => ({
+          id: index.toString(),
+        }));
+        const testList = array.map((item) => {
+          return {
+            id: item.id,
+            section: {
+              userId: item.id,
+              remark: item.id + generateRandomNames(),
+              nickName: generateRandomNames(),
+              avatar:
+                'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+            },
+          } as ContactListItemProps;
+        });
+        refreshToUI(testList);
+        return;
+      }
+      const url = im.user(im.userId)?.avatarURL;
+      if (url) {
+        setAvatarUrl(url);
+      }
+      if (isAutoLoad === true) {
+        if (isClearState === undefined || isClearState === true) {
+          if (contactType === 'create-group') {
+            im.clearContactCheckedState({ key: contactType });
+          } else if (contactType === 'add-group-member') {
+            if (groupId) {
+              im.clearContactCheckedState({ key: groupId });
+            }
           }
         }
-      }
 
-      const s = await im.loginState();
-      if (s === 'logged') {
-        onSetState('loading');
-        if (contactType === 'add-group-member') {
-          im.getAllContacts({
-            onResult: (result) => {
-              const { isOk, value, error } = result;
-              if (isOk === true) {
-                if (value && groupId) {
-                  im.getGroupAllMembers({
-                    groupId,
-                    onResult: (groupResult) => {
-                      if (groupResult.isOk === true) {
-                        const groupMembers = groupResult.value ?? [];
-                        const list = value.map((item) => {
-                          const isExisted = groupMembers.find((member) => {
-                            return member.id === item.userId;
+        const s = await im.loginState();
+        if (s === 'logged') {
+          updateState('loading');
+          if (contactType === 'add-group-member') {
+            im.getAllContacts({
+              onResult: (result) => {
+                const { isOk, value, error } = result;
+                if (isOk === true) {
+                  if (value && groupId) {
+                    im.getGroupAllMembers({
+                      groupId,
+                      onResult: (groupResult) => {
+                        if (groupResult.isOk === true) {
+                          const groupMembers = groupResult.value ?? [];
+                          const list = value.map((item) => {
+                            const isExisted = groupMembers.find((member) => {
+                              return member.id === item.userId;
+                            });
+                            return {
+                              id: item.userId,
+                              section: {
+                                ...item,
+                                checked:
+                                  isExisted !== undefined
+                                    ? true
+                                    : im.getContactCheckedState({
+                                        key: groupId,
+                                        userId: item.userId,
+                                      }) !== undefined ?? false,
+                                disable: isExisted !== undefined,
+                              },
+                              contactType: contactType,
+                            } as ContactListItemProps;
                           });
-                          return {
-                            id: item.userId,
-                            section: {
-                              ...item,
-                              checked:
-                                isExisted !== undefined
-                                  ? true
-                                  : im.getContactCheckedState({
-                                      key: groupId,
-                                      userId: item.userId,
-                                    }) !== undefined ?? false,
-                              disable: isExisted !== undefined,
-                            },
-                            contactType: contactType,
-                          } as ContactListItemProps;
-                        });
-                        onSetData(list);
-                        onSetState('normal');
-                      } else {
-                        if (groupResult.error) {
-                          onSetState('error');
-                          im.sendError({ error: groupResult.error });
+                          refreshToUI(list);
+                          updateState('normal');
+                        } else {
+                          if (groupResult.error) {
+                            updateState('error');
+                            im.sendError({ error: groupResult.error });
+                          }
                         }
-                      }
-                    },
-                  });
+                      },
+                    });
+                  }
+                } else {
+                  if (error) {
+                    updateState('error');
+                    im.sendError({ error });
+                  }
                 }
-              } else {
-                if (error) {
-                  onSetState('error');
-                  im.sendError({ error });
+                onFinished?.();
+              },
+            });
+          } else {
+            im.getAllContacts({
+              onResult: (result) => {
+                const { isOk, value, error } = result;
+                if (isOk === true) {
+                  if (value) {
+                    const list = value.map((item) => {
+                      return {
+                        id: item.userId,
+                        section:
+                          contactType === 'create-group'
+                            ? {
+                                ...item,
+                                checked:
+                                  im.getContactCheckedState({
+                                    key: contactType,
+                                    userId: item.userId,
+                                  }) !== undefined ?? false,
+                              }
+                            : item,
+                        contactType: contactType,
+                      } as ContactListItemProps;
+                    });
+                    refreshToUI(list);
+                    updateState('normal');
+                  }
+                } else {
+                  if (error) {
+                    updateState('error');
+                    im.sendError({ error });
+                  }
                 }
-              }
-              onFinished?.();
-            },
-          });
+                onFinished?.();
+              },
+            });
+          }
+          onChangeGroupCount();
         } else {
-          im.getAllContacts({
-            onResult: (result) => {
-              const { isOk, value, error } = result;
-              if (isOk === true) {
-                if (value) {
-                  const list = value.map((item) => {
-                    return {
-                      id: item.userId,
-                      section:
-                        contactType === 'create-group'
-                          ? {
-                              ...item,
-                              checked:
-                                im.getContactCheckedState({
-                                  key: contactType,
-                                  userId: item.userId,
-                                }) !== undefined ?? false,
-                            }
-                          : item,
-                      contactType: contactType,
-                    } as ContactListItemProps;
-                  });
-                  onSetData(list);
-                  onSetState('normal');
-                }
-              } else {
-                if (error) {
-                  onSetState('error');
-                  im.sendError({ error });
-                }
-              }
-              onFinished?.();
-            },
-          });
+          updateState('error');
         }
-        onChangeGroupCount();
-      } else {
-        onSetState('error');
       }
-    }
-  };
+    },
+    [
+      contactType,
+      groupId,
+      im,
+      isAutoLoad,
+      onChangeGroupCount,
+      onRequestMultiData,
+      refreshToUI,
+      testMode,
+      updateState,
+    ]
+  );
+
+  const onAddedContact = React.useCallback(
+    (userId: string) => {
+      if (contactType !== 'contact-list') {
+        return;
+      }
+      im.getContact({
+        userId,
+        onResult: (result) => {
+          if (result.isOk === true && result.value) {
+            addContactToUI(result.value);
+          }
+        },
+      });
+    },
+    [addContactToUI, contactType, im]
+  );
 
   useChatListener(
     React.useMemo(() => {
       return {
         onContactAdded: async (userId: string) => {
-          im.getContact({
-            userId,
-            onResult: (result) => {
-              if (result.isOk === true && result.value) {
-                addContactToUI(result.value);
-              }
-            },
-          });
+          onAddedContact(userId);
         },
         onContactDeleted: async (userId: string) => {
           removeContactToUI(userId);
@@ -541,56 +569,14 @@ export function useContactList(props: ContactListProps) {
           }
         },
       } as ChatServiceListener;
-    }, [addContactToUI, im, removeContactToUI])
+    }, [onAddedContact, removeContactToUI])
   );
-
-  // React.useEffect(() => {
-  //   if (contactType !== 'create-group') {
-  //     return;
-  //   }
-  //   const listener = (
-  //     callback: (
-  //       list: {
-  //         convId: string;
-  //         checked: boolean | undefined;
-  //       }[]
-  //     ) => void
-  //   ) => {
-  //     const list = sectionsRef.current
-  //       .map((section) => {
-  //         return section.data.map((item) => {
-  //           return item;
-  //         });
-  //       })
-  //       .flat()
-  //       .map((item) => {
-  //         return {
-  //           convId: item.section.userId,
-  //           checked: item.section.checked,
-  //         };
-  //       });
-  //     callback(list);
-  //   };
-  //   const sub = DeviceEventEmitter.addListener(
-  //     '_$request_contact_state',
-  //     listener
-  //   );
-  //   return () => {
-  //     sub.remove();
-  //   };
-  // }, [contactType, sectionsRef]);
 
   const onCreateGroupCallback = React.useCallback(() => {
     if (contactType !== 'create-group') {
       return;
     }
-    const list = sectionsRef.current
-      .map((section) => {
-        return section.data.map((item) => {
-          return item;
-        });
-      })
-      .flat()
+    const list = flatList(sectionsRef.current)
       .filter((item) => {
         return item.section.checked === true;
       })
@@ -598,19 +584,13 @@ export function useContactList(props: ContactListProps) {
         return item.section;
       });
     onCreateGroupResultValue?.(list);
-  }, [contactType, onCreateGroupResultValue, sectionsRef]);
+  }, [contactType, flatList, onCreateGroupResultValue, sectionsRef]);
 
   const onClickedAddGroupParticipant = React.useCallback(() => {
     if (contactType !== 'add-group-member') {
       return;
     }
-    const list = sectionsRef.current
-      .map((section) => {
-        return section.data.map((item) => {
-          return item;
-        });
-      })
-      .flat()
+    const list = flatList(sectionsRef.current)
       .filter((item) => {
         if (item.section.checked === true) {
           if (groupId) {
@@ -627,17 +607,14 @@ export function useContactList(props: ContactListProps) {
         return item.section;
       });
     onAddGroupParticipantResult?.(list);
-  }, [contactType, groupId, im, onAddGroupParticipantResult, sectionsRef]);
-
-  const onChangeGroupCount = React.useCallback(() => {
-    im.fetchJoinedGroupCount({
-      onResult: (result) => {
-        if (result.isOk === true && result.value) {
-          setGroupCount(result.value);
-        }
-      },
-    });
-  }, [im]);
+  }, [
+    contactType,
+    flatList,
+    groupId,
+    im,
+    onAddGroupParticipantResult,
+    sectionsRef,
+  ]);
 
   const { onShowContactListMoreActions } = useContactListMoreActions({
     menuRef,
@@ -659,14 +636,9 @@ export function useContactList(props: ContactListProps) {
       im.addNewContact({
         useId: item.userId,
         reason: 'add contact',
-        onResult: (result) => {
-          if (result.isOk === true) {
-            addContactToUI(item);
-          }
-        },
       });
     },
-    [addContactToUI, contactType, im]
+    [contactType, im]
   );
 
   const removeContact = React.useCallback(
@@ -676,27 +648,10 @@ export function useContactList(props: ContactListProps) {
       }
       im.removeContact({
         userId: item.userId,
-        onResult: (result) => {
-          if (result.isOk === true) {
-            removeContactToUI(item.userId);
-          }
-        },
       });
     },
-    [contactType, im, removeContactToUI]
+    [contactType, im]
   );
-
-  const refreshListToUI = React.useCallback(() => {
-    onSetData(
-      sectionsRef.current
-        .map((section) => {
-          return section.data.map((item) => {
-            return item;
-          });
-        })
-        .flat()
-    );
-  }, [onSetData, sectionsRef]);
 
   const setContactRemark = React.useCallback(
     (item: ContactModel) => {
@@ -704,15 +659,10 @@ export function useContactList(props: ContactListProps) {
         im.setContactRemark({
           userId: item.userId,
           remark: item.remark,
-          onResult: (result) => {
-            if (result.isOk === true) {
-              updateContactToUI(item);
-            }
-          },
         });
       }
     },
-    [im, updateContactToUI]
+    [im]
   );
 
   if (propsRef?.current) {
@@ -725,13 +675,7 @@ export function useContactList(props: ContactListProps) {
     };
     propsRef.current.getAlertRef = () => alertRef;
     propsRef.current.getList = () => {
-      return sectionsRef.current
-        .map((section) => {
-          return section.data.map((item) => {
-            return item.section;
-          });
-        })
-        .flat();
+      return flatList(sectionsRef.current).map((item) => item.section);
     };
     propsRef.current.getMenuRef = () => menuRef;
     propsRef.current.getSectionListRef = () => {
@@ -740,7 +684,7 @@ export function useContactList(props: ContactListProps) {
       >;
     };
     propsRef.current.refreshList = () => {
-      refreshListToUI();
+      refreshToUI(flatList(sectionsRef.current));
     };
     propsRef.current.reloadList = () => {
       init({ onFinished: onInitialized });
@@ -754,42 +698,54 @@ export function useContactList(props: ContactListProps) {
   }
 
   React.useEffect(() => {
-    if (contactType !== 'create-group' && contactType !== 'add-group-member') {
-      return;
-    }
-    if (selectedData && selectedData.length > 0) {
-      init({ isClearState: false });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contactType, onSetData, sectionsRef, selectedData]);
+    const listener: UIContactListListener = {
+      onAddedEvent: (data) => {
+        addContactToUI(data);
+      },
+      onDeletedEvent: (data) => {
+        removeContactToUI(data.userId);
+      },
+      onUpdatedEvent: (data) => {
+        updateContactToUI(data);
+      },
+      onRequestRefreshEvent: () => {
+        refreshToUI(flatList(sectionsRef.current));
+      },
+      onRequestReloadEvent: () => {
+        init({ onFinished: onInitialized });
+      },
+      type: UIListenerType.Contact,
+    };
+    im.addUIListener(listener);
+    return () => {
+      im.removeUIListener(listener);
+    };
+  }, [
+    addContactToUI,
+    flatList,
+    im,
+    init,
+    onInitialized,
+    refreshToUI,
+    removeContactToUI,
+    sectionsRef,
+    updateContactToUI,
+  ]);
 
   React.useEffect(() => {
-    const listener = {
+    if (selectedData && selectedData.length > 0) {
+      init({ isClearState: false });
+    } else {
+      init({});
+    }
+  }, [contactType, init, refreshToUI, sectionsRef, selectedData]);
+
+  React.useEffect(() => {
+    const listener: RequestListListener = {
       onNewRequestListChanged: (list: NewRequestModel[]) => {
         setRequestCount(list.length);
       },
-      onAutoAcceptInvitation: (_params: {
-        groupId: string;
-        inviter: string;
-        inviteMessage?: string;
-      }) => {
-        onChangeGroupCount();
-      },
-      onCreateGroup: () => {
-        onChangeGroupCount();
-      },
-
-      onMemberRemoved: (_params: { groupId: string; groupName?: string }) => {
-        // todo: remove conversation item.
-        onChangeGroupCount();
-      },
-      onDestroyed: (_params: { groupId: string; groupName?: string }) => {
-        onChangeGroupCount();
-      },
-      onQuitGroup: () => {
-        onChangeGroupCount();
-      },
-    } as RequestListListener;
+    };
     im.requestList.addListener('ContactList', listener);
     return () => {
       im.requestList.removeListener('ContactList');

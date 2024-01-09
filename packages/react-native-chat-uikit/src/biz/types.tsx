@@ -20,6 +20,9 @@ export type PropsWithTest = { testMode?: 'only-ui' | undefined };
 export type PropsWithError = { onError?: (error: UIKitError) => void };
 export type PropsWithChildren = React.PropsWithChildren<{}>;
 export type PropsWithInit<DataT = any> = {
+  /**
+   * This callback will be called during initialization or reloading.
+   */
   onInitialized?: (data?: DataT) => void;
 };
 export type PropsWithBack<DataT = any> = {

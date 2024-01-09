@@ -2,10 +2,9 @@ import * as React from 'react';
 import { ChatConversationType } from 'react-native-chat-sdk';
 
 import {
-  ChatServiceListener,
-  GroupModel,
+  UIGroupListListener,
+  UIListenerType,
   useChatContext,
-  useChatListener,
 } from '../../chat';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -188,30 +187,11 @@ export function useGroupInfo(
       ],
     });
   };
-  const onGroupAvatar = (newGroupAvatar: string) => {
+  const onGroupAvatar = (_newGroupAvatar: string) => {
     if (propsOnGroupName) {
       propsOnGroupName(groupId, groupAvatar);
       return;
     }
-    im.getGroupInfo({
-      groupId,
-      onResult: (value) => {
-        let ext = value.value?.options?.ext;
-        try {
-          if (ext) {
-            ext = JSON.parse(ext);
-          }
-        } catch (error) {}
-        im.setGroupAvatar({
-          groupId,
-          groupAvatar: newGroupAvatar,
-          ext: typeof ext === 'object' ? ext : {},
-          onResult: () => {
-            setGroupAvatar(newGroupAvatar);
-          },
-        });
-      },
-    });
   };
   const onGroupDescription = () => {
     if (propsOnGroupDescription) {
@@ -320,19 +300,34 @@ export function useGroupInfo(
     onShowGroupInfoActions(im.userId ?? '', ownerIdRef.current, groupId);
   };
 
-  const listener = React.useMemo(() => {
-    return {
-      onGroupInfoChanged: (group: GroupModel) => {
-        if (group.groupId === groupId) {
-          setGroupName(group.groupName);
-          setGroupAvatar(group.groupAvatar);
-          setGroupDescription(group.description);
-          setGroupMemberCount(group.memberCount ?? 0);
+  React.useEffect(() => {
+    const uiListener: UIGroupListListener = {
+      onUpdatedEvent: (data) => {
+        setGroupName((prev) => {
+          if (prev === data.groupName) {
+            return prev;
+          }
+          return data.groupName;
+        });
+        setGroupDescription((prev) => {
+          if (prev === data.description) {
+            return prev;
+          }
+          return data.description;
+        });
+      },
+      onDeletedEvent: (data) => {
+        if (data.groupId === groupId) {
+          // todo: go back
         }
       },
-    } as ChatServiceListener;
-  }, [groupId]);
-  useChatListener(listener);
+      type: UIListenerType.Group,
+    };
+    im.addUIListener(uiListener);
+    return () => {
+      im.removeUIListener(uiListener);
+    };
+  }, [groupId, im]);
 
   React.useImperativeHandle(
     ref,

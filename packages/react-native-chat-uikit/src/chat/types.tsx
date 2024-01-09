@@ -1,11 +1,8 @@
 import type {
   ChatClient,
-  ChatContact,
   ChatContactEventListener,
-  ChatConversation,
   ChatConversationType,
   ChatCustomEventListener,
-  ChatGroup,
   ChatGroupEventListener,
   ChatMessage,
   ChatMessageEventListener,
@@ -20,6 +17,14 @@ import type { UIKitError } from '../error';
 import type { PartialUndefinable } from '../types';
 import type { MessageCacheManager } from './messageManager.types';
 import type { RequestList } from './requestList.types';
+import type {
+  ContactModel,
+  ConversationModel,
+  GroupModel,
+  GroupParticipantModel,
+  UIListener,
+  UIListenerType,
+} from './types.ui';
 
 export type ChatEventType = 'undefined' | string;
 
@@ -75,7 +80,6 @@ export type DataModel = {
 };
 
 export type UserFrom = 'user' | 'group' | 'group-member' | 'others';
-export type NewRequestStateType = 'pending' | 'accepted' | 'declined';
 
 /**
  * The type of user data.
@@ -138,16 +142,10 @@ export interface ConnectServiceListener {
 export type MessageServiceListener =
   PartialUndefinable<ChatMessageEventListener>;
 
-export type ConversationListener = {
-  onConversationChanged?: (conv: ConversationModel) => void;
-};
+export type ConversationListener = {};
 
 export type GroupServiceListener =
-  PartialUndefinable<ChatGroupEventListener> & {
-    onGroupInfoChanged?: (group: GroupModel) => void;
-    onCreateGroup?: (group: GroupModel) => void;
-    onQuitGroup?: (groupId: string) => void;
-  };
+  PartialUndefinable<ChatGroupEventListener> & {};
 
 export type ContactServiceListener =
   PartialUndefinable<ChatContactEventListener>;
@@ -177,89 +175,6 @@ export type ChatServiceListener = ConnectServiceListener &
   MultiDeviceStateListener &
   ErrorServiceListener &
   ResultServiceListener;
-
-type _ConversationModel = PartialUndefinable<ChatConversation>;
-export type ConversationModel = Pick<
-  _ConversationModel,
-  'ext' | 'isPinned' | 'pinnedTime'
-> & {
-  /**
-   * The conversation ID.
-   */
-  convId: string;
-  /**
-   * The conversation type.
-   */
-  convType: ChatConversationType;
-  /**
-   * The message unread count.
-   */
-  unreadMessageCount?: number;
-  /**
-   * The conversation name.
-   */
-  convName?: string;
-  /**
-   * The conversation avatar URL.
-   */
-  convAvatar?: string;
-  /**
-   * Whether the conversation is silent.
-   */
-  doNotDisturb?: boolean;
-  /**
-   * The last message.
-   */
-  lastMessage?: ChatMessage;
-};
-type _ContactModel = PartialUndefinable<ChatContact>;
-export type ContactModel = _ContactModel & {
-  userId: string;
-  nickName?: string;
-  avatar?: string;
-  checked?: boolean;
-  disable?: boolean;
-};
-
-type _GroupModel = Omit<
-  PartialUndefinable<ChatGroup>,
-  'memberList' | 'adminList' | 'blockList' | 'muteList'
->;
-export type GroupModel = _GroupModel & {
-  /**
-   * The group ID.
-   */
-  groupId: string;
-  /**
-   * The group owner ID.
-   */
-  owner: string;
-  /**
-   * The group avatar url.
-   */
-  groupAvatar?: string;
-  /**
-   * The group my remark.
-   */
-  myRemark?: string;
-};
-
-export type GroupParticipantModel = {
-  id: string;
-  name?: string;
-  avatar?: string;
-  checked?: boolean;
-  disable?: boolean;
-};
-
-export type NewRequestModel = {
-  id: string;
-  name: string;
-  avatar?: string;
-  tip?: string;
-  state?: NewRequestStateType;
-  msg?: ChatMessage;
-};
 
 export interface ConversationServices {
   setOnRequestMultiData<DataT>(
@@ -304,11 +219,6 @@ export interface ConversationServices {
     convType: ChatConversationType;
     ext: Record<string, string | number | boolean>;
   }): Promise<void>;
-  setConversationMsg(params: {
-    convId: string;
-    convType: ChatConversationType;
-    lastMessage: ChatMessage;
-  }): Promise<void>;
   getConversationMessageCount(
     convId: string,
     convType: ChatConversationType
@@ -339,16 +249,16 @@ export interface ContactServices {
   addNewContact(params: {
     useId: string;
     reason?: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   removeContact(params: {
     userId: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   setContactRemark(params: {
     userId: string;
     remark: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   acceptInvitation(params: {
     userId: string;
@@ -509,7 +419,7 @@ export interface GroupServices {
     groupName: string;
     groupDescription?: string;
     inviteMembers: string[];
-    onResult: ResultCallback<GroupModel>;
+    onResult?: ResultCallback<GroupModel>;
   }): void;
   quitGroup(params: { groupId: string; onResult?: ResultCallback<void> }): void;
   destroyGroup(params: {
@@ -524,20 +434,14 @@ export interface GroupServices {
   setGroupDescription(params: {
     groupId: string;
     groupDescription: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   setGroupMyRemark(params: {
     groupId: string;
     memberId: string;
     groupMyRemark: string;
     ext?: Record<string, string>;
-    onResult: ResultCallback<void>;
-  }): void;
-  setGroupAvatar(params: {
-    groupId: string;
-    groupAvatar: string;
-    ext?: Record<string, string>;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   getGroupMyRemark(params: {
     groupId: string;
@@ -558,7 +462,7 @@ export interface GroupServices {
   changeGroupOwner(params: {
     groupId: string;
     newOwnerId: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
 }
 
@@ -616,6 +520,32 @@ export interface ChatService
    * **Note** Please use this interface with caution, as it may result in deleting other listeners and failing to receive notifications.
    */
   clearListener(): void;
+
+  /**
+   * It is a complement to `ChatServiceListener`. Usually data changes due to user behavior are received and processed through this listener. For example: actions such as creating a group and adding contacts will trigger an `onAddedEvent` callback notification. Modifying the group name and modifying contact notes will trigger an `onUpdatedEvent` callback notification. Exiting the group and deleting a contact will trigger an `onDeletedEvent` callback notification.
+   */
+  addUIListener<DataModel>(listener: UIListener<DataModel>): void;
+  /**
+   * Remove UI listener.
+   */
+  removeUIListener<DataModel>(listener: UIListener<DataModel>): void;
+  /**
+   * Clear all UI listeners.
+   */
+  clearUIListener(): void;
+  /**
+   * Certain user behaviors will trigger corresponding event callback notifications from the listener. See each interface for details. {@link ChatService}
+   * @param type {@link UIListenerType}
+   * @param event {@link UIListener}
+   * @param data Generic data.
+   * @param args Any number of parameters.
+   */
+  sendUIEvent<DataModel>(
+    type: UIListenerType,
+    event: keyof UIListener<DataModel>,
+    data?: DataModel | string,
+    ...args: any[]
+  ): void;
 
   /**
    * If the built-in method is not enough, you can get the original IM object through this method.

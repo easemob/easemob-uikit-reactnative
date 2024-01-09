@@ -4,6 +4,8 @@ import { ChatMultiDeviceEvent } from 'react-native-chat-sdk';
 import {
   ChatServiceListener,
   GroupModel,
+  UIGroupListListener,
+  UIListenerType,
   useChatContext,
   useChatListener,
 } from '../../chat';
@@ -35,8 +37,8 @@ export function useGroupList(props: UseGroupListProps) {
   } = props;
   const flatListProps = useFlatList<GroupListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
-    onInit: () => init(),
-    onMore: () => onMore(),
+    // onInit: () => init(),
+    // onMore: () => onMore(),
     onVisibleItems: (items: GroupListItemProps[]) => onVisibleItems(items),
   });
   const { setData, dataRef, setListState, ref: flatListRef } = flatListProps;
@@ -51,7 +53,7 @@ export function useGroupList(props: UseGroupListProps) {
     propsListItemRender ?? GroupListItemMemo
   );
 
-  const onSetState = React.useCallback(
+  const updateState = React.useCallback(
     (state: ListState) => {
       setListState?.(state);
       onStateChanged?.(state);
@@ -77,129 +79,140 @@ export function useGroupList(props: UseGroupListProps) {
     [onLongPressed]
   );
 
-  const onSetData = React.useCallback(
+  const removeDuplicateData = React.useCallback(
     (list: GroupListItemProps[]) => {
       const uniqueList = list.filter(
         (item, index, self) =>
           index === self.findIndex((t) => t.data.groupId === item.data.groupId)
       );
-      dataRef.current = uniqueList;
-      setData([...dataRef.current]);
+      return uniqueList;
     },
-    [dataRef, setData]
+    []
   );
 
-  const addDataToUI = (list: GroupListItemProps[]) => {
-    if (dataRef.current.length === 0) {
-      onSetData(list);
-    } else {
-      dataRef.current = [...dataRef.current, ...list];
-      onSetData(dataRef.current);
-    }
-  };
+  const refreshToUI = React.useCallback(
+    (list: GroupListItemProps[]) => {
+      dataRef.current = removeDuplicateData(list);
+      setData([...dataRef.current]);
+    },
+    [dataRef, removeDuplicateData, setData]
+  );
 
-  const updateDataToUI = (data: GroupModel) => {
-    dataRef.current = dataRef.current.map((item) => {
-      if (item.data.groupId === data.groupId) {
-        item.data = { ...item.data, ...data };
+  const addGroupToUI = React.useCallback(
+    (list: GroupModel[], pos: 'before' | 'after') => {
+      const propsList = list.map((v) => {
+        return {
+          id: v.groupId,
+          data: v,
+        } as GroupListItemProps;
+      });
+      if (pos === 'before') {
+        dataRef.current = [...propsList, ...dataRef.current];
+      } else {
+        dataRef.current = [...dataRef.current, ...propsList];
       }
-      return item;
-    });
-    onSetData(dataRef.current);
-  };
+      refreshToUI(dataRef.current);
+    },
+    [dataRef, refreshToUI]
+  );
 
-  const removeDataToUI = (groupId: string) => {
-    dataRef.current = dataRef.current.filter((item) => item.id !== groupId);
-    onSetData(dataRef.current);
-  };
+  const updateGroupToUI = React.useCallback(
+    (data: GroupModel) => {
+      dataRef.current = dataRef.current.map((item) => {
+        if (item.data.groupId === data.groupId) {
+          item.data = { ...item.data, ...data };
+        }
+        return item;
+      });
+      refreshToUI(dataRef.current);
+    },
+    [dataRef, refreshToUI]
+  );
 
-  const requestList = (pageNum: number) => {
-    if (testMode === 'only-ui') {
-    } else {
-      im.getPageGroups({
-        pageSize: gGroupListPageNumber,
-        pageNum: pageNum,
-        onResult: (result) => {
-          const { isOk, value, error } = result;
-          if (isOk === true) {
-            if (pageNum === 0) {
-              currentPageNumberRef.current = 0;
-              dataRef.current = [];
-            }
-            if (value) {
-              const list = value.map((item) => {
-                return {
-                  id: item.groupId,
-                  data: item,
-                } as GroupListItemProps;
-              });
-              addDataToUI(list);
-            }
-            if (value) {
-              if (value?.length < gGroupListPageNumber) {
-                isNoMoreRef.current = true;
-                onNoMore?.();
-              } else {
-                currentPageNumberRef.current = pageNum + 1;
+  const removeGroupToUI = React.useCallback(
+    (groupId: string) => {
+      dataRef.current = dataRef.current.filter((item) => item.id !== groupId);
+      refreshToUI(dataRef.current);
+    },
+    [dataRef, refreshToUI]
+  );
+
+  const requestList = React.useCallback(
+    (pageNum: number) => {
+      if (testMode === 'only-ui') {
+      } else {
+        im.getPageGroups({
+          pageSize: gGroupListPageNumber,
+          pageNum: pageNum,
+          onResult: (result) => {
+            const { isOk, value, error } = result;
+            if (isOk === true) {
+              if (pageNum === 0) {
+                currentPageNumberRef.current = 0;
+                dataRef.current = [];
+                isNoMoreRef.current = false;
+              }
+
+              if (value) {
+                addGroupToUI(value, 'after');
+
+                if (value?.length < gGroupListPageNumber) {
+                  isNoMoreRef.current = true;
+                  onNoMore?.();
+                } else {
+                  currentPageNumberRef.current = pageNum + 1;
+                }
+              }
+
+              updateState('normal');
+            } else {
+              if (error) {
+                im.sendError({ error });
               }
             }
-            onSetState('normal');
-          } else {
-            if (error) {
-              im.sendError({ error });
-            }
-          }
-        },
-      });
-    }
-  };
+          },
+        });
+      }
+    },
+    [addGroupToUI, dataRef, im, onNoMore, testMode, updateState]
+  );
 
-  const init = () => {
+  const init = React.useCallback(() => {
     requestList(0);
-  };
-  const onMore = () => {
+  }, [requestList]);
+
+  const onMore = React.useCallback(() => {
     if (isNoMoreRef.current === true) {
       return;
     }
     requestList(currentPageNumberRef.current);
-  };
+  }, [requestList]);
+
   const onVisibleItems = (_items: GroupListItemProps[]) => {};
 
-  const onAddGroup = (params: {
-    groupId: string;
-    inviter: string;
-    inviteMessage?: string;
-  }) => {
-    const isExisted = dataRef.current.find(
-      (item) => item.id === params.groupId
-    );
-    if (isExisted === undefined) {
-      im.getGroupInfo({
-        groupId: params.groupId,
-        onResult: (result) => {
-          const { isOk, value, error } = result;
-          if (isOk === true) {
-            if (value) {
-              dataRef.current = [
-                {
-                  id: value.groupId,
-                  data: value,
-                },
-                ...dataRef.current,
-              ];
-              onSetData(dataRef.current);
+  const onAddedGroup = React.useCallback(
+    (params: { groupId: string; inviter: string; inviteMessage?: string }) => {
+      const isExisted = dataRef.current.find(
+        (item) => item.id === params.groupId
+      );
+      if (isExisted === undefined) {
+        im.getGroupInfo({
+          groupId: params.groupId,
+          onResult: (result) => {
+            const { isOk, value, error } = result;
+            if (isOk === true && value) {
+              addGroupToUI([value], 'before');
             } else {
-              // todo: ???
+              if (error) {
+                im.sendError({ error });
+              }
             }
-          } else {
-            if (error) {
-              im.sendError({ error });
-            }
-          }
-        },
-      });
-    }
-  };
+          },
+        });
+      }
+    },
+    [addGroupToUI, dataRef, im]
+  );
 
   const updateGroupName = (item: GroupModel) => {
     const data = dataRef.current.find((t) => t.id === item.groupId)?.data;
@@ -207,11 +220,6 @@ export function useGroupList(props: UseGroupListProps) {
       im.setGroupName({
         groupId: item.groupId,
         groupNewName: item.groupName,
-        onResult: (result) => {
-          if (result.isOk === true) {
-            updateDataToUI({ ...data, groupName: item.groupName });
-          }
-        },
       });
     }
   };
@@ -222,11 +230,6 @@ export function useGroupList(props: UseGroupListProps) {
       im.setGroupDescription({
         groupId: item.groupId,
         groupDescription: item.description,
-        onResult: (result) => {
-          if (result.isOk === true) {
-            updateDataToUI({ ...data, description: item.description });
-          }
-        },
       });
     }
   };
@@ -238,11 +241,6 @@ export function useGroupList(props: UseGroupListProps) {
         groupId: item.groupId,
         memberId: im.userId,
         groupMyRemark: item.myRemark,
-        onResult: (result) => {
-          if (result.isOk === true) {
-            updateDataToUI({ ...data, myRemark: item.myRemark });
-          }
-        },
       });
     }
   };
@@ -253,32 +251,28 @@ export function useGroupList(props: UseGroupListProps) {
       im.changeGroupOwner({
         groupId: item.groupId,
         newOwnerId: item.owner,
-        onResult: (result) => {
-          if (result.isOk === true) {
-            updateDataToUI({ ...data, owner: item.owner });
-          }
-        },
       });
     }
   };
 
   if (propsRef?.current) {
     propsRef.current.deleteItem = (item) => {
-      im.destroyGroup({
-        groupId: item.groupId,
-        onResult: (result) => {
-          if (result.isOk === true) {
-            removeDataToUI(item.groupId);
-          }
-        },
-      });
+      if (item.owner === im.userId) {
+        im.destroyGroup({
+          groupId: item.groupId,
+        });
+      } else {
+        im.quitGroup({
+          groupId: item.groupId,
+        });
+      }
     };
     propsRef.current.getAlertRef = () => alertRef;
     propsRef.current.getMenuRef = () => menuRef;
     propsRef.current.getFlatListRef = () =>
       flatListRef as React.RefObject<FlatListRef<GroupListItemProps>>;
     propsRef.current.refreshList = () => {
-      onSetData(dataRef.current);
+      refreshToUI(dataRef.current);
     };
     propsRef.current.reloadList = () => {
       init();
@@ -291,59 +285,88 @@ export function useGroupList(props: UseGroupListProps) {
     };
   }
 
+  React.useEffect(() => {
+    const uiListener: UIGroupListListener = {
+      onAddedEvent: (data) => {
+        addGroupToUI([data], 'before');
+      },
+      onUpdatedEvent: (data) => {
+        updateGroupToUI(data);
+      },
+      onDeletedEvent: (data) => {
+        removeGroupToUI(data.groupId);
+      },
+      onRequestRefreshEvent: () => {
+        refreshToUI(dataRef.current);
+      },
+      onRequestReloadEvent: () => {
+        init();
+      },
+      type: UIListenerType.Group,
+    };
+    im.addUIListener(uiListener);
+    return () => {
+      im.removeUIListener(uiListener);
+    };
+  }, [
+    addGroupToUI,
+    dataRef,
+    im,
+    init,
+    refreshToUI,
+    removeGroupToUI,
+    updateGroupToUI,
+  ]);
+
   const listenerRef = React.useRef<ChatServiceListener>({
     onMemberRemoved: (params: { groupId: string; groupName?: string }) => {
-      removeDataToUI(params.groupId);
+      removeGroupToUI(params.groupId);
     },
     onDestroyed: (params: { groupId: string; groupName?: string }) => {
-      removeDataToUI(params.groupId);
+      removeGroupToUI(params.groupId);
     },
     onAutoAcceptInvitation: (params: {
       groupId: string;
       inviter: string;
       inviteMessage?: string;
     }) => {
-      onAddGroup({ ...params });
-    },
-    onCreateGroup: (group) => {
-      onAddGroup({ groupId: group.groupId, inviter: '' });
-    },
-    onGroupInfoChanged: (group) => {
-      updateDataToUI(group);
+      onAddedGroup({ ...params });
     },
     onDetailChanged: (_group) => {},
-    onQuitGroup: (groupId) => {
-      removeDataToUI(groupId);
-    },
     onGroupEvent: (
       event?: ChatMultiDeviceEvent,
       target?: string,
       _usernames?: Array<string>
     ): void => {
+      // todo: need to check the event type
       if (event === ChatMultiDeviceEvent.GROUP_CREATE) {
         if (target) {
-          onAddGroup({ groupId: target, inviter: '' });
+          onAddedGroup({ groupId: target, inviter: '' });
         }
       } else if (event === ChatMultiDeviceEvent.GROUP_DESTROY) {
         if (target) {
-          removeDataToUI(target);
+          removeGroupToUI(target);
         }
       } else if (event === ChatMultiDeviceEvent.GROUP_JOIN) {
         if (target) {
-          onAddGroup({ groupId: target, inviter: '' });
+          onAddedGroup({ groupId: target, inviter: '' });
         }
       } else if (event === ChatMultiDeviceEvent.GROUP_LEAVE) {
         if (target) {
-          removeDataToUI(target);
+          removeGroupToUI(target);
         }
       } else if (event === ChatMultiDeviceEvent.GROUP_INVITE_ACCEPT) {
         if (target) {
-          onAddGroup({ groupId: target, inviter: '' });
+          onAddedGroup({ groupId: target, inviter: '' });
         }
       }
     },
   });
   useChatListener(listenerRef.current);
+
+  React.useEffect(() => {
+    init();
+  }, [init]);
 
   return {
     ...flatListProps,

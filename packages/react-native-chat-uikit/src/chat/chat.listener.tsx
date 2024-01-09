@@ -18,6 +18,7 @@ import {
 } from 'react-native-chat-sdk';
 
 import { ChatServiceListener, DisconnectReasonType } from './types';
+import { UIListener, UIListenerType } from './types.ui';
 
 let gConnectListener: ChatConnectEventListener;
 let gMessageListener: ChatMessageEventListener;
@@ -29,8 +30,16 @@ let gPresenceListener: ChatPresenceEventListener;
 
 export class ChatServiceListenerImpl {
   _listeners: Set<ChatServiceListener>;
+  _uiListeners: Map<UIListenerType, Set<UIListener<any>>>;
   constructor() {
     this._listeners = new Set();
+    this._uiListeners = new Map([
+      [UIListenerType.Conversation, new Set()],
+      [UIListenerType.Contact, new Set()],
+      [UIListenerType.Group, new Set()],
+      [UIListenerType.GroupParticipant, new Set()],
+      [UIListenerType.NewRequest, new Set()],
+    ]);
   }
 
   get client(): ChatClient {
@@ -41,6 +50,10 @@ export class ChatServiceListenerImpl {
     return this._listeners;
   }
 
+  uiListener<DataModel>(type: UIListenerType): Set<UIListener<DataModel>> {
+    return this._uiListeners.get(type)!;
+  }
+
   addListener(listener: ChatServiceListener): void {
     this._listeners.add(listener);
   }
@@ -49,6 +62,37 @@ export class ChatServiceListenerImpl {
   }
   clearListener(): void {
     this._listeners.clear();
+  }
+
+  addUIListener<DataModel>(listener: UIListener<DataModel>): void {
+    this._uiListeners.get(listener.type)?.add(listener);
+    console.log(
+      'test:zuoyu:addUIListener:',
+      listener.type,
+      this._uiListeners.size
+    );
+  }
+  removeUIListener<DataModel>(listener: UIListener<DataModel>): void {
+    this._uiListeners.get(listener.type)?.delete(listener);
+    console.log('test:zuoyu:removeUIListener:', this._uiListeners.size);
+  }
+  clearUIListener(): void {
+    this._uiListeners.forEach((v) => {
+      v.clear();
+    });
+  }
+  sendUIEvent<DataModel>(
+    type: UIListenerType,
+    event: keyof UIListener<DataModel>,
+    data?: DataModel | string,
+    ...args: any[]
+  ): void {
+    this._uiListeners.get(type)?.forEach((v) => {
+      if (typeof v[event] === 'function') {
+        const f = v[event] as Function;
+        f(data, ...args);
+      }
+    });
   }
 
   _initListener() {

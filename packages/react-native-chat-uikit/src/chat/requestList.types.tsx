@@ -1,5 +1,6 @@
 import type { CommonManager } from './commonManager.types';
-import type { NewRequestModel, ResultCallback } from './types';
+import type { ResultCallback } from './types';
+import type { NewRequestModel } from './types.ui';
 
 export type RequestListListener = {
   onNewRequestListChanged: (list: NewRequestModel[]) => void;

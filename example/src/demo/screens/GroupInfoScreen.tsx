@@ -4,6 +4,9 @@ import {
   ChatServiceListener,
   GroupInfo,
   GroupInfoRef,
+  UIGroupListListener,
+  UIListenerType,
+  useChatContext,
   useChatListener,
   useColors,
   useI18nContext,
@@ -29,6 +32,7 @@ export function GroupInfoScreen(props: Props) {
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
   const testRef = React.useRef<string>();
+  const im = useChatContext();
   // const goBack2 = React.useCallback(
   //   (data: any) => {
   //     groupInfoRef.current?.setGroupName?.(groupId, data);
@@ -50,12 +54,22 @@ export function GroupInfoScreen(props: Props) {
     }
   };
 
+  React.useEffect(() => {
+    const uiListener: UIGroupListListener = {
+      onDeletedEvent: (data) => {
+        if (data.groupId === groupId) {
+          navigation.goBack();
+        }
+      },
+      type: UIListenerType.Group,
+    };
+    im.addUIListener(uiListener);
+    return () => {
+      im.removeUIListener(uiListener);
+    };
+  }, [groupId, im, navigation, ownerId]);
+
   const listener = React.useRef<ChatServiceListener>({
-    onQuitGroup: (gid: string) => {
-      if (gid === groupId) {
-        navigation.goBack();
-      }
-    },
     onDestroyed: (params: { groupId: string }) => {
       if (params.groupId === groupId) {
         navigation.goBack();

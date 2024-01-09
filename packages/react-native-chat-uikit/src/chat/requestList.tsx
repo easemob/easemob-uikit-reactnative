@@ -18,13 +18,8 @@ import {
   gNewRequestConversationUserName,
 } from './const';
 import type { RequestList, RequestListListener } from './requestList.types';
-import type {
-  ChatService,
-  ChatServiceListener,
-  NewRequestModel,
-  NewRequestStateType,
-  ResultCallback,
-} from './types';
+import type { ChatService, ChatServiceListener, ResultCallback } from './types';
+import type { NewRequestModel, NewRequestStateType } from './types.ui';
 import { getNewRequest } from './utils';
 
 let gListener: ChatServiceListener | undefined;

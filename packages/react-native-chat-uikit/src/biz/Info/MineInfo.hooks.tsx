@@ -41,7 +41,7 @@ export function useMineInfo(props: MineInfoProps) {
           const self = im.user(userId);
           if (self) {
             setUserName(self.userName);
-            setUserSign(self.sign);
+            setUserSign('self.sign');
           }
           // im.getUserInfo({
           //   userId: userId,

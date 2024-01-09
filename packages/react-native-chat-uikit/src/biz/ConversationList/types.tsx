@@ -37,7 +37,7 @@ export type ConversationListRef = Omit<
   'addItem' | 'clearItem' | 'updateItem'
 > & {
   /**
-   * Supported updated content includes: `unreadMessageCount`, `doNotDisturb`, `lastMessage`, `ext`. `convName` and `convAvatar` are updated via `onRequestMultiData`. Other fields do not support updating. `unreadMessageCount` can be set to 0 and other values are invalid. If you need to customize it, you can save custom data in the ext field and redefine the `ListItemRender` component to achieve a closed loop process.
+   * Supported updated content includes: `unreadMessageCount`, `doNotDisturb`, `ext`. `convName` and `convAvatar` are updated via `onRequestMultiData`. Other fields do not support updating. `unreadMessageCount` can be set to 0 and other values are invalid. If you need to customize it, you can save custom data in the ext field and redefine the `ListItemRender` component to achieve a closed loop process.
    *
    * If the operation fails, an error is returned through `ErrorServiceListener.onError`.
    */

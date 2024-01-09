@@ -17,11 +17,8 @@ import type {
   MessageCacheManager,
   MessageManagerListener,
 } from './messageManager.types';
-import type {
-  ChatService,
-  ChatServiceListener,
-  ConversationModel,
-} from './types';
+import type { ChatService, ChatServiceListener } from './types';
+import type { ConversationModel } from './types.ui';
 
 let gListener: ChatServiceListener | undefined;
 
