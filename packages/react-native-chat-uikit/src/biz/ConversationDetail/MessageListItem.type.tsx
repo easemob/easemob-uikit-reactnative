@@ -5,6 +5,7 @@ import type { IconNameType } from '../../assets';
 import type {
   MessageLayoutType,
   MessageListItemActionsProps,
+  MessageListItemRenders,
   MessageModel,
   MessageStateType,
   SystemMessageModel,
@@ -50,12 +51,22 @@ export type MessageFileRender = React.FC<MessageFileProps>;
 export type MessageCustomCardProps = MessageBasicProps & {};
 export type MessageCustomCardRender = React.FC<MessageCustomCardProps>;
 
-export type MessageBubbleProps = MessageListItemActionsProps & {
-  hasTriangle?: boolean;
-  model: MessageModel;
-  containerStyle?: StyleProp<ViewStyle>;
-  maxWidth?: number;
+export type MessageContentProps = {
+  msg: ChatMessage;
+  isSupport: boolean;
+  layoutType: MessageLayoutType;
+  contentMaxWidth?: number | undefined;
+  isVoicePlaying?: boolean | undefined;
 };
+export type MessageContentRender = React.FC<MessageContentProps>;
+
+export type MessageBubbleProps = MessageListItemRenders &
+  MessageListItemActionsProps & {
+    hasTriangle?: boolean;
+    model: MessageModel;
+    containerStyle?: StyleProp<ViewStyle>;
+    maxWidth?: number;
+  };
 export type MessageBubbleRender = React.FC<MessageBubbleProps>;
 
 export type AvatarViewProps = {
@@ -107,13 +118,14 @@ export type MessageQuoteBubbleProps = MessageListItemActionsProps & {
 };
 export type MessageQuoteBubbleRender = React.FC<MessageQuoteBubbleProps>;
 
-export type MessageViewProps = MessageListItemActionsProps & {
-  isVisible?: boolean;
-  model: MessageModel;
-  avatarIsVisible?: boolean;
-  nameIsVisible?: boolean;
-  timeIsVisible?: boolean;
-};
+export type MessageViewProps = MessageListItemRenders &
+  MessageListItemActionsProps & {
+    isVisible?: boolean;
+    model: MessageModel;
+    avatarIsVisible?: boolean;
+    nameIsVisible?: boolean;
+    timeIsVisible?: boolean;
+  };
 export type MessageViewRender = React.FC<MessageViewProps>;
 
 export type SystemTipViewProps = {

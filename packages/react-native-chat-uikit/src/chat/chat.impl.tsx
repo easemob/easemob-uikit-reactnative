@@ -650,6 +650,7 @@ export class ChatServiceImpl
           }
         });
         if (needRequest.size === 0) {
+          resolve();
           return;
         }
         this._basicDataRequestCallback({
@@ -732,6 +733,7 @@ export class ChatServiceImpl
           }
         });
         if (needRequest.size === 0) {
+          resolve();
           return;
         }
         this._basicDataRequestCallback({
@@ -931,9 +933,11 @@ export class ChatServiceImpl
         const c2 = this._convList.get(params.convId);
         if (c2) {
           const conv = mergeObjects(c1, c2);
+          console.log('test:zuoyu:getConversation', conv);
           this._convList.set(conv.convId, conv);
           return conv;
         }
+        console.log('test:zuoyu:getConversation', c1);
         this._convList.set(c1.convId, c1);
         return c1;
       }

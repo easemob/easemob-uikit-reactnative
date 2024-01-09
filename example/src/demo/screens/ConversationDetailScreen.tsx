@@ -1,6 +1,5 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-// import { Text, View } from 'react-native';
 import {
   ChatConversationType,
   ChatMessageChatType,
@@ -23,6 +22,18 @@ import {
 } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
+
+// export function MyMessageContent(props: MessageContentProps) {
+//   const { msg } = props;
+//   if (msg.body.type === ChatMessageType.TXT) {
+//     return (
+//       <View>
+//         <Text>{(msg.body as ChatTextMessageBody).content + 'test'}</Text>
+//       </View>
+//     );
+//   }
+//   return <MessageContent {...props} />;
+// }
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ConversationDetailScreen(props: Props) {
@@ -177,21 +188,9 @@ export function ConversationDetailScreen(props: Props) {
               }
             },
             // reportMessageCustomList: [{ key: '1', value: 'test' }],
-            // ListItemRender: () => {
-            //   return (
-            //     <View style={{ height: 100, backgroundColor: 'red' }}>
-            //       <Text>{'test'}</Text>
-            //     </View>
-            //   );
+            // listItemRenderProps: {
+            //   MessageContent: MyMessageContent,
             // },
-            // ListItemRender: React.memo(() => {
-            //   return (
-            //     <View style={{ height: 100, backgroundColor: 'red' }}>
-            //       <Text>{'test'}</Text>
-            //     </View>
-            //   );
-            // }),
-            // ListItemRender: MessageListItemMemo,
           },
         }}
         onBack={() => {

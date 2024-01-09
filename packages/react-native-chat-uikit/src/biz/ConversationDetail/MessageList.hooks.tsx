@@ -39,9 +39,14 @@ import type {
   BottomSheetMessageReportRef,
   ReportItemModel,
 } from '../MessageReport';
-import type { UseFlatListReturn } from '../types';
 import { MessageListItemMemo } from './MessageListItem';
 import { getQuoteAttribute } from './MessageListItem.hooks';
+import type {
+  MessageBubbleRender,
+  MessageContentRender,
+  MessageQuoteBubbleRender,
+  MessageViewRender,
+} from './MessageListItem.type';
 import type {
   MessageAddPosition,
   MessageListItemComponentType,
@@ -59,13 +64,12 @@ import type {
   SendVoiceProps,
   SystemMessageModel,
   TimeMessageModel,
-  UseMessageListReturn,
 } from './types';
 
 export function useMessageList(
   props: MessageListProps,
   ref?: React.ForwardedRef<MessageListRef>
-): UseFlatListReturn<MessageListItemProps> & UseMessageListReturn {
+) {
   const {
     convId,
     convType,
@@ -77,7 +81,7 @@ export function useMessageList(
     reportMessageCustomList = gReportMessageList,
     onClickedItemAvatar: propsOnClickedItemAvatar,
     onClickedItemQuote: propsOnClickedItemQuote,
-    ListItemRender: propsListItemRender,
+    listItemRenderProps: propsListItemRenderProps,
     recvMessageAutoScroll = false,
     enableListItemUserInfoUpdateFromMessage = false,
     onInitMenu,
@@ -130,8 +134,14 @@ export function useMessageList(
   const currentReportMessageRef = React.useRef<MessageModel>();
   const { closeMenu } = useCloseMenu({ menuRef });
   const MessageListItemRef = React.useRef<MessageListItemComponentType>(
-    propsListItemRender ?? MessageListItemMemo
+    propsListItemRenderProps?.ListItemRender ?? MessageListItemMemo
   );
+  const listItemRenderPropsRef = React.useRef<{
+    MessageView?: MessageViewRender | undefined;
+    MessageQuoteBubble?: MessageQuoteBubbleRender | undefined;
+    MessageBubble?: MessageBubbleRender | undefined;
+    MessageContent?: MessageContentRender | undefined;
+  }>({ ...propsListItemRenderProps });
   const { dispatchUserInfo } = useMessageContext();
   const { recallTimeout } = useConfigContext();
 
@@ -1164,6 +1174,7 @@ export function useMessageList(
     onClickedItemQuote,
     onClickedItemState,
     ListItemRender: MessageListItemRef.current,
+    listItemRenderProps: listItemRenderPropsRef.current,
     scrollEventThrottle,
     onMomentumScrollEnd,
     onScrollEndDrag,

@@ -51,6 +51,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onClickedItemQuote,
       onClickedItemState,
       ListItemRender,
+      listItemRenderProps,
       scrollEventThrottle,
       onMomentumScrollEnd,
       onScroll,
@@ -118,6 +119,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
                   enableListItemUserInfoUpdateFromMessage={
                     enableListItemUserInfoUpdateFromMessage
                   }
+                  {...listItemRenderProps}
                 />
               );
             }}

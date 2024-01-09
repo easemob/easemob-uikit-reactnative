@@ -56,6 +56,7 @@ import type {
   AvatarViewProps,
   CheckViewProps,
   MessageBubbleProps,
+  MessageContentProps,
   MessageCustomCardProps,
   MessageDefaultImageProps,
   MessageFileProps,
@@ -575,6 +576,95 @@ export function MessageCustomCard(props: MessageCustomCardProps) {
   );
 }
 
+export function MessageContent(props: MessageContentProps) {
+  const { msg, isSupport, layoutType, contentMaxWidth, isVoicePlaying } = props;
+  if (isSupport === true) {
+    switch (msg.body.type) {
+      case ChatMessageType.TXT: {
+        return (
+          <MessageText
+            msg={msg}
+            layoutType={layoutType}
+            isSupport={isSupport}
+            maxWidth={contentMaxWidth}
+          />
+        );
+      }
+      case ChatMessageType.IMAGE: {
+        return (
+          <MessageImage
+            layoutType={layoutType}
+            msg={msg}
+            maxWidth={contentMaxWidth}
+          />
+        );
+      }
+      case ChatMessageType.VOICE: {
+        return (
+          <MessageVoice
+            msg={msg}
+            layoutType={layoutType}
+            isPlay={isVoicePlaying}
+            maxWidth={contentMaxWidth}
+          />
+        );
+      }
+      case ChatMessageType.VIDEO: {
+        return (
+          <MessageVideo
+            msg={msg}
+            layoutType={layoutType}
+            maxWidth={contentMaxWidth}
+          />
+        );
+      }
+      case ChatMessageType.FILE: {
+        return (
+          <MessageFile
+            msg={msg}
+            layoutType={layoutType}
+            maxWidth={contentMaxWidth}
+          />
+        );
+      }
+      case ChatMessageType.CUSTOM: {
+        const body = msg.body as ChatCustomMessageBody;
+        if (body.event === gCustomMessageCardEventType) {
+          return (
+            <MessageCustomCard
+              msg={msg}
+              layoutType={layoutType}
+              maxWidth={contentMaxWidth}
+            />
+          );
+        }
+        return (
+          <MessageText
+            msg={msg}
+            layoutType={layoutType}
+            isSupport={isSupport}
+            maxWidth={contentMaxWidth}
+          />
+        );
+      }
+      default: {
+        return (
+          <MessageText
+            msg={msg}
+            layoutType={layoutType}
+            isSupport={isSupport}
+            maxWidth={contentMaxWidth}
+          />
+        );
+      }
+    }
+  } else {
+    return (
+      <MessageText msg={msg} layoutType={layoutType} isSupport={isSupport} />
+    );
+  }
+}
+
 export function MessageBubble(props: MessageBubbleProps) {
   const {
     hasTriangle = true,
@@ -583,7 +673,10 @@ export function MessageBubble(props: MessageBubbleProps) {
     onClicked,
     onLongPress,
     maxWidth,
+    MessageContent: propsMessageContent,
   } = props;
+  const _MessageContent = propsMessageContent ?? MessageContent;
+  console.log('test:zuoyu:MessageBubble', propsMessageContent);
   const { layoutType, msg, isVoicePlaying } = model;
   const { paddingHorizontal, paddingVertical } = React.useMemo(
     () => getMessageBubblePadding(msg),
@@ -621,94 +714,6 @@ export function MessageBubble(props: MessageBubbleProps) {
       return _maxWidth;
     }
   }, [isShowTriangle, maxWidth, paddingHorizontal]);
-
-  const getContent = () => {
-    if (isSupport === true) {
-      switch (msg.body.type) {
-        case ChatMessageType.TXT: {
-          return (
-            <MessageText
-              msg={msg}
-              layoutType={layoutType}
-              isSupport={isSupport}
-              maxWidth={contentMaxWidth}
-            />
-          );
-        }
-        case ChatMessageType.IMAGE: {
-          return (
-            <MessageImage
-              layoutType={layoutType}
-              msg={msg}
-              maxWidth={contentMaxWidth}
-            />
-          );
-        }
-        case ChatMessageType.VOICE: {
-          return (
-            <MessageVoice
-              msg={msg}
-              layoutType={layoutType}
-              isPlay={isVoicePlaying}
-              maxWidth={contentMaxWidth}
-            />
-          );
-        }
-        case ChatMessageType.VIDEO: {
-          return (
-            <MessageVideo
-              msg={msg}
-              layoutType={layoutType}
-              maxWidth={contentMaxWidth}
-            />
-          );
-        }
-        case ChatMessageType.FILE: {
-          return (
-            <MessageFile
-              msg={msg}
-              layoutType={layoutType}
-              maxWidth={contentMaxWidth}
-            />
-          );
-        }
-        case ChatMessageType.CUSTOM: {
-          const body = msg.body as ChatCustomMessageBody;
-          if (body.event === gCustomMessageCardEventType) {
-            return (
-              <MessageCustomCard
-                msg={msg}
-                layoutType={layoutType}
-                maxWidth={contentMaxWidth}
-              />
-            );
-          }
-          return (
-            <MessageText
-              msg={msg}
-              layoutType={layoutType}
-              isSupport={isSupport}
-              maxWidth={contentMaxWidth}
-            />
-          );
-        }
-        default: {
-          return (
-            <MessageText
-              msg={msg}
-              layoutType={layoutType}
-              isSupport={isSupport}
-              maxWidth={contentMaxWidth}
-            />
-          );
-        }
-      }
-    } else {
-      return (
-        <MessageText msg={msg} layoutType={layoutType} isSupport={isSupport} />
-      );
-    }
-  };
 
   const _onClicked = React.useCallback(() => {
     if (onClicked) {
@@ -769,7 +774,20 @@ export function MessageBubble(props: MessageBubbleProps) {
         onPress={_onClicked}
         onLongPress={_onLongPress}
       >
-        {getContent()}
+        {/* <MessageContent
+          isSupport={isSupport}
+          msg={msg}
+          layoutType={layoutType}
+          isVoicePlaying={isVoicePlaying}
+          contentMaxWidth={contentMaxWidth}
+        /> */}
+        {_MessageContent({
+          isSupport,
+          msg,
+          layoutType,
+          isVoicePlaying,
+          contentMaxWidth,
+        })}
       </Pressable>
     </View>
   );
@@ -1344,8 +1362,12 @@ export function MessageView(props: MessageViewProps) {
     onQuoteClicked,
     onAvatarClicked,
     onStateClicked,
+    MessageQuoteBubble: propsMessageQuoteBubble,
+    MessageBubble: propsMessageBubble,
     ...others
   } = props;
+  const _MessageQuoteBubble = propsMessageQuoteBubble ?? MessageQuoteBubble;
+  const _MessageBubble = propsMessageBubble ?? MessageBubble;
   const { layoutType } = model;
   const state = getMessageState(model.msg);
   const maxWidth = Dimensions.get('window').width * 0.6;
@@ -1415,7 +1437,7 @@ export function MessageView(props: MessageViewProps) {
           />
         ) : null}
         {isQuote ? (
-          <MessageQuoteBubble
+          <_MessageQuoteBubble
             hasAvatar={avatarIsVisible}
             hasTriangle={hasTriangle}
             onQuoteClicked={onQuoteClicked}
@@ -1436,7 +1458,7 @@ export function MessageView(props: MessageViewProps) {
               onAvatarClicked={onClickedAvatar}
             />
           ) : null}
-          <MessageBubble
+          <_MessageBubble
             model={model}
             maxWidth={maxWidth}
             hasTriangle={hasTriangle}
@@ -1528,10 +1550,16 @@ export function TimeTipView(props: TimeTipViewProps) {
 }
 
 export function MessageListItem(props: MessageListItemProps) {
-  const { model, enableListItemUserInfoUpdateFromMessage, ...others } = props;
+  const {
+    model,
+    enableListItemUserInfoUpdateFromMessage,
+    MessageView: propsMessageView,
+    ...others
+  } = props;
   gEnableListItemUserInfoUpdateFromMessage =
     enableListItemUserInfoUpdateFromMessage;
   const { modelType } = model;
+  const _MessageView = propsMessageView ?? MessageView;
   return (
     <View
       style={{
@@ -1545,7 +1573,7 @@ export function MessageListItem(props: MessageListItemProps) {
       }}
     >
       {modelType === 'message' ? (
-        <MessageView
+        <_MessageView
           isVisible={modelType === 'message' ? true : false}
           model={model as MessageModel}
           {...others}

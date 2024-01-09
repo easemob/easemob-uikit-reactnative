@@ -4,6 +4,7 @@ export * from './biz/Badges';
 export * from './biz/BottomSheetMenu';
 export * from './biz/BottomTabBar';
 export * from './biz/ContactList';
+export * from './biz/Context';
 export * from './biz/ConversationDetail';
 export * from './biz/ConversationList';
 export * from './biz/CreateGroup';

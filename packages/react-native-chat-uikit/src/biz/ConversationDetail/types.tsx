@@ -28,6 +28,12 @@ import type {
 } from '../types';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
 import type { MessageInputEditMessageRef } from './MessageInputEditMessage';
+import type {
+  MessageBubbleRender,
+  MessageContentRender,
+  MessageQuoteBubbleRender,
+  MessageViewRender,
+} from './MessageListItem.type';
 
 export type MessageInputRef = {
   close: () => void;
@@ -218,15 +224,23 @@ export type MessageListItemActionsProps = {
     model: SystemMessageModel | TimeMessageModel | MessageModel
   ) => void;
 };
-export type MessageListItemProps = MessageListItemActionsProps & {
-  /**
-   * @description: message id. If it is a message, use the message msgId, otherwise use the millisecond message timestamp.
-   */
-  id: string;
-  model: SystemMessageModel | TimeMessageModel | MessageModel;
-  containerStyle?: StyleProp<ViewStyle>;
-  enableListItemUserInfoUpdateFromMessage?: boolean;
+
+export type MessageListItemRenders = {
+  MessageView?: MessageViewRender;
+  MessageQuoteBubble?: MessageQuoteBubbleRender;
+  MessageBubble?: MessageBubbleRender;
+  MessageContent?: MessageContentRender;
 };
+export type MessageListItemProps = MessageListItemRenders &
+  MessageListItemActionsProps & {
+    /**
+     * @description: message id. If it is a message, use the message msgId, otherwise use the millisecond message timestamp.
+     */
+    id: string;
+    model: SystemMessageModel | TimeMessageModel | MessageModel;
+    containerStyle?: StyleProp<ViewStyle>;
+    enableListItemUserInfoUpdateFromMessage?: boolean;
+  };
 export type MessageListItemComponentType =
   | React.ComponentType<MessageListItemProps>
   | React.ExoticComponent<MessageListItemProps>;
@@ -277,7 +291,14 @@ export type MessageListProps = PropsWithError &
     onEditMessageForInput?: (model: MessageModel) => void;
     containerStyle?: StyleProp<ViewStyle>;
     reportMessageCustomList?: { key: string; value: string }[];
-    ListItemRender?: MessageListItemComponentType;
+
+    listItemRenderProps?: {
+      ListItemRender?: MessageListItemComponentType;
+      MessageView?: MessageViewRender;
+      MessageQuoteBubble?: MessageQuoteBubbleRender;
+      MessageBubble?: MessageBubbleRender;
+      MessageContent?: MessageContentRender;
+    };
     /**
      * Whether to automatically scroll to the latest message when receiving a message.
      *
