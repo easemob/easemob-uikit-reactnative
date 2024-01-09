@@ -28,7 +28,7 @@ import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
-import { localUrlEscape, playUrl, timeoutTask } from '../../utils';
+import { localUrlEscape, playUrl, seqId, timeoutTask } from '../../utils';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { gReportMessageList } from '../const';
 import { useMessageContext } from '../Context';
@@ -55,6 +55,7 @@ import type {
   MessageListRef,
   MessageModel,
   SendCardProps,
+  SendCustomProps,
   SendFileProps,
   SendImageProps,
   SendSystemProps,
@@ -767,14 +768,15 @@ export function useMessageList(
         | SendVoiceProps
         | SendTimeProps
         | SendSystemProps
-        | SendCardProps,
+        | SendCardProps
+        | SendCustomProps,
 
-      onFinished?: (msg: ChatMessage) => void
+      onFinished?: (item: MessageListItemProps) => void
     ) => {
-      let msg: ChatMessage | undefined;
+      let ret: MessageListItemProps | undefined;
       if (value.type === 'text') {
         const v = value as SendTextProps;
-        msg = ChatMessage.createTextMessage(
+        const msg = ChatMessage.createTextMessage(
           convId,
           // emoji.fromCodePointText(v.content),
           v.content,
@@ -791,23 +793,21 @@ export function useMessageList(
             },
           };
         }
-        onAddData(
-          {
-            id: msg.msgId.toString(),
-            model: {
-              userId: msg.from,
-              modelType: 'message',
-              layoutType: 'right',
-              msg: msg,
-              quoteMsg: quoteMsg,
-            },
-            containerStyle: getStyle(),
+        ret = {
+          id: msg.msgId.toString(),
+          model: {
+            userId: msg.from,
+            modelType: 'message',
+            layoutType: 'right',
+            msg: msg,
+            quoteMsg: quoteMsg,
           },
-          'bottom'
-        );
+          containerStyle: getStyle(),
+        } as MessageListItemProps;
+        onAddData(ret, 'bottom');
       } else if (value.type === 'image') {
         const v = value as SendImageProps;
-        msg = ChatMessage.createImageMessage(
+        const msg = ChatMessage.createImageMessage(
           convId,
           v.localPath,
           convType as number as ChatMessageChatType,
@@ -818,22 +818,20 @@ export function useMessageList(
             displayName: v.displayName ?? '',
           }
         );
-        onAddData(
-          {
-            id: msg.msgId.toString(),
-            model: {
-              userId: msg.from,
-              modelType: 'message',
-              layoutType: 'right',
-              msg: msg,
-            },
-            containerStyle: getStyle(),
+        ret = {
+          id: msg.msgId.toString(),
+          model: {
+            userId: msg.from,
+            modelType: 'message',
+            layoutType: 'right',
+            msg: msg,
           },
-          'bottom'
-        );
+          containerStyle: getStyle(),
+        } as MessageListItemProps;
+        onAddData(ret, 'bottom');
       } else if (value.type === 'voice') {
         const v = value as SendVoiceProps;
-        msg = ChatMessage.createVoiceMessage(
+        const msg = ChatMessage.createVoiceMessage(
           convId,
           v.localPath,
           convType as number as ChatMessageChatType,
@@ -843,22 +841,20 @@ export function useMessageList(
             displayName: v.displayName ?? '',
           }
         );
-        onAddData(
-          {
-            id: msg.msgId.toString(),
-            model: {
-              userId: msg.from,
-              modelType: 'message',
-              layoutType: 'right',
-              msg: msg,
-            },
-            containerStyle: getStyle(),
+        ret = {
+          id: msg.msgId.toString(),
+          model: {
+            userId: msg.from,
+            modelType: 'message',
+            layoutType: 'right',
+            msg: msg,
           },
-          'bottom'
-        );
+          containerStyle: getStyle(),
+        } as MessageListItemProps;
+        onAddData(ret, 'bottom');
       } else if (value.type === 'video') {
         const v = value as SendVideoProps;
-        msg = ChatMessage.createVideoMessage(
+        const msg = ChatMessage.createVideoMessage(
           convId,
           v.localPath,
           convType as number as ChatMessageChatType,
@@ -871,22 +867,20 @@ export function useMessageList(
             height: v.videoHeight,
           }
         );
-        onAddData(
-          {
-            id: msg.msgId.toString(),
-            model: {
-              userId: msg.from,
-              modelType: 'message',
-              layoutType: 'right',
-              msg: msg,
-            },
-            containerStyle: getStyle(),
+        ret = {
+          id: msg.msgId.toString(),
+          model: {
+            userId: msg.from,
+            modelType: 'message',
+            layoutType: 'right',
+            msg: msg,
           },
-          'bottom'
-        );
+          containerStyle: getStyle(),
+        } as MessageListItemProps;
+        onAddData(ret, 'bottom');
       } else if (value.type === 'file') {
         const v = value as SendFileProps;
-        msg = ChatMessage.createFileMessage(
+        const msg = ChatMessage.createFileMessage(
           convId,
           v.localPath,
           convType as number as ChatMessageChatType,
@@ -895,22 +889,20 @@ export function useMessageList(
             displayName: v.displayName ?? '',
           }
         );
-        onAddData(
-          {
-            id: msg.msgId.toString(),
-            model: {
-              userId: msg.from,
-              modelType: 'message',
-              layoutType: 'right',
-              msg: msg,
-            },
-            containerStyle: getStyle(),
+        ret = {
+          id: msg.msgId.toString(),
+          model: {
+            userId: msg.from,
+            modelType: 'message',
+            layoutType: 'right',
+            msg: msg,
           },
-          'bottom'
-        );
+          containerStyle: getStyle(),
+        } as MessageListItemProps;
+        onAddData(ret, 'bottom');
       } else if (value.type === 'card') {
         const card = value as SendCardProps;
-        msg = ChatMessage.createCustomMessage(
+        const msg = ChatMessage.createCustomMessage(
           convId,
           gCustomMessageCardEventType,
           convType as number as ChatMessageChatType,
@@ -922,22 +914,58 @@ export function useMessageList(
             },
           }
         );
-        onAddData(
-          {
-            id: msg.msgId.toString(),
-            model: {
-              userId: msg.from,
-              modelType: 'message',
-              layoutType: 'right',
-              msg: msg,
-            },
-            containerStyle: getStyle(),
+        ret = {
+          id: msg.msgId.toString(),
+          model: {
+            userId: msg.from,
+            modelType: 'message',
+            layoutType: 'right',
+            msg: msg,
           },
-          'bottom'
-        );
+          containerStyle: getStyle(),
+        } as MessageListItemProps;
+        onAddData(ret, 'bottom');
+      } else if (value.type === 'custom') {
+        const custom = value as SendCustomProps;
+        const msg = custom.msg;
+        ret = {
+          id: msg.msgId.toString(),
+          model: {
+            userId: msg.from,
+            modelType: 'message',
+            layoutType: 'right',
+            msg: msg,
+          },
+          containerStyle: getStyle(),
+        } as MessageListItemProps;
+        onAddData(ret, 'bottom');
+      } else if (value.type === 'system') {
+        const v = value as SendSystemProps;
+        const msg = v.msg;
+        ret = {
+          id: msg.msgId.toString(),
+          model: {
+            userId: msg.from,
+            modelType: 'system',
+            msg: msg,
+          } as SystemMessageModel,
+          containerStyle: getStyle(),
+        } as MessageListItemProps;
+        onAddData(ret, 'bottom');
+      } else if (value.type === 'time') {
+        const v = value as SendTimeProps;
+        ret = {
+          id: v.timestamp.toString(),
+          model: {
+            userId: seqId('_$msg').toString(),
+            modelType: 'time',
+          } as TimeMessageModel,
+          containerStyle: getStyle(),
+        } as MessageListItemProps;
+        onAddData(ret, 'bottom');
       }
-      if (msg) {
-        onFinished?.(msg);
+      if (ret) {
+        onFinished?.(ret);
         scrollToBottom();
       }
     },
@@ -1018,10 +1046,14 @@ export function useMessageList(
             | SendTimeProps
             | SendSystemProps
             | SendCardProps
+            | SendCustomProps
         ) => {
           setNeedScroll(true);
-          addSendMessageToUI(value, (msg) => {
-            sendMessageToServer(msg);
+          addSendMessageToUI(value, (item) => {
+            if (item.model.modelType === 'message') {
+              const msgModel = item.model as MessageModel;
+              sendMessageToServer(msgModel.msg);
+            }
           });
         },
         removeMessage: (msg: ChatMessage) => {

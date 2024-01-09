@@ -87,6 +87,17 @@ export type GlobalContainerProps = React.PropsWithChildren<{
    */
   conversationDetail?: ConversationDetailType;
   /**
+   * The group config.
+   */
+  group?: {
+    /**
+     * The group member limit.
+     *
+     * Default value is `1000`.
+     */
+    createGroupMemberLimit?: number;
+  };
+  /**
    * Avatar option.
    */
   avatar?: {

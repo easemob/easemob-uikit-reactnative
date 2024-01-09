@@ -37,6 +37,15 @@ export type Config = {
    */
   conversationDetail?: ConversationDetailType;
 
+  group: {
+    /**
+     * The create group member limit.
+     *
+     * Default value is `1000`.
+     */
+    createGroupMemberLimit?: number;
+  };
+
   /**
    * Format timestamp. Users can provide a timestamp format string callback interface for session lists and session details.
    */

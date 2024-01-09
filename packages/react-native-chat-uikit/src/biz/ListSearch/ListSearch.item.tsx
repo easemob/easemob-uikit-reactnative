@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
-import type { DataModel } from 'src/chat';
 
+import type { DataModel } from '../../chat';
 import { g_not_existed_url } from '../../const';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';

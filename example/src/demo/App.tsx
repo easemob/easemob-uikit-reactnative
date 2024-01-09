@@ -208,6 +208,7 @@ export function App() {
         onInitialized={onInitialized}
         // formatTime={formatTime}
         // recallTimeout={1200}
+        group={{ createGroupMemberLimit: 2 }}
       >
         <NavigationContainer
           onStateChange={(state: NavigationState | undefined) => {

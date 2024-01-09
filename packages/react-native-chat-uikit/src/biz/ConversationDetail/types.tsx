@@ -121,7 +121,8 @@ export type SendType =
   | 'video'
   | 'time'
   | 'system'
-  | 'card';
+  | 'card'
+  | 'custom';
 export type SendBasicProps = {
   type: SendType;
   quote?: MessageModel;
@@ -165,6 +166,10 @@ export type SendCardProps = SendBasicProps & {
   userAvatar?: string;
 };
 
+export type SendCustomProps = SendBasicProps & {
+  msg: ChatMessage;
+};
+
 export type MessageBubbleType = 'system' | 'time' | 'message';
 export type MessageLayoutType = 'left' | 'right';
 export type MessageRecvStateType = 'no-play' | 'loading-attachment';
@@ -182,7 +187,6 @@ export type MessageEditableStateType = 'no-editable' | 'editable' | 'edited';
 
 type BasicModel = {
   modelType: MessageBubbleType;
-  layoutType: MessageLayoutType;
   userId: string;
   userName?: string;
   userAvatar?: string;
@@ -198,6 +202,7 @@ export type TimeMessageModel = BasicModel & {
 };
 export type MessageModel = BasicModel &
   VoiceModel & {
+    layoutType: MessageLayoutType;
     msg: ChatMessage;
     quoteMsg?: ChatMessage;
   };

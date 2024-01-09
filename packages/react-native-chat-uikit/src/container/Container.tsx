@@ -42,6 +42,7 @@ export function GlobalContainer(props: GlobalContainerProps) {
     releaseArea,
     onInitialized,
     conversationDetail,
+    group,
     avatar,
     input,
     alert,
@@ -95,6 +96,12 @@ export function GlobalContainer(props: GlobalContainerProps) {
                       bubble: {
                         radiusStyle: 'small',
                       },
+                    }
+                  ),
+                  group: mergeObjects(
+                    { ...group },
+                    {
+                      createGroupMemberLimit: 1000,
                     }
                   ),
                 }}

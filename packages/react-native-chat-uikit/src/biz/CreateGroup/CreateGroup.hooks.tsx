@@ -8,11 +8,14 @@ import {
   useChatContext,
 } from '../../chat';
 import { setUserInfoToMessage } from '../../chat/utils';
+import { useConfigContext } from '../../config';
+import { ErrorCode, UIKitError } from '../../error';
 import type { CreateGroupProps } from './types';
 
 export function useCreateGroup(props: CreateGroupProps) {
   const { onCreateGroupResult: propsOnCreateGroupResult } = props;
   const im = useChatContext();
+  const { group: groupConfig } = useConfigContext();
 
   const createMessageTip = React.useCallback(
     (_data: ContactModel[], group: GroupModel): ChatMessage => {
@@ -53,6 +56,19 @@ export function useCreateGroup(props: CreateGroupProps) {
     (data?: ContactModel[]) => {
       if (data && data.length > 0) {
         const groupName = generateGroupName(data);
+        if (
+          groupConfig.createGroupMemberLimit &&
+          data.length > groupConfig.createGroupMemberLimit
+        ) {
+          propsOnCreateGroupResult?.({
+            isOk: false,
+            error: new UIKitError({
+              code: ErrorCode.common,
+              desc: 'The number of selected members exceeds the limit. ',
+            }),
+          });
+          return;
+        }
         im.createGroup({
           groupName: groupName,
           inviteMembers: data.map((item) => item.userId),
@@ -70,7 +86,13 @@ export function useCreateGroup(props: CreateGroupProps) {
         });
       }
     },
-    [createMessageTip, generateGroupName, im, propsOnCreateGroupResult]
+    [
+      createMessageTip,
+      generateGroupName,
+      groupConfig.createGroupMemberLimit,
+      im,
+      propsOnCreateGroupResult,
+    ]
   );
   return {
     onCreateGroupResultValue,
