@@ -388,7 +388,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       loadCount: 10,
       onResult: (result) => {
         if (result.isOk && result.value) {
-          // todo: try download failed attachment. dispatch download result.
+          // todo: try download failed thumb. dispatch download result.
           params.onResult(result.value);
         } else {
           params.onResult([]);

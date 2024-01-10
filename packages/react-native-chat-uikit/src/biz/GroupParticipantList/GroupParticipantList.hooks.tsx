@@ -30,6 +30,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     onDelParticipant,
     onChangeOwner,
     ListItemRender: propsListItemRender,
+    onKicked: propsOnKicked,
   } = props;
   const flatListProps = useFlatList<GroupParticipantListItemProps>({
     onInit: () => init(),
@@ -279,7 +280,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
 
   const chatListenerRef = React.useRef<ChatServiceListener>({
     onMemberRemoved: (_params: { groupId: string; groupName?: string }) => {
-      // todo: goto back last page.
+      propsOnKicked?.(groupId);
     },
     onMemberJoined: (params: { groupId: string; member: string }) => {
       addData(params.groupId, params.member);

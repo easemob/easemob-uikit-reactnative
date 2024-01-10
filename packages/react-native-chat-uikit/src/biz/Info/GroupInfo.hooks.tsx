@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ChatConversationType } from 'react-native-chat-sdk';
 
 import {
+  ChatServiceListener,
   UIGroupListListener,
   UIListenerType,
   useChatContext,
@@ -37,6 +38,7 @@ export function useGroupInfo(
     onGroupDestroy,
     onGroupQuit,
     onInitMenu,
+    onGroupKicked,
   } = props;
   const im = useChatContext();
   const { tr } = useI18nContext();
@@ -263,9 +265,6 @@ export function useGroupInfo(
                 groupId,
                 memberId: im.userId,
                 groupMyRemark: text,
-                onResult: () => {
-                  // todo:
-                },
               });
             }
           },
@@ -301,6 +300,30 @@ export function useGroupInfo(
   };
 
   React.useEffect(() => {
+    const listener: ChatServiceListener = {
+      onDestroyed: (params: {
+        groupId: string;
+        groupName?: string | undefined;
+      }) => {
+        onGroupDestroy?.(params.groupId);
+      },
+      onMemberExited: (params: { groupId: string; member: string }) => {
+        onGroupQuit?.(params.groupId);
+      },
+      onMemberRemoved: (params: {
+        groupId: string;
+        groupName?: string | undefined;
+      }) => {
+        onGroupKicked?.(params.groupId);
+      },
+    };
+    im.addListener(listener);
+    return () => {
+      im.removeListener(listener);
+    };
+  }, [im, onGroupDestroy, onGroupKicked, onGroupQuit]);
+
+  React.useEffect(() => {
     const uiListener: UIGroupListListener = {
       onUpdatedEvent: (data) => {
         setGroupName((prev) => {
@@ -318,7 +341,7 @@ export function useGroupInfo(
       },
       onDeletedEvent: (data) => {
         if (data.groupId === groupId) {
-          // todo: go back
+          onGroupQuit?.(data.groupId);
         }
       },
       type: UIListenerType.Group,
@@ -327,7 +350,7 @@ export function useGroupInfo(
     return () => {
       im.removeUIListener(uiListener);
     };
-  }, [groupId, im]);
+  }, [groupId, im, onGroupQuit]);
 
   React.useImperativeHandle(
     ref,
@@ -361,7 +384,6 @@ export function useGroupInfo(
             groupId,
             memberId: im.userId ?? '',
             groupMyRemark: remark,
-            onResult: () => {},
           });
         },
       };

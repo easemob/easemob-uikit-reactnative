@@ -82,6 +82,7 @@ export function useMessageList(
     recvMessageAutoScroll = false,
     enableListItemUserInfoUpdateFromMessage = false,
     onInitMenu,
+    onCopyFinished: propsOnCopyFinished,
   } = props;
   const { tr } = useI18nContext();
   const flatListProps = useFlatList<MessageListItemProps>({
@@ -436,6 +437,7 @@ export function useMessageList(
     deleteMessage: deleteMessage,
     recallMessage: recallMessage,
     onInit: onInitMenu,
+    onCopyFinished: propsOnCopyFinished,
   });
 
   const onClickedListItem = React.useCallback(

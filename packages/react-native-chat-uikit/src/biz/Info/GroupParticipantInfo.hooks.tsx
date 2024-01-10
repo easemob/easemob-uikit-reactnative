@@ -36,16 +36,6 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     React.useCallback(
       (state: any) => {
         if (state === 'load') {
-          // todo: get user info
-          // im.getUserInfo({
-          //   userId,
-          //   onResult: (value) => {
-          //     if (value) {
-          //       setUserAvatar(value.value?.avatarURL);
-          //       setUserName(value.value?.userName);
-          //     }
-          //   },
-          // });
           setIsContact(im.isContact({ userId }));
         }
       },
@@ -110,8 +100,6 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
   const onRemark = () => {
     if (propsOnGroupParticipantRemark) {
       propsOnGroupParticipantRemark(groupId, userId);
-    } else {
-      // todo: add remark
     }
   };
 

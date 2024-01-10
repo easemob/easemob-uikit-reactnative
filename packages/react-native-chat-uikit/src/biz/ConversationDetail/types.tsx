@@ -266,7 +266,7 @@ export type MessageListRef = {
       | SendTimeProps
       | SendSystemProps
       | SendCardProps
-  ) => void; // todo:
+  ) => void;
   removeMessage: (msg: ChatMessage) => void;
   recallMessage: (msg: ChatMessage) => void;
   updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => void;
@@ -337,6 +337,7 @@ export type MessageListProps = PropsWithError &
      */
     enableListItemUserInfoUpdateFromMessage?: boolean;
     onInitMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
+    onCopyFinished?: (content: string) => void;
   };
 export type UseMessageListReturn = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;

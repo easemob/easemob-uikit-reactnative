@@ -23,22 +23,23 @@ import { Icon } from '../../ui/Image';
 import { ImagePreview } from '../../ui/ImagePreview';
 import { ImageUrl, localUrlEscape } from '../../utils';
 import { useImageSize } from '../hooks/useImageSize';
-import type { PropsWithBack } from '../types';
+import type { PropsWithBack, PropsWithError } from '../types';
 
-export type ImageMessagePreviewProps = PropsWithBack & {
-  /**
-   * Message id.
-   */
-  msgId: string;
-  /**
-   * local message id.
-   */
-  localMsgId: string;
-  /**
-   * Container style for the file preview component.
-   */
-  containerStyle?: StyleProp<ViewStyle>;
-};
+export type ImageMessagePreviewProps = PropsWithBack &
+  PropsWithError & {
+    /**
+     * Message id.
+     */
+    msgId: string;
+    /**
+     * local message id.
+     */
+    localMsgId: string;
+    /**
+     * Container style for the file preview component.
+     */
+    containerStyle?: StyleProp<ViewStyle>;
+  };
 export function ImageMessagePreview(props: ImageMessagePreviewProps) {
   const { containerStyle, onBack } = props;
   const { url, size } = useImageMessagePreview(props);
@@ -95,7 +96,7 @@ type ImageSize = {
 };
 
 export function useImageMessagePreview(props: ImageMessagePreviewProps) {
-  const { msgId: propsMsgId } = props;
+  const { msgId: propsMsgId, onError } = props;
   const im = useChatContext();
   const [url, setUrl] = React.useState<string>(g_not_existed_url);
   const [size, setSize] = React.useState<ImageSize>({
@@ -146,7 +147,12 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
             if (body.fileStatus === ChatDownloadStatus.SUCCESS) {
               setUrl(localUrlEscape(ImageUrl(body.localPath)));
             } else if (body.fileStatus === ChatDownloadStatus.FAILED) {
-              // todo: download failed
+              onError?.(
+                new UIKitError({
+                  code: ErrorCode.common,
+                  desc: 'file download failed.',
+                })
+              );
             }
           }
         }
@@ -156,7 +162,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
     return () => {
       im.messageManager.removeListener(propsMsgId);
     };
-  }, [im.messageManager, propsMsgId]);
+  }, [im.messageManager, onError, propsMsgId]);
 
   return {
     url,

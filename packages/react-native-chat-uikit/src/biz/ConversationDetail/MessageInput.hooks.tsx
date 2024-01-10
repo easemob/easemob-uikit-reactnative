@@ -449,7 +449,7 @@ export function useMessageInput(
       (emojiHeight > 0 && keyboardCurrentHeight === 0) ||
       (emojiHeight === 0 && keyboardCurrentHeight === 0)
     ) {
-      // todo: height is pseudo.
+      // !!! height is pseudo.
       onHeightChange?.(
         emojiHeight === 0 && keyboardCurrentHeight === 0 ? 0 : 1
       );

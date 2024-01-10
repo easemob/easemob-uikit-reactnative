@@ -219,7 +219,12 @@ export class ChatServiceImpl
       }
     } catch (e) {
       console.warn('createUserDir:', e);
-      // todo: show alert
+      this.sendError({
+        error: new UIKitError({
+          code: ErrorCode.common,
+          desc: 'createUserDir failed.',
+        }),
+      });
     }
   }
 

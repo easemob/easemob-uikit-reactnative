@@ -3,9 +3,11 @@ import { ListRenderItemInfo, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
+import { Alert } from '../../ui/Alert';
 import { IconButton } from '../../ui/Button';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Text } from '../../ui/Text';
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
 import {
@@ -42,6 +44,10 @@ export function NewRequests(props: NewRequestsProps) {
     onButtonClicked,
     tr,
     ListItemRender,
+    onShowContactListMoreActions,
+    menuRef,
+    alertRef,
+    onRequestCloseMenu,
   } = useNewRequests(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -88,7 +94,7 @@ export function NewRequests(props: NewRequestsProps) {
             Right={TopNavigationBarRight}
             RightProps={{
               onClicked: () => {
-                // todo:
+                onShowContactListMoreActions();
               },
               iconName: 'person_add',
             }}
@@ -146,6 +152,12 @@ export function NewRequests(props: NewRequestsProps) {
           }
         />
       </View>
+
+      <BottomSheetNameMenu
+        ref={menuRef}
+        onRequestModalClose={onRequestCloseMenu}
+      />
+      <Alert ref={alertRef} />
     </View>
   );
 }

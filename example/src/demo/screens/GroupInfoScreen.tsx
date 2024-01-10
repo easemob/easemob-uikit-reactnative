@@ -33,15 +33,6 @@ export function GroupInfoScreen(props: Props) {
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
   const testRef = React.useRef<string>();
   const im = useChatContext();
-  // const goBack2 = React.useCallback(
-  //   (data: any) => {
-  //     groupInfoRef.current?.setGroupName?.(groupId, data);
-  //   },
-  //   [groupId]
-  // );
-
-  // React.useEffect(() => {
-  // }, [testRef.current]);
 
   const goBack = (data: any) => {
     // !!! warning: react navigation
@@ -105,12 +96,6 @@ export function GroupInfoScreen(props: Props) {
         onParticipant={(groupId) => {
           navigation.push('GroupParticipantList', { params: { groupId } });
         }}
-        // onGroupDestroy={() => {
-        //   navigation.goBack();
-        // }}
-        onGroupQuit={() => {
-          navigation.goBack();
-        }}
         onClickedChangeGroupOwner={() => {
           navigation.push('ChangeGroupOwner', { params: { groupId } });
         }}
@@ -163,6 +148,15 @@ export function GroupInfoScreen(props: Props) {
           });
         }}
         onBack={() => {
+          navigation.goBack();
+        }}
+        onGroupDestroy={() => {
+          navigation.goBack();
+        }}
+        onGroupKicked={() => {
+          navigation.goBack();
+        }}
+        onGroupQuit={() => {
           navigation.goBack();
         }}
       />

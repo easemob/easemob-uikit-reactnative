@@ -34,9 +34,6 @@ export function useContactListMoreActions(
               im.addNewContact({
                 useId: value.trim(),
                 reason: 'add contact',
-                onResult: (_result) => {
-                  // todo:
-                },
               });
             }
           },

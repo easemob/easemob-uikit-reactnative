@@ -142,9 +142,6 @@ export function getStateIconColor(state: MessageStateType): string {
 
 export async function getImageThumbUrl(msg: ChatMessage) {
   const body = msg.body as ChatImageMessageBody;
-  // todo: file is or not exist
-  // todo: 判断顺序，如果是发送的消息，本地缩略图 -》 本地大图 =》 服务器缩略图
-  // todo: 如果是接收的消息，本地缩略图 =》 服务器缩略图
   let isExisted = await Services.dcs.isExistedFile(body.thumbnailLocalPath);
   if (isExisted) {
     return localUrlEscape(ImageUrl(body.thumbnailLocalPath));
@@ -163,9 +160,6 @@ export async function getVideoThumbUrl(
   onGenerate?: (url: string) => void
 ) {
   const body = msg.body as ChatVideoMessageBody;
-  // todo: file is or not exist
-  // todo: 判断顺序，如果是发送的消息，本地缩略图 -》 本地大图 =》 服务器缩略图
-  // todo: 如果是接收的消息，本地缩略图 =》 服务器缩略图
   let isExisted = await Services.dcs.isExistedFile(body.thumbnailLocalPath);
   if (isExisted) {
     return localUrlEscape(ImageUrl(body.thumbnailLocalPath));

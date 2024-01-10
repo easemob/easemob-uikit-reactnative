@@ -63,6 +63,7 @@ export type GroupParticipantListProps = Pick<
     groupId: string;
     containerStyle?: StyleProp<ViewStyle>;
     ListItemRender?: GroupParticipantListItemComponentType;
+    onKicked?: (groupId: string) => void;
   };
 
 export type GroupParticipantListItemProps = ListItemProps &

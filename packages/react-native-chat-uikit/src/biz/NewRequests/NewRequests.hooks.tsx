@@ -3,6 +3,9 @@ import * as React from 'react';
 import { NewRequestModel, useChatContext } from '../../chat';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import type { AlertRef } from '../../ui/Alert';
+import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { useCloseMenu, useContactListMoreActions } from '../hooks';
 import { useFlatList } from '../List';
 import { NewRequestsItemMemo } from './NewRequests.item';
 import type {
@@ -30,6 +33,13 @@ export function useNewRequests(props: NewRequestsProps) {
   const ListItemRenderRef = React.useRef<NewRequestsItemComponentType>(
     propsListItemRender ?? NewRequestsItemMemo
   );
+  const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const alertRef = React.useRef<AlertRef>({} as any);
+  const { closeMenu } = useCloseMenu({ menuRef });
+  const { onShowContactListMoreActions } = useContactListMoreActions({
+    menuRef,
+    alertRef,
+  });
 
   const onClickedCallback = React.useCallback(
     (data?: NewRequestModel | undefined) => {
@@ -50,7 +60,7 @@ export function useNewRequests(props: NewRequestsProps) {
       if (onButtonClicked) {
         onButtonClicked(data);
       } else {
-        // todo: accept invite. no have reject.
+        // !!! accept invite. no have reject.
         if (data) {
           im.acceptInvitation({
             userId: data.requestId,
@@ -140,5 +150,9 @@ export function useNewRequests(props: NewRequestsProps) {
     onButtonClicked: onButtonClickedCallback,
     tr,
     ListItemRender: ListItemRenderRef.current,
+    onShowContactListMoreActions,
+    menuRef,
+    alertRef,
+    onRequestCloseMenu: closeMenu,
   };
 }

@@ -336,7 +336,6 @@ export function useGroupList(props: GroupListProps) {
       target?: string,
       _usernames?: Array<string>
     ): void => {
-      // todo: need to check the event type
       if (event === ChatMultiDeviceEvent.GROUP_CREATE) {
         if (target) {
           onAddedGroup({ groupId: target, inviter: '' });

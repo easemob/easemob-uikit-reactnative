@@ -75,6 +75,9 @@ export function GroupParticipantListScreen(props: Props) {
         onBack={() => {
           navigation.goBack();
         }}
+        onKicked={() => {
+          navigation.goBack();
+        }}
       />
     </SafeAreaView>
   );

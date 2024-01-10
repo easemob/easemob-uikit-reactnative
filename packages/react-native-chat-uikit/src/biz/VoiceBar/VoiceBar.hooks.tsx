@@ -130,9 +130,6 @@ export function useVoiceBar(props: VoiceBarProps) {
               targetPath: localPath,
               localPath: result.path,
             })
-            .then(() => {
-              // todo: send message
-            })
             .catch((error) => {
               onFailed?.({
                 reason: 'save file voice is failed.',
@@ -214,7 +211,6 @@ export function useVoiceBar(props: VoiceBarProps) {
       displayName: voiceFileNameRef.current,
       type: 'voice',
     });
-    // todo: do something after send message?
   };
 
   React.useEffect(() => {

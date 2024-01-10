@@ -10,10 +10,8 @@ export function useImageSize(props: useImageSizeProps) {
       maxHeight: number,
       maxWidth: number
     ) => {
-      // todo: 保存图片原始比例，高度和宽度不超过屏幕
+      // !!! Save the original proportions of the image, with the height and width not exceeding the screen
       const ratio = imageHight / imageWidth;
-      // const maxWidth = winWidth;
-      // const maxHeight = winHeight;
       if (maxWidth < imageWidth) {
         const w = maxWidth;
         const h = maxWidth * ratio;

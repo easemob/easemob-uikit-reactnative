@@ -50,6 +50,7 @@ export type GroupInfoProps = InfoProps & {
   onClickedChangeGroupOwner?: (groupId: string, ownerId: string) => void;
   onGroupDestroy?: (groupId: string) => void;
   onGroupQuit?: (groupId: string) => void;
+  onGroupKicked?: (groupId: string) => void;
 };
 export type GroupParticipantInfoProps = InfoProps & {
   groupId: string;

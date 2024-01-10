@@ -20,9 +20,10 @@ import type {
 } from '../ConversationDetail';
 import { useCloseMenu } from './useCloseMenu';
 
-export type useMessageLongPressActionsProps = {
+export type UseMessageLongPressActionsProps = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
+  onCopyFinished?: (content: string) => void;
   onQuoteMessageForInput?: (model: MessageModel) => void;
   onEditMessageForInput?: (model: MessageModel) => void;
   showReportMessage?: (model: MessageModel) => void;
@@ -31,7 +32,7 @@ export type useMessageLongPressActionsProps = {
   onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
 };
 export function useMessageLongPressActions(
-  props: useMessageLongPressActionsProps
+  props: UseMessageLongPressActionsProps
 ) {
   const {
     menuRef,
@@ -40,6 +41,7 @@ export function useMessageLongPressActions(
     showReportMessage,
     deleteMessage,
     recallMessage,
+    onCopyFinished,
     onInit,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
@@ -64,7 +66,7 @@ export function useMessageLongPressActions(
             closeMenu(() => {
               const body = msgModel.msg.body as ChatTextMessageBody;
               Services.cbs.setString(body.content);
-              // todo: toast
+              onCopyFinished?.(body.content);
             });
           },
         });
@@ -138,7 +140,6 @@ export function useMessageLongPressActions(
         msgModel.msg.body.type === ChatMessageType.VIDEO ||
         msgModel.msg.body.type === ChatMessageType.FILE
       ) {
-        // todo: max time limit
         if (
           msgModel.msg.status === ChatMessageStatus.SUCCESS &&
           msgModel.msg.from === im.userId
