@@ -279,21 +279,6 @@ export function useMessageList(
   const updateMessageVoiceUIState = React.useCallback(
     (model: MessageModel) => {
       const msgId = model.msg.msgId;
-      // const msgs = dataRef.current
-      //   .filter((d) => d.model.modelType === 'message')
-      //   .filter((d) => {
-      //     return (
-      //       (d.model as MessageModel).msg.body.type === ChatMessageType.VOICE
-      //     );
-      //   });
-      // msgs.forEach((d) => {
-      //   const msgModel = d.model as MessageModel;
-      //   if (msgId === msgModel.msg.msgId) {
-      //     msgModel.isVoicePlaying = !msgModel.isVoicePlaying;
-      //   } else {
-      //     msgModel.isVoicePlaying = false;
-      //   }
-      // });
       dataRef.current.map((d) => {
         if (d.model.modelType === 'message') {
           const msgModel = d.model as MessageModel;

@@ -1094,6 +1094,7 @@ export class ChatServiceImpl
     });
     if (conv) {
       conv.unreadMessageCount = 0;
+      this.messageManager.emitConversationUnreadCountChanged();
       this.sendUIEvent(UIListenerType.Conversation, 'onUpdatedEvent', conv);
     }
 

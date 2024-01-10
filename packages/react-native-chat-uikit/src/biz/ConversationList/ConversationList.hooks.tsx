@@ -6,11 +6,6 @@ import {
   ChatMultiDeviceEvent,
 } from 'react-native-chat-sdk';
 
-// import type { ChatMultiDeviceEvent as ChatMultiDeviceEventType } from 'react-native-chat-sdk';
-// import {
-//   ChatMessageType,
-//   type ChatMultiDeviceEvent,
-// } from 'react-native-chat-sdk';
 import {
   ChatServiceListener,
   ConversationModel,

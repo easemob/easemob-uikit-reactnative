@@ -11,7 +11,7 @@ import {
 } from 'react-native-chat-sdk';
 
 import { ErrorCode, UIKitError } from '../error';
-import { getCurTs } from '../utils';
+import { asyncTask, getCurTs } from '../utils';
 import {
   gCustomMessageRecallEventType,
   gMessageAttributeFileProgress,
@@ -121,12 +121,23 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       v.onMessageAttachmentProgressChanged?.(msg);
     });
   }
+  emitConversationUnreadCountChanged(): void {
+    this._client.client.chatManager
+      .getUnreadCount()
+      .then((count) => {
+        this._userListener.forEach((v) => {
+          v.onAllConversationUnreadCountChanged?.(count);
+        });
+      })
+      .catch();
+  }
   bindOnMessagesReceived(messages: Array<ChatMessage>) {
     console.log(
       'dev:MessageCacheManager:bindOnMessagesReceived',
       messages.length,
       this._userListener?.size
     );
+    asyncTask(this.emitConversationUnreadCountChanged.bind(this));
     messages.forEach((msg) => {
       this._userListener.forEach((v) => {
         v.onRecvMessage?.(msg);

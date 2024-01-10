@@ -19,6 +19,7 @@ export type MessageManagerListener = {
   onMessageAttachmentChanged?: (msg: ChatMessage) => void;
   onMessageAttachmentProgressChanged?: (msg: ChatMessage) => void;
   onRecvRecallMessage?: (orgMsg: ChatMessage, tipMsg: ChatMessage) => void;
+  onAllConversationUnreadCountChanged?: (count: number) => void;
 };
 
 export interface MessageCacheManager
@@ -44,4 +45,5 @@ export interface MessageCacheManager
   }): void;
   createRecallMessageTip(msg: ChatMessage): ChatMessage;
   setRecallMessageTimeout(recallTimeout?: number): void;
+  emitConversationUnreadCountChanged(): void;
 }

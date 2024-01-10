@@ -226,18 +226,22 @@ export class RequestListImpl implements RequestList {
     if (request.msg === undefined) {
       return;
     }
+    let isExisted = false;
     for (let index = 0; index < this._newRequestList.length; index++) {
       const localRequest = this._newRequestList[index];
       if (localRequest?.requestId === request.requestId) {
         this._newRequestList.splice(index, 1);
+        isExisted = true;
         break;
       }
     }
-    this._client.removeMessage({
-      message: request.msg,
-      onResult: () => {
-        this.emitNewRequestListChanged();
-      },
-    });
+    if (isExisted === true) {
+      this._client.removeMessage({
+        message: request.msg,
+        onResult: () => {
+          this.emitNewRequestListChanged();
+        },
+      });
+    }
   }
 }
