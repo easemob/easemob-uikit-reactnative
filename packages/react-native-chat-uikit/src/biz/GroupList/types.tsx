@@ -40,7 +40,11 @@ export type GroupListRef = Omit<
   updateItem: (items: GroupModel) => void;
 };
 
-export type GroupListProps = PropsWithTest &
+export type GroupListProps = Pick<
+  ListRequestProps<DataModel>,
+  'onRequestGroupData'
+> &
+  PropsWithTest &
   PropsWithInit &
   PropsWithBack &
   PropsWithSearch &

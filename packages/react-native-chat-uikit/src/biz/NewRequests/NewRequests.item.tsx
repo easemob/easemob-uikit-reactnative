@@ -64,7 +64,7 @@ export function NewRequestsItem(props: NewRequestsItemProps) {
           }}
         >
           <SingleLineText paletteType={'title'} textType={'medium'}>
-            {data.name ?? data.id}
+            {data.name ?? data.requestId}
           </SingleLineText>
           <SingleLineText paletteType={'body'} textType={'medium'}>
             {getNewRequest(data.msg)?.tip}

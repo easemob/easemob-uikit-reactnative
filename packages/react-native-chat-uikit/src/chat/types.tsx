@@ -177,12 +177,12 @@ export type ChatServiceListener = ConnectServiceListener &
   ResultServiceListener;
 
 export interface ConversationServices {
-  setOnRequestMultiData<DataT>(
-    callback?: (params: {
-      ids: Map<DataModelType, string[]>;
-      result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
-    }) => void | Promise<void>
-  ): void;
+  // setOnRequestMultiData<DataT>(
+  //   callback?: (params: {
+  //     ids: Map<DataModelType, string[]>;
+  //     result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
+  //   }) => void | Promise<void>
+  // ): void;
   setCurrentConversation(params: { conv?: ConversationModel }): void;
   getCurrentConversation(): ConversationModel | undefined;
   getAllConversations(params: {
@@ -234,12 +234,12 @@ export interface ConversationServices {
 }
 
 export interface ContactServices {
-  setContactOnRequestData<DataT>(
-    callback?: (params: {
-      ids: string[];
-      result: (data?: DataT[], error?: UIKitError) => void;
-    }) => void | Promise<void>
-  ): void;
+  // setContactOnRequestData<DataT>(
+  //   callback?: (params: {
+  //     ids: string[];
+  //     result: (data?: DataT[], error?: UIKitError) => void;
+  //   }) => void | Promise<void>
+  // ): void;
   isContact(params: { userId: string }): boolean;
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void;
   getContact(params: {
@@ -373,12 +373,12 @@ export interface MessageServices {
 }
 
 export interface GroupServices {
-  setGroupOnRequestData<DataT>(
-    callback?: (params: {
-      ids: string[];
-      result: (data?: DataT[], error?: UIKitError) => void;
-    }) => void | Promise<void>
-  ): void;
+  // setGroupOnRequestData<DataT>(
+  //   callback?: (params: {
+  //     ids: string[];
+  //     result: (data?: DataT[], error?: UIKitError) => void;
+  //   }) => void | Promise<void>
+  // ): void;
   setGroupParticipantOnRequestData<DataT>(
     callback?: (params: {
       groupId: string;

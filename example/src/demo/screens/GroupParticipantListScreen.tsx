@@ -95,7 +95,7 @@ export function GroupParticipantListScreen(props: Props) {
             navigation.push('GroupParticipantInfo', {
               params: {
                 groupId: groupId,
-                userId: data.id,
+                userId: data.memberId,
               },
             });
           }

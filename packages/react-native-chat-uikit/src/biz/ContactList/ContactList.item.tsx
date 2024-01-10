@@ -89,7 +89,7 @@ export function ContactListItem(props: ContactListItemProps) {
             />
           </View>
         ) : null}
-        <Avatar url={section.avatar} size={40} />
+        <Avatar url={section.userAvatar} size={40} />
         <View
           style={{
             flexGrow: 1,
@@ -102,7 +102,7 @@ export function ContactListItem(props: ContactListItemProps) {
             textType={'medium'}
             style={{ color: getColor('t1') }}
           >
-            {section.nickName ?? section.userId}
+            {section.userName ?? section.userId}
           </SingleLineText>
         </View>
       </Pressable>

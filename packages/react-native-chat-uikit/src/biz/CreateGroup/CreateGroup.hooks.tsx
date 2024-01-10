@@ -45,7 +45,7 @@ export function useCreateGroup(props: CreateGroupProps) {
   const generateGroupName = React.useCallback(
     (data: ContactModel[]): string => {
       const s = data
-        .map((item) => item.nickName ?? item.userId)
+        .map((item) => item.userName ?? item.userId)
         .filter((_v, i) => i < 3)
         .join(',');
       return `${s}的群聊`;

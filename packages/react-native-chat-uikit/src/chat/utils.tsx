@@ -17,11 +17,8 @@ import {
   gNewRequestConversationUserId,
   gNewRequestConversationUserName,
 } from './const';
-import type {
-  NewRequestModel,
-  UserData,
-  UserServiceDataFromMessage,
-} from './types';
+import type { UserData, UserServiceDataFromMessage } from './types';
+import type { NewRequestModel } from './types.ui';
 
 export function userInfoFromMessage(msg?: ChatMessage): UserData | undefined {
   if (msg === undefined || msg === null) {
@@ -127,7 +124,7 @@ export function getNewRequest(msg?: ChatMessage): NewRequestModel | undefined {
     }
   }
   return {
-    id: msg.attributes[gNewRequestConversationUserId] as string,
+    requestId: msg.attributes[gNewRequestConversationUserId] as string,
     avatar: msg.attributes[gNewRequestConversationUserAvatar] as string,
     name: msg.attributes[gNewRequestConversationUserName] as string,
     tip: msg.attributes[gNewRequestConversationTip] as string,

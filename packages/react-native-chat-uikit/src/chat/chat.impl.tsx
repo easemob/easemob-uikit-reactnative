@@ -532,8 +532,8 @@ export class ChatServiceImpl
       ...others,
       userId: contact.userId,
       remark: contact.remark,
-      avatar: this._getAvatarFromCache(contact.userId),
-      nickName: this._getNameFromCache(contact.userId),
+      userAvatar: this._getAvatarFromCache(contact.userId),
+      userName: this._getNameFromCache(contact.userId),
     };
   }
 
@@ -1152,10 +1152,10 @@ export class ChatServiceImpl
           list.forEach((v) => {
             const item = this._dataList.get(v.userId);
             if (item && item.avatar) {
-              v.avatar = item.avatar;
+              v.userAvatar = item.avatar;
             }
             if (item && item.name) {
-              v.nickName = item.name;
+              v.userName = item.name;
             }
           });
 
@@ -1186,10 +1186,10 @@ export class ChatServiceImpl
         this._contactList.forEach((v) => {
           const item = this._dataList.get(v.userId);
           if (item && item.avatar) {
-            v.avatar = item.avatar;
+            v.userAvatar = item.avatar;
           }
           if (item && item.name) {
-            v.nickName = item.name;
+            v.userName = item.name;
           }
         });
 
@@ -1468,9 +1468,9 @@ export class ChatServiceImpl
       ),
       event: 'getGroupMemberList',
       onFinished: async (value) => {
-        const memberList = new Map();
+        const memberList = new Map<string, GroupParticipantModel>();
         value.list?.forEach(async (v) => {
-          memberList.set(v, { id: v });
+          memberList.set(v, { memberId: v });
         });
 
         cursor = value.cursor;
@@ -1488,7 +1488,7 @@ export class ChatServiceImpl
                 cursor
               );
             list.list?.forEach((v) => {
-              memberList.set(v, { id: v });
+              memberList.set(v, { memberId: v });
             });
 
             cursor = value.cursor;
@@ -1503,18 +1503,19 @@ export class ChatServiceImpl
         }
 
         this._groupMemberList.set(params.groupId, memberList);
+        console.log('test:zuoyu:group:list', memberList);
 
         if (this._groupParticipantDataRequestCallback) {
           this._groupParticipantDataRequestCallback({
             groupId: params.groupId,
-            ids: Array.from(memberList.values()).map((v) => v.id),
+            ids: Array.from(memberList.values()).map((v) => v.memberId),
             result: async (data?: DataModel[], error?: UIKitError) => {
               if (data) {
                 data.forEach((item) => {
                   const member = memberList.get(item.id);
                   if (member) {
-                    member.nickName = item.name;
-                    member.avatar = item.avatar;
+                    member.memberName = item.name;
+                    member.memberAvatar = item.avatar;
                   }
                 });
               }
@@ -1527,6 +1528,7 @@ export class ChatServiceImpl
             },
           });
         }
+        console.log('test:zuoyu:group:list:2', memberList);
 
         params.onResult({
           isOk: true,
@@ -1851,14 +1853,14 @@ export class ChatServiceImpl
     this.tryCatch({
       promise: this.client.groupManager.addMembers(
         params.groupId,
-        params.members.map((item) => item.id),
+        params.members.map((item) => item.memberId),
         params.welcomeMessage
       ),
       event: 'addMembers',
       onFinished: async () => {
         const groupMembers = this._groupMemberList.get(params.groupId);
         for (const member of params.members) {
-          groupMembers?.set(member.id, member);
+          groupMembers?.set(member.memberId, member);
         }
         params.onResult({
           isOk: true,

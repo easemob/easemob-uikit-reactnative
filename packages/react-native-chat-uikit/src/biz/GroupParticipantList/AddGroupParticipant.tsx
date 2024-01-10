@@ -25,9 +25,9 @@ export function AddGroupParticipant(props: AddGroupParticipantProps) {
           groupId,
           members: added.map((item) => {
             return {
-              id: item.userId,
-              name: item.nickName,
-              avatar: item.avatar,
+              memberId: item.userId,
+              memberName: item.userName,
+              memberAvatar: item.userAvatar,
             } as GroupParticipantModel;
           }),
           welcomeMessage: 'Welcome to the group',

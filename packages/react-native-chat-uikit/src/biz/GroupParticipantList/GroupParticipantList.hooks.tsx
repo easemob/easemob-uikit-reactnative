@@ -61,7 +61,7 @@ export function useGroupParticipantList(
         alertRef.current.alertWithInit({
           message: tr(
             '_uikit_group_alert_change_owner_title',
-            data?.name ?? data?.id
+            data?.memberName ?? data?.memberId
           ),
           buttons: [
             {
@@ -109,7 +109,7 @@ export function useGroupParticipantList(
     calculateDeleteCount();
     const uniqueList = dataRef.current.filter(
       (item, index, self) =>
-        index === self.findIndex((t) => t.data.id === item.data.id)
+        index === self.findIndex((t) => t.data.memberId === item.data.memberId)
     );
     dataRef.current = uniqueList;
     setData([...dataRef.current]);
@@ -121,13 +121,13 @@ export function useGroupParticipantList(
         if (data?.checked !== undefined) {
           im.setGroupMemberState({
             groupId,
-            userId: data.id,
+            userId: data.memberId,
             checked: !data.checked,
             onResult: () => {},
           });
           dataRef.current = dataRef.current.map((item) => {
             if (item) {
-              if (item.id === data.id) {
+              if (item.id === data.memberId) {
                 return {
                   ...item,
                   data: { ...item.data, checked: !data.checked },
@@ -156,7 +156,7 @@ export function useGroupParticipantList(
               dataRef.current = value.map((item) => {
                 if (participantType === 'delete') {
                   return {
-                    id: item.id,
+                    id: item.memberId,
                     data: {
                       ...item,
                       checked:
@@ -165,29 +165,29 @@ export function useGroupParticipantList(
                   } as GroupParticipantListItemProps;
                 } else {
                   return {
-                    id: item.id,
+                    id: item.memberId,
                     data: { ...item, checked: undefined },
                   } as GroupParticipantListItemProps;
                 }
               });
               if (participantType === 'change-owner') {
                 dataRef.current = dataRef.current.filter((item) => {
-                  return item.data.id !== im.userId;
+                  return item.data.memberId !== im.userId;
                 });
               } else if (participantType === 'delete') {
                 dataRef.current = dataRef.current.filter((item) => {
-                  return item.data.id !== im.userId;
+                  return item.data.memberId !== im.userId;
                 });
               } else if (participantType === 'mention') {
                 dataRef.current.unshift({
                   id: 'All',
                   data: {
-                    id: 'All',
-                    name: 'All',
+                    memberId: 'All',
+                    memberName: 'All',
                   } as GroupParticipantModel,
                 });
                 dataRef.current = dataRef.current.filter((item) => {
-                  return item.data.id !== im.userId;
+                  return item.data.memberId !== im.userId;
                 });
               }
               onSetData();
@@ -254,15 +254,15 @@ export function useGroupParticipantList(
       });
       if (groupMember) {
         dataRef.current.push({
-          id: groupMember.id,
+          id: groupMember.memberId,
           data: groupMember,
         });
       } else {
         dataRef.current.push({
           id: memberId,
           data: {
-            id: memberId,
-            name: memberId,
+            memberId: memberId,
+            memberName: memberId,
           },
         });
       }

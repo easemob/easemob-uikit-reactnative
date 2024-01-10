@@ -120,7 +120,7 @@ export function useSearchContact(
                 return {
                   ...item,
                   id: item.userId,
-                  name: item.nickName,
+                  name: item.userName,
                   checked: getChecked(),
                   disable: getState(),
                   onCheckClicked: 'create-group'

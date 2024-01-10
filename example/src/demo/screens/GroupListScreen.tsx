@@ -1,6 +1,11 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { GroupList } from 'react-native-chat-uikit';
+import {
+  DataModel,
+  DataModelType,
+  GroupList,
+  UIKitError,
+} from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
@@ -20,22 +25,23 @@ export function GroupListScreen(props: Props) {
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
-        // onRequestData={(params: {
-        //   ids: string[];
-        //   result: (data?: DataModel[], error?: UIKitError) => void;
-        // }) => {
-        //   params?.result(
-        //     params.ids.map((v) => {
-        //       return {
-        //         id: v,
-        //         name: v + 'name',
-        //         avatar:
-        //           'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-        //         type: 'user' as DataModelType,
-        //       };
-        //     })
-        //   );
-        // }}
+        onRequestGroupData={(params: {
+          groupId: string;
+          ids: string[];
+          result: (data?: DataModel[], error?: UIKitError) => void;
+        }) => {
+          params?.result(
+            params.ids.map((v) => {
+              return {
+                id: v,
+                name: v + 'name',
+                avatar:
+                  'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+                type: 'user' as DataModelType,
+              };
+            })
+          );
+        }}
         // onRequestMultiData={(params: {
         //   ids: Map<DataModelType, string[]>;
         //   result: (

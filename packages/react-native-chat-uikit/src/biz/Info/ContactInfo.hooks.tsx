@@ -58,8 +58,8 @@ export function useContactInfo(props: ContactInfoProps) {
               userId: userId,
               onResult: (value) => {
                 if (value) {
-                  setUserAvatar(value.value?.avatar);
-                  setUserName(value.value?.nickName);
+                  setUserAvatar(value.value?.userAvatar);
+                  setUserName(value.value?.userName);
                 }
               },
             });

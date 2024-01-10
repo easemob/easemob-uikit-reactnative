@@ -60,7 +60,7 @@ export function useNewRequests(
         // todo: accept invite. no have reject.
         if (data) {
           im.acceptInvitation({
-            userId: data.id,
+            userId: data.requestId,
             onResult: () => {
               data.state === 'accepted';
               im.requestList.removeRequest(data);
@@ -78,7 +78,7 @@ export function useNewRequests(
         onNewRequestListChanged: (list) => {
           dataRef.current = list.map((item) => {
             return {
-              id: item.id,
+              id: item.requestId,
               data: item,
             };
           });
@@ -99,7 +99,7 @@ export function useNewRequests(
             if (result.isOk && result.value) {
               dataRef.current = result.value.map((item) => {
                 return {
-                  id: item.id,
+                  id: item.requestId,
                   data: item,
                 };
               });

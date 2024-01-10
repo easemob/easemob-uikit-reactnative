@@ -34,6 +34,7 @@ export function useGroupList(props: UseGroupListProps) {
     onStateChanged,
     propsRef,
     flatListProps: propsFlatListProps,
+    onRequestGroupData,
   } = props;
   const flatListProps = useFlatList<GroupListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
@@ -178,8 +179,9 @@ export function useGroupList(props: UseGroupListProps) {
   );
 
   const init = React.useCallback(() => {
+    im.setGroupParticipantOnRequestData(onRequestGroupData);
     requestList(0);
-  }, [requestList]);
+  }, [im, onRequestGroupData, requestList]);
 
   const onMore = React.useCallback(() => {
     if (isNoMoreRef.current === true) {

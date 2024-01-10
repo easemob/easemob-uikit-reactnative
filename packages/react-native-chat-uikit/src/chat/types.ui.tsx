@@ -55,8 +55,8 @@ export type ConversationModel = Pick<
 type _ContactModel = PartialUndefinable<ChatContact>;
 export type ContactModel = _ContactModel & {
   userId: string;
-  nickName?: string;
-  avatar?: string;
+  userName?: string;
+  userAvatar?: string;
   checked?: boolean;
   disable?: boolean;
 };
@@ -89,15 +89,15 @@ export type GroupModel = _GroupModel & {
 };
 
 export type GroupParticipantModel = {
-  id: string;
-  name?: string;
-  avatar?: string;
+  memberId: string;
+  memberName?: string;
+  memberAvatar?: string;
   checked?: boolean;
   disable?: boolean;
 };
 
 export type NewRequestModel = {
-  id: string;
+  requestId: string;
   name: string;
   avatar?: string;
   tip?: string;

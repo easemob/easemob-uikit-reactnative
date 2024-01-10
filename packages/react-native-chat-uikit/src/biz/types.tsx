@@ -140,6 +140,18 @@ export type ListRequestProps<DataT> = {
   /**
    * @description Get data information in batches. If it cannot be obtained, a single acquisition will be attempted during rendering. {@link ListItemRequestProps.onRequestData}
    * @params params -
+   * - groupId: The id of the group.
+   * - ids: The id of the item.
+   * - result: The callback function of the result.
+   */
+  onRequestGroupData?: (params: {
+    groupId: string;
+    ids: string[];
+    result: (data?: DataT[], error?: UIKitError) => void;
+  }) => void | Promise<void>;
+  /**
+   * @description Get data information in batches. If it cannot be obtained, a single acquisition will be attempted during rendering. {@link ListItemRequestProps.onRequestData}
+   * @params params -
    * - ids: The id of the item.
    * - result: The callback function of the result.
    */

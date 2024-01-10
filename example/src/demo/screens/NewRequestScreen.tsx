@@ -32,8 +32,8 @@ export function NewRequestScreen(props: Props) {
           // backgroundColor: 'red',
         }}
         onClicked={(data) => {
-          if (data?.id) {
-            navigation.push('ContactInfo', { params: { userId: data.id } });
+          if (data?.requestId) {
+            navigation.push('ContactInfo', { params: { userId: data.requestId } });
           }
         }}
         onBack={() => {

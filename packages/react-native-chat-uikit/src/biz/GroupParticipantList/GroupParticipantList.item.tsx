@@ -100,14 +100,14 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
       >
         {getCheckedButton(data.disable, data.checked)}
 
-        <Avatar url={data.avatar} size={40} />
+        <Avatar url={data.memberAvatar} size={40} />
         <View style={{ flexGrow: 1, paddingLeft: 12, maxWidth: '80%' }}>
           <SingleLineText
             paletteType={'title'}
             textType={'medium'}
             style={{ color: getColor('t1') }}
           >
-            {data.name ?? data.id}
+            {data.memberName ?? data.memberId}
           </SingleLineText>
         </View>
       </Pressable>

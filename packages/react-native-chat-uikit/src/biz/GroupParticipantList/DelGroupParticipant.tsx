@@ -22,7 +22,7 @@ export function DelGroupParticipant(props: DelGroupParticipantProps) {
       if (data) {
         im.removeGroupMembers({
           groupId,
-          members: data.map((item) => item.id),
+          members: data.map((item) => item.memberId),
           onResult: (result) => {
             onDelResult?.(result);
           },

@@ -23,14 +23,14 @@ export function ChangeGroupOwner(props: ChangeGroupOwnerProps) {
         groupId,
         onResult: (result) => {
           if (result.isOk === true && result.value) {
-            if (result.value.owner !== data?.id && data?.id) {
+            if (result.value.owner !== data?.memberId && data?.memberId) {
               im.changeGroupOwner({
                 groupId,
-                newOwnerId: data.id,
+                newOwnerId: data.memberId,
                 onResult: (result) => {
                   onChangeResult?.({
                     isOk: result.isOk,
-                    value: data.id,
+                    value: data.memberId,
                     error: result.error,
                   });
                 },

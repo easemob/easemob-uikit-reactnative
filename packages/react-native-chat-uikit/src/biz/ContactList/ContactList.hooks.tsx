@@ -223,7 +223,7 @@ export function useContactList(props: ContactListProps) {
 
       const sortList: (IndexModel & { data: ContactListItemProps[] })[] = [];
       uniqueList.forEach((item) => {
-        const first = getFirst(item.section.nickName?.[0]?.toLocaleUpperCase());
+        const first = getFirst(item.section.userName?.[0]?.toLocaleUpperCase());
         const indexTitle = first
           ? g_index_alphabet_range.includes(first)
             ? first
@@ -404,8 +404,8 @@ export function useContactList(props: ContactListProps) {
             section: {
               userId: item.id,
               remark: item.id + generateRandomNames(),
-              nickName: generateRandomNames(),
-              avatar:
+              userName: generateRandomNames(),
+              userAvatar:
                 'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
             },
           } as ContactListItemProps;
@@ -444,7 +444,7 @@ export function useContactList(props: ContactListProps) {
                           const groupMembers = groupResult.value ?? [];
                           const list = value.map((item) => {
                             const isExisted = groupMembers.find((member) => {
-                              return member.id === item.userId;
+                              return member.memberId === item.userId;
                             });
                             return {
                               id: item.userId,
@@ -831,13 +831,13 @@ const sortContact = (
   nextProps: ContactListItemProps
 ): number => {
   if (
-    prevProps.section.nickName &&
-    prevProps.section.nickName.length > 0 &&
-    nextProps.section.nickName &&
-    nextProps.section.nickName.length > 0
+    prevProps.section.userName &&
+    prevProps.section.userName.length > 0 &&
+    nextProps.section.userName &&
+    nextProps.section.userName.length > 0
   ) {
-    const prevFirstLetter = prevProps.section.nickName.toLowerCase();
-    const nextFirstLetter = nextProps.section.nickName.toLowerCase();
+    const prevFirstLetter = prevProps.section.userName.toLowerCase();
+    const nextFirstLetter = nextProps.section.userName.toLowerCase();
 
     if (prevFirstLetter < nextFirstLetter) {
       return -1;

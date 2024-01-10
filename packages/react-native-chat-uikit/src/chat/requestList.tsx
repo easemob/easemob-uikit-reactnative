@@ -110,7 +110,7 @@ export class RequestListImpl implements RequestList {
   }
   bindOnFriendRequestAccepted(userId: string): void {
     for (const request of this._newRequestList) {
-      if (request.id === userId) {
+      if (request.requestId === userId) {
         request.state = 'accepted';
         this.updateRequest(request);
         break;
@@ -119,7 +119,7 @@ export class RequestListImpl implements RequestList {
   }
   bindOnFriendRequestDeclined(userId: string): void {
     for (const request of this._newRequestList) {
-      if (request.id === userId) {
+      if (request.requestId === userId) {
         request.state = 'declined';
         this.updateRequest(request);
         break;
@@ -133,14 +133,14 @@ export class RequestListImpl implements RequestList {
   ): void {
     if (event === ChatMultiDeviceEvent.CONTACT_ACCEPT) {
       for (const request of this._newRequestList) {
-        if (request.id === convId) {
+        if (request.requestId === convId) {
           this.removeRequest(request);
           break;
         }
       }
     } else if (event === ChatMultiDeviceEvent.CONTACT_DECLINE) {
       for (const request of this._newRequestList) {
-        if (request.id === convId) {
+        if (request.requestId === convId) {
           this.removeRequest(request);
           break;
         }
@@ -191,7 +191,7 @@ export class RequestListImpl implements RequestList {
     request.msg = { ...request.msg } as ChatMessage;
 
     request.msg.attributes = {
-      [gNewRequestConversationUserId]: request.id,
+      [gNewRequestConversationUserId]: request.requestId,
       [gNewRequestConversationUserName]: request.name,
       [gNewRequestConversationUserAvatar]: request.avatar,
       [gNewRequestConversationState]: request.state,
@@ -201,7 +201,7 @@ export class RequestListImpl implements RequestList {
     for (let index = 0; index < this._newRequestList.length; index++) {
       const localRequest = this._newRequestList[index];
       if (
-        localRequest?.id === request.id &&
+        localRequest?.requestId === request.requestId &&
         localRequest.state !== 'accepted' &&
         localRequest?.state !== 'declined'
       ) {
@@ -223,7 +223,7 @@ export class RequestListImpl implements RequestList {
     }
     for (let index = 0; index < this._newRequestList.length; index++) {
       const localRequest = this._newRequestList[index];
-      if (localRequest?.id === request.id) {
+      if (localRequest?.requestId === request.requestId) {
         this._newRequestList.splice(index, 1);
         break;
       }

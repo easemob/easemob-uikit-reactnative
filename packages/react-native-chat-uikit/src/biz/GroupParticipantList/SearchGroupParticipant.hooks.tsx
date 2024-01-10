@@ -31,8 +31,8 @@ export function UseSearchGroupParticipant(
             dataRef.current = value.map((item) => {
               return {
                 ...item,
-                id: item.id,
-                name: item.name ?? item.id,
+                memberId: item.memberId,
+                memberName: item.memberName ?? item.memberId,
               } as GroupParticipantSearchModel;
             });
           } else {
