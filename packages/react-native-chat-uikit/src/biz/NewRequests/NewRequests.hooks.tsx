@@ -4,27 +4,17 @@ import { NewRequestModel, useChatContext } from '../../chat';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { useFlatList } from '../List';
-import type { ListItemActions, UseFlatListReturn } from '../types';
 import { NewRequestsItemMemo } from './NewRequests.item';
 import type {
   NewRequestsItemComponentType,
   NewRequestsItemProps,
-  UseNewRequestsProps,
-  UseNewRequestsReturn,
+  NewRequestsProps,
 } from './types';
 
-export function useNewRequests(
-  props: UseNewRequestsProps
-): UseFlatListReturn<NewRequestsItemProps> &
-  Omit<
-    ListItemActions<NewRequestModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > &
-  UseNewRequestsReturn & {
-    tr: (key: string, ...args: any[]) => string;
-  } {
+export function useNewRequests(props: NewRequestsProps) {
   const {
-    onClicked,
+    onClickedItem,
+    onLongPressedItem,
     onButtonClicked,
     testMode,
     onSort: propsOnSort,
@@ -43,13 +33,16 @@ export function useNewRequests(
 
   const onClickedCallback = React.useCallback(
     (data?: NewRequestModel | undefined) => {
-      if (onClicked) {
-        onClicked(data);
-      } else {
-        // todo: goto new friend info page.
-      }
+      onClickedItem?.(data);
     },
-    [onClicked]
+    [onClickedItem]
+  );
+
+  const onLongPressedCallback = React.useCallback(
+    (data?: NewRequestModel | undefined) => {
+      onLongPressedItem?.(data);
+    },
+    [onLongPressedItem]
   );
 
   const onButtonClickedCallback = React.useCallback(
@@ -143,6 +136,7 @@ export function useNewRequests(
   return {
     ...flatListProps,
     onClicked: onClickedCallback,
+    onLongPressed: onLongPressedCallback,
     onButtonClicked: onButtonClickedCallback,
     tr,
     ListItemRender: ListItemRenderRef.current,

@@ -1,4 +1,4 @@
-import type { ListState, UseListBasicReturn } from '../types';
+import type { UseListBasicReturn } from '../types';
 
 export type UseListCommonProps<ItemT> = {
   /**
@@ -14,10 +14,3 @@ export type UseListCommonProps<ItemT> = {
 
 export type UseListBasicProps<ItemT> = UseListBasicReturn<ItemT> &
   UseListCommonProps<ItemT>;
-
-export type UseListBasicInternalReturn = {
-  /**
-   * @description The state of the list.
-   */
-  setListState?: React.Dispatch<React.SetStateAction<ListState>>;
-};

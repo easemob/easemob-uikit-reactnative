@@ -29,6 +29,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     onViewableItemsChanged,
     listState,
     onClicked,
+    onLongPressed,
     participantCount,
     onClickedAddParticipant,
     onClickedDelParticipant,
@@ -103,6 +104,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
                 {...item}
                 onClicked={onClicked}
                 onCheckClicked={onCheckClicked}
+                onLongPressed={onLongPressed}
               />
             );
           }}

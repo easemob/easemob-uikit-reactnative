@@ -10,18 +10,10 @@ import { useDelayExecTask, useLifecycle } from '../../hook';
 import type { FlatListRef } from '../../ui/FlatList';
 import type { SectionListRef } from '../../ui/SectionList';
 import { ListIndex } from '../ListIndex';
-import type {
-  DefaultListIndexPropsT,
-  ListState,
-  UseFlatListReturn,
-  UseListBasicReturn,
-  UseSectionListReturn,
-} from '../types';
-import type { UseListBasicInternalReturn, UseListBasicProps } from './types';
+import type { DefaultListIndexPropsT, ListState } from '../types';
+import type { UseListBasicProps } from './types';
 
-export function useListBasic<ItemT>(
-  props: UseListBasicProps<ItemT>
-): UseListBasicReturn<ItemT> & UseListBasicInternalReturn {
+export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
   const {
     onVisibleItems,
     onRefresh: propsOnRefresh,
@@ -128,17 +120,7 @@ export function useListBasic<ItemT>(
 }
 export function useFlatList<ItemT>(
   props: Omit<UseListBasicProps<ItemT>, 'listType'>
-): UseFlatListReturn<ItemT> &
-  UseListBasicInternalReturn & {
-    /**
-     * @description The data source of the reference.
-     */
-    dataRef: React.MutableRefObject<ItemT[]>;
-    /**
-     * @description The set data source of the list.
-     */
-    setData: React.Dispatch<React.SetStateAction<readonly ItemT[]>>;
-  } {
+) {
   const basics = useListBasic({ ...props, listType: 'FlatList' });
   const dataRef = React.useRef<ItemT[]>([]);
   const [data, setData] = React.useState<ReadonlyArray<ItemT>>(dataRef.current);
@@ -158,25 +140,7 @@ export function useSectionList<
   ItemT,
   SectionT extends DefaultSectionT,
   ListIndexPropsT extends DefaultListIndexPropsT
->(
-  props: Omit<UseListBasicProps<ItemT>, 'listType'>
-): UseSectionListReturn<ItemT, SectionT, ListIndexPropsT> &
-  UseListBasicInternalReturn & {
-    /**
-     * @description The data source of the reference.
-     */
-    sectionsRef: React.MutableRefObject<SectionListData<ItemT, SectionT>[]>;
-    /**
-     * @description The set data source of the list.
-     */
-    setSection: React.Dispatch<
-      React.SetStateAction<ReadonlyArray<SectionListData<ItemT, SectionT>>>
-    >;
-    /**
-     * @description The set index titles of the list.
-     */
-    setIndexTitles: React.Dispatch<React.SetStateAction<string[]>>;
-  } {
+>(props: Omit<UseListBasicProps<ItemT>, 'listType'>) {
   const basics = useListBasic({ ...props, listType: 'FlatList' });
   const sectionsRef = React.useRef<SectionListData<ItemT, SectionT>[]>([]);
   const [sections, setSection] = React.useState<

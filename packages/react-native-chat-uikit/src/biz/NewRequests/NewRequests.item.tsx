@@ -11,7 +11,7 @@ import { Avatar } from '../Avatar';
 import type { NewRequestsItemProps } from './types';
 
 export function NewRequestsItem(props: NewRequestsItemProps) {
-  const { onClicked, onButtonClicked, data } = props;
+  const { onClicked, onLongPressed, onButtonClicked, data } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -43,6 +43,9 @@ export function NewRequestsItem(props: NewRequestsItemProps) {
       }}
       onPress={() => {
         onClicked?.(data);
+      }}
+      onLongPress={() => {
+        onLongPressed?.(data);
       }}
     >
       <View

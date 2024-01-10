@@ -310,6 +310,33 @@ export type ListItemActions<DataT> = {
   onToLeftSlide?: ((data?: DataT) => void) | undefined;
 };
 
+export type ListActions<DataT> = {
+  /**
+   * Callback notification when a list item is clicked. If the return result is true, execution continues, otherwise it terminates.
+   *
+   * If the return result is false, the default behavior is prevented.
+   */
+  onClickedItem?: ((data?: DataT) => boolean | void) | undefined;
+  /**
+   * Callback notification when a list item is long pressed. If the return result is true, execution continues, otherwise it terminates.
+   *
+   * If the return result is false, the default behavior is prevented.
+   */
+  onLongPressedItem?: ((data?: DataT) => boolean | void) | undefined;
+  /**
+   * Callback notification when a list item is swiped to the left. If the return result is true, execution continues, otherwise it terminates.
+   *
+   * If the return result is false, the default behavior is prevented.
+   */
+  onToRightSlideItem?: ((data?: DataT) => boolean | void) | undefined;
+  /**
+   * Callback notification when a list item is swiped to the right. If the return result is true, execution continues, otherwise it terminates.
+   *
+   * If the return result is false, the default behavior is prevented.
+   */
+  onToLeftSlideItem?: ((data?: DataT) => boolean | void) | undefined;
+};
+
 export type DefaultListIndexPropsT = {
   /**
    * Header of alphabetical list. For example: A, B, C, etc.

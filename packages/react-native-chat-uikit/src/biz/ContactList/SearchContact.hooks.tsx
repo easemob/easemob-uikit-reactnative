@@ -3,16 +3,9 @@ import * as React from 'react';
 // import { DeviceEventEmitter } from 'react-native';
 import { useChatContext } from '../../chat';
 import { useFlatList } from '../List';
-import type { UseSearchReturn } from '../ListSearch';
-import type { UseFlatListReturn } from '../types';
 import type { ContactSearchModel, SearchContactProps } from './types';
 
-export function useSearchContact(
-  props: SearchContactProps
-): UseFlatListReturn<ContactSearchModel> &
-  UseSearchReturn<ContactSearchModel> & {
-    onCancel?: () => void;
-  } {
+export function useSearchContact(props: SearchContactProps) {
   const { onClicked, testMode, searchType, onCancel, groupId } = props;
   const flatListProps = useFlatList<ContactSearchModel>({
     isShowAfterLoaded: false,
@@ -46,10 +39,6 @@ export function useSearchContact(
                 }
               }
               setData([...dataRef.current]);
-              // DeviceEventEmitter.emit(
-              //   '_$response_contact_state',
-              //   dataRef.current[i]
-              // );
               break;
             }
           }
@@ -140,31 +129,6 @@ export function useSearchContact(
       });
     }
   };
-
-  // React.useEffect(() => {
-  //   if (searchType === 'create-group') {
-  //     if (initialized === true) {
-  //       DeviceEventEmitter.emit(
-  //         '_$request_contact_state',
-  //         (
-  //           list: {
-  //             convId: string;
-  //             checked: boolean | undefined;
-  //           }[]
-  //         ) => {
-  //           list.forEach((item) => {
-  //             dataRef.current.forEach((v) => {
-  //               if (v.userId === item.convId) {
-  //                 v.checked = item.checked;
-  //               }
-  //             });
-  //           });
-  //           setData([...dataRef.current]);
-  //         }
-  //       );
-  //     }
-  //   }
-  // }, [initialized, dataRef, searchType, setData]);
 
   return {
     ...flatListProps,

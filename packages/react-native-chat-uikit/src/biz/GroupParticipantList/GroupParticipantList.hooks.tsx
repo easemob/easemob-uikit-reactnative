@@ -11,25 +11,17 @@ import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useFlatList } from '../List';
-import type { ListItemActions, UseFlatListReturn } from '../types';
 import { GroupParticipantListItemMemo } from './GroupParticipantList.item';
 import type {
   GroupParticipantListItemComponentType,
   GroupParticipantListItemProps,
-  UseGroupParticipantListProps,
-  UseGroupParticipantListReturn,
+  GroupParticipantListProps,
 } from './types';
 
-export function useGroupParticipantList(
-  props: UseGroupParticipantListProps
-): UseFlatListReturn<GroupParticipantListItemProps> &
-  Omit<
-    ListItemActions<GroupParticipantModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > &
-  UseGroupParticipantListReturn {
+export function useGroupParticipantList(props: GroupParticipantListProps) {
   const {
-    onClicked,
+    onClickedItem,
+    onLongPressedItem,
     testMode,
     groupId,
     participantType,
@@ -57,36 +49,42 @@ export function useGroupParticipantList(
 
   const onClickedCallback = React.useCallback(
     (data?: GroupParticipantModel | undefined) => {
-      if (participantType === 'change-owner') {
-        alertRef.current.alertWithInit({
-          message: tr(
-            '_uikit_group_alert_change_owner_title',
-            data?.memberName ?? data?.memberId
-          ),
-          buttons: [
-            {
-              text: tr('cancel'),
-              onPress: () => {
-                alertRef.current.close?.();
+      const ret = onClickedItem?.(data);
+      if (ret !== false) {
+        if (participantType === 'change-owner') {
+          alertRef.current.alertWithInit({
+            message: tr(
+              '_uikit_group_alert_change_owner_title',
+              data?.memberName ?? data?.memberId
+            ),
+            buttons: [
+              {
+                text: tr('cancel'),
+                onPress: () => {
+                  alertRef.current.close?.();
+                },
               },
-            },
-            {
-              text: tr('confirm'),
-              isPreferred: true,
-              onPress: () => {
-                alertRef.current.close?.();
-                onChangeOwner?.(data);
+              {
+                text: tr('confirm'),
+                isPreferred: true,
+                onPress: () => {
+                  alertRef.current.close?.();
+                  onChangeOwner?.(data);
+                },
               },
-            },
-          ],
-        });
-      } else {
-        if (onClicked) {
-          onClicked(data);
+            ],
+          });
         }
       }
     },
-    [onChangeOwner, onClicked, participantType, tr]
+    [onChangeOwner, onClickedItem, participantType, tr]
+  );
+
+  const onLongPressedCallback = React.useCallback(
+    (data?: GroupParticipantModel | undefined) => {
+      onLongPressedItem?.(data);
+    },
+    [onLongPressedItem]
   );
 
   const calculateDeleteCount = React.useCallback(() => {
@@ -295,6 +293,7 @@ export function useGroupParticipantList(
   return {
     ...flatListProps,
     onClicked: onClickedCallback,
+    onLongPressed: onLongPressedCallback,
     onCheckClicked: onCheckClickedCallback,
     participantCount: participantCount,
     onClickedAddParticipant: onClickedAddParticipantCallback,

@@ -6,4 +6,5 @@ export type ListIndexProps = {
   onIndexSelected?: (index: number) => void;
   indexContainerStyle?: StyleProp<ViewStyle>;
   fontContainerStyle?: StyleProp<ViewStyle>;
+  isVisibleLetter?: boolean;
 };

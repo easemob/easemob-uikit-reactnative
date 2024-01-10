@@ -12,10 +12,7 @@ import type {
   SearchType,
 } from '../types';
 
-export type DefaultComponentModel = {
-  id: string;
-  name?: string;
-};
+export type DefaultComponentModel = DataModel;
 
 export type ListSearchItemComponent<
   ComponentModel extends DefaultComponentModel = DefaultComponentModel

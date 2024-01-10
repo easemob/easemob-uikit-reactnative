@@ -19,7 +19,7 @@ export function SelectSingleParticipant(props: SelectSingleParticipantProps) {
   return (
     <GroupParticipantList
       participantType={'mention'}
-      onClicked={onSelectedSingle}
+      onClickedItem={onSelectedSingle}
       {...props}
     />
   );

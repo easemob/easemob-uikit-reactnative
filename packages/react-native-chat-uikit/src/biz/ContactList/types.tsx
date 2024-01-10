@@ -5,6 +5,7 @@ import type { ContactModel, DataModel } from '../../chat';
 import type { IndexModel } from '../ListIndex';
 import type {
   ContactType,
+  ListActions,
   ListItemActions,
   ListItemProps,
   ListItemRequestProps,
@@ -78,7 +79,10 @@ export type ContactListProps = Pick<
   ContactListNavigationBarProps &
   PropsWithSectionList<ContactListItemProps, IndexModel> &
   PropsWithMenu &
-  Omit<ListItemActions<ContactModel>, 'onToRightSlide' | 'onToLeftSlide'> & {
+  Omit<
+    ListActions<ContactModel>,
+    'onToRightSlideItem' | 'onToLeftSlideItem'
+  > & {
     containerStyle?: StyleProp<ViewStyle>;
     /**
      * Callback for initializing individual list items. The input is the default component and the updated component is returned.

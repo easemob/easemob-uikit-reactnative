@@ -10,7 +10,12 @@ import type { GroupParticipantListProps } from './types';
 
 export type ChangeGroupOwnerProps = Pick<
   GroupParticipantListProps,
-  'groupId' | 'containerStyle' | 'onBack' | 'onClicked' | 'onError' | 'testMode'
+  | 'groupId'
+  | 'containerStyle'
+  | 'onBack'
+  | 'onClickedItem'
+  | 'onError'
+  | 'testMode'
 > & {
   onChangeResult?: ResultCallback<string>;
 };

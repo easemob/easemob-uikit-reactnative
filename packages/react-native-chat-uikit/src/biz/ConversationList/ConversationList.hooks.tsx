@@ -35,13 +35,13 @@ import { ConversationListItemMemo } from './ConversationList.item';
 import type {
   ConversationListItemComponentType,
   ConversationListItemProps,
-  UseConversationListProps,
+  ConversationListProps,
 } from './types';
 
-export function useConversationList(props: UseConversationListProps) {
+export function useConversationList(props: ConversationListProps) {
   const {
-    onClicked,
-    onLongPressed,
+    onClickedItem,
+    onLongPressedItem,
     testMode,
     onRequestMultiData,
     onSort: propsOnSort,
@@ -115,9 +115,8 @@ export function useConversationList(props: UseConversationListProps) {
   const onLongPressedRef = React.useRef(
     (data?: ConversationModel | undefined) => {
       if (data) {
-        if (onLongPressed) {
-          onLongPressed(data);
-        } else {
+        const ret = onLongPressedItem?.(data);
+        if (ret !== false) {
           onShowConversationLongPressActions(data);
         }
       }
@@ -125,9 +124,7 @@ export function useConversationList(props: UseConversationListProps) {
   );
   const onClickedRef = React.useRef((data?: ConversationModel | undefined) => {
     if (data) {
-      if (onClicked) {
-        onClicked(data);
-      }
+      onClickedItem?.(data);
     }
   });
 

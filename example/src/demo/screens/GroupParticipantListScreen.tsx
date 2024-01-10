@@ -56,7 +56,7 @@ export function GroupParticipantListScreen(props: Props) {
         onClickedSearch={() => {
           navigation.push('GroupParticipantList', {});
         }}
-        onClicked={(data) => {
+        onClickedItem={(data) => {
           if (data) {
             navigation.push('GroupParticipantInfo', {
               params: {

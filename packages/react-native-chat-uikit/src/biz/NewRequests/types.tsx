@@ -2,6 +2,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 
 import type { DataModel, NewRequestModel } from '../../chat';
 import type {
+  ListActions,
   ListItemActions,
   ListItemProps,
   ListItemRequestProps,
@@ -14,10 +15,7 @@ import type {
 
 export type NewRequestsItemProps = ListItemProps &
   ListItemRequestProps<DataModel> &
-  Omit<
-    ListItemActions<NewRequestModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > & {
+  Omit<ListItemActions<NewRequestModel>, 'onToRightSlide' | 'onToLeftSlide'> & {
     data: NewRequestModel;
     onButtonClicked?: (data?: NewRequestModel | undefined) => void;
   };
@@ -32,8 +30,8 @@ export type NewRequestsProps = PropsWithTest &
   PropsWithSearch &
   PropsWithNavigationBar &
   Omit<
-    ListItemActions<NewRequestModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+    ListActions<NewRequestModel>,
+    'onToRightSlideItem' | 'onToLeftSlideItem'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
     onButtonClicked?: (data?: NewRequestModel | undefined) => void;
@@ -43,8 +41,3 @@ export type NewRequestsProps = PropsWithTest &
     ) => number;
     ListItemRender?: NewRequestsItemComponentType;
   };
-export type UseNewRequestsProps = NewRequestsProps;
-export type UseNewRequestsReturn = {
-  onButtonClicked?: (data?: NewRequestModel | undefined) => void;
-  ListItemRender: NewRequestsItemComponentType;
-};

@@ -43,8 +43,8 @@ import type {
 
 export function useContactList(props: ContactListProps) {
   const {
-    onClicked,
-    onLongPressed,
+    onClickedItem,
+    onLongPressedItem,
     testMode,
     onRequestMultiData,
     onSort: propsOnSort,
@@ -124,20 +124,16 @@ export function useContactList(props: ContactListProps) {
 
   const onClickedCallback = React.useCallback(
     (data?: ContactModel | undefined) => {
-      if (onClicked) {
-        onClicked(data);
-      }
+      onClickedItem?.(data);
     },
-    [onClicked]
+    [onClickedItem]
   );
 
   const onLongPressCallback = React.useCallback(
     (data?: ContactModel | undefined) => {
-      if (onLongPressed) {
-        onLongPressed(data);
-      }
+      onLongPressedItem?.(data);
     },
-    [onLongPressed]
+    [onLongPressedItem]
   );
 
   const getFirst = React.useCallback((str?: string) => {

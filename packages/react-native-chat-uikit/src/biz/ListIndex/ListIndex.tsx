@@ -15,6 +15,7 @@ export const ListIndex = (props: ListIndexProps) => {
     onIndexSelected,
     indexContainerStyle,
     fontContainerStyle,
+    isVisibleLetter = false,
   } = props;
   const ref = React.useRef<View>(null);
   const offsetRef = React.useRef(0);
@@ -103,7 +104,7 @@ export const ListIndex = (props: ListIndexProps) => {
           </View>
         ))}
       </View>
-      {currentTitle ? (
+      {currentTitle && isVisibleLetter === true ? (
         <View
           style={[
             StyleSheet.absoluteFill,

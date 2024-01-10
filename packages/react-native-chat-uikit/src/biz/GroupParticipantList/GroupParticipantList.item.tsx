@@ -9,7 +9,7 @@ import { Avatar } from '../Avatar';
 import type { GroupParticipantListItemProps } from './types';
 
 export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
-  const { data, onClicked, onCheckClicked } = props;
+  const { data, onClicked, onLongPressed, onCheckClicked } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -96,6 +96,9 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
           } else {
             onClicked?.(data);
           }
+        }}
+        onLongPress={() => {
+          onLongPressed?.(data);
         }}
       >
         {getCheckedButton(data.disable, data.checked)}

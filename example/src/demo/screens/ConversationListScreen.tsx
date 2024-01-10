@@ -76,7 +76,7 @@ export function ConversationListScreen(props: Props) {
         onClickedSearch={() => {
           navigation.push('SearchConversation', {});
         }}
-        onClicked={(data) => {
+        onClickedItem={(data) => {
           if (data === undefined) {
             return;
           }
@@ -104,7 +104,7 @@ export function ConversationListScreen(props: Props) {
         //       name: 'test',
         //       isHigh: false,
         //       icon: 'bell',
-        //       onClicked: () => {
+        //       onClickedItem: () => {
         //         console.log('test');
         //         const list = convRef.current.getList();
         //         const first = list[0];

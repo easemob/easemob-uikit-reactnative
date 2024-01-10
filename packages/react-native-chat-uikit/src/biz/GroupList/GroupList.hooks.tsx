@@ -21,14 +21,14 @@ import { GroupListItemMemo } from './GroupList.item';
 import type {
   GroupListItemComponentType,
   GroupListItemProps,
-  UseGroupListProps,
+  GroupListProps,
 } from './types';
 
-export function useGroupList(props: UseGroupListProps) {
+export function useGroupList(props: GroupListProps) {
   const {
     testMode,
-    onClicked,
-    onLongPressed,
+    onClickedItem,
+    onLongPressedItem,
     onNoMore,
     ListItemRender: propsListItemRender,
     onStateChanged,
@@ -64,20 +64,16 @@ export function useGroupList(props: UseGroupListProps) {
 
   const onClickedCallback = React.useCallback(
     (data?: GroupModel | undefined) => {
-      if (onClicked) {
-        onClicked(data);
-      }
+      onClickedItem?.(data);
     },
-    [onClicked]
+    [onClickedItem]
   );
 
   const onLongPressCallback = React.useCallback(
     (data?: GroupModel | undefined) => {
-      if (onLongPressed) {
-        onLongPressed(data);
-      }
+      onLongPressedItem?.(data);
     },
-    [onLongPressed]
+    [onLongPressedItem]
   );
 
   const removeDuplicateData = React.useCallback(

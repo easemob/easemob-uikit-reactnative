@@ -3,6 +3,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 import type { DataModel, GroupModel } from '../../chat';
 import type {
   FlatListRefType,
+  ListActions,
   ListItemActions,
   ListItemProps,
   ListItemRequestProps,
@@ -46,7 +47,7 @@ export type GroupListProps = PropsWithTest &
   PropsWithNavigationBar &
   PropsWithFlatList<GroupListItemProps> &
   PropsWithMenu &
-  Omit<ListItemActions<GroupModel>, 'onToRightSlide' | 'onToLeftSlide'> & {
+  Omit<ListActions<GroupModel>, 'onToRightSlideItem' | 'onToLeftSlideItem'> & {
     /**
      * Container style for the session list component.
      */
@@ -80,7 +81,4 @@ export type SearchGroupProps = PropsWithTest &
     containerStyle?: StyleProp<ViewStyle>;
   };
 
-export type UseGroupListProps = GroupListProps;
-
 export type GroupSearchModel = GroupModel & DataModel;
-export type UseSearchGroupProps = SearchGroupProps;

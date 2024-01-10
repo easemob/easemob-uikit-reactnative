@@ -10,7 +10,12 @@ import type { GroupParticipantListProps } from './types';
 
 export type DelGroupParticipantProps = Pick<
   GroupParticipantListProps,
-  'groupId' | 'containerStyle' | 'onBack' | 'onClicked' | 'onError' | 'testMode'
+  | 'groupId'
+  | 'containerStyle'
+  | 'onBack'
+  | 'onClickedItem'
+  | 'onError'
+  | 'testMode'
 > & {
   onDelResult?: ResultCallback<void>;
 };

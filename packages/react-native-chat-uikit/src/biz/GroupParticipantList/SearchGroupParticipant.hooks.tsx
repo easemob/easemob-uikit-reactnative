@@ -1,18 +1,11 @@
 import { useChatContext } from '../../chat';
 import { useFlatList } from '../List';
-import type { ListItemActions, UseFlatListReturn } from '../types';
 import type {
   GroupParticipantSearchModel,
-  UseSearchGroupParticipantProps,
+  SearchGroupParticipantProps,
 } from './types';
 
-export function UseSearchGroupParticipant(
-  props: UseSearchGroupParticipantProps
-): UseFlatListReturn<GroupParticipantSearchModel> &
-  Omit<
-    ListItemActions<GroupParticipantSearchModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
-  > {
+export function UseSearchGroupParticipant(props: SearchGroupParticipantProps) {
   const { groupId, onClicked, testMode } = props;
   const flatListProps = useFlatList<GroupParticipantSearchModel>({
     onInit: () => init(),

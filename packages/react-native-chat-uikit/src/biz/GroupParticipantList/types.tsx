@@ -5,11 +5,10 @@ import type {
   GroupParticipantModel,
   ResultCallback,
 } from '../../chat';
-import type { AlertRef } from '../../ui/Alert';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import type { DefaultComponentModel } from '../ListSearch';
 import type {
   GroupParticipantType,
+  ListActions,
   ListItemActions,
   ListItemProps,
   ListItemRequestProps,
@@ -58,8 +57,8 @@ export type GroupParticipantListProps = Pick<
   PropsWithSearch &
   GroupParticipantListNavigationBarProps &
   Omit<
-    ListItemActions<GroupParticipantModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+    ListActions<GroupParticipantModel>,
+    'onToRightSlideItem' | 'onToLeftSlideItem'
   > & {
     groupId: string;
     containerStyle?: StyleProp<ViewStyle>;
@@ -70,7 +69,7 @@ export type GroupParticipantListItemProps = ListItemProps &
   ListItemRequestProps<DataModel> &
   Omit<
     ListItemActions<GroupParticipantModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+    'onToRightSlide' | 'onToLeftSlide'
   > & {
     data: GroupParticipantModel;
     onCheckClicked?: ((data?: GroupParticipantModel) => void) | undefined;
@@ -80,12 +79,11 @@ export type GroupParticipantListItemComponentType =
   | React.ComponentType<GroupParticipantListItemProps>
   | React.ExoticComponent<GroupParticipantListItemProps>;
 
-export type SearchGroupParticipantProps = ListRequestProps<DataModel> &
-  PropsWithTest &
+export type SearchGroupParticipantProps = PropsWithTest &
   PropsWithError &
   Omit<
     ListItemActions<GroupParticipantModel>,
-    'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
+    'onToRightSlide' | 'onToLeftSlide'
   > & {
     groupId: string;
     containerStyle?: StyleProp<ViewStyle>;
@@ -94,25 +92,15 @@ export type SearchGroupParticipantProps = ListRequestProps<DataModel> &
 
 export type SelectSingleParticipantProps = Pick<
   GroupParticipantListProps,
-  'groupId' | 'containerStyle' | 'onBack' | 'onClicked' | 'onError' | 'testMode'
+  | 'groupId'
+  | 'containerStyle'
+  | 'onBack'
+  | 'onClickedItem'
+  | 'onError'
+  | 'testMode'
 > & {
   onSelectResult?: ResultCallback<GroupParticipantModel>;
 };
 
-export type UseGroupParticipantListReturn = {
-  participantCount: number;
-  onCheckClicked?: ((data?: GroupParticipantModel) => void) | undefined;
-  onClickedAddParticipant?: () => void;
-  onClickedDelParticipant?: () => void;
-  onDelParticipant?: () => void;
-  deleteCount: number;
-  alertRef: React.MutableRefObject<AlertRef>;
-  onRequestCloseMenu: () => void;
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  ListItemRender: GroupParticipantListItemComponentType;
-};
-
-export type UseGroupParticipantListProps = GroupParticipantListProps;
-export type UseSearchGroupParticipantProps = SearchGroupParticipantProps;
 export type GroupParticipantSearchModel = GroupParticipantModel &
   DefaultComponentModel;

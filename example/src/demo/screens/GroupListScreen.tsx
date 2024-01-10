@@ -23,7 +23,7 @@ export function GroupListScreen(props: Props) {
         onClickedSearch={() => {
           navigation.push('SearchGroup', {});
         }}
-        onClicked={(data) => {
+        onClickedItem={(data) => {
           if (data) {
             navigation.push('GroupInfo', {
               params: {

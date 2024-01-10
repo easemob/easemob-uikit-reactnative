@@ -3,7 +3,7 @@ import type { ContactListProps } from '../ContactList';
 
 export type CreateGroupProps = Pick<
   ContactListProps,
-  'containerStyle' | 'onClicked' | 'onClickedSearch' | 'onBack'
+  'containerStyle' | 'onClickedItem' | 'onClickedSearch' | 'onBack'
 > & {
   selectedData?: ContactModel[];
   onCreateGroupResult?: ResultCallback<GroupModel>;

@@ -2,12 +2,9 @@ import { ChatConversationType } from 'react-native-chat-sdk';
 
 import { useChatContext } from '../../chat';
 import { useFlatList } from '../List';
-import type {
-  ConversationSearchModel,
-  UseSearchConversationProps,
-} from './types';
+import type { ConversationSearchModel, SearchConversationProps } from './types';
 
-export function useSearchConversation(props: UseSearchConversationProps) {
+export function useSearchConversation(props: SearchConversationProps) {
   const { onClicked, testMode } = props;
   const flatListProps = useFlatList<ConversationSearchModel>({
     isShowAfterLoaded: false,

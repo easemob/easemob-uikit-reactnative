@@ -38,6 +38,7 @@ export function NewRequests(props: NewRequestsProps) {
     onViewableItemsChanged,
     listState,
     onClicked,
+    onLongPressed,
     onButtonClicked,
     tr,
     ListItemRender,
@@ -123,6 +124,7 @@ export function NewRequests(props: NewRequestsProps) {
                 {...item}
                 onClicked={onClicked}
                 onButtonClicked={onButtonClicked}
+                onLongPressed={onLongPressed}
               />
             );
           }}

@@ -31,7 +31,7 @@ export function NewRequestScreen(props: Props) {
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
-        onClicked={(data) => {
+        onClickedItem={(data) => {
           if (data?.requestId) {
             navigation.push('ContactInfo', { params: { userId: data.requestId } });
           }

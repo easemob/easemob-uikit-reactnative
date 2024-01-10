@@ -4,6 +4,7 @@ import type { ConversationModel, DataModel } from '../../chat';
 import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type {
   FlatListRefType,
+  ListActions,
   ListItemActions,
   ListItemProps,
   ListItemRequestProps,
@@ -75,8 +76,8 @@ export type ConversationListProps = Pick<
   PropsWithFlatList<ConversationListItemProps> &
   PropsWithMenu &
   Omit<
-    ListItemActions<ConversationModel>,
-    'onToRightSlide' | 'onToLeftSlide'
+    ListActions<ConversationModel>,
+    'onToRightSlideItem' | 'onToLeftSlideItem'
   > & {
     /**
      * Container style for the session list component.
@@ -139,6 +140,5 @@ export type SearchConversationProps = PropsWithTest &
   > & {
     containerStyle?: StyleProp<ViewStyle>;
   };
-export type UseConversationListProps = ConversationListProps;
-export type UseSearchConversationProps = SearchConversationProps;
+
 export type ConversationSearchModel = ConversationModel & DataModel;

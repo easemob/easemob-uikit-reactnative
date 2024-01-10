@@ -7,7 +7,7 @@ import { ContactList, ContactListProps } from '../ContactList';
 export type AddGroupParticipantProps = Pick<
   ContactListProps,
   | 'containerStyle'
-  | 'onClicked'
+  | 'onClickedItem'
   | 'onClickedSearch'
   | 'groupId'
   | 'selectedData'

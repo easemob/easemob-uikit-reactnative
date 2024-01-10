@@ -39,7 +39,7 @@ export function ShareContactScreen(props: Props) {
             params: { searchType: 'share-contact', convId, convType, convName },
           });
         }}
-        onClicked={(data) => {
+        onClickedItem={(data) => {
           navigation.navigate('ConversationDetail', {
             params: {
               convId,

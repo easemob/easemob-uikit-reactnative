@@ -36,7 +36,7 @@ export function SelectSingleParticipantScreen(props: Props) {
         onBack={() => {
           navigation.goBack();
         }}
-        onClicked={(data) => {
+        onClickedItem={(data) => {
           // navigation.goBack();
           navigation.navigate({
             name: 'ConversationDetail',

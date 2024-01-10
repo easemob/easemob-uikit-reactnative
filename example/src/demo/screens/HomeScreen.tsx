@@ -205,7 +205,7 @@ function HomeTabConversationListScreen(
       onClickedSearch={() => {
         navigation.navigate('SearchConversation', {});
       }}
-      onClicked={(data) => {
+      onClickedItem={(data) => {
         if (data === undefined) {
           return;
         }
@@ -293,7 +293,7 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
       //     params: { searchType: 'new-conversation' },
       //   });
       // }}
-      onClicked={(data) => {
+      onClickedItem={(data) => {
         if (data?.userId) {
           navigation.navigate('ContactInfo', {
             params: { userId: data.userId },
