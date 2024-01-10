@@ -35,10 +35,8 @@ export function MessageContextProvider({
           userAvatar?: string;
         }) => void
       ): Deleter => {
-        console.log('test:zuoyu:addListener');
         _listeners.add(onUpdateUserInfo);
         const deleter = () => {
-          console.log('test:zuoyu:removeListener');
           _listeners.delete(onUpdateUserInfo);
         };
         return deleter;

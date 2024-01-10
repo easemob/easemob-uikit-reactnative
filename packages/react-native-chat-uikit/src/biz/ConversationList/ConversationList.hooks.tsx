@@ -292,6 +292,7 @@ export function useConversationList(props: UseConversationListProps) {
 
   const removeConv = React.useCallback(
     async (conv: ConversationModel) => {
+      // !!! Only when users actively delete the session, if they exit the group, be kicked out of the group, delete contact, add blacklist, etc., will not delete the session list.
       im.removeConversation({ convId: conv.convId });
     },
     [im]
@@ -439,24 +440,16 @@ export function useConversationList(props: UseConversationListProps) {
         onMessage(msgs);
       },
       onMessagesRecalled: async () => {
-        // todo: see `onRecvRecallMessage`
+        // !!!: see `onRecvRecallMessage`
       },
       onConversationsUpdate: () => {
-        // todo: see `UIConversationListListener`
+        // !!!: see `UIConversationListListener`
       },
       onConversationRead: () => {
-        // todo: see `UIConversationListListener`
+        // !!!: see `UIConversationListListener`
       },
       onMessageContentChanged: (msg) => {
         onMessage([msg]);
-      },
-
-      onMemberRemoved: (params: { groupId: string; groupName?: string }) => {
-        // todo: remove conversation item.
-        onRemove(params.groupId);
-      },
-      onDestroyed: (params: { groupId: string; groupName?: string }) => {
-        onRemove(params.groupId);
       },
 
       onConversationEvent: (
@@ -466,7 +459,7 @@ export function useConversationList(props: UseConversationListProps) {
       ) => {
         if (event === ChatMultiDeviceEvent.CONVERSATION_DELETED) {
           if (convId) {
-            onRemove(convId);
+            init({});
           }
         } else if (event === ChatMultiDeviceEvent.CONVERSATION_PINNED) {
           if (convId && convType !== undefined) {
@@ -479,7 +472,7 @@ export function useConversationList(props: UseConversationListProps) {
         }
       },
     } as ChatServiceListener;
-  }, [onMessage, onRemove, onPin, onUnPin]);
+  }, [onMessage, init, onPin, onUnPin]);
 
   useChatListener(listener);
 

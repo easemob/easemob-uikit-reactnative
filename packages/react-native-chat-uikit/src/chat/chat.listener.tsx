@@ -66,15 +66,9 @@ export class ChatServiceListenerImpl {
 
   addUIListener<DataModel>(listener: UIListener<DataModel>): void {
     this._uiListeners.get(listener.type)?.add(listener);
-    console.log(
-      'test:zuoyu:addUIListener:',
-      listener.type,
-      this._uiListeners.size
-    );
   }
   removeUIListener<DataModel>(listener: UIListener<DataModel>): void {
     this._uiListeners.get(listener.type)?.delete(listener);
-    console.log('test:zuoyu:removeUIListener:', this._uiListeners.size);
   }
   clearUIListener(): void {
     this._uiListeners.forEach((v) => {

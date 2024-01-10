@@ -117,7 +117,6 @@ export function ConversationDetailScreen(props: Props) {
             //   });
             // },
             onClickedCardMenu: () => {
-              // todo: select contact. need contact list screen
               navigation.push('ShareContact', {
                 params: {
                   convId,
@@ -194,7 +193,6 @@ export function ConversationDetailScreen(props: Props) {
           },
         }}
         onBack={() => {
-          // todo: maybe need update
           navigation.goBack();
         }}
         onClickedAvatar={(params: {

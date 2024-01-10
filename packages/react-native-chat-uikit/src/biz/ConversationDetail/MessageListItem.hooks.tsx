@@ -257,10 +257,10 @@ export function getImageSizeFromUrl(url: string) {
   Image.getSize(
     url,
     (width: number, height: number) => {
-      console.log('test:zuoyu:getImageSizeFromUrl', width, height);
+      console.log('dev:getImageSizeFromUrl', width, height);
     },
     (error: any) => {
-      console.log('test:zuoyu:getImageSizeFromUrl', error);
+      console.log('dev:getImageSizeFromUrl', error);
     }
   );
 }

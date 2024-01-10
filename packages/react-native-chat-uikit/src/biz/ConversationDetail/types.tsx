@@ -33,6 +33,8 @@ import type {
   MessageContentRender,
   MessageQuoteBubbleRender,
   MessageViewRender,
+  SystemTipViewRender,
+  TimeTipViewRender,
 } from './MessageListItem.type';
 
 export type MessageInputRef = {
@@ -235,6 +237,8 @@ export type MessageListItemRenders = {
   MessageQuoteBubble?: MessageQuoteBubbleRender;
   MessageBubble?: MessageBubbleRender;
   MessageContent?: MessageContentRender;
+  SystemTipView?: SystemTipViewRender;
+  TimeTipView?: TimeTipViewRender;
 };
 export type MessageListItemProps = MessageListItemRenders &
   MessageListItemActionsProps & {
@@ -297,12 +301,8 @@ export type MessageListProps = PropsWithError &
     containerStyle?: StyleProp<ViewStyle>;
     reportMessageCustomList?: { key: string; value: string }[];
 
-    listItemRenderProps?: {
+    listItemRenderProps?: MessageListItemRenders & {
       ListItemRender?: MessageListItemComponentType;
-      MessageView?: MessageViewRender;
-      MessageQuoteBubble?: MessageQuoteBubbleRender;
-      MessageBubble?: MessageBubbleRender;
-      MessageContent?: MessageContentRender;
     };
     /**
      * Whether to automatically scroll to the latest message when receiving a message.

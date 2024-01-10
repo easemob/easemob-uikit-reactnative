@@ -119,7 +119,6 @@ export function ConversationListScreen(props: Props) {
         //   ];
         // }}
         // onClickedNewContact={() => {
-        //   // todo:
         // }}
       />
     </SafeAreaView>

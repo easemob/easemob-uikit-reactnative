@@ -24,6 +24,7 @@ import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { g_not_existed_url } from '../../const';
+// import { useDispatchContext } from '../../dispatch';
 import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
@@ -42,15 +43,10 @@ import type {
 import { MessageListItemMemo } from './MessageListItem';
 import { getQuoteAttribute } from './MessageListItem.hooks';
 import type {
-  MessageBubbleRender,
-  MessageContentRender,
-  MessageQuoteBubbleRender,
-  MessageViewRender,
-} from './MessageListItem.type';
-import type {
   MessageAddPosition,
   MessageListItemComponentType,
   MessageListItemProps,
+  MessageListItemRenders,
   MessageListProps,
   MessageListRef,
   MessageModel,
@@ -137,12 +133,9 @@ export function useMessageList(
   const MessageListItemRef = React.useRef<MessageListItemComponentType>(
     propsListItemRenderProps?.ListItemRender ?? MessageListItemMemo
   );
-  const listItemRenderPropsRef = React.useRef<{
-    MessageView?: MessageViewRender | undefined;
-    MessageQuoteBubble?: MessageQuoteBubbleRender | undefined;
-    MessageBubble?: MessageBubbleRender | undefined;
-    MessageContent?: MessageContentRender | undefined;
-  }>({ ...propsListItemRenderProps });
+  const listItemRenderPropsRef = React.useRef<MessageListItemRenders>({
+    ...propsListItemRenderProps,
+  });
   const { dispatchUserInfo } = useMessageContext();
   const { recallTimeout } = useConfigContext();
 
@@ -152,6 +145,7 @@ export function useMessageList(
   const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
     userScrollGestureRef.current = isUserScroll;
   }, []);
+  // const { addListener, removeListener, emit } = useDispatchContext();
 
   const needScrollToBottom = React.useCallback(() => {
     if (needScrollRef.current === true) {
@@ -182,20 +176,20 @@ export function useMessageList(
     [listRef, needScrollToBottom]
   );
 
-  const onReallySetData = React.useCallback(
+  const _refreshToUI = React.useCallback(
     (items: MessageListItemProps[]) => {
       setData([...items]);
     },
     [setData]
   );
 
-  const onSetData = React.useCallback(
+  const refreshToUI = React.useCallback(
     (items: MessageListItemProps[]) => {
       if (needScrollToBottom() === true) {
         if (items.length > 0) {
           preBottomDataRef.current = items[0];
         }
-        onReallySetData(items);
+        _refreshToUI(items);
       } else {
         const index = items.findIndex((d) => {
           if (d.id === preBottomDataRef.current?.id) {
@@ -204,15 +198,15 @@ export function useMessageList(
           return false;
         });
         if (index !== -1) {
-          // todo: 获取数组指定位置后的元素，并返回
+          // !!!: Get the element after the specified position in the array and return
           const tmp = items.slice(index);
-          onReallySetData(tmp);
+          _refreshToUI(tmp);
         } else {
-          onReallySetData(items);
+          _refreshToUI(items);
         }
       }
     },
-    [needScrollToBottom, onReallySetData]
+    [needScrollToBottom, _refreshToUI]
   );
 
   // !!! Both gestures and scrolling methods are triggered on the ios platform. However, the android platform only has gesture triggering.
@@ -226,7 +220,7 @@ export function useMessageList(
         if (y < 10) {
           setNeedScroll(true);
           const preId = preBottomDataRef.current?.id;
-          onSetData(dataRef.current);
+          refreshToUI(dataRef.current);
           const index = dataRef.current.findIndex((d) => {
             if (d.id === preId) {
               return true;
@@ -240,7 +234,7 @@ export function useMessageList(
           setNeedScroll(false);
         }
       },
-      [dataRef, onSetData, scrollTo, setNeedScroll]
+      [dataRef, refreshToUI, scrollTo, setNeedScroll]
     )
   );
 
@@ -312,9 +306,9 @@ export function useMessageList(
           }
         }
       });
-      onSetData(dataRef.current);
+      refreshToUI(dataRef.current);
     },
-    [dataRef, onSetData]
+    [dataRef, refreshToUI]
   );
 
   const startVoicePlay = React.useCallback(
@@ -381,7 +375,70 @@ export function useMessageList(
     [im, updateMessageVoiceUIState]
   );
 
-  const onClickedItem = React.useCallback(
+  const recallMessage = React.useCallback(
+    (msg: ChatMessage) => {
+      im.messageManager.recallMessage(msg);
+    },
+    [im]
+  );
+
+  const showReportMessageMenu = React.useCallback((model: MessageModel) => {
+    currentReportMessageRef.current = model;
+    reportRef.current?.startShow?.();
+  }, []);
+
+  const onDelMessageToUI = React.useCallback(
+    (msg: ChatMessage) => {
+      const index = dataRef.current.findIndex((d) => {
+        if (d.model.modelType === 'message') {
+          const msgModel = d.model as MessageModel;
+          if (msg.status === ChatMessageStatus.SUCCESS) {
+            if (msgModel.msg.msgId === msg.msgId) {
+              return true;
+            }
+          } else {
+            if (msgModel.msg.localMsgId === msg.localMsgId) {
+              return true;
+            }
+          }
+        }
+        return false;
+      });
+      if (index !== -1) {
+        dataRef.current.splice(index, 1);
+        if (index === 0) {
+          preBottomDataRef.current = dataRef.current[0];
+        }
+        refreshToUI(dataRef.current);
+      }
+    },
+    [dataRef, refreshToUI]
+  );
+
+  const deleteMessage = React.useCallback(
+    (msg: ChatMessage) => {
+      im.removeMessage({
+        message: msg,
+        onResult: () => {
+          onDelMessageToUI(msg);
+        },
+      });
+    },
+    [im, onDelMessageToUI]
+  );
+
+  const { onShowMessageLongPressActions } = useMessageLongPressActions({
+    menuRef,
+    alertRef,
+    onQuoteMessageForInput: propsOnQuoteMessageForInput,
+    onEditMessageForInput: propsOnEditMessageForInput,
+    showReportMessage: showReportMessageMenu,
+    deleteMessage: deleteMessage,
+    recallMessage: recallMessage,
+    onInit: onInitMenu,
+  });
+
+  const onClickedListItem = React.useCallback(
     (
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
@@ -402,7 +459,7 @@ export function useMessageList(
     [propsOnClicked, startVoicePlay]
   );
 
-  const onLongPressItem = React.useCallback(
+  const onLongPressListItem = React.useCallback(
     (
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
@@ -410,11 +467,10 @@ export function useMessageList(
       propsOnLongPress?.(id, model);
       onShowMessageLongPressActions(id, model);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [propsOnLongPress]
+    [onShowMessageLongPressActions, propsOnLongPress]
   );
 
-  const onClickedItemAvatar = React.useCallback(
+  const onClickedListItemAvatar = React.useCallback(
     (
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
@@ -424,7 +480,7 @@ export function useMessageList(
     [propsOnClickedItemAvatar]
   );
 
-  const onClickedItemQuote = React.useCallback(
+  const onClickedListItemQuote = React.useCallback(
     (
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
@@ -434,20 +490,20 @@ export function useMessageList(
     [propsOnClickedItemQuote]
   );
 
-  const getStyle = () => {
+  const getStyle = React.useCallback(() => {
     return undefined;
-  };
+  }, []);
 
-  const onAddData = React.useCallback(
+  const onAddDataToUI = React.useCallback(
     (d: MessageListItemProps, pos: MessageAddPosition) => {
       if (pos === 'bottom') {
         dataRef.current = [d, ...dataRef.current];
       } else {
         dataRef.current = [...dataRef.current, d];
       }
-      onSetData(dataRef.current);
+      refreshToUI(dataRef.current);
     },
-    [dataRef, onSetData]
+    [dataRef, refreshToUI]
   );
 
   const onAddMessageListToUI = React.useCallback(
@@ -502,58 +558,13 @@ export function useMessageList(
       } else {
         dataRef.current = [...dataRef.current, ...l];
       }
-      onSetData(dataRef.current);
+      refreshToUI(dataRef.current);
       onFinished?.(l as MessageListItemProps[]);
     },
-    [dataRef, im, onSetData]
+    [dataRef, getStyle, im, refreshToUI]
   );
 
-  const onDelMessageToUI = React.useCallback(
-    (msg: ChatMessage) => {
-      const index = dataRef.current.findIndex((d) => {
-        if (d.model.modelType === 'message') {
-          const msgModel = d.model as MessageModel;
-          if (msg.status === ChatMessageStatus.SUCCESS) {
-            if (msgModel.msg.msgId === msg.msgId) {
-              return true;
-            }
-          } else {
-            if (msgModel.msg.localMsgId === msg.localMsgId) {
-              return true;
-            }
-          }
-        }
-        return false;
-      });
-      if (index !== -1) {
-        dataRef.current.splice(index, 1);
-        if (index === 0) {
-          preBottomDataRef.current = dataRef.current[0];
-        }
-        onSetData(dataRef.current);
-      }
-    },
-    [dataRef, onSetData]
-  );
-
-  const deleteMessageCallback = React.useCallback(
-    (msg: ChatMessage) => {
-      im.removeMessage({
-        message: msg,
-        onResult: () => {
-          onDelMessageToUI(msg);
-        },
-      });
-    },
-    [im, onDelMessageToUI]
-  );
-
-  const showReportMessageCallback = React.useCallback((model: MessageModel) => {
-    currentReportMessageRef.current = model;
-    reportRef.current?.startShow?.();
-  }, []);
-
-  const reportMessageCallback = React.useCallback(
+  const reportMessage = React.useCallback(
     (result?: ReportItemModel) => {
       if (result) {
         const msg = currentReportMessageRef.current?.msg;
@@ -595,13 +606,13 @@ export function useMessageList(
         return false;
       });
       if (isExisted) {
-        onSetData(dataRef.current);
+        refreshToUI(dataRef.current);
       }
     },
-    [dataRef, onSetData]
+    [dataRef, refreshToUI]
   );
 
-  const resendMessageCallback = React.useCallback(
+  const resendMessage = React.useCallback(
     (msg: ChatMessage) => {
       if (msg.direction !== ChatMessageDirection.SEND) {
         return;
@@ -614,7 +625,7 @@ export function useMessageList(
     [im.messageManager, onUpdateMessageToUI]
   );
 
-  const onClickedItemState = React.useCallback(
+  const onClickedListItemState = React.useCallback(
     (
       _id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
@@ -624,13 +635,13 @@ export function useMessageList(
       }
       const msgModel = model as MessageModel;
       if (msgModel.msg.status === ChatMessageStatus.FAIL) {
-        resendMessageCallback(msgModel.msg);
+        resendMessage(msgModel.msg);
       }
     },
-    [resendMessageCallback]
+    [resendMessage]
   );
 
-  const editMessageCallback = React.useCallback(
+  const editMessage = React.useCallback(
     (msg: ChatMessage) => {
       im.editMessage({
         message: msg,
@@ -648,7 +659,7 @@ export function useMessageList(
 
   const onAddMessageToUI = React.useCallback(
     (msg: ChatMessage, quoteMsg?: ChatMessage) => {
-      onAddData(
+      onAddDataToUI(
         {
           id: msg.msgId.toString(),
           model: {
@@ -676,14 +687,15 @@ export function useMessageList(
     [
       dispatchUserInfo,
       enableListItemUserInfoUpdateFromMessage,
+      getStyle,
       im.userId,
-      onAddData,
+      onAddDataToUI,
     ]
   );
 
   const onRecallMessageToUI = React.useCallback(
     (tipMsg: ChatMessage) => {
-      onAddData(
+      onAddDataToUI(
         {
           id: tipMsg.msgId.toString(),
           model: {
@@ -696,7 +708,7 @@ export function useMessageList(
         'bottom'
       );
     },
-    [onAddData]
+    [getStyle, onAddDataToUI]
   );
 
   const onRecvRecallMessage = React.useCallback(
@@ -707,25 +719,7 @@ export function useMessageList(
     [onDelMessageToUI, onRecallMessageToUI]
   );
 
-  const recallMessageCallback = React.useCallback(
-    (msg: ChatMessage) => {
-      im.messageManager.recallMessage(msg);
-    },
-    [im]
-  );
-
-  const { onShowMessageLongPressActions } = useMessageLongPressActions({
-    menuRef,
-    alertRef,
-    onQuoteMessageForInput: propsOnQuoteMessageForInput,
-    onEditMessageForInput: propsOnEditMessageForInput,
-    showReportMessage: showReportMessageCallback,
-    deleteMessage: deleteMessageCallback,
-    recallMessage: recallMessageCallback,
-    onInit: onInitMenu,
-  });
-
-  const sendRecvMessageReadAckCallback = React.useCallback(
+  const sendRecvMessageReadAck = React.useCallback(
     (msg: ChatMessage) => {
       if (
         msg.chatType === ChatMessageChatType.PeerChat &&
@@ -741,7 +735,7 @@ export function useMessageList(
   );
 
   // todo: how to do?
-  // const setRecvMessageReadCallback = React.useCallback(
+  // const setRecvMessageRead = React.useCallback(
   //   (msg: ChatMessage) => {
   //     if (
   //       msg.chatType === ChatMessageChatType.PeerChat &&
@@ -804,7 +798,7 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddData(ret, 'bottom');
+        onAddDataToUI(ret, 'bottom');
       } else if (value.type === 'image') {
         const v = value as SendImageProps;
         const msg = ChatMessage.createImageMessage(
@@ -828,7 +822,7 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddData(ret, 'bottom');
+        onAddDataToUI(ret, 'bottom');
       } else if (value.type === 'voice') {
         const v = value as SendVoiceProps;
         const msg = ChatMessage.createVoiceMessage(
@@ -851,7 +845,7 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddData(ret, 'bottom');
+        onAddDataToUI(ret, 'bottom');
       } else if (value.type === 'video') {
         const v = value as SendVideoProps;
         const msg = ChatMessage.createVideoMessage(
@@ -877,7 +871,7 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddData(ret, 'bottom');
+        onAddDataToUI(ret, 'bottom');
       } else if (value.type === 'file') {
         const v = value as SendFileProps;
         const msg = ChatMessage.createFileMessage(
@@ -899,7 +893,7 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddData(ret, 'bottom');
+        onAddDataToUI(ret, 'bottom');
       } else if (value.type === 'card') {
         const card = value as SendCardProps;
         const msg = ChatMessage.createCustomMessage(
@@ -924,7 +918,7 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddData(ret, 'bottom');
+        onAddDataToUI(ret, 'bottom');
       } else if (value.type === 'custom') {
         const custom = value as SendCustomProps;
         const msg = custom.msg;
@@ -938,7 +932,7 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddData(ret, 'bottom');
+        onAddDataToUI(ret, 'bottom');
       } else if (value.type === 'system') {
         const v = value as SendSystemProps;
         const msg = v.msg;
@@ -951,7 +945,7 @@ export function useMessageList(
           } as SystemMessageModel,
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddData(ret, 'bottom');
+        onAddDataToUI(ret, 'bottom');
       } else if (value.type === 'time') {
         const v = value as SendTimeProps;
         ret = {
@@ -962,14 +956,14 @@ export function useMessageList(
           } as TimeMessageModel,
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddData(ret, 'bottom');
+        onAddDataToUI(ret, 'bottom');
       }
       if (ret) {
         onFinished?.(ret);
         scrollToBottom();
       }
     },
-    [convId, convType, onAddData, scrollToBottom]
+    [convId, convType, getStyle, onAddDataToUI, scrollToBottom]
   );
 
   const sendMessageToServer = React.useCallback(
@@ -1017,7 +1011,7 @@ export function useMessageList(
             list.map((v) => {
               if (v.model.modelType === 'message') {
                 const msgModel = v.model as MessageModel;
-                sendRecvMessageReadAckCallback(msgModel.msg);
+                sendRecvMessageReadAck(msgModel.msg);
               }
             });
           });
@@ -1029,8 +1023,18 @@ export function useMessageList(
     convType,
     im.messageManager,
     onAddMessageListToUI,
-    sendRecvMessageReadAckCallback,
+    sendRecvMessageReadAck,
   ]);
+
+  // React.useEffect(() => {
+  //   const listener = (msg: ChatMessage) => {
+  //     setRecvMessageRead(msg);
+  //   };
+  //   addListener('setRecvMessageRead', listener);
+  //   return () => {
+  //     removeListener('setRecvMessageRead', listener);
+  //   };
+  // }, [addListener, removeListener, setRecvMessageRead]);
 
   React.useImperativeHandle(
     ref,
@@ -1057,10 +1061,10 @@ export function useMessageList(
           });
         },
         removeMessage: (msg: ChatMessage) => {
-          deleteMessageCallback(msg);
+          deleteMessage(msg);
         },
         recallMessage: (msg: ChatMessage) => {
-          recallMessageCallback(msg);
+          recallMessage(msg);
         },
         updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => {
           onUpdateMessageToUI(updatedMsg, fromType);
@@ -1078,7 +1082,7 @@ export function useMessageList(
             list.map((v) => {
               if (v.model.modelType === 'message') {
                 const msgModel = v.model as MessageModel;
-                sendRecvMessageReadAckCallback(msgModel.msg);
+                sendRecvMessageReadAck(msgModel.msg);
               }
             });
           });
@@ -1089,7 +1093,7 @@ export function useMessageList(
           // }
         },
         editMessageFinished: (model) => {
-          editMessageCallback(model.msg);
+          editMessage(model.msg);
         },
         scrollToBottom: () => {
           scrollToBottom();
@@ -1098,14 +1102,14 @@ export function useMessageList(
     },
     [
       addSendMessageToUI,
-      deleteMessageCallback,
-      editMessageCallback,
+      deleteMessage,
+      editMessage,
       onAddMessageListToUI,
       onUpdateMessageToUI,
-      recallMessageCallback,
+      recallMessage,
       scrollToBottom,
       sendMessageToServer,
-      sendRecvMessageReadAckCallback,
+      sendRecvMessageReadAck,
       setNeedScroll,
     ]
   );
@@ -1130,7 +1134,7 @@ export function useMessageList(
             onAddMessageToUI(msg);
           }
 
-          sendRecvMessageReadAckCallback(msg);
+          sendRecvMessageReadAck(msg);
         }
       },
       onRecvMessageStatusChanged: (msg: ChatMessage) => {
@@ -1175,7 +1179,7 @@ export function useMessageList(
     onRecvRecallMessage,
     onUpdateMessageToUI,
     recvMessageAutoScroll,
-    sendRecvMessageReadAckCallback,
+    sendRecvMessageReadAck,
     setNeedScroll,
   ]);
 
@@ -1191,20 +1195,20 @@ export function useMessageList(
     onRequestCloseMenu: closeMenu,
     menuRef,
     alertRef,
-    onClickedItem,
-    onLongPressItem,
+    onClickedItem: onClickedListItem,
+    onLongPressItem: onLongPressListItem,
     inverted,
     maxListHeight,
     setMaxListHeight,
     reachedThreshold,
     onMore: onRequestHistoryMessage,
-    reportMessage: reportMessageCallback,
-    showReportMessage: showReportMessageCallback,
+    reportMessage: reportMessage,
+    showReportMessage: showReportMessageMenu,
     reportData: reportDataRef.current,
     reportRef,
-    onClickedItemAvatar,
-    onClickedItemQuote,
-    onClickedItemState,
+    onClickedItemAvatar: onClickedListItemAvatar,
+    onClickedItemQuote: onClickedListItemQuote,
+    onClickedItemState: onClickedListItemState,
     ListItemRender: MessageListItemRef.current,
     listItemRenderProps: listItemRenderPropsRef.current,
     scrollEventThrottle,

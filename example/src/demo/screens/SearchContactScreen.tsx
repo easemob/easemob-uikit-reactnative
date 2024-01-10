@@ -69,7 +69,6 @@ export function SearchContactScreen(props: Props) {
         }}
         onClicked={(data) => {
           if (searchType === 'share-contact') {
-            // todo: go back 2 times
             // navigation.pop(2);
             navigation.navigate('ConversationDetail', {
               params: {

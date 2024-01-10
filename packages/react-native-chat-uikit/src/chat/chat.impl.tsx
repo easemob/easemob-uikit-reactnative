@@ -576,6 +576,25 @@ export class ChatServiceImpl
     this._groupParticipantDataRequestCallback = callback;
   }
 
+  updateGroupParticipantOnRequestData(params: {
+    groupId: string;
+    data: Map<DataModelType, DataModel[]>;
+  }): void {
+    const { groupId, data } = params;
+    const list = this._groupMemberList.get(groupId);
+    if (list) {
+      data.forEach((values: DataModel[]) => {
+        values.map((value) => {
+          const conv = list.get(value.id);
+          if (conv) {
+            conv.memberName = value.name;
+            conv.memberAvatar = value.avatar;
+          }
+        });
+      });
+    }
+  }
+
   setOnRequestMultiData<DataT>(
     callback?: (params: {
       ids: Map<DataModelType, string[]>;
@@ -948,11 +967,9 @@ export class ChatServiceImpl
         const c2 = this._convList.get(params.convId);
         if (c2) {
           const conv = mergeObjects(c1, c2);
-          console.log('test:zuoyu:getConversation', conv);
           this._convList.set(conv.convId, conv);
           return conv;
         }
-        console.log('test:zuoyu:getConversation', c1);
         this._convList.set(c1.convId, c1);
         return c1;
       }
@@ -1286,9 +1303,9 @@ export class ChatServiceImpl
       event: 'addContact',
       onFinished: async () => {
         await this._requestContactData([{ userId: params.useId }]);
-        const contact = this.toUIContact({ userId: params.useId, remark: '' });
-        this._contactList.set(params.useId, contact);
-        this.sendUIEvent(UIListenerType.Contact, 'onAddedEvent', contact);
+        // const contact = this.toUIContact({ userId: params.useId, remark: '' });
+        // this._contactList.set(params.useId, contact);
+        // this.sendUIEvent(UIListenerType.Contact, 'onAddedEvent', contact);
         params.onResult?.({
           isOk: true,
         });
@@ -1518,7 +1535,6 @@ export class ChatServiceImpl
         }
 
         this._groupMemberList.set(params.groupId, memberList);
-        console.log('test:zuoyu:group:list', memberList);
 
         if (this._groupParticipantDataRequestCallback) {
           this._groupParticipantDataRequestCallback({
@@ -1543,7 +1559,6 @@ export class ChatServiceImpl
             },
           });
         }
-        console.log('test:zuoyu:group:list:2', memberList);
 
         params.onResult({
           isOk: true,

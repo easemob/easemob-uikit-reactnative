@@ -194,6 +194,11 @@ export interface ConversationServices {
     createIfNotExist?: boolean;
     fromNative?: boolean;
   }): Promise<ConversationModel | undefined>;
+  /**
+   * Remove local conversation.
+   *
+   * Only when users actively delete the session, if they exit the group, be kicked out of the group, delete contact, add blacklist, etc., will not delete the session list.
+   */
   removeConversation(params: { convId: string }): Promise<void>;
   clearAllConversations(): Promise<void>;
   /**
@@ -396,6 +401,10 @@ export interface GroupServices {
       result: (data?: DataT[], error?: UIKitError) => void;
     }) => void | Promise<void>
   ): void;
+  updateGroupParticipantOnRequestData(params: {
+    groupId: string;
+    data: Map<DataModelType, DataModel[]>;
+  }): void;
   getPageGroups(params: {
     pageSize: number;
     pageNum: number;

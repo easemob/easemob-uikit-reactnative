@@ -571,28 +571,29 @@ export function useContactList(props: ContactListProps) {
     [onClickedGroupList, onClickedNewRequest, propsOnInitListItemActions, tr]
   );
 
-  const onAddedContact = React.useCallback(
-    (userId: string) => {
-      if (contactType !== 'contact-list') {
-        return;
-      }
-      im.getContact({
-        userId,
-        onResult: (result) => {
-          if (result.isOk === true && result.value) {
-            addContactToUI(result.value);
-          }
-        },
-      });
-    },
-    [addContactToUI, contactType, im]
-  );
+  // const onAddedContact = React.useCallback(
+  //   (userId: string) => {
+  //     if (contactType !== 'contact-list') {
+  //       return;
+  //     }
+  //     im.getContact({
+  //       userId,
+  //       onResult: (result) => {
+  //         if (result.isOk === true && result.value) {
+  //           addContactToUI(result.value);
+  //         }
+  //       },
+  //     });
+  //   },
+  //   [addContactToUI, contactType, im]
+  // );
 
   useChatListener(
     React.useMemo(() => {
       return {
-        onContactAdded: async (userId: string) => {
-          onAddedContact(userId);
+        onContactAdded: async (_userId: string) => {
+          // onAddedContact(userId);
+          init({});
         },
         onContactDeleted: async (userId: string) => {
           removeContactToUI(userId);
@@ -609,7 +610,7 @@ export function useContactList(props: ContactListProps) {
           }
         },
       } as ChatServiceListener;
-    }, [onAddedContact, removeContactToUI])
+    }, [init, removeContactToUI])
   );
 
   const onCreateGroupCallback = React.useCallback(() => {

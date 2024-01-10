@@ -164,13 +164,18 @@ export class RequestListImpl implements RequestList {
       onResult: (result) => {
         if (result.isOk) {
           if (result.value) {
-            this._newRequestList = result.value
+            const list = result.value
               .map((v) => {
                 return getNewRequest(v);
               })
               .filter((v) => {
                 return v !== undefined;
               }) as NewRequestModel[];
+            const uniqueList = list.filter(
+              (item, index, self) =>
+                index === self.findIndex((t) => t.requestId === item.requestId)
+            );
+            this._newRequestList = uniqueList;
             params.onResult({ isOk: true, value: this._newRequestList });
           } else {
             params.onResult({

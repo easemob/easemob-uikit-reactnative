@@ -676,7 +676,6 @@ export function MessageBubble(props: MessageBubbleProps) {
     MessageContent: propsMessageContent,
   } = props;
   const _MessageContent = propsMessageContent ?? MessageContent;
-  console.log('test:zuoyu:MessageBubble', propsMessageContent);
   const { layoutType, msg, isVoicePlaying } = model;
   const { paddingHorizontal, paddingVertical } = React.useMemo(
     () => getMessageBubblePadding(msg),
@@ -1403,7 +1402,6 @@ export function MessageView(props: MessageViewProps) {
               userName?: string | undefined;
               userAvatar?: string | undefined;
             }) => {
-              console.log('test:zuoyu:name:', params);
               setUserName(params.userName ?? params.userId);
               setUserAvatar(
                 avatarIsVisible === true ? model.userAvatar : undefined
@@ -1554,12 +1552,16 @@ export function MessageListItem(props: MessageListItemProps) {
     model,
     enableListItemUserInfoUpdateFromMessage,
     MessageView: propsMessageView,
+    SystemTipView: propsSystemTipView,
+    TimeTipView: propsTimeTipView,
     ...others
   } = props;
   gEnableListItemUserInfoUpdateFromMessage =
     enableListItemUserInfoUpdateFromMessage;
   const { modelType } = model;
   const _MessageView = propsMessageView ?? MessageView;
+  const _SystemTipView = propsSystemTipView ?? SystemTipView;
+  const _TimeTipView = propsTimeTipView ?? TimeTipView;
   return (
     <View
       style={{
@@ -1580,13 +1582,13 @@ export function MessageListItem(props: MessageListItemProps) {
         />
       ) : null}
       {modelType === 'system' ? (
-        <SystemTipView
+        <_SystemTipView
           isVisible={modelType === 'system' ? true : false}
           model={model as SystemMessageModel}
         />
       ) : null}
       {modelType === 'time' ? (
-        <TimeTipView
+        <_TimeTipView
           isVisible={modelType === 'time' ? true : false}
           model={model as TimeMessageModel}
         />

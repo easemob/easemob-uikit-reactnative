@@ -45,7 +45,6 @@ export function EditInfoScreen(props: Props) {
           navigation.goBack();
         }}
         onSave={(data) => {
-          // todo: go back with params.
           // navigation.setParams({});
           goBack?.(data);
           navigation.goBack();
