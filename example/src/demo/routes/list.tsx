@@ -95,6 +95,10 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  FileMessagePreview: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
   ImageMessagePreview: {
     option?: {} | undefined;
     params?: {} | undefined;
@@ -215,6 +219,10 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   SelectSingleParticipant: {
+    option: undefined,
+    params: undefined,
+  },
+  FileMessagePreview: {
     option: undefined,
     params: undefined,
   },

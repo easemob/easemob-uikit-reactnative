@@ -34,14 +34,24 @@ import {
   uuid,
 } from '../../utils';
 import { useImageSize } from '../hooks/useImageSize';
+import type { PropsWithBack } from '../types';
 
-export type VideoMessagePreviewProps = {
+export type VideoMessagePreviewProps = PropsWithBack & {
+  /**
+   * Message id.
+   */
   msgId: string;
+  /**
+   * local message id.
+   */
+  localMsgId: string;
+  /**
+   * Container style for the file preview component.
+   */
   containerStyle?: StyleProp<ViewStyle>;
-  onClicked?: () => void;
 };
 export function VideoMessagePreview(props: VideoMessagePreviewProps) {
-  const { containerStyle, onClicked } = props;
+  const { containerStyle, onBack } = props;
   const {
     url,
     size,
@@ -137,7 +147,7 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
           justifyContent: 'center',
           alignItems: 'center',
         }}
-        onPress={onClicked}
+        onPress={onBack}
         // pointerEvents={'none'}
       >
         <Icon

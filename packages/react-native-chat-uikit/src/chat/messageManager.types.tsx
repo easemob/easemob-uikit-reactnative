@@ -5,6 +5,7 @@ import type { ConversationModel } from './types.ui';
 
 export type MessageManagerListener = {
   onSendMessageChanged?: (msg: ChatMessage) => void;
+  onSendMessageProgressChanged?: (msg: ChatMessage) => void;
   onSendMessageBefore?: (msg: ChatMessage) => void;
   onRecallMessageBefore?: (msg: ChatMessage) => void;
   onRecallMessageResult?: (params: {
@@ -16,6 +17,7 @@ export type MessageManagerListener = {
   onRecvMessageStatusChanged?: (msg: ChatMessage) => void;
   onRecvMessageContentChanged?: (msg: ChatMessage, byUserId: string) => void;
   onMessageAttachmentChanged?: (msg: ChatMessage) => void;
+  onMessageAttachmentProgressChanged?: (msg: ChatMessage) => void;
   onRecvRecallMessage?: (orgMsg: ChatMessage, tipMsg: ChatMessage) => void;
 };
 

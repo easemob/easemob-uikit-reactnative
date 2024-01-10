@@ -12,7 +12,10 @@ import {
 
 import { ErrorCode, UIKitError } from '../error';
 import { getCurTs } from '../utils';
-import { gCustomMessageRecallEventType } from './const';
+import {
+  gCustomMessageRecallEventType,
+  gMessageAttributeFileProgress,
+} from './const';
 import type {
   MessageCacheManager,
   MessageManagerListener,
@@ -79,6 +82,11 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       v.onSendMessageChanged?.(msg);
     });
   }
+  emitSendMessageProgressChanged(msg: ChatMessage) {
+    this._userListener.forEach((v) => {
+      v.onSendMessageProgressChanged?.(msg);
+    });
+  }
   emitSendMessageBefore(msg: ChatMessage) {
     this._userListener.forEach((v) => {
       v.onSendMessageBefore?.(msg);
@@ -106,6 +114,11 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   emitAttachmentChanged(msg: ChatMessage) {
     this._userListener.forEach((v) => {
       v.onMessageAttachmentChanged?.(msg);
+    });
+  }
+  emitAttachmentProgressChanged(msg: ChatMessage) {
+    this._userListener.forEach((v) => {
+      v.onMessageAttachmentProgressChanged?.(msg);
     });
   }
   bindOnMessagesReceived(messages: Array<ChatMessage>) {
@@ -210,6 +223,15 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
         if (isExisted) {
           this.emitSendMessageChanged(message);
           this._sendList.delete(message.localMsgId);
+        }
+      },
+      onProgress: (localMsgId, progress) => {
+        const isExisted = this._sendList.get(localMsgId);
+        if (isExisted) {
+          const msg = { ...isExisted.msg } as ChatMessage;
+          const p = { [gMessageAttributeFileProgress]: progress };
+          msg.attributes = { ...msg.attributes, ...p };
+          this.emitSendMessageProgressChanged(msg);
         }
       },
       onError: (localMsgId, _error) => {
@@ -322,6 +344,15 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
         if (isExisted) {
           this.emitAttachmentChanged(message);
           this._downloadList.delete(message.localMsgId);
+        }
+      },
+      onProgress: (localMsgId, progress) => {
+        const isExisted = this._downloadList.get(localMsgId);
+        if (isExisted) {
+          const msg = { ...isExisted.msg } as ChatMessage;
+          const p = { [gMessageAttributeFileProgress]: progress };
+          msg.attributes = { ...msg.attributes, ...p };
+          this.emitAttachmentProgressChanged(msg);
         }
       },
       onError: (localMsgId, _error) => {

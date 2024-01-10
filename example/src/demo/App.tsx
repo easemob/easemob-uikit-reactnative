@@ -31,6 +31,7 @@ import {
   CreateGroupScreen,
   DelGroupParticipantScreen,
   EditInfoScreen,
+  FileMessagePreviewScreen,
   GroupInfoScreen,
   GroupListScreen,
   GroupParticipantInfoScreen,
@@ -399,6 +400,13 @@ export function App() {
                 headerShown: false,
               }}
               component={SelectSingleParticipantScreen}
+            />
+            <Root.Screen
+              name={'FileMessagePreview'}
+              options={{
+                headerShown: false,
+              }}
+              component={FileMessagePreviewScreen}
             />
             <Root.Screen
               name={'ImageMessagePreview'}

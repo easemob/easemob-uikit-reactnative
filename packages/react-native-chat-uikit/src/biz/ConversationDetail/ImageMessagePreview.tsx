@@ -23,14 +23,24 @@ import { Icon } from '../../ui/Image';
 import { ImagePreview } from '../../ui/ImagePreview';
 import { ImageUrl, localUrlEscape } from '../../utils';
 import { useImageSize } from '../hooks/useImageSize';
+import type { PropsWithBack } from '../types';
 
-export type ImageMessagePreviewProps = {
+export type ImageMessagePreviewProps = PropsWithBack & {
+  /**
+   * Message id.
+   */
   msgId: string;
+  /**
+   * local message id.
+   */
+  localMsgId: string;
+  /**
+   * Container style for the file preview component.
+   */
   containerStyle?: StyleProp<ViewStyle>;
-  onClicked?: () => void;
 };
 export function ImageMessagePreview(props: ImageMessagePreviewProps) {
-  const { containerStyle, onClicked } = props;
+  const { containerStyle, onBack } = props;
   const { url, size } = useImageMessagePreview(props);
   const { top } = useSafeAreaInsets();
 
@@ -70,7 +80,7 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
           alignItems: 'center',
           backgroundColor: 'red',
         }}
-        onPress={onClicked}
+        onPress={onBack}
         // pointerEvents={'none'}
       >
         <Icon name={'chevron_left'} style={{ height: 24, width: 24 }} />

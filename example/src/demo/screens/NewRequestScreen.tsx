@@ -33,7 +33,9 @@ export function NewRequestScreen(props: Props) {
         }}
         onClickedItem={(data) => {
           if (data?.requestId) {
-            navigation.push('ContactInfo', { params: { userId: data.requestId } });
+            navigation.push('ContactInfo', {
+              params: { userId: data.requestId },
+            });
           }
         }}
         onBack={() => {

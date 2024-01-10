@@ -143,13 +143,22 @@ export function ConversationDetailScreen(props: Props) {
               if (msgModel.msg.body.type === ChatMessageType.IMAGE) {
                 navigation.push('ImageMessagePreview', {
                   params: {
-                    msgId: id,
+                    msgId: msgModel.msg.msgId,
+                    localMsgId: msgModel.msg.localMsgId,
                   },
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.VIDEO) {
                 navigation.push('VideoMessagePreview', {
                   params: {
-                    msgId: id,
+                    msgId: msgModel.msg.msgId,
+                    localMsgId: msgModel.msg.localMsgId,
+                  },
+                });
+              } else if (msgModel.msg.body.type === ChatMessageType.FILE) {
+                navigation.push('FileMessagePreview', {
+                  params: {
+                    msgId: msgModel.msg.msgId,
+                    localMsgId: msgModel.msg.localMsgId,
                   },
                 });
               }

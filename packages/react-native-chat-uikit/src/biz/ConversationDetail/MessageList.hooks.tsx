@@ -443,16 +443,13 @@ export function useMessageList(
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
-      if (model.modelType === 'message') {
-        const msgModel = model as MessageModel;
-        if (msgModel.msg.body.type === ChatMessageType.VOICE) {
-          startVoicePlay(msgModel);
-        } else if (msgModel.msg.body.type === ChatMessageType.IMAGE) {
-          propsOnClicked?.(id, model);
-        } else if (msgModel.msg.body.type === ChatMessageType.VIDEO) {
-          propsOnClicked?.(id, model);
-        } else if (msgModel.msg.body.type === ChatMessageType.FILE) {
-          propsOnClicked?.(id, model);
+      const ret = propsOnClicked?.(id, model);
+      if (ret !== false) {
+        if (model.modelType === 'message') {
+          const msgModel = model as MessageModel;
+          if (msgModel.msg.body.type === ChatMessageType.VOICE) {
+            startVoicePlay(msgModel);
+          }
         }
       }
     },
@@ -464,8 +461,10 @@ export function useMessageList(
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
-      propsOnLongPress?.(id, model);
-      onShowMessageLongPressActions(id, model);
+      const ret = propsOnLongPress?.(id, model);
+      if (ret !== false) {
+        onShowMessageLongPressActions(id, model);
+      }
     },
     [onShowMessageLongPressActions, propsOnLongPress]
   );

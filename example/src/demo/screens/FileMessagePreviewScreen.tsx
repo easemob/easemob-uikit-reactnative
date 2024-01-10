@@ -1,23 +1,34 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { View } from 'react-native';
-import { VideoMessagePreview } from 'react-native-chat-uikit';
+import {
+  FileMessagePreview,
+  useColors,
+  usePaletteContext,
+} from 'react-native-chat-uikit';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function VideoMessagePreviewScreen(props: Props) {
+export function FileMessagePreviewScreen(props: Props) {
   const { navigation, route } = props;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+  });
   const msgId = ((route.params as any)?.params as any)?.msgId;
   const localMsgId = ((route.params as any)?.params as any)?.localMsgId;
   return (
-    <View
+    <SafeAreaView
       style={{
-        // backgroundColor: 'green',
+        backgroundColor: getColor('bg'),
         flex: 1,
       }}
     >
-      <VideoMessagePreview
+      <FileMessagePreview
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
@@ -28,6 +39,6 @@ export function VideoMessagePreviewScreen(props: Props) {
           navigation.goBack();
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 }

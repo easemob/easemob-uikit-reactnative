@@ -280,22 +280,42 @@ export type MessageListProps = PropsWithError &
     convId: string;
     convType: ChatConversationType;
     onClicked?: () => void;
+    /**
+     * Callback notification when a list item is clicked.
+     *
+     * If the return result is false, the default behavior is prevented.
+     */
     onClickedItem?: (
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
-    ) => void;
+    ) => void | boolean | undefined;
+    /**
+     * Callback notification when a list item is long pressed.
+     *
+     * If the return result is false, the default behavior is prevented.
+     */
     onLongPressItem?: (
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
-    ) => void;
+    ) => void | boolean | undefined;
+    /**
+     * Callback notification when the avatar of a list item is clicked.
+     *
+     * If the return result is false, the default behavior is prevented.
+     */
     onClickedItemAvatar?: (
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
-    ) => void;
+    ) => void | boolean | undefined;
+    /**
+     * Callback notification when the quote of a list item is clicked.
+     *
+     * If the return result is false, the default behavior is prevented.
+     */
     onClickedItemQuote?: (
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
-    ) => void;
+    ) => void | boolean | undefined;
     onQuoteMessageForInput?: (model: MessageModel) => void;
     onEditMessageForInput?: (model: MessageModel) => void;
     containerStyle?: StyleProp<ViewStyle>;
