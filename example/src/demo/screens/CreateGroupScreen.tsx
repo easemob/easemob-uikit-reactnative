@@ -57,6 +57,7 @@ export function CreateGroupScreen(props: Props) {
         onBack={() => {
           navigation.goBack();
         }}
+        // onGetGroupName={() => 'test create group'}
       />
     </SafeAreaView>
   );

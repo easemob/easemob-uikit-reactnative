@@ -10,12 +10,21 @@ import {
 import { setUserInfoToMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { ErrorCode, UIKitError } from '../../error';
+import { useI18nContext } from '../../i18n';
 import type { CreateGroupProps } from './types';
 
 export function useCreateGroup(props: CreateGroupProps) {
-  const { onCreateGroupResult: propsOnCreateGroupResult } = props;
+  const { onCreateGroupResult: propsOnCreateGroupResult, onGetGroupName } =
+    props;
   const im = useChatContext();
   const { group: groupConfig } = useConfigContext();
+  const { tr } = useI18nContext();
+
+  React.useEffect(() => {
+    if (onGetGroupName) {
+      im.setGroupNameOnCreateGroup(onGetGroupName);
+    }
+  }, [im, onGetGroupName]);
 
   const createMessageTip = React.useCallback(
     (_data: ContactModel[], group: GroupModel): ChatMessage => {
@@ -44,18 +53,23 @@ export function useCreateGroup(props: CreateGroupProps) {
 
   const generateGroupName = React.useCallback(
     (data: ContactModel[]): string => {
-      const s = data
-        .map((item) => item.userName ?? item.userId)
-        .filter((_v, i) => i < 3)
-        .join(',');
-      return `${s}的群聊`;
+      const callback = im.getCreateGroupCustomNameCallback();
+      if (callback) {
+        return callback({ selected: data });
+      } else {
+        const s = data
+          .map((item) => item.userName ?? item.userId)
+          .filter((_v, i) => i < 3)
+          .join(',');
+        return tr('_uikit_group_create_name', `${s}`);
+      }
     },
-    []
+    [im, tr]
   );
   const onCreateGroupResultValue = React.useCallback(
     (data?: ContactModel[]) => {
       if (data && data.length > 0) {
-        const groupName = generateGroupName(data);
+        const newGroupName = generateGroupName(data);
         if (
           groupConfig.createGroupMemberLimit &&
           data.length > groupConfig.createGroupMemberLimit
@@ -70,7 +84,7 @@ export function useCreateGroup(props: CreateGroupProps) {
           return;
         }
         im.createGroup({
-          groupName: groupName,
+          groupName: newGroupName,
           inviteMembers: data.map((item) => item.userId),
           onResult: (result) => {
             if (result.isOk === true && result.value) {

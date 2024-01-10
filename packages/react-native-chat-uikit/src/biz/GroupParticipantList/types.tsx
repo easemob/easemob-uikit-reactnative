@@ -48,7 +48,10 @@ export type GroupParticipantListNavigationBarProps = PropsWithBack &
      */
     onChangeOwner?: (data?: GroupParticipantModel) => void;
   };
-export type GroupParticipantListProps = ListRequestProps<DataModel> &
+export type GroupParticipantListProps = Pick<
+  ListRequestProps<DataModel>,
+  'onRequestGroupData'
+> &
   PropsWithTest &
   PropsWithError &
   PropsWithInit &

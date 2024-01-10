@@ -25,7 +25,6 @@ export function ContactListScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
-  // console.log('test:zuoyu:names:', names);
 
   return (
     <SafeAreaView
@@ -40,23 +39,6 @@ export function ContactListScreen(props: Props) {
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
-        // onRequestData={(params: {
-        //   ids: string[];
-        //   result: (data?: DataModel[], error?: UIKitError) => void;
-        // }) => {
-        //   const userIds = params.ids;
-        //   const users = userIds.map((v) => {
-        //     return {
-        //       id: v,
-        //       name: v + 'name',
-        //       // name: names[Math.floor(Math.random() * names.length)]!,
-        //       avatar:
-        //         'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-        //       type: 'user' as DataModelType,
-        //     };
-        //   });
-        //   params.result(users ?? []);
-        // }}
         onRequestMultiData={async (params: {
           ids: Map<DataModelType, string[]>;
           result: (

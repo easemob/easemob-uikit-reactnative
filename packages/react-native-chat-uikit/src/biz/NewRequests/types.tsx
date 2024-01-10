@@ -5,7 +5,6 @@ import type {
   ListItemActions,
   ListItemProps,
   ListItemRequestProps,
-  ListRequestProps,
   PropsWithBack,
   PropsWithError,
   PropsWithNavigationBar,
@@ -27,8 +26,7 @@ export type NewRequestsItemComponentType =
   | React.ComponentType<NewRequestsItemProps>
   | React.ExoticComponent<NewRequestsItemProps>;
 
-export type NewRequestsProps = ListRequestProps<DataModel> &
-  PropsWithTest &
+export type NewRequestsProps = PropsWithTest &
   PropsWithError &
   PropsWithBack &
   PropsWithSearch &

@@ -39,7 +39,7 @@ export function createStringSetEn(): StringSet {
       `Transfer Group Ownership to ${name}`,
     '_uikit_group_alert_del_member_title': (names) =>
       `Confirm removal of selected members ${names}?`,
-    '_uikit_group_create_name': "'s Group Chat",
+    '_uikit_group_create_name': (key) => `${key}'s Group Chat`,
 
     '_uikit_chat_input_quote_file': (name) => `Attachment ${name}`,
     '_uikit_chat_input_quote_title_1': 'Replying to',

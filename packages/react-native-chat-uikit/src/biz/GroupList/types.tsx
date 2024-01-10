@@ -6,7 +6,6 @@ import type {
   ListItemActions,
   ListItemProps,
   ListItemRequestProps,
-  ListRequestProps,
   ListStateType,
   PropsWithBack,
   PropsWithCancel,
@@ -40,11 +39,7 @@ export type GroupListRef = Omit<
   updateItem: (items: GroupModel) => void;
 };
 
-export type GroupListProps = Pick<
-  ListRequestProps<DataModel>,
-  'onRequestGroupData'
-> &
-  PropsWithTest &
+export type GroupListProps = PropsWithTest &
   PropsWithInit &
   PropsWithBack &
   PropsWithSearch &
@@ -76,8 +71,7 @@ export type GroupListProps = Pick<
      */
     propsRef?: React.MutableRefObject<GroupListRef>;
   };
-export type SearchGroupProps = ListRequestProps<DataModel> &
-  PropsWithTest &
+export type SearchGroupProps = PropsWithTest &
   PropsWithCancel &
   Omit<
     ListItemActions<GroupModel>,

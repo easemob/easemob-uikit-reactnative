@@ -101,6 +101,9 @@ export class ChatServiceImpl
         ids: Map<DataModelType, string[]>;
         result: (data?: Map<DataModelType, any[]>, error?: UIKitError) => void;
       }) => Promise<void>);
+  _groupNameOnCreateGroupCallback?: (params: {
+    selected: ContactModel[];
+  }) => string;
 
   constructor() {
     console.log('dev:chat:constructor:');
@@ -580,6 +583,18 @@ export class ChatServiceImpl
     }) => void
   ): void {
     this._convDataRequestCallback = callback;
+  }
+
+  setGroupNameOnCreateGroup(
+    callback: (params: { selected: ContactModel[] }) => string
+  ): void {
+    this._groupNameOnCreateGroupCallback = callback;
+  }
+
+  getCreateGroupCustomNameCallback():
+    | ((params: { selected: ContactModel[] }) => string)
+    | undefined {
+    return this._groupNameOnCreateGroupCallback;
   }
 
   setOnRequestData(

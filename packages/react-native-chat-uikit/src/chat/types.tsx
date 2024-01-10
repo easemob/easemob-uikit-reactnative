@@ -379,6 +379,16 @@ export interface GroupServices {
   //     result: (data?: DataT[], error?: UIKitError) => void;
   //   }) => void | Promise<void>
   // ): void;
+  /**
+   * Create a group name customization. You can register the callback. When you create a group, call it. If it is not provided, the default name will be used.
+   * @param callback Provide group IDs and selected personnel lists, and return to the new group name.
+   */
+  setGroupNameOnCreateGroup(
+    callback: (params: { selected: ContactModel[] }) => string
+  ): void;
+  getCreateGroupCustomNameCallback():
+    | ((params: { selected: ContactModel[] }) => string)
+    | undefined;
   setGroupParticipantOnRequestData<DataT>(
     callback?: (params: {
       groupId: string;

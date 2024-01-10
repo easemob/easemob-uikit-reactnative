@@ -7,4 +7,5 @@ export type CreateGroupProps = Pick<
 > & {
   selectedData?: ContactModel[];
   onCreateGroupResult?: ResultCallback<GroupModel>;
+  onGetGroupName?: (params: { selected: ContactModel[] }) => string;
 };
