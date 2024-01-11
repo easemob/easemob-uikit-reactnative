@@ -9,8 +9,10 @@ import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
 import {
+  createDefaultStringSet,
   GlobalContainer,
   LanguageCode,
+  StringSet,
   useChatListener,
   useDarkTheme,
   useLightTheme,
@@ -66,6 +68,7 @@ export function App() {
   const dark = useDarkTheme(palette);
   const light = useLightTheme(palette);
   const [theme, setTheme] = React.useState(light);
+  const [language, setLanguage] = React.useState<LanguageCode>('zh-Hans');
   const isNavigationReadyRef = React.useRef(false);
   const isContainerReadyRef = React.useRef(false);
   const isFontReadyRef = React.useRef(false);
@@ -110,8 +113,16 @@ export function App() {
         setTheme(light);
       }
     });
+    const ret2 = DeviceEventEmitter.addListener(
+      'example_change_language',
+      (e) => {
+        console.log('test:zuoyu:language', e);
+        setLanguage(e);
+      }
+    );
     return () => {
       ret.remove();
+      ret2.remove();
     };
   }, [dark, light]);
 
@@ -174,16 +185,16 @@ export function App() {
     }
   }, []);
 
-  const languageExtensionFactory = React.useCallback(
-    (language: LanguageCode) => {
-      if (language === 'zh-Hans') {
-        return createStringSetCn();
-      } else {
-        return createStringSetEn();
-      }
-    },
-    []
-  );
+  // const languageExtensionFactory = React.useCallback(
+  //   (language: LanguageCode) => {
+  //     if (language === 'zh-Hans') {
+  //       return createStringSetCn();
+  //     } else {
+  //       return createStringSetEn();
+  //     }
+  //   },
+  //   []
+  // );
 
   // const formatTime = React.useMemo(() => {
   //   return {
@@ -203,10 +214,31 @@ export function App() {
         options={options}
         palette={palette}
         theme={theme}
-        language={'zh-Hans'}
+        language={language}
         // fontFamily={fontFamily}
-        languageExtensionFactory={languageExtensionFactory}
+        // languageExtensionFactory={languageExtensionFactory}
         onInitialized={onInitialized}
+        onInitLanguageSet={() => {
+          const ret = (
+            language: LanguageCode,
+            _defaultSet: StringSet
+          ): StringSet => {
+            const d = createDefaultStringSet(language);
+            if (language === 'zh-Hans') {
+              return {
+                ...d,
+                ...createStringSetCn(),
+              };
+            } else if (language === 'en') {
+              return {
+                ...d,
+                ...createStringSetEn(),
+              };
+            }
+            return d;
+          };
+          return ret;
+        }}
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}

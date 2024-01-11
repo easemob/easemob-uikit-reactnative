@@ -36,16 +36,8 @@ export interface I18nInit {
   languageCode: LanguageCode;
   /**
    * The string set of the current language.
-   *
-   * This is an expansion pack, which is added based on the original uikit built-in.
    */
-  stringSet?: StringSet;
-  /**
-   * The factory function of the string set. If it is not provided, the default string set will be used.
-   *
-   * If set, will replace the uikit built-in ones.
-   */
-  factory?: CreateStringSet;
+  assets?: CreateStringSet | StringSet;
 }
 
 /**

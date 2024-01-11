@@ -5,7 +5,6 @@ import { ChatContextProvider } from '../chat';
 import { ConfigContextProvider, ConversationDetailType } from '../config';
 import { DispatchContextProvider } from '../dispatch';
 import { I18nContextProvider } from '../i18n';
-import { createStringSet } from '../i18n/StringSet';
 import {
   PaletteContextProvider,
   ThemeContextProvider,
@@ -14,6 +13,7 @@ import {
 import { mergeObjects } from '../utils';
 import {
   getI18nLanguage,
+  getLanguagePackage,
   getReleaseArea,
   getTranslateLanguage,
   useGetTheme,
@@ -34,8 +34,6 @@ export function GlobalContainer(props: GlobalContainerProps) {
     options,
     children,
     language,
-    languageBuiltInFactory,
-    languageExtensionFactory,
     palette,
     theme,
     fontFamily,
@@ -48,12 +46,16 @@ export function GlobalContainer(props: GlobalContainerProps) {
     alert,
     formatTime,
     recallTimeout,
+    onInitLanguageSet,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
 
-  const _languageBuiltInFactory = languageBuiltInFactory ?? createStringSet;
-  const _guessLanguage = getI18nLanguage(language, languageBuiltInFactory);
+  const _guessLanguage = getI18nLanguage(language);
+  const _languagePackage = getLanguagePackage(
+    _guessLanguage,
+    onInitLanguageSet?.()
+  );
   const _releaseArea = getReleaseArea(releaseArea);
   const _theme = useGetTheme({
     theme: theme,
@@ -71,8 +73,7 @@ export function GlobalContainer(props: GlobalContainerProps) {
           <I18nContextProvider
             value={{
               languageCode: _guessLanguage,
-              factory: _languageBuiltInFactory,
-              stringSet: languageExtensionFactory?.(language ?? _guessLanguage),
+              assets: _languagePackage,
             }}
           >
             <ChatContextProvider
@@ -86,7 +87,7 @@ export function GlobalContainer(props: GlobalContainerProps) {
                   isDevMode: options.debugModel,
                   enableCompare: false,
                   enableCheckType: false,
-                  languageCode: getTranslateLanguage(language),
+                  languageCode: getTranslateLanguage(_guessLanguage),
                   fontFamily: fontFamily,
                   formatTime: formatTime,
                   recallTimeout: recallTimeout,

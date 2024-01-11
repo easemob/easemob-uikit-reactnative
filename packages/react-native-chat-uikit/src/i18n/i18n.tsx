@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { createStringSet } from './StringSet';
+import { createDefaultStringSet } from './StringSet';
 import { TranslateImpl } from './Translate';
 import type { I18nInit, I18nTr } from './types';
 
@@ -19,14 +19,11 @@ type I18nContextProps = React.PropsWithChildren<{ value: I18nInit }>;
  * The I18n context's provider.
  */
 export function I18nContextProvider({ value, children }: I18nContextProps) {
-  const { stringSet, languageCode, factory } = value;
+  const { assets, languageCode } = value;
   const t = new TranslateImpl({
-    func: factory ?? createStringSet,
+    assets: assets ?? createDefaultStringSet,
     type: languageCode,
   });
-  if (stringSet) {
-    t.addCustom({ stringSet, type: languageCode });
-  }
   return (
     <I18nContext.Provider
       value={{ tr: t.tr.bind(t), currentLanguage: t.currentLanguage.bind(t) }}

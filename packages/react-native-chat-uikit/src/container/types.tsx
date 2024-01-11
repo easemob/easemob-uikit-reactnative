@@ -1,6 +1,6 @@
 import type { ChatOptionsType } from '../chat';
 import type { ConversationDetailType } from '../config';
-import type { CreateStringSet, LanguageCode } from '../i18n';
+import type { CreateStringSet, LanguageCode, StringSet } from '../i18n';
 import type {
   ClipboardService,
   DirCacheService,
@@ -24,18 +24,6 @@ export type GlobalContainerProps = React.PropsWithChildren<{
    * The language code.
    */
   language?: LanguageCode;
-  /**
-   * The language built-in factory.
-   *
-   * If set, replace the data inside uikit.
-   */
-  languageBuiltInFactory?: CreateStringSet;
-  /**
-   * The language extension factory.
-   *
-   * If set, it can also be used in the application.
-   */
-  languageExtensionFactory?: CreateStringSet;
   /**
    * The palette.
    */
@@ -116,6 +104,19 @@ export type GlobalContainerProps = React.PropsWithChildren<{
   alert?: {
     borderRadiusStyle?: CornerRadiusPaletteType;
   };
+  /**
+   * Initialize language pack. When {@link GlobalContainerProps.language} is modified, this callback will be called again.
+   *
+   * UIKit has built-in Chinese and English language packs. If the user sets other languages, corresponding language packs need to be provided. See {@link createStringSetCn} or {@link createStringSetEn} for details
+   *
+   * If no language code is set, the default `language` code is used. When this callback is called, the default language code will be returned to the user.
+   *
+   * @returns UIKit calls this method. Provide user-set `language` and default UIKit language pack. This method is defined by the user and returns the new language pack.
+   */
+  onInitLanguageSet?: () => (
+    language: LanguageCode,
+    defaultSet: StringSet
+  ) => CreateStringSet | StringSet;
   /**
    * IM initialization is completed.
    */

@@ -9,7 +9,13 @@ import * as ImagePicker from 'react-native-image-picker';
 import * as Permissions from 'react-native-permissions';
 import VideoComponent from 'react-native-video';
 
-import { CreateStringSet, LanguageCode, languageCodes } from '../i18n';
+import {
+  CreateStringSet,
+  LanguageCode,
+  languageCodes,
+  StringSet,
+} from '../i18n';
+import { createDefaultStringSet } from '../i18n/StringSet';
 import { Services } from '../services';
 import {
   CornerRadiusPaletteType,
@@ -34,16 +40,27 @@ const getDefaultLanguage = (): LanguageCode => {
   return ret;
 };
 
-export const getI18nLanguage = (
-  language?: LanguageCode,
-  languageBuiltInFactory?: CreateStringSet
-): LanguageCode => {
+export const getLanguagePackage = (
+  language: LanguageCode,
+  callback?: (
+    language: LanguageCode,
+    defaultSet: StringSet
+  ) => CreateStringSet | StringSet
+) => {
+  let ret: CreateStringSet | StringSet;
+  if (callback) {
+    ret = callback(language, createDefaultStringSet(language));
+  } else {
+    ret = createDefaultStringSet(language);
+  }
+  return ret;
+};
+
+export const getI18nLanguage = (language?: LanguageCode): LanguageCode => {
   let ret = language;
   if (language) {
     const isExisted = languageCodes.includes(language);
     if (isExisted === true) {
-      ret = language;
-    } else if (isExisted === false && languageBuiltInFactory) {
       ret = language;
     } else {
       ret = require('../config.local').language as LanguageCode;

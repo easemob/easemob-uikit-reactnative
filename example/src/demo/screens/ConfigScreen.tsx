@@ -2,7 +2,9 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { DeviceEventEmitter, Switch, Text, View } from 'react-native';
 import {
+  LanguageCode,
   useColors,
+  useI18nContext,
   usePaletteContext,
   useThemeContext,
 } from 'react-native-chat-uikit';
@@ -13,8 +15,12 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ConfigScreen(props: Props) {
   const {} = props;
   const { style } = useThemeContext();
+  const { currentLanguage } = useI18nContext();
   const [value, onValueChange] = React.useState(
     style === 'light' ? false : true
+  );
+  const [language, setLanguage] = React.useState<boolean>(
+    currentLanguage() === 'en' ? true : false
   );
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -41,6 +47,24 @@ export function ConfigScreen(props: Props) {
           DeviceEventEmitter.emit(
             'example_change_theme',
             value === true ? 'light' : 'dark'
+          );
+        }}
+      />
+      <View>
+        <Text style={{ color: getColor('text') }}>
+          {'Click the switch button to switch language.'}
+        </Text>
+      </View>
+      <Switch
+        value={language}
+        onValueChange={(v) => {
+          console.log('test:zuoyu:switch:', v);
+          setLanguage(v);
+          DeviceEventEmitter.emit(
+            'example_change_language',
+            language === false
+              ? ('en' as LanguageCode)
+              : ('zh-Hans' as LanguageCode)
           );
         }}
       />

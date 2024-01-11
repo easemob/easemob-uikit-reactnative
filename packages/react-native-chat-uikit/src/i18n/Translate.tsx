@@ -26,20 +26,26 @@ export class TranslateImpl implements Translate {
   currentLanguage(): LanguageCode {
     return this.language;
   }
-  constructor(params: { func: CreateStringSet; type: LanguageCode }) {
+  constructor(params: {
+    assets: CreateStringSet | StringSet;
+    type: LanguageCode;
+  }) {
     this.map = new Map();
     this.language = params.type;
-    const stringSet = params.func(params.type);
-    const keys = Object.keys(stringSet);
-    for (const key of keys) {
-      this.map.set(key, stringSet[key]!);
-    }
+    this.append(params);
   }
-  addCustom(params: { stringSet: StringSet; type: LanguageCode }) {
-    const { stringSet } = params;
-    const keys = Object.keys(stringSet);
-    for (const key of keys) {
-      this.map.set(key, stringSet[key]!);
+  append(params: { assets: CreateStringSet | StringSet; type: LanguageCode }) {
+    if (typeof params.assets === 'function') {
+      const stringSet = params.assets(params.type);
+      const keys = Object.keys(stringSet);
+      for (const key of keys) {
+        this.map.set(key, stringSet[key]!);
+      }
+    } else {
+      const keys = Object.keys(params.assets);
+      for (const key of keys) {
+        this.map.set(key, params.assets[key]!);
+      }
     }
   }
 }
