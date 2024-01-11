@@ -22,6 +22,7 @@ import type {
   ConversationModel,
   GroupModel,
   GroupParticipantModel,
+  StateModel,
   UIListener,
   UIListenerType,
 } from './types.ui';
@@ -273,21 +274,6 @@ export interface ContactServices {
     userId: string;
     onResult: ResultCallback<void>;
   }): void;
-  /**
-   * Save state for multi-page components.
-   *
-   * **Note** At present, routing is implemented in the application layer, so it is troublesome to transfer complex objects through attribute layers. Therefore, data synchronization and exchange are performed through the bottom layer.
-   */
-  setContactCheckedState(params: {
-    key: string;
-    userId: string;
-    checked: boolean;
-  }): void;
-  getContactCheckedState(params: {
-    key: string;
-    userId: string;
-  }): boolean | undefined;
-  clearContactCheckedState(params: { key: string }): void;
 }
 
 export interface UserServices {
@@ -565,6 +551,23 @@ export interface ChatService
     data?: DataModel | string,
     ...args: any[]
   ): void;
+
+  /**
+   * Save the selected state of the data. To synchronize the list data status between pages, the parameters provided by the interface are usually used. However, it is troublesome to pass complex objects of react-native between routes and require layer-by-layer penetration. Therefore, the bottom layer save and update processing is used here. Just refresh the list to achieve synchronization.
+   * @param params -
+   * - tag: The tag of the data. You can use classification tags, such as contact tags, group tags, etc.
+   * - id: The ID of the data.
+   * - state: The state of the data.
+   */
+  setModelState(params: { tag: string; id: string; state: StateModel }): void;
+  /**
+   * Get the selected state of the data.
+   */
+  getModelState(params: { tag: string; id: string }): StateModel | undefined;
+  /**
+   * Clear the selected state of the data.
+   */
+  clearModelState(params: { tag: string }): void;
 
   /**
    * If the built-in method is not enough, you can get the original IM object through this method.

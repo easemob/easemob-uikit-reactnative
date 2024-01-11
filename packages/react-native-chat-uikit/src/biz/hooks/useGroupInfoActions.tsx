@@ -1,4 +1,3 @@
-import { useChatContext } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type {
@@ -11,29 +10,28 @@ import { useCloseMenu } from './useCloseMenu';
 export type useGroupInfoActionsProps = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
-  onGroupQuit?: (groupId: string) => void;
+  quitGroup?: (groupId: string) => void;
   onClickedChangeGroupOwner?: (groupId: string, ownerId: string) => void;
-  onGroupDestroy?: (groupId: string) => void;
+  destroyGroup?: (groupId: string) => void;
   onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
 };
 export function useGroupInfoActions(props: useGroupInfoActionsProps) {
   const {
     menuRef,
     alertRef,
-    onGroupQuit,
+    quitGroup,
+    destroyGroup,
     onClickedChangeGroupOwner,
-    onGroupDestroy,
     onInit,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const { closeAlert } = useCloseAlert({ alertRef });
   const { tr } = useI18nContext();
-  const im = useChatContext();
   const onShowMenu = (userId: string, ownerId: string, groupId: string) => {
     if (userId !== ownerId) {
       let items = [
         {
-          name: tr('quit_group'),
+          name: tr('_uikit_info_menu_quit_group'),
           isHigh: true,
           onClicked: () => {
             closeMenu(() => {
@@ -51,12 +49,8 @@ export function useGroupInfoActions(props: useGroupInfoActionsProps) {
                     text: tr('Quit'),
                     isPreferred: true,
                     onPress: () => {
-                      closeAlert();
-                      im.quitGroup({
-                        groupId,
-                        onResult: () => {
-                          onGroupQuit?.(groupId);
-                        },
+                      closeAlert(() => {
+                        quitGroup?.(groupId);
                       });
                     },
                   },
@@ -104,14 +98,7 @@ export function useGroupInfoActions(props: useGroupInfoActionsProps) {
                     isPreferred: true,
                     onPress: () => {
                       closeAlert(() => {
-                        if (onGroupDestroy) {
-                          onGroupDestroy?.(groupId);
-                        } else {
-                          im.destroyGroup({
-                            groupId,
-                            onResult: () => {},
-                          });
-                        }
+                        destroyGroup?.(groupId);
                       });
                     },
                   },

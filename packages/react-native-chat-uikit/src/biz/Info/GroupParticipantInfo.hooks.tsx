@@ -21,6 +21,10 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     onCopyId: propsOnCopyId,
     onGroupParticipantRemark: propsOnGroupParticipantRemark,
     isContact: propsIsContact,
+    onAddContact: propsOnAddContact,
+    onSendMessage: propsOnSendMessage,
+    onAudioCall: propsOnAudioCall,
+    onVideoCall: propsOnVideoCall,
   } = props;
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
@@ -74,12 +78,9 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
           text: tr('confirm'),
           isPreferred: true,
           onPress: () => {
-            alertRef.current.close();
-            im.removeConversation({ convId: userId })
-              .then(() => {})
-              .catch((e) => {
-                im.sendError({ error: e });
-              });
+            alertRef.current.close(() => {
+              im.removeConversation({ convId: userId });
+            });
           },
         },
       ],
@@ -103,6 +104,30 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     }
   };
 
+  const onAddContact = () => {
+    if (propsOnAddContact) {
+      propsOnAddContact(userId);
+    }
+  };
+
+  const onSendMessage = () => {
+    if (propsOnSendMessage) {
+      propsOnSendMessage(userId);
+    }
+  };
+
+  const onAudioCall = () => {
+    if (propsOnAudioCall) {
+      propsOnAudioCall(userId);
+    }
+  };
+
+  const onVideoCall = () => {
+    if (propsOnVideoCall) {
+      propsOnVideoCall(userId);
+    }
+  };
+
   return {
     ...props,
     doNotDisturb,
@@ -117,5 +142,9 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     onRemark,
     isContact,
     tr,
+    onAddContact,
+    onSendMessage,
+    onVideoCall,
+    onAudioCall,
   };
 }

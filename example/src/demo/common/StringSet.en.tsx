@@ -9,5 +9,9 @@ export function createStringSetEn(): StringSet {
     '_demo_tab_conv_list': 'Conversation',
     '_demo_tab_contact_list': 'Contact',
     '_demo_tab_mine': 'Mine',
+
+    'edit_group_name': 'Edit group name',
+    'edit_group_description': 'Edit group description',
+    'edit_group_my_remark': 'Edit group my remark',
   };
 }

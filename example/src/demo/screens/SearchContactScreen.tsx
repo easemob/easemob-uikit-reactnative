@@ -1,6 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+import { ChatConversationType } from 'react-native-chat-sdk';
 import {
+  ContactSearchModel,
   SearchContact,
   SearchType,
   useColors,
@@ -38,7 +40,7 @@ export function SearchContactScreen(props: Props) {
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
-        onCancel={(data) => {
+        onCancel={(data: ContactSearchModel[]) => {
           if (searchType === 'create-group') {
             navigation.navigate({
               name: 'CreateGroup',
@@ -70,6 +72,7 @@ export function SearchContactScreen(props: Props) {
         onClicked={(data) => {
           if (searchType === 'share-contact') {
             // navigation.pop(2);
+            navigation.popToTop();
             navigation.navigate('ConversationDetail', {
               params: {
                 convId,
@@ -79,6 +82,16 @@ export function SearchContactScreen(props: Props) {
                 operateType: 'share_card',
               },
             });
+          } else if (searchType === 'new-conversation') {
+            if (data) {
+              navigation.popToTop(); // go to home
+              navigation.navigate('ConversationDetail', {
+                params: {
+                  convId: data.userId,
+                  convType: ChatConversationType.PeerChat,
+                },
+              });
+            }
           }
         }}
         searchType={searchType}

@@ -58,7 +58,6 @@ export function ConfigScreen(props: Props) {
       <Switch
         value={language}
         onValueChange={(v) => {
-          console.log('test:zuoyu:switch:', v);
           setLanguage(v);
           DeviceEventEmitter.emit(
             'example_change_language',

@@ -26,7 +26,7 @@ export function GroupList(props: GroupListProps) {
     onBack,
     navigationBarVisible,
     customNavigationBar,
-    searchStyleVisible,
+    searchStyleVisible = false,
     customSearch,
     onClickedSearch,
   } = props;

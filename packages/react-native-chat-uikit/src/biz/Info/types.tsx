@@ -1,6 +1,7 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { ChatGroupStyle } from 'react-native-chat-sdk';
 
+import type { BlockButtonProps } from '../../ui/Button';
 import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type { PropsWithBack, PropsWithNavigationBar } from '../types';
 
@@ -21,6 +22,9 @@ export type InfoProps = PropsWithBack &
     onVideoCall?: (id: string) => void;
     onCopyId?: (id: string) => void;
     onInitMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
+    onInitButton?: (
+      initButtons: React.ReactElement<BlockButtonProps>[]
+    ) => React.ReactElement<BlockButtonProps>[];
   };
 
 export type ContactInfoProps = InfoProps & {
@@ -28,6 +32,7 @@ export type ContactInfoProps = InfoProps & {
   userName?: string;
   userAvatar?: string;
   isContact?: boolean;
+  onAddContact?: (id: string) => void;
 };
 export type GroupInfoRef = {
   setGroupName: (groupId: string, groupName?: string) => void;
@@ -60,6 +65,7 @@ export type GroupParticipantInfoProps = InfoProps & {
   isContact?: boolean;
   userRemark?: string;
   onGroupParticipantRemark?: (groupId: string, memberId: string) => void;
+  onAddContact?: (id: string) => void;
 };
 export type MineInfoProps = InfoProps & {
   userId: string;

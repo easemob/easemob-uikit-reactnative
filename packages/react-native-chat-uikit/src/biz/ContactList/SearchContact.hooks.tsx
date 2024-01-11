@@ -24,17 +24,17 @@ export function useSearchContact(props: SearchContactProps) {
             if (item.userId === data.userId) {
               dataRef.current[i] = { ...item, checked: !data.checked };
               if (searchType === 'create-group') {
-                im.setContactCheckedState({
-                  key: searchType,
-                  userId: data.userId,
-                  checked: !data.checked,
+                im.setModelState({
+                  tag: searchType,
+                  id: data.userId,
+                  state: { checked: !data.checked },
                 });
               } else if (searchType === 'add-group-member') {
                 if (groupId) {
-                  im.setContactCheckedState({
-                    key: groupId,
-                    userId: data.userId,
-                    checked: !data.checked,
+                  im.setModelState({
+                    tag: groupId,
+                    id: data.userId,
+                    state: { checked: !data.checked },
                   });
                 }
               }
@@ -72,10 +72,10 @@ export function useSearchContact(props: SearchContactProps) {
                 const getChecked = () => {
                   if (searchType === 'create-group') {
                     return (
-                      im.getContactCheckedState({
-                        key: searchType,
-                        userId: item.userId,
-                      }) ?? false
+                      im.getModelState({
+                        tag: searchType,
+                        id: item.userId,
+                      })?.checked ?? false
                     );
                   } else if (searchType === 'add-group-member') {
                     if (groupId) {
@@ -83,10 +83,10 @@ export function useSearchContact(props: SearchContactProps) {
                         groupId,
                         userId: item.userId,
                       });
-                      const checked = im.getContactCheckedState({
-                        key: groupId,
-                        userId: item.userId,
-                      });
+                      const checked = im.getModelState({
+                        tag: groupId,
+                        id: item.userId,
+                      })?.checked;
                       return (
                         isExisted !== undefined ||
                         (checked !== undefined ? checked : false)

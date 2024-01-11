@@ -35,7 +35,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
   const flatListProps = useFlatList<GroupParticipantListItemProps>({
     onInit: () => init(),
   });
-  const { setData, dataRef } = flatListProps;
+  const { setData, dataRef, setListState } = flatListProps;
   const [participantCount, setParticipantCount] = React.useState(0);
   const [deleteCount, setDeleteCount] = React.useState(0);
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
@@ -44,6 +44,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
   const ListItemRenderRef = React.useRef<GroupParticipantListItemComponentType>(
     propsListItemRender ?? GroupParticipantListItemMemo
   );
+  const [ownerId, setOwnerId] = React.useState<string | undefined>(undefined);
 
   const im = useChatContext();
   const { tr } = useI18nContext();
@@ -118,11 +119,10 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     (data?: GroupParticipantModel) => {
       if (participantType === 'delete') {
         if (data?.checked !== undefined) {
-          im.setGroupMemberState({
-            groupId,
-            userId: data.memberId,
-            checked: !data.checked,
-            onResult: () => {},
+          im.setModelState({
+            tag: groupId,
+            id: data.memberId,
+            state: { checked: !data.checked },
           });
           dataRef.current = dataRef.current.map((item) => {
             if (item) {
@@ -142,9 +142,22 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     [dataRef, groupId, im, onSetData, participantType]
   );
 
-  const init = () => {
+  const init = async () => {
     if (testMode === 'only-ui') {
     } else {
+      im.getGroupInfo({
+        groupId,
+        onResult: (result) => {
+          if (result.isOk && result.value) {
+            setOwnerId(result.value.owner);
+          } else {
+            setListState('error');
+          }
+        },
+      });
+      if (participantType === 'delete') {
+        im.clearModelState({ tag: groupId });
+      }
       im.getGroupAllMembers({
         groupId: groupId,
         isReset: true,
@@ -154,12 +167,15 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
             if (value) {
               dataRef.current = value.map((item) => {
                 if (participantType === 'delete') {
+                  const modelState = im.getModelState({
+                    tag: groupId,
+                    id: item.memberId,
+                  });
                   return {
                     id: item.memberId,
                     data: {
                       ...item,
-                      checked:
-                        item.checked !== undefined ? item.checked : false,
+                      checked: modelState?.checked ?? false,
                     },
                   } as GroupParticipantListItemProps;
                 } else {
@@ -305,5 +321,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     menuRef,
     onRequestCloseMenu: closeMenu,
     ListItemRender: ListItemRenderRef.current,
+    groupId,
+    ownerId,
   };
 }

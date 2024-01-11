@@ -21,39 +21,43 @@ export function useListSearch<
   const { onClicked, testMode, initData, onSearch: propsOnSearch } = props;
   const flatListProps = useFlatList<ListSearchItemProps<ComponentModel>>({
     isShowAfterLoaded: false,
-    onSearch: (keyword: string) => onSearch(keyword),
+    // onSearch: (keyword: string) => onSearch(keyword),
   });
-  const { setData, dataRef, isAutoLoad, isShowAfterLoaded } = flatListProps;
+  const { setData, dataRef, isAutoLoad, isShowAfterLoaded, setOnSearch } =
+    flatListProps;
   const isLocalSearch = React.useRef(props.onSearch ?? true).current;
   const keywordRef = React.useRef('');
 
-  const onSearch = async (keyword: string) => {
-    keywordRef.current = keyword;
-    if (keyword === '') {
-      setData([]);
-    } else {
-      if (propsOnSearch) {
-        const data = await propsOnSearch(keyword);
-        setData(
-          data.map((item) => {
-            return {
-              id: item.id,
-              data: item,
-              keyword: keyword,
-            } as ListSearchItemProps<ComponentModel>;
-          })
-        );
+  const onSearch = React.useCallback(
+    async (keyword: string) => {
+      keywordRef.current = keyword;
+      if (keyword === '') {
+        setData([]);
       } else {
-        setData([
-          ...dataRef.current
-            .filter((item) => item.data.name?.includes(keyword))
-            .map((item) => {
-              return { ...item, keyword: keyword };
-            }),
-        ]);
+        if (propsOnSearch) {
+          const data = await propsOnSearch(keyword);
+          setData(
+            data.map((item) => {
+              return {
+                id: item.id,
+                data: item,
+                keyword: keyword,
+              } as ListSearchItemProps<ComponentModel>;
+            })
+          );
+        } else {
+          setData([
+            ...dataRef.current
+              .filter((item) => item.data.name?.includes(keyword))
+              .map((item) => {
+                return { ...item, keyword: keyword };
+              }),
+          ]);
+        }
       }
-    }
-  };
+    },
+    [dataRef, propsOnSearch, setData]
+  );
 
   const onClickedCallback = React.useCallback(
     (data?: ComponentModel | undefined) => {
@@ -82,7 +86,7 @@ export function useListSearch<
           } as ListSearchItemProps<ComponentModel>;
         });
         if (isShowAfterLoaded === true || keywordRef.current.length > 0) {
-          setData([...dataRef.current]);
+          onSearch(keywordRef.current);
         }
       } else {
         const data = initData as ReadonlyArray<ComponentModel>;
@@ -94,7 +98,7 @@ export function useListSearch<
           } as ListSearchItemProps<ComponentModel>;
         });
         if (isShowAfterLoaded === true || keywordRef.current.length > 0) {
-          setData([...dataRef.current]);
+          onSearch(keywordRef.current);
         }
       }
     }
@@ -104,7 +108,7 @@ export function useListSearch<
     isAutoLoad,
     isLocalSearch,
     isShowAfterLoaded,
-    setData,
+    onSearch,
     testMode,
   ]);
   const unInit = () => {};
@@ -113,12 +117,13 @@ export function useListSearch<
     React.useCallback(
       async (state: any) => {
         if (state === 'load') {
+          setOnSearch(onSearch);
           init();
         } else if (state === 'unload') {
           unInit();
         }
       },
-      [init]
+      [init, onSearch, setOnSearch]
     )
   );
 

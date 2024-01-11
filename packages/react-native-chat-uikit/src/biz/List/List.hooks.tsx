@@ -17,7 +17,7 @@ export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
   const {
     onVisibleItems,
     onRefresh: propsOnRefresh,
-    onSearch: propsOnSearch,
+    // onSearch: propsOnSearch,
     onLoadMore: propsOnLoadMore,
     onInit,
     onUnInit,
@@ -41,6 +41,7 @@ export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
   const enableRefresh = React.useRef(props.onRefresh ? true : false).current;
   const enableMore = React.useRef(props.onLoadMore ? true : false).current;
   const [refreshing, setRefreshing] = React.useState(props.refreshing ?? false);
+  const onSearchRef = React.useRef<(keyword: string) => void>({} as any);
 
   const viewabilityConfigRef = React.useRef<ViewabilityConfig>({
     // minimumViewTime: 1000,
@@ -64,14 +65,18 @@ export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
     )
   );
 
+  const setOnSearch = React.useCallback(
+    (onSearch: (keyword: string) => void) => {
+      onSearchRef.current = onSearch;
+    },
+    []
+  );
+
   const { delayExecTask: deferSearch } = useDelayExecTask(
     500,
-    React.useCallback(
-      (keyword: string) => {
-        propsOnSearch?.(keyword);
-      },
-      [propsOnSearch]
-    )
+    React.useCallback((keyword: string) => {
+      onSearchRef.current?.(keyword);
+    }, [])
   );
 
   const onRefresh = React.useCallback(() => {
@@ -116,6 +121,7 @@ export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
     onViewableItemsChanged:
       isVisibleUpdate === true ? onViewableItemsChanged : undefined,
     deferSearch,
+    setOnSearch,
   };
 }
 export function useFlatList<ItemT>(

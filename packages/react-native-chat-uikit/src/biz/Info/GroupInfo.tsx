@@ -4,7 +4,6 @@ import { Pressable, ScrollView, View } from 'react-native';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
-import { BlockButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
 import { Text } from '../../ui/Text';
@@ -13,6 +12,7 @@ import { Avatar } from '../Avatar';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { ListItem } from '../ListItem';
 import { TopNavigationBar } from '../TopNavigationBar';
+import { BlockButtons } from './BlockButtons';
 import { useGroupInfo } from './GroupInfo.hooks';
 import type { GroupInfoProps, GroupInfoRef } from './types';
 
@@ -27,6 +27,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
       containerStyle,
       navigationBarVisible,
       customNavigationBar,
+      onInitButton,
     } = props;
     const {
       groupName,
@@ -156,38 +157,15 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
             </Pressable>
 
             <View style={{ height: 20 }} />
-            <View
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-              }}
-            >
-              {hasSendMessage ? (
-                <BlockButton
-                  iconName={'bubble_fill'}
-                  text={tr('_uikit_info_send_msg')}
-                  containerStyle={{ height: 62, width: 114 }}
-                  onPress={() => onSendMessage?.(groupId)}
-                />
-              ) : null}
-              {hasAudioCall ? (
-                <BlockButton
-                  iconName={'phone_pick'}
-                  text={tr('_uikit_info_send_audio')}
-                  containerStyle={{ height: 62, width: 114 }}
-                  onPress={() => onAudioCall?.(groupId)}
-                />
-              ) : null}
-              {hasVideoCall ? (
-                <BlockButton
-                  iconName={'video_camera'}
-                  text={tr('_uikit_info_send_video')}
-                  containerStyle={{ height: 62, width: 114 }}
-                  onPress={() => onVideoCall?.(groupId)}
-                />
-              ) : null}
-            </View>
+            <BlockButtons
+              hasAudioCall={hasAudioCall}
+              hasSendMessage={hasSendMessage}
+              hasVideoCall={hasVideoCall}
+              onSendMessage={onSendMessage}
+              onAudioCall={onAudioCall}
+              onVideoCall={onVideoCall}
+              onInitButton={onInitButton}
+            />
           </View>
           <View style={{ height: 20 }} />
           <ListItem
@@ -307,14 +285,13 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                     {tr('_uikit_info_item_group_name')}
                   </Text>
                 }
-                RightText={
-                  <Text
-                    textType={'large'}
-                    paletteType={'label'}
-                    style={{ color: getColor('t1') }}
-                  >
-                    {groupName}
-                  </Text>
+                RightIcon={
+                  <View>
+                    <Icon
+                      name={'chevron_right'}
+                      style={{ height: 20, width: 20 }}
+                    />
+                  </View>
                 }
               />
               <ListItem

@@ -214,8 +214,6 @@ export function useContactList(props: ContactListProps) {
         list.sort(onSort);
       }
       const uniqueList = removeDuplicateData(list);
-      calculateGroupCount();
-      calculateAddedGroupMemberCount();
 
       const sortList: (IndexModel & { data: ContactListItemProps[] })[] = [];
       uniqueList.forEach((item) => {
@@ -238,6 +236,10 @@ export function useContactList(props: ContactListProps) {
         }
       });
       sectionsRef.current = sortList;
+
+      calculateGroupCount();
+      calculateAddedGroupMemberCount();
+
       setIndexTitles(sectionsRef.current.map((item) => item.indexTitle));
       setSection(sectionsRef.current);
     },
@@ -308,17 +310,17 @@ export function useContactList(props: ContactListProps) {
       if (isExisted !== undefined) {
         if (data.checked !== undefined) {
           if (contactType === 'create-group') {
-            im.setContactCheckedState({
-              key: contactType,
-              userId: data.userId,
-              checked: data.checked,
+            im.setModelState({
+              tag: contactType,
+              id: data.userId,
+              state: { checked: data.checked },
             });
           } else if (contactType === 'add-group-member') {
             if (groupId) {
-              im.setContactCheckedState({
-                key: groupId,
-                userId: data.userId,
-                checked: data.checked,
+              im.setModelState({
+                tag: groupId,
+                id: data.userId,
+                state: { checked: data.checked },
               });
             }
           }
@@ -416,10 +418,10 @@ export function useContactList(props: ContactListProps) {
       if (isAutoLoad === true) {
         if (isClearState === undefined || isClearState === true) {
           if (contactType === 'create-group') {
-            im.clearContactCheckedState({ key: contactType });
+            im.clearModelState({ tag: contactType });
           } else if (contactType === 'add-group-member') {
             if (groupId) {
-              im.clearContactCheckedState({ key: groupId });
+              im.clearModelState({ tag: groupId });
             }
           }
         }
@@ -449,10 +451,10 @@ export function useContactList(props: ContactListProps) {
                                 checked:
                                   isExisted !== undefined
                                     ? true
-                                    : im.getContactCheckedState({
-                                        key: groupId,
-                                        userId: item.userId,
-                                      }) !== undefined ?? false,
+                                    : im.getModelState({
+                                        tag: groupId,
+                                        id: item.userId,
+                                      })?.checked ?? false,
                                 disable: isExisted !== undefined,
                               },
                               contactType: contactType,
@@ -492,10 +494,10 @@ export function useContactList(props: ContactListProps) {
                             ? {
                                 ...item,
                                 checked:
-                                  im.getContactCheckedState({
-                                    key: contactType,
-                                    userId: item.userId,
-                                  }) !== undefined ?? false,
+                                  im.getModelState({
+                                    tag: contactType,
+                                    id: item.userId,
+                                  })?.checked ?? false,
                               }
                             : item,
                         contactType: contactType,
@@ -541,6 +543,9 @@ export function useContactList(props: ContactListProps) {
       requestCount: number;
       groupCount: number;
     }) => {
+      if (contactType !== 'contact-list') {
+        return null;
+      }
       const items = [
         <ContactItem
           name={tr('_uikit_contact_new_request')}
@@ -564,7 +569,13 @@ export function useContactList(props: ContactListProps) {
         : items;
       return newContactItems;
     },
-    [onClickedGroupList, onClickedNewRequest, propsOnInitListItemActions, tr]
+    [
+      contactType,
+      onClickedGroupList,
+      onClickedNewRequest,
+      propsOnInitListItemActions,
+      tr,
+    ]
   );
 
   // const onAddedContact = React.useCallback(
@@ -771,11 +782,12 @@ export function useContactList(props: ContactListProps) {
 
   React.useEffect(() => {
     if (selectedData && selectedData.length > 0) {
+      setSelectedCount(selectedData.length);
       init({ isClearState: false });
     } else {
       init({});
     }
-  }, [contactType, init, refreshToUI, sectionsRef, selectedData]);
+  }, [init, selectedData]);
 
   React.useEffect(() => {
     const listener: RequestListListener = {

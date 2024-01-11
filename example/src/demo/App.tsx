@@ -116,7 +116,6 @@ export function App() {
     const ret2 = DeviceEventEmitter.addListener(
       'example_change_language',
       (e) => {
-        console.log('test:zuoyu:language', e);
         setLanguage(e);
       }
     );

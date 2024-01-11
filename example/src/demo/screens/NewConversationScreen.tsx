@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+import { ChatConversationType } from 'react-native-chat-sdk';
 import {
   NewConversation,
   useColors,
@@ -38,6 +39,14 @@ export function NewConversationScreen(props: Props) {
         }}
         onBack={() => {
           navigation.goBack();
+        }}
+        onClickedItem={(data) => {
+          navigation.navigate('ConversationDetail', {
+            params: {
+              convId: data?.userId,
+              convType: ChatConversationType.PeerChat,
+            },
+          });
         }}
       />
     </SafeAreaView>

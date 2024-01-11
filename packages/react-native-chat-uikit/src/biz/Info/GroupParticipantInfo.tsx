@@ -4,7 +4,7 @@ import { Pressable, View } from 'react-native';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert, AlertRef } from '../../ui/Alert';
-import { BlockButton, CmnButton } from '../../ui/Button';
+import { CmnButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
 import { Text } from '../../ui/Text';
@@ -12,6 +12,7 @@ import { SimpleToast } from '../../ui/Toast';
 import { Avatar } from '../Avatar';
 import { ListItem } from '../ListItem';
 import { TopNavigationBar } from '../TopNavigationBar';
+import { BlockButtons } from './BlockButtons';
 import { useGroupParticipantInfo } from './GroupParticipantInfo.hooks';
 import type { GroupParticipantInfoProps } from './types';
 
@@ -24,7 +25,6 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
     hasVideoCall = false,
     onClearChat,
     containerStyle,
-    isContact = false,
     navigationBarVisible,
     customNavigationBar,
   } = props;
@@ -37,6 +37,12 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
     onCopyId,
     toastRef,
     tr,
+    onSendMessage,
+    onAddContact,
+    onAudioCall,
+    onVideoCall,
+    isContact,
+    onInitButton,
   } = useGroupParticipantInfo(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -126,43 +132,24 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
           />
         </Pressable>
         <View style={{ height: 20 }} />
-        {isContact === true ? (
+        {isContact !== true ? (
           <CmnButton
             sizesType={'large'}
             radiusType={'small'}
             contentType={'only-text'}
             text={tr('_uikit_info_button_add_contact')}
+            onPress={onAddContact}
           />
         ) : (
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-            }}
-          >
-            {hasSendMessage ? (
-              <BlockButton
-                iconName={'bubble_fill'}
-                text={tr('_uikit_info_send_msg')}
-                containerStyle={{ height: 62, width: 114 }}
-              />
-            ) : null}
-            {hasAudioCall ? (
-              <BlockButton
-                iconName={'phone_pick'}
-                text={tr('_uikit_info_send_audio')}
-                containerStyle={{ height: 62, width: 114 }}
-              />
-            ) : null}
-            {hasVideoCall ? (
-              <BlockButton
-                iconName={'video_camera'}
-                text={tr('_uikit_info_send_video')}
-                containerStyle={{ height: 62, width: 114 }}
-              />
-            ) : null}
-          </View>
+          <BlockButtons
+            hasAudioCall={hasAudioCall}
+            hasSendMessage={hasSendMessage}
+            hasVideoCall={hasVideoCall}
+            onSendMessage={onSendMessage}
+            onAudioCall={onAudioCall}
+            onVideoCall={onVideoCall}
+            onInitButton={onInitButton}
+          />
         )}
       </View>
       {isContact === true ? null : (

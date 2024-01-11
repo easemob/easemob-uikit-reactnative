@@ -40,6 +40,8 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     menuRef,
     onRequestCloseMenu,
     ListItemRender,
+    groupId,
+    ownerId,
   } = useGroupParticipantList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -73,6 +75,8 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     >
       {navigationBarVisible !== false ? (
         <GroupParticipantListNavigationBar
+          groupId={groupId}
+          ownerId={ownerId}
           participantType={participantType}
           onBack={onBack}
           onDelParticipant={onDelParticipant}

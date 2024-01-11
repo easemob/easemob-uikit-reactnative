@@ -44,6 +44,7 @@ import {
   ConversationModel,
   GroupModel,
   GroupParticipantModel,
+  StateModel,
   UIListener,
   UIListenerType,
 } from './types.ui';
@@ -63,7 +64,7 @@ export class ChatServiceImpl
   _groupMemberList: Map<string, Map<string, GroupParticipantModel>>;
   _request: RequestList;
   _messageManager: MessageCacheManager;
-  _contactState: Map<string, Map<string, boolean>>;
+  _modelState: Map<string, Map<string, StateModel>>;
   _currentConversation?: ConversationModel;
   _silentModeList: Map<string, { convId: string; doNotDisturb?: boolean }>;
   _convDataRequestCallback?: (params: {
@@ -114,7 +115,7 @@ export class ChatServiceImpl
     this._contactList = new Map();
     this._groupList = new Map();
     this._groupMemberList = new Map();
-    this._contactState = new Map();
+    this._modelState = new Map();
     this._silentModeList = new Map();
     this._request = new RequestListImpl(this);
     this._messageManager = new MessageCacheManagerImpl(this);
@@ -133,7 +134,7 @@ export class ChatServiceImpl
     this._contactList.clear();
     this._groupList.clear();
     this._groupMemberList.clear();
-    this._contactState.clear();
+    this._modelState.clear();
     this._silentModeList.clear();
   }
 
@@ -1385,37 +1386,22 @@ export class ChatServiceImpl
     });
   }
 
-  setContactCheckedState(params: {
-    key: string;
-    userId: string;
-    checked: boolean;
-  }): void {
-    const map = this._contactState.get(params.key);
-    if (map) {
-      if (params.checked === false) {
-        map.delete(params.userId);
-      } else {
-        map.set(params.userId, params.checked);
-      }
+  setModelState(params: { tag: string; id: string; state: StateModel }): void {
+    const list = this._modelState.get(params.tag);
+    if (list) {
+      list.set(params.id, params.state);
     } else {
-      if (params.checked === true) {
-        this._contactState.set(params.key, new Map([[params.userId, true]]));
-      }
+      this._modelState.set(params.tag, new Map([[params.id, params.state]]));
     }
-  }
-  getContactCheckedState(params: {
-    key: string;
-    userId: string;
-  }): boolean | undefined {
-    const map = this._contactState.get(params.key);
-    if (map) {
-      return map.get(params.userId);
-    }
-    return undefined;
   }
 
-  clearContactCheckedState(params: { key: string }): void {
-    this._contactState.delete(params.key);
+  getModelState(params: { tag: string; id: string }): StateModel | undefined {
+    const list = this._modelState.get(params.tag);
+    return list?.get(params.id);
+  }
+
+  clearModelState(params: { tag: string }): void {
+    this._modelState.delete(params.tag);
   }
 
   getPageGroups(params: {
@@ -1677,7 +1663,7 @@ export class ChatServiceImpl
         } else {
           params.onResult({
             isOk: true,
-            value: undefined,
+            value: value,
           });
         }
       },

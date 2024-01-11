@@ -18,6 +18,20 @@ export enum UIListenerType {
 
 export type NewRequestStateType = 'pending' | 'accepted' | 'declined';
 
+/**
+ * Used when making multiple or single selections.
+ */
+export type StateModel = {
+  /**
+   * Check or not
+   */
+  checked?: boolean;
+  /**
+   * Whether to disable.
+   */
+  disable?: boolean;
+};
+
 type _ConversationModel = PartialUndefinable<ChatConversation>;
 export type ConversationModel = Pick<
   _ConversationModel,
@@ -53,13 +67,12 @@ export type ConversationModel = Pick<
   lastMessage?: ChatMessage;
 };
 type _ContactModel = PartialUndefinable<ChatContact>;
-export type ContactModel = _ContactModel & {
-  userId: string;
-  userName?: string;
-  userAvatar?: string;
-  checked?: boolean;
-  disable?: boolean;
-};
+export type ContactModel = _ContactModel &
+  StateModel & {
+    userId: string;
+    userName?: string;
+    userAvatar?: string;
+  };
 
 type _GroupModel = Omit<
   PartialUndefinable<ChatGroup>,
@@ -88,12 +101,10 @@ export type GroupModel = _GroupModel & {
   myRemark?: string;
 };
 
-export type GroupParticipantModel = {
+export type GroupParticipantModel = StateModel & {
   memberId: string;
   memberName?: string;
   memberAvatar?: string;
-  checked?: boolean;
-  disable?: boolean;
 };
 
 export type NewRequestModel = {

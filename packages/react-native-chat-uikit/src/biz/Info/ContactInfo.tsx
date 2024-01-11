@@ -4,7 +4,7 @@ import { Pressable, View } from 'react-native';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
-import { BlockButton, CmnButton } from '../../ui/Button';
+import { CmnButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
 import { Text } from '../../ui/Text';
@@ -13,6 +13,7 @@ import { Avatar } from '../Avatar';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { ListItem } from '../ListItem';
 import { TopNavigationBar } from '../TopNavigationBar';
+import { BlockButtons } from './BlockButtons';
 import { useContactInfo } from './ContactInfo.hooks';
 import type { ContactInfoProps } from './types';
 
@@ -25,6 +26,7 @@ export function ContactInfo(props: ContactInfoProps) {
     containerStyle,
     navigationBarVisible,
     customNavigationBar,
+    onInitButton,
   } = props;
   const {
     doNotDisturb,
@@ -140,44 +142,15 @@ export function ContactInfo(props: ContactInfoProps) {
         {isContact === true ? (
           <>
             <View style={{ height: 20 }} />
-            <View
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-              }}
-            >
-              {hasSendMessage ? (
-                <BlockButton
-                  iconName={'bubble_fill'}
-                  text={tr('_uikit_info_send_msg')}
-                  containerStyle={{ height: 62, width: 114 }}
-                  onPress={() => {
-                    onSendMessage?.(userId);
-                  }}
-                />
-              ) : null}
-              {hasAudioCall ? (
-                <BlockButton
-                  iconName={'phone_pick'}
-                  text={tr('_uikit_info_send_audio')}
-                  containerStyle={{ height: 62, width: 114 }}
-                  onPress={() => {
-                    onAudioCall?.(userId);
-                  }}
-                />
-              ) : null}
-              {hasVideoCall ? (
-                <BlockButton
-                  iconName={'video_camera'}
-                  text={tr('_uikit_info_send_video')}
-                  containerStyle={{ height: 62, width: 114 }}
-                  onPress={() => {
-                    onVideoCall?.(userId);
-                  }}
-                />
-              ) : null}
-            </View>
+            <BlockButtons
+              hasAudioCall={hasAudioCall}
+              hasSendMessage={hasSendMessage}
+              hasVideoCall={hasVideoCall}
+              onSendMessage={onSendMessage}
+              onAudioCall={onAudioCall}
+              onVideoCall={onVideoCall}
+              onInitButton={onInitButton}
+            />
           </>
         ) : null}
       </View>

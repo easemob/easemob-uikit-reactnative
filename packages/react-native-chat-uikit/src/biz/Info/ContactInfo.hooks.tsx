@@ -1,6 +1,10 @@
 import * as React from 'react';
 
-import { useChatContext } from '../../chat';
+import {
+  UIConversationListListener,
+  UIListenerType,
+  useChatContext,
+} from '../../chat';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
@@ -15,9 +19,14 @@ export function useContactInfo(props: ContactInfoProps) {
     userName: propsUserName,
     userAvatar: propsUserAvatar,
     doNotDisturb: propsDoNotDisturb,
+    onDoNotDisturb: propsOnDoNotDisturb,
     onClearChat: propsOnClearChat,
     isContact: propsIsContact,
     onInitMenu,
+    onSendMessage: propsOnSendMessage,
+    onAudioCall: propsOnAudioCall,
+    onVideoCall: propsOnVideoCall,
+    onMore: propsOnMore,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(propsUserName);
@@ -74,26 +83,22 @@ export function useContactInfo(props: ContactInfoProps) {
     )
   );
   const onDoNotDisturb = (value: boolean) => {
+    if (propsOnDoNotDisturb) {
+      propsOnDoNotDisturb(value);
+      return;
+    }
     im.setConversationSilentMode({
       convId: userId,
       convType: 0,
       doNotDisturb: value,
-    })
-      .then(() => {
-        setDoNotDisturb(value);
-      })
-      .catch((e) => {
-        im.sendError({ error: e });
-      });
+    });
   };
   const onClearChat = () => {
-    im.removeConversation({ convId: userId })
-      .then(() => {
-        propsOnClearChat?.();
-      })
-      .catch((e) => {
-        im.sendError({ error: e });
-      });
+    if (propsOnClearChat) {
+      propsOnClearChat();
+      return;
+    }
+    im.removeConversation({ convId: userId });
   };
 
   const onRequestCloseMenu = () => {
@@ -101,8 +106,45 @@ export function useContactInfo(props: ContactInfoProps) {
   };
 
   const onMoreMenu = () => {
+    if (propsOnMore) {
+      propsOnMore();
+      return;
+    }
     onShowContactInfoActions(userId, userName);
   };
+
+  const onSendMessage = () => {
+    if (propsOnSendMessage) {
+      propsOnSendMessage(userId);
+    }
+  };
+
+  const onAudioCall = () => {
+    if (propsOnAudioCall) {
+      propsOnAudioCall(userId);
+    }
+  };
+
+  const onVideoCall = () => {
+    if (propsOnVideoCall) {
+      propsOnVideoCall(userId);
+    }
+  };
+
+  React.useEffect(() => {
+    const listener: UIConversationListListener = {
+      onUpdatedEvent: (data) => {
+        if (data.convId === userId) {
+          setDoNotDisturb(data.doNotDisturb);
+        }
+      },
+      type: UIListenerType.Conversation,
+    };
+    im.addUIListener(listener);
+    return () => {
+      im.removeUIListener(listener);
+    };
+  }, [im, userId]);
 
   return {
     ...props,
@@ -120,5 +162,8 @@ export function useContactInfo(props: ContactInfoProps) {
     toastRef,
     tr,
     isSelf,
+    onSendMessage,
+    onAudioCall,
+    onVideoCall,
   };
 }

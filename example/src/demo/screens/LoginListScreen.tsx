@@ -75,8 +75,6 @@ export function LoginListScreen(props: Props) {
                   userName: `${v.id}name`,
                   userAvatarURL:
                     'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/cat-512.png',
-                  gender: 1,
-                  sign: 'Discussing heroes over wine other.',
                   result: ({ isOk, error }) => {
                     setS(isOk === true ? 'success' : 'failed');
                     if (error) {

@@ -3,6 +3,7 @@ import { ChatConversationType } from 'react-native-chat-sdk';
 
 import {
   ChatServiceListener,
+  UIConversationListListener,
   UIGroupListListener,
   UIListenerType,
   useChatContext,
@@ -28,6 +29,7 @@ export function useGroupInfo(
     groupDescription: propsGroupDescription,
     groupMyRemark: propsGroupMyRemark,
     doNotDisturb: propsDoNotDisturb,
+    onDoNotDisturb: propsOnDoNotDisturb,
     onClearChat: propsOnClearChat,
     onGroupName: propsOnGroupName,
     onGroupMyRemark: propsOnGroupMyRemark,
@@ -39,6 +41,9 @@ export function useGroupInfo(
     onGroupQuit,
     onInitMenu,
     onGroupKicked,
+    onSendMessage: propsOnSendMessage,
+    onAudioCall: propsOnAudioCall,
+    onVideoCall: propsOnVideoCall,
   } = props;
   const im = useChatContext();
   const { tr } = useI18nContext();
@@ -55,14 +60,7 @@ export function useGroupInfo(
   const [groupMyRemark, setGroupMyRemark] = React.useState(propsGroupMyRemark);
   const [groupMemberCount, setGroupMemberCount] = React.useState(0);
   const [isOwner, setIsOwner] = React.useState(false);
-  const { onShowGroupInfoActions } = useGroupInfoActions({
-    menuRef,
-    alertRef,
-    onGroupQuit,
-    onClickedChangeGroupOwner,
-    onGroupDestroy,
-    onInit: onInitMenu,
-  });
+
   useLifecycle(
     React.useCallback(
       (state: any) => {
@@ -73,12 +71,13 @@ export function useGroupInfo(
               ownerId;
               const { isOk } = value;
               if (isOk === true && value.value) {
+                // todo: useReducer
+                ownerIdRef.current = value.value.owner;
                 setGroupDescription(value.value?.description);
                 setGroupName(value.value?.groupName);
                 setGroupAvatar(value.value.groupAvatar);
                 setGroupMemberCount(value.value.memberCount ?? 0);
                 setGroupMyRemark(value.value?.myRemark);
-                ownerIdRef.current = value.value.owner;
                 setIsOwner(im.userId === value.value.owner);
               }
             },
@@ -91,7 +90,7 @@ export function useGroupInfo(
           })
             .then((result) => {
               if (result) {
-                setDoNotDisturb(result.doNotDisturb);
+                setDoNotDisturb(result.doNotDisturb ?? false);
               }
             })
             .catch();
@@ -111,20 +110,35 @@ export function useGroupInfo(
       [im, groupId, ownerId]
     )
   );
-  const onDoNotDisturb = (value: boolean) => {
+
+  const quitGroup = React.useCallback(() => {
+    im.quitGroup({ groupId });
+  }, [groupId, im]);
+  const destroyGroup = React.useCallback(() => {
+    im.destroyGroup({ groupId });
+  }, [groupId, im]);
+
+  const { onShowGroupInfoActions } = useGroupInfoActions({
+    menuRef,
+    alertRef,
+    quitGroup: quitGroup,
+    destroyGroup: destroyGroup,
+    onClickedChangeGroupOwner,
+    onInit: onInitMenu,
+  });
+
+  const doNotDisturbCallback = (value: boolean) => {
+    if (propsOnDoNotDisturb) {
+      propsOnDoNotDisturb(value);
+      return;
+    }
     im.setConversationSilentMode({
       convId: groupId,
       convType: ChatConversationType.GroupChat,
       doNotDisturb: value,
-    })
-      .then(() => {
-        setDoNotDisturb(value);
-      })
-      .catch((e) => {
-        im.sendError({ error: e });
-      });
+    });
   };
-  const onClearChat = () => {
+  const onClearConversation = () => {
     if (propsOnClearChat) {
       propsOnClearChat();
       return;
@@ -142,12 +156,9 @@ export function useGroupInfo(
           text: tr('confirm'),
           isPreferred: true,
           onPress: () => {
-            alertRef.current.close();
-            im.removeConversation({ convId: groupId })
-              .then(() => {})
-              .catch((e) => {
-                im.sendError({ error: e });
-              });
+            alertRef.current.close(() => {
+              im.removeConversation({ convId: groupId });
+            });
           },
         },
       ],
@@ -174,16 +185,14 @@ export function useGroupInfo(
           text: tr('confirm'),
           isPreferred: true,
           onPress: (text) => {
-            alertRef.current.close();
-            if (text) {
-              im.setGroupName({
-                groupId,
-                groupNewName: text,
-                onResult: () => {
-                  setGroupName(text);
-                },
-              });
-            }
+            alertRef.current.close(() => {
+              if (text) {
+                im.setGroupName({
+                  groupId,
+                  groupNewName: text,
+                });
+              }
+            });
           },
         },
       ],
@@ -216,16 +225,14 @@ export function useGroupInfo(
           text: tr('confirm'),
           isPreferred: true,
           onPress: (text) => {
-            alertRef.current.close();
-            if (text) {
-              im.setGroupDescription({
-                groupId,
-                groupDescription: text,
-                onResult: () => {
-                  setGroupDescription(text);
-                },
-              });
-            }
+            alertRef.current.close(() => {
+              if (text) {
+                im.setGroupDescription({
+                  groupId,
+                  groupDescription: text,
+                });
+              }
+            });
           },
         },
       ],
@@ -253,20 +260,21 @@ export function useGroupInfo(
           text: tr('confirm'),
           isPreferred: true,
           onPress: (text) => {
-            alertRef.current.close();
-            if (text) {
-              if (text.trim().length === 0) {
-                return;
+            alertRef.current.close(() => {
+              if (text) {
+                if (text.trim().length === 0) {
+                  return;
+                }
+                if (im.userId === undefined) {
+                  return;
+                }
+                im.setGroupMyRemark({
+                  groupId,
+                  memberId: im.userId,
+                  groupMyRemark: text,
+                });
               }
-              if (im.userId === undefined) {
-                return;
-              }
-              im.setGroupMyRemark({
-                groupId,
-                memberId: im.userId,
-                groupMyRemark: text,
-              });
-            }
+            });
           },
         },
       ],
@@ -299,6 +307,24 @@ export function useGroupInfo(
     onShowGroupInfoActions(im.userId ?? '', ownerIdRef.current, groupId);
   };
 
+  const onSendMessage = () => {
+    if (propsOnSendMessage) {
+      propsOnSendMessage(groupId);
+    }
+  };
+
+  const onAudioCall = () => {
+    if (propsOnAudioCall) {
+      propsOnAudioCall(groupId);
+    }
+  };
+
+  const onVideoCall = () => {
+    if (propsOnVideoCall) {
+      propsOnVideoCall(groupId);
+    }
+  };
+
   React.useEffect(() => {
     const listener: ChatServiceListener = {
       onDestroyed: (params: {
@@ -322,6 +348,21 @@ export function useGroupInfo(
       im.removeListener(listener);
     };
   }, [im, onGroupDestroy, onGroupKicked, onGroupQuit]);
+
+  React.useEffect(() => {
+    const listener: UIConversationListListener = {
+      onUpdatedEvent: (data) => {
+        if (data.convId === groupId) {
+          setDoNotDisturb(data.doNotDisturb);
+        }
+      },
+      type: UIListenerType.Conversation,
+    };
+    im.addUIListener(listener);
+    return () => {
+      im.removeUIListener(listener);
+    };
+  }, [groupId, im]);
 
   React.useEffect(() => {
     const uiListener: UIGroupListListener = {
@@ -363,7 +404,6 @@ export function useGroupInfo(
           im.setGroupName({
             groupId,
             groupNewName: groupNewName,
-            onResult: () => {},
           });
         },
         setGroupDescription: (groupId: string, desc?: string) => {
@@ -373,7 +413,6 @@ export function useGroupInfo(
           im.setGroupDescription({
             groupId,
             groupDescription: desc,
-            onResult: () => {},
           });
         },
         setGroupMyRemark: (groupId: string, remark?: string) => {
@@ -394,8 +433,8 @@ export function useGroupInfo(
   return {
     ...props,
     doNotDisturb,
-    onDoNotDisturb,
-    onClearChat,
+    onDoNotDisturb: doNotDisturbCallback,
+    onClearChat: onClearConversation,
     groupName,
     onGroupName,
     groupAvatar,
@@ -413,5 +452,8 @@ export function useGroupInfo(
     groupMemberCount,
     isOwner,
     tr,
+    onAudioCall,
+    onVideoCall,
+    onSendMessage,
   };
 }

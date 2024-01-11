@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
+import { useChatContext } from '../../chat';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
@@ -12,6 +13,8 @@ import type { GroupParticipantListNavigationBarProps } from './types';
 
 type _GroupParticipantListNavigationBarProps =
   GroupParticipantListNavigationBarProps & {
+    groupId: string;
+    ownerId?: string;
     onDelParticipant?: () => void;
     deleteCount?: number;
     participantCount?: number;
@@ -28,8 +31,11 @@ export const GroupParticipantListNavigationBar = (
     onClickedAddParticipant,
     onClickedDelParticipant,
     customNavigationBar,
+    ownerId,
   } = props;
   const { tr } = useI18nContext();
+  const im = useChatContext();
+  const isOwner = ownerId === im.userId;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -73,22 +79,24 @@ export const GroupParticipantListNavigationBar = (
           </Pressable>
         }
         Right={
-          <Pressable
-            style={{ flexDirection: 'row' }}
-            onPress={onDelParticipant}
-          >
-            <Text
-              textType={'medium'}
-              paletteType={'label'}
-              style={{
-                color: getColor(
-                  deleteCount === 0 ? 'text_disable' : 'text_enable'
-                ),
-              }}
+          isOwner === true ? (
+            <Pressable
+              style={{ flexDirection: 'row' }}
+              onPress={onDelParticipant}
             >
-              {tr('_uikit_group_del_member_button', deleteCount)}
-            </Text>
-          </Pressable>
+              <Text
+                textType={'medium'}
+                paletteType={'label'}
+                style={{
+                  color: getColor(
+                    deleteCount === 0 ? 'text_disable' : 'text_enable'
+                  ),
+                }}
+              >
+                {tr('_uikit_group_del_member_button', deleteCount)}
+              </Text>
+            </Pressable>
+          ) : null
         }
         containerStyle={{ paddingHorizontal: 12 }}
       />
@@ -97,19 +105,21 @@ export const GroupParticipantListNavigationBar = (
     return (
       <TopNavigationBar
         Left={
-          <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center' }}
-            onPress={onBack}
-          >
-            <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
-            <Text
-              textType={'medium'}
-              paletteType={'label'}
-              style={{ color: getColor('text') }}
+          isOwner === true ? (
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+              onPress={onBack}
             >
-              {tr('_uikit_group_change_owner_title')}
-            </Text>
-          </Pressable>
+              <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+              <Text
+                textType={'medium'}
+                paletteType={'label'}
+                style={{ color: getColor('text') }}
+              >
+                {tr('_uikit_group_change_owner_title')}
+              </Text>
+            </Pressable>
+          ) : null
         }
         Right={<View style={{ width: 1, height: 1 }} />}
         containerStyle={{ paddingHorizontal: 12 }}
@@ -150,19 +160,21 @@ export const GroupParticipantListNavigationBar = (
           </Pressable>
         }
         Right={
-          <View style={{ flexDirection: 'row' }}>
-            <IconButton
-              iconName={'person_add'}
-              style={{ width: 24, height: 24, padding: 6 }}
-              onPress={onClickedAddParticipant}
-            />
-            <View style={{ width: 4 }} />
-            <IconButton
-              iconName={'person_minus'}
-              style={{ width: 24, height: 24, padding: 6 }}
-              onPress={onClickedDelParticipant}
-            />
-          </View>
+          isOwner === true ? (
+            <View style={{ flexDirection: 'row' }}>
+              <IconButton
+                iconName={'person_add'}
+                style={{ width: 24, height: 24, padding: 6 }}
+                onPress={onClickedAddParticipant}
+              />
+              <View style={{ width: 4 }} />
+              <IconButton
+                iconName={'person_minus'}
+                style={{ width: 24, height: 24, padding: 6 }}
+                onPress={onClickedDelParticipant}
+              />
+            </View>
+          ) : null
         }
         containerStyle={{ paddingHorizontal: 12 }}
       />

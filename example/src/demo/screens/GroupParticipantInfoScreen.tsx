@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+import { ChatConversationType } from 'react-native-chat-sdk';
 import {
   GroupParticipantInfo,
   useColors,
@@ -11,7 +12,7 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function GroupParticipantInfoScreen(props: Props) {
-  const { route } = props;
+  const { route, navigation } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -35,6 +36,19 @@ export function GroupParticipantInfoScreen(props: Props) {
         }}
         groupId={groupId}
         userId={userId}
+        onSendMessage={(data) => {
+          if (data) {
+            navigation.navigate('ConversationDetail', {
+              params: {
+                convId: data,
+                convType: ChatConversationType.PeerChat,
+              },
+            });
+          }
+        }}
+        onBack={() => {
+          navigation.goBack();
+        }}
       />
     </SafeAreaView>
   );

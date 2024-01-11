@@ -84,3 +84,7 @@ export function BlockButton(props: BlockButtonProps) {
     </TouchableOpacity>
   );
 }
+
+export type BlockButtonComponentType =
+  | React.ComponentType<BlockButtonProps>
+  | React.ExoticComponent<BlockButtonProps>;
