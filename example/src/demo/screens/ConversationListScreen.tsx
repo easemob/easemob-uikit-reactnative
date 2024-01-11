@@ -38,6 +38,7 @@ export function ConversationListScreen(props: Props) {
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
+        // filterEmptyConversation={true}
         onRequestMultiData={async (params: {
           ids: Map<DataModelType, string[]>;
           result: (

@@ -405,12 +405,6 @@ export interface GroupServices {
     groupId: string;
     userId: string;
   }): GroupParticipantModel | undefined;
-  setGroupMemberState(params: {
-    groupId: string;
-    userId: string;
-    checked: boolean;
-    onResult: ResultCallback<void>;
-  }): void;
   fetchJoinedGroupCount(params: { onResult: ResultCallback<number> }): void;
   getGroupInfo(params: {
     groupId: string;
@@ -748,8 +742,6 @@ type _ChatOptionsType = PartialUndefinable<ChatOptions>;
  */
 export type ChatOptionsType = _ChatOptionsType & {
   appKey: string;
-  autoLogin: boolean;
-  debugModel: boolean;
 };
 
 /**

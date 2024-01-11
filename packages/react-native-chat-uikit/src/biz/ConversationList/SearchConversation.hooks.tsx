@@ -1,11 +1,11 @@
 import { ChatConversationType } from 'react-native-chat-sdk';
 
-import { useChatContext } from '../../chat';
+import { gNewRequestConversationId, useChatContext } from '../../chat';
 import { useFlatList } from '../List';
 import type { ConversationSearchModel, SearchConversationProps } from './types';
 
 export function useSearchConversation(props: SearchConversationProps) {
-  const { onClicked, testMode } = props;
+  const { onClicked, testMode, filterEmptyConversation } = props;
   const flatListProps = useFlatList<ConversationSearchModel>({
     isShowAfterLoaded: false,
     onInit: () => init(),
@@ -50,6 +50,14 @@ export function useSearchConversation(props: SearchConversationProps) {
                     conv.convType === ChatConversationType.GroupChat
                       ? 'group'
                       : 'user',
+                });
+              }
+              dataRef.current = dataRef.current.filter((item) => {
+                return item.convId !== gNewRequestConversationId;
+              });
+              if (filterEmptyConversation === true) {
+                dataRef.current = dataRef.current.filter((item) => {
+                  return item.lastMessage !== undefined;
                 });
               }
               setData([...dataRef.current]);

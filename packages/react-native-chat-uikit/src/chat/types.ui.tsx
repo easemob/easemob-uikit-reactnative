@@ -105,6 +105,7 @@ export type GroupParticipantModel = StateModel & {
   memberId: string;
   memberName?: string;
   memberAvatar?: string;
+  isOwner?: boolean;
 };
 
 export type NewRequestModel = {

@@ -204,6 +204,25 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
                 dataRef.current = dataRef.current.filter((item) => {
                   return item.data.memberId !== im.userId;
                 });
+              } else {
+                im.getGroupInfo({
+                  groupId,
+                  onResult: (result) => {
+                    if (result.isOk && result.value) {
+                      dataRef.current.push({
+                        id: result.value.owner,
+                        data: {
+                          memberId: result.value.owner,
+                          memberName: undefined,
+                          isOwner: true,
+                        },
+                      });
+                      onSetData();
+                      setParticipantCount(dataRef.current.length);
+                    }
+                  },
+                });
+                return;
               }
               onSetData();
               setParticipantCount(dataRef.current.length);

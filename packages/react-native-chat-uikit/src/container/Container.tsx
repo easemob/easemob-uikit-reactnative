@@ -37,7 +37,6 @@ export function GlobalContainer(props: GlobalContainerProps) {
     palette,
     theme,
     fontFamily,
-    releaseArea,
     onInitialized,
     conversationDetail,
     group,
@@ -56,7 +55,7 @@ export function GlobalContainer(props: GlobalContainerProps) {
     _guessLanguage,
     onInitLanguageSet?.()
   );
-  const _releaseArea = getReleaseArea(releaseArea);
+  const _releaseArea = getReleaseArea();
   const _theme = useGetTheme({
     theme: theme,
     palette: palette ?? _palette,
@@ -84,7 +83,7 @@ export function GlobalContainer(props: GlobalContainerProps) {
             >
               <ConfigContextProvider
                 value={{
-                  isDevMode: options.debugModel,
+                  isDevMode: options.debugModel ?? false,
                   enableCompare: false,
                   enableCheckType: false,
                   languageCode: getTranslateLanguage(_guessLanguage),

@@ -131,6 +131,10 @@ export type ConversationListProps = Pick<
      * Callback notification for initializing the bottom menu for long press list item.
      */
     onInitBottomMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
+    /**
+     * filter empty conversation.
+     */
+    filterEmptyConversation?: boolean;
   };
 export type SearchConversationProps = PropsWithTest &
   PropsWithCancel &
@@ -139,6 +143,10 @@ export type SearchConversationProps = PropsWithTest &
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > & {
     containerStyle?: StyleProp<ViewStyle>;
+    /**
+     * filter empty conversation.
+     */
+    filterEmptyConversation?: boolean;
   };
 
 export type ConversationSearchModel = ConversationModel & DataModel;

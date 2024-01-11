@@ -50,6 +50,7 @@ export function useConversationList(props: ConversationListProps) {
     onInitNavigationBarMenu,
     onInitBottomMenu,
     onInitialized,
+    filterEmptyConversation,
   } = props;
   const flatListProps = useFlatList<ConversationListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
@@ -244,7 +245,15 @@ export function useConversationList(props: ConversationListProps) {
                     });
                   }
                   if (isShowAfterLoaded === true) {
-                    refreshToUI(dataRef.current);
+                    dataRef.current = dataRef.current.filter(
+                      (item) => item.data.convId !== gNewRequestConversationId
+                    );
+                    if (filterEmptyConversation === true) {
+                      dataRef.current = dataRef.current.filter(
+                        (item) => item.data.lastMessage !== undefined
+                      );
+                    }
+                    refreshToUI([...dataRef.current]);
                   }
                 }
                 onSetState('normal');
@@ -265,12 +274,13 @@ export function useConversationList(props: ConversationListProps) {
     },
     [
       dataRef,
+      filterEmptyConversation,
       im,
       isAutoLoad,
       isShowAfterLoaded,
       onRequestMultiData,
-      refreshToUI,
       onSetState,
+      refreshToUI,
       testMode,
     ]
   );

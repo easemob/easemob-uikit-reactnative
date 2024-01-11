@@ -1,16 +1,7 @@
 import type { ChatOptionsType } from '../chat';
 import type { ConversationDetailType } from '../config';
 import type { CreateStringSet, LanguageCode, StringSet } from '../i18n';
-import type {
-  ClipboardService,
-  DirCacheService,
-  LocalStorageService,
-  MediaService,
-  NotificationService,
-  PermissionService,
-} from '../services';
 import type { CornerRadiusPaletteType, Palette, Theme } from '../theme';
-import type { ReleaseArea } from '../types';
 
 /**
  * Properties of the GlobalContainer.
@@ -39,7 +30,7 @@ export type GlobalContainerProps = React.PropsWithChildren<{
   /**
    * The release area.
    */
-  releaseArea?: ReleaseArea;
+  // releaseArea?: ReleaseArea;
 
   /**
    * Format timestamp. Users can provide a timestamp format string callback interface for session lists and session details.
@@ -121,15 +112,4 @@ export type GlobalContainerProps = React.PropsWithChildren<{
    * IM initialization is completed.
    */
   onInitialized?: () => void;
-  /**
-   * reserve.
-   */
-  services?: {
-    clipboard?: ClipboardService | undefined;
-    media?: MediaService | undefined;
-    notification?: NotificationService | undefined;
-    permission?: PermissionService | undefined;
-    storage?: LocalStorageService | undefined;
-    dir?: DirCacheService | undefined;
-  };
 }>;

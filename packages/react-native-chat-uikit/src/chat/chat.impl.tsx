@@ -1574,21 +1574,6 @@ export class ChatServiceImpl
     return undefined;
   }
 
-  setGroupMemberState(params: {
-    groupId: string;
-    userId: string;
-    checked: boolean;
-    onResult: ResultCallback<void>;
-  }): void {
-    const map = this._groupMemberList.get(params.groupId);
-    if (map) {
-      const isExisted = map.get(params.groupId);
-      if (isExisted) {
-        isExisted.checked = params.checked;
-      }
-    }
-  }
-
   fetchJoinedGroupCount(params: { onResult: ResultCallback<number> }): void {
     this.tryCatch({
       promise: this.client.groupManager.fetchJoinedGroupCount(),

@@ -16,14 +16,20 @@ export type Config = {
   isDevMode: boolean;
   /**
    * Whether to enable the debug mode.
+   *
+   * Whether to activate the object comparison tool. If activated, the `useCompare` tool can be used.
    */
   enableCompare: boolean;
   /**
    * Whether to enable the type check.
+   *
+   * Whether to activate the object type check tool. If activated, the `useCheckType` tool can be used.
    */
   enableCheckType: boolean;
   /**
    * This language code is used to translate message.
+   *
+   * If not set, it is obtained from the system. If the language set is not built-in, the local environment is automatically set.
    */
   languageCode: LanguageCode;
 
@@ -37,6 +43,9 @@ export type Config = {
    */
   conversationDetail?: ConversationDetailType;
 
+  /**
+   * The group config.
+   */
   group: {
     /**
      * The create group member limit.
