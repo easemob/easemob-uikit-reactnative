@@ -159,11 +159,22 @@ export type CustomServiceListener = PartialUndefinable<ChatCustomEventListener>;
 export type MultiDeviceStateListener =
   PartialUndefinable<ChatMultiDeviceEventListener>;
 
-export interface ErrorServiceListener {
-  onError?(params: { error: UIKitError; from?: string; extra?: any }): void;
-}
-export interface ResultServiceListener {
+/**
+ * When calling the `ChatService` common interface, the corresponding event will be triggered. Events before calling the interface, calling completion events and calling failure events.
+ */
+export interface EventServiceListener {
+  /**
+   * Event notification before calling the interface.
+   */
+  onBefore?(params: { event: ChatEventType; extra?: any }): void;
+  /**
+   * Event notification after calling the interface.
+   */
   onFinished?(params: { event: ChatEventType; extra?: any }): void;
+  /**
+   * Event notification when an error occurs.
+   */
+  onError?(params: { error: UIKitError; from?: string; extra?: any }): void;
 }
 
 export type ChatServiceListener = ConnectServiceListener &
@@ -174,8 +185,7 @@ export type ChatServiceListener = ConnectServiceListener &
   PresenceServiceListener &
   CustomServiceListener &
   MultiDeviceStateListener &
-  ErrorServiceListener &
-  ResultServiceListener;
+  EventServiceListener;
 
 export interface ConversationServices {
   // setOnRequestMultiData<DataT>(
@@ -200,7 +210,10 @@ export interface ConversationServices {
    *
    * Only when users actively delete the session, if they exit the group, be kicked out of the group, delete contact, add blacklist, etc., will not delete the session list.
    */
-  removeConversation(params: { convId: string }): Promise<void>;
+  removeConversation(params: {
+    convId: string;
+    removeMessage?: boolean;
+  }): Promise<void>;
   clearAllConversations(): Promise<void>;
   /**
    * Set the conversation pin.
@@ -253,7 +266,7 @@ export interface ContactServices {
     onResult: ResultCallback<ContactModel | undefined>;
   }): void;
   addNewContact(params: {
-    useId: string;
+    userId: string;
     reason?: string;
     onResult?: ResultCallback<void>;
   }): void;
@@ -693,6 +706,13 @@ export interface ChatService
    * - extra: the extra data.
    */
   sendFinished(params: { event: ChatEventType; extra?: any }): void;
+  /**
+   * Send a before to the listener.
+   * @param params -
+   * - event: the event type.
+   * - extra: the extra data.
+   */
+  sendBefore(params: { event: ChatEventType; extra?: any }): void;
 
   /**
    * This is the cache list of new notifications. When the new notification component has not been loaded and the notification is received, the cache will be automatically updated. Keep data updated when new notification components are loaded.

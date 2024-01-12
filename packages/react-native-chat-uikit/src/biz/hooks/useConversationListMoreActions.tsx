@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { useChatContext } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type {
@@ -9,16 +8,17 @@ import type {
 } from '../BottomSheetMenu';
 import { useCloseMenu } from './useCloseMenu';
 
-export type useConversationListMoreActionsProps = {
+export type UseConversationListMoreActionsProps = {
   onClickedNewConversation?: () => void;
   onClickedNewGroup?: () => void;
   onClickedNewContact?: () => void;
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
   onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
+  onAddContact: (userId: string) => void;
 };
 export function useConversationListMoreActions(
-  props: useConversationListMoreActionsProps
+  props: UseConversationListMoreActionsProps
 ) {
   const {
     onClickedNewConversation,
@@ -27,10 +27,10 @@ export function useConversationListMoreActions(
     menuRef,
     alertRef,
     onInit,
+    onAddContact,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
-  const im = useChatContext();
   const onShowMenu = React.useCallback(() => {
     let items = [
       {
@@ -67,13 +67,9 @@ export function useConversationListMoreActions(
                     text: tr('add'),
                     isPreferred: true,
                     onPress: (value) => {
-                      alertRef.current?.close?.();
-                      if (value) {
-                        im.addNewContact({
-                          useId: value.trim(),
-                          reason: 'add contact',
-                        });
-                      }
+                      alertRef.current?.close?.(() => {
+                        if (value) onAddContact(value);
+                      });
                     },
                   },
                 ],
@@ -103,8 +99,8 @@ export function useConversationListMoreActions(
   }, [
     alertRef,
     closeMenu,
-    im,
     menuRef,
+    onAddContact,
     onClickedNewContact,
     onClickedNewConversation,
     onClickedNewGroup,

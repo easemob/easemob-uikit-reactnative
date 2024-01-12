@@ -40,9 +40,14 @@ export function useContactInfo(props: ContactInfoProps) {
     menuRef,
     alertRef,
     onInit: onInitMenu,
+    onRemoveContact: () => {
+      removeContact(userId);
+      removeConversation(userId);
+    },
   });
   const im = useChatContext();
   const { tr } = useI18nContext();
+
   useLifecycle(
     React.useCallback(
       (state: any) => {
@@ -82,6 +87,15 @@ export function useContactInfo(props: ContactInfoProps) {
       [im, userId]
     )
   );
+
+  const removeContact = (userId: string) => {
+    im.removeContact({ userId });
+  };
+
+  const removeConversation = (userId: string) => {
+    im.removeConversation({ convId: userId });
+  };
+
   const onDoNotDisturb = (value: boolean) => {
     if (propsOnDoNotDisturb) {
       propsOnDoNotDisturb(value);
@@ -98,7 +112,7 @@ export function useContactInfo(props: ContactInfoProps) {
       propsOnClearChat();
       return;
     }
-    im.removeConversation({ convId: userId });
+    removeConversation(userId);
   };
 
   const onRequestCloseMenu = () => {

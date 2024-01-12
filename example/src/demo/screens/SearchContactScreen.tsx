@@ -92,6 +92,12 @@ export function SearchContactScreen(props: Props) {
                 },
               });
             }
+          } else if (searchType === 'contact-list') {
+            if (data) {
+              navigation.navigate('ContactInfo', {
+                params: { userId: data.userId },
+              });
+            }
           }
         }}
         searchType={searchType}

@@ -36,9 +36,20 @@ export function useNewRequests(props: NewRequestsProps) {
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const { closeMenu } = useCloseMenu({ menuRef });
+
+  const addContact = React.useCallback(
+    (userId: string) => {
+      im.addNewContact({
+        userId: userId,
+      });
+    },
+    [im]
+  );
+
   const { onShowContactListMoreActions } = useContactListMoreActions({
     menuRef,
     alertRef,
+    onAddContact: addContact,
   });
 
   const onClickedCallback = React.useCallback(

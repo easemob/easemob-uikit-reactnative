@@ -379,7 +379,7 @@ export class ChatServiceImpl
   }): Promise<void> {
     this.tryCatch({
       promise: this.client.renewAgoraToken(params.token),
-      event: 'renewAgoraToken',
+      event: 'refreshToken',
       onFinished: () => {
         params?.result?.({ isOk: true });
       },
@@ -425,6 +425,11 @@ export class ChatServiceImpl
       asyncTask(() => v.onFinished?.(params));
     });
   }
+  sendBefore(params: { event: ChatEventType; extra?: any }): void {
+    this.listeners.forEach((v) => {
+      asyncTask(() => v.onBefore?.(params));
+    });
+  }
 
   get requestList(): RequestList {
     return this._request!;
@@ -437,15 +442,17 @@ export class ChatServiceImpl
   tryCatch<T>(params: {
     promise: Promise<T>;
     event: string;
-    onFinished?: (value: T) => void;
-    onError?: (e: UIKitError) => void;
+    onFinished?:
+      | ((value: T) => Promise<void | boolean> | void | boolean)
+      | undefined;
+    onError?: ((e: UIKitError) => void | boolean) | undefined;
   }): void {
     const { promise, event, onFinished, onError } = params;
+    this.sendBefore({ event: event });
     promise
-      .then((value: T) => {
-        if (onFinished) {
-          onFinished(value);
-        } else {
+      .then(async (value: T) => {
+        const ret = await onFinished?.(value);
+        if (ret !== false) {
           this.sendFinished({ event: event });
         }
       })
@@ -455,9 +462,8 @@ export class ChatServiceImpl
           desc: event,
           extra: this._fromChatError(e),
         });
-        if (onError) {
-          onError(_e);
-        } else {
+        const ret = onError?.(_e);
+        if (ret !== false) {
           this.sendError({
             error: _e,
             from: event,
@@ -470,8 +476,11 @@ export class ChatServiceImpl
     event: string;
   }): Promise<T> {
     const { promise, event } = params;
+    this.sendBefore({ event: event });
     try {
-      return await promise;
+      const ret = await promise;
+      this.sendFinished({ event: event, extra: ret });
+      return ret;
     } catch (error) {
       throw new UIKitError({
         code: ErrorCode.common,
@@ -960,7 +969,7 @@ export class ChatServiceImpl
           params.convType,
           params.createIfNotExist ?? true
         ),
-        event: 'createConversation',
+        event: 'getConversation',
       });
       if (ret) {
         await this._requestConvData([
@@ -985,11 +994,17 @@ export class ChatServiceImpl
     }
     return undefined;
   }
-  async removeConversation(params: { convId: string }): Promise<void> {
-    const { convId } = params;
+  async removeConversation(params: {
+    convId: string;
+    removeMessage?: boolean;
+  }): Promise<void> {
+    const { convId, removeMessage } = params;
     const ret = await this.tryCatchSync({
-      promise: this.client.chatManager.deleteConversation(convId, true),
-      event: 'deleteConversation',
+      promise: this.client.chatManager.deleteConversation(
+        convId,
+        removeMessage ?? true
+      ),
+      event: 'removeConversation',
     });
     const conv = this._convList.get(convId);
     if (conv) {
@@ -1002,7 +1017,7 @@ export class ChatServiceImpl
     const ret = Array.from(this._convList.values()).map(async (v) => {
       await this.tryCatchSync({
         promise: this.client.chatManager.deleteConversation(v.convId, true),
-        event: 'deleteConversation',
+        event: 'clearAllConversations',
       });
       this.sendUIEvent(UIListenerType.Conversation, 'onDeletedEvent', v);
     });
@@ -1019,7 +1034,7 @@ export class ChatServiceImpl
         params.convId,
         params.isPin
       ),
-      event: 'pinConversation',
+      event: 'setConversationPin',
     });
     // const conv = this._convList.get(params.convId);
     const conv = await this.getConversation({
@@ -1050,7 +1065,7 @@ export class ChatServiceImpl
           paramType: ChatSilentModeParamType.REMIND_TYPE,
         },
       }),
-      event: 'setSilentModeForConversation',
+      event: 'setConversationSilentMode',
     });
     // const conv = this._convList.get(params.convId);
     const conv = await this.getConversation({
@@ -1085,7 +1100,7 @@ export class ChatServiceImpl
         params.convId,
         params.convType
       ),
-      event: 'markAllMessagesAsRead',
+      event: 'setConversationRead',
     });
     // const conv = this._convList.get(params.convId);
     const conv = await this.getConversation({
@@ -1112,7 +1127,7 @@ export class ChatServiceImpl
         params.convType,
         params.ext
       ),
-      event: 'setConversationExtension',
+      event: 'setConversationExt',
     });
     // const conv = this._convList.get(params.convId);
     const conv = await this.getConversation({
@@ -1135,7 +1150,7 @@ export class ChatServiceImpl
         convId,
         convType
       ),
-      event: 'getUnreadCount',
+      event: 'getConversationMessageCount',
     });
   }
   getConversationLatestMessage(
@@ -1144,7 +1159,7 @@ export class ChatServiceImpl
   ): Promise<ChatMessage | undefined> {
     return this.tryCatchSync({
       promise: this.client.chatManager.getLatestMessage(convId, convType),
-      event: 'getLastMessage',
+      event: 'getConversationLatestMessage',
     });
   }
   async getDoNotDisturb(
@@ -1298,21 +1313,18 @@ export class ChatServiceImpl
   }
 
   addNewContact(params: {
-    useId: string;
+    userId: string;
     reason?: string;
     onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.contactManager.addContact(
-        params.useId,
+        params.userId,
         params.reason
       ),
-      event: 'addContact',
+      event: 'addNewContact',
       onFinished: async () => {
-        await this._requestContactData([{ userId: params.useId }]);
-        // const contact = this.toUIContact({ userId: params.useId, remark: '' });
-        // this._contactList.set(params.useId, contact);
-        // this.sendUIEvent(UIListenerType.Contact, 'onAddedEvent', contact);
+        await this._requestContactData([{ userId: params.userId }]);
         params.onResult?.({
           isOk: true,
         });
@@ -1325,7 +1337,7 @@ export class ChatServiceImpl
   }): void {
     this.tryCatch({
       promise: this.client.contactManager.deleteContact(params.userId),
-      event: 'deleteContact',
+      event: 'removeContact',
       onFinished: async () => {
         const contact = this._contactList.get(params.userId);
         this._contactList.delete(params.userId);
@@ -1490,7 +1502,7 @@ export class ChatServiceImpl
         pageSize,
         cursor
       ),
-      event: 'getGroupMemberList',
+      event: 'getGroupAllMembers',
       onFinished: async (value) => {
         const memberList = new Map<string, GroupParticipantModel>();
         value.list?.forEach(async (v) => {
@@ -1863,7 +1875,7 @@ export class ChatServiceImpl
         params.members.map((item) => item.memberId),
         params.welcomeMessage
       ),
-      event: 'addMembers',
+      event: 'addGroupMembers',
       onFinished: async () => {
         const groupMembers = this._groupMemberList.get(params.groupId);
         for (const member of params.members) {
@@ -1885,7 +1897,7 @@ export class ChatServiceImpl
         params.groupId,
         params.members
       ),
-      event: 'removeMembers',
+      event: 'removeGroupMembers',
       onFinished: async () => {
         for (const memberId of params.members) {
           this._groupMemberList.get(params.groupId)?.delete(memberId);

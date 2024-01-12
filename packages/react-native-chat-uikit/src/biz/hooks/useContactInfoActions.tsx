@@ -1,4 +1,3 @@
-import { useChatContext } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type {
@@ -11,12 +10,12 @@ export type useContactInfoActionsProps = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
   onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
+  onRemoveContact?: (userId: string) => void;
 };
 export function useContactInfoActions(props: useContactInfoActionsProps) {
-  const { menuRef, alertRef, onInit } = props;
+  const { menuRef, alertRef, onInit, onRemoveContact } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
-  const im = useChatContext();
 
   const onShowMenu = (userId: string, userName?: string) => {
     let items = [
@@ -40,7 +39,7 @@ export function useContactInfoActions(props: useContactInfoActionsProps) {
                   isPreferred: true,
                   onPress: () => {
                     alertRef.current?.close?.(() => {
-                      im.removeContact({ userId, onResult: () => {} });
+                      onRemoveContact?.(userId);
                     });
                   },
                 },

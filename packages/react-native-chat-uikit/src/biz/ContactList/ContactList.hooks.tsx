@@ -664,25 +664,13 @@ export function useContactList(props: ContactListProps) {
     sectionsRef,
   ]);
 
-  const { onShowContactListMoreActions } = useContactListMoreActions({
-    menuRef,
-    alertRef,
-  });
-  const onClickedNewContact = React.useCallback(() => {
-    if (propsOnClickedNewContact) {
-      propsOnClickedNewContact();
-    } else {
-      onShowContactListMoreActions();
-    }
-  }, [onShowContactListMoreActions, propsOnClickedNewContact]);
-
   const addContact = React.useCallback(
-    (item: ContactModel) => {
+    (userId: string) => {
       if (contactType !== 'contact-list') {
         return;
       }
       im.addNewContact({
-        useId: item.userId,
+        userId: userId,
         reason: 'add contact',
       });
     },
@@ -701,6 +689,13 @@ export function useContactList(props: ContactListProps) {
     [contactType, im]
   );
 
+  const removeConversation = React.useCallback(
+    (userId: string) => {
+      im.removeConversation({ convId: userId });
+    },
+    [im]
+  );
+
   const setContactRemark = React.useCallback(
     (item: ContactModel) => {
       if (item.remark) {
@@ -713,13 +708,27 @@ export function useContactList(props: ContactListProps) {
     [im]
   );
 
+  const { onShowContactListMoreActions } = useContactListMoreActions({
+    menuRef,
+    alertRef,
+    onAddContact: addContact,
+  });
+  const onClickedNewContact = React.useCallback(() => {
+    if (propsOnClickedNewContact) {
+      propsOnClickedNewContact();
+    } else {
+      onShowContactListMoreActions();
+    }
+  }, [onShowContactListMoreActions, propsOnClickedNewContact]);
+
   if (propsRef?.current) {
     propsRef.current.addItem = (item) => {
-      addContact(item);
+      addContact(item.userId);
     };
     propsRef.current.closeMenu = () => closeMenu();
     propsRef.current.deleteItem = (item) => {
       removeContact(item);
+      removeConversation(item.userId);
     };
     propsRef.current.getAlertRef = () => alertRef;
     propsRef.current.getList = () => {

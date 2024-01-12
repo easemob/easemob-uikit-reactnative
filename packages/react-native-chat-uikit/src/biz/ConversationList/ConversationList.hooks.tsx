@@ -76,6 +76,12 @@ export function useConversationList(props: ConversationListProps) {
   const ListItemRenderRef = React.useRef<ConversationListItemComponentType>(
     propsListItemRender ?? ConversationListItemMemo
   );
+  const im = useChatContext();
+
+  const onAddContact = (userId: string) => {
+    im.addNewContact({ userId });
+  };
+
   const { onShowConversationListMoreActions } = useConversationListMoreActions({
     alertRef,
     menuRef,
@@ -83,8 +89,8 @@ export function useConversationList(props: ConversationListProps) {
     onClickedNewConversation,
     onClickedNewGroup,
     onInit: onInitNavigationBarMenu,
+    onAddContact: onAddContact,
   });
-  const im = useChatContext();
 
   const onSetState = React.useCallback(
     (state: ListState) => {

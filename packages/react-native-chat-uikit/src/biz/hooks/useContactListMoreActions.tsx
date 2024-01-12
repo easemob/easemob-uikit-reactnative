@@ -1,18 +1,17 @@
-import { useChatContext } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 
-export type useContactListMoreActionsProps = {
+export type UseContactListMoreActionsProps = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
   alertRef: React.RefObject<AlertRef>;
+  onAddContact: (userId: string) => void;
 };
 export function useContactListMoreActions(
-  props: useContactListMoreActionsProps
+  props: UseContactListMoreActionsProps
 ) {
-  const { alertRef } = props;
+  const { alertRef, onAddContact } = props;
   const { tr } = useI18nContext();
-  const im = useChatContext();
   const onShowAlert = () => {
     alertRef.current?.alertWithInit?.({
       title: tr('_uikit_contact_alert_title'),
@@ -29,13 +28,9 @@ export function useContactListMoreActions(
           text: tr('add'),
           isPreferred: true,
           onPress: (value) => {
-            alertRef.current?.close?.();
-            if (value) {
-              im.addNewContact({
-                useId: value.trim(),
-                reason: 'add contact',
-              });
-            }
+            alertRef.current?.close?.(() => {
+              if (value) onAddContact(value);
+            });
           },
         },
       ],
