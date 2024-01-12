@@ -476,11 +476,8 @@ export class ChatServiceImpl
     event: string;
   }): Promise<T> {
     const { promise, event } = params;
-    this.sendBefore({ event: event });
     try {
-      const ret = await promise;
-      this.sendFinished({ event: event, extra: ret });
-      return ret;
+      return await promise;
     } catch (error) {
       throw new UIKitError({
         code: ErrorCode.common,
@@ -1308,6 +1305,7 @@ export class ChatServiceImpl
             value: undefined,
           });
         }
+        return false;
       },
     });
   }
@@ -1592,6 +1590,7 @@ export class ChatServiceImpl
       event: 'fetchJoinedGroupCount',
       onFinished: async (value) => {
         params.onResult({ isOk: true, value: value });
+        return false;
       },
     });
   }
@@ -2170,6 +2169,7 @@ export class ChatServiceImpl
           isOk: true,
           value: value,
         });
+        return false;
       },
     });
   }
@@ -2218,6 +2218,7 @@ export class ChatServiceImpl
       event: 'getHistoryMessage',
       onFinished: (value) => {
         params.onResult({ isOk: true, value: value });
+        return false;
       },
     });
   }
@@ -2245,6 +2246,7 @@ export class ChatServiceImpl
       event: 'setMessageRead',
       onFinished: () => {
         params.onResult({ isOk: true });
+        return false;
       },
     });
   }
@@ -2260,6 +2262,7 @@ export class ChatServiceImpl
         params.onResult({
           isOk: true,
         });
+        return false;
       },
     });
   }

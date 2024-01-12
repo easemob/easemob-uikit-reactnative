@@ -35,6 +35,7 @@ export interface MessageCacheManager
     convId: string;
     convType: ChatConversationType;
     startMsgId: string;
+    loadCount: number;
     onResult: (msgs: ChatMessage[]) => void;
   }): void;
   sendMessageReadAck(params: { message: ChatMessage }): void;

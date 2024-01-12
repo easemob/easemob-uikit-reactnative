@@ -60,6 +60,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onLayout,
       bounces,
       enableListItemUserInfoUpdateFromMessage,
+      onContentSizeChange,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -99,6 +100,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           <FlatList
             ref={flatListRef}
             onLayout={onLayout}
+            onContentSizeChange={onContentSizeChange}
             // style={{ flexGrow: 1 }}
             // contentContainerStyle={{ flexGrow: 1 }}
             data={data}

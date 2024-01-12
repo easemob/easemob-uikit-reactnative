@@ -41,8 +41,8 @@ export function useContactInfo(props: ContactInfoProps) {
     alertRef,
     onInit: onInitMenu,
     onRemoveContact: () => {
-      removeContact(userId);
-      removeConversation(userId);
+      im.removeContact({ userId });
+      im.removeConversation({ convId: userId });
     },
   });
   const im = useChatContext();
@@ -88,14 +88,6 @@ export function useContactInfo(props: ContactInfoProps) {
     )
   );
 
-  const removeContact = (userId: string) => {
-    im.removeContact({ userId });
-  };
-
-  const removeConversation = (userId: string) => {
-    im.removeConversation({ convId: userId });
-  };
-
   const onDoNotDisturb = (value: boolean) => {
     if (propsOnDoNotDisturb) {
       propsOnDoNotDisturb(value);
@@ -112,7 +104,26 @@ export function useContactInfo(props: ContactInfoProps) {
       propsOnClearChat();
       return;
     }
-    removeConversation(userId);
+    alertRef.current.alertWithInit({
+      message: tr('_uikit_info_alert_clear_chat_title'),
+      buttons: [
+        {
+          text: tr('cancel'),
+          onPress: () => {
+            alertRef.current.close();
+          },
+        },
+        {
+          text: tr('confirm'),
+          isPreferred: true,
+          onPress: () => {
+            alertRef.current.close(() => {
+              im.removeConversation({ convId: userId });
+            });
+          },
+        },
+      ],
+    });
   };
 
   const onRequestCloseMenu = () => {

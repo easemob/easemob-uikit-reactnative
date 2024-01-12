@@ -40,6 +40,7 @@ import type {
   BottomSheetMessageReportRef,
   ReportItemModel,
 } from '../MessageReport';
+import { gRequestMaxMessageCount } from './const';
 import { MessageListItemMemo } from './MessageListItem';
 import { getQuoteAttribute } from './MessageListItem.hooks';
 import type {
@@ -125,6 +126,7 @@ export function useMessageList(
       };
     })
   );
+  const hasNoMoreRef = React.useRef(false);
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
   const reportRef = React.useRef<BottomSheetMessageReportRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
@@ -177,11 +179,54 @@ export function useMessageList(
     [listRef, needScrollToBottom]
   );
 
+  const removeDuplicateData = React.useCallback(
+    (list: MessageListItemProps[]) => {
+      const uniqueList = list.filter(
+        (item, index, self) =>
+          index ===
+          self.findIndex((t) => {
+            if (
+              item.model.modelType === 'message' &&
+              t.model.modelType === 'message'
+            ) {
+              const msgModel = item.model as MessageModel;
+              const tMsgModel = t.model as MessageModel;
+              if (msgModel.msg.localMsgId === tMsgModel.msg.localMsgId) {
+                return true;
+              }
+            } else if (
+              item.model.modelType === 'system' &&
+              t.model.modelType === 'system'
+            ) {
+              const msgModel = item.model as SystemMessageModel;
+              const tMsgModel = t.model as SystemMessageModel;
+              if (msgModel.msg.msgId === tMsgModel.msg.msgId) {
+                return true;
+              }
+            } else if (
+              item.model.modelType === 'time' &&
+              t.model.modelType === 'time'
+            ) {
+              const msgModel = item.model as TimeMessageModel;
+              const tMsgModel = t.model as TimeMessageModel;
+              if (msgModel.timestamp === tMsgModel.timestamp) {
+                return true;
+              }
+            }
+            return false;
+          })
+      );
+      return uniqueList;
+    },
+    []
+  );
+
   const _refreshToUI = React.useCallback(
     (items: MessageListItemProps[]) => {
+      items = removeDuplicateData(items);
       setData([...items]);
     },
-    [setData]
+    [removeDuplicateData, setData]
   );
 
   const refreshToUI = React.useCallback(
@@ -968,6 +1013,7 @@ export function useMessageList(
       setUserScrollGesture(false);
       currentVoicePlayingRef.current = undefined;
       startMsgIdRef.current = '';
+      hasNoMoreRef.current = false;
       dataRef.current = [];
       im.messageManager.setRecallMessageTimeout(recallTimeout);
     }
@@ -981,12 +1027,22 @@ export function useMessageList(
     testMode,
   ]);
 
-  const onRequestHistoryMessage = React.useCallback(() => {
+  const onContentSizeChange = React.useCallback((_w: number, _h: number) => {},
+  []);
+
+  const requestHistoryMessage = React.useCallback(() => {
+    if (hasNoMoreRef.current === true) {
+      return;
+    }
     im.messageManager.loadHistoryMessage({
       convId,
       convType,
       startMsgId: startMsgIdRef.current,
+      loadCount: gRequestMaxMessageCount,
       onResult: (msgs) => {
+        if (msgs.length < gRequestMaxMessageCount) {
+          hasNoMoreRef.current = true;
+        }
         if (msgs.length > 0) {
           const newStartMsgId = msgs[0]!.msgId.toString();
           if (newStartMsgId === startMsgIdRef.current) {
@@ -1171,8 +1227,8 @@ export function useMessageList(
 
   React.useEffect(() => {
     init();
-    onRequestHistoryMessage();
-  }, [convId, convType, im.messageManager, init, onRequestHistoryMessage]);
+    requestHistoryMessage();
+  }, [convId, convType, im.messageManager, init, requestHistoryMessage]);
 
   return {
     ...flatListProps,
@@ -1187,7 +1243,7 @@ export function useMessageList(
     maxListHeight,
     setMaxListHeight,
     reachedThreshold,
-    onMore: onRequestHistoryMessage,
+    onMore: requestHistoryMessage,
     reportMessage: reportMessage,
     showReportMessage: showReportMessageMenu,
     reportData: reportDataRef.current,
@@ -1205,5 +1261,6 @@ export function useMessageList(
     onLayout,
     bounces,
     enableListItemUserInfoUpdateFromMessage,
+    onContentSizeChange,
   };
 }

@@ -31,6 +31,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
   if (hasSendMessage) {
     items.push(
       <BlockButton
+        key={'100'}
         iconName={'bubble_fill'}
         text={tr('_uikit_info_send_msg')}
         containerStyle={{ height: 62, width: 114 }}
@@ -41,6 +42,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
   if (hasAudioCall) {
     items.push(
       <BlockButton
+        key={'101'}
         iconName={'phone_pick'}
         text={tr('_uikit_info_send_audio')}
         containerStyle={{ height: 62, width: 114 }}
@@ -51,6 +53,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
   if (hasVideoCall) {
     items.push(
       <BlockButton
+        key={'102'}
         iconName={'video_camera'}
         text={tr('_uikit_info_send_video')}
         containerStyle={{ height: 62, width: 114 }}
