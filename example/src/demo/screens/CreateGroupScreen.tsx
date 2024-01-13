@@ -47,7 +47,7 @@ export function CreateGroupScreen(props: Props) {
               params: {
                 convId: result.value?.groupId,
                 convType: 1,
-                convName: result.value?.groupName,
+                convName: result.value?.groupName ?? result.value?.groupId,
               },
             });
           } else {

@@ -74,7 +74,7 @@ export const GroupParticipantListNavigationBar = (
               paletteType={'label'}
               style={{ color: getColor('text') }}
             >
-              {tr('_uikit_group_alert_del_member_title')}
+              {tr('_uikit_group_del_member_title')}
             </Text>
           </Pressable>
         }

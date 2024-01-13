@@ -42,6 +42,7 @@ export function GroupParticipantInfoScreen(props: Props) {
               params: {
                 convId: data,
                 convType: ChatConversationType.PeerChat,
+                convName: data,
               },
             });
           }

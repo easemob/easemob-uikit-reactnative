@@ -5,6 +5,7 @@ import {
   ChatServiceListener,
   UIConversationListListener,
   UIGroupListListener,
+  UIGroupParticipantListListener,
   UIListenerType,
   useChatContext,
 } from '../../chat';
@@ -334,7 +335,11 @@ export function useGroupInfo(
         onGroupDestroy?.(params.groupId);
       },
       onMemberExited: (params: { groupId: string; member: string }) => {
-        onGroupQuit?.(params.groupId);
+        if (params.member === im.userId) {
+          onGroupQuit?.(params.groupId);
+        } else {
+          setGroupMemberCount((prev) => prev - 1);
+        }
       },
       onMemberRemoved: (params: {
         groupId: string;
@@ -386,6 +391,24 @@ export function useGroupInfo(
         }
       },
       type: UIListenerType.Group,
+    };
+    im.addUIListener(uiListener);
+    return () => {
+      im.removeUIListener(uiListener);
+    };
+  }, [groupId, im, onGroupQuit]);
+
+  React.useEffect(() => {
+    const uiListener: UIGroupParticipantListListener = {
+      onUpdatedEvent: (_data) => {},
+      onDeletedEvent: (_data) => {},
+      onAddedEvent: (data) => {
+        if (data.memberId === im.userId) {
+          return;
+        }
+        setGroupMemberCount((prev) => prev + 1);
+      },
+      type: UIListenerType.GroupParticipant,
     };
     im.addUIListener(uiListener);
     return () => {

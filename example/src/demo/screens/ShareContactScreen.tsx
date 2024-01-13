@@ -44,7 +44,7 @@ export function ShareContactScreen(props: Props) {
             params: {
               convId,
               convType,
-              convName,
+              convName: convName ?? convId,
               selectedContacts: JSON.stringify(data),
               operateType: 'share_card',
             },

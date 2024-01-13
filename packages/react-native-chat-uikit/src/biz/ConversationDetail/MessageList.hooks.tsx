@@ -126,6 +126,7 @@ export function useMessageList(
       };
     })
   );
+  // There is no more data.
   const hasNoMoreRef = React.useRef(false);
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
   const reportRef = React.useRef<BottomSheetMessageReportRef>(null);
@@ -1005,6 +1006,7 @@ export function useMessageList(
   );
 
   const init = React.useCallback(async () => {
+    console.log('dev:MessageList:', convId, convType);
     if (testMode === 'only-ui') {
       return;
     }
@@ -1016,12 +1018,16 @@ export function useMessageList(
       hasNoMoreRef.current = false;
       dataRef.current = [];
       im.messageManager.setRecallMessageTimeout(recallTimeout);
+      refreshToUI(dataRef.current);
     }
   }, [
+    convId,
+    convType,
     dataRef,
     im.messageManager,
     isAutoLoad,
     recallTimeout,
+    refreshToUI,
     setNeedScroll,
     setUserScrollGesture,
     testMode,

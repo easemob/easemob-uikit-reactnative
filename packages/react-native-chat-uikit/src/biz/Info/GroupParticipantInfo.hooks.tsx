@@ -33,6 +33,7 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
   const [userAvatar, _setUserAvatar] = React.useState(propsUserAvatar);
   const [userRemark, _setUserRemark] = React.useState(propsUserRemark);
   const [isContact, setIsContact] = React.useState(propsIsContact);
+  const [isSelf, setIsSelf] = React.useState(false);
   const im = useChatContext();
   const { tr } = useI18nContext();
 
@@ -41,6 +42,7 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
       (state: any) => {
         if (state === 'load') {
           setIsContact(im.isContact({ userId }));
+          setIsSelf(im.userId === userId);
         }
       },
       [im, userId]
@@ -146,5 +148,6 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     onSendMessage,
     onVideoCall,
     onAudioCall,
+    isSelf,
   };
 }

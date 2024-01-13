@@ -88,7 +88,7 @@ export function ConversationListScreen(props: Props) {
             params: {
               convId,
               convType,
-              convName,
+              convName: convName ?? convId,
             },
           });
         }}

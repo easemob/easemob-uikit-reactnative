@@ -393,7 +393,7 @@ export interface GroupServices {
   getCreateGroupCustomNameCallback():
     | ((params: { selected: ContactModel[] }) => string)
     | undefined;
-  setGroupParticipantOnRequestData<DataT>(
+  setGroupParticipantOnRequestData<DataT extends DataModel = DataModel>(
     callback?: (params: {
       groupId: string;
       ids: string[];

@@ -3,6 +3,8 @@ import * as React from 'react';
 import {
   ChatServiceListener,
   GroupParticipantModel,
+  UIGroupParticipantListListener,
+  UIListenerType,
   useChatContext,
   useChatListener,
 } from '../../chat';
@@ -31,6 +33,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     onChangeOwner,
     ListItemRender: propsListItemRender,
     onKicked: propsOnKicked,
+    onRequestGroupData,
   } = props;
   const flatListProps = useFlatList<GroupParticipantListItemProps>({
     onInit: () => init(),
@@ -145,6 +148,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
   const init = async () => {
     if (testMode === 'only-ui') {
     } else {
+      im.setGroupParticipantOnRequestData(onRequestGroupData);
       im.getGroupInfo({
         groupId,
         onResult: (result) => {
@@ -160,7 +164,10 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
       }
       im.getGroupAllMembers({
         groupId: groupId,
-        isReset: true,
+        isReset:
+          participantType === undefined || participantType === 'common'
+            ? true
+            : false,
         onResult: (result) => {
           const { isOk, value, error } = result;
           if (isOk === true) {
@@ -258,8 +265,9 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
           return item.data.checked === true;
         })
         .map((item) => item.data);
+      const names = list.map((item) => item.memberName ?? item.memberId);
       alertRef.current.alertWithInit({
-        message: tr('_uikit_group_alert_del_member_title'),
+        message: tr('_uikit_group_alert_del_member_title', names.join(',')),
         buttons: [
           {
             text: 'cancel',
@@ -322,9 +330,31 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     },
     onMemberExited: (params: { groupId: string; member: string }) => {
       removeData(params.groupId, params.member);
+      if (params.member === im.userId) {
+        return;
+      }
+      setParticipantCount((prev) => prev - 1);
     },
   });
   useChatListener(chatListenerRef.current);
+
+  React.useEffect(() => {
+    const uiListener: UIGroupParticipantListListener = {
+      onUpdatedEvent: (_data) => {},
+      onDeletedEvent: (_data) => {},
+      onAddedEvent: (data) => {
+        if (data.memberId === im.userId) {
+          return;
+        }
+        setParticipantCount((prev) => prev + 1);
+      },
+      type: UIListenerType.GroupParticipant,
+    };
+    im.addUIListener(uiListener);
+    return () => {
+      im.removeUIListener(uiListener);
+    };
+  }, [im]);
 
   return {
     ...flatListProps,

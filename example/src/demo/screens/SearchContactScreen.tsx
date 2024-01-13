@@ -89,6 +89,7 @@ export function SearchContactScreen(props: Props) {
                 params: {
                   convId: data.userId,
                   convType: ChatConversationType.PeerChat,
+                  convName: data.userName ?? data.userId,
                 },
               });
             }

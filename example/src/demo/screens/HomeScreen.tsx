@@ -216,7 +216,7 @@ function HomeTabConversationListScreen(
           params: {
             convId,
             convType,
-            convName,
+            convName: convName ?? convId,
           },
         });
       }}

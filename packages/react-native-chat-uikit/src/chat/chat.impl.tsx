@@ -70,37 +70,43 @@ export class ChatServiceImpl
   _convDataRequestCallback?: (params: {
     ids: Map<DataModelType, string[]>;
     result: (
-      data?: Map<DataModelType, any[]> | undefined,
+      data?: Map<DataModelType, DataModel[]> | undefined,
       error?: UIKitError
     ) => void | Promise<void>;
   }) => void;
   _contactDataRequestCallback:
     | ((params: {
         ids: string[];
-        result: (data?: any[], error?: UIKitError) => void;
+        result: (data?: DataModel[], error?: UIKitError) => void;
       }) => void | Promise<void>)
     | undefined;
   _groupDataRequestCallback:
     | ((params: {
         ids: string[];
-        result: (data?: any[], error?: UIKitError) => void;
+        result: (data?: DataModel[], error?: UIKitError) => void;
       }) => void | Promise<void>)
     | undefined;
   _groupParticipantDataRequestCallback:
     | ((params: {
         groupId: string;
         ids: string[];
-        result: (data?: any[], error?: UIKitError) => void;
+        result: (data?: DataModel[], error?: UIKitError) => void;
       }) => void | Promise<void>)
     | undefined;
   _basicDataRequestCallback?:
     | ((params: {
         ids: Map<DataModelType, string[]>;
-        result: (data?: Map<DataModelType, any[]>, error?: UIKitError) => void;
+        result: (
+          data?: Map<DataModelType, DataModel[]>,
+          error?: UIKitError
+        ) => void;
       }) => void)
     | ((params: {
         ids: Map<DataModelType, string[]>;
-        result: (data?: Map<DataModelType, any[]>, error?: UIKitError) => void;
+        result: (
+          data?: Map<DataModelType, DataModel[]>,
+          error?: UIKitError
+        ) => void;
       }) => Promise<void>);
   _groupNameOnCreateGroupCallback?: (params: {
     selected: ContactModel[];
@@ -193,7 +199,7 @@ export class ChatServiceImpl
     type: UIListenerType,
     event: keyof UIListener<DataModel>,
     data?: DataModel | string,
-    ...args: any[]
+    ...args: DataModel[]
   ): void {
     super.sendUIEvent<DataModel>(type, event, data, ...args);
   }
@@ -560,7 +566,7 @@ export class ChatServiceImpl
     };
   }
 
-  setContactOnRequestData<DataT>(
+  setContactOnRequestData<DataT extends DataModel = DataModel>(
     callback?: (params: {
       ids: string[];
       result: (data?: DataT[], error?: UIKitError) => void;
@@ -569,7 +575,7 @@ export class ChatServiceImpl
     this._contactDataRequestCallback = callback;
   }
 
-  setGroupOnRequestData<DataT>(
+  setGroupOnRequestData<DataT extends DataModel = DataModel>(
     callback?: (params: {
       ids: string[];
       result: (data?: DataT[], error?: UIKitError) => void;
@@ -578,7 +584,7 @@ export class ChatServiceImpl
     this._groupDataRequestCallback = callback;
   }
 
-  setGroupParticipantOnRequestData<DataT>(
+  setGroupParticipantOnRequestData<DataT extends DataModel = DataModel>(
     callback?: (params: {
       groupId: string;
       ids: string[];
@@ -607,7 +613,7 @@ export class ChatServiceImpl
     }
   }
 
-  setOnRequestMultiData<DataT>(
+  setOnRequestMultiData<DataT extends DataModel = DataModel>(
     callback?: (params: {
       ids: Map<DataModelType, string[]>;
       result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
@@ -809,6 +815,73 @@ export class ChatServiceImpl
                     conv.avatar = value.avatar;
                   }
                 });
+              });
+              resolve();
+            } else {
+              reject(error);
+            }
+          },
+        });
+      } else {
+        resolve();
+      }
+    });
+
+    return ret;
+  }
+
+  _requestGroupMemberData(
+    groupId: string,
+    list: GroupParticipantModel[]
+  ): Promise<void> {
+    const ret = new Promise<void>((resolve, reject) => {
+      if (this._groupParticipantDataRequestCallback) {
+        const needRequest = new Set<DataModel>();
+        let groupMember = this._groupMemberList.get(groupId);
+        if (groupMember === undefined) {
+          this._groupMemberList.set(groupId, new Map());
+        }
+        groupMember = this._groupMemberList.get(groupId);
+        Array.from(list.values()).forEach((v) => {
+          if (
+            v === undefined ||
+            v.memberName === undefined ||
+            v.memberAvatar === undefined
+          ) {
+            needRequest.add({
+              id: v.memberId,
+              type: 'user',
+              name: undefined,
+              avatar: undefined,
+              groupId: groupId,
+            });
+          }
+        });
+        if (needRequest.size === 0) {
+          resolve();
+          return;
+        }
+        this._groupParticipantDataRequestCallback({
+          groupId: groupId,
+          ids: Array.from(needRequest.values())
+            .filter(
+              (v) =>
+                (v?.type === 'user' &&
+                  (v.id === v?.name ||
+                    v?.name === undefined ||
+                    v.name === null ||
+                    v.name.length === 0)) ||
+                (v?.type === 'user' && v?.avatar === undefined)
+            )
+            .map((v) => v.id),
+          result: (data, error) => {
+            if (data) {
+              data.forEach((value: DataModel) => {
+                const conv = groupMember?.get(value.id);
+                if (conv) {
+                  conv.memberName = value.name;
+                  conv.memberAvatar = value.avatar;
+                }
               });
               resolve();
             } else {
@@ -1180,7 +1253,9 @@ export class ChatServiceImpl
   }
 
   isContact(params: { userId: string }): boolean {
-    return this._contactList.has(params.userId);
+    return (
+      this._contactList.has(params.userId) && this.userId !== params.userId
+    );
   }
 
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void {
@@ -1537,30 +1612,10 @@ export class ChatServiceImpl
         }
 
         this._groupMemberList.set(params.groupId, memberList);
-
-        if (this._groupParticipantDataRequestCallback) {
-          this._groupParticipantDataRequestCallback({
-            groupId: params.groupId,
-            ids: Array.from(memberList.values()).map((v) => v.memberId),
-            result: async (data?: DataModel[], error?: UIKitError) => {
-              if (data) {
-                data.forEach((item) => {
-                  const member = memberList.get(item.id);
-                  if (member) {
-                    member.memberName = item.name;
-                    member.memberAvatar = item.avatar;
-                  }
-                });
-              }
-
-              params.onResult({
-                isOk: true,
-                value: Array.from(memberList.values()),
-                error,
-              });
-            },
-          });
-        }
+        await this._requestGroupMemberData(
+          params.groupId,
+          Array.from(memberList.values())
+        );
 
         params.onResult({
           isOk: true,
@@ -1877,12 +1932,31 @@ export class ChatServiceImpl
       event: 'addGroupMembers',
       onFinished: async () => {
         const groupMembers = this._groupMemberList.get(params.groupId);
-        for (const member of params.members) {
-          groupMembers?.set(member.memberId, member);
+        if (groupMembers) {
+          for (const member of params.members) {
+            groupMembers.set(member.memberId, member);
+          }
+          await this._requestGroupMemberData(
+            params.groupId,
+            Array.from(groupMembers.values())
+          );
+
+          for (const member of params.members) {
+            this.sendUIEvent(
+              UIListenerType.GroupParticipant,
+              'onAddedEvent',
+              member
+            );
+          }
+
+          params.onResult({
+            isOk: true,
+          });
+        } else {
+          params.onResult({
+            isOk: false,
+          });
         }
-        params.onResult({
-          isOk: true,
-        });
       },
     });
   }
@@ -1899,13 +1973,18 @@ export class ChatServiceImpl
       event: 'removeGroupMembers',
       onFinished: async () => {
         for (const memberId of params.members) {
-          this._groupMemberList.get(params.groupId)?.delete(memberId);
-          this.listeners.forEach((v) => {
-            v?.onMemberExited?.({
-              groupId: params.groupId,
-              member: memberId,
-            });
-          });
+          const groupMember = this._groupMemberList.get(params.groupId);
+          if (groupMember) {
+            const member = groupMember.get(memberId);
+            if (member) {
+              groupMember.delete(memberId);
+              this.sendUIEvent(
+                UIListenerType.GroupParticipant,
+                'onDeletedEvent',
+                member
+              );
+            }
+          }
         }
 
         params.onResult({

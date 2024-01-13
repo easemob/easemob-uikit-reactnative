@@ -2,11 +2,13 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
   ChatConversationType,
+  ChatCustomMessageBody,
   ChatMessageChatType,
   ChatMessageType,
 } from 'react-native-chat-sdk';
 import {
   ConversationDetail,
+  gCustomMessageCardEventType,
   MessageInputRef,
   MessageListRef,
   MessageModel,
@@ -161,6 +163,22 @@ export function ConversationDetailScreen(props: Props) {
                     localMsgId: msgModel.msg.localMsgId,
                   },
                 });
+              } else if (msgModel.msg.body.type === ChatMessageType.CUSTOM) {
+                const body = msgModel.msg.body as ChatCustomMessageBody;
+                const event = body.event;
+                const params = body.params;
+                if (event === gCustomMessageCardEventType) {
+                  const cardParams = params as {
+                    userId: string;
+                    nickname: string;
+                    avatar: string;
+                  };
+                  navigation.push('ContactInfo', {
+                    params: {
+                      userId: cardParams.userId,
+                    },
+                  });
+                }
               }
             },
             onClickedItemAvatar: (id, model) => {

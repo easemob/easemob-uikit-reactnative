@@ -43,6 +43,7 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
     onVideoCall,
     isContact,
     onInitButton,
+    isSelf,
   } = useGroupParticipantInfo(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -93,7 +94,14 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
               </Pressable>
             }
             Right={
-              <Pressable style={{ width: 32, height: 32 }} onPress={onMore}>
+              <Pressable
+                style={{
+                  display: isSelf === true ? 'none' : 'flex',
+                  width: 32,
+                  height: 32,
+                }}
+                onPress={onMore}
+              >
                 <Icon
                   name={'ellipsis_vertical'}
                   style={{ height: 24, width: 24 }}
@@ -132,15 +140,7 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
           />
         </Pressable>
         <View style={{ height: 20 }} />
-        {isContact !== true ? (
-          <CmnButton
-            sizesType={'large'}
-            radiusType={'small'}
-            contentType={'only-text'}
-            text={tr('_uikit_info_button_add_contact')}
-            onPress={onAddContact}
-          />
-        ) : (
+        {isContact === true ? (
           <BlockButtons
             hasAudioCall={hasAudioCall}
             hasSendMessage={hasSendMessage}
@@ -150,9 +150,17 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
             onVideoCall={onVideoCall}
             onInitButton={onInitButton}
           />
+        ) : isSelf === true ? null : (
+          <CmnButton
+            sizesType={'large'}
+            radiusType={'small'}
+            contentType={'only-text'}
+            text={tr('_uikit_info_button_add_contact')}
+            onPress={onAddContact}
+          />
         )}
       </View>
-      {isContact === true ? null : (
+      {isContact === true ? (
         <>
           <ListItem
             containerStyle={{ paddingHorizontal: 16 }}
@@ -167,12 +175,14 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
             }
             RightIcon={
               <View>
-                <CommonSwitch
-                  height={31}
-                  width={51}
-                  value={doNotDisturb}
-                  onValueChange={onDoNotDisturb}
-                />
+                {doNotDisturb !== undefined ? (
+                  <CommonSwitch
+                    height={31}
+                    width={51}
+                    value={doNotDisturb}
+                    onValueChange={onDoNotDisturb}
+                  />
+                ) : null}
               </View>
             }
           />
@@ -190,7 +200,7 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
             }
           />
         </>
-      )}
+      ) : null}
 
       <Alert ref={alertRef} />
       <SimpleToast propsRef={toastRef} />
