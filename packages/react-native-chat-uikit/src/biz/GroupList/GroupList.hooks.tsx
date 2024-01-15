@@ -330,7 +330,10 @@ export function useGroupList(props: GroupListProps) {
     }) => {
       onAddedGroup({ ...params });
     },
-    onDetailChanged: (_group) => {},
+    onDetailChanged: (group) => {
+      updateGroupToUI(group);
+    },
+    onStateChanged: (_group) => {},
     onGroupEvent: (
       event?: ChatMultiDeviceEvent,
       target?: string,

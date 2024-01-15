@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 import { Services } from '../../services';
 import { getFileExtension, localUrl, timeoutTask, uuid } from '../../utils';
 import type {
@@ -131,6 +133,15 @@ export function selectFile(params: {
     Services.ms
       .openDocument({})
       .then((result) => {
+        // !!! weird bug: Paths with % percent signs are not supported. Please ios chat sdk developers review it.
+        if (Platform.OS === 'ios') {
+          if (result?.uri.includes('%')) {
+            let uri = result.uri.substring(result.uri.lastIndexOf('/'));
+            let uri2 = result.uri.substring(0, result.uri.lastIndexOf('/'));
+            result.uri = uri2 + decodeURIComponent(uri);
+          }
+        }
+
         if (result) {
           params.onResult({
             localPath: result.uri,

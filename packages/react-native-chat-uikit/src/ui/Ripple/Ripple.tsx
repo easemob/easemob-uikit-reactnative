@@ -25,7 +25,6 @@ export type RippleProps = {
   playAnimated: boolean;
 };
 export function Ripple(props: RippleProps) {
-  console.log('test:zuoyu:Ripple:props:', props);
   const {
     containerStyle,
     children,

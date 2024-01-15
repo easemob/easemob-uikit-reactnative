@@ -150,7 +150,6 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     } else {
       im.setGroupParticipantOnRequestData(onRequestGroupData);
       const owner = await im.getGroupOwner({ groupId });
-      console.log('test:zuoyu:owner:', owner);
       if (owner) {
         setOwnerId(owner.memberId);
       }
