@@ -31,7 +31,6 @@ export function GroupInfoScreen(props: Props) {
   const groupInfoRef = React.useRef<GroupInfoRef>({} as any);
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
-  const testRef = React.useRef<string>();
   const im = useChatContext();
 
   const goBack = (data: any) => {
@@ -44,6 +43,7 @@ export function GroupInfoScreen(props: Props) {
       groupInfoRef.current?.setGroupMyRemark?.(groupId, data);
     }
   };
+  const testRef = React.useRef<(data: any) => void>(goBack);
 
   React.useEffect(() => {
     const uiListener: UIGroupListListener = {
@@ -117,7 +117,8 @@ export function GroupInfoScreen(props: Props) {
               saveName: 'Save',
               initialData: groupName,
               maxLength: 128,
-              goBack: goBack,
+              // goBack: goBack,
+              groupInfoRef,
               testRef,
             },
           });
@@ -130,7 +131,9 @@ export function GroupInfoScreen(props: Props) {
               saveName: 'Save',
               initialData: groupDescription,
               maxLength: 128,
-              goBack: goBack,
+              // goBack: goBack,
+              groupInfoRef,
+              testRef,
             },
           });
         }}
@@ -142,7 +145,8 @@ export function GroupInfoScreen(props: Props) {
               saveName: 'Save',
               initialData: groupMyRemark,
               maxLength: 128,
-              goBack: goBack,
+              // goBack: goBack,
+              groupInfoRef,
               testRef,
             },
           });

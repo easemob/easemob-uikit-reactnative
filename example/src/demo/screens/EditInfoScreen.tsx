@@ -16,8 +16,9 @@ export function EditInfoScreen(props: Props) {
   const saveName = ((route.params as any)?.params as any)?.saveName;
   const initialData = ((route.params as any)?.params as any)?.initialData;
   const maxLength = ((route.params as any)?.params as any)?.maxLength;
-  const goBack = ((route.params as any)?.params as any)?.goBack;
-  // const testRef = ((route.params as any)?.params as any)?.testRef;
+  // const goBack = ((route.params as any)?.params as any)?.goBack;
+  const testRef = ((route.params as any)?.params as any)
+    ?.testRef as React.MutableRefObject<(data: any) => void>;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -46,7 +47,8 @@ export function EditInfoScreen(props: Props) {
         }}
         onSave={(data) => {
           // navigation.setParams({});
-          goBack?.(data);
+          // goBack?.(data);
+          testRef.current?.(data);
           navigation.goBack();
           // navigation.setParams({ params: { data } });
           // testRef.current = data;
