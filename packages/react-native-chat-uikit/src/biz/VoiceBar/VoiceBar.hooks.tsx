@@ -37,6 +37,7 @@ export function useVoiceBar(props: VoiceBarProps) {
   const im = useChatContext();
   const tipTimerRef = React.useRef<TimerTextRef>({} as any);
   const contentTimerRef = React.useRef<TimerTextRef>({} as any);
+  const [playRipple, setPlayRipple] = React.useState<boolean>(false);
 
   const AudioOptionRef = React.useRef<AudioSet>({
     AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
@@ -68,6 +69,7 @@ export function useVoiceBar(props: VoiceBarProps) {
     tipTimerRef.current?.start?.();
     contentTimerRef.current?.reset?.();
     contentTimerRef.current?.start?.();
+    setPlayRipple(true);
 
     Services.ms
       .startRecordAudio({
@@ -82,6 +84,7 @@ export function useVoiceBar(props: VoiceBarProps) {
           onFailed?.({ reason: 'record voice is failed.', error: error });
           tipTimerRef.current?.stop?.();
           contentTimerRef.current?.stop?.();
+          setPlayRipple(false);
         },
         onFinished: ({ result, path, error }) => {
           console.log('test:startRecordAudio:onFinished:', result, path, error);
@@ -95,6 +98,7 @@ export function useVoiceBar(props: VoiceBarProps) {
         onFailed?.({ reason: 'record voice is failed.', error: error });
         tipTimerRef.current?.stop?.();
         contentTimerRef.current?.stop?.();
+        setPlayRipple(false);
       });
   };
   const stopRecord = React.useCallback(() => {
@@ -106,6 +110,7 @@ export function useVoiceBar(props: VoiceBarProps) {
     }
 
     onState('stopping');
+    setPlayRipple(false);
 
     const conv = im.getCurrentConversation();
     if (!conv) {
@@ -153,6 +158,7 @@ export function useVoiceBar(props: VoiceBarProps) {
     isPlayingRef.current = true;
     contentTimerRef.current?.reset?.();
     contentTimerRef.current?.start?.();
+    setPlayRipple(true);
     Services.ms
       .playAudio({
         url: localUrlEscape(playUrl(voiceFilePathRef.current)),
@@ -161,6 +167,7 @@ export function useVoiceBar(props: VoiceBarProps) {
             isPlayingRef.current = false;
             contentTimerRef.current?.stop?.();
             onState('stopping');
+            setPlayRipple(false);
           }
         },
       })
@@ -170,6 +177,7 @@ export function useVoiceBar(props: VoiceBarProps) {
         isPlayingRef.current = false;
         contentTimerRef.current?.stop?.();
         onState('stopping');
+        setPlayRipple(false);
       });
   };
   const _onClickedRecordButton = () => {
@@ -234,5 +242,6 @@ export function useVoiceBar(props: VoiceBarProps) {
     onClickedSendButton: _onClickedSendButton,
     tipTimerRef,
     contentTimerRef,
+    playRipple,
   };
 }

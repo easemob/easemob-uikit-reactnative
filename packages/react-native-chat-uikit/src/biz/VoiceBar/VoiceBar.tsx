@@ -6,6 +6,7 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
+import { Ripple } from '../../ui/Ripple';
 import { Text, TimerText } from '../../ui/Text';
 import { gVoiceBarHeight } from '../const';
 import type { VoiceBarProps } from './types';
@@ -48,6 +49,7 @@ export function VoiceBar(props: VoiceBarProps) {
     onClickedSendButton,
     tipTimerRef,
     contentTimerRef,
+    playRipple,
   } = useVoiceBar(props);
 
   const getTextTip = () => {
@@ -101,58 +103,78 @@ export function VoiceBar(props: VoiceBarProps) {
           </View>
         ) : null}
 
-        <Pressable
-          style={{
+        <Ripple
+          containerStyle={{
+            height: 58,
+            width: 90,
+          }}
+          childrenStyle={{
+            borderRadius: 24,
             height: 48,
             width: 80,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: getColor('enable'),
-            borderRadius: 24,
           }}
-          onPress={onClickedRecordButton}
+          rippleStyle={{
+            height: 58,
+            width: 90,
+            backgroundColor: getColor('enable') as string,
+          }}
+          playAnimated={playRipple}
+          rippleStartOpacity={0.8}
         >
-          <View>
-            <Icon
-              name={'mic_on'}
-              style={{
-                width: 24,
-                height: 24,
-                tintColor: getColor('bg'),
-                display: state === 'idle' ? 'flex' : 'none',
-              }}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                display: state === 'idle' ? 'none' : 'flex',
-              }}
-            >
-              <TimerText
-                textStyle={{
-                  textType: 'small',
-                  paletteType: 'headline',
-                  style: {
-                    color: getColor('bg'),
-                  },
-                }}
-                isIncrease={true}
-                startValue={0}
-                stopValue={60}
-                propsRef={contentTimerRef}
-              />
-              <Text
-                textType={'small'}
-                paletteType={'headline'}
+          <Pressable
+            style={{
+              height: 48,
+              width: 80,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: getColor('enable'),
+              borderRadius: 24,
+            }}
+            onPress={onClickedRecordButton}
+          >
+            <View>
+              <Icon
+                name={'mic_on'}
                 style={{
-                  color: getColor('bg'),
+                  width: 24,
+                  height: 24,
+                  tintColor: getColor('bg'),
+                  display: state === 'idle' ? 'flex' : 'none',
+                }}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  display: state === 'idle' ? 'none' : 'flex',
                 }}
               >
-                {'s'}
-              </Text>
+                <TimerText
+                  textStyle={{
+                    textType: 'small',
+                    paletteType: 'headline',
+                    style: {
+                      color: getColor('bg'),
+                    },
+                  }}
+                  isIncrease={true}
+                  startValue={0}
+                  stopValue={60}
+                  propsRef={contentTimerRef}
+                />
+                <Text
+                  textType={'small'}
+                  paletteType={'headline'}
+                  style={{
+                    color: getColor('bg'),
+                  }}
+                >
+                  {'s'}
+                </Text>
+              </View>
             </View>
-          </View>
-        </Pressable>
+          </Pressable>
+        </Ripple>
+
         {state === 'playing' || state === 'stopping' ? (
           <View
             style={{
