@@ -18,6 +18,8 @@ import {
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
   gMessageAttributeVoiceReadFlag,
+  UIConversationListListener,
+  UIListenerType,
   useChatContext,
 } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
@@ -1161,6 +1163,22 @@ export function useMessageList(
       setNeedScroll,
     ]
   );
+
+  React.useEffect(() => {
+    const uiListener: UIConversationListListener = {
+      onDeletedEvent: (data) => {
+        if (data.convId === convId) {
+          dataRef.current = [];
+          refreshToUI(dataRef.current);
+        }
+      },
+      type: UIListenerType.Conversation,
+    };
+    im.addUIListener(uiListener);
+    return () => {
+      im.removeUIListener(uiListener);
+    };
+  }, [convId, dataRef, im, refreshToUI]);
 
   React.useEffect(() => {
     const listener = {
