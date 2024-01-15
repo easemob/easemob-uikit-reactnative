@@ -1489,6 +1489,21 @@ export class ChatServiceImpl
     this._modelState.delete(params.tag);
   }
 
+  getJoinedGroups(params: { onResult: ResultCallback<GroupModel[]> }): void {
+    this.tryCatch({
+      promise: this.client.groupManager.getJoinedGroups(),
+      event: 'getJoinedGroups',
+      onFinished: async (groups) => {
+        let list: GroupModel[] = [];
+        for (const group of groups) {
+          list.push(this.toUIGroup(group));
+        }
+        params.onResult({ isOk: true, value: list });
+        return false;
+      },
+    });
+  }
+
   getPageGroups(params: {
     pageSize: number;
     pageNum: number;
@@ -1556,9 +1571,10 @@ export class ChatServiceImpl
   getGroupAllMembers(params: {
     groupId: string;
     isReset?: boolean;
+    owner?: GroupParticipantModel;
     onResult: ResultCallback<GroupParticipantModel[]>;
   }): void {
-    const { isReset = false } = params;
+    const { isReset = false, owner } = params;
     const memberList = this._groupMemberList.get(params.groupId);
     if (memberList && memberList.size > 0 && isReset === false) {
       params.onResult({
@@ -1611,6 +1627,10 @@ export class ChatServiceImpl
           }
         }
 
+        if (owner) {
+          memberList.set(owner.memberId, owner);
+        }
+
         this._groupMemberList.set(params.groupId, memberList);
         await this._requestGroupMemberData(
           params.groupId,
@@ -1626,6 +1646,36 @@ export class ChatServiceImpl
         params.onResult({ isOk: false, error: e });
       },
     });
+  }
+
+  async getGroupOwner(params: {
+    groupId: string;
+  }): Promise<GroupParticipantModel | undefined> {
+    const ret = await this.tryCatchSync({
+      promise: this.client.groupManager.getGroupWithId(params.groupId),
+      event: 'getGroupOwner',
+    });
+    if (ret) {
+      let group = this._groupMemberList.get(params.groupId);
+      if (group) {
+        const member = group.get(ret.owner);
+        if (member) {
+          return member;
+        }
+        group.set(ret.owner, { memberId: ret.owner } as GroupParticipantModel);
+      } else {
+        group = new Map([
+          [ret.owner, { memberId: ret.owner } as GroupParticipantModel],
+        ]);
+        this._groupMemberList.set(params.groupId, group);
+      }
+      await this._requestGroupMemberData(
+        params.groupId,
+        Array.from(group.values())
+      );
+      return this._groupMemberList.get(params.groupId)?.get(ret.owner);
+    }
+    return undefined;
   }
 
   getGroupMember(params: {

@@ -431,7 +431,7 @@ export function useContactList(props: ContactListProps) {
           updateState('loading');
           if (contactType === 'add-group-member') {
             im.getAllContacts({
-              onResult: (result) => {
+              onResult: async (result) => {
                 const { isOk, value, error } = result;
                 if (isOk === true) {
                   if (value && groupId) {

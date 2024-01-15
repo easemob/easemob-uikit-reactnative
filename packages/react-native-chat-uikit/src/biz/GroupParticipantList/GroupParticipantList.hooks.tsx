@@ -38,7 +38,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
   const flatListProps = useFlatList<GroupParticipantListItemProps>({
     onInit: () => init(),
   });
-  const { setData, dataRef, setListState } = flatListProps;
+  const { setData, dataRef } = flatListProps;
   const [participantCount, setParticipantCount] = React.useState(0);
   const [deleteCount, setDeleteCount] = React.useState(0);
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
@@ -149,21 +149,17 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     if (testMode === 'only-ui') {
     } else {
       im.setGroupParticipantOnRequestData(onRequestGroupData);
-      im.getGroupInfo({
-        groupId,
-        onResult: (result) => {
-          if (result.isOk && result.value) {
-            setOwnerId(result.value.owner);
-          } else {
-            setListState('error');
-          }
-        },
-      });
+      const owner = await im.getGroupOwner({ groupId });
+      console.log('test:zuoyu:owner:', owner);
+      if (owner) {
+        setOwnerId(owner.memberId);
+      }
       if (participantType === 'delete') {
         im.clearModelState({ tag: groupId });
       }
       im.getGroupAllMembers({
         groupId: groupId,
+        owner,
         isReset:
           participantType === undefined || participantType === 'common'
             ? true
@@ -182,23 +178,34 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
                     id: item.memberId,
                     data: {
                       ...item,
+                      isOwner: item.memberId === owner?.memberId,
                       checked: modelState?.checked ?? false,
                     },
                   } as GroupParticipantListItemProps;
                 } else {
                   return {
                     id: item.memberId,
-                    data: { ...item, checked: undefined },
+                    data: {
+                      ...item,
+                      isOwner: item.memberId === owner?.memberId,
+                      checked: undefined,
+                    },
                   } as GroupParticipantListItemProps;
                 }
               });
               if (participantType === 'change-owner') {
                 dataRef.current = dataRef.current.filter((item) => {
-                  return item.data.memberId !== im.userId;
+                  return (
+                    item.data.memberId !== im.userId ||
+                    item.data.isOwner !== true
+                  );
                 });
               } else if (participantType === 'delete') {
                 dataRef.current = dataRef.current.filter((item) => {
-                  return item.data.memberId !== im.userId;
+                  return (
+                    item.data.memberId !== im.userId ||
+                    item.data.isOwner !== true
+                  );
                 });
               } else if (participantType === 'mention') {
                 dataRef.current.unshift({
@@ -208,28 +215,6 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
                     memberName: 'All',
                   } as GroupParticipantModel,
                 });
-                dataRef.current = dataRef.current.filter((item) => {
-                  return item.data.memberId !== im.userId;
-                });
-              } else {
-                im.getGroupInfo({
-                  groupId,
-                  onResult: (result) => {
-                    if (result.isOk && result.value) {
-                      dataRef.current.push({
-                        id: result.value.owner,
-                        data: {
-                          memberId: result.value.owner,
-                          memberName: undefined,
-                          isOwner: true,
-                        },
-                      });
-                      onSetData();
-                      setParticipantCount(dataRef.current.length);
-                    }
-                  },
-                });
-                return;
               }
               onSetData();
               setParticipantCount(dataRef.current.length);

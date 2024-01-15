@@ -13,11 +13,13 @@ export function UseSearchGroupParticipant(props: SearchGroupParticipantProps) {
   const { dataRef } = flatListProps;
 
   const im = useChatContext();
-  const init = () => {
+  const init = async () => {
     if (testMode === 'only-ui') {
     } else {
+      const owner = await im.getGroupOwner({ groupId });
       im.getGroupAllMembers({
         groupId: groupId,
+        owner,
         onResult: (result) => {
           const { isOk, value, error } = result;
           if (isOk === true && value) {
@@ -26,6 +28,7 @@ export function UseSearchGroupParticipant(props: SearchGroupParticipantProps) {
                 ...item,
                 memberId: item.memberId,
                 memberName: item.memberName ?? item.memberId,
+                isOwner: item.memberId === owner?.memberId,
               } as GroupParticipantSearchModel;
             });
           } else {

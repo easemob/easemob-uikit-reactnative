@@ -404,6 +404,7 @@ export interface GroupServices {
     groupId: string;
     data: Map<DataModelType, DataModel[]>;
   }): void;
+  getJoinedGroups(params: { onResult: ResultCallback<GroupModel[]> }): void;
   getPageGroups(params: {
     pageSize: number;
     pageNum: number;
@@ -412,8 +413,12 @@ export interface GroupServices {
   getGroupAllMembers(params: {
     groupId: string;
     isReset?: boolean;
+    owner?: GroupParticipantModel;
     onResult: ResultCallback<GroupParticipantModel[]>;
   }): void;
+  getGroupOwner(params: {
+    groupId: string;
+  }): Promise<GroupParticipantModel | undefined>;
   getGroupMember(params: {
     groupId: string;
     userId: string;
