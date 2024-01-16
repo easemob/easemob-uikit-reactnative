@@ -86,6 +86,7 @@ export function useMessageList(
     enableListItemUserInfoUpdateFromMessage = false,
     onInitMenu,
     onCopyFinished: propsOnCopyFinished,
+    messageLayoutType,
   } = props;
   const { tr } = useI18nContext();
   const flatListProps = useFlatList<MessageListItemProps>({
@@ -574,7 +575,9 @@ export function useMessageList(
             return {
               userId: msg.from,
               modelType: 'message',
-              layoutType: msg.from === im.userId ? 'right' : 'left',
+              layoutType:
+                messageLayoutType ??
+                (msg.from === im.userId ? 'right' : 'left'),
               msg: msg,
               quoteMsg: quoteMsg,
             } as MessageModel;
@@ -595,7 +598,7 @@ export function useMessageList(
       refreshToUI(dataRef.current);
       onFinished?.(l as MessageListItemProps[]);
     },
-    [dataRef, getStyle, im, refreshToUI]
+    [dataRef, getStyle, im, messageLayoutType, refreshToUI]
   );
 
   const reportMessage = React.useCallback(
@@ -826,7 +829,7 @@ export function useMessageList(
           model: {
             userId: msg.from,
             modelType: 'message',
-            layoutType: 'right',
+            layoutType: messageLayoutType ?? 'right',
             msg: msg,
             quoteMsg: quoteMsg,
           },
@@ -851,7 +854,7 @@ export function useMessageList(
           model: {
             userId: msg.from,
             modelType: 'message',
-            layoutType: 'right',
+            layoutType: messageLayoutType ?? 'right',
             msg: msg,
           },
           containerStyle: getStyle(),
@@ -874,7 +877,7 @@ export function useMessageList(
           model: {
             userId: msg.from,
             modelType: 'message',
-            layoutType: 'right',
+            layoutType: messageLayoutType ?? 'right',
             msg: msg,
           },
           containerStyle: getStyle(),
@@ -900,7 +903,7 @@ export function useMessageList(
           model: {
             userId: msg.from,
             modelType: 'message',
-            layoutType: 'right',
+            layoutType: messageLayoutType ?? 'right',
             msg: msg,
           },
           containerStyle: getStyle(),
@@ -922,7 +925,7 @@ export function useMessageList(
           model: {
             userId: msg.from,
             modelType: 'message',
-            layoutType: 'right',
+            layoutType: messageLayoutType ?? 'right',
             msg: msg,
           },
           containerStyle: getStyle(),
@@ -947,7 +950,7 @@ export function useMessageList(
           model: {
             userId: msg.from,
             modelType: 'message',
-            layoutType: 'right',
+            layoutType: messageLayoutType ?? 'right',
             msg: msg,
           },
           containerStyle: getStyle(),
@@ -961,7 +964,7 @@ export function useMessageList(
           model: {
             userId: msg.from,
             modelType: 'message',
-            layoutType: 'right',
+            layoutType: messageLayoutType ?? 'right',
             msg: msg,
           },
           containerStyle: getStyle(),
@@ -997,7 +1000,14 @@ export function useMessageList(
         scrollToBottom();
       }
     },
-    [convId, convType, getStyle, onAddDataToUI, scrollToBottom]
+    [
+      convId,
+      convType,
+      getStyle,
+      messageLayoutType,
+      onAddDataToUI,
+      scrollToBottom,
+    ]
   );
 
   const sendMessageToServer = React.useCallback(

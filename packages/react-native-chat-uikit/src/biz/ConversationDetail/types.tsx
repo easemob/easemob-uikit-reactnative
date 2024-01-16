@@ -336,7 +336,17 @@ export type MessageListProps = PropsWithError &
      * Default is false.
      */
     enableListItemUserInfoUpdateFromMessage?: boolean;
+    /**
+     * all messages are all on the left or right.
+     */
+    messageLayoutType?: MessageLayoutType;
+    /**
+     * During the initialization process, set the callback notification of the menu. Provides a default menu and returns a new menu.
+     */
     onInitMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
+    /**
+     * Callback notification when copying ID is completed.
+     */
     onCopyFinished?: (content: string) => void;
   };
 export type UseMessageListReturn = {

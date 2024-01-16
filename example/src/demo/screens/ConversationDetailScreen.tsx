@@ -217,6 +217,7 @@ export function ConversationDetailScreen(props: Props) {
             // listItemRenderProps: {
             //   MessageContent: MyMessageContent,
             // },
+            // messageLayoutType: 'left',
           },
         }}
         onBack={() => {
