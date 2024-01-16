@@ -53,6 +53,7 @@ export function useGroupList(props: GroupListProps) {
   const ListItemRenderRef = React.useRef<GroupListItemComponentType>(
     propsListItemRender ?? GroupListItemMemo
   );
+  const [groupCount, setGroupCount] = React.useState(0);
 
   const updateState = React.useCallback(
     (state: ListState) => {
@@ -109,6 +110,7 @@ export function useGroupList(props: GroupListProps) {
         dataRef.current = [...dataRef.current, ...propsList];
       }
       refreshToUI(dataRef.current);
+      setGroupCount(dataRef.current.length);
     },
     [dataRef, refreshToUI]
   );
@@ -130,6 +132,7 @@ export function useGroupList(props: GroupListProps) {
     (groupId: string) => {
       dataRef.current = dataRef.current.filter((item) => item.id !== groupId);
       refreshToUI(dataRef.current);
+      setGroupCount(dataRef.current.length);
     },
     [dataRef, refreshToUI]
   );
@@ -379,5 +382,6 @@ export function useGroupList(props: GroupListProps) {
     menuRef,
     closeMenu,
     flatListProps: propsFlatListProps,
+    groupCount,
   };
 }

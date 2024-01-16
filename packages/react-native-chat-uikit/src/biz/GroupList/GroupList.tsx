@@ -47,6 +47,7 @@ export function GroupList(props: GroupListProps) {
     alertRef,
     closeMenu,
     flatListProps,
+    groupCount,
   } = useGroupList(props);
   const {
     style,
@@ -87,7 +88,7 @@ export function GroupList(props: GroupListProps) {
                 onPress={onBack}
               >
                 <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
-                <Text>{tr('_uikit_group_title')}</Text>
+                <Text>{tr('_uikit_group_title', groupCount)}</Text>
               </Pressable>
             }
             Right={<View style={{ width: 32, height: 32 }} />}

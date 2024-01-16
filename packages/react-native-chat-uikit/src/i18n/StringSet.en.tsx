@@ -30,7 +30,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_conv_menu_delete': 'Delete Conversation',
     '_uikit_conv_alert_title': 'Delete this conversation?',
 
-    '_uikit_group_title': 'Group Chat',
+    '_uikit_group_title': (count) => `Group Chat(${count})`,
     '_uikit_group_del_member_title': 'Remove Group Members',
     '_uikit_group_del_member_button': (count) => `Remove (${count})`,
     '_uikit_group_change_owner_title': 'Select New Group Owner',

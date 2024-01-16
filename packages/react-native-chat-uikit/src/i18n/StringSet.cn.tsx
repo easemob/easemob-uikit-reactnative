@@ -30,7 +30,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_conv_menu_delete': '删除会话',
     '_uikit_conv_alert_title': '删除该会话？',
 
-    '_uikit_group_title': '群聊',
+    '_uikit_group_title': (count) => `群聊(${count})`,
     '_uikit_group_del_member_title': '删除群成员',
     '_uikit_group_del_member_button': (count) => `删除(${count})`,
     '_uikit_group_change_owner_title': '选择新群主',

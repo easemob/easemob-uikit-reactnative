@@ -536,13 +536,7 @@ export function useContactList(props: ContactListProps) {
   );
 
   const contactItems = React.useCallback(
-    ({
-      requestCount,
-      groupCount,
-    }: {
-      requestCount: number;
-      groupCount: number;
-    }) => {
+    ({ requestCount }: { requestCount: number; groupCount: number }) => {
       if (contactType !== 'contact-list') {
         return null;
       }
@@ -557,7 +551,7 @@ export function useContactList(props: ContactListProps) {
           name={tr('_uikit_contact_group_list')}
           count={
             <Text paletteType={'label'} textType={'medium'}>
-              {groupCount}
+              {null}
             </Text>
           }
           hasArrow={true}
