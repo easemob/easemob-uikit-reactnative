@@ -318,8 +318,9 @@ export class MediaServiceImplement implements MediaService {
       if (!granted) throw new Error('Permission not granted');
     }
     try {
+      // !!! mode: 'open' Failed to send file in open mode. Native problem.
       const { uri, size, name, type } =
-        await this.option.documentPickerModule.pickSingle();
+        await this.option.documentPickerModule.pickSingle({ mode: 'import' });
       return this.resultReduction({ uri, size, name, type });
     } catch (e) {
       if (
