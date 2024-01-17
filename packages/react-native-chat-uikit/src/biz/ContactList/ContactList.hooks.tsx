@@ -610,6 +610,14 @@ export function useContactList(props: ContactListProps) {
             }
           }
         },
+        onContactEvent: (event) => {
+          if (
+            event === ChatMultiDeviceEvent.CONTACT_ACCEPT ||
+            event === ChatMultiDeviceEvent.CONTACT_REMOVE
+          ) {
+            init({});
+          }
+        },
       } as ChatServiceListener;
     }, [init, removeContactToUI])
   );

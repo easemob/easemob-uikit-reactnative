@@ -414,10 +414,13 @@ export function useConversationList(props: ConversationListProps) {
               if (im.getCurrentConversation()?.convId === msg.conversationId) {
                 item.data.unreadMessageCount = 0;
               } else {
-                if (item.data.unreadMessageCount === undefined) {
-                  item.data.unreadMessageCount = 0;
+                if (msg.from === im.userId) {
+                } else {
+                  if (item.data.unreadMessageCount === undefined) {
+                    item.data.unreadMessageCount = 0;
+                  }
+                  item.data.unreadMessageCount += 1;
                 }
-                item.data.unreadMessageCount += 1;
               }
             } else {
               item.data.unreadMessageCount = undefined;
@@ -490,6 +493,7 @@ export function useConversationList(props: ConversationListProps) {
         onMessage([msg]);
       },
       onRecvRecallMessage: (_orgMsg: ChatMessage, tipMsg: ChatMessage) => {
+        console.log('test:zuoyu:onRecvRecallMessage', _orgMsg, tipMsg);
         onMessage([tipMsg]);
       },
       onRecallMessageResult: (params: {

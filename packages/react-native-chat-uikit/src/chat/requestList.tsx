@@ -41,6 +41,7 @@ export class RequestListImpl implements RequestList {
       onFriendRequestAccepted: this.bindOnFriendRequestAccepted.bind(this),
       onFriendRequestDeclined: this.bindOnFriendRequestDeclined.bind(this),
       onConversationEvent: this.bindOnConversationEvent.bind(this),
+      onContactEvent: this.bindOnContactEvent.bind(this),
     };
     this._client.addListener(gListener);
   }
@@ -141,6 +142,20 @@ export class RequestListImpl implements RequestList {
     } else if (event === ChatMultiDeviceEvent.CONTACT_DECLINE) {
       for (const request of this._newRequestList) {
         if (request.requestId === convId) {
+          this.removeRequest(request);
+          break;
+        }
+      }
+    }
+  }
+  bindOnContactEvent(
+    event?: ChatMultiDeviceEvent,
+    target?: string,
+    _ext?: string
+  ): void {
+    if (event === ChatMultiDeviceEvent.CONTACT_ACCEPT) {
+      for (const request of this._newRequestList) {
+        if (request.requestId === target) {
           this.removeRequest(request);
           break;
         }
