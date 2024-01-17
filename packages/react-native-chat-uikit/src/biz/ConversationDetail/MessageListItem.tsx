@@ -1548,14 +1548,12 @@ export function TimeTipView(props: TimeTipViewProps) {
 export function MessageListItem(props: MessageListItemProps) {
   const {
     model,
-    enableListItemUserInfoUpdateFromMessage,
     MessageView: propsMessageView,
     SystemTipView: propsSystemTipView,
     TimeTipView: propsTimeTipView,
     ...others
   } = props;
-  gEnableListItemUserInfoUpdateFromMessage =
-    enableListItemUserInfoUpdateFromMessage;
+  gEnableListItemUserInfoUpdateFromMessage = false;
   const { modelType } = model;
   const _MessageView = propsMessageView ?? MessageView;
   const _SystemTipView = propsSystemTipView ?? SystemTipView;

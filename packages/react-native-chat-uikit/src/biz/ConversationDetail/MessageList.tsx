@@ -59,7 +59,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onScrollEndDrag,
       onLayout,
       bounces,
-      enableListItemUserInfoUpdateFromMessage,
+      // enableListItemUserInfoUpdateFromMessage,
       onContentSizeChange,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
@@ -118,9 +118,9 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
                   onAvatarClicked={onClickedItemAvatar}
                   onQuoteClicked={onClickedItemQuote}
                   onStateClicked={onClickedItemState}
-                  enableListItemUserInfoUpdateFromMessage={
-                    enableListItemUserInfoUpdateFromMessage
-                  }
+                  // enableListItemUserInfoUpdateFromMessage={
+                  //   enableListItemUserInfoUpdateFromMessage
+                  // }
                   {...listItemRenderProps}
                 />
               );

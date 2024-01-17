@@ -248,7 +248,6 @@ export type MessageListItemProps = MessageListItemRenders &
     id: string;
     model: SystemMessageModel | TimeMessageModel | MessageModel;
     containerStyle?: StyleProp<ViewStyle>;
-    enableListItemUserInfoUpdateFromMessage?: boolean;
   };
 export type MessageListItemComponentType =
   | React.ComponentType<MessageListItemProps>
@@ -331,12 +330,6 @@ export type MessageListProps = PropsWithError &
      */
     recvMessageAutoScroll?: boolean;
     /**
-     * Whether to activate updating the user information of the message list item through the user information carried in the message.
-     *
-     * Default is false.
-     */
-    enableListItemUserInfoUpdateFromMessage?: boolean;
-    /**
      * all messages are all on the left or right.
      */
     messageLayoutType?: MessageLayoutType;
@@ -389,7 +382,6 @@ export type UseMessageListReturn = {
   onScrollBeginDrag: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   onLayout: (event: LayoutChangeEvent) => void;
   bounces: boolean;
-  enableListItemUserInfoUpdateFromMessage?: boolean;
 };
 export type UseMessageInputReturn = {
   inputRef: React.MutableRefObject<RNTextInput>;

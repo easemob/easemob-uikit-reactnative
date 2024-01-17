@@ -83,7 +83,6 @@ export function useMessageList(
     onClickedItemQuote: propsOnClickedItemQuote,
     listItemRenderProps: propsListItemRenderProps,
     recvMessageAutoScroll = false,
-    enableListItemUserInfoUpdateFromMessage = false,
     onInitMenu,
     onCopyFinished: propsOnCopyFinished,
     messageLayoutType,
@@ -115,6 +114,7 @@ export function useMessageList(
   const im = useChatContext();
   const startMsgIdRef = React.useRef('');
   const [maxListHeight, setMaxListHeight] = React.useState<number>(0);
+  const enableListItemUserInfoUpdateFromMessage = React.useRef(false).current;
   // !!! https://github.com/facebook/react-native/issues/36529
   // !!! https://github.com/facebook/react-native/issues/14312
   // !!! only android, FlatList onEndReached no work android
