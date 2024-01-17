@@ -34,6 +34,7 @@ import {
 } from '../../utils';
 import { useImageSize } from '../hooks/useImageSize';
 import type { PropsWithBack } from '../types';
+import { getImageSizeFromUrl } from './MessageListItem.hooks';
 
 export type VideoMessagePreviewProps = PropsWithBack & {
   /**
@@ -62,6 +63,12 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
     thumbnailUrl,
     showLoading,
   } = useVideoMessagePreview(props);
+  // const u =
+  //   '/var/mobile/Containers/Data/Application/F4EF9F0C-7EAB-44BE-8109-B98E5C8FFD9A/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/4c847d40-b526-11ee-94cd-1b34468849ce?em-redirect=true&share-secret=TITLYLUmEe6-5M0HikC84neFGaGOFglbHbtYyO6mFDW8pnhN.mov'; // error
+  // const u2 =
+  //   'file:///var/mobile/Containers/Data/Application/F4EF9F0C-7EAB-44BE-8109-B98E5C8FFD9A/Library/Application%20Support/HyphenateSDK/appdata/zuoyu/zd2/4c847d40-b526-11ee-94cd-1b34468849ce%3Fem-redirect%3Dtrue%26share-secret%3DTITLYLUmEe6-5M0HikC84neFGaGOFglbHbtYyO6mFDW8pnhN.mov'; // ok
+  // const s =
+  //   '/var/mobile/Containers/Data/Application/F4EF9F0C-7EAB-44BE-8109-B98E5C8FFD9A/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/4c847d40-b526-11ee-94cd-1b34468849ce?em-redirect=true&share-secret=TITLYLUmEe6-5M0HikC84neFGaGOFglbHbtYyO6mFDW8pnhN&vframe=true';
   const { top } = useSafeAreaInsets();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -192,10 +199,6 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
               });
             }
             const body = result.body as ChatImageMessageBody;
-            const h = body.height ?? winHeight;
-            const w = body.width ?? winWidth;
-            setSize(getImageSize(h, w, winHeight, winWidth));
-
             const isExisted = await Services.dcs.isExistedFile(body.localPath);
             if (isExisted !== true) {
               const thumbIsExisted = await Services.dcs.isExistedFile(
@@ -203,6 +206,16 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
               );
               if (thumbIsExisted === true) {
                 setThumbnailUrl(LocalPath.showImage(body.thumbnailLocalPath));
+                getImageSizeFromUrl(
+                  LocalPath.showImage(body.thumbnailLocalPath),
+                  ({ isOk, width, height }) => {
+                    if (isOk === true) {
+                      setSize(
+                        getImageSize(height!, width!, winHeight, winWidth)
+                      );
+                    }
+                  }
+                );
               }
               im.messageManager.downloadAttachment(result);
             } else {
@@ -257,6 +270,16 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
                   setThumbnailUrl(undefined);
                   body.thumbnailLocalPath = localPath;
                   body.thumbnailStatus = ChatDownloadStatus.SUCCESS;
+                  getImageSizeFromUrl(
+                    LocalPath.showImage(body.thumbnailLocalPath),
+                    ({ isOk, width, height }) => {
+                      if (isOk === true) {
+                        setSize(
+                          getImageSize(height!, width!, winHeight, winWidth)
+                        );
+                      }
+                    }
+                  );
                   im.updateMessage({ message: msg, onResult: () => {} });
                 })
                 .catch();
@@ -265,7 +288,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
           .catch();
       }
     },
-    [im]
+    [getImageSize, im, winHeight, winWidth]
   );
 
   const onEnd = React.useCallback(() => {

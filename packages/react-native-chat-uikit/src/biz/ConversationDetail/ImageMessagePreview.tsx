@@ -23,6 +23,7 @@ import { ImagePreview } from '../../ui/ImagePreview';
 import { LocalPath } from '../../utils';
 import { useImageSize } from '../hooks/useImageSize';
 import type { PropsWithBack, PropsWithError } from '../types';
+import { getImageSizeFromUrl } from './MessageListItem.hooks';
 
 export type ImageMessagePreviewProps = PropsWithBack &
   PropsWithError & {
@@ -43,6 +44,23 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
   const { containerStyle, onBack } = props;
   const { url, size } = useImageMessagePreview(props);
   const { top } = useSafeAreaInsets();
+  // const u =
+  //   '/Users/asterisk/Library/Developer/CoreSimulator/Devices/604D801A-1119-460B-8FA8-EB305EC1D5E8/data/Containers/Data/Application/DED71CD7-7399-4DFB-8AF7-EB8C0B5A2EB6/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/cacd5c10-b519-11ee-b1d8-ffc4c34a583c?em-redirect=true&share-secret=ys2DILUZEe6avXPiRjoO3lBSOCOD5wHJ-C5ef9jE3HVmJhes.jpg'; // ok
+  // const u2 = `file://${encodeURIComponent(u)}`; // error
+  // const u3 = `file://${u}`; // error
+  // const u4 =
+  //   '/Users/asterisk/Library/Developer/CoreSimulator/Devices/604D801A-1119-460B-8FA8-EB305EC1D5E8/data/Containers/Data/Application/DED71CD7-7399-4DFB-8AF7-EB8C0B5A2EB6/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/';
+  // const u5 = `file://${encodeURIComponent(
+  //   u4
+  // )}cacd5c10-b519-11ee-b1d8-ffc4c34a583c?em-redirect=true&share-secret=ys2DILUZEe6avXPiRjoO3lBSOCOD5wHJ-C5ef9jE3HVmJhes.jpg`;
+  // const u6 =
+  //   '/Users/asterisk/Library/Developer/CoreSimulator/Devices/604D801A-1119-460B-8FA8-EB305EC1D5E8/data/Containers/Data/Application/DED71CD7-7399-4DFB-8AF7-EB8C0B5A2EB6/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/1.jpg';
+  // const u7 = encodeURIComponent(u6);
+  // const u8 = `file://${u6}`; // ok
+  // const u9 = '/Users/asterisk/Downloads/2.jpg'; // ok
+  // const u10 = `file://${u9}`; // ok
+  // const u11 = `file://${encodeURIComponent(u9)}`;
+  // console.log('test:zuoyu:ImageMessagePreview:', url, size, u3);
 
   return (
     <View
@@ -65,9 +83,16 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
           // ),
           // uri: 'https://picsum.photos/200/300',
           uri: url,
+          // uri: u3,
           ...size,
+          // width: 100,
+          // height: 100,
         }}
-        imageStyle={{ ...size }}
+        imageStyle={{
+          ...size,
+          // width: 100,
+          // height: 100,
+        }}
       />
       <Pressable
         style={{
@@ -117,14 +142,19 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
               });
             }
             const body = result.body as ChatImageMessageBody;
-            const h = body.height ?? 300;
-            const w = body.width ?? 300;
-            setSize(getImageSize(h, w, winHeight, winWidth));
             const isExisted = await Services.dcs.isExistedFile(body.localPath);
             if (isExisted !== true) {
               im.messageManager.downloadAttachment(result);
             } else {
               setUrl(LocalPath.showImage(body.localPath));
+              getImageSizeFromUrl(
+                LocalPath.showImage(body.localPath),
+                ({ isOk, width, height }) => {
+                  if (isOk === true) {
+                    setSize(getImageSize(height!, width!, winHeight, winWidth));
+                  }
+                }
+              );
             }
           }
         })
@@ -145,6 +175,14 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
             const body = msg.body as ChatImageMessageBody;
             if (body.fileStatus === ChatDownloadStatus.SUCCESS) {
               setUrl(LocalPath.showImage(body.localPath));
+              getImageSizeFromUrl(
+                LocalPath.showImage(body.localPath),
+                ({ isOk, width, height }) => {
+                  if (isOk === true) {
+                    setSize(getImageSize(height!, width!, winHeight, winWidth));
+                  }
+                }
+              );
             } else if (body.fileStatus === ChatDownloadStatus.FAILED) {
               onError?.(
                 new UIKitError({
@@ -161,7 +199,14 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
     return () => {
       im.messageManager.removeListener(propsMsgId);
     };
-  }, [im.messageManager, onError, propsMsgId]);
+  }, [
+    getImageSize,
+    im.messageManager,
+    onError,
+    propsMsgId,
+    winHeight,
+    winWidth,
+  ]);
 
   return {
     url,

@@ -239,6 +239,8 @@ export function getImageShowSize(msg: ChatMessage, maxW?: number) {
   if (
     width !== undefined &&
     height !== undefined &&
+    width !== null &&
+    height !== null &&
     width !== 0 &&
     height !== 0
   ) {
@@ -251,14 +253,23 @@ export function getImageShowSize(msg: ChatMessage, maxW?: number) {
   }
 }
 
-export function getImageSizeFromUrl(url: string) {
+export function getImageSizeFromUrl(
+  url: string,
+  onFinished: (result: {
+    isOk: boolean;
+    width?: number;
+    height?: number;
+  }) => void
+) {
   Image.getSize(
     url,
     (width: number, height: number) => {
       console.log('dev:getImageSizeFromUrl', width, height);
+      onFinished({ isOk: true, width, height });
     },
     (error: any) => {
-      console.log('dev:getImageSizeFromUrl', error);
+      console.log('dev:getImageSizeFromUrl', url, error);
+      onFinished({ isOk: false });
     }
   );
 }

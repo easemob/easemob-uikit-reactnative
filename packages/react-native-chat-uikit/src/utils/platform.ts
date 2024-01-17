@@ -151,11 +151,11 @@ export class LocalPath {
     return localPath;
   }
   static showImage(localPath: string): string {
-    if (Platform.OS === 'ios') {
-      return LocalPath.encode2(localPath);
-    } else if (Platform.OS === 'android') {
-      return LocalPath.encode2(localPath);
-    }
+    // if (Platform.OS === 'ios') {
+    //   return LocalPath.encode2(localPath);
+    // } else if (Platform.OS === 'android') {
+    //   return LocalPath.encode2(localPath);
+    // }
     return localPath;
   }
   static createImage(localPath: string): string {

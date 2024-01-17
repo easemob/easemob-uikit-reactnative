@@ -44,7 +44,16 @@ export function ImagePreview(props: ImagePreviewProps) {
       <Draggable2>
         <Scalable onDoubleClicked={onDupClicked}>
           <View>
-            <Image source={source} style={imageStyle} />
+            <Image
+              source={source}
+              style={imageStyle}
+              onError={(error) => {
+                console.log('ImagePreview Image onError', error.nativeEvent);
+              }}
+              onLoadEnd={() => {
+                console.log('ImagePreview Image onLoadEnd');
+              }}
+            />
           </View>
         </Scalable>
       </Draggable2>
