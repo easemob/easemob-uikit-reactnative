@@ -349,11 +349,9 @@ export function MessageVideo(props: MessageVideoProps) {
   });
   React.useEffect(() => {
     msg.status;
-    getVideoThumbUrl(msg, (url) => {
-      setThumbUrl(url);
-    })
+    getVideoThumbUrl(msg)
       .then((url) => {
-        if (url !== undefined) {
+        if (url) {
           setThumbUrl(url);
         }
       })

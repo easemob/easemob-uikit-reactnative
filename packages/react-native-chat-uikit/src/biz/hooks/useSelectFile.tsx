@@ -1,7 +1,5 @@
-import { Platform } from 'react-native';
-
 import { Services } from '../../services';
-import { getFileExtension, localUrl, timeoutTask, uuid } from '../../utils';
+import { getFileExtension, LocalPath, timeoutTask, uuid } from '../../utils';
 import type {
   SendFileProps,
   SendImageProps,
@@ -23,7 +21,7 @@ export function selectOnePicture(params: {
           return;
         }
         params.onResult({
-          localPath: result[0]!.uri,
+          localPath: LocalPath.sendImage(result[0]!.uri),
           fileSize: result[0]!.size,
           displayName: result[0]!.name,
           imageWidth: result[0]!.width ?? 0,
@@ -55,36 +53,36 @@ export function selectOneShortVideo(params: {
         let thumbLocalPath;
         try {
           thumbLocalPath = await Services.ms.getVideoThumbnail({
-            url: result[0]!.uri,
+            url: LocalPath.createImage(result[0]!.uri),
           });
         } catch (error) {
           params.onError?.(error);
           return;
         }
 
-        let localPath = localUrl(
+        let tmp = LocalPath.sendVideo(
           Services.dcs.getFileDir(params.convId, uuid())
         );
 
         const extension = getFileExtension(thumbLocalPath!);
-        localPath = localPath + extension;
+        tmp = tmp + extension;
         if (thumbLocalPath) {
           await Services.ms.saveFromLocal({
-            targetPath: localPath,
+            targetPath: tmp,
             localPath: thumbLocalPath,
           });
-          thumbLocalPath = localPath;
+          thumbLocalPath = tmp;
         }
 
         params.onResult({
-          localPath: result[0]!.uri,
+          localPath: LocalPath.sendVideo(result[0]!.uri),
           fileSize: result[0]!.size,
           displayName: result[0]!.name,
           videoWidth: result[0]!.width ?? 0,
           videoHeight: result[0]!.height ?? 0,
           fileExtension: result[0]!.type,
           duration: undefined,
-          thumbLocalPath: thumbLocalPath ?? '',
+          thumbLocalPath: LocalPath.sendImage(thumbLocalPath ?? ''),
           type: 'video',
         });
       })
@@ -109,7 +107,7 @@ export function selectCamera(params: {
           return;
         }
         params.onResult({
-          localPath: result.uri,
+          localPath: LocalPath.sendImage(result.uri),
           fileSize: result.size,
           displayName: result.name,
           imageHeight: result.width ?? 0,
@@ -135,21 +133,21 @@ export function selectFile(params: {
       .then((result) => {
         // !!! weird bug: Paths with % percent signs are not supported.
         // !!! iOS returns the uri string and needs to be decoded. Normally no decoding is required.
-        if (Platform.OS === 'ios') {
-          // console.log('test:zuoyu:file:', result);
-          if (result?.uri.includes('%')) {
-            // let uri = result.uri.substring(result.uri.lastIndexOf('/'));
-            // let uri2 = result.uri.substring(0, result.uri.lastIndexOf('/'));
-            // console.log('test:zuoyu:file:uri:', uri, uri2);
-            // result.uri = uri2 + decodeURIComponent(uri);
-            result.uri = decodeURIComponent(result.uri);
-            // console.log('test:zuoyu:file:2', result);
-          }
-        }
+        // if (Platform.OS === 'ios') {
+        //   // console.log('test:zuoyu:file:', result);
+        //   if (result?.uri.includes('%')) {
+        //     // let uri = result.uri.substring(result.uri.lastIndexOf('/'));
+        //     // let uri2 = result.uri.substring(0, result.uri.lastIndexOf('/'));
+        //     // console.log('test:zuoyu:file:uri:', uri, uri2);
+        //     // result.uri = uri2 + decodeURIComponent(uri);
+        //     result.uri = decodeURIComponent(result.uri);
+        //     // console.log('test:zuoyu:file:2', result);
+        //   }
+        // }
 
         if (result) {
           params.onResult({
-            localPath: result.uri,
+            localPath: LocalPath.sendFile(result.uri),
             fileSize: result.size,
             displayName: result.name,
             fileExtension: result!.type,

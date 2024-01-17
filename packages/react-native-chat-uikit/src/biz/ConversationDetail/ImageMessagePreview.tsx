@@ -16,12 +16,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useChatContext } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
-import { g_not_existed_url } from '../../const';
 import { ErrorCode, UIKitError } from '../../error';
 import { Services } from '../../services';
 import { Icon } from '../../ui/Image';
 import { ImagePreview } from '../../ui/ImagePreview';
-import { ImageUrl, localUrlEscape } from '../../utils';
+import { LocalPath } from '../../utils';
 import { useImageSize } from '../hooks/useImageSize';
 import type { PropsWithBack, PropsWithError } from '../types';
 
@@ -79,7 +78,7 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
           left: 0,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: 'red',
+          // backgroundColor: 'red',
         }}
         onPress={onBack}
         // pointerEvents={'none'}
@@ -98,7 +97,7 @@ type ImageSize = {
 export function useImageMessagePreview(props: ImageMessagePreviewProps) {
   const { msgId: propsMsgId, onError } = props;
   const im = useChatContext();
-  const [url, setUrl] = React.useState<string>(g_not_existed_url);
+  const [url, setUrl] = React.useState<string | undefined>(undefined);
   const [size, setSize] = React.useState<ImageSize>({
     width: 300,
     height: 300,
@@ -125,7 +124,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
             if (isExisted !== true) {
               im.messageManager.downloadAttachment(result);
             } else {
-              setUrl(localUrlEscape(ImageUrl(body.localPath)));
+              setUrl(LocalPath.showImage(body.localPath));
             }
           }
         })
@@ -145,7 +144,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
           if (msg.body.type === ChatMessageType.IMAGE) {
             const body = msg.body as ChatImageMessageBody;
             if (body.fileStatus === ChatDownloadStatus.SUCCESS) {
-              setUrl(localUrlEscape(ImageUrl(body.localPath)));
+              setUrl(LocalPath.showImage(body.localPath));
             } else if (body.fileStatus === ChatDownloadStatus.FAILED) {
               onError?.(
                 new UIKitError({

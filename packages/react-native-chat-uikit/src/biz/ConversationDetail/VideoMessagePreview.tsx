@@ -29,8 +29,7 @@ import { Icon, Image, LoadingIcon } from '../../ui/Image';
 import {
   getFileDirectory,
   getFileExtension,
-  ImageUrl,
-  localUrlEscape,
+  LocalPath,
   uuid,
 } from '../../utils';
 import { useImageSize } from '../hooks/useImageSize';
@@ -203,15 +202,13 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
                 body.thumbnailLocalPath
               );
               if (thumbIsExisted === true) {
-                setThumbnailUrl(
-                  localUrlEscape(ImageUrl(body.thumbnailLocalPath))
-                );
+                setThumbnailUrl(LocalPath.showImage(body.thumbnailLocalPath));
               }
               im.messageManager.downloadAttachment(result);
             } else {
               setShowLoading(false);
               setThumbnailUrl(undefined);
-              setUrl(localUrlEscape(ImageUrl(body.localPath)));
+              setUrl(LocalPath.playVideo(body.localPath));
             }
           }
         })
@@ -288,7 +285,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
           if (msg.body.type === ChatMessageType.VIDEO) {
             const body = msg.body as ChatVideoMessageBody;
             if (body.fileStatus === ChatDownloadStatus.SUCCESS) {
-              setUrl(localUrlEscape(ImageUrl(body.localPath)));
+              setUrl(LocalPath.playVideo(body.localPath));
               setShowLoading(false);
               setThumbnailUrl(undefined);
               onGenerateThumbnail(msg);

@@ -320,7 +320,10 @@ export class MediaServiceImplement implements MediaService {
     try {
       // !!! mode: 'open' Failed to send file in open mode. Native problem.
       const { uri, size, name, type } =
-        await this.option.documentPickerModule.pickSingle({ mode: 'import' });
+        await this.option.documentPickerModule.pickSingle({
+          mode: 'open',
+          // type: ['public.folder'],
+        });
       return this.resultReduction({ uri, size, name, type });
     } catch (e) {
       if (

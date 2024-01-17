@@ -11,13 +11,7 @@ import {
 import { useChatContext } from '../../chat';
 import { Services } from '../../services';
 import type { TimerTextRef } from '../../ui/Text';
-import {
-  getFileExtension,
-  localUrl,
-  localUrlEscape,
-  playUrl,
-  uuid,
-} from '../../utils';
+import { getFileExtension, LocalPath, uuid } from '../../utils';
 import type { VoiceBarProps, VoiceBarState } from './types';
 
 export function useVoiceBar(props: VoiceBarProps) {
@@ -123,7 +117,7 @@ export function useVoiceBar(props: VoiceBarProps) {
       .then((result?: { pos: number; path: string }) => {
         if (result?.path) {
           voiceFileNameRef.current = uuid();
-          let localPath = localUrl(
+          let localPath = LocalPath.sendVoice(
             Services.dcs.getFileDir(conv.convId, voiceFileNameRef.current)
           );
           const extension = getFileExtension(result.path);
@@ -161,7 +155,7 @@ export function useVoiceBar(props: VoiceBarProps) {
     setPlayRipple(true);
     Services.ms
       .playAudio({
-        url: localUrlEscape(playUrl(voiceFilePathRef.current)),
+        url: LocalPath.playVoice(voiceFilePathRef.current),
         onPlay({ currentPosition, duration }) {
           if (currentPosition === duration) {
             isPlayingRef.current = false;

@@ -31,7 +31,7 @@ import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
-import { localUrlEscape, playUrl, seqId, timeoutTask } from '../../utils';
+import { LocalPath, seqId, timeoutTask } from '../../utils';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { gReportMessageList } from '../const';
 import { useMessageContext } from '../Context';
@@ -392,7 +392,7 @@ export function useMessageList(
         }
 
         await Services.ms.playAudio({
-          url: localUrlEscape(playUrl(localPath)),
+          url: LocalPath.playVoice(localPath),
           onPlay({ currentPosition, duration }) {
             if (currentPosition === duration) {
               tmp.isVoicePlaying = true;

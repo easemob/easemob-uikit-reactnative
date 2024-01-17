@@ -19,7 +19,7 @@ import {
   gMessageAttributeVoiceReadFlag,
 } from '../../chat';
 import { Services } from '../../services';
-import { ImageUrl, localUrlEscape } from '../../utils';
+import { LocalPath } from '../../utils';
 import type { MessageStateType } from './types';
 
 export function isSupportMessage(msg: ChatMessage) {
@@ -142,54 +142,58 @@ export function getStateIconColor(state: MessageStateType): string {
 
 export async function getImageThumbUrl(msg: ChatMessage) {
   const body = msg.body as ChatImageMessageBody;
+  // const tmp = '/Users/asterisk/Library/Developer/CoreSimulator/Devices/604D801A-1119-460B-8FA8-EB305EC1D5E8/data/Containers/Data/Application/9B034A2E-24F3-4233-8E7D-1FEF570F17CC/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/thumb_b8b30d30-b466-11ee-b157-fb4184017b8e?em-redirect=true&share-secret=uLM0QLRmEe6iMvuXVj8Kki5KRZPAkp9oJpQiiLtDDEG-j8lH';
+  // const tmp2 = encodeURIComponent(tmp);
+  // return tmp2;
+  // // return tmp;
+  // return localUrlEscape(ImageUrl(tmp));
+  // return 'file:///data/user/0/com.hyphenate.rn.ChatUikitExample/cache/rn_image_picker_lib_temp_8ecb3509-71d9-4574-8ada-4d92e6f947e6.jpg';
   let isExisted = await Services.dcs.isExistedFile(body.thumbnailLocalPath);
   if (isExisted) {
-    return localUrlEscape(ImageUrl(body.thumbnailLocalPath));
-    // return `file://${body.thumbnailLocalPath}`;
+    return LocalPath.showImage(body.thumbnailLocalPath);
   }
   isExisted = await Services.dcs.isExistedFile(body.localPath);
   if (isExisted) {
-    return localUrlEscape(ImageUrl(body.localPath));
-    // return `file://${body.localPath}`;
+    return LocalPath.showImage(body.localPath);
   }
   return body.thumbnailRemotePath;
 }
 
-export async function getVideoThumbUrl(
-  msg: ChatMessage,
-  onGenerate?: (url: string) => void
-) {
+export async function getVideoThumbUrl(msg: ChatMessage) {
   const body = msg.body as ChatVideoMessageBody;
   let isExisted = await Services.dcs.isExistedFile(body.thumbnailLocalPath);
   if (isExisted) {
-    return localUrlEscape(ImageUrl(body.thumbnailLocalPath));
+    return LocalPath.showImage(body.thumbnailLocalPath);
+    // return localUrlEscape(ImageUrl(body.thumbnailLocalPath));
     // return `file://${body.thumbnailLocalPath}`;
   }
-  isExisted =
-    body.thumbnailRemotePath !== undefined &&
-    body.thumbnailRemotePath.length > 0
-      ? body.thumbnailRemotePath.startsWith('http')
-      : false;
-  if (isExisted) {
-    return body.thumbnailRemotePath;
-  } else {
-    if (
-      body.localPath !== undefined &&
-      body.localPath.length > 0 &&
-      body.thumbnailLocalPath !== undefined &&
-      body.thumbnailLocalPath.length > 0
-    ) {
-      Services.ms
-        .getVideoThumbnail({ url: body.localPath })
-        .then((url) => {
-          if (url !== undefined && url.length > 0) {
-            onGenerate?.(url);
-          }
-        })
-        .catch();
-    }
-  }
-  return undefined;
+  return body.thumbnailRemotePath;
+  // todo: download thumb or generate thumb in `MessageListItem`
+  // isExisted =
+  //   body.thumbnailRemotePath !== undefined &&
+  //   body.thumbnailRemotePath.length > 0
+  //     ? body.thumbnailRemotePath.startsWith('http')
+  //     : false;
+  // if (isExisted) {
+  //   return body.thumbnailRemotePath;
+  // } else {
+  //   if (
+  //     body.localPath !== undefined &&
+  //     body.localPath.length > 0 &&
+  //     body.thumbnailLocalPath !== undefined &&
+  //     body.thumbnailLocalPath.length > 0
+  //   ) {
+  //     Services.ms
+  //       .getVideoThumbnail({ url: body.localPath })
+  //       .then((url) => {
+  //         if (url !== undefined && url.length > 0) {
+  //           onGenerate?.(url);
+  //         }
+  //       })
+  //       .catch();
+  //   }
+  // }
+  // return undefined;
 }
 
 const hw = (params: {
