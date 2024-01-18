@@ -22,6 +22,10 @@ export function getDescription(code: ErrorCode): ErrorDescription {
     case ErrorCode.max_count:
       ret = ErrorDescription.max_count;
       break;
+    case ErrorCode.sdk:
+      ret = ErrorDescription.sdk;
+      break;
+
     case ErrorCode.init_error:
       ret = ErrorDescription.init_error;
       break;

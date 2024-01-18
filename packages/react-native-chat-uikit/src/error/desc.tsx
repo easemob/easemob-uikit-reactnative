@@ -6,6 +6,8 @@ export enum ErrorDescription {
   params = 'input parameters are invalid.',
   max_count = 'Maximum quantity limit exceeded.',
 
+  sdk = 'sdk error.',
+
   init_error = 'An initialization error occurred.',
   login_error = 'A login error occurred.',
   logout_error = 'A log out error occurred.',

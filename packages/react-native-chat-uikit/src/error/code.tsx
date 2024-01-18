@@ -5,6 +5,8 @@ export enum ErrorCode {
   existed = 11,
   params = 12,
   max_count = 13,
+  sdk = 14,
+
   // protocol error 1000 start
   init_error = 1000,
   login_error,

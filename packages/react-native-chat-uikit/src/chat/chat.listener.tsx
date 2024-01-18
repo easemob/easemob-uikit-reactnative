@@ -4,6 +4,8 @@ import {
   ChatContactEventListener,
   ChatConversationType,
   ChatCustomEventListener,
+  ChatError,
+  ChatErrorEventListener,
   ChatGroup,
   ChatGroupEventListener,
   ChatGroupMessageAck,
@@ -17,6 +19,7 @@ import {
   ChatPresenceEventListener,
 } from 'react-native-chat-sdk';
 
+import { ErrorCode, UIKitError } from '../error';
 import { ChatServiceListener, DisconnectReasonType } from './types';
 import { UIListener, UIListenerType } from './types.ui';
 
@@ -27,6 +30,7 @@ let gMultiDeviceListener: ChatMultiDeviceEventListener;
 let gCustomListener: ChatCustomEventListener;
 let gContactListener: ChatContactEventListener;
 let gPresenceListener: ChatPresenceEventListener;
+let gErrorListener: ChatErrorEventListener;
 
 export class ChatServiceListenerImpl {
   _listeners: Set<ChatServiceListener>;
@@ -100,6 +104,7 @@ export class ChatServiceListenerImpl {
     this._initContactListener();
     this._initPresenceListener();
     this._initExtraListener();
+    this._initErrorListener();
   }
   _unInitListener() {
     console.log('dev:chat:unInitListener');
@@ -110,6 +115,7 @@ export class ChatServiceListenerImpl {
     this.client.removeCustomListener(gCustomListener);
     this.client.contactManager.removeContactListener(gContactListener);
     this.client.presenceManager.removePresenceListener(gPresenceListener);
+    this.client.removeErrorListener(gErrorListener);
   }
   _clearListener() {
     console.log('dev:chat:clearListener');
@@ -120,6 +126,7 @@ export class ChatServiceListenerImpl {
     this.client.removeAllCustomListener();
     this.client.contactManager.removeAllContactListener();
     this.client.presenceManager.removeAllPresenceListener();
+    this.client.removeAllErrorListener();
   }
 
   onConnected(): void {
@@ -631,4 +638,27 @@ export class ChatServiceListenerImpl {
   }
 
   _initExtraListener() {}
+
+  bindOnError(params: {
+    error: ChatError;
+    from?: string | undefined;
+    extra?: Record<string, string> | undefined;
+  }) {
+    this._listeners.forEach((v) => {
+      v.onError?.({
+        error: new UIKitError({
+          code: ErrorCode.sdk,
+          desc: JSON.stringify(params.error),
+        }),
+        from: params.from,
+        extra: params.extra,
+      });
+    });
+  }
+  _initErrorListener() {
+    gErrorListener = {
+      onError: this.bindOnError.bind(this),
+    };
+    this.client.addErrorListener(gErrorListener);
+  }
 }
