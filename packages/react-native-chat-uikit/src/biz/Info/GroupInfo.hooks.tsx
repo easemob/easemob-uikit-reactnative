@@ -347,12 +347,28 @@ export function useGroupInfo(
       }) => {
         onGroupKicked?.(params.groupId);
       },
+      onDetailChanged: (group): void => {
+        if (group.groupId === groupId) {
+          setGroupName((prev) => {
+            if (prev === group.groupName) {
+              return prev;
+            }
+            return group.groupName;
+          });
+          setGroupDescription((prev) => {
+            if (prev === group.description) {
+              return prev;
+            }
+            return group.description;
+          });
+        }
+      },
     };
     im.addListener(listener);
     return () => {
       im.removeListener(listener);
     };
-  }, [im, onGroupDestroy, onGroupKicked, onGroupQuit]);
+  }, [groupId, im, onGroupDestroy, onGroupKicked, onGroupQuit]);
 
   React.useEffect(() => {
     const listener: UIConversationListListener = {
@@ -372,18 +388,20 @@ export function useGroupInfo(
   React.useEffect(() => {
     const uiListener: UIGroupListListener = {
       onUpdatedEvent: (data) => {
-        setGroupName((prev) => {
-          if (prev === data.groupName) {
-            return prev;
-          }
-          return data.groupName;
-        });
-        setGroupDescription((prev) => {
-          if (prev === data.description) {
-            return prev;
-          }
-          return data.description;
-        });
+        if (data.groupId === groupId) {
+          setGroupName((prev) => {
+            if (prev === data.groupName) {
+              return prev;
+            }
+            return data.groupName;
+          });
+          setGroupDescription((prev) => {
+            if (prev === data.description) {
+              return prev;
+            }
+            return data.description;
+          });
+        }
       },
       onDeletedEvent: (data) => {
         if (data.groupId === groupId) {

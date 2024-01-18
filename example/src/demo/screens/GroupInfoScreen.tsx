@@ -130,7 +130,7 @@ export function GroupInfoScreen(props: Props) {
               backName: tr('edit_group_description'),
               saveName: 'Save',
               initialData: groupDescription,
-              maxLength: 128,
+              maxLength: 512,
               // goBack: goBack,
               groupInfoRef,
               testRef,

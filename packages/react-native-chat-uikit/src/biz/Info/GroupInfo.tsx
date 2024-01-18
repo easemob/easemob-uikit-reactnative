@@ -119,7 +119,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
             />
           )
         ) : null}
-        <ScrollView>
+        <ScrollView style={{ flex: 1 }}>
           <View style={{ alignItems: 'center', paddingTop: 20 }}>
             <Avatar size={100} url={groupAvatar} />
             <View style={{ height: 12 }} />
