@@ -16,6 +16,9 @@ import type {
 
 const FlatList = FlatListFactory<GroupParticipantListItemProps>();
 
+/**
+ * Group Participant List Component.
+ */
 export function GroupParticipantList(props: GroupParticipantListProps) {
   const { containerStyle, onBack, participantType, navigationBarVisible } =
     props;

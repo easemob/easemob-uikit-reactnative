@@ -11,6 +11,9 @@ import { Text } from '../../ui/Text';
 import { gHeaderHeight } from './BottomTabBar.const';
 
 export type BottomTabBarProps = Omit<TabPageHeaderProps, 'titles'> & {
+  /**
+   * Set the tab list item.
+   */
   items: {
     title?: string;
     icon: IconNameType | number;
@@ -18,6 +21,10 @@ export type BottomTabBarProps = Omit<TabPageHeaderProps, 'titles'> & {
   // selectedColor?: ColorValue;
   // unselectedColor?: ColorValue;
 };
+
+/**
+ * tab component.
+ */
 export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
   props: BottomTabBarProps
 ) => {

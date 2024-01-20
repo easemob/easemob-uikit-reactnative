@@ -1,3 +1,4 @@
+export * from './types';
 export * from './useCloseAlert';
 export * from './useCloseMenu';
 export * from './useContactInfoActions';

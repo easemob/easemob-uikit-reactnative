@@ -19,6 +19,11 @@ import type {
   MessageListRef,
 } from './types';
 
+/**
+ * Message List Component.
+ *
+ * This component can display sent and received messages, display historical messages, play language messages, preview pictures, video messages, download files, and customize behaviors and styles such as previewing pictures, previewing videos, and downloading documents. Custom messages can be added and more. Usually used in conjunction with the `MessageInput` component.
+ */
 export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
   function (props: MessageListProps, ref?: React.ForwardedRef<MessageListRef>) {
     const FlatList = React.useMemo(
@@ -59,7 +64,6 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onScrollEndDrag,
       onLayout,
       bounces,
-      // enableListItemUserInfoUpdateFromMessage,
       onContentSizeChange,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
@@ -118,9 +122,6 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
                   onAvatarClicked={onClickedItemAvatar}
                   onQuoteClicked={onClickedItemQuote}
                   onStateClicked={onClickedItemState}
-                  // enableListItemUserInfoUpdateFromMessage={
-                  //   enableListItemUserInfoUpdateFromMessage
-                  // }
                   {...listItemRenderProps}
                 />
               );

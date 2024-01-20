@@ -10,6 +10,11 @@ import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import type { TopNavigationBarProps } from './types';
 
+/**
+ * Top Navigation Bar Component.
+ *
+ * This component is usually displayed at the top of the page-level component, with a left-center-right layout. It generally provides a return button on the left, a title in the middle, and an expand button on the right.
+ */
 export function TopNavigationBar<LeftProps = any, RightProps = any>(
   props: TopNavigationBarProps<LeftProps, RightProps>
 ) {
@@ -42,6 +47,9 @@ export function TopNavigationBar<LeftProps = any, RightProps = any>(
   );
 }
 
+/**
+ * The component on the right side of the navigation bar.
+ */
 export function TopNavigationBarRight({
   onClicked,
   iconName,
@@ -108,6 +116,9 @@ export function TopNavigationBarRightList({
   );
 }
 
+/**
+ * The component on the middle side of the navigation bar.
+ */
 export function TopNavigationBarTitle({ text }: { text: string }) {
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();

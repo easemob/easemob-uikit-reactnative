@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import {
-  GlobalContainer,
+  Container,
   useDispatchContext,
   useLifecycle,
 } from 'react-native-chat-uikit';
@@ -105,7 +105,7 @@ export class CL3 extends React.PureComponent<{ id: string }> {
 
 export default function TestLifeCycle() {
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -113,6 +113,6 @@ export default function TestLifeCycle() {
       }}
     >
       <CL />
-    </GlobalContainer>
+    </Container>
   );
 }

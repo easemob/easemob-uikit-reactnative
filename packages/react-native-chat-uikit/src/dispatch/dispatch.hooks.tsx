@@ -4,6 +4,9 @@ import { useLifecycle } from '../hook';
 import type { Callback } from '../utils';
 import { useDispatchContext } from './dispatch';
 
+/**
+ * Use dispatch listener.
+ */
 export function useDispatchListener(key: string, cb: Callback) {
   const { addListener, removeListener } = useDispatchContext();
   useLifecycle(

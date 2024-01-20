@@ -8,13 +8,31 @@ import { IconButton, Text1Button } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { TextInput } from '../../ui/TextInput';
 
+/**
+ * Search Component properties.
+ */
 export type SearchProps = {
+  /**
+   * Cancel button click event.
+   */
   onCancel?: () => void;
+  /**
+   * Text change event.
+   */
   onChangeText?: ((text: string) => void) | undefined;
+  /**
+   * Text value.
+   */
   value?: string | undefined;
+  /**
+   * Back button click event.
+   */
   onBack?: () => void;
 };
 
+/**
+ * Search Component.
+ */
 export function Search(props: SearchProps) {
   const { onCancel, onChangeText, value, onBack } = props;
   const { tr } = useI18nContext();

@@ -11,6 +11,9 @@ import type { IndexModel } from '../ListIndex';
 import { ListItem } from '../ListItem';
 import type { ContactItemProps, ContactListItemProps } from './types';
 
+/**
+ * Contact list item component.
+ */
 export function ContactListItem(props: ContactListItemProps) {
   const { section, onClicked, onCheckClicked, onLongPressed } = props;
   const { checked, disable } = section;
@@ -119,6 +122,9 @@ export function ContactListItem(props: ContactListItemProps) {
 }
 export const ContactListItemMemo = React.memo(ContactListItem);
 
+/**
+ * Contact list item header component.
+ */
 export function ContactListItemHeader(
   props: SectionListData<ContactListItemProps, IndexModel>
 ) {
@@ -174,6 +180,9 @@ export function ContactListItemHeader(
 }
 export const ContactListItemHeaderMemo = React.memo(ContactListItemHeader);
 
+/**
+ * Contact list item header component.
+ */
 export function ContactItem(props: ContactItemProps) {
   const { icon, name, count, hasArrow, onClicked } = props;
   const { colors } = usePaletteContext();

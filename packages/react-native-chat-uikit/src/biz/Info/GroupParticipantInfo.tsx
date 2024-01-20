@@ -3,23 +3,29 @@ import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { Alert, AlertRef } from '../../ui/Alert';
+import { Alert } from '../../ui/Alert';
 import { CmnButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
 import { Text } from '../../ui/Text';
 import { SimpleToast } from '../../ui/Toast';
 import { Avatar } from '../Avatar';
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { ListItem } from '../ListItem';
 import { TopNavigationBar } from '../TopNavigationBar';
 import { BlockButtons } from './BlockButtons';
 import { useGroupParticipantInfo } from './GroupParticipantInfo.hooks';
 import type { GroupParticipantInfoProps } from './types';
 
+/**
+ * Group Participant Info Component.
+ *
+ * If it is a contact, the send message button is displayed, otherwise the add contact button is displayed.
+ */
 export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
   const {
     onBack,
-    onMore,
+    onClickedNavigationBarButton: onMore,
     hasAudioCall = false,
     hasSendMessage = true,
     hasVideoCall = false,
@@ -44,6 +50,9 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
     isContact,
     onInitButton,
     isSelf,
+    onRequestCloseMenu,
+    menuRef,
+    alertRef,
   } = useGroupParticipantInfo(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -68,7 +77,6 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
       dark: colors.neutral[6],
     },
   });
-  const alertRef = React.useRef<AlertRef>({} as any);
 
   return (
     <View
@@ -203,6 +211,10 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
       ) : null}
 
       <Alert ref={alertRef} />
+      <BottomSheetNameMenu
+        onRequestModalClose={onRequestCloseMenu}
+        ref={menuRef}
+      />
       <SimpleToast propsRef={toastRef} />
     </View>
   );

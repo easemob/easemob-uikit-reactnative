@@ -6,9 +6,9 @@ import {
   View,
 } from 'react-native';
 import {
+  Container,
   DynamicIcon,
   DynamicIconRef,
-  GlobalContainer,
   useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-uikit';
@@ -88,7 +88,7 @@ export default function TestDynamicIcon() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -99,6 +99,6 @@ export default function TestDynamicIcon() {
     >
       <Test1 />
       {/* <View style={{ height: 50 }} /> */}
-    </GlobalContainer>
+    </Container>
   );
 }

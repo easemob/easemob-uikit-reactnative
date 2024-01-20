@@ -36,6 +36,10 @@ export function useNewRequests(props: NewRequestsProps) {
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const { closeMenu } = useCloseMenu({ menuRef });
+  const { onShowContactListMoreActions } = useContactListMoreActions({
+    menuRef,
+    alertRef,
+  });
 
   const addContact = React.useCallback(
     (userId: string) => {
@@ -45,12 +49,6 @@ export function useNewRequests(props: NewRequestsProps) {
     },
     [im]
   );
-
-  const { onShowContactListMoreActions } = useContactListMoreActions({
-    menuRef,
-    alertRef,
-    onAddContact: addContact,
-  });
 
   const onClickedCallback = React.useCallback(
     (data?: NewRequestModel | undefined) => {
@@ -154,6 +152,10 @@ export function useNewRequests(props: NewRequestsProps) {
     }
   };
 
+  const onAddContact = React.useCallback(() => {
+    onShowContactListMoreActions(addContact);
+  }, [addContact, onShowContactListMoreActions]);
+
   return {
     ...flatListProps,
     onClicked: onClickedCallback,
@@ -161,7 +163,7 @@ export function useNewRequests(props: NewRequestsProps) {
     onButtonClicked: onButtonClickedCallback,
     tr,
     ListItemRender: ListItemRenderRef.current,
-    onShowContactListMoreActions,
+    onAddContact,
     menuRef,
     alertRef,
     onRequestCloseMenu: closeMenu,

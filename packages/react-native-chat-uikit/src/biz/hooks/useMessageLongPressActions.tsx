@@ -8,28 +8,40 @@ import {
 import { useChatContext } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
-import type { AlertRef } from '../../ui/Alert';
-import type {
-  BottomSheetNameMenuRef,
-  InitMenuItemsType,
-} from '../BottomSheetMenu';
+import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type {
   MessageModel,
   SystemMessageModel,
   TimeMessageModel,
 } from '../ConversationDetail';
+import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
 
-export type UseMessageLongPressActionsProps = {
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  alertRef: React.RefObject<AlertRef>;
+export type UseMessageLongPressActionsProps = BasicActionsProps & {
+  /**
+   * Callback notification of copy completion.
+   */
   onCopyFinished?: (content: string) => void;
+  /**
+   * Callback notification of quote message for input.
+   */
   onQuoteMessageForInput?: (model: MessageModel) => void;
+  /**
+   * Callback notification of edit message for input.
+   */
   onEditMessageForInput?: (model: MessageModel) => void;
+  /**
+   * Callback notification of show report message.
+   */
   showReportMessage?: (model: MessageModel) => void;
-  deleteMessage?: (msg: ChatMessage) => void;
-  recallMessage?: (msg: ChatMessage, fromType: 'send' | 'recv') => void;
-  onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
+  /**
+   * Callback notification of delete message.
+   */
+  onDeleteMessage?: (msg: ChatMessage) => void;
+  /**
+   * Callback notification of recall message.
+   */
+  onRecallMessage?: (msg: ChatMessage, fromType: 'send' | 'recv') => void;
 };
 export function useMessageLongPressActions(
   props: UseMessageLongPressActionsProps
@@ -39,8 +51,8 @@ export function useMessageLongPressActions(
     onQuoteMessageForInput,
     onEditMessageForInput,
     showReportMessage,
-    deleteMessage,
-    recallMessage,
+    onDeleteMessage,
+    onRecallMessage,
     onCopyFinished,
     onInit,
   } = props;
@@ -129,7 +141,7 @@ export function useMessageLongPressActions(
         icon: 'trash',
         onClicked: () => {
           closeMenu(() => {
-            deleteMessage?.(msgModel.msg);
+            onDeleteMessage?.(msgModel.msg);
           });
         },
       });
@@ -151,7 +163,7 @@ export function useMessageLongPressActions(
             onClicked: () => {
               closeMenu(() => {
                 const msgModel = model as MessageModel;
-                recallMessage?.(msgModel.msg, 'send');
+                onRecallMessage?.(msgModel.msg, 'send');
               });
             },
           });

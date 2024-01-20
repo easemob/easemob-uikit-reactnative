@@ -1,19 +1,25 @@
 import type { ConversationModel } from '../../chat';
 import { useI18nContext } from '../../i18n';
-import type { AlertRef } from '../../ui/Alert';
-import type {
-  BottomSheetNameMenuRef,
-  InitMenuItemsType,
-} from '../BottomSheetMenu';
+import type { InitMenuItemsType } from '../BottomSheetMenu';
+import type { BasicActionsProps } from './types';
 
-export type ConversationLongPressActionsProps = {
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  alertRef: React.RefObject<AlertRef>;
+export type ConversationLongPressActionsProps = BasicActionsProps & {
+  /**
+   * callback notification of disturb
+   */
   onDisturb: (conv: ConversationModel) => Promise<void>;
+  /**
+   * callback notification of pin.
+   */
   onPin: (conv: ConversationModel) => Promise<void>;
+  /**
+   * callback notification of read.
+   */
   onRead: (conv: ConversationModel) => void;
+  /**
+   * callback notification of remove.
+   */
   onRemove: (conv: ConversationModel) => Promise<void>;
-  onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
 };
 export function useConversationLongPressActions(
   props: ConversationLongPressActionsProps

@@ -16,14 +16,19 @@ import { BlockButtons } from './BlockButtons';
 import { useGroupInfo } from './GroupInfo.hooks';
 import type { GroupInfoProps, GroupInfoRef } from './types';
 
+/**
+ * Group Info Component.
+ *
+ * If you are a group administrator, you have more operating rights. If you are an ordinary member, you have no group management rights.
+ */
 export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
   function (props: GroupInfoProps, ref?: React.ForwardedRef<GroupInfoRef>) {
     const {
       groupId,
       onBack,
-      hasAudioCall = true,
+      hasAudioCall = false,
       hasSendMessage = true,
-      hasVideoCall = true,
+      hasVideoCall = false,
       containerStyle,
       navigationBarVisible,
       customNavigationBar,

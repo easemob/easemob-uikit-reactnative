@@ -7,6 +7,9 @@ import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { GroupListItemProps } from './types';
 
+/**
+ * Group List Item Component.
+ */
 export function GroupListItem(props: GroupListItemProps) {
   const { data, onClicked, onLongPressed } = props;
   const { colors } = usePaletteContext();

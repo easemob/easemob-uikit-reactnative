@@ -8,6 +8,9 @@ import {
 import { GroupParticipantList } from './GroupParticipantList';
 import type { GroupParticipantListProps } from './types';
 
+/**
+ * Delete Group Participant Component properties.
+ */
 export type DelGroupParticipantProps = Pick<
   GroupParticipantListProps,
   | 'groupId'
@@ -17,8 +20,15 @@ export type DelGroupParticipantProps = Pick<
   | 'onError'
   | 'testMode'
 > & {
+  /**
+   * Delete group participant result callback.
+   */
   onDelResult?: ResultCallback<void>;
 };
+
+/**
+ * Delete Group Participant Component.
+ */
 export function DelGroupParticipant(props: DelGroupParticipantProps) {
   const { groupId, onDelResult } = props;
   const im = useChatContext();

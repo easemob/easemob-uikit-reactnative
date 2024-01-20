@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   CmnButton,
-  GlobalContainer,
+  Container,
   TimerText,
   TimerTextRef,
   useLightTheme,
@@ -57,7 +57,7 @@ export default function TestTimerText() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -67,6 +67,6 @@ export default function TestTimerText() {
       theme={t}
     >
       <Test1 />
-    </GlobalContainer>
+    </Container>
   );
 }

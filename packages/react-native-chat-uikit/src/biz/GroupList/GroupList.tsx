@@ -20,6 +20,9 @@ import type { GroupListItemProps, GroupListProps } from './types';
 
 const FlatList = FlatListFactory<GroupListItemProps>();
 
+/**
+ * Group List Component.
+ */
 export function GroupList(props: GroupListProps) {
   const {
     containerStyle,

@@ -25,17 +25,44 @@ export type PropsWithInit<DataT = any> = {
    */
   onInitialized?: (data?: DataT) => void;
 };
+/**
+ * Common properties.
+ */
 export type PropsWithBack<DataT = any> = {
+  /**
+   * Callback notification when the back button is clicked. Routing processing is usually required.
+   */
   onBack?: (data?: DataT) => void;
 };
+/**
+ * Common properties.
+ */
 export type PropsWithCancel<DataT = any> = {
+  /**
+   * Callback notification when the cancel button is clicked. Routing processing is usually required.
+   */
   onCancel?: (data?: DataT) => void;
 };
+/**
+ * Common properties.
+ */
 export type PropsWithSearch<DataT = any> = {
+  /**
+   * Checks whether the search style component is visible.
+   */
   searchStyleVisible?: boolean;
+  /**
+   * Custom search style component.
+   */
   customSearch?: React.ReactElement;
+  /**
+   * Callback notification when the search button is clicked.
+   */
   onClickedSearch?: (data?: DataT) => void;
 };
+/**
+ * Common properties.
+ */
 export type PropsWithNavigationBar = {
   /**
    * Whether to display the navigation bar.
@@ -46,6 +73,9 @@ export type PropsWithNavigationBar = {
    */
   customNavigationBar?: React.ReactElement;
 };
+/**
+ * Common properties.
+ */
 export type PropsWithFlatList<ListItemProps> = {
   /**
    * Properties of the list component. Currently, direct setting of ref, data, renderItem is not supported.
@@ -55,6 +85,9 @@ export type PropsWithFlatList<ListItemProps> = {
     'ref' | 'data' | 'renderItem'
   >;
 };
+/**
+ * Common properties.
+ */
 export type PropsWithSectionList<
   ListItemProps,
   SectionT extends DefaultSectionT = DefaultSectionT
@@ -67,6 +100,9 @@ export type PropsWithSectionList<
     'ref' | 'data' | 'renderItem'
   >;
 };
+/**
+ * Common properties.
+ */
 export type PropsWithMenu = {
   /**
    * Custom menu items. Supports replacing and appending menu items.
@@ -76,18 +112,28 @@ export type PropsWithMenu = {
   onInitMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
 };
 
+/**
+ * The type of contact component. Contact components can be used in multiple scenarios. For example: contact list, create new conversation, create group, add group members, share contact card, etc.
+ */
 export type ContactType =
   | 'contact-list'
   | 'new-conversation'
   | 'create-group'
   | 'add-group-member'
   | 'share-contact';
+
+/**
+ * Group member list component. This component can be used in multiple scenarios. For example: group member list, deleting group members, changing group owner, etc.
+ */
 export type GroupParticipantType =
   | 'common'
   | 'delete'
   | 'change-owner'
   | 'mention';
 
+/**
+ * Search type. The search list component can be used in multiple scenarios. For example: conversation list search, contact list search, new conversation list search, create group list search, add group member list search, shared contact list search, etc.
+ */
 export type SearchType =
   | 'conv-list'
   | 'contact-list'
@@ -99,20 +145,32 @@ export type SearchType =
   | 'group-member-list'
   | 'request-list';
 
-export type ListState = 'loading' | 'normal' | 'error' | 'empty';
-
+/**
+ * List item type. Mainly include: conversation list, contact list, group list, group member list.
+ */
 export type ListItemType =
   | 'conv-list'
   | 'contact-list'
   | 'group-list'
   | 'group-member-list';
 
+/**
+ * Choose a type. Includes single choice and multiple choice.
+ */
 export type ChoiceType = 'single' | 'multiple';
 
+/**
+ * ID.
+ */
 export type ListItemProps = {
   id: string;
 };
 
+/**
+ * List item request properties.
+ *
+ * @resevered
+ */
 export type ListItemRequestProps<DataT> = {
   /**
    * Single request, supports asynchronous. If you need to get it over the network instead of locally, it is recommended to use `` to complete the provided data.
@@ -126,6 +184,11 @@ export type ListItemRequestProps<DataT> = {
   }) => void | Promise<void>;
 };
 
+/**
+ * List request properties.
+ *
+ * The name and avatar of the list item component need to be provided by the user. If provided, the callback notification needs to be registered. The component will obtain the data when loading the data.
+ */
 export type ListRequestProps<DataT> = {
   /**
    * @description Get data information in batches. If it cannot be obtained, a single acquisition will be attempted during rendering. {@link ListItemRequestProps.onRequestData}
@@ -161,8 +224,14 @@ export type ListRequestProps<DataT> = {
   }) => void | Promise<void>;
 };
 
+/**
+ * List state type.
+ */
 export type ListStateType = 'loading' | 'empty' | 'error' | 'normal';
 
+/**
+ * List basic hooks properties.
+ */
 export type UseListBasicReturn<ItemT> = {
   /**
    * @description The type of list.
@@ -241,6 +310,9 @@ export type UseListBasicReturn<ItemT> = {
   deferSearch?: (key: string) => void;
 };
 
+/**
+ * Flat list hooks properties.
+ */
 export type UseFlatListReturn<ItemT> = UseListBasicReturn<ItemT> & {
   /**
    * @description The data source of the list.
@@ -256,6 +328,9 @@ export type UseFlatListReturn<ItemT> = UseListBasicReturn<ItemT> & {
   ref?: React.MutableRefObject<FlatListRef<ItemT>>;
 };
 
+/**
+ * Section list hooks properties.
+ */
 export type UseSectionListReturn<
   ItemT,
   SectionT extends DefaultSectionT,
@@ -291,6 +366,9 @@ export type UseSectionListReturn<
   onIndexSelected?: (index: number) => void;
 };
 
+/**
+ * List item actions properties.
+ */
 export type ListItemActions<DataT> = {
   /**
    * Callback notification when a list item is clicked. If the return result is true, execution continues, otherwise it terminates.
@@ -310,6 +388,9 @@ export type ListItemActions<DataT> = {
   onToLeftSlide?: ((data?: DataT) => void) | undefined;
 };
 
+/**
+ * List actions properties.
+ */
 export type ListActions<DataT> = {
   /**
    * Callback notification when a list item is clicked. If the return result is true, execution continues, otherwise it terminates.
@@ -337,6 +418,9 @@ export type ListActions<DataT> = {
   onToLeftSlideItem?: ((data?: DataT) => boolean | void) | undefined;
 };
 
+/**
+ * List index properties.
+ */
 export type DefaultListIndexPropsT = {
   /**
    * Header of alphabetical list. For example: A, B, C, etc.
@@ -348,6 +432,9 @@ export type DefaultListIndexPropsT = {
   onIndexSelected?: (index: number) => void;
 };
 
+/**
+ * List component reference.
+ */
 export type BasicListRefType<DataModel> = {
   /**
    * get data model list.
@@ -410,16 +497,28 @@ export type BasicListRefType<DataModel> = {
   getAlertRef: () => React.RefObject<AlertRef>;
 };
 
+/**
+ * Flat list component reference.
+ */
 export type FlatListRefType<DataModel, ListItemProps> =
   BasicListRefType<DataModel> & {
+    /**
+     * Get the flat list component reference.
+     */
     getFlatListRef: () => React.RefObject<FlatListRef<ListItemProps>>;
   };
 
+/**
+ * Section list component reference.
+ */
 export type SectionListRefType<
   DataModel,
   ListItemProps,
   SectionT extends DefaultSectionT = DefaultSectionT
 > = BasicListRefType<DataModel> & {
+  /**
+   * Get the section list component reference.
+   */
   getSectionListRef: () => React.RefObject<
     SectionListRef<ListItemProps, SectionT>
   >;

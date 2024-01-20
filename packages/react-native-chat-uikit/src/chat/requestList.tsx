@@ -24,6 +24,9 @@ import { getNewRequest } from './utils';
 
 let gListener: ChatServiceListener | undefined;
 
+/**
+ * Request List Implementation.
+ */
 export class RequestListImpl implements RequestList {
   _client: ChatService;
   _listener?: ChatServiceListener;

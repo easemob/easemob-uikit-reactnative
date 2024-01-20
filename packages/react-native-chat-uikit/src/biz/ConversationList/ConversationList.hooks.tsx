@@ -25,7 +25,7 @@ import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useConversationListMoreActions } from '../hooks/useConversationListMoreActions';
 import { useConversationLongPressActions } from '../hooks/useConversationLongPressActions';
 import { useFlatList } from '../List';
-import type { ListState } from '../types';
+import type { ListStateType } from '../types';
 import { ConversationListItemMemo } from './ConversationList.item';
 import type {
   ConversationListItemComponentType,
@@ -93,7 +93,7 @@ export function useConversationList(props: ConversationListProps) {
   });
 
   const onSetState = React.useCallback(
-    (state: ListState) => {
+    (state: ListStateType) => {
       setListState?.(state);
       onStateChanged?.(state);
     },
@@ -296,6 +296,19 @@ export function useConversationList(props: ConversationListProps) {
       onRemoveDataToUI({ convId, convType: 0 });
     },
     [onRemoveDataToUI]
+  );
+
+  const addConv = React.useCallback(
+    async (conv: ConversationModel) => {
+      const ret = await im.getConversation({
+        convId: conv.convId,
+        convType: conv.convType,
+        fromNative: true,
+        createIfNotExist: true,
+      });
+      if (ret) onAddDataToUI(ret);
+    },
+    [im, onAddDataToUI]
   );
 
   const removeConv = React.useCallback(
@@ -553,6 +566,7 @@ export function useConversationList(props: ConversationListProps) {
   }, [init, onInitialized]);
 
   if (propsRef && propsRef.current) {
+    propsRef.current.addItem = (conv) => addConv(conv);
     propsRef.current.closeMenu = () => closeMenu();
     propsRef.current.deleteItem = (conv) => removeConv(conv);
     propsRef.current.getAlertRef = () => alertRef;

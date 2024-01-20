@@ -31,7 +31,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
     onClickedAvatar: propsOnClickedAvatar,
   } = props;
   const permissionsRef = React.useRef(false);
-
   const messageInputRef = React.useRef<MessageInputRef>({} as any);
   const messageListRef = React.useRef<MessageListRef>({} as any);
   const _messageInputRef = input?.ref ?? messageInputRef;

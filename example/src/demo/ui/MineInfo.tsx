@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { UIKIT_VERSION } from 'react-native-chat-uikit';
+import {
+  Alert,
+  Avatar,
+  BottomSheetNameMenu,
+  Icon,
+  ListItem,
+  SimpleToast,
+  Text,
+  Text1Button,
+  UIKIT_VERSION,
+  useColors,
+  usePaletteContext,
+} from 'react-native-chat-uikit';
 
-import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
-import { Alert } from '../../ui/Alert';
-import { Text1Button } from '../../ui/Button';
-import { Icon } from '../../ui/Image';
-import { Text } from '../../ui/Text';
-import { SimpleToast } from '../../ui/Toast';
-import { Avatar } from '../Avatar';
-import { BottomSheetNameMenu } from '../BottomSheetMenu';
-import { ListItem } from '../ListItem';
 import { useMineInfo } from './MineInfo.hooks';
 import type { MineInfoProps } from './types';
 

@@ -23,6 +23,9 @@ import { Text } from '../../ui/Text';
 import { gCountPerRow } from './EmojiList.const';
 import { EmojiListFloatButtonMemo } from './EmojiListFloatButton';
 
+/**
+ * Emoji List Component properties.
+ */
 export type EmojiListProps = {
   /**
    * Callback function when an emoji is selected.

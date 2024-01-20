@@ -1,59 +1,82 @@
-import type { AlertRef } from '../../ui/Alert';
-import type {
-  BottomSheetNameMenuRef,
-  InitMenuItemsType,
-} from '../BottomSheetMenu';
+import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type {
   SendFileProps,
   SendImageProps,
   SendVideoProps,
 } from '../ConversationDetail';
+import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
 
-export type useMessageInputExtendActionsProps = {
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  alertRef: React.RefObject<AlertRef>;
+export type UseMessageInputExtendActionsProps = BasicActionsProps & {
+  /**
+   * Conversation ID.
+   */
   convId: string;
-  selectOnePicture: (params: {
+  /**
+   * callback notification of select one picture.
+   */
+  onSelectOnePicture: (params: {
     onResult: (params: SendImageProps) => void;
     onCancel?: (() => void) | undefined;
     onError?: ((error: any) => void) | undefined;
   }) => void;
-  onSelectSendImage: (props: SendImageProps) => void;
-  selectOneShortVideo: (params: {
+  /**
+   * callback notification of select one picture from camera.
+   */
+  onSelectOnePictureFromCamera: (params: {
+    onResult: (params: SendImageProps) => void;
+    onCancel?: (() => void) | undefined;
+    onError?: ((error: any) => void) | undefined;
+  }) => void;
+  /**
+   * callback notification of select one picture result.
+   */
+  onSelectOnePictureResult: (props: SendImageProps) => void;
+  /**
+   * callback notification of select one short video.
+   */
+  onSelectOneShortVideo: (params: {
     convId: string;
     onResult: (params: SendVideoProps) => void;
     onCancel?: (() => void) | undefined;
     onError?: ((error: any) => void) | undefined;
   }) => void;
-  onSelectSendVideo: (props: SendVideoProps) => void;
-  selectCamera: (params: {
-    onResult: (params: SendImageProps) => void;
-    onCancel?: (() => void) | undefined;
-    onError?: ((error: any) => void) | undefined;
-  }) => void;
-  selectFile: (params: {
+  /**
+   * callback notification of select one short video result.
+   */
+  onSelectOneShortVideoResult: (props: SendVideoProps) => void;
+  /**
+   * callback notification of select one file.
+   */
+  onSelectFile: (params: {
     onResult: (params: SendFileProps) => void;
     onCancel?: (() => void) | undefined;
     onError?: ((error: any) => void) | undefined;
   }) => void;
-  onSelectSendFile: (props: SendFileProps) => void;
+  /**
+   * callback notification of select one file result.
+   */
+  onSelectFileResult: (props: SendFileProps) => void;
+  /**
+   * callback notification of select send card.
+   *
+   * Routing operations are usually required.
+   */
   onSelectSendCard: () => void;
-  onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
 };
 export function useMessageInputExtendActions(
-  props: useMessageInputExtendActionsProps
+  props: UseMessageInputExtendActionsProps
 ) {
   const {
     convId,
     menuRef,
-    selectOnePicture,
-    onSelectSendImage,
-    selectOneShortVideo,
-    onSelectSendVideo,
-    selectCamera,
-    selectFile,
-    onSelectSendFile,
+    onSelectOnePicture,
+    onSelectOnePictureResult,
+    onSelectOneShortVideo,
+    onSelectOneShortVideoResult,
+    onSelectOnePictureFromCamera,
+    onSelectFile,
+    onSelectFileResult,
     onSelectSendCard,
     onInit,
   } = props;
@@ -66,9 +89,9 @@ export function useMessageInputExtendActions(
         icon: 'img',
         onClicked: () => {
           closeMenu(() => {
-            selectOnePicture({
+            onSelectOnePicture({
               onResult: (params) => {
-                onSelectSendImage(params);
+                onSelectOnePictureResult(params);
               },
             });
           });
@@ -80,10 +103,10 @@ export function useMessageInputExtendActions(
         icon: 'triangle_in_rectangle',
         onClicked: () => {
           closeMenu(() => {
-            selectOneShortVideo({
+            onSelectOneShortVideo({
               convId: convId,
               onResult: (params) => {
-                onSelectSendVideo(params);
+                onSelectOneShortVideoResult(params);
               },
             });
           });
@@ -95,9 +118,9 @@ export function useMessageInputExtendActions(
         icon: 'camera_fill',
         onClicked: () => {
           closeMenu(() => {
-            selectCamera({
+            onSelectOnePictureFromCamera({
               onResult: (params) => {
-                onSelectSendImage(params);
+                onSelectOnePictureResult(params);
               },
             });
           });
@@ -109,9 +132,9 @@ export function useMessageInputExtendActions(
         icon: 'folder',
         onClicked: () => {
           closeMenu(() => {
-            selectFile({
+            onSelectFile({
               onResult: (params) => {
-                onSelectSendFile(params);
+                onSelectFileResult(params);
               },
             });
           });

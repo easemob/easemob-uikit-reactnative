@@ -9,8 +9,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
 import {
+  Container,
   createDefaultStringSet,
-  GlobalContainer,
   LanguageCode,
   StringSet,
   useChatListener,
@@ -209,7 +209,7 @@ export function App() {
 
   return (
     <React.StrictMode>
-      <GlobalContainer
+      <Container
         options={options}
         palette={palette}
         theme={theme}
@@ -471,7 +471,7 @@ export function App() {
         </NavigationContainer>
         <TestListener />
         <ToastView />
-      </GlobalContainer>
+      </Container>
     </React.StrictMode>
   );
 }

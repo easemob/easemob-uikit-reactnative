@@ -34,13 +34,12 @@ import type {
   SendImageProps,
   SendVideoProps,
   SendVoiceProps,
-  UseMessageInputReturn,
 } from './types';
 
 export function useMessageInput(
   props: MessageInputProps,
   ref?: React.ForwardedRef<MessageInputRef>
-): UseMessageInputReturn {
+) {
   const {
     bottom,
     onClickedSend: propsOnClickedSend,
@@ -390,14 +389,14 @@ export function useMessageInput(
     menuRef,
     convId,
     alertRef,
-    selectOnePicture,
-    selectCamera,
-    selectFile,
-    selectOneShortVideo,
+    onSelectOnePicture: selectOnePicture,
+    onSelectOnePictureFromCamera: selectCamera,
+    onSelectFile: selectFile,
+    onSelectOneShortVideo: selectOneShortVideo,
     onSelectSendCard,
-    onSelectSendFile,
-    onSelectSendImage,
-    onSelectSendVideo,
+    onSelectFileResult: onSelectSendFile,
+    onSelectOnePictureResult: onSelectSendImage,
+    onSelectOneShortVideoResult: onSelectSendVideo,
     onInit: onInitMenu,
   });
 
@@ -467,20 +466,20 @@ export function useMessageInput(
       editMessage: (model) => {
         onShowEditMessage(model);
       },
-      mentionSelected: (list: { id: string; name: string }[]) => {
-        mentionListRef.current.push(...list);
-        // !!! only support one mention
-        const text = valueRef.current;
-        const index = text.lastIndexOf('@');
-        if (index !== -1) {
-          const pre = text.substring(0, index);
-          const post = text.substring(index + 1);
-          const mention = list[0];
-          const mentionText = `@${mention!.name} `;
-          const newText = `${pre}${mentionText}${post}`;
-          setInputValue(newText);
-        }
-      },
+      // mentionSelected: (list: { id: string; name: string }[]) => {
+      //   mentionListRef.current.push(...list);
+      //   // !!! only support one mention
+      //   const text = valueRef.current;
+      //   const index = text.lastIndexOf('@');
+      //   if (index !== -1) {
+      //     const pre = text.substring(0, index);
+      //     const post = text.substring(index + 1);
+      //     const mention = list[0];
+      //     const mentionText = `@${mention!.name} `;
+      //     const newText = `${pre}${mentionText}${post}`;
+      //     setInputValue(newText);
+      //   }
+      // },
     };
   });
 

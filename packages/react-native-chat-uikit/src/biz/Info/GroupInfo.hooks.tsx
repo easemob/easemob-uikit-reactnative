@@ -45,6 +45,7 @@ export function useGroupInfo(
     onSendMessage: propsOnSendMessage,
     onAudioCall: propsOnAudioCall,
     onVideoCall: propsOnVideoCall,
+    onClickedNavigationBarButton,
   } = props;
   const im = useChatContext();
   const { tr } = useI18nContext();
@@ -122,8 +123,8 @@ export function useGroupInfo(
   const { onShowGroupInfoActions } = useGroupInfoActions({
     menuRef,
     alertRef,
-    quitGroup: quitGroup,
-    destroyGroup: destroyGroup,
+    onQuitGroup: quitGroup,
+    onDestroyGroup: destroyGroup,
     onClickedChangeGroupOwner,
     onInit: onInitMenu,
   });
@@ -305,7 +306,11 @@ export function useGroupInfo(
   };
 
   const onMoreMenu = () => {
-    onShowGroupInfoActions(im.userId ?? '', ownerIdRef.current, groupId);
+    if (onClickedNavigationBarButton) {
+      onClickedNavigationBarButton();
+    } else {
+      onShowGroupInfoActions(im.userId ?? '', ownerIdRef.current, groupId);
+    }
   };
 
   const onSendMessage = () => {

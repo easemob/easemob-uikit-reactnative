@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Animated, Image, Pressable, StyleSheet, View } from 'react-native';
 import {
-  GlobalContainer,
+  Container,
   useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-uikit';
@@ -66,7 +66,7 @@ export default function TestDraggable() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -76,7 +76,7 @@ export default function TestDraggable() {
       theme={t}
     >
       <TestMyScale />
-    </GlobalContainer>
+    </Container>
   );
 }
 

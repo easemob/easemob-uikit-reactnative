@@ -12,6 +12,9 @@ import { gVoiceBarHeight } from '../const';
 import type { VoiceBarProps } from './types';
 import { useVoiceBar } from './VoiceBar.hooks';
 
+/**
+ * Component for recording and playing speech.
+ */
 export function VoiceBar(props: VoiceBarProps) {
   const { height } = props;
   const { tr } = useI18nContext();

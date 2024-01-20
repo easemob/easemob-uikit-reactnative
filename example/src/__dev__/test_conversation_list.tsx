@@ -2,10 +2,10 @@ import * as React from 'react';
 import {
   BottomTabBar,
   ContactList,
+  Container,
   ConversationList,
   DataModel,
   DataModelType,
-  GlobalContainer,
   SearchConversation,
   TabPage,
   UIKitError,
@@ -26,23 +26,23 @@ export function CL() {
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
-        onRequestData={(params: {
-          ids: string[];
-          result: (data?: DataModel[], error?: UIKitError) => void;
-        }) => {
-          console.log('test:zuoyu:onRequestData', params);
-          const users = params.ids?.map<DataModel>((id) => {
-            return {
-              id,
-              name: id + 'name',
-              // avatar: 'https://i.pravatar.cc/300',
-              avatar:
-                'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-              type: 'user' as DataModelType,
-            };
-          });
-          params?.result(users ?? []);
-        }}
+        // onRequestData={(params: {
+        //   ids: string[];
+        //   result: (data?: DataModel[], error?: UIKitError) => void;
+        // }) => {
+        //   console.log('test:zuoyu:onRequestData', params);
+        //   const users = params.ids?.map<DataModel>((id) => {
+        //     return {
+        //       id,
+        //       name: id + 'name',
+        //       // avatar: 'https://i.pravatar.cc/300',
+        //       avatar:
+        //         'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+        //       type: 'user' as DataModelType,
+        //     };
+        //   });
+        //   params?.result(users ?? []);
+        // }}
         onRequestMultiData={(params: {
           ids: Map<DataModelType, string[]>;
           result: (
@@ -201,7 +201,7 @@ export function CL2() {
 
 export default function TestConversationList() {
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -209,6 +209,6 @@ export default function TestConversationList() {
       }}
     >
       <CL2 />
-    </GlobalContainer>
+    </Container>
   );
 }

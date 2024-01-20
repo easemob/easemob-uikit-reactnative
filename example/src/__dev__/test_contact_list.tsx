@@ -2,9 +2,9 @@ import * as React from 'react';
 import {
   BottomTabBar,
   ContactList,
+  Container,
   DataModel,
   DataModelType,
-  GlobalContainer,
   SearchContact,
   TabPage,
   UIKitError,
@@ -21,22 +21,22 @@ export function CL() {
           height: '100%',
           // backgroundColor: 'yellow',
         }}
-        onRequestData={(params: {
-          ids: string[];
-          result: (data?: DataModel[], error?: UIKitError) => void;
-        }) => {
-          params?.result(
-            params.ids.map((v) => {
-              return {
-                id: v,
-                name: v + 'name',
-                avatar:
-                  'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-                type: 'user' as DataModelType,
-              };
-            })
-          );
-        }}
+        // onRequestData={(params: {
+        //   ids: string[];
+        //   result: (data?: DataModel[], error?: UIKitError) => void;
+        // }) => {
+        //   params?.result(
+        //     params.ids.map((v) => {
+        //       return {
+        //         id: v,
+        //         name: v + 'name',
+        //         avatar:
+        //           'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+        //         type: 'user' as DataModelType,
+        //       };
+        //     })
+        //   );
+        // }}
         onRequestMultiData={(params: {
           ids: Map<DataModelType, string[]>;
           result: (
@@ -72,9 +72,9 @@ export function CL() {
             ])
           );
         }}
-        onClicked={(data) => {
-          console.log('test:zuoyu:onClicked', data);
-        }}
+        // onClicked={(data) => {
+        //   console.log('test:zuoyu:onClicked', data);
+        // }}
       />
     </SafeAreaView>
   );
@@ -202,7 +202,7 @@ export function CL2() {
 
 export default function TestContactList() {
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -210,6 +210,6 @@ export default function TestContactList() {
       }}
     >
       <CL />
-    </GlobalContainer>
+    </Container>
   );
 }

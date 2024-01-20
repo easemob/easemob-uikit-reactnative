@@ -1,13 +1,10 @@
 import * as React from 'react';
 import {
   BottomTabBar,
-  DataModel,
-  DataModelType,
-  GlobalContainer,
+  Container,
   GroupList,
   SearchGroup,
   TabPage,
-  UIKitError,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -22,63 +19,63 @@ export function CL() {
             // backgroundColor: 'red',
           }
         }
-        onRequestData={(params: {
-          ids: string[];
-          result: (data?: DataModel[], error?: UIKitError) => void;
-        }) => {
-          params?.result(
-            params.ids.map((v) => {
-              return {
-                id: v,
-                name: v + 'name',
-                avatar:
-                  'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-                type: 'user' as DataModelType,
-              };
-            })
-          );
-        }}
-        onRequestMultiData={(params: {
-          ids: Map<DataModelType, string[]>;
-          result: (
-            data?: Map<DataModelType, DataModel[]>,
-            error?: UIKitError
-          ) => void;
-        }) => {
-          console.log('test:zuoyu:onRequestMultiData', params);
-          params?.result(
-            new Map([
-              [
-                'user',
-                [
-                  {
-                    id: 'xx',
-                    name: 'xx',
-                    avatar: '',
-                    type: 'user' as DataModelType,
-                  },
-                ],
-              ],
-              [
-                'group',
-                [
-                  {
-                    id: 'yy',
-                    name: 'yy',
-                    avatar: '',
-                    type: 'group' as DataModelType,
-                  },
-                ],
-              ],
-            ])
-          );
-        }}
+        // onRequestData={(params: {
+        //   ids: string[];
+        //   result: (data?: DataModel[], error?: UIKitError) => void;
+        // }) => {
+        //   params?.result(
+        //     params.ids.map((v) => {
+        //       return {
+        //         id: v,
+        //         name: v + 'name',
+        //         avatar:
+        //           'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
+        //         type: 'user' as DataModelType,
+        //       };
+        //     })
+        //   );
+        // }}
+        // onRequestMultiData={(params: {
+        //   ids: Map<DataModelType, string[]>;
+        //   result: (
+        //     data?: Map<DataModelType, DataModel[]>,
+        //     error?: UIKitError
+        //   ) => void;
+        // }) => {
+        //   console.log('test:zuoyu:onRequestMultiData', params);
+        //   params?.result(
+        //     new Map([
+        //       [
+        //         'user',
+        //         [
+        //           {
+        //             id: 'xx',
+        //             name: 'xx',
+        //             avatar: '',
+        //             type: 'user' as DataModelType,
+        //           },
+        //         ],
+        //       ],
+        //       [
+        //         'group',
+        //         [
+        //           {
+        //             id: 'yy',
+        //             name: 'yy',
+        //             avatar: '',
+        //             type: 'group' as DataModelType,
+        //           },
+        //         ],
+        //       ],
+        //     ])
+        //   );
+        // }}
         onClickedSearch={() => {
           console.log('test:zuoyu:onClickedSearch');
         }}
-        onClicked={() => {
-          console.log('test:zuoyu:onClicked:13');
-        }}
+        // onClicked={() => {
+        //   console.log('test:zuoyu:onClicked:13');
+        // }}
       />
     </SafeAreaView>
   );
@@ -206,7 +203,7 @@ export function CL2() {
 
 export default function TestGroupList() {
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -214,6 +211,6 @@ export default function TestGroupList() {
       }}
     >
       <CL />
-    </GlobalContainer>
+    </Container>
   );
 }

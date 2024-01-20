@@ -10,6 +10,9 @@ import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { NewRequestsItemProps } from './types';
 
+/**
+ * New Requests Item Component.
+ */
 export function NewRequestsItem(props: NewRequestsItemProps) {
   const { onClicked, onLongPressed, onButtonClicked, data } = props;
   const { tr } = useI18nContext();

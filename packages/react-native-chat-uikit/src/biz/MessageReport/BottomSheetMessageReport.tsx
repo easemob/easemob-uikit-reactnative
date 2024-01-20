@@ -19,12 +19,17 @@ export type BottomSheetMessageReportRef = SlideModalRef & {};
  * Properties of the `MessageReport` component.
  */
 export type BottomSheetMessageReportProps = {
+  /**
+   * Data model.
+   */
   data: ReportItemModel[];
-  maskStyle?: StyleProp<ViewStyle> | undefined;
   /**
    * Style of the container. This property can mainly change the display or hiding, position, size, background color, style, etc.
    */
   containerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Callback notification when the report is completed.
+   */
   onReport: (result?: ReportItemModel) => void;
 } & PropsWithTest &
   PropsWithError;
@@ -92,7 +97,6 @@ export const BottomSheetMessageReport = React.forwardRef<
       // onRequestModalClose={() => {
       //   ref.current.startHide();
       // }}
-      // maskStyle={maskStyle}
     >
       <View
         style={[

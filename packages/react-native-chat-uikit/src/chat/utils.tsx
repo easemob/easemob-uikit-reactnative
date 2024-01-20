@@ -20,6 +20,9 @@ import {
 import type { UserData, UserServiceDataFromMessage } from './types';
 import type { NewRequestModel } from './types.ui';
 
+/**
+ * Get user info from message.
+ */
 export function userInfoFromMessage(msg?: ChatMessage): UserData | undefined {
   if (msg === undefined || msg === null) {
     return undefined;
@@ -45,6 +48,9 @@ export function userInfoFromMessage(msg?: ChatMessage): UserData | undefined {
   return undefined;
 }
 
+/**
+ * Set user info to message.
+ */
 export function setUserInfoToMessage(params: {
   msg: ChatMessage;
   user?: UserData;
@@ -62,6 +68,9 @@ export function setUserInfoToMessage(params: {
   };
 }
 
+/**
+ * Get message snapshot.
+ */
 export function getMessageSnapshot(msg?: ChatMessage): string {
   if (msg === undefined) {
     return '';
@@ -96,19 +105,10 @@ export function getMessageSnapshot(msg?: ChatMessage): string {
       return '[unknown]';
   }
 }
-// export function getMessageFormatTime(
-//   msg?: ChatMessage,
-//   timestamp?: number
-// ): string {
-//   if (msg === undefined && timestamp) {
-//     return formatTsForConvList(timestamp);
-//   } else if (msg) {
-//     return formatTsForConvList(msg.localTime);
-//   } else {
-//     return '';
-//   }
-// }
 
+/**
+ * Get new request from message.
+ */
 export function getNewRequest(msg?: ChatMessage): NewRequestModel | undefined {
   if (msg === undefined) {
     return undefined;

@@ -47,6 +47,10 @@ export type GroupParticipantListNavigationBarProps = PropsWithBack &
      */
     onChangeOwner?: (data?: GroupParticipantModel) => void;
   };
+
+/**
+ * Group member list component properties.
+ */
 export type GroupParticipantListProps = Pick<
   ListRequestProps<DataModel>,
   'onRequestGroupData'
@@ -60,12 +64,28 @@ export type GroupParticipantListProps = Pick<
     ListActions<GroupParticipantModel>,
     'onToRightSlideItem' | 'onToLeftSlideItem'
   > & {
+    /**
+     * Group ID.
+     */
     groupId: string;
+    /**
+     * Component style properties.
+     */
     containerStyle?: StyleProp<ViewStyle>;
+    /**
+     * Custom group member list item component.
+     */
     ListItemRender?: GroupParticipantListItemComponentType;
+
+    /**
+     * Callback notification when a group is removed.
+     */
     onKicked?: (groupId: string) => void;
   };
 
+/**
+ * Group member list item component properties.
+ */
 export type GroupParticipantListItemProps = ListItemProps &
   ListItemRequestProps<DataModel> &
   Omit<
@@ -76,10 +96,16 @@ export type GroupParticipantListItemProps = ListItemProps &
     onCheckClicked?: ((data?: GroupParticipantModel) => void) | undefined;
   };
 
+/**
+ * Custom group member list item component type.
+ */
 export type GroupParticipantListItemComponentType =
   | React.ComponentType<GroupParticipantListItemProps>
   | React.ExoticComponent<GroupParticipantListItemProps>;
 
+/**
+ * Search group member component properties.
+ */
 export type SearchGroupParticipantProps = PropsWithTest &
   PropsWithError &
   Omit<
@@ -91,6 +117,9 @@ export type SearchGroupParticipantProps = PropsWithTest &
     onCancel?: () => void;
   };
 
+/**
+ * Select group member component properties.
+ */
 export type SelectSingleParticipantProps = Pick<
   GroupParticipantListProps,
   | 'groupId'

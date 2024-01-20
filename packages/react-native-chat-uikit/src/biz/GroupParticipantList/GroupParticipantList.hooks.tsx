@@ -36,7 +36,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     onRequestGroupData,
   } = props;
   const flatListProps = useFlatList<GroupParticipantListItemProps>({
-    onInit: () => init(),
+    // onInit: () => init(),
   });
   const { setData, dataRef } = flatListProps;
   const [participantCount, setParticipantCount] = React.useState(0);
@@ -108,7 +108,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     setDeleteCount(count);
   }, [dataRef, participantType]);
 
-  const onSetData = React.useCallback(() => {
+  const refreshToUI = React.useCallback(() => {
     calculateDeleteCount();
     const uniqueList = dataRef.current.filter(
       (item, index, self) =>
@@ -138,14 +138,14 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
             }
             return item;
           });
-          onSetData();
+          refreshToUI();
         }
       }
     },
-    [dataRef, groupId, im, onSetData, participantType]
+    [dataRef, groupId, im, refreshToUI, participantType]
   );
 
-  const init = async () => {
+  const init = React.useCallback(async () => {
     if (testMode === 'only-ui') {
     } else {
       im.setGroupParticipantOnRequestData(onRequestGroupData);
@@ -215,7 +215,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
                   } as GroupParticipantModel,
                 });
               }
-              onSetData();
+              refreshToUI();
               setParticipantCount(dataRef.current.length);
             }
           } else {
@@ -226,7 +226,15 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
         },
       });
     }
-  };
+  }, [
+    dataRef,
+    groupId,
+    im,
+    onRequestGroupData,
+    participantType,
+    refreshToUI,
+    testMode,
+  ]);
 
   const onClickedAddParticipantCallback = React.useCallback(() => {
     if (onClickedAddParticipant) {
@@ -272,7 +280,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     }
   }, [dataRef, onDelParticipant, participantType, tr]);
 
-  const addData = (gid: string, memberId: string) => {
+  const addDataToUI = (gid: string, memberId: string) => {
     if (gid === groupId) {
       const groupMember = im.getGroupMember({
         groupId,
@@ -292,16 +300,16 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
           },
         });
       }
-      onSetData();
+      refreshToUI();
     }
   };
-  const removeData = (gid: string, memberId: string) => {
+  const removeDataToUI = (gid: string, memberId: string) => {
     if (gid === groupId) {
       const index = dataRef.current.findIndex((item) => item.id === memberId);
       if (index !== -1) {
         dataRef.current.splice(index, 1);
       }
-      onSetData();
+      refreshToUI();
     }
   };
 
@@ -310,10 +318,10 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
       propsOnKicked?.(groupId);
     },
     onMemberJoined: (params: { groupId: string; member: string }) => {
-      addData(params.groupId, params.member);
+      addDataToUI(params.groupId, params.member);
     },
     onMemberExited: (params: { groupId: string; member: string }) => {
-      removeData(params.groupId, params.member);
+      removeDataToUI(params.groupId, params.member);
       if (params.member === im.userId) {
         return;
       }
@@ -332,13 +340,27 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
         }
         setParticipantCount((prev) => prev + 1);
       },
+      onRequestRefreshEvent: (id) => {
+        if (id === groupId) {
+          refreshToUI();
+        }
+      },
+      onRequestReloadEvent: (id) => {
+        if (id === groupId) {
+          init();
+        }
+      },
       type: UIListenerType.GroupParticipant,
     };
     im.addUIListener(uiListener);
     return () => {
       im.removeUIListener(uiListener);
     };
-  }, [im]);
+  }, [groupId, im, init, refreshToUI]);
+
+  React.useEffect(() => {
+    init();
+  }, [init]);
 
   return {
     ...flatListProps,

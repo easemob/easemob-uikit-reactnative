@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import {
+  Container,
   containsChinese,
   getPinyinFirsLetter,
-  GlobalContainer,
   HighText,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -136,7 +136,7 @@ export function TestPinyin() {
 
 export default function TestUtils() {
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -144,6 +144,6 @@ export default function TestUtils() {
       }}
     >
       <TestPinyin />
-    </GlobalContainer>
+    </Container>
   );
 }

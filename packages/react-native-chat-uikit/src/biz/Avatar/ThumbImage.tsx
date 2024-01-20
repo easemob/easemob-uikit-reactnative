@@ -5,7 +5,7 @@ import { useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { DefaultIconImage, DefaultIconImageProps } from '../../ui/Image';
 
-export type ThumbImageProps = Omit<DefaultIconImageProps, 'localIcon'>;
+export type ThumbImageProps = DefaultIconImageProps;
 
 /**
  * ThumbImage component. If the url is incorrect, does not exist, or a network error occurs
@@ -14,14 +14,14 @@ export type ThumbImageProps = Omit<DefaultIconImageProps, 'localIcon'>;
  * @returns JSX.Element
  */
 export function ThumbImage(props: ThumbImageProps) {
-  const { size, style, ...others } = props;
+  const { size, style, localIcon, ...others } = props;
   const { cornerRadius: corner } = useThemeContext();
   const { cornerRadius } = usePaletteContext();
   const { getBorderRadius } = useGetStyleProps();
 
   return (
     <DefaultIconImage
-      localIcon={ICON_ASSETS.img('3x')}
+      localIcon={localIcon ?? ICON_ASSETS.img('3x')}
       size={size}
       style={[
         style,

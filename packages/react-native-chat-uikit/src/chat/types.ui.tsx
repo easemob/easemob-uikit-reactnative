@@ -16,6 +16,9 @@ export enum UIListenerType {
   NewRequest = 'NewRequestModel',
 }
 
+/**
+ * The state of the new request.
+ */
 export type NewRequestStateType = 'pending' | 'accepted' | 'declined';
 
 /**
@@ -33,6 +36,9 @@ export type StateModel = {
 };
 
 type _ConversationModel = PartialUndefinable<ChatConversation>;
+/**
+ * ConversationModel: The data model of the conversation list UI component.
+ */
 export type ConversationModel = Pick<
   _ConversationModel,
   'ext' | 'isPinned' | 'pinnedTime'
@@ -67,6 +73,9 @@ export type ConversationModel = Pick<
   lastMessage?: ChatMessage;
 };
 type _ContactModel = PartialUndefinable<ChatContact>;
+/**
+ * ContactModel: The data model of the contact list UI component.
+ */
 export type ContactModel = _ContactModel &
   StateModel & {
     userId: string;
@@ -78,6 +87,9 @@ type _GroupModel = Omit<
   PartialUndefinable<ChatGroup>,
   'memberList' | 'adminList' | 'blockList' | 'muteList'
 >;
+/**
+ * GroupModel: The data model of the group list UI component.
+ */
 export type GroupModel = _GroupModel & {
   /**
    * The group ID.
@@ -101,6 +113,9 @@ export type GroupModel = _GroupModel & {
   myRemark?: string;
 };
 
+/**
+ * GroupParticipantModel: The data model of the group member list UI component.
+ */
 export type GroupParticipantModel = StateModel & {
   memberId: string;
   memberName?: string;
@@ -108,6 +123,9 @@ export type GroupParticipantModel = StateModel & {
   isOwner?: boolean;
 };
 
+/**
+ * NewRequestModel: The data model of the new request notification list UI component.
+ */
 export type NewRequestModel = {
   requestId: string;
   name: string;

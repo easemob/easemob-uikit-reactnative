@@ -77,7 +77,7 @@ export function useCreateGroup(props: CreateGroupProps) {
           propsOnCreateGroupResult?.({
             isOk: false,
             error: new UIKitError({
-              code: ErrorCode.common,
+              code: ErrorCode.chat_uikit,
               desc: 'The number of selected members exceeds the limit. ',
             }),
           });

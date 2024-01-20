@@ -8,6 +8,9 @@ import {
 import { GroupParticipantList } from './GroupParticipantList';
 import type { GroupParticipantListProps } from './types';
 
+/**
+ * Change Group Owner Component properties.
+ */
 export type ChangeGroupOwnerProps = Pick<
   GroupParticipantListProps,
   | 'groupId'
@@ -17,8 +20,15 @@ export type ChangeGroupOwnerProps = Pick<
   | 'onError'
   | 'testMode'
 > & {
+  /**
+   * Change group owner result callback.
+   */
   onChangeResult?: ResultCallback<string>;
 };
+
+/**
+ * Change Group Owner Component.
+ */
 export function ChangeGroupOwner(props: ChangeGroupOwnerProps) {
   const { groupId, onChangeResult } = props;
   const im = useChatContext();

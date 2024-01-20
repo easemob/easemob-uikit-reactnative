@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+/**
+ * Get the component.
+ */
 export function getElement<Props = any>(
   Component?:
     | React.ComponentType<Props>

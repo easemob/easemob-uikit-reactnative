@@ -168,32 +168,6 @@ export async function getVideoThumbUrl(msg: ChatMessage) {
     // return `file://${body.thumbnailLocalPath}`;
   }
   return body.thumbnailRemotePath;
-  // todo: download thumb or generate thumb in `MessageListItem`
-  // isExisted =
-  //   body.thumbnailRemotePath !== undefined &&
-  //   body.thumbnailRemotePath.length > 0
-  //     ? body.thumbnailRemotePath.startsWith('http')
-  //     : false;
-  // if (isExisted) {
-  //   return body.thumbnailRemotePath;
-  // } else {
-  //   if (
-  //     body.localPath !== undefined &&
-  //     body.localPath.length > 0 &&
-  //     body.thumbnailLocalPath !== undefined &&
-  //     body.thumbnailLocalPath.length > 0
-  //   ) {
-  //     Services.ms
-  //       .getVideoThumbnail({ url: body.localPath })
-  //       .then((url) => {
-  //         if (url !== undefined && url.length > 0) {
-  //           onGenerate?.(url);
-  //         }
-  //       })
-  //       .catch();
-  //   }
-  // }
-  // return undefined;
 }
 
 const hw = (params: {
@@ -274,20 +248,6 @@ export function getImageSizeFromUrl(
   );
 }
 
-// export class VoicePlayManager {
-//   static list: Map<string, boolean> = new Map();
-//   static setPlaying(msgId: string, isVoicePlaying: boolean) {
-//     if (isVoicePlaying === true) {
-//       this.list.set(msgId, isVoicePlaying);
-//     } else {
-//       this.list.delete(msgId);
-//     }
-//   }
-//   static isVoicePlaying(msgId: string) {
-//     return this.list.get(msgId) === true;
-//   }
-// }
-
 export function getFileSize(size: number) {
   if (size === undefined) {
     return '0B';
@@ -302,10 +262,6 @@ export function getFileSize(size: number) {
     return `${(size / 1024 / 1024 / 1024).toFixed(1)}GB`;
   }
 }
-
-// export function getFormatTime(time: number) {
-//   return formatTsForConvDetail(time);
-// }
 
 export function getMessageBubblePadding(msg: ChatMessage) {
   if (msg.body.type === ChatMessageType.IMAGE) {

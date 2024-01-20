@@ -2,16 +2,33 @@ import type { SlideModalProps, SlideModalRef } from '../../ui/Modal';
 import type { SendVoiceProps } from '../ConversationDetail';
 import type { PropsWithError, PropsWithTest } from '../types';
 
+/**
+ * Voice component state.
+ */
 export type VoiceBarState = 'idle' | 'recording' | 'playing' | 'stopping';
+
+/**
+ * Voice component reference.
+ */
 export type VoiceBarRef = {
   /**
-   * You can specify the path to save the file. If not specified, the default path will be used.
+   * Start recording voice. You can specify the path to save the file. If not specified, the default path will be used.
    * @param voiceFilePath the voice file path.
    */
   startRecord: (voiceFilePath?: string) => void;
+  /**
+   * Stop recording voice.
+   */
   stopRecord: () => void;
+  /**
+   * Play voice.
+   */
   replay: () => void;
 };
+
+/**
+ * Voice component properties.
+ */
 export type VoiceBarProps = PropsWithError &
   PropsWithTest & {
     /**

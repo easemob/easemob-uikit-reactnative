@@ -20,6 +20,11 @@ import type { NewRequestsItemProps, NewRequestsProps } from './types';
 
 const FlatList = FlatListFactory<NewRequestsItemProps>();
 
+/**
+ * New Requests Component.
+ *
+ * This component displays and manages contact requests.
+ */
 export function NewRequests(props: NewRequestsProps) {
   const {
     containerStyle,
@@ -44,7 +49,7 @@ export function NewRequests(props: NewRequestsProps) {
     onButtonClicked,
     tr,
     ListItemRender,
-    onShowContactListMoreActions,
+    onAddContact,
     menuRef,
     alertRef,
     onRequestCloseMenu,
@@ -94,7 +99,7 @@ export function NewRequests(props: NewRequestsProps) {
             Right={TopNavigationBarRight}
             RightProps={{
               onClicked: () => {
-                onShowContactListMoreActions();
+                onAddContact();
               },
               iconName: 'person_add',
             }}

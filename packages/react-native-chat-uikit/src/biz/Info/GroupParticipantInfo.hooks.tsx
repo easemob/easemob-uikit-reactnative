@@ -1,12 +1,19 @@
 import * as React from 'react';
 import { ChatConversationType } from 'react-native-chat-sdk';
 
-import { useChatContext } from '../../chat';
+import {
+  ContactServiceListener,
+  UIConversationListListener,
+  UIListenerType,
+  useChatContext,
+} from '../../chat';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
+import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { useCloseMenu, useContactListMoreActions } from '../hooks';
 import type { GroupParticipantInfoProps } from './types';
 
 export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
@@ -17,6 +24,7 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     userAvatar: propsUserAvatar,
     userRemark: propsUserRemark,
     doNotDisturb: propsDoNotDisturb,
+    onDoNotDisturb: propsOnDoNotDisturb,
     onClearChat: propsOnClearChat,
     onCopyId: propsOnCopyId,
     onGroupParticipantRemark: propsOnGroupParticipantRemark,
@@ -26,6 +34,7 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     onAudioCall: propsOnAudioCall,
     onVideoCall: propsOnVideoCall,
   } = props;
+  const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
@@ -36,6 +45,21 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
   const [isSelf, setIsSelf] = React.useState(false);
   const im = useChatContext();
   const { tr } = useI18nContext();
+  const { closeMenu } = useCloseMenu({ menuRef });
+  const { onShowContactListMoreActions } = useContactListMoreActions({
+    menuRef,
+    alertRef,
+  });
+
+  const addContact = React.useCallback(
+    (userId: string) => {
+      im.addNewContact({
+        userId: userId,
+        reason: 'add contact',
+      });
+    },
+    [im]
+  );
 
   useLifecycle(
     React.useCallback(
@@ -43,6 +67,14 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
         if (state === 'load') {
           setIsContact(im.isContact({ userId }));
           setIsSelf(im.userId === userId);
+          im.getConversation({
+            convId: userId,
+            convType: ChatConversationType.PeerChat,
+          })
+            .then((result) => {
+              setDoNotDisturb(result?.doNotDisturb ?? false);
+            })
+            .catch();
         }
       },
       [im, userId]
@@ -50,17 +82,15 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
   );
 
   const onDoNotDisturb = (value: boolean) => {
+    if (propsOnDoNotDisturb) {
+      propsOnDoNotDisturb(value);
+      return;
+    }
     im.setConversationSilentMode({
       convId: userId,
       convType: ChatConversationType.PeerChat,
       doNotDisturb: value,
-    })
-      .then(() => {
-        setDoNotDisturb(value);
-      })
-      .catch((e) => {
-        im.sendError({ error: e });
-      });
+    });
   };
   const onClearChat = () => {
     if (propsOnClearChat) {
@@ -109,7 +139,9 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
   const onAddContact = () => {
     if (propsOnAddContact) {
       propsOnAddContact(userId);
+      return;
     }
+    onShowContactListMoreActions(addContact);
   };
 
   const onSendMessage = () => {
@@ -130,6 +162,40 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     }
   };
 
+  React.useEffect(() => {
+    const listener: UIConversationListListener = {
+      onUpdatedEvent: (data) => {
+        if (data.convId === groupId) {
+          setDoNotDisturb(data.doNotDisturb);
+        }
+      },
+      type: UIListenerType.Conversation,
+    };
+    im.addUIListener(listener);
+    return () => {
+      im.removeUIListener(listener);
+    };
+  }, [groupId, im]);
+
+  React.useEffect(() => {
+    const listener: ContactServiceListener = {
+      onContactAdded: async (_userId: string) => {
+        if (userId === _userId) {
+          setIsContact(true);
+        }
+      },
+      onContactDeleted: async (_userId: string) => {
+        if (userId === _userId) {
+          setIsContact(false);
+        }
+      },
+    };
+    im.addListener(listener);
+    return () => {
+      im.removeListener(listener);
+    };
+  }, [im, userId]);
+
   return {
     ...props,
     doNotDisturb,
@@ -149,5 +215,7 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     onVideoCall,
     onAudioCall,
     isSelf,
+    onRequestCloseMenu: closeMenu,
+    menuRef,
   };
 }

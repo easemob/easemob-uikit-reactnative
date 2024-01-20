@@ -7,10 +7,23 @@ import { usePaletteContext, useThemeContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 
+/**
+ * Search Style Component properties.
+ */
 export type SearchStyleProps = {
+  /**
+   * Title.
+   */
   title: string;
+  /**
+   * Press event.
+   */
   onPress: () => void;
 };
+
+/**
+ * Search Style Component.
+ */
 export function SearchStyle(props: SearchStyleProps) {
   const { title, onPress } = props;
   const { colors, cornerRadius } = usePaletteContext();

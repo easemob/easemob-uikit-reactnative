@@ -15,10 +15,23 @@ export type BadgesProps = {
    * - `others` means unread count.
    */
   count?: number;
+  /**
+   * Set the maximum value. Default value is 99.
+   */
   maxCount?: number;
+  /**
+   * Text style properties.
+   */
   textStyle?: StyleProp<TextStyle>;
+  /**
+   * Component container style properties.
+   */
   containerStyle?: StyleProp<ViewStyle>;
 };
+
+/**
+ * Unread components.
+ */
 export function Badges(props: BadgesProps) {
   const { count, maxCount = gMaxCount, containerStyle, textStyle } = props;
   const { colors } = usePaletteContext();

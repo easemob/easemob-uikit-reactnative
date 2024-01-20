@@ -25,6 +25,9 @@ import type { ConversationModel } from './types.ui';
 
 let gListener: ChatServiceListener | undefined;
 
+/**
+ * Message Cache Manager Implementation.
+ */
 export class MessageCacheManagerImpl implements MessageCacheManager {
   _client: ChatService;
   _listener?: ChatServiceListener;
@@ -311,8 +314,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       this.emitRecallMessageChanged({ isOk: false });
       this._client.sendError({
         error: new UIKitError({
-          code: ErrorCode.common,
-          desc: 'recallMessage',
+          code: ErrorCode.msg_recall_error,
         }),
       });
       return;

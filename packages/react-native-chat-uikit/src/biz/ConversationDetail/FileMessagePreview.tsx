@@ -16,6 +16,9 @@ import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import type { PropsWithBack, PropsWithChildren } from '../types';
 
+/**
+ * File Message Preview Component properties.
+ */
 export type FileMessagePreviewProps = PropsWithBack &
   PropsWithChildren & {
     /**
@@ -39,6 +42,9 @@ export type FileMessagePreviewProps = PropsWithBack &
     onProgress?: (progress: number) => void;
   };
 
+/**
+ * File Message Preview Component.
+ */
 export function FileMessagePreview(props: FileMessagePreviewProps) {
   const {
     containerStyle,
@@ -58,7 +64,7 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
           if (result) {
             if (result.body.type !== ChatMessageType.FILE) {
               throw new UIKitError({
-                code: ErrorCode.common,
+                code: ErrorCode.chat_uikit,
                 desc: 'Message type is not ChatMessageType.FILE',
               });
             }

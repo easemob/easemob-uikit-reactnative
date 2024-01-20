@@ -5,8 +5,12 @@ export enum ErrorDescription {
   existed = 'object has existed.',
   params = 'input parameters are invalid.',
   max_count = 'Maximum quantity limit exceeded.',
+  network = 'network error.',
 
-  sdk = 'sdk error.',
+  chat_sdk = 'chat sdk error.',
+  chat_uikit = 'chat uikit error.',
+  chat_callkit = 'chat callkit error.',
+  chatroom_uikit = 'chatroom uikit error.',
 
   init_error = 'An initialization error occurred.',
   login_error = 'A login error occurred.',

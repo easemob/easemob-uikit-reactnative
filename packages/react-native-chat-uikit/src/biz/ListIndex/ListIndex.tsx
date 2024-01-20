@@ -9,6 +9,11 @@ import {
 } from './ListIndex.const';
 import type { ListIndexProps } from './types';
 
+/**
+ * List Index Component.
+ *
+ * This component is mainly used with alphabetical lists.
+ */
 export const ListIndex = (props: ListIndexProps) => {
   const {
     indexTitles,

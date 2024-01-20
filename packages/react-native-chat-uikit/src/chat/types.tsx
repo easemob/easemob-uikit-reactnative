@@ -27,6 +27,9 @@ import type {
   UIListenerType,
 } from './types.ui';
 
+/**
+ * Event type. Usually calling the interface provided by `ChatService` will trigger a callback notification. The event type in the callback notification is the name of the calling interface.
+ */
 export type ChatEventType = 'undefined' | string;
 
 /**
@@ -43,16 +46,38 @@ export enum DisconnectReasonType {
   user_did_login_too_many_device = 'user_did_login_too_many_device',
   user_kicked_by_other_device = 'user_kicked_by_other_device',
   user_authentication_failed = 'user_authentication_failed',
+  /**
+   * In addition to the above reasons, other reasons are here. Including network issues.
+   */
   others = 'others',
 }
 
+/**
+ * The callback type of the calling interface. Might return a result if the call completes, or an error object if it fails.
+ */
 export type ResultCallback<T> = (params: {
+  /**
+   * Whether the call is successful.
+   */
   isOk: boolean;
+  /**
+   * The result of the call.
+   */
   value?: T;
+  /**
+   * The error object of the call.
+   */
   error?: UIKitError;
 }) => void;
 
+/**
+ * The type of data model.
+ */
 export type DataModelType = 'user' | 'group';
+
+/**
+ * The type of data model.
+ */
 export type DataModel = {
   /**
    * User ID, group ID or group member ID.
@@ -80,6 +105,9 @@ export type DataModel = {
   groupId?: string;
 };
 
+/**
+ * User from type.
+ */
 export type UserFrom = 'user' | 'group' | 'group-member' | 'others';
 
 /**
@@ -117,6 +145,9 @@ export type UserData = {
   };
 };
 
+/**
+ * The type of user data.
+ */
 export type UserServiceDataFromMessage = {
   nickname: string;
   avatarURL: string;
@@ -140,22 +171,43 @@ export interface ConnectServiceListener {
   onDisconnected?(reason: DisconnectReasonType): void;
 }
 
+/**
+ * The type of message listener.
+ */
 export type MessageServiceListener =
   PartialUndefinable<ChatMessageEventListener>;
 
+/**
+ * The type of conversation listener.
+ */
 export type ConversationListener = {};
 
+/**
+ * The type of group listener.
+ */
 export type GroupServiceListener =
   PartialUndefinable<ChatGroupEventListener> & {};
 
+/**
+ * The type of contact listener.
+ */
 export type ContactServiceListener =
   PartialUndefinable<ChatContactEventListener>;
 
+/**
+ * The type of presence listener.
+ */
 export type PresenceServiceListener =
   PartialUndefinable<ChatPresenceEventListener>;
 
+/**
+ * The type of custom listener.
+ */
 export type CustomServiceListener = PartialUndefinable<ChatCustomEventListener>;
 
+/**
+ * The type of multi device state listener.
+ */
 export type MultiDeviceStateListener =
   PartialUndefinable<ChatMultiDeviceEventListener>;
 
@@ -177,6 +229,34 @@ export interface EventServiceListener {
   onError?(params: { error: UIKitError; from?: string; extra?: any }): void;
 }
 
+/**
+ * A collection of listeners.
+ *
+ * You can use one or more listeners, for example: only care about changes in the contact list.
+ *
+ * @example
+ *
+ * ```tsx
+ * React.useEffect(() => {
+ *   const listener: ContactServiceListener = {
+ *     onContactAdded: async (_userId: string) => {
+ *       if (userId === _userId) {
+ *         setIsContact(true);
+ *       }
+ *     },
+ *     onContactDeleted: async (_userId: string) => {
+ *       if (userId === _userId) {
+ *         setIsContact(false);
+ *       }
+ *     },
+ *   };
+ *   im.addListener(listener);
+ *   return () => {
+ *     im.removeListener(listener);
+ *   };
+ * }, [im, userId]);
+ * ```
+ */
 export type ChatServiceListener = ConnectServiceListener &
   MessageServiceListener &
   ConversationListener &
@@ -187,6 +267,9 @@ export type ChatServiceListener = ConnectServiceListener &
   MultiDeviceStateListener &
   EventServiceListener;
 
+/**
+ * The type of conversation service.
+ */
 export interface ConversationServices {
   // setOnRequestMultiData<DataT>(
   //   callback?: (params: {
@@ -194,11 +277,29 @@ export interface ConversationServices {
   //     result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
   //   }) => void | Promise<void>
   // ): void;
+  /**
+   * Set the current conversation.
+   */
   setCurrentConversation(params: { conv?: ConversationModel }): void;
+  /**
+   * Get the current conversation.
+   */
   getCurrentConversation(): ConversationModel | undefined;
+  /**
+   * Get all conversations.
+   */
   getAllConversations(params: {
     onResult: ResultCallback<ConversationModel[]>;
   }): Promise<void>;
+  /**
+   * Get the conversation.
+   *
+   * @params -
+   * - convId: Conversation ID.
+   * - convType: Conversation type.
+   * - createIfNotExist: Whether to create a new conversation if it does not exist.
+   * - fromNative: Whether it is called from the native layer.
+   */
   getConversation(params: {
     convId: string;
     convType: ChatConversationType;
@@ -214,6 +315,9 @@ export interface ConversationServices {
     convId: string;
     removeMessage?: boolean;
   }): Promise<void>;
+  /**
+   * Clear all conversations.
+   */
   clearAllConversations(): Promise<void>;
   /**
    * Set the conversation pin.
@@ -224,34 +328,59 @@ export interface ConversationServices {
     convType: ChatConversationType;
     isPin: boolean;
   }): Promise<void>;
+  /**
+   * Set the conversation disturb.
+   * @throws {@link UIKitError}
+   */
   setConversationSilentMode(params: {
     convId: string;
     convType: ChatConversationType;
     doNotDisturb: boolean;
   }): Promise<void>;
+  /**
+   * Set the conversation top.
+   * @throws {@link UIKitError}
+   */
   setConversationRead(params: {
     convId: string;
     convType: ChatConversationType;
   }): Promise<void>;
+  /**
+   * Set the conversation extension.
+   * @throws {@link UIKitError}
+   */
   setConversationExt(params: {
     convId: string;
     convType: ChatConversationType;
     ext: Record<string, string | number | boolean>;
   }): Promise<void>;
+  /**
+   * Get the conversation extension.
+   * @throws {@link UIKitError}
+   */
   getConversationMessageCount(
     convId: string,
     convType: ChatConversationType
   ): Promise<number>;
+  /**
+   * Get the conversation latest message.
+   */
   getConversationLatestMessage(
     convId: string,
     convType: ChatConversationType
   ): Promise<ChatMessage | undefined>;
+  /**
+   * Get the conversation disturb.
+   */
   getDoNotDisturb(
     convId: string,
     convType: ChatConversationType
   ): Promise<boolean>;
 }
 
+/**
+ * The type of contact service.
+ */
 export interface ContactServices {
   // setContactOnRequestData<DataT>(
   //   callback?: (params: {
@@ -259,73 +388,139 @@ export interface ContactServices {
   //     result: (data?: DataT[], error?: UIKitError) => void;
   //   }) => void | Promise<void>
   // ): void;
+  /**
+   * Whether it is a contact person.
+   */
   isContact(params: { userId: string }): boolean;
+  /**
+   * Get all contacts.
+   */
   getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void;
+  /**
+   * Get the contact.
+   */
   getContact(params: {
     userId: string;
     onResult: ResultCallback<ContactModel | undefined>;
   }): void;
+  /**
+   * Add a new contact.
+   *
+   * Trigger contact callback notification. {@link UIContactListListener}
+   */
   addNewContact(params: {
     userId: string;
     reason?: string;
     onResult?: ResultCallback<void>;
   }): void;
+  /**
+   * Remove a contact.
+   *
+   * Trigger contact callback notification. {@link UIContactListListener}
+   */
   removeContact(params: {
     userId: string;
     onResult?: ResultCallback<void>;
   }): void;
+  /**
+   * Update the contact remark.
+   *
+   * Trigger contact callback notification. {@link UIContactListListener}
+   */
   setContactRemark(params: {
     userId: string;
     remark: string;
     onResult?: ResultCallback<void>;
   }): void;
+  /**
+   * Accept the invitation.
+   */
   acceptInvitation(params: {
     userId: string;
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Decline the invitation.
+   */
   declineInvitation(params: {
     userId: string;
     onResult: ResultCallback<void>;
   }): void;
 }
 
+/**
+ * The type of user service.
+ */
 export interface UserServices {
+  /**
+   * Get the user information.
+   */
   getUserInfo(params: {
     userId: string;
     onResult: ResultCallback<UserData | undefined>;
   }): void;
+  /**
+   * Get the user information list.
+   */
   getUsersInfo(params: {
     userIds: string[];
     onResult: ResultCallback<UserData[]>;
   }): void;
 }
 
+/**
+ * The type of message service.
+ */
 export interface MessageServices {
+  /**
+   * Get the message.
+   */
   getMessage(params: { messageId: string }): Promise<ChatMessage | undefined>;
+  /**
+   * Resend the message.
+   */
   resendMessage(params: {
     message: ChatMessage;
     callback?: ChatMessageStatusCallback;
   }): void;
+  /**
+   * Recall the message.
+   */
   recallMessage(params: {
     message: ChatMessage;
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Insert the message.
+   */
   insertMessage(params: {
     message: ChatMessage;
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Update the message.
+   */
   updateMessage(params: {
     message: ChatMessage;
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Remove the message.
+   */
   removeMessage(params: {
     message: ChatMessage;
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Edit the message.
+   */
   editMessage(params: {
     message: ChatMessage;
     onResult: ResultCallback<ChatMessage>;
   }): void;
+  /**
+   * Get the message list.
+   */
   getNewRequestList(params: {
     convId: string;
     convType: ChatConversationType;
@@ -334,14 +529,23 @@ export interface MessageServices {
     direction?: ChatSearchDirection;
     onResult: ResultCallback<ChatMessage[]>;
   }): void;
+  /**
+   * Send the message list.
+   */
   sendMessage(params: {
     message: ChatMessage;
     callback?: ChatMessageStatusCallback;
   }): void;
+  /**
+   * Download the message attachment.
+   */
   downloadMessageAttachment(params: {
     message: ChatMessage;
     callback?: ChatMessageStatusCallback;
   }): void;
+  /**
+   * Get the history message list.
+   */
   getHistoryMessage(params: {
     convId: string;
     convType: ChatConversationType;
@@ -358,16 +562,25 @@ export interface MessageServices {
    * Set the user information to the message.
    */
   setUserInfoToMessage(params: { msg: ChatMessage; user: UserData }): void;
+  /**
+   * Set message read flag.
+   */
   setMessageRead(params: {
     convId: string;
     convType: ChatConversationType;
     msgId: string;
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Send message read ack.
+   */
   sendMessageReadAck(params: {
     message: ChatMessage;
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Report message to server.
+   */
   reportMessage(params: {
     messageId: string;
     tag: string;
@@ -390,9 +603,15 @@ export interface GroupServices {
   setGroupNameOnCreateGroup(
     callback: (params: { selected: ContactModel[] }) => string
   ): void;
+  /**
+   * Get the group name customization callback.
+   */
   getCreateGroupCustomNameCallback():
     | ((params: { selected: ContactModel[] }) => string)
     | undefined;
+  /**
+   * Registrar. When loading the group member list, the avatars and nicknames of the group members will be obtained.
+   */
   setGroupParticipantOnRequestData<DataT extends DataModel = DataModel>(
     callback?: (params: {
       groupId: string;
@@ -400,59 +619,114 @@ export interface GroupServices {
       result: (data?: DataT[], error?: UIKitError) => void;
     }) => void | Promise<void>
   ): void;
+  /**
+   * Actively update group members' avatars and nicknames. The component will take effect next time.
+   */
   updateGroupParticipantOnRequestData(params: {
     groupId: string;
     data: Map<DataModelType, DataModel[]>;
   }): void;
+  /**
+   * Get joined groups.
+   */
   getJoinedGroups(params: { onResult: ResultCallback<GroupModel[]> }): void;
+  /**
+   * Get the group list in pages..
+   */
   getPageGroups(params: {
     pageSize: number;
     pageNum: number;
     onResult: ResultCallback<GroupModel[]>;
   }): void;
+  /**
+   * Get the group member list.
+   */
   getGroupAllMembers(params: {
     groupId: string;
     isReset?: boolean;
     owner?: GroupParticipantModel;
     onResult: ResultCallback<GroupParticipantModel[]>;
   }): void;
+  /**
+   * Get group owner.
+   */
   getGroupOwner(params: {
     groupId: string;
   }): Promise<GroupParticipantModel | undefined>;
+  /**
+   * Get group member.
+   */
   getGroupMember(params: {
     groupId: string;
     userId: string;
   }): GroupParticipantModel | undefined;
+  /**
+   * fetch joined group count.
+   */
   fetchJoinedGroupCount(params: { onResult: ResultCallback<number> }): void;
+  /**
+   * Get the group information.
+   */
   getGroupInfo(params: {
     groupId: string;
     onResult: ResultCallback<GroupModel>;
   }): void;
+  /**
+   * Get the group information from the server.
+   */
   getGroupInfoFromServer(params: {
     groupId: string;
     onResult: ResultCallback<GroupModel>;
   }): void;
+  /**
+   * Create a group.
+   */
   createGroup(params: {
     groupName: string;
     groupDescription?: string;
     inviteMembers: string[];
     onResult?: ResultCallback<GroupModel>;
   }): void;
+  /**
+   * Quit the group.
+   *
+   * Trigger group callback notification. {@link UIGroupListListener}
+   */
   quitGroup(params: { groupId: string; onResult?: ResultCallback<void> }): void;
+  /**
+   * Destroy the group.
+   *
+   * Trigger group callback notification. {@link UIGroupListListener}
+   */
   destroyGroup(params: {
     groupId: string;
     onResult?: ResultCallback<void>;
   }): void;
+  /**
+   * Set the group name.
+   *
+   * Trigger group callback notification. {@link UIGroupListListener}
+   */
   setGroupName(params: {
     groupId: string;
     groupNewName: string;
     onResult?: ResultCallback<void>;
   }): void;
+  /**
+   * Set the group description.
+   *
+   * Trigger group callback notification. {@link UIGroupListListener}
+   */
   setGroupDescription(params: {
     groupId: string;
     groupDescription: string;
     onResult?: ResultCallback<void>;
   }): void;
+  /**
+   * Set the group extension.
+   *
+   * Trigger group callback notification. {@link UIGroupListListener}
+   */
   setGroupMyRemark(params: {
     groupId: string;
     memberId: string;
@@ -460,22 +734,40 @@ export interface GroupServices {
     ext?: Record<string, string>;
     onResult?: ResultCallback<void>;
   }): void;
+  /**
+   * Get the group member remark.
+   */
   getGroupMyRemark(params: {
     groupId: string;
     memberId: string;
     onResult: ResultCallback<string | undefined>;
   }): void;
+  /**
+   * Add group members.
+   *
+   * Trigger group callback notification. {@link UIGroupParticipantListListener}
+   */
   addGroupMembers(params: {
     groupId: string;
     members: GroupParticipantModel[];
     welcomeMessage?: string;
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Remove group members.
+   *
+   * Trigger group callback notification. {@link UIGroupParticipantListListener}
+   */
   removeGroupMembers(params: {
     groupId: string;
     members: string[];
     onResult: ResultCallback<void>;
   }): void;
+  /**
+   * Set the group owner.
+   *
+   * Trigger group callback notification. {@link UIGroupParticipantListListener}
+   */
   changeGroupOwner(params: {
     groupId: string;
     newOwnerId: string;
@@ -483,6 +775,9 @@ export interface GroupServices {
   }): void;
 }
 
+/**
+ * The type of presence service.
+ */
 export interface PresenceServices {
   /**
    * Subscribe to user status.
@@ -514,6 +809,11 @@ export interface PresenceServices {
   }): void;
 }
 
+/**
+ * The type of chat service.
+ *
+ * Interfaces are mainly divided into two categories: synchronous method and asynchronous method. Synchronous method may throw exceptions, but asynchronous method do not. The main difference between them is whether `ResultCallback` is included in the parameters.
+ */
 export interface ChatService
   extends ConversationServices,
     ContactServices,
@@ -766,6 +1066,9 @@ type _ChatOptionsType = PartialUndefinable<ChatOptions>;
  *
  */
 export type ChatOptionsType = _ChatOptionsType & {
+  /**
+   * App key. (required)
+   */
   appKey: string;
 };
 
@@ -773,6 +1076,9 @@ export type ChatOptionsType = _ChatOptionsType & {
  * ChatServiceInit is the initialization parameters of ChatService.
  */
 export type ChatServiceInit = {
+  /**
+   * Chat SDK options.
+   */
   options: ChatOptionsType;
   /**
    * IM initialization is completed callback notification.

@@ -44,8 +44,8 @@ export function ConversationDetailScreen(props: Props) {
   const convType = ((route.params as any)?.params as any)?.convType;
   const convName = ((route.params as any)?.params as any)?.convName;
   const operateType = ((route.params as any)?.params as any)?.operateType;
-  const selectedParticipants = ((route.params as any)?.params as any)
-    ?.selectedParticipants;
+  // const selectedParticipants = ((route.params as any)?.params as any)
+  //   ?.selectedParticipants;
   const selectedContacts = ((route.params as any)?.params as any)
     ?.selectedContacts;
   const listRef = React.useRef<MessageListRef>({} as any);
@@ -60,21 +60,21 @@ export function ConversationDetailScreen(props: Props) {
     },
   });
 
-  React.useEffect(() => {
-    if (selectedParticipants && operateType === 'mention') {
-      try {
-        const p = JSON.parse(selectedParticipants);
-        inputRef.current?.mentionSelected(
-          p.map((item: any) => {
-            return {
-              id: item.id,
-              name: item.name ?? item.id,
-            };
-          })
-        );
-      } catch {}
-    }
-  }, [selectedParticipants, operateType]);
+  // React.useEffect(() => {
+  //   if (selectedParticipants && operateType === 'mention') {
+  //     try {
+  //       const p = JSON.parse(selectedParticipants);
+  //       inputRef.current?.mentionSelected(
+  //         p.map((item: any) => {
+  //           return {
+  //             id: item.id,
+  //             name: item.name ?? item.id,
+  //           };
+  //         })
+  //       );
+  //     } catch {}
+  //   }
+  // }, [selectedParticipants, operateType]);
 
   React.useEffect(() => {
     if (selectedContacts && operateType === 'share_card') {

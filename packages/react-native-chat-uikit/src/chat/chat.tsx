@@ -1,7 +1,7 @@
 import React from 'react';
 
 // import { once2 } from '../utils';
-import { getChatService as _getChatService } from './chat.impl';
+import { getChatServiceImpl as _getChatService } from './chat.impl';
 import type { ChatService, ChatServiceInit } from './types';
 
 /**

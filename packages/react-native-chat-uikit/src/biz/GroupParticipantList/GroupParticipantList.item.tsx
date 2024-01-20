@@ -8,6 +8,9 @@ import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { GroupParticipantListItemProps } from './types';
 
+/**
+ * Group Participant List Item Component.
+ */
 export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
   const { data, onClicked, onLongPressed, onCheckClicked } = props;
   const { colors } = usePaletteContext();

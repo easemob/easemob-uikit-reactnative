@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ChatMessage } from 'react-native-chat-sdk';
 import {
   CmnButton,
-  GlobalContainer,
+  Container,
   MessageInputEditMessage,
   MessageInputEditMessageRef,
   useLightTheme,
@@ -40,7 +40,7 @@ export default function TestEditMessage() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -50,6 +50,6 @@ export default function TestEditMessage() {
       theme={t}
     >
       <Test1 />
-    </GlobalContainer>
+    </Container>
   );
 }

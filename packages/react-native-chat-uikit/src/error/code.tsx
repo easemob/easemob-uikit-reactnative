@@ -5,7 +5,12 @@ export enum ErrorCode {
   existed = 11,
   params = 12,
   max_count = 13,
-  sdk = 14,
+  network = 15,
+
+  chat_sdk = 900,
+  chat_uikit = 901,
+  chat_callkit = 902,
+  chatroom_uikit = 903,
 
   // protocol error 1000 start
   init_error = 1000,

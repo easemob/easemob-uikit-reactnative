@@ -25,6 +25,9 @@ import { useImageSize } from '../hooks/useImageSize';
 import type { PropsWithBack, PropsWithError } from '../types';
 import { getImageSizeFromUrl } from './MessageListItem.hooks';
 
+/**
+ * Image Message Preview Component properties.
+ */
 export type ImageMessagePreviewProps = PropsWithBack &
   PropsWithError & {
     /**
@@ -40,6 +43,10 @@ export type ImageMessagePreviewProps = PropsWithBack &
      */
     containerStyle?: StyleProp<ViewStyle>;
   };
+
+/**
+ * Image Message Preview Component.
+ */
 export function ImageMessagePreview(props: ImageMessagePreviewProps) {
   const { containerStyle, onBack } = props;
   const { url, size } = useImageMessagePreview(props);
@@ -137,7 +144,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
           if (result) {
             if (result.body.type !== ChatMessageType.IMAGE) {
               throw new UIKitError({
-                code: ErrorCode.common,
+                code: ErrorCode.chat_uikit,
                 desc: 'Message type is not ChatMessageType.IMAGE',
               });
             }
@@ -186,7 +193,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
             } else if (body.fileStatus === ChatDownloadStatus.FAILED) {
               onError?.(
                 new UIKitError({
-                  code: ErrorCode.common,
+                  code: ErrorCode.chat_uikit,
                   desc: 'file download failed.',
                 })
               );

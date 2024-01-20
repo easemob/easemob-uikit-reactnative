@@ -17,6 +17,11 @@ import { BlockButtons } from './BlockButtons';
 import { useContactInfo } from './ContactInfo.hooks';
 import type { ContactInfoProps } from './types';
 
+/**
+ * Contact Info Component.
+ *
+ * If it is a contact, the send button is displayed, if it is not a contact, the add contact button is displayed. If it is the current user, there are no operation options.
+ */
 export function ContactInfo(props: ContactInfoProps) {
   const {
     onBack,
@@ -46,6 +51,7 @@ export function ContactInfo(props: ContactInfoProps) {
     onMore,
     tr,
     isSelf,
+    onAddContact,
   } = useContactInfo(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -210,6 +216,7 @@ export function ContactInfo(props: ContactInfoProps) {
             contentType={'only-text'}
             text={tr('_uikit_info_button_add_contact')}
             style={{ width: 180, height: 50 }}
+            onPress={onAddContact}
           />
         </View>
       ) : null}

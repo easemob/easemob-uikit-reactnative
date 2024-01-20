@@ -5,5 +5,4 @@ export * from './GroupInfo';
 export * from './GroupInfo.hooks';
 export * from './GroupParticipantInfo';
 export * from './GroupParticipantInfo.hooks';
-export * from './MineInfo';
 export * from './types';

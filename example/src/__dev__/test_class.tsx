@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GlobalContainer } from 'react-native-chat-uikit';
+import { Container } from 'react-native-chat-uikit';
 
 interface TestBindListener {
   print: () => void;
@@ -25,7 +25,7 @@ export function Test1() {
 
 export default function TestClass() {
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -33,6 +33,6 @@ export default function TestClass() {
       }}
     >
       <Test1 />
-    </GlobalContainer>
+    </Container>
   );
 }

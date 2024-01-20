@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   ContactInfo,
-  GlobalContainer,
+  Container,
   GroupInfo,
   GroupParticipantInfo,
 } from 'react-native-chat-uikit';
@@ -49,7 +49,7 @@ export function TestGroupParticipantInfo() {
 
 export default function TestInfo() {
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -57,6 +57,6 @@ export default function TestInfo() {
       }}
     >
       <TestGroupParticipantInfo />
-    </GlobalContainer>
+    </Container>
   );
 }

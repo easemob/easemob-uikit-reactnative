@@ -1,26 +1,23 @@
 import { useI18nContext } from '../../i18n';
-import type { AlertRef } from '../../ui/Alert';
-import type {
-  BottomSheetNameMenuRef,
-  InitMenuItemsType,
-} from '../BottomSheetMenu';
+import type { InitMenuItemsType } from '../BottomSheetMenu';
+import type { BasicActionsProps } from './types';
 import { useCloseAlert } from './useCloseAlert';
 import { useCloseMenu } from './useCloseMenu';
 
-export type useGroupInfoActionsProps = {
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  alertRef: React.RefObject<AlertRef>;
-  quitGroup?: (groupId: string) => void;
+export type useGroupInfoActionsProps = BasicActionsProps & {
+  /**
+   * callback notification of quit group.
+   */
+  onQuitGroup?: (groupId: string) => void;
   onClickedChangeGroupOwner?: (groupId: string, ownerId: string) => void;
-  destroyGroup?: (groupId: string) => void;
-  onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
+  onDestroyGroup?: (groupId: string) => void;
 };
 export function useGroupInfoActions(props: useGroupInfoActionsProps) {
   const {
     menuRef,
     alertRef,
-    quitGroup,
-    destroyGroup,
+    onQuitGroup,
+    onDestroyGroup,
     onClickedChangeGroupOwner,
     onInit,
   } = props;
@@ -50,7 +47,7 @@ export function useGroupInfoActions(props: useGroupInfoActionsProps) {
                     isPreferred: true,
                     onPress: () => {
                       closeAlert(() => {
-                        quitGroup?.(groupId);
+                        onQuitGroup?.(groupId);
                       });
                     },
                   },
@@ -98,7 +95,7 @@ export function useGroupInfoActions(props: useGroupInfoActionsProps) {
                     isPreferred: true,
                     onPress: () => {
                       closeAlert(() => {
-                        destroyGroup?.(groupId);
+                        onDestroyGroup?.(groupId);
                       });
                     },
                   },

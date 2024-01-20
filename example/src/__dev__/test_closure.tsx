@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { GlobalContainer } from 'react-native-chat-uikit';
+import { Container } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 let count = 0;
@@ -95,7 +95,7 @@ export function Test1() {
 
 export default function TestClosure() {
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -103,6 +103,6 @@ export default function TestClosure() {
       }}
     >
       <Test1 />
-    </GlobalContainer>
+    </Container>
   );
 }

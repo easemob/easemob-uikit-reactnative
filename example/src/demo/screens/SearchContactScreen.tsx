@@ -47,7 +47,6 @@ export function SearchContactScreen(props: Props) {
               params: {
                 params: {
                   searchType: 'create-group',
-                  groupId,
                   data: data ? JSON.stringify(data) : undefined,
                 },
               },

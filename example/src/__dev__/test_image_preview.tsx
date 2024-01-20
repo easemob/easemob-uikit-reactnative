@@ -4,7 +4,7 @@ import {
   View,
 } from 'react-native';
 import {
-  GlobalContainer,
+  Container,
   ImagePreview,
   useLightTheme,
   usePresetPalette,
@@ -84,7 +84,7 @@ export default function TestImagePreview() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -94,6 +94,6 @@ export default function TestImagePreview() {
       theme={t}
     >
       <TestMyImagePreview />
-    </GlobalContainer>
+    </Container>
   );
 }

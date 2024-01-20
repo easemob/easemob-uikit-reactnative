@@ -10,7 +10,7 @@ import { useDelayExecTask, useLifecycle } from '../../hook';
 import type { FlatListRef } from '../../ui/FlatList';
 import type { SectionListRef } from '../../ui/SectionList';
 import { ListIndex } from '../ListIndex';
-import type { DefaultListIndexPropsT, ListState } from '../types';
+import type { DefaultListIndexPropsT, ListStateType } from '../types';
 import type { UseListBasicProps } from './types';
 
 export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
@@ -26,7 +26,7 @@ export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
   const loadType = React.useRef<'once' | 'multiple'>(
     props.loadType ?? 'once'
   ).current;
-  const [listState, setListState] = React.useState<ListState>(
+  const [listState, setListState] = React.useState<ListStateType>(
     props.listState ?? 'normal'
   );
   const isAutoLoad = React.useRef(props.isAutoLoad ?? true).current;

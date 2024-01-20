@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 import {
+  ContactServiceListener,
+  UIContactListListener,
   UIConversationListListener,
   UIListenerType,
   useChatContext,
@@ -10,6 +12,7 @@ import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { useContactListMoreActions } from '../hooks';
 import { useContactInfoActions } from '../hooks/useContactInfoActions';
 import type { ContactInfoProps } from './types';
 
@@ -26,7 +29,8 @@ export function useContactInfo(props: ContactInfoProps) {
     onSendMessage: propsOnSendMessage,
     onAudioCall: propsOnAudioCall,
     onVideoCall: propsOnVideoCall,
-    onMore: propsOnMore,
+    onClickedNavigationBarButton,
+    onAddContact: propsOnAddContact,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(propsUserName);
@@ -45,8 +49,23 @@ export function useContactInfo(props: ContactInfoProps) {
       im.removeConversation({ convId: userId });
     },
   });
+  const { onShowContactListMoreActions } = useContactListMoreActions({
+    menuRef,
+    alertRef,
+  });
+
   const im = useChatContext();
   const { tr } = useI18nContext();
+
+  const addContact = React.useCallback(
+    (userId: string) => {
+      im.addNewContact({
+        userId: userId,
+        reason: 'add contact',
+      });
+    },
+    [im]
+  );
 
   useLifecycle(
     React.useCallback(
@@ -131,8 +150,8 @@ export function useContactInfo(props: ContactInfoProps) {
   };
 
   const onMoreMenu = () => {
-    if (propsOnMore) {
-      propsOnMore();
+    if (onClickedNavigationBarButton) {
+      onClickedNavigationBarButton();
       return;
     }
     onShowContactInfoActions(userId, userName);
@@ -156,6 +175,14 @@ export function useContactInfo(props: ContactInfoProps) {
     }
   };
 
+  const onAddContact = () => {
+    if (propsOnAddContact) {
+      propsOnAddContact(userId);
+      return;
+    }
+    onShowContactListMoreActions(addContact);
+  };
+
   React.useEffect(() => {
     const listener: UIConversationListListener = {
       onUpdatedEvent: (data) => {
@@ -168,6 +195,45 @@ export function useContactInfo(props: ContactInfoProps) {
     im.addUIListener(listener);
     return () => {
       im.removeUIListener(listener);
+    };
+  }, [im, userId]);
+
+  React.useEffect(() => {
+    const listener: UIContactListListener = {
+      onAddedEvent: (data) => {
+        if (data.userId === userId) {
+          setIsContact(true);
+        }
+      },
+      onDeletedEvent: (data) => {
+        if (data.userId === userId) {
+          setIsContact(false);
+        }
+      },
+      type: UIListenerType.Contact,
+    };
+    im.addUIListener(listener);
+    return () => {
+      im.removeUIListener(listener);
+    };
+  }, [im, userId]);
+
+  React.useEffect(() => {
+    const listener: ContactServiceListener = {
+      onContactAdded: async (_userId: string) => {
+        if (userId === _userId) {
+          setIsContact(true);
+        }
+      },
+      onContactDeleted: async (_userId: string) => {
+        if (userId === _userId) {
+          setIsContact(false);
+        }
+      },
+    };
+    im.addListener(listener);
+    return () => {
+      im.removeListener(listener);
     };
   }, [im, userId]);
 
@@ -190,5 +256,6 @@ export function useContactInfo(props: ContactInfoProps) {
     onSendMessage,
     onAudioCall,
     onVideoCall,
+    onAddContact,
   };
 }

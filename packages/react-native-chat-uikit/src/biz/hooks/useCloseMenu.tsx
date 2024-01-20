@@ -2,10 +2,14 @@ import * as React from 'react';
 
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 
-export type useCloseMenuProps = {
+export type UseCloseMenuProps = {
   menuRef: React.RefObject<BottomSheetNameMenuRef>;
 };
-export function useCloseMenu(props: useCloseMenuProps) {
+
+/**
+ * use close menu.
+ */
+export function useCloseMenu(props: UseCloseMenuProps) {
   const { menuRef } = props;
   const closeMenu = React.useCallback(
     (onFinished?: () => void) => {

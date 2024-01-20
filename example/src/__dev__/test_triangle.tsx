@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 import {
-  GlobalContainer,
+  Container,
   useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-uikit';
@@ -165,7 +165,7 @@ export default function TestTriangle() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -175,6 +175,6 @@ export default function TestTriangle() {
       theme={t}
     >
       <MyTriangle2 />
-    </GlobalContainer>
+    </Container>
   );
 }

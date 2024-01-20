@@ -19,17 +19,17 @@ import {
   useGetTheme,
   useInitServices,
 } from './Container.hook';
-import type { GlobalContainerProps } from './types';
+import type { ContainerProps } from './types';
 
 /**
  * Entry to the UIKit component library. It will complete initialization, configure custom parameters and other preparations.
- * 
+ *
  * **Note** IM will be initialized here. If other UIKit is integrated at the same time, the parameters initialized first shall prevail.
-For example: if `chat uikit sdk` and `chat uikit sdk` are integrated at the same time, then the parameter initialized first will prevail.
- * @param props {@link GlobalContainerProps}
- * @returns JSX.Element
+ * For example: if `chat uikit sdk` and `chat uikit sdk` are integrated at the same time, then the parameter initialized first will prevail.
+ *
+ * @param props {@link ContainerProps}
  */
-export function GlobalContainer(props: GlobalContainerProps) {
+export function Container(props: ContainerProps) {
   const {
     options,
     children,

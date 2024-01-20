@@ -7,8 +7,8 @@ import {
   View,
 } from 'react-native';
 import {
+  Container,
   ConversationDetail,
-  GlobalContainer,
   Services,
   TextInput,
   useLightTheme,
@@ -136,7 +136,7 @@ export default function TestConversationDetail() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -147,6 +147,6 @@ export default function TestConversationDetail() {
     >
       <ConvDetail />
       {/* <View style={{ height: 50 }} /> */}
-    </GlobalContainer>
+    </Container>
   );
 }

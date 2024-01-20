@@ -18,6 +18,9 @@ import type {
   PropsWithTest,
 } from '../types';
 
+/**
+ * Group List Item Component.
+ */
 export type GroupListItemProps = ListItemProps &
   ListItemRequestProps<DataModel> &
   Omit<ListItemActions<GroupModel>, 'onToRightSlide' | 'onToLeftSlide'> & {
@@ -28,6 +31,9 @@ export type GroupListItemComponentType =
   | React.ComponentType<GroupListItemProps>
   | React.ExoticComponent<GroupListItemProps>;
 
+/**
+ * Group List Component reference.
+ */
 export type GroupListRef = Omit<
   FlatListRefType<GroupModel, GroupListItemProps>,
   'addItem' | 'clearItem' | 'updateItem' | 'showMenu' | 'closeMenu'
@@ -40,6 +46,9 @@ export type GroupListRef = Omit<
   updateItem: (items: GroupModel) => void;
 };
 
+/**
+ * Group List Component properties.
+ */
 export type GroupListProps = PropsWithTest &
   PropsWithInit &
   PropsWithBack &
@@ -72,6 +81,10 @@ export type GroupListProps = PropsWithTest &
      */
     propsRef?: React.MutableRefObject<GroupListRef>;
   };
+
+/**
+ * Group Search Component properties.
+ */
 export type SearchGroupProps = PropsWithTest &
   PropsWithCancel &
   Omit<

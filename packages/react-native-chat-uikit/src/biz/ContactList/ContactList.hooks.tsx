@@ -27,7 +27,7 @@ import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useContactListMoreActions } from '../hooks/useContactListMoreActions';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
-import type { ChoiceType, ListState } from '../types';
+import type { ChoiceType, ListStateType } from '../types';
 import { g_index_alphabet_range } from './const';
 import {
   ContactItem,
@@ -41,6 +41,9 @@ import type {
   ContactListProps,
 } from './types';
 
+/**
+ * Contact list hook.
+ */
 export function useContactList(props: ContactListProps) {
   const {
     onClickedItem,
@@ -99,9 +102,13 @@ export function useContactList(props: ContactListProps) {
     React.useRef<ContactListItemHeaderComponentType>(
       propsListItemHeaderRender ?? ContactListItemHeaderMemo
     );
+  const { onShowContactListMoreActions } = useContactListMoreActions({
+    menuRef,
+    alertRef,
+  });
 
   const updateState = React.useCallback(
-    (state: ListState) => {
+    (state: ListStateType) => {
       setListState?.(state);
       onStateChanged?.(state);
     },
@@ -710,18 +717,13 @@ export function useContactList(props: ContactListProps) {
     [im]
   );
 
-  const { onShowContactListMoreActions } = useContactListMoreActions({
-    menuRef,
-    alertRef,
-    onAddContact: addContact,
-  });
   const onClickedNewContact = React.useCallback(() => {
     if (propsOnClickedNewContact) {
       propsOnClickedNewContact();
     } else {
-      onShowContactListMoreActions();
+      onShowContactListMoreActions(addContact);
     }
-  }, [onShowContactListMoreActions, propsOnClickedNewContact]);
+  }, [addContact, onShowContactListMoreActions, propsOnClickedNewContact]);
 
   if (propsRef?.current) {
     propsRef.current.addItem = (item) => {
@@ -749,7 +751,7 @@ export function useContactList(props: ContactListProps) {
       init({ onFinished: onInitialized });
     };
     propsRef.current.showMenu = () => {
-      onShowContactListMoreActions();
+      onShowContactListMoreActions(addContact);
     };
     propsRef.current.updateItem = (item) => {
       setContactRemark(item);

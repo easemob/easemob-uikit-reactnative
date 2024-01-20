@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { Badges, GlobalContainer } from 'react-native-chat-uikit';
+import { Badges, Container } from 'react-native-chat-uikit';
 
 export function TB() {
   return (
@@ -13,7 +13,7 @@ export function TB() {
 
 export default function TestBadge() {
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -21,6 +21,6 @@ export default function TestBadge() {
       }}
     >
       <TB />
-    </GlobalContainer>
+    </Container>
   );
 }

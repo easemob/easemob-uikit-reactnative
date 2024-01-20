@@ -16,6 +16,11 @@ import { MessageInputEditMessage } from './MessageInputEditMessage';
 import { MessageInputQuoteView } from './MessageInputQuoteView';
 import type { MessageInputProps, MessageInputRef } from './types';
 
+/**
+ * Message Input Component.
+ *
+ * This component can send text, send emoticons, send files, send pictures, send voice, send files, etc. You can customize the sending menu and add a UI for sending custom messages. Usually this component is used in conjunction with the `MessageList` component.
+ */
 export const MessageInput = React.forwardRef<
   MessageInputRef,
   MessageInputProps

@@ -4,9 +4,9 @@ import type { CreateStringSet, LanguageCode, StringSet } from '../i18n';
 import type { CornerRadiusPaletteType, Palette, Theme } from '../theme';
 
 /**
- * Properties of the GlobalContainer.
+ * Properties of the Container.
  */
-export type GlobalContainerProps = React.PropsWithChildren<{
+export type ContainerProps = React.PropsWithChildren<{
   /**
    * Initialization parameters, the parameters that must be filled in include `appKey`, `debugModel`, `autoLogin`.
    */
@@ -96,7 +96,7 @@ export type GlobalContainerProps = React.PropsWithChildren<{
     borderRadiusStyle?: CornerRadiusPaletteType;
   };
   /**
-   * Initialize language pack. When {@link GlobalContainerProps.language} is modified, this callback will be called again.
+   * Initialize language pack. When {@link ContainerProps.language} is modified, this callback will be called again.
    *
    * UIKit has built-in Chinese and English language packs. If the user sets other languages, corresponding language packs need to be provided. See {@link createStringSetCn} or {@link createStringSetEn} for details
    *

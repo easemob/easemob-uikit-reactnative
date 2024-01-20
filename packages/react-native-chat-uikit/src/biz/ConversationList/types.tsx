@@ -20,6 +20,9 @@ import type {
   PropsWithTest,
 } from '../types';
 
+/**
+ * Conversation list item component properties.
+ */
 export type ConversationListItemProps = ListItemProps &
   ListItemRequestProps<DataModel> &
   Omit<
@@ -33,10 +36,17 @@ export type ConversationListItemComponentType =
   | React.ComponentType<ConversationListItemProps>
   | React.ExoticComponent<ConversationListItemProps>;
 
+/**
+ * Conversation list component reference.
+ */
 export type ConversationListRef = Omit<
   FlatListRefType<ConversationModel, ConversationListItemProps>,
-  'addItem' | 'clearItem' | 'updateItem'
+  'clearItem' | 'updateItem'
 > & {
+  /**
+   * Add items to the list.
+   */
+  addItem: (items: ConversationModel) => void;
   /**
    * Supported updated content includes: `unreadMessageCount`, `doNotDisturb`, `ext`. `convName` and `convAvatar` are updated via `onRequestMultiData`. Other fields do not support updating. `unreadMessageCount` can be set to 0 and other values are invalid. If you need to customize it, you can save custom data in the ext field and redefine the `ListItemRender` component to achieve a closed loop process.
    *
@@ -64,6 +74,9 @@ export type ConversationListRef = Omit<
 //   convListRef: React.RefObject<ConversationListRef>;
 // };
 
+/**
+ * Conversation list component properties.
+ */
 export type ConversationListProps = Pick<
   ListRequestProps<DataModel>,
   'onRequestMultiData'
@@ -136,6 +149,10 @@ export type ConversationListProps = Pick<
      */
     filterEmptyConversation?: boolean;
   };
+
+/**
+ * Conversation search component properties.
+ */
 export type SearchConversationProps = PropsWithTest &
   PropsWithCancel &
   Omit<

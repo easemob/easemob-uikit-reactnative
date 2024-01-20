@@ -5,6 +5,9 @@ import { useChatContext } from '../../chat';
 import { useFlatList } from '../List';
 import type { ContactSearchModel, SearchContactProps } from './types';
 
+/**
+ * Search Contacts component.
+ */
 export function useSearchContact(props: SearchContactProps) {
   const { onClicked, testMode, searchType, onCancel, groupId } = props;
   const flatListProps = useFlatList<ContactSearchModel>({

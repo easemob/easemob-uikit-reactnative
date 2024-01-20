@@ -1,18 +1,21 @@
 import { useI18nContext } from '../../i18n';
-import type { AlertRef } from '../../ui/Alert';
-import type {
-  BottomSheetNameMenuRef,
-  InitMenuItemsType,
-} from '../BottomSheetMenu';
+import type { InitMenuItemsType } from '../BottomSheetMenu';
+import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
 
-export type useContactInfoActionsProps = {
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  alertRef: React.RefObject<AlertRef>;
-  onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
+export type UseContactInfoActionsProps = BasicActionsProps & {
+  /**
+   * Remove contact callback.
+   */
   onRemoveContact?: (userId: string) => void;
 };
-export function useContactInfoActions(props: useContactInfoActionsProps) {
+
+/**
+ * use contact info actions.
+ *
+ * Normally the default menu is displayed.
+ */
+export function useContactInfoActions(props: UseContactInfoActionsProps) {
   const { menuRef, alertRef, onInit, onRemoveContact } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();

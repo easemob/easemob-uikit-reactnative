@@ -1,18 +1,19 @@
 import { useI18nContext } from '../../i18n';
-import type { AlertRef } from '../../ui/Alert';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import type { BasicActionsProps } from './types';
 
-export type UseContactListMoreActionsProps = {
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  alertRef: React.RefObject<AlertRef>;
-  onAddContact: (userId: string) => void;
-};
+export type UseContactListMoreActionsProps = BasicActionsProps & {};
+
+/**
+ * use contact list more actions.
+ *
+ * Normally the default menu is displayed.
+ */
 export function useContactListMoreActions(
   props: UseContactListMoreActionsProps
 ) {
-  const { alertRef, onAddContact } = props;
+  const { alertRef } = props;
   const { tr } = useI18nContext();
-  const onShowAlert = () => {
+  const onShowAlert = (onAddContact: (userId: string) => void) => {
     alertRef.current?.alertWithInit?.({
       title: tr('_uikit_contact_alert_title'),
       message: tr('_uikit_contact_alert_content'),

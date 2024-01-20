@@ -6,13 +6,13 @@ import type { ListItemActions, UseFlatListReturn } from '../types';
 import type {
   DefaultComponentModel,
   ListSearchItemProps,
-  useListSearchProps,
+  UseListSearchProps,
 } from './types';
 
 export function useListSearch<
   ComponentModel extends DefaultComponentModel = DefaultComponentModel
 >(
-  props: useListSearchProps<ComponentModel>
+  props: UseListSearchProps<ComponentModel>
 ): UseFlatListReturn<ListSearchItemProps<ComponentModel>> &
   Omit<
     ListItemActions<ComponentModel>,

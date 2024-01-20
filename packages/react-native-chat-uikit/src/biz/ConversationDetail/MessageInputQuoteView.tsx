@@ -18,11 +18,17 @@ import { SingleLineText } from '../../ui/Text';
 import { MessageDefaultImage } from './MessageListItem';
 import { getImageThumbUrl, getVideoThumbUrl } from './MessageListItem.hooks';
 
+/**
+ * Message Input Quote View Component properties.
+ */
 export type MessageInputQuoteViewProps = {
   showQuote: boolean;
   onDel: () => void;
   msg?: ChatMessage;
 };
+/**
+ * Message Input Quote View Component.
+ */
 export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
   const { showQuote, onDel, msg: propsMsg } = props;
   const { tr } = useI18nContext();

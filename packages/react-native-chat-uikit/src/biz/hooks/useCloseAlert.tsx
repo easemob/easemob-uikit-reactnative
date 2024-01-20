@@ -2,10 +2,13 @@ import * as React from 'react';
 
 import type { AlertRef } from '../../ui/Alert';
 
-export type useCloseAlertProps = {
+export type UseCloseAlertProps = {
   alertRef: React.RefObject<AlertRef>;
 };
-export function useCloseAlert(props: useCloseAlertProps) {
+/**
+ * use close alert
+ */
+export function useCloseAlert(props: UseCloseAlertProps) {
   const { alertRef } = props;
   const closeAlert = React.useCallback(
     (onFinished?: () => void) => {

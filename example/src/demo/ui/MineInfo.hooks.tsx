@@ -1,17 +1,17 @@
 import * as React from 'react';
 import type { ChatPresence } from 'react-native-chat-sdk';
-
 import {
-  ChatServiceListener,
+  type AlertRef,
+  type BottomSheetNameMenuRef,
+  type ChatServiceListener,
+  type SimpleToastRef,
   useChatContext,
   useChatListener,
-} from '../../chat';
-import { useLifecycle } from '../../hook';
-import { useI18nContext } from '../../i18n';
-import type { AlertRef } from '../../ui/Alert';
-import type { SimpleToastRef } from '../../ui/Toast';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
-import { useMineInfoActions } from '../hooks/useMineInfoActions';
+  useI18nContext,
+  useLifecycle,
+  useMineInfoActions,
+} from 'react-native-chat-uikit';
+
 import type { MineInfoProps, UserState } from './types';
 
 export function useMineInfo(props: MineInfoProps) {

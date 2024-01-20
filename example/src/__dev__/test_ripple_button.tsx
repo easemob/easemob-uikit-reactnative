@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import {
-  GlobalContainer,
+  Container,
   Ripple,
   useLightTheme,
   usePresetPalette,
@@ -163,7 +163,7 @@ export default function TestRippleButton() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -173,6 +173,6 @@ export default function TestRippleButton() {
       theme={t}
     >
       <Test2 />
-    </GlobalContainer>
+    </Container>
   );
 }

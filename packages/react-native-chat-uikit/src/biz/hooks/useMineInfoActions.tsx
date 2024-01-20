@@ -1,15 +1,11 @@
 import { useChatContext } from '../../chat';
 import { useI18nContext } from '../../i18n';
-import type { AlertRef } from '../../ui/Alert';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import type { BasicActionsProps } from './types';
 import { useCloseAlert } from './useCloseAlert';
 import { useCloseMenu } from './useCloseMenu';
 
-export type useMineInfoActionsProps = {
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  alertRef: React.RefObject<AlertRef>;
-};
-export function useMineInfoActions(props: useMineInfoActionsProps) {
+export type UseMineInfoActionsProps = BasicActionsProps & {};
+export function useMineInfoActions(props: UseMineInfoActionsProps) {
   const { menuRef, alertRef } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const {} = useCloseAlert({ alertRef });

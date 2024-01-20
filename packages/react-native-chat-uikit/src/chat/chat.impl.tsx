@@ -170,7 +170,7 @@ export class ChatServiceImpl
         isOk: false,
         error: new UIKitError({
           code: ErrorCode.init_error,
-          extra: JSON.stringify(error),
+          desc: this._fromChatError(error),
         }),
       });
     }
@@ -228,7 +228,7 @@ export class ChatServiceImpl
       console.warn('createUserDir:', e);
       this.sendError({
         error: new UIKitError({
-          code: ErrorCode.common,
+          code: ErrorCode.chat_uikit,
           desc: 'createUserDir failed.',
         }),
       });
@@ -313,7 +313,7 @@ export class ChatServiceImpl
         isOk: false,
         error: new UIKitError({
           code: ErrorCode.login_error,
-          extra: JSON.stringify(error),
+          desc: this._fromChatError(error),
         }),
       });
     }
@@ -331,7 +331,10 @@ export class ChatServiceImpl
     } catch (error) {
       params.result?.({
         isOk: false,
-        error: new UIKitError({ code: ErrorCode.logout_error }),
+        error: new UIKitError({
+          code: ErrorCode.logout_error,
+          desc: this._fromChatError(error),
+        }),
       });
     }
   }
@@ -389,10 +392,13 @@ export class ChatServiceImpl
       onFinished: () => {
         params?.result?.({ isOk: true });
       },
-      onError: () => {
+      onError: (error) => {
         params.result?.({
           isOk: false,
-          error: new UIKitError({ code: ErrorCode.refresh_token_error }),
+          error: new UIKitError({
+            code: ErrorCode.refresh_token_error,
+            desc: this._fromChatError(error),
+          }),
         });
       },
     });
@@ -464,9 +470,9 @@ export class ChatServiceImpl
       })
       .catch((e) => {
         const _e = new UIKitError({
-          code: ErrorCode.common,
-          desc: event,
-          extra: this._fromChatError(e),
+          code: ErrorCode.chat_uikit,
+          tag: event,
+          desc: this._fromChatError(e),
         });
         const ret = onError?.(_e);
         if (ret !== false) {
@@ -486,9 +492,9 @@ export class ChatServiceImpl
       return await promise;
     } catch (error) {
       throw new UIKitError({
-        code: ErrorCode.common,
-        desc: event,
-        extra: this._fromChatError(error),
+        code: ErrorCode.chat_uikit,
+        tag: event,
+        desc: this._fromChatError(error),
       });
     }
   }
@@ -610,6 +616,7 @@ export class ChatServiceImpl
           }
         });
       });
+      this.sendUIEvent(UIListenerType.Group, 'onRequestReloadEvent', groupId);
     }
   }
 
@@ -670,6 +677,8 @@ export class ChatServiceImpl
         }
       });
     });
+    this.sendUIEvent(UIListenerType.Contact, 'onRequestReloadEvent');
+    this.sendUIEvent(UIListenerType.Conversation, 'onRequestReloadEvent');
   }
 
   async _requestConvData(list: ChatConversation[]): Promise<void> {
@@ -1020,7 +1029,7 @@ export class ChatServiceImpl
         isOk: false,
         error: new UIKitError({
           code: ErrorCode.get_all_conversations_error,
-          extra: this._fromChatError(e),
+          desc: this._fromChatError(e),
         }),
       });
     }
@@ -1398,6 +1407,8 @@ export class ChatServiceImpl
       event: 'addNewContact',
       onFinished: async () => {
         await this._requestContactData([{ userId: params.userId }]);
+        const contact = this._contactList.get(params.userId);
+        this.sendUIEvent(UIListenerType.Contact, 'onAddedEvent', contact);
         params.onResult?.({
           isOk: true,
         });
@@ -2195,7 +2206,7 @@ export class ChatServiceImpl
           isOk: false,
           error: new UIKitError({
             code: ErrorCode.common,
-            extra: JSON.stringify(e),
+            desc: this._fromChatError(e),
           }),
         });
       },
@@ -2488,7 +2499,7 @@ export class ChatServiceImpl
 
 let gIMService: ChatService;
 
-export function getChatService(): ChatService {
+export function getChatServiceImpl(): ChatService {
   if (gIMService === undefined) {
     gIMService = new ChatServiceImpl();
   }

@@ -25,7 +25,7 @@ import {
 } from '../theme';
 import type { ReleaseArea } from '../types';
 import { getSystemLanguage } from '../utils';
-import type { GlobalContainerProps } from './types';
+import type { ContainerProps } from './types';
 
 const getDefaultLanguage = (): LanguageCode => {
   let ret: LanguageCode;
@@ -176,7 +176,7 @@ export const useGetTheme = (params: {
   }
 };
 
-export const useInitServices = (props: GlobalContainerProps) => {
+export const useInitServices = (props: ContainerProps) => {
   const {} = props;
 
   if (Services.cbs === undefined) {

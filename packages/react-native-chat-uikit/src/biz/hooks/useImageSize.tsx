@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-export type useImageSizeProps = {};
-export function useImageSize(props: useImageSizeProps) {
+export type UseImageSizeProps = {};
+export function useImageSize(props: UseImageSizeProps) {
   const {} = props;
   const getImageSize = React.useCallback(
     (

@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import {
-  GlobalContainer,
+  Container,
   TextInput,
   useLightTheme,
   usePresetPalette,
@@ -218,7 +218,7 @@ export default function TestListWithKeyboard() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -228,6 +228,6 @@ export default function TestListWithKeyboard() {
       theme={t}
     >
       <Test2 />
-    </GlobalContainer>
+    </Container>
   );
 }

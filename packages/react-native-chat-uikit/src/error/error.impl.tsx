@@ -22,8 +22,21 @@ export function getDescription(code: ErrorCode): ErrorDescription {
     case ErrorCode.max_count:
       ret = ErrorDescription.max_count;
       break;
-    case ErrorCode.sdk:
-      ret = ErrorDescription.sdk;
+    case ErrorCode.network:
+      ret = ErrorDescription.network;
+      break;
+
+    case ErrorCode.chat_sdk:
+      ret = ErrorDescription.chat_sdk;
+      break;
+    case ErrorCode.chat_uikit:
+      ret = ErrorDescription.chat_uikit;
+      break;
+    case ErrorCode.chat_callkit:
+      ret = ErrorDescription.chat_callkit;
+      break;
+    case ErrorCode.chatroom_uikit:
+      ret = ErrorDescription.chatroom_uikit;
       break;
 
     case ErrorCode.init_error:

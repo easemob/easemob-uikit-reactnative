@@ -2,8 +2,8 @@ import * as React from 'react';
 import { FlatList, ListRenderItemInfo, View } from 'react-native';
 import {
   BottomTabBar,
+  Container,
   ConversationListItemProps,
-  GlobalContainer,
   TabPage,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -135,7 +135,7 @@ export function CL2() {
  */
 export default function TestFlatListRn() {
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -143,6 +143,6 @@ export default function TestFlatListRn() {
       }}
     >
       <CL2 />
-    </GlobalContainer>
+    </Container>
   );
 }

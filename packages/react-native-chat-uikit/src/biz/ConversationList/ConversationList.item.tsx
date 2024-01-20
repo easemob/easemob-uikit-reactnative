@@ -13,6 +13,9 @@ import { Avatar } from '../Avatar';
 import { Badges } from '../Badges';
 import type { ConversationListItemProps } from './types';
 
+/**
+ * Conversation list item component.
+ */
 export function ConversationListItem(props: ConversationListItemProps) {
   const { onClicked, onLongPressed, data } = props;
   const { formatTime } = useConfigContext();

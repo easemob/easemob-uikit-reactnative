@@ -53,7 +53,7 @@ export function TabPageBodyLIST<Props extends {} = {}>(
 
   if (childrenCount !== RenderChildren.length) {
     throw new UIKitError({
-      code: ErrorCode.common,
+      code: ErrorCode.params,
       desc: 'TabPageBodyLIST: childrenCount !== RenderChildren.length, please check.',
     });
   }

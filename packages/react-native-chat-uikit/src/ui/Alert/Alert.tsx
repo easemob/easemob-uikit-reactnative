@@ -69,7 +69,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
     const count = buttons?.length ?? 1;
     if (count > 3) {
       throw new UIKitError({
-        code: ErrorCode.common,
+        code: ErrorCode.max_count,
         desc: 'Alert buttons count must less than 3',
       });
     }

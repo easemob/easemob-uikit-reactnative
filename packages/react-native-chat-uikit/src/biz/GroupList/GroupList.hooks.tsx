@@ -16,7 +16,7 @@ import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { gGroupListPageNumber } from '../const';
 import { useCloseMenu } from '../hooks';
 import { useFlatList } from '../List';
-import type { ListState } from '../types';
+import type { ListStateType } from '../types';
 import { GroupListItemMemo } from './GroupList.item';
 import type {
   GroupListItemComponentType,
@@ -56,7 +56,7 @@ export function useGroupList(props: GroupListProps) {
   const [groupCount, setGroupCount] = React.useState(0);
 
   const updateState = React.useCallback(
-    (state: ListState) => {
+    (state: ListStateType) => {
       setListState?.(state);
       onStateChanged?.(state);
     },

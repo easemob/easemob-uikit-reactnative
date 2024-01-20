@@ -2,8 +2,8 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   CmnButton,
+  Container,
   getPropValueFromStyleT,
-  GlobalContainer,
   useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-uikit';
@@ -42,7 +42,7 @@ export default function TestHooks() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
   return (
-    <GlobalContainer
+    <Container
       options={{
         appKey: 'sdf',
         debugModel: true,
@@ -52,7 +52,7 @@ export default function TestHooks() {
       theme={t}
     >
       <Test1 />
-    </GlobalContainer>
+    </Container>
   );
 }
 

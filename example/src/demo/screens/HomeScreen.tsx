@@ -13,7 +13,6 @@ import {
   DataModel,
   DataModelType,
   DisconnectReasonType,
-  MineInfo,
   TabPage,
   TabPageRef,
   UIKitError,
@@ -26,6 +25,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
+import { MineInfo } from '../ui/MineInfo';
 
 const env = require('../../env');
 const demoType = env.demoType;

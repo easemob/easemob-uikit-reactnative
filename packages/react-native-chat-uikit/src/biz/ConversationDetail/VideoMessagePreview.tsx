@@ -36,6 +36,9 @@ import { useImageSize } from '../hooks/useImageSize';
 import type { PropsWithBack } from '../types';
 import { getImageSizeFromUrl } from './MessageListItem.hooks';
 
+/**
+ * Video Message Preview Component properties.
+ */
 export type VideoMessagePreviewProps = PropsWithBack & {
   /**
    * Message id.
@@ -50,6 +53,10 @@ export type VideoMessagePreviewProps = PropsWithBack & {
    */
   containerStyle?: StyleProp<ViewStyle>;
 };
+
+/**
+ * Video Message Preview Component.
+ */
 export function VideoMessagePreview(props: VideoMessagePreviewProps) {
   const { containerStyle, onBack } = props;
   const {
@@ -194,7 +201,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
           if (result) {
             if (result.body.type !== ChatMessageType.VIDEO) {
               throw new UIKitError({
-                code: ErrorCode.common,
+                code: ErrorCode.chat_uikit,
                 desc: 'Message type is not ChatMessageType.VIDEO',
               });
             }

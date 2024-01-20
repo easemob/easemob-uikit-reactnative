@@ -16,6 +16,9 @@ import { TextInput } from '../../ui/TextInput';
 import { TopNavigationBar } from '../TopNavigationBar';
 import type { EditInfoProps } from './types';
 
+/**
+ * Edit Info Component.
+ */
 export function EditInfo(props: EditInfoProps) {
   const {
     containerStyle,

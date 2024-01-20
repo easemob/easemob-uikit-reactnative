@@ -9,6 +9,7 @@ import { getDescription } from './error.impl';
  */
 export class UIKitError extends Error {
   code: ErrorCode;
+  tag?: string;
   desc: ErrorDescription | string;
   /**
    * Constructor of UIKitError.
@@ -20,12 +21,14 @@ export class UIKitError extends Error {
    */
   constructor(params: {
     code: ErrorCode;
+    tag?: string;
     desc?: string;
     extra?: string;
     options?: ErrorOptions;
   }) {
     super(params.extra, params.options);
     this.code = params.code;
+    this.tag = params.tag;
     this.desc = params.desc ?? getDescription(this.code);
 
     // if (Error.captureStackTrace) {
@@ -42,6 +45,7 @@ export class UIKitError extends Error {
    */
   public toString(): string {
     return `code: ${this.code}\n
+    tag: ${this.tag}\n
     desc: ${this.desc}\n
     extra: ${this.message}`;
   }

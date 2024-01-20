@@ -1,20 +1,32 @@
 import * as React from 'react';
 
 import { useI18nContext } from '../../i18n';
-import type { AlertRef } from '../../ui/Alert';
-import type {
-  BottomSheetNameMenuRef,
-  InitMenuItemsType,
-} from '../BottomSheetMenu';
+import type { InitMenuItemsType } from '../BottomSheetMenu';
+import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
 
-export type UseConversationListMoreActionsProps = {
+export type UseConversationListMoreActionsProps = BasicActionsProps & {
+  /**
+   * callback notification of new conversation.
+   *
+   * Routing operations are usually required.
+   */
   onClickedNewConversation?: () => void;
+  /**
+   * callback notification of new group.
+   *
+   * Routing operations are usually required.
+   */
   onClickedNewGroup?: () => void;
+  /**
+   * callback notification of new contact.
+   *
+   * Routing operations are usually required.
+   */
   onClickedNewContact?: () => void;
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
-  alertRef: React.RefObject<AlertRef>;
-  onInit?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
+  /**
+   * Add contact callback.
+   */
   onAddContact: (userId: string) => void;
 };
 export function useConversationListMoreActions(

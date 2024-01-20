@@ -468,8 +468,8 @@ export function useMessageList(
     onQuoteMessageForInput: propsOnQuoteMessageForInput,
     onEditMessageForInput: propsOnEditMessageForInput,
     showReportMessage: showReportMessageMenu,
-    deleteMessage: deleteMessage,
-    recallMessage: recallMessage,
+    onDeleteMessage: deleteMessage,
+    onRecallMessage: recallMessage,
     onInit: onInitMenu,
     onCopyFinished: propsOnCopyFinished,
   });
