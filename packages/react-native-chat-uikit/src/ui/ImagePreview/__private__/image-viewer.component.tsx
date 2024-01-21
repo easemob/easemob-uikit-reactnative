@@ -42,7 +42,7 @@ export class ImageViewer extends React.Component<
   private styles = styles(0, 0, 'transparent');
 
   // 是否执行过 layout. fix 安卓不断触发 onLayout 的 bug
-  private hasLayout = false;
+  // private hasLayout = false;
 
   // 记录已加载的图片 index
   private loadedIndex = new Map<number, boolean>();
@@ -51,28 +51,8 @@ export class ImageViewer extends React.Component<
 
   private imageRefs: any[] = [];
 
-  constructor(props: ImageViewerProps) {
-    super(props);
-    this.state = new ImageViewerState();
-    this.fadeAnim = new Animated.Value(0);
-    this.standardPositionX = 0;
-    this.positionXNumber = 0;
-    this.positionX = new Animated.Value(0);
-    this.width = 0;
-    this.height = 0;
-    this.styles = styles(0, 0, 'transparent');
-    this.hasLayout = false;
-    this.loadedIndex = new Map<number, boolean>();
-    this.handleLongPressWithIndex = new Map<number, any>();
-    this.imageRefs = [];
-
-    this.init(this.props);
-  }
-
   public componentDidMount() {
-    // this.init(this.props);
-    this.hasLayout;
-    this.state = {};
+    this.init(this.props);
   }
 
   static getDerivedStateFromProps(
@@ -94,7 +74,7 @@ export class ImageViewer extends React.Component<
   ) {
     if (prevProps.index !== this.props.index) {
       // 立刻预加载要看的图
-      this.loadImage(this.props.index ?? 0);
+      this.loadImage(this.props.index || 0);
 
       this.jumpToCurrentImage();
 
@@ -121,8 +101,8 @@ export class ImageViewer extends React.Component<
     const imageSizes: IImageSize[] = [];
     nextProps.imageUrls.forEach((imageUrl) => {
       imageSizes.push({
-        width: imageUrl.width ?? 0,
-        height: imageUrl.height ?? 0,
+        width: imageUrl.width || 0,
+        height: imageUrl.height || 0,
         status: 'loading',
       });
     });
@@ -130,12 +110,12 @@ export class ImageViewer extends React.Component<
     this.setState(
       {
         currentShowIndex: nextProps.index,
-        prevIndexProp: nextProps.index ?? 0,
+        prevIndexProp: nextProps.index || 0,
         imageSizes,
       },
       () => {
         // 立刻预加载要看的图
-        this.loadImage(nextProps.index ?? 0);
+        this.loadImage(nextProps.index || 0);
 
         this.jumpToCurrentImage();
 
@@ -161,7 +141,7 @@ export class ImageViewer extends React.Component<
     // 跳到当前图的位置
     this.positionXNumber =
       this.width *
-      (this.state.currentShowIndex ?? 0) *
+      (this.state.currentShowIndex || 0) *
       (I18nManager.isRTL ? 1 : -1);
     this.standardPositionX = this.positionXNumber;
     this.positionX.setValue(this.positionXNumber);
@@ -180,13 +160,8 @@ export class ImageViewer extends React.Component<
     }
     this.loadedIndex.set(index, true);
 
-    const image = this.props.imageUrls[index];
+    const image = this.props.imageUrls[index]!;
     const imageStatus = { ...this!.state!.imageSizes![index] };
-
-    if (image === undefined || image === null) {
-      console.log('dev:image === undefined || image === null');
-      return;
-    }
 
     // 保存 imageSize
     const saveImageSize = () => {
@@ -199,7 +174,7 @@ export class ImageViewer extends React.Component<
       }
 
       const imageSizes = this!.state!.imageSizes!.slice();
-      if (imageSizes[index]) imageSizes[index] = imageStatus as any;
+      imageSizes[index] = imageStatus as any;
       this.setState({ imageSizes });
     };
 
@@ -224,12 +199,12 @@ export class ImageViewer extends React.Component<
     let imageLoaded = false;
 
     // Tagged success if url is started with file:, or not set yet(for custom source.uri).
-    if ((image && !image.url) || (image && image.url.startsWith(`file:`))) {
+    if (!image?.url || image.url.startsWith(`file:`)) {
       imageLoaded = true;
     }
 
     // 如果已知源图片宽高，直接设置为 success
-    if (image.width && image.height) {
+    if (image?.width && image.height) {
       if (this.props.enablePreload && imageLoaded === false) {
         Image.prefetch(image.url);
       }
@@ -241,7 +216,7 @@ export class ImageViewer extends React.Component<
     }
 
     Image.getSize(
-      image.url,
+      image?.url ?? 'not found url',
       (width: number, height: number) => {
         imageStatus.width = width;
         imageStatus.height = height;
@@ -286,14 +261,11 @@ export class ImageViewer extends React.Component<
         this!.state!.currentShowIndex ||
         this.props.imageUrls.length - 1 > 0
       ) {
-        this.loadImage((this!.state!.currentShowIndex ?? 0) + 1);
+        this.loadImage((this!.state!.currentShowIndex || 0) + 1);
       }
     } else if (offsetXRTL > 0) {
-      if (
-        this!.state!.currentShowIndex !== undefined &&
-        this.state.currentShowIndex >= 0
-      ) {
-        this.loadImage((this!.state!.currentShowIndex ?? 0) - 1);
+      if ((this!.state!.currentShowIndex || 0) > 0) {
+        this.loadImage((this!.state!.currentShowIndex || 0) - 1);
       }
     }
   };
@@ -319,18 +291,15 @@ export class ImageViewer extends React.Component<
       this.goBack.call(this);
 
       // 这里可能没有触发溢出滚动，为了防止图片不被加载，调用加载图片
-      if (
-        this.state.currentShowIndex !== undefined &&
-        this.state.currentShowIndex >= 0
-      ) {
-        this.loadImage((this.state.currentShowIndex ?? 0) - 1);
+      if ((this.state.currentShowIndex || 0) > 0) {
+        this.loadImage((this.state.currentShowIndex || 0) - 1);
       }
       return;
     } else if (vxRTL < -0.7) {
       // 下一张
       this.goNext.call(this);
       if (this.state.currentShowIndex || this.props.imageUrls.length - 1 > 0) {
-        this.loadImage((this.state.currentShowIndex ?? 0) + 1);
+        this.loadImage((this.state.currentShowIndex || 0) + 1);
       }
       return;
     }
@@ -369,7 +338,7 @@ export class ImageViewer extends React.Component<
       useNativeDriver: !!this.props.useNativeDriver,
     }).start();
 
-    const nextIndex = (this.state.currentShowIndex ?? 0) - 1;
+    const nextIndex = (this.state.currentShowIndex || 0) - 1;
 
     this.setState(
       {
@@ -403,7 +372,7 @@ export class ImageViewer extends React.Component<
       useNativeDriver: !!this.props.useNativeDriver,
     }).start();
 
-    const nextIndex = (this.state.currentShowIndex ?? 0) + 1;
+    const nextIndex = (this.state.currentShowIndex || 0) + 1;
 
     this.setState(
       {
@@ -465,7 +434,7 @@ export class ImageViewer extends React.Component<
    * 退出
    */
   public handleCancel = () => {
-    this.hasLayout = false;
+    // this.hasLayout = false;
     if (this.props.onCancel) {
       this.props.onCancel();
     }
@@ -476,14 +445,14 @@ export class ImageViewer extends React.Component<
    */
   public handleLayout = (event: any) => {
     if (event.nativeEvent.layout.width !== this.width) {
-      this.hasLayout = true;
+      // this.hasLayout = true;
 
       this.width = event.nativeEvent.layout.width;
       this.height = event.nativeEvent.layout.height;
       this.styles = styles(
         this.width,
         this.height,
-        this.props.backgroundColor ?? 'transparent'
+        this.props.backgroundColor || 'transparent'
       );
 
       // 强制刷新
@@ -502,8 +471,8 @@ export class ImageViewer extends React.Component<
 
     const ImageElements = this.props.imageUrls.map((image, index) => {
       if (
-        (this.state.currentShowIndex ?? 0) > index + 1 ||
-        (this.state.currentShowIndex ?? 0) < index - 1
+        (this.state.currentShowIndex || 0) > index + 1 ||
+        (this.state.currentShowIndex || 0) < index - 1
       ) {
         return (
           <View
@@ -520,8 +489,8 @@ export class ImageViewer extends React.Component<
         );
       }
 
-      let width = this!.state!.imageSizes![index]!.width;
-      let height = this.state.imageSizes![index]!.height;
+      let width = this!.state!.imageSizes![index]?.width ?? 0;
+      let height = this.state.imageSizes![index]?.height ?? 0;
       const imageInfo = this.state.imageSizes![index];
 
       if (!imageInfo || !imageInfo.status) {
@@ -615,7 +584,7 @@ export class ImageViewer extends React.Component<
             };
           }
           if (this.props.enablePreload) {
-            this.preloadImage(this.state.currentShowIndex ?? 0);
+            this.preloadImage(this.state.currentShowIndex || 0);
           }
           return (
             <ImageZoom
@@ -707,14 +676,14 @@ export class ImageViewer extends React.Component<
             {ImageElements}
           </Animated.View>
           {this!.props!.renderIndicator!(
-            (this.state.currentShowIndex ?? 0) + 1,
+            (this.state.currentShowIndex || 0) + 1,
             this.props.imageUrls.length
           )}
 
-          {this.props.imageUrls[this.state.currentShowIndex ?? 0] &&
-            this.props.imageUrls[this.state.currentShowIndex ?? 0]!
+          {this.props.imageUrls[this.state.currentShowIndex || 0] &&
+            this.props.imageUrls[this.state.currentShowIndex || 0]!
               .originSizeKb &&
-            this.props.imageUrls[this.state.currentShowIndex ?? 0]!
+            this.props.imageUrls[this.state.currentShowIndex || 0]!
               .originUrl && (
               <View style={this.styles.watchOrigin}>
                 <TouchableOpacity style={this.styles.watchOriginTouchable}>
@@ -728,7 +697,7 @@ export class ImageViewer extends React.Component<
               this.props.footerContainerStyle,
             ]}
           >
-            {this!.props!.renderFooter!(this.state.currentShowIndex ?? 0)}
+            {this!.props!.renderFooter!(this.state.currentShowIndex || 0)}
           </View>
         </Animated.View>
       </Animated.View>
@@ -739,9 +708,16 @@ export class ImageViewer extends React.Component<
    * 保存当前图片到本地相册
    */
   public saveToLocal = () => {
-    this.props.onSave?.(
-      this.props.imageUrls[this.state.currentShowIndex ?? 0]!.url
-    );
+    if (!this.props.onSave) {
+      // CameraRoll.saveToCameraRoll(
+      //   this.props.imageUrls[this.state.currentShowIndex || 0].url
+      // );
+      // this!.props!.onSaveToCamera!(this.state.currentShowIndex);
+    } else {
+      this.props.onSave(
+        this.props.imageUrls[this.state.currentShowIndex || 0]!.url
+      );
+    }
 
     this.setState({ isShowMenu: false });
   };

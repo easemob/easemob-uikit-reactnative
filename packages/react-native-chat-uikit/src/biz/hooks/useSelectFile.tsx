@@ -134,14 +134,11 @@ export function selectFile(params: {
         // !!! weird bug: Paths with % percent signs are not supported.
         // !!! iOS returns the uri string and needs to be decoded. Normally no decoding is required.
         // if (Platform.OS === 'ios') {
-        //   // console.log('test:zuoyu:file:', result);
         //   if (result?.uri.includes('%')) {
         //     // let uri = result.uri.substring(result.uri.lastIndexOf('/'));
         //     // let uri2 = result.uri.substring(0, result.uri.lastIndexOf('/'));
-        //     // console.log('test:zuoyu:file:uri:', uri, uri2);
         //     // result.uri = uri2 + decodeURIComponent(uri);
         //     result.uri = decodeURIComponent(result.uri);
-        //     // console.log('test:zuoyu:file:2', result);
         //   }
         // }
 

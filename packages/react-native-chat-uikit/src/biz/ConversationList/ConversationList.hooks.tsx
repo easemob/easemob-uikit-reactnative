@@ -506,7 +506,6 @@ export function useConversationList(props: ConversationListProps) {
         onMessage([msg]);
       },
       onRecvRecallMessage: (_orgMsg: ChatMessage, tipMsg: ChatMessage) => {
-        console.log('test:zuoyu:onRecvRecallMessage', _orgMsg, tipMsg);
         onMessage([tipMsg]);
       },
       onRecallMessageResult: (params: {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Dimensions,
   Pressable,
   StyleProp,
   useWindowDimensions,
@@ -19,7 +20,7 @@ import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { ErrorCode, UIKitError } from '../../error';
 import { Services } from '../../services';
 import { Icon } from '../../ui/Image';
-import { ImagePreview } from '../../ui/ImagePreview';
+import { ImagePreview2 } from '../../ui/ImagePreview';
 import { LocalPath } from '../../utils';
 import { useImageSize } from '../hooks/useImageSize';
 import type { PropsWithBack, PropsWithError } from '../types';
@@ -67,7 +68,6 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
   // const u9 = '/Users/asterisk/Downloads/2.jpg'; // ok
   // const u10 = `file://${u9}`; // ok
   // const u11 = `file://${encodeURIComponent(u9)}`;
-  // console.log('test:zuoyu:ImageMessagePreview:', url, size, u3);
 
   return (
     <View
@@ -81,7 +81,7 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
         containerStyle,
       ]}
     >
-      <ImagePreview
+      <ImagePreview2
         source={{
           // uri: localUrlEscape(
           //   ImageUrl(
@@ -99,6 +99,10 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
           ...size,
           // width: 100,
           // height: 100,
+        }}
+        containerStyle={{
+          width: size.width ?? Dimensions.get('window').width,
+          height: size.height ?? Dimensions.get('window').height,
         }}
       />
       <Pressable

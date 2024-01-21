@@ -6,6 +6,7 @@ import {
 import {
   Container,
   ImagePreview,
+  ImagePreview2,
   useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-uikit';
@@ -32,6 +33,19 @@ export function TestMyImagePreview() {
         >
           <ImagePreview
             source={{ uri: url2, width: 300, height: 300 }}
+            onClicked={() => {
+              console.log('onClicked');
+            }}
+            onLongPress={() => {
+              console.log('onLongPress');
+            }}
+            onDupClicked={() => {
+              console.log('onDupClicked');
+            }}
+          />
+          <ImagePreview2
+            source={{ uri: url2, width: 300, height: 300 }}
+            containerStyle={{ width: 300, height: 300 }}
             onClicked={() => {
               console.log('onClicked');
             }}

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { usePermissions } from 'react-native-chat-uikit';
 
 // import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { default as Test } from './test_ripple_button';
+import { default as Test } from './test_image_preview';
 
 // if (
 //   Platform.OS === 'android' &&
@@ -20,11 +20,11 @@ export function AppDev(): JSX.Element {
       permissionsRef.current = isSuccess;
     },
   });
-  // return (
-  //   <View style={{ flex: 1 }}>
-  //     <Test />
-  //   </View>
-  // );
+  return (
+    <View style={{ flex: 1 }}>
+      <Test />
+    </View>
+  );
   // return (
   //   <View style={{ flex: 1 }}>
   //     <GestureHandlerRootView>
@@ -32,11 +32,11 @@ export function AppDev(): JSX.Element {
   //     </GestureHandlerRootView>
   //   </View>
   // );
-  return (
-    <React.StrictMode>
-      <View style={{ flex: 1 }}>
-        <Test />
-      </View>
-    </React.StrictMode>
-  );
+  // return (
+  //   <React.StrictMode>
+  //     <View style={{ flex: 1 }}>
+  //       <Test />
+  //     </View>
+  //   </React.StrictMode>
+  // );
 }

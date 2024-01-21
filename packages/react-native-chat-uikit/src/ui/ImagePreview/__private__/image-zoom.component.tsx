@@ -1,3 +1,5 @@
+// ref: https://github.com/ascoders/react-native-image-zoom/blob/master/src/image-zoom/image-zoom.component.tsx
+
 import * as React from 'react';
 import {
   Animated,
@@ -31,7 +33,7 @@ export class ImageZoom extends React.Component<ImageZoomProps, ImageZoomState> {
   private zoomCurrentDistance = 0;
 
   // 上次手按下去的时间
-  private lastTouchStartTime = 0;
+  // private lastTouchStartTime = 0;
 
   // 滑动过程中，整体横向过界偏移量
   private horizontalWholeOuterCounter = 0;
@@ -48,10 +50,10 @@ export class ImageZoom extends React.Component<ImageZoomProps, ImageZoomState> {
   private centerDiffY = 0;
 
   // 触发单击的 timeout
-  private singleClickTimeout: number | NodeJS.Timeout | undefined;
+  private singleClickTimeout: NodeJS.Timeout | undefined;
 
   // 计算长按的 timeout
-  private longPressTimeout: number | NodeJS.Timeout | undefined;
+  private longPressTimeout: NodeJS.Timeout | undefined;
 
   // 上一次点击的时间
   private lastClickTime = 0;
@@ -84,7 +86,7 @@ export class ImageZoom extends React.Component<ImageZoomProps, ImageZoomState> {
       this.zoomLastDistance = null;
       this.horizontalWholeCounter = 0;
       this.verticalWholeCounter = 0;
-      this.lastTouchStartTime = new Date().getTime();
+      // this.lastTouchStartTime = new Date().getTime();
       this.isDoubleClick = false;
       this.isLongPress = false;
       this.isHorizontalWrap = false;
@@ -120,11 +122,11 @@ export class ImageZoom extends React.Component<ImageZoomProps, ImageZoomState> {
         }
       }, this.props.longPressTime);
 
-      if (evt.nativeEvent.changedTouches.length === 1) {
+      if (evt.nativeEvent.changedTouches.length <= 1) {
         // 一个手指的情况
         if (
           new Date().getTime() - this.lastClickTime <
-          (this.props.doubleClickInterval ?? 0)
+          (this.props.doubleClickInterval || 0)
         ) {
           // 认为触发了双击
           this.lastClickTime = 0;
@@ -210,12 +212,12 @@ export class ImageZoom extends React.Component<ImageZoomProps, ImageZoomState> {
 
       if (evt.nativeEvent.changedTouches.length <= 1) {
         // x 位移
-        let diffX = gestureState.dx - (this.lastPositionX ?? 0);
+        let diffX = gestureState.dx - (this.lastPositionX || 0);
         if (this.lastPositionX === null) {
           diffX = 0;
         }
         // y 位移
-        let diffY = gestureState.dy - (this.lastPositionY ?? 0);
+        let diffY = gestureState.dy - (this.lastPositionY || 0);
         if (this.lastPositionY === null) {
           diffY = 0;
         }
@@ -321,13 +323,13 @@ export class ImageZoom extends React.Component<ImageZoomProps, ImageZoomState> {
 
             // 溢出量不会超过设定界限
             if (
-              this.horizontalWholeOuterCounter > (this.props.maxOverflow ?? 0)
+              this.horizontalWholeOuterCounter > (this.props.maxOverflow || 0)
             ) {
-              this.horizontalWholeOuterCounter = this.props.maxOverflow ?? 0;
+              this.horizontalWholeOuterCounter = this.props.maxOverflow || 0;
             } else if (
-              this.horizontalWholeOuterCounter < -(this.props.maxOverflow ?? 0)
+              this.horizontalWholeOuterCounter < -(this.props.maxOverflow || 0)
             ) {
-              this.horizontalWholeOuterCounter = -(this.props.maxOverflow ?? 0);
+              this.horizontalWholeOuterCounter = -(this.props.maxOverflow || 0);
             }
 
             if (this.horizontalWholeOuterCounter !== 0) {
@@ -429,11 +431,11 @@ export class ImageZoom extends React.Component<ImageZoomProps, ImageZoomState> {
               (this.zoomCurrentDistance - this.zoomLastDistance) / 200;
             let zoom = this.scale + distanceDiff;
 
-            if (zoom < (this.props.minScale ?? 0)) {
-              zoom = this.props.minScale ?? 0;
+            if (zoom < (this.props.minScale || 0)) {
+              zoom = this.props.minScale || 0;
             }
-            if (zoom > (this.props.maxScale ?? 0)) {
-              zoom = this.props.maxScale ?? 0;
+            if (zoom > (this.props.maxScale || 0)) {
+              zoom = this.props.maxScale || 0;
             }
 
             // 记录之前缩放比例
@@ -484,7 +486,7 @@ export class ImageZoom extends React.Component<ImageZoomProps, ImageZoomState> {
 
       if (
         evt.nativeEvent.changedTouches.length === 1 &&
-        moveDistance < (this.props.clickDistance ?? 0)
+        moveDistance < (this.props.clickDistance || 0)
       ) {
         this.singleClickTimeout = setTimeout(() => {
           if (this.props.onClick) {
@@ -662,7 +664,7 @@ export class ImageZoom extends React.Component<ImageZoomProps, ImageZoomState> {
     this.positionX = params.x;
     this.positionY = params.y;
     this.scale = params.scale;
-    const duration = params.duration ?? 300;
+    const duration = params.duration || 300;
     Animated.parallel([
       Animated.timing(this.animatedScale, {
         toValue: this.scale,
@@ -706,7 +708,6 @@ export class ImageZoom extends React.Component<ImageZoomProps, ImageZoomState> {
   }
 
   public render(): React.ReactNode {
-    this.lastTouchStartTime;
     const animateConf = {
       transform: [
         {
