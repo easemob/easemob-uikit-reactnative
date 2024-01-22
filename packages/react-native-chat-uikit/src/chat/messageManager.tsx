@@ -371,9 +371,11 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       onError: (localMsgId, _error) => {
         const isExisted = this._downloadList.get(localMsgId);
         if (isExisted) {
-          const msg = isExisted.msg;
-          const body = msg.body as ChatFileMessageBody;
-          body.fileStatus = ChatDownloadStatus.FAILED;
+          const msg = { ...isExisted.msg } as ChatMessage;
+          msg.body = {
+            ...msg.body,
+            fileStatus: ChatDownloadStatus.FAILED,
+          } as ChatFileMessageBody;
           this.emitAttachmentChanged(msg);
           this._downloadList.delete(localMsgId);
         }

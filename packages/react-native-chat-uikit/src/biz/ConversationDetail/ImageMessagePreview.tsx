@@ -141,6 +141,21 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
   const { width: winWidth, height: winHeight } = useWindowDimensions();
   const { getImageSize } = useImageSize({});
 
+  const showImage = React.useCallback(
+    (url: string) => {
+      getImageSizeFromUrl(
+        LocalPath.showImage(url),
+        ({ isOk, width, height }) => {
+          if (isOk === true) {
+            setSize(getImageSize(height!, width!, winHeight, winWidth));
+          }
+        }
+      );
+      setUrl(LocalPath.showImage(url));
+    },
+    [getImageSize, winHeight, winWidth]
+  );
+
   const onGetMessage = React.useCallback(
     (msgId: string) => {
       im.getMessage({ messageId: msgId })
@@ -155,23 +170,16 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
             const body = result.body as ChatImageMessageBody;
             const isExisted = await Services.dcs.isExistedFile(body.localPath);
             if (isExisted !== true) {
+              showImage(body.remotePath);
               im.messageManager.downloadAttachment(result);
             } else {
-              setUrl(LocalPath.showImage(body.localPath));
-              getImageSizeFromUrl(
-                LocalPath.showImage(body.localPath),
-                ({ isOk, width, height }) => {
-                  if (isOk === true) {
-                    setSize(getImageSize(height!, width!, winHeight, winWidth));
-                  }
-                }
-              );
+              showImage(body.localPath);
             }
           }
         })
         .catch();
     },
-    [getImageSize, im, winHeight, winWidth]
+    [im, showImage]
   );
 
   React.useEffect(() => {
@@ -185,15 +193,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
           if (msg.body.type === ChatMessageType.IMAGE) {
             const body = msg.body as ChatImageMessageBody;
             if (body.fileStatus === ChatDownloadStatus.SUCCESS) {
-              setUrl(LocalPath.showImage(body.localPath));
-              getImageSizeFromUrl(
-                LocalPath.showImage(body.localPath),
-                ({ isOk, width, height }) => {
-                  if (isOk === true) {
-                    setSize(getImageSize(height!, width!, winHeight, winWidth));
-                  }
-                }
-              );
+              showImage(body.localPath);
             } else if (body.fileStatus === ChatDownloadStatus.FAILED) {
               onError?.(
                 new UIKitError({
@@ -210,14 +210,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
     return () => {
       im.messageManager.removeListener(propsMsgId);
     };
-  }, [
-    getImageSize,
-    im.messageManager,
-    onError,
-    propsMsgId,
-    winHeight,
-    winWidth,
-  ]);
+  }, [im.messageManager, onError, propsMsgId, showImage]);
 
   return {
     url,

@@ -97,7 +97,6 @@
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-get-random-values": "~1.8.0",
-    "react-native-image-picker": "^5.4.2",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-pager-view": "6.1.2",
     "react-native-paper": "^5.8.0",

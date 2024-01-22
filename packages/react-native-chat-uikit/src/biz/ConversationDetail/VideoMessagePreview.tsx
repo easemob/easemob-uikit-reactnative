@@ -76,6 +76,7 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
   //   'file:///var/mobile/Containers/Data/Application/F4EF9F0C-7EAB-44BE-8109-B98E5C8FFD9A/Library/Application%20Support/HyphenateSDK/appdata/zuoyu/zd2/4c847d40-b526-11ee-94cd-1b34468849ce%3Fem-redirect%3Dtrue%26share-secret%3DTITLYLUmEe6-5M0HikC84neFGaGOFglbHbtYyO6mFDW8pnhN.mov'; // ok
   // const s =
   //   '/var/mobile/Containers/Data/Application/F4EF9F0C-7EAB-44BE-8109-B98E5C8FFD9A/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/4c847d40-b526-11ee-94cd-1b34468849ce?em-redirect=true&share-secret=TITLYLUmEe6-5M0HikC84neFGaGOFglbHbtYyO6mFDW8pnhN&vframe=true';
+
   const { top } = useSafeAreaInsets();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -194,6 +195,62 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
   const [pause, setPause] = React.useState(false);
   const { getImageSize } = useImageSize({});
 
+  const genThumb = React.useCallback(
+    async (videoPath: string, onFinished: (thumbLocalPath: string) => void) => {
+      const isExisted = await Services.dcs.isExistedFile(videoPath);
+      if (isExisted !== true) {
+        return;
+      }
+      Services.ms
+        .getVideoThumbnail({ url: videoPath })
+        .then((tmpFilePath) => {
+          if (tmpFilePath !== undefined && tmpFilePath.length > 0) {
+            const dir = getFileDirectory(videoPath);
+            const extension = getFileExtension(tmpFilePath);
+            let localPath = dir + uuid() + extension;
+            Services.ms
+              .saveFromLocal({
+                targetPath: localPath,
+                localPath: tmpFilePath,
+              })
+              .then(() => {
+                onFinished(localPath);
+              })
+              .catch();
+          }
+        })
+        .catch();
+    },
+    []
+  );
+
+  const setThumbSize = React.useCallback(
+    (url: string) => {
+      getImageSizeFromUrl(
+        LocalPath.showImage(url),
+        ({ isOk, width, height }) => {
+          if (isOk === true) {
+            setSize(getImageSize(height!, width!, winHeight, winWidth));
+          }
+        }
+      );
+    },
+    [getImageSize, winHeight, winWidth]
+  );
+
+  const showThumb = React.useCallback(
+    async (thumbnailLocalPath: string) => {
+      const thumbIsExisted = await Services.dcs.isExistedFile(
+        thumbnailLocalPath
+      );
+      if (thumbIsExisted === true) {
+        setThumbSize(thumbnailLocalPath);
+        setThumbnailUrl(LocalPath.showImage(thumbnailLocalPath));
+      }
+    },
+    [setThumbSize]
+  );
+
   const onGetMessage = React.useCallback(
     (msgId: string) => {
       im.getMessage({ messageId: msgId })
@@ -206,24 +263,10 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
               });
             }
             const body = result.body as ChatImageMessageBody;
+            setThumbSize(body.thumbnailRemotePath);
             const isExisted = await Services.dcs.isExistedFile(body.localPath);
             if (isExisted !== true) {
-              const thumbIsExisted = await Services.dcs.isExistedFile(
-                body.thumbnailLocalPath
-              );
-              if (thumbIsExisted === true) {
-                setThumbnailUrl(LocalPath.showImage(body.thumbnailLocalPath));
-                getImageSizeFromUrl(
-                  LocalPath.showImage(body.thumbnailLocalPath),
-                  ({ isOk, width, height }) => {
-                    if (isOk === true) {
-                      setSize(
-                        getImageSize(height!, width!, winHeight, winWidth)
-                      );
-                    }
-                  }
-                );
-              }
+              showThumb(body.thumbnailLocalPath);
               im.messageManager.downloadAttachment(result);
             } else {
               setShowLoading(false);
@@ -234,11 +277,11 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
         })
         .catch();
     },
-    [getImageSize, im, winHeight, winWidth]
+    [im, setThumbSize, showThumb]
   );
 
   const onVideoError = React.useCallback((error: LoadError) => {
-    console.warn('dev:video error: ', error);
+    console.log('dev:video:error: ', error);
   }, []);
 
   const onClickedVideo = React.useCallback(() => {
@@ -261,41 +304,14 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
         body.thumbnailLocalPath
       );
       if (isExisted === true && thumbIsExisted !== true) {
-        Services.ms
-          .getVideoThumbnail({ url: body.localPath })
-          .then((tmpFilePath) => {
-            if (tmpFilePath !== undefined && tmpFilePath.length > 0) {
-              const dir = getFileDirectory(body.localPath);
-              const extension = getFileExtension(tmpFilePath);
-              let localPath = dir + uuid() + extension;
-              Services.ms
-                .saveFromLocal({
-                  targetPath: localPath,
-                  localPath: tmpFilePath,
-                })
-                .then(() => {
-                  setThumbnailUrl(undefined);
-                  body.thumbnailLocalPath = localPath;
-                  body.thumbnailStatus = ChatDownloadStatus.SUCCESS;
-                  getImageSizeFromUrl(
-                    LocalPath.showImage(body.thumbnailLocalPath),
-                    ({ isOk, width, height }) => {
-                      if (isOk === true) {
-                        setSize(
-                          getImageSize(height!, width!, winHeight, winWidth)
-                        );
-                      }
-                    }
-                  );
-                  im.updateMessage({ message: msg, onResult: () => {} });
-                })
-                .catch();
-            }
-          })
-          .catch();
+        genThumb(body.localPath, (thumbLocalPath) => {
+          body.thumbnailLocalPath = thumbLocalPath;
+          body.thumbnailStatus = ChatDownloadStatus.SUCCESS;
+          im.updateMessage({ message: msg, onResult: () => {} });
+        });
       }
     },
-    [getImageSize, im, winHeight, winWidth]
+    [genThumb, im]
   );
 
   const onEnd = React.useCallback(() => {
