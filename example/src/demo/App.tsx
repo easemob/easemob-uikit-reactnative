@@ -173,7 +173,6 @@ export function App() {
   // };
 
   const onInitialized = React.useCallback(() => {
-    console.log('dev:onInitialized:');
     isContainerReadyRef.current = true;
     if (
       isFontReadyRef.current === true &&
@@ -256,7 +255,6 @@ export function App() {
             console.log('dev:onUnhandledAction:', action);
           }}
           onReady={() => {
-            console.log('dev:onReady:');
             isNavigationReadyRef.current = true;
             if (
               isFontReadyRef.current === true &&

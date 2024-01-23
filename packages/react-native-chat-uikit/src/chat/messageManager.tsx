@@ -135,11 +135,6 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       .catch();
   }
   bindOnMessagesReceived(messages: Array<ChatMessage>) {
-    console.log(
-      'dev:MessageCacheManager:bindOnMessagesReceived',
-      messages.length,
-      this._userListener?.size
-    );
     asyncTask(this.emitConversationUnreadCountChanged.bind(this));
     messages.forEach((msg) => {
       this._userListener.forEach((v) => {
@@ -193,7 +188,6 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   }
 
   setCurrentConvId(conv: ConversationModel): void {
-    console.log('dev:MessageCacheManager:', conv);
     this._conv = conv;
   }
   sendMessageReadAck(params: { message: ChatMessage }): void {

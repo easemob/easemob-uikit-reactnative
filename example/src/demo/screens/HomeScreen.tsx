@@ -122,7 +122,7 @@ export function BodyPagesT({
   index: number;
   currentIndex: number;
 }) {
-  console.log('test:BodyPagesT:', index, currentIndex);
+  console.log('dev:BodyPagesT:', index, currentIndex);
   if (index === 0) {
     return <HomeTabConversationListScreen />;
   } else if (index === 1) {
@@ -140,7 +140,7 @@ export function BodyPagesLIST({
   index: number;
   currentIndex: number;
 }) {
-  console.log('test:BodyPagesLIST:', index, currentIndex);
+  console.log('dev:BodyPagesLIST:', index, currentIndex);
   return (
     <View
       style={{

@@ -37,14 +37,14 @@ export class MediaServiceImplement implements MediaService {
   }
 
   protected createRootDir(rootDirName: string, DocumentDir?: string): void {
+    const _rootDir = Platform.select({
+      ios: this.option.fsModule.Dirs.LibraryDir,
+      default: this.option.fsModule.Dirs.DocumentDir,
+    });
+    const docDir = DocumentDir ?? _rootDir;
+    this.rootDir = `${docDir}/${rootDirName}`;
+    console.log('dev:rootDir:', this.rootDir);
     const create = () => {
-      const _rootDir = Platform.select({
-        ios: this.option.fsModule.Dirs.LibraryDir,
-        default: this.option.fsModule.Dirs.DocumentDir,
-      });
-      const docDir = DocumentDir ?? _rootDir;
-      this.rootDir = `${docDir}/${rootDirName}`;
-      console.log('test:rootDir:', this.rootDir);
       this.option.fsModule.FileSystem.exists(this.rootDir)
         .then((result) => {
           if (result === false) {
@@ -88,6 +88,7 @@ export class MediaServiceImplement implements MediaService {
     } else {
       dir += '/' + subDir;
     }
+    console.log('dev:createDir', dir);
     return this.option.fsModule.FileSystem.mkdir(dir);
   }
 
@@ -135,7 +136,6 @@ export class MediaServiceImplement implements MediaService {
         }
       });
       const uri = await recorder.startRecorder(options.url, options.audio);
-      console.log('test:startRecorder:uri:', uri);
       options.onFinished?.({ result: true, path: uri });
       this.record = {
         pos: 0,
