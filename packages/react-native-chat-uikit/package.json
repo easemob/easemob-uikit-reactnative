@@ -130,6 +130,7 @@
     "react-native-document-picker": ">=9.0.1",
     "react-native-fast-image": ">=8.6.3",
     "react-native-file-access": ">=3.0.4",
+    "react-native-gesture-handler": ">=2.9.0",
     "react-native-get-random-values": ">=1.8.0",
     "react-native-image-picker": ">=5.4.2",
     "react-native-linear-gradient": ">=2.8.3",
@@ -137,7 +138,8 @@
     "react-native-reanimated": ">=2.14.4",
     "react-native-safe-area-context": "4.5.0",
     "react-native-screens": ">=3.20.0",
-    "react-native-video": ">=5.2.1"
+    "react-native-video": ">=5.2.1",
+    "twemoji": ">=14.0.2"
   },
   "peerDependenciesMeta": {
     "react-native-fast-image": {
