@@ -160,6 +160,8 @@ export type ContactListProps = Pick<
     containerStyle?: StyleProp<ViewStyle>;
     /**
      * Callback for initializing individual list items. The input is the default component and the updated component is returned.
+     *
+     * The default includes contact application list and group list.
      */
     onInitListItemActions?: (
       defaultItems: React.ReactElement<ContactItemProps>[]

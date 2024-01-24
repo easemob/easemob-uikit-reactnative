@@ -26,6 +26,25 @@ export function ContactListScreen(props: Props) {
     },
   });
 
+  // const im = useChatContext();
+  // const updateData = React.useCallback(async () => {
+  //   im.getAllContacts({
+  //     onResult: (result) => {
+  //       if (result.isOk && result.value) {
+  //         const users: DataModel[] = [];
+  //         result.value.forEach((conv) => {
+  //           if (conv.userId === ChatConversationType.PeerChat) {
+  //             users.push({ id: conv.userId, type: 'user', name: 'xxx' });
+  //           }
+  //         });
+  //         im.updateRequestData({
+  //           data: new Map([['user', users ?? []]]),
+  //         });
+  //       }
+  //     },
+  //   });
+  // }, [im]);
+
   return (
     <SafeAreaView
       style={{
@@ -39,6 +58,7 @@ export function ContactListScreen(props: Props) {
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
+        // onInitialized={updateData}
         onRequestMultiData={async (params: {
           ids: Map<DataModelType, string[]>;
           result: (
