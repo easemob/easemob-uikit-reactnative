@@ -104,7 +104,8 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
             Right={
               <Pressable
                 style={{
-                  display: isSelf === true ? 'none' : 'flex',
+                  display:
+                    isSelf === true || isContact === false ? 'none' : 'flex',
                   width: 32,
                   height: 32,
                 }}

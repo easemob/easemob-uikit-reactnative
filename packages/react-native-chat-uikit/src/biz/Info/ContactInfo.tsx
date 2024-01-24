@@ -105,7 +105,8 @@ export function ContactInfo(props: ContactInfoProps) {
                 style={{
                   width: 32,
                   height: 32,
-                  display: isSelf === true ? 'none' : 'flex',
+                  display:
+                    isSelf === true || isContact === false ? 'none' : 'flex',
                 }}
                 onPress={onMore}
               >
