@@ -79,12 +79,7 @@ export function App() {
   });
 
   const permissionsRef = React.useRef(false);
-  usePermissions({
-    onResult: (isSuccess) => {
-      console.log('dev:permissions:', isSuccess);
-      permissionsRef.current = isSuccess;
-    },
-  });
+  const { getPermission } = usePermissions();
 
   const formatNavigationState = (
     state: NavigationState | undefined,
@@ -104,6 +99,15 @@ export function App() {
       result.push(ret);
     }
   };
+
+  React.useEffect(() => {
+    getPermission({
+      onResult: (isSuccess: boolean) => {
+        console.log('dev:permissions:', isSuccess);
+        permissionsRef.current = isSuccess;
+      },
+    });
+  }, [getPermission]);
 
   React.useEffect(() => {
     const ret = DeviceEventEmitter.addListener('example_change_theme', (e) => {

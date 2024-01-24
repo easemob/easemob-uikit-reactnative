@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { usePermissions } from 'react-native-chat-uikit';
 
 // import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { default as Test } from './test_image_preview';
+import { default as Test } from './test_updater';
 
 // if (
 //   Platform.OS === 'android' &&
@@ -14,12 +14,15 @@ import { default as Test } from './test_image_preview';
 
 export function AppDev(): JSX.Element {
   const permissionsRef = React.useRef(false);
-  usePermissions({
-    onResult: (isSuccess) => {
-      console.log('dev:permissions:', isSuccess);
-      permissionsRef.current = isSuccess;
-    },
-  });
+  const { getPermission } = usePermissions();
+  React.useEffect(() => {
+    getPermission({
+      onResult: (isSuccess: boolean) => {
+        console.log('dev:permissions:', isSuccess);
+        permissionsRef.current = isSuccess;
+      },
+    });
+  }, [getPermission]);
   return (
     <View style={{ flex: 1 }}>
       <Test />

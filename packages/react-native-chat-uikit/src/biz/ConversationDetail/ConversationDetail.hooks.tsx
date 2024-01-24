@@ -49,11 +49,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const [convAvatar, setConvAvatar] = React.useState<string>();
   const ownerIdRef = React.useRef<string>();
 
-  usePermissions({
-    onResult: (isSuccess) => {
-      permissionsRef.current = isSuccess;
-    },
-  });
+  const { getPermission } = usePermissions();
   const { createDirectoryIfNotExisted } = useCreateConversationDirectory();
   const im = useChatContext();
   im.messageManager.setCurrentConvId({ convId, convType, convName });
@@ -109,6 +105,14 @@ export function useConversationDetail(props: ConversationDetailProps) {
       im.setConversationRead({ convId, convType });
     }
   }, [convId, convType, im]);
+
+  React.useEffect(() => {
+    getPermission({
+      onResult: (isSuccess: boolean) => {
+        permissionsRef.current = isSuccess;
+      },
+    });
+  }, [getPermission]);
 
   React.useEffect(() => {
     const conv = im.getCurrentConversation();
