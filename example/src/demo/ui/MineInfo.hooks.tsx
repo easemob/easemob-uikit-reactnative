@@ -10,6 +10,7 @@ import {
   useI18nContext,
   useLifecycle,
   useMineInfoActions,
+  useThemeContext,
 } from 'react-native-chat-uikit';
 
 import type { MineInfoProps, UserState } from './types';
@@ -32,6 +33,14 @@ export function useMineInfo(props: MineInfoProps) {
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
+  const { style } = useThemeContext();
+  const { currentLanguage } = useI18nContext();
+  const [value, onValueChange] = React.useState(
+    style === 'light' ? false : true
+  );
+  const [language, setLanguage] = React.useState<boolean>(
+    currentLanguage() === 'en' ? true : false
+  );
   const im = useChatContext();
   const { tr } = useI18nContext();
   useLifecycle(
@@ -88,6 +97,14 @@ export function useMineInfo(props: MineInfoProps) {
     onShowMineInfoActions();
   }, [onShowMineInfoActions]);
 
+  const onClickedTheme = React.useCallback(() => {
+    // todo: change theme
+  }, []);
+
+  const onClickedLanguage = React.useCallback(() => {
+    // todo: change language
+  }, []);
+
   const onClickedLogout = React.useCallback(() => {
     propsOnClickedLogout?.();
   }, [propsOnClickedLogout]);
@@ -121,7 +138,13 @@ export function useMineInfo(props: MineInfoProps) {
     userSign,
     onClickedState,
     onClickedLogout,
+    onClickedTheme,
+    onClickedLanguage,
     userState,
     tr,
+    value,
+    onValueChange,
+    language,
+    setLanguage,
   };
 }

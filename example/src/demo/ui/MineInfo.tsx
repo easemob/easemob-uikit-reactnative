@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { DeviceEventEmitter, View } from 'react-native';
 import {
   Alert,
   Avatar,
   BottomSheetNameMenu,
+  CommonSwitch,
   Icon,
+  LanguageCode,
   ListItem,
   SimpleToast,
   Text,
@@ -30,6 +32,12 @@ export function MineInfo(props: MineInfoProps) {
     userSign,
     onClickedState,
     onClickedLogout,
+    onClickedLanguage,
+    onClickedTheme,
+    value,
+    onValueChange,
+    language,
+    setLanguage,
     tr,
   } = useMineInfo(props);
   const { colors } = usePaletteContext();
@@ -169,6 +177,76 @@ export function MineInfo(props: MineInfoProps) {
               {`Easemob UIKit v${UIKIT_VERSION}`}
             </Text>
             <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+          </View>
+        }
+      />
+
+      <ListItem
+        onClicked={onClickedTheme}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row' }}>
+            <Icon name={'link'} style={{ height: 28, width: 28 }} />
+            <View style={{ width: 8 }} />
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('theme')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ justifyContent: 'center' }}>
+            <CommonSwitch
+              height={31}
+              width={51}
+              value={value}
+              onValueChange={(v) => {
+                onValueChange(v);
+                DeviceEventEmitter.emit(
+                  'example_change_theme',
+                  value === true ? 'light' : 'dark'
+                );
+              }}
+            />
+          </View>
+        }
+      />
+
+      <ListItem
+        onClicked={onClickedLanguage}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row' }}>
+            <Icon name={'link'} style={{ height: 28, width: 28 }} />
+            <View style={{ width: 8 }} />
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('language')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ justifyContent: 'center' }}>
+            <CommonSwitch
+              height={31}
+              width={51}
+              value={language}
+              onValueChange={(v) => {
+                setLanguage(v);
+                DeviceEventEmitter.emit(
+                  'example_change_language',
+                  language === false
+                    ? ('en' as LanguageCode)
+                    : ('zh-Hans' as LanguageCode)
+                );
+              }}
+            />
           </View>
         }
       />
