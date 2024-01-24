@@ -160,6 +160,37 @@ function HomeTabConversationListScreen(
   const navigation =
     useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
 
+  // const im = useChatContext();
+  // const updatedRef = React.useRef<boolean>(false);
+  // const updateData = React.useCallback(() => {
+  //   if (updatedRef.current) {
+  //     return;
+  //   }
+  //   updatedRef.current = true;
+  //   im.getAllConversations({
+  //     onResult: (result) => {
+  //       // 假设需要获取所有会话列表项的头像和昵称
+  //       if (result.isOk && result.value) {
+  //         const users: DataModel[] = [];
+  //         const groups: DataModel[] = [];
+  //         result.value.forEach((conv) => {
+  //           if (conv.convType === ChatConversationType.PeerChat) {
+  //             users.push({ id: conv.convId, type: 'user', name: 'xxx' });
+  //           } else {
+  //             groups.push({ id: conv.convId, type: 'group', name: 'yyy' });
+  //           }
+  //         });
+  //         im.updateRequestData({
+  //           data: new Map([
+  //             ['user', users ?? []],
+  //             ['group', groups ?? []],
+  //           ]),
+  //         });
+  //       }
+  //     },
+  //   });
+  // }, [im]);
+
   return (
     <ConversationList
       containerStyle={{
@@ -167,6 +198,7 @@ function HomeTabConversationListScreen(
         // backgroundColor: 'red',
         // height: 400,
       }}
+      // onInitialized={updateData}
       onRequestMultiData={(params: {
         ids: Map<DataModelType, string[]>;
         result: (
