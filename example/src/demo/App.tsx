@@ -58,7 +58,7 @@ const demoType = env.demoType;
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
-SplashScreen?.preventAutoHideAsync();
+SplashScreen?.preventAutoHideAsync?.();
 
 export function App() {
   const [initialRouteName] = React.useState(
@@ -142,7 +142,7 @@ export function App() {
       return;
     }
     isReadyRef.current = true;
-    await SplashScreen?.hideAsync();
+    await SplashScreen?.hideAsync?.();
   };
 
   if (fontsLoaded) {
