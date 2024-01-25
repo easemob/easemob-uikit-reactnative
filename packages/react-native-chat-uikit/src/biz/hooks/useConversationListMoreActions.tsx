@@ -68,6 +68,9 @@ export function useConversationListMoreActions(
                 title: tr('_uikit_contact_alert_title'),
                 message: tr('_uikit_contact_alert_content'),
                 supportInput: true,
+                isSaveInput: false,
+                enableClearButton: true,
+                autoFocus: true,
                 buttons: [
                   {
                     text: tr('cancel'),

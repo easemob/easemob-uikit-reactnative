@@ -45,7 +45,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
       onDoNotDisturb,
       onGroupName,
       onGroupDescription,
-      onGroupMyRemark,
+      // onGroupMyRemark,
       onCopyId,
       onParticipant,
       menuRef,
@@ -210,7 +210,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               backgroundColor: getColor('bg2'),
             }}
           />
-          <ListItem
+          {/* <ListItem
             onClicked={onGroupMyRemark}
             containerStyle={{ paddingHorizontal: 16 }}
             LeftName={
@@ -230,7 +230,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                 />
               </View>
             }
-          />
+          /> */}
           <ListItem
             containerStyle={{ paddingHorizontal: 16 }}
             LeftName={
