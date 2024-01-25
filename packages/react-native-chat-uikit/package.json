@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
+    "@easemob/react-native-create-thumbnail": "^1.6.6",
     "@evilmartians/lefthook": "^1.2.2",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-native-camera-roll/camera-roll": "^5.6.0",
@@ -90,7 +91,6 @@
     "react-native": "0.71.11",
     "react-native-audio-recorder-player": "^3.5.3",
     "react-native-builder-bob": "^0.20.4",
-    "@easemob/react-native-create-thumbnail": "^1.6.6",
     "react-native-document-picker": "^9.0.1",
     "react-native-fast-image": "^8.6.3",
     "react-native-file-access": "^3.0.4",
@@ -116,6 +116,7 @@
     "@types/react-native": "~0.71.0"
   },
   "peerDependencies": {
+    "@easemob/react-native-create-thumbnail": ">=1.6.4",
     "@react-native-async-storage/async-storage": ">=1.17.11",
     "@react-native-camera-roll/camera-roll": ">=5.6.0",
     "@react-native-clipboard/clipboard": ">=1.11.2",
@@ -126,7 +127,7 @@
     "react-native": "*",
     "react-native-audio-recorder-player": ">=3.5.3",
     "react-native-chat-sdk": ">=1.1.0",
-    "@easemob/react-native-create-thumbnail": ">=1.6.4",
+    "react-native-device-info": "^10.12.0",
     "react-native-document-picker": ">=9.0.1",
     "react-native-fast-image": ">=8.6.3",
     "react-native-file-access": ">=3.0.4",

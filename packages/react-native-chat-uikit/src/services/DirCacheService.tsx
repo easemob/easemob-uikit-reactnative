@@ -79,4 +79,14 @@ export class DirCacheServiceImplement implements DirCacheService {
   createConversationDir(convId: string): Promise<string> {
     return this.option.media.createDir(this._getConversationDir(convId));
   }
+
+  deleteUserDir(): Promise<void> {
+    return this.option.media.deleteDir(this._getUserDir());
+  }
+  deleteMessageDir(): Promise<void> {
+    return this.option.media.deleteDir(this._getMessageDir());
+  }
+  deleteConversationDir(convId: string): Promise<void> {
+    return this.option.media.deleteDir(this._getConversationDir(convId));
+  }
 }

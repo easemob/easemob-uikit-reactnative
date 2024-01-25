@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Platform } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ChatContextProvider } from '../chat';
@@ -64,6 +66,16 @@ export function Container(props: ContainerProps) {
     input,
     alert,
   });
+
+  React.useEffect(() => {
+    if (Platform.OS === 'ios') {
+      const id = DeviceInfo.getBundleId();
+      console.log('dev:getBundleId', id);
+    } else if (Platform.OS === 'android') {
+      const id = DeviceInfo.getBundleId();
+      console.log('dev:getBundleId', id);
+    }
+  }, []);
 
   return (
     <DispatchContextProvider>

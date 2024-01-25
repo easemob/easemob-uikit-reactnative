@@ -8,7 +8,7 @@ import { BorderButton, CmnButton } from '../Button';
 import type { AlertProps } from './types';
 
 export function useAlert(props: AlertProps) {
-  const { containerStyle } = props;
+  const { containerStyle, supportInput = false } = props;
   const [value, _onChangeText] = React.useState('');
   const [textCount, setTextCount] = React.useState(0);
   const [_props, setProps] = React.useState(props);
@@ -16,7 +16,9 @@ export function useAlert(props: AlertProps) {
   const { cornerRadius: corner } = useThemeContext();
   const { cornerRadius } = usePaletteContext();
   const { getBorderRadius } = useGetStyleProps();
-  const [disabled, setDisabled] = React.useState(true);
+  const [disabled, setDisabled] = React.useState(
+    supportInput === false ? false : true
+  );
   const onChangeText = React.useCallback((v: string) => {
     _onChangeText(v);
     if (v.length > 0) {

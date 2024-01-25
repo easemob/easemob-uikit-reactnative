@@ -92,6 +92,17 @@ export class MediaServiceImplement implements MediaService {
     return this.option.fsModule.FileSystem.mkdir(dir);
   }
 
+  public async deleteDir(subDir: string): Promise<void> {
+    let dir = this.rootDir;
+    if (subDir.startsWith('/')) {
+      dir += subDir;
+    } else {
+      dir += '/' + subDir;
+    }
+    console.log('dev:deleteDir', dir);
+    return this.option.fsModule.FileSystem.unlink(dir);
+  }
+
   public async isDir(subDir: string): Promise<boolean> {
     let dir = this.rootDir;
     if (subDir.startsWith('/')) {

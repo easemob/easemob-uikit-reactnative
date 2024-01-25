@@ -1077,7 +1077,7 @@ export class ChatServiceImpl
     convId: string;
     removeMessage?: boolean;
   }): Promise<void> {
-    const { convId, removeMessage } = params;
+    const { convId, removeMessage = true } = params;
     const ret = await this.tryCatchSync({
       promise: this.client.chatManager.deleteConversation(
         convId,
@@ -1089,6 +1089,14 @@ export class ChatServiceImpl
     if (conv) {
       this._convList.delete(convId);
       this.sendUIEvent(UIListenerType.Conversation, 'onDeletedEvent', conv);
+      if (removeMessage === true) {
+        Services.dcs
+          .deleteConversationDir(params.convId)
+          .then()
+          .catch((e) => {
+            console.warn('dev:remove:', e);
+          });
+      }
     }
     return ret;
   }

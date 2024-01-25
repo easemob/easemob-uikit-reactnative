@@ -148,6 +148,7 @@ export interface MediaService {
   stopAudio(): Promise<void>;
   getRootDir(): string;
   createDir(subDir: string): Promise<string>;
+  deleteDir(subDir: string): Promise<void>;
   isDir(subDir: string): Promise<boolean>;
   isExistedDir(subDir: string): Promise<boolean>;
   isExistedFile(file: string): Promise<boolean>;
@@ -229,4 +230,8 @@ export interface DirCacheService {
   createUserDir(): Promise<string>;
   createMessageDir(): Promise<string>;
   createConversationDir(convId: string): Promise<string>;
+
+  deleteUserDir(): Promise<void>;
+  deleteMessageDir(): Promise<void>;
+  deleteConversationDir(convId: string): Promise<void>;
 }
