@@ -59,9 +59,19 @@ export function SlideModal(props: SlideModalProps) {
   const _Slide = Slide ?? DefaultSlide;
 
   if (propsRef.current) {
-    propsRef.current.startShow = () => {
+    propsRef.current.startShow = (onf?: () => void, timeout?: number) => {
       setVisible(true);
-      startShow();
+      if (timeout !== undefined) {
+        startShow(() => {
+          timeoutTask(timeout, () => {
+            onf?.();
+          });
+        });
+      } else {
+        startShow(() => {
+          onf?.();
+        });
+      }
     };
     propsRef.current.startHide = (onf?: () => void, timeout?: number) => {
       if (timeout !== undefined) {

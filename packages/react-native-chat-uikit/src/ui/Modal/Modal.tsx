@@ -26,7 +26,7 @@ import type { ModalAnimationType } from './types';
  * ref: example/src/__dev__/test_modal_prototype.tsx
  */
 export type ModalRef = {
-  startShow: () => void;
+  startShow: (onFinished?: () => void, timeout?: number) => void;
   /**
    * Hiding a component is not destroying it.
    */

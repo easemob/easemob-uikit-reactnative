@@ -10,4 +10,5 @@ export type AlertProps = {
   isSaveInput?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
   enableClearButton?: boolean;
+  autoFocus?: boolean | undefined;
 };
