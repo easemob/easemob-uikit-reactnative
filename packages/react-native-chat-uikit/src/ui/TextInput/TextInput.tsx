@@ -29,6 +29,10 @@ export type TextInputProps = RNTextInputProps & {
    */
   enableClearButton?: boolean;
   /**
+   * Clear button style.
+   */
+  clearButtonStyle?: ViewStyle;
+  /**
    * Callback notification when clear button is pressed.
    */
   onClear?: () => void;
@@ -77,6 +81,7 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       clearButtonMode: _,
       clearTextOnFocus: __,
       enableClearButton,
+      clearButtonStyle,
       onClear,
       ...others
     } = props;
@@ -210,13 +215,16 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
         ) : null}
         {value && value?.length > 0 && enableClearButton === true ? (
           <Pressable
-            style={{
-              position: 'absolute',
-              right: 0,
-              padding: 13,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+            style={[
+              {
+                position: 'absolute',
+                right: 0,
+                padding: 13,
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              clearButtonStyle,
+            ]}
             onPress={_onClearValue}
           >
             <Icon

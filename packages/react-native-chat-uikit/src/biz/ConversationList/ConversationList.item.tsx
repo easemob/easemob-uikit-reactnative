@@ -57,6 +57,13 @@ export function ConversationListItem(props: ConversationListItemProps) {
     [formatTime?.conversationListCallback]
   );
 
+  const count =
+    data.doNotDisturb === true
+      ? data.unreadMessageCount === 0
+        ? 0
+        : undefined
+      : data.unreadMessageCount;
+
   return (
     <Pressable
       style={{
@@ -117,6 +124,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
           >
             {getMessageFormatTime(data.lastMessage, data.pinnedTime)}
           </SingleLineText>
+          <View style={{ height: count === undefined ? 10 : 5 }} />
           <View
             style={{
               justifyContent: 'center',
@@ -127,18 +135,10 @@ export function ConversationListItem(props: ConversationListItemProps) {
             <View
               style={{
                 height: 20,
-                justifyContent: 'center',
+                // justifyContent: 'center',
               }}
             >
-              <Badges
-                count={
-                  data.doNotDisturb === true
-                    ? data.unreadMessageCount === 0
-                      ? 0
-                      : undefined
-                    : data.unreadMessageCount
-                }
-              />
+              <Badges count={count} />
             </View>
           </View>
         </View>

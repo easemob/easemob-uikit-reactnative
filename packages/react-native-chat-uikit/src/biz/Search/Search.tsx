@@ -39,17 +39,21 @@ export function Search(props: SearchProps) {
   const { style } = useThemeContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    backgroundColor: {
+    bg: {
       light: colors.neutral[98],
       dark: colors.neutral[1],
     },
-    backgroundColor2: {
+    bg2: {
       light: colors.neutral[95],
       dark: colors.neutral[2],
     },
     color: {
-      light: colors.neutral[5],
-      dark: colors.neutral[5],
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    cursor: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
     },
   });
   return (
@@ -65,9 +69,9 @@ export function Search(props: SearchProps) {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          backgroundColor: getColor('backgroundColor'),
-          paddingLeft: 16,
-          paddingRight: 8,
+          backgroundColor: getColor('bg'),
+          paddingLeft: 8,
+          // paddingRight: 8,
         }}
       >
         {onBack ? (
@@ -90,7 +94,7 @@ export function Search(props: SearchProps) {
         >
           <TextInput
             containerStyle={{
-              backgroundColor: getColor('backgroundColor2'),
+              backgroundColor: getColor('bg2'),
               justifyContent: 'center',
               // borderRadius: 18,
               height: 36,
@@ -102,6 +106,10 @@ export function Search(props: SearchProps) {
             onChangeText={onChangeText}
             value={value}
             keyboardAppearance={style === 'light' ? 'light' : 'dark'}
+            autoFocus={true}
+            cursorColor={getColor('cursor')}
+            enableClearButton={true}
+            clearButtonStyle={{ padding: 7 }}
           />
           <Icon
             name={'magnifier'}
@@ -121,6 +129,7 @@ export function Search(props: SearchProps) {
             contentType={'only-text'}
             text={tr('cancel')}
             onPress={onCancel}
+            style={{ paddingHorizontal: 20 }}
           />
         ) : null}
       </View>

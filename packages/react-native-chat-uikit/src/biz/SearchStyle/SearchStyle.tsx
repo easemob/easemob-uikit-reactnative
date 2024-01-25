@@ -44,7 +44,7 @@ export function SearchStyle(props: SearchStyleProps) {
     <View
       style={{
         justifyContent: 'center',
-        paddingHorizontal: 16,
+        paddingHorizontal: 8,
         paddingVertical: 4,
         height: 44,
       }}
