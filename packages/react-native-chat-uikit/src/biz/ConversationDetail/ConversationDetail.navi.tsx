@@ -98,7 +98,10 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
             // todo: click video_camera
           },
         ],
-        iconNameList: ['phone_pick', 'video_camera'],
+        iconNameList: [
+          // 'phone_pick',
+          // 'video_camera'
+        ],
       }}
       containerStyle={{ paddingHorizontal: 12 }}
     />

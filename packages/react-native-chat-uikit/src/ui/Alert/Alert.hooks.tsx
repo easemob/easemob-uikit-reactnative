@@ -9,13 +9,22 @@ import type { AlertProps } from './types';
 
 export function useAlert(props: AlertProps) {
   const { containerStyle } = props;
-  const [value, onChangeText] = React.useState('');
+  const [value, _onChangeText] = React.useState('');
   const [textCount, setTextCount] = React.useState(0);
   const [_props, setProps] = React.useState(props);
   const { tr } = useI18nContext();
   const { cornerRadius: corner } = useThemeContext();
   const { cornerRadius } = usePaletteContext();
   const { getBorderRadius } = useGetStyleProps();
+  const [disabled, setDisabled] = React.useState(true);
+  const onChangeText = React.useCallback((v: string) => {
+    _onChangeText(v);
+    if (v.length > 0) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, []);
   const getButton = (
     buttons: AlertButton[] | undefined,
     onRequestModalClose: () => void
@@ -26,9 +35,11 @@ export function useAlert(props: AlertProps) {
       v: AlertButton,
       i: number
     ) => {
+      const lastIndex = count - 1;
       return (
         <Button
           key={i}
+          disabled={lastIndex === i ? disabled : false}
           sizesType={'large'}
           radiusType={'large'}
           contentType={'only-text'}

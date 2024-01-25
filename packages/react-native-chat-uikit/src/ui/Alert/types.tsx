@@ -9,4 +9,5 @@ export type AlertProps = {
   inputMaxCount?: number;
   isSaveInput?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
+  enableClearButton?: boolean;
 };

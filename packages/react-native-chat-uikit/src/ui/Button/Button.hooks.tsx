@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ErrorCode, UIKitError } from '../../error';
 import { FontStyles, IconStyles, useThemeContext } from '../../theme';
 import {
@@ -81,19 +79,14 @@ export const useGetButtonStyle = (
 };
 export const useGetButtonStateStyle = (props: ButtonProps): ButtonColors => {
   const { disabled } = props;
-  const stateType = React.useRef<ButtonStateColorType>(
-    disabled === true ? 'disabled' : 'enabled'
-  ).current;
+  const stateType: ButtonStateColorType =
+    disabled === true ? 'disabled' : 'enabled';
   const { state } = useGetButtonStyle(props);
   switch (stateType) {
     case 'disabled':
       return state.disabled;
     case 'enabled':
       return state.enabled;
-    case 'loading':
-      return state.loading;
-    case 'pressed':
-      return state.pressed;
 
     default:
       break;

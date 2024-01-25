@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Platform,
+  Pressable,
   StyleProp,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
@@ -11,6 +12,7 @@ import {
 
 import { useColors, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
+import { Icon } from '../Image';
 import { Text } from '../Text';
 
 export type TextInputProps = RNTextInputProps & {
@@ -20,6 +22,20 @@ export type TextInputProps = RNTextInputProps & {
    */
   containerStyle?: StyleProp<ViewStyle>;
 
+  /**
+   * Enable clear button.
+   *
+   * Default is `false`.
+   */
+  enableClearButton?: boolean;
+  /**
+   * Callback notification when clear button is pressed.
+   */
+  onClear?: () => void;
+
+  /**
+   * Statistics settings for the text input component.
+   */
   statistics?: {
     /**
      * Current word count.
@@ -57,8 +73,15 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       containerStyle,
       statistics,
       onChangeText,
+      value,
+      clearButtonMode: _,
+      clearTextOnFocus: __,
+      enableClearButton,
+      onClear,
       ...others
     } = props;
+    _;
+    __;
     const { cornerRadius: corner } = useThemeContext();
     const { cornerRadius, colors } = usePaletteContext();
     const { getBorderRadius } = useGetStyleProps();
@@ -70,6 +93,10 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       fg: {
         light: colors.neutral[1],
         dark: colors.neutral[98],
+      },
+      clear: {
+        light: colors.neutral[3],
+        dark: colors.neutral[8],
       },
     });
 
@@ -84,12 +111,20 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       maxHeightRef.current
     );
 
-    const _onChangeText = (text: string) => {
-      onChangeText?.(text);
-      if (statistics) {
-        statistics.onCountChange?.(text.length);
-      }
-    };
+    const _onChangeText = React.useCallback(
+      (text: string) => {
+        onChangeText?.(text);
+        if (statistics) {
+          statistics.onCountChange?.(text.length);
+        }
+      },
+      [onChangeText, statistics]
+    );
+
+    const _onClearValue = React.useCallback(() => {
+      _onChangeText('');
+      onClear?.();
+    }, [_onChangeText, onClear]);
 
     const getStyle = (): StyleProp<TextStyle> => {
       const s = containerStyle as any;
@@ -153,6 +188,7 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
           }}
           onChangeText={_onChangeText}
           autoCapitalize={'none'}
+          value={value}
           {...others}
         />
         {statistics ? (
@@ -171,6 +207,24 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
               ]}
             >{`${statistics.count}/${statistics.maxCount}`}</Text>
           </View>
+        ) : null}
+        {value && value?.length > 0 && enableClearButton === true ? (
+          <Pressable
+            style={{
+              position: 'absolute',
+              right: 0,
+              padding: 13,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={_onClearValue}
+          >
+            <Icon
+              name={'xmark_in_circle_fill'}
+              resolution={'3x'}
+              style={{ height: 22, width: 22, tintColor: getColor('clear') }}
+            />
+          </Pressable>
         ) : null}
       </View>
     );

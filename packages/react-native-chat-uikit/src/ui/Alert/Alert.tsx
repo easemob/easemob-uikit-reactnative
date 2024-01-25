@@ -65,6 +65,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
       supportInputStatistics,
       inputMaxCount,
       isSaveInput = true,
+      enableClearButton = false,
     } = updatedProps;
     const count = buttons?.length ?? 1;
     if (count > 3) {
@@ -205,6 +206,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                       }
                     : undefined
                 }
+                enableClearButton={enableClearButton}
               />
               <View style={{ height: 24 }} />
             </View>
