@@ -48,6 +48,7 @@ export function Container(props: ContainerProps) {
     formatTime,
     recallTimeout,
     onInitLanguageSet,
+    onRequestMultiData,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -90,6 +91,7 @@ export function Container(props: ContainerProps) {
             <ChatContextProvider
               value={{
                 options: options,
+                onRequestMultiData: onRequestMultiData,
                 onInitialized: onInitialized,
               }}
             >

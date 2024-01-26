@@ -33,7 +33,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     onChangeOwner,
     ListItemRender: propsListItemRender,
     onKicked: propsOnKicked,
-    onRequestGroupData,
+    // onRequestGroupData,
   } = props;
   const flatListProps = useFlatList<GroupParticipantListItemProps>({
     // onInit: () => init(),
@@ -148,7 +148,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
   const init = React.useCallback(async () => {
     if (testMode === 'only-ui') {
     } else {
-      im.setGroupParticipantOnRequestData(onRequestGroupData);
+      // im.setGroupParticipantOnRequestData(onRequestGroupData);
       const owner = await im.getGroupOwner({ groupId });
       if (owner) {
         setOwnerId(owner.memberId);
@@ -226,15 +226,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
         },
       });
     }
-  }, [
-    dataRef,
-    groupId,
-    im,
-    onRequestGroupData,
-    participantType,
-    refreshToUI,
-    testMode,
-  ]);
+  }, [dataRef, groupId, im, participantType, refreshToUI, testMode]);
 
   const onClickedAddParticipantCallback = React.useCallback(() => {
     if (onClickedAddParticipant) {

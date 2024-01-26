@@ -59,11 +59,6 @@ export const ContactListNavigationBar = (
       dark: colors.neutral[95],
     },
   });
-  console.log(
-    'test:zuoyu:ContactListNavigationBar:customNavigationBar',
-    selectedMemberCount,
-    selectedCount
-  );
 
   if (customNavigationBar) {
     return <>{customNavigationBar}</>;

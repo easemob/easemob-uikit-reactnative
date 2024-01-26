@@ -839,6 +839,75 @@ export class ChatServiceImpl
     return ret;
   }
 
+  _requestData(list: string[]): Promise<void> {
+    const ret = new Promise<void>((resolve, reject) => {
+      if (this._basicDataRequestCallback) {
+        const needRequest = new Set<DataModel>();
+        Array.from(list.values()).forEach((v) => {
+          const old = this._dataList.get(v);
+          if (
+            old === undefined ||
+            old.name === undefined ||
+            old.avatar === undefined
+          ) {
+            needRequest.add({
+              id: v,
+              type: 'user',
+              name: undefined,
+              avatar: undefined,
+            });
+            this._dataList.set(v, {
+              id: v,
+              type: 'user' as DataModelType,
+            } as DataModel);
+          }
+        });
+        if (needRequest.size === 0) {
+          resolve();
+          return;
+        }
+        this._basicDataRequestCallback({
+          ids: new Map([
+            [
+              'user',
+              Array.from(needRequest.values())
+                .filter(
+                  (v) =>
+                    (v?.type === 'user' &&
+                      (v.id === v?.name ||
+                        v?.name === undefined ||
+                        v.name === null ||
+                        v.name.length === 0)) ||
+                    (v?.type === 'user' && v?.avatar === undefined)
+                )
+                .map((v) => v.id),
+            ],
+          ]),
+          result: (data, error) => {
+            if (data) {
+              data.forEach((values: DataModel[]) => {
+                values.map((value) => {
+                  const conv = this._dataList.get(value.id);
+                  if (conv) {
+                    conv.name = value.name;
+                    conv.avatar = value.avatar;
+                  }
+                });
+              });
+              resolve();
+            } else {
+              reject(error);
+            }
+          },
+        });
+      } else {
+        resolve();
+      }
+    });
+
+    return ret;
+  }
+
   _requestGroupMemberData(
     groupId: string,
     list: GroupParticipantModel[]
@@ -1652,11 +1721,22 @@ export class ChatServiceImpl
           memberList.set(owner.memberId, owner);
         }
 
+        await this._requestData(Array.from(memberList.keys()));
+        memberList.forEach((v) => {
+          const item = this._dataList.get(v.memberId);
+          if (item && item.avatar) {
+            v.memberAvatar = item.avatar;
+          }
+          if (item && item.name) {
+            v.memberName = item.name;
+          }
+        });
+
         this._groupMemberList.set(params.groupId, memberList);
-        await this._requestGroupMemberData(
-          params.groupId,
-          Array.from(memberList.values())
-        );
+        // await this._requestGroupMemberData(
+        //   params.groupId,
+        //   Array.from(memberList.values())
+        // );
 
         params.onResult({
           isOk: true,
@@ -1677,23 +1757,36 @@ export class ChatServiceImpl
       event: 'getGroupOwner',
     });
     if (ret) {
-      let group = this._groupMemberList.get(params.groupId);
-      if (group) {
-        const member = group.get(ret.owner);
-        if (member) {
+      let groupMember = this._groupMemberList.get(params.groupId);
+      if (groupMember) {
+        const member = groupMember.get(ret.owner);
+        if (member && member.memberName && member.memberAvatar) {
           return member;
         }
-        group.set(ret.owner, { memberId: ret.owner } as GroupParticipantModel);
+        await this._requestData([ret.owner]);
+        groupMember.set(ret.owner, {
+          memberId: ret.owner,
+          ...member,
+          memberAvatar: this._dataList.get(ret.owner)?.avatar,
+          memberName: this._dataList.get(ret.owner)?.name,
+        } as GroupParticipantModel);
       } else {
-        group = new Map([
+        groupMember = new Map([
           [ret.owner, { memberId: ret.owner } as GroupParticipantModel],
         ]);
-        this._groupMemberList.set(params.groupId, group);
+        await this._requestData([ret.owner]);
+        groupMember.set(ret.owner, {
+          memberId: ret.owner,
+          memberAvatar: this._dataList.get(ret.owner)?.avatar,
+          memberName: this._dataList.get(ret.owner)?.name,
+        } as GroupParticipantModel);
+        this._groupMemberList.set(params.groupId, groupMember);
       }
-      await this._requestGroupMemberData(
-        params.groupId,
-        Array.from(group.values())
-      );
+
+      // await this._requestGroupMemberData(
+      //   params.groupId,
+      //   Array.from(groupMember.values())
+      // );
       return this._groupMemberList.get(params.groupId)?.get(ret.owner);
     }
     return undefined;
@@ -2004,13 +2097,20 @@ export class ChatServiceImpl
       onFinished: async () => {
         const groupMembers = this._groupMemberList.get(params.groupId);
         if (groupMembers) {
+          // await this._requestGroupMemberData(
+          //   params.groupId,
+          //   Array.from(groupMembers.values())
+          // );
+          await this._requestData(params.members.map((item) => item.memberId));
+
           for (const member of params.members) {
-            groupMembers.set(member.memberId, member);
+            const s = this._dataList.get(member.memberId);
+            groupMembers.set(member.memberId, {
+              ...member,
+              memberName: s?.name,
+              memberAvatar: s?.avatar,
+            });
           }
-          await this._requestGroupMemberData(
-            params.groupId,
-            Array.from(groupMembers.values())
-          );
 
           for (const member of params.members) {
             this.sendUIEvent(

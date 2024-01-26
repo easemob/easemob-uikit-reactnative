@@ -49,7 +49,7 @@ export function useContactList(props: ContactListProps) {
     onClickedItem,
     onLongPressedItem,
     testMode,
-    onRequestMultiData,
+    // onRequestMultiData,
     onSort: propsOnSort,
     onClickedNewContact: propsOnClickedNewContact,
     onCreateGroupResultValue,
@@ -371,7 +371,7 @@ export function useContactList(props: ContactListProps) {
   const init = React.useCallback(
     async (params: { isClearState?: boolean; onFinished?: () => void }) => {
       const { isClearState, onFinished } = params;
-      im.setOnRequestData(onRequestMultiData);
+      // im.setOnRequestData(onRequestMultiData);
       if (testMode === 'only-ui') {
         const names = [
           'James',
@@ -535,7 +535,6 @@ export function useContactList(props: ContactListProps) {
       im,
       isAutoLoad,
       onChangeGroupCount,
-      onRequestMultiData,
       refreshToUI,
       testMode,
       updateState,

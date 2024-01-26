@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { ChatConversationType } from 'react-native-chat-sdk';
 
-import { useChatContext } from '../../chat';
+import {
+  UIGroupListListener,
+  UIListenerType,
+  useChatContext,
+} from '../../chat';
 import { usePermissions } from '../../hook';
 import { useCreateConversationDirectory } from '../hooks/useCreateConversationDirectory';
 import { MessageInput } from './MessageInput';
@@ -147,6 +151,30 @@ export function useConversationDetail(props: ConversationDetailProps) {
     setConversation,
     testMode,
   ]);
+
+  React.useEffect(() => {
+    const uiListener: UIGroupListListener = {
+      onUpdatedEvent: (data) => {
+        if (data.groupId === convId) {
+          if (data.groupName) {
+            setConvName(data.groupName);
+          }
+        }
+      },
+      onAddedEvent: (data) => {
+        if (data.groupId === convId) {
+          if (data.groupName) {
+            setConvName(data.groupName);
+          }
+        }
+      },
+      type: UIListenerType.Group,
+    };
+    im.addUIListener(uiListener);
+    return () => {
+      im.removeUIListener(uiListener);
+    };
+  }, [convId, im]);
 
   React.useEffect(() => {
     createDirectoryIfNotExisted(convId);

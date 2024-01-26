@@ -1081,6 +1081,31 @@ export type ChatServiceInit = {
    */
   options: ChatOptionsType;
   /**
+   * @description Registered user information callback. The avatar and nickname of the contact, group member and group are obtained through the callback of this registration. If not provided, the default value will be used.
+   *
+   * In addition, data updates can also be achieved by actively calling `ChatService.updateRequestData`.
+   *
+   * Developer should also pay attention to notifications of name or avatar changes to maintain data consistency. For example: pay attention to contact name updates, group name updates, etc. These notifications need to pay attention to the corresponding listeners.
+   *
+   * This callback will be used in the contact list, conversation list, group list, and group member list.
+   *
+   * See `DataModelType` for details on acquisition types.
+   *
+   * For details on obtaining results, see `DataModel`.
+   *
+   * @params params -
+   * - ids: The id of the item.
+   * - result: The callback function of the result.
+   *
+   */
+  onRequestMultiData?: (params: {
+    ids: Map<DataModelType, string[]>;
+    result: (
+      data?: Map<DataModelType, DataModel[]>,
+      error?: UIKitError
+    ) => void;
+  }) => void | Promise<void>;
+  /**
    * IM initialization is completed callback notification.
    */
   onInitialized?: () => void;

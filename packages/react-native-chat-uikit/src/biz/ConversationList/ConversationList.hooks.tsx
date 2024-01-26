@@ -11,6 +11,7 @@ import {
   ConversationModel,
   gNewRequestConversationId,
   UIConversationListListener,
+  UIGroupListListener,
   UIListenerType,
   useChatContext,
   useChatListener,
@@ -38,7 +39,7 @@ export function useConversationList(props: ConversationListProps) {
     onClickedItem,
     onLongPressedItem,
     testMode,
-    onRequestMultiData,
+    // onRequestMultiData,
     onSort: propsOnSort,
     onClickedNewContact,
     onClickedNewConversation,
@@ -224,7 +225,7 @@ export function useConversationList(props: ConversationListProps) {
         refreshToUI(testList);
         return;
       }
-      im.setOnRequestData(onRequestMultiData);
+      // im.setOnRequestData(onRequestMultiData);
       if (isAutoLoad === true) {
         const url = im.user(im.userId)?.avatarURL;
         if (url) {
@@ -284,7 +285,6 @@ export function useConversationList(props: ConversationListProps) {
       im,
       isAutoLoad,
       isShowAfterLoaded,
-      onRequestMultiData,
       onSetState,
       refreshToUI,
       testMode,
@@ -495,8 +495,20 @@ export function useConversationList(props: ConversationListProps) {
           }
         }
       },
+
+      onDetailChanged: (group) => {
+        if (group.groupName) {
+          const isExisted = dataRef.current.find((item) => {
+            return item.data.convId === group.groupId;
+          });
+          if (isExisted) {
+            isExisted.data.convName = group.groupName;
+            onUpdateDataToUI(isExisted.data);
+          }
+        }
+      },
     } as ChatServiceListener;
-  }, [onMessage, init, onPin, onUnPin]);
+  }, [onMessage, init, onPin, onUnPin, dataRef, onUpdateDataToUI]);
 
   useChatListener(listener);
 
@@ -559,6 +571,38 @@ export function useConversationList(props: ConversationListProps) {
     onUpdateDataToUI,
     refreshToUI,
   ]);
+
+  React.useEffect(() => {
+    const uiListener: UIGroupListListener = {
+      onUpdatedEvent: (data) => {
+        const isExisted = dataRef.current.find((item) => {
+          return item.data.convId === data.groupId;
+        });
+        if (isExisted) {
+          if (data.groupName) {
+            isExisted.data.convName = data.groupName;
+            onUpdateDataToUI(isExisted.data);
+          }
+        }
+      },
+      onAddedEvent: (data) => {
+        const isExisted = dataRef.current.find((item) => {
+          return item.data.convId === data.groupId;
+        });
+        if (isExisted) {
+          if (data.groupName) {
+            isExisted.data.convName = data.groupName;
+            onUpdateDataToUI(isExisted.data);
+          }
+        }
+      },
+      type: UIListenerType.Group,
+    };
+    im.addUIListener(uiListener);
+    return () => {
+      im.removeUIListener(uiListener);
+    };
+  }, [dataRef, im, onUpdateDataToUI]);
 
   React.useEffect(() => {
     init({ onFinished: onInitialized });

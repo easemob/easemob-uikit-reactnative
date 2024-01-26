@@ -21,6 +21,7 @@ import {
 } from 'react-native-chat-uikit';
 
 import { createStringSetCn, createStringSetEn, ToastView } from './common';
+import { useApp } from './hooks/useApp';
 import type { RootParamsList, RootParamsName } from './routes';
 import {
   AddGroupParticipantScreen,
@@ -80,6 +81,8 @@ export function App() {
 
   const permissionsRef = React.useRef(false);
   const { getPermission } = usePermissions();
+
+  const { onRequestMultiData } = useApp();
 
   const formatNavigationState = (
     state: NavigationState | undefined,
@@ -241,6 +244,7 @@ export function App() {
           };
           return ret;
         }}
+        onRequestMultiData={onRequestMultiData}
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}
