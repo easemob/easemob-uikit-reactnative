@@ -18,7 +18,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useChatContext } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { ErrorCode, UIKitError } from '../../error';
+import { useColors } from '../../hook';
 import { Services } from '../../services';
+import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { ImagePreview2 } from '../../ui/ImagePreview';
 import { LocalPath } from '../../utils';
@@ -52,6 +54,13 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
   const { containerStyle, onBack } = props;
   const { url, size } = useImageMessagePreview(props);
   const { top } = useSafeAreaInsets();
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
+  });
   // const u =
   //   '/Users/asterisk/Library/Developer/CoreSimulator/Devices/604D801A-1119-460B-8FA8-EB305EC1D5E8/data/Containers/Data/Application/DED71CD7-7399-4DFB-8AF7-EB8C0B5A2EB6/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/cacd5c10-b519-11ee-b1d8-ffc4c34a583c?em-redirect=true&share-secret=ys2DILUZEe6avXPiRjoO3lBSOCOD5wHJ-C5ef9jE3HVmJhes.jpg'; // ok
   // const u2 = `file://${encodeURIComponent(u)}`; // error
@@ -119,7 +128,10 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
         onPress={onBack}
         // pointerEvents={'none'}
       >
-        <Icon name={'chevron_left'} style={{ height: 24, width: 24 }} />
+        <Icon
+          name={'chevron_left'}
+          style={{ height: 24, width: 24, tintColor: getColor('icon') }}
+        />
       </Pressable>
     </View>
   );

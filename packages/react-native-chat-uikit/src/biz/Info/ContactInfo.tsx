@@ -75,6 +75,10 @@ export function ContactInfo(props: ContactInfoProps) {
       light: colors.neutral[7],
       dark: colors.neutral[6],
     },
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
   });
 
   return (
@@ -97,7 +101,10 @@ export function ContactInfo(props: ContactInfoProps) {
                 style={{ flexDirection: 'row', alignItems: 'center' }}
                 onPress={onBack}
               >
-                <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+                <Icon
+                  name={'chevron_left'}
+                  style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+                />
               </Pressable>
             }
             Right={

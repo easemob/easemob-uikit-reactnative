@@ -4,6 +4,7 @@ import {
   //   SectionList as RNSectionList,
   SectionListData,
   SectionListRenderItemInfo,
+  StyleSheet,
   View,
 } from 'react-native';
 
@@ -75,6 +76,7 @@ export function ContactList(props: ContactListProps) {
     onEndReached: propsOnEndReached,
     viewabilityConfig: propsViewabilityConfig,
     onViewableItemsChanged: propsOnViewableItemsChanged,
+    showsVerticalScrollIndicator,
     ...others
   } = sectionListProps ?? {};
   const { colors } = usePaletteContext();
@@ -142,6 +144,7 @@ export function ContactList(props: ContactListProps) {
           style={[{ flexGrow: 1 }, style]}
           contentContainerStyle={[{ flexGrow: 1 }, contentContainerStyle]}
           sections={sections}
+          showsVerticalScrollIndicator={showsVerticalScrollIndicator ?? false}
           refreshing={propsRefreshing ?? refreshing}
           onRefresh={propsOnRefresh ?? onRefresh}
           renderItem={(
@@ -187,10 +190,24 @@ export function ContactList(props: ContactListProps) {
           {...others}
         />
         {AlphabeticIndex ? (
-          <AlphabeticIndex
-            indexTitles={indexTitles}
-            onIndexSelected={onIndexSelected}
-          />
+          <View
+            pointerEvents={'box-none'}
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                position: 'absolute',
+                justifyContent: 'center',
+                alignItems: 'center',
+                right: 2,
+                left: 0,
+              },
+            ]}
+          >
+            <AlphabeticIndex
+              indexTitles={indexTitles}
+              onIndexSelected={onIndexSelected}
+            />
+          </View>
         ) : null}
       </View>
 

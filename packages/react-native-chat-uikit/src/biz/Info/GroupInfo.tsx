@@ -84,6 +84,10 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
         light: colors.neutral[7],
         dark: colors.neutral[6],
       },
+      icon: {
+        light: colors.neutral[3],
+        dark: colors.neutral[95],
+      },
     });
 
     return (
@@ -108,7 +112,11 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                 >
                   <Icon
                     name={'chevron_left'}
-                    style={{ width: 24, height: 24 }}
+                    style={{
+                      width: 24,
+                      height: 24,
+                      tintColor: getColor('icon'),
+                    }}
                   />
                 </Pressable>
               }

@@ -54,7 +54,16 @@ export const ContactListNavigationBar = (
       light: colors.primary[5],
       dark: colors.primary[6],
     },
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
   });
+  console.log(
+    'test:zuoyu:ContactListNavigationBar:customNavigationBar',
+    selectedMemberCount,
+    selectedCount
+  );
 
   if (customNavigationBar) {
     return <>{customNavigationBar}</>;
@@ -99,7 +108,7 @@ export const ContactListNavigationBar = (
           <View style={{ flexDirection: 'row' }}>
             <IconButton
               iconName={'chevron_left'}
-              style={{ width: 24, height: 24 }}
+              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
               onPress={onBack}
             />
             <Text
@@ -112,11 +121,18 @@ export const ContactListNavigationBar = (
           </View>
         }
         Right={
-          <Pressable onPress={onClickedCreateGroup}>
+          <Pressable
+            onPress={onClickedCreateGroup}
+            disabled={selectedCount && selectedCount > 0 ? false : true}
+          >
             <Text
               paletteType={'label'}
               textType={'medium'}
-              style={{ color: getColor('text_enable') }}
+              style={{
+                color: getColor(
+                  selectedCount === 0 ? 'text_disable' : 'text_enable'
+                ),
+              }}
             >
               {tr('_uikit_create_group_button', selectedCount)}
             </Text>
@@ -133,7 +149,7 @@ export const ContactListNavigationBar = (
           <View style={{ flexDirection: 'row' }}>
             <IconButton
               iconName={'chevron_left'}
-              style={{ width: 24, height: 24 }}
+              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
               onPress={onBack}
             />
             <Text
@@ -146,11 +162,20 @@ export const ContactListNavigationBar = (
           </View>
         }
         Right={
-          <Pressable onPress={onClickedAddGroupParticipant}>
+          <Pressable
+            onPress={onClickedAddGroupParticipant}
+            disabled={
+              selectedMemberCount && selectedMemberCount > 0 ? false : true
+            }
+          >
             <Text
               paletteType={'label'}
               textType={'medium'}
-              style={{ color: getColor('text_enable') }}
+              style={{
+                color: getColor(
+                  selectedMemberCount === 0 ? 'text_disable' : 'text_enable'
+                ),
+              }}
             >
               {tr('_uikit_add_group_member_button', selectedMemberCount)}
             </Text>

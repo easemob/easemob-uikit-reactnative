@@ -136,6 +136,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
               style={{
                 height: 20,
                 // justifyContent: 'center',
+                marginRight: count === undefined ? 4 : 0,
               }}
             >
               <Badges count={count} />

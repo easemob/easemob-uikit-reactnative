@@ -47,6 +47,10 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
       light: colors.primary[5],
       dark: colors.primary[6],
     },
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
   });
   if (NavigationBar) {
     // return { NavigationBar };
@@ -58,7 +62,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <IconButton
             iconName={'chevron_left'}
-            style={{ width: 24, height: 24 }}
+            style={{ width: 24, height: 24, tintColor: getColor('icon') }}
             onPress={onBack}
           />
           <Pressable onPress={onClickedAvatar}>

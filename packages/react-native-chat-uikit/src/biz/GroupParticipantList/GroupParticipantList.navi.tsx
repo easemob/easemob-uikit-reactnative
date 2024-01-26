@@ -54,6 +54,10 @@ export const GroupParticipantListNavigationBar = (
       light: colors.error[5],
       dark: colors.error[6],
     },
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
   });
 
   if (customNavigationBar) {
@@ -68,7 +72,10 @@ export const GroupParticipantListNavigationBar = (
             style={{ flexDirection: 'row', alignItems: 'center' }}
             onPress={onBack}
           >
-            <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+            <Icon
+              name={'chevron_left'}
+              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+            />
             <Text
               textType={'medium'}
               paletteType={'label'}
@@ -110,7 +117,10 @@ export const GroupParticipantListNavigationBar = (
               style={{ flexDirection: 'row', alignItems: 'center' }}
               onPress={onBack}
             >
-              <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+              <Icon
+                name={'chevron_left'}
+                style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+              />
               <Text
                 textType={'medium'}
                 paletteType={'label'}
@@ -133,7 +143,10 @@ export const GroupParticipantListNavigationBar = (
             style={{ flexDirection: 'row', alignItems: 'center' }}
             onPress={onBack}
           >
-            <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+            <Icon
+              name={'chevron_left'}
+              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+            />
             <Text
               textType={'medium'}
               paletteType={'label'}
@@ -153,7 +166,10 @@ export const GroupParticipantListNavigationBar = (
             style={{ flexDirection: 'row', alignItems: 'center' }}
             onPress={onBack}
           >
-            <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+            <Icon
+              name={'chevron_left'}
+              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+            />
             <Text>
               {tr('_uikit_group_member_list_title', participantCount)}
             </Text>

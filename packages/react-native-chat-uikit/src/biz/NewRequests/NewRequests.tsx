@@ -64,6 +64,10 @@ export function NewRequests(props: NewRequestsProps) {
       light: colors.neutral[1],
       dark: colors.neutral[98],
     },
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
   });
 
   return (
@@ -84,7 +88,7 @@ export function NewRequests(props: NewRequestsProps) {
               <View style={{ flexDirection: 'row' }}>
                 <IconButton
                   iconName={'chevron_left'}
-                  style={{ width: 24, height: 24 }}
+                  style={{ width: 24, height: 24, tintColor: getColor('icon') }}
                   onPress={onBack}
                 />
                 <Text

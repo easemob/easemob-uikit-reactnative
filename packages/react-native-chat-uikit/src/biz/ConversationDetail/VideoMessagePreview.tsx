@@ -88,6 +88,10 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
       light: colors.neutral[1],
       dark: colors.neutral[98],
     },
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
   });
 
   return (
@@ -166,7 +170,7 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
       >
         <Icon
           name={'chevron_left'}
-          style={{ height: 24, width: 24, tintColor: getColor('fg') }}
+          style={{ height: 24, width: 24, tintColor: getColor('icon') }}
         />
       </Pressable>
     </View>

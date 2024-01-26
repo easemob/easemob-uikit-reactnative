@@ -55,6 +55,10 @@ export function EditInfo(props: EditInfoProps) {
       light: colors.neutral[7],
       dark: colors.neutral[6],
     },
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
   });
 
   const onValue = React.useCallback(
@@ -96,7 +100,7 @@ export function EditInfo(props: EditInfoProps) {
               <View style={{ flexDirection: 'row' }}>
                 <IconButton
                   iconName={'chevron_left'}
-                  style={{ width: 24, height: 24, tintColor: getColor('t1') }}
+                  style={{ width: 24, height: 24, tintColor: getColor('icon') }}
                   onPress={onBack}
                 />
                 <Text

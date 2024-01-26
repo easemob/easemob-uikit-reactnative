@@ -68,6 +68,10 @@ export function GroupList(props: GroupListProps) {
       light: colors.neutral[98],
       dark: colors.neutral[1],
     },
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
   });
 
   return (
@@ -90,7 +94,10 @@ export function GroupList(props: GroupListProps) {
                 style={{ flexDirection: 'row', alignItems: 'center' }}
                 onPress={onBack}
               >
-                <Icon name={'chevron_left'} style={{ width: 24, height: 24 }} />
+                <Icon
+                  name={'chevron_left'}
+                  style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+                />
                 <Text>{tr('_uikit_group_title', groupCount)}</Text>
               </Pressable>
             }

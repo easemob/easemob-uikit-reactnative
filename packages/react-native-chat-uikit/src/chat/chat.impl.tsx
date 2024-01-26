@@ -1063,8 +1063,10 @@ export class ChatServiceImpl
           const conv = mergeObjects(c1, c2);
           this._convList.set(conv.convId, conv);
           return conv;
+        } else {
+          this._convList.set(c1.convId, c1);
+          this.sendUIEvent(UIListenerType.Conversation, 'onAddedEvent', c1);
         }
-        this._convList.set(c1.convId, c1);
         return c1;
       }
     } else {

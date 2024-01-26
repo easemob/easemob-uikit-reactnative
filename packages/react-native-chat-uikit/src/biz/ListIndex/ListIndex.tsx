@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useDelayExecTask } from '../../hook';
+import { useColors, useDelayExecTask } from '../../hook';
+import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
 import {
   g_index_alphabet_size,
@@ -42,6 +43,22 @@ export const ListIndex = (props: ListIndexProps) => {
     setCurrentIndex(undefined);
     setCurrentTitle(undefined);
   });
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+    fg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    fg2: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+  });
+
   return (
     <>
       <View
@@ -49,7 +66,7 @@ export const ListIndex = (props: ListIndexProps) => {
         style={[
           {
             position: 'absolute',
-            right: 10,
+            right: 2,
           },
           indexContainerStyle,
         ]}
@@ -93,7 +110,8 @@ export const ListIndex = (props: ListIndexProps) => {
             style={{
               height: g_index_alphabet_size,
               width: g_index_alphabet_size,
-              backgroundColor: currentIndex === index ? 'blue' : undefined,
+              backgroundColor:
+                currentIndex === index ? getColor('bg') : undefined,
               justifyContent: 'center',
               alignItems: 'center',
               borderRadius: g_index_alphabet_size,
@@ -102,7 +120,10 @@ export const ListIndex = (props: ListIndexProps) => {
             <Text
               paletteType={'label'}
               textType={'extraSmall'}
-              style={{ color: 'grey' }}
+              style={{
+                color:
+                  currentIndex === index ? getColor('fg') : getColor('fg2'),
+              }}
             >
               {section[0]}
             </Text>

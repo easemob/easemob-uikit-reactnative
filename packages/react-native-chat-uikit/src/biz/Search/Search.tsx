@@ -55,6 +55,10 @@ export function Search(props: SearchProps) {
       light: colors.primary[5],
       dark: colors.primary[6],
     },
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
   });
   return (
     <View
@@ -80,7 +84,7 @@ export function Search(props: SearchProps) {
             style={{
               width: 24,
               height: 24,
-              tintColor: getColor('color'),
+              tintColor: getColor('icon'),
             }}
             onPress={onBack}
           />
