@@ -515,6 +515,7 @@ export function useConversationList(props: ConversationListProps) {
   React.useEffect(() => {
     const listener = {
       onSendMessageChanged: (msg: ChatMessage) => {
+        console.log('test:zuoyu:data:onSendMessageChanged:2', msg);
         onMessage([msg]);
       },
       onRecvRecallMessage: (_orgMsg: ChatMessage, tipMsg: ChatMessage) => {
@@ -525,6 +526,7 @@ export function useConversationList(props: ConversationListProps) {
         orgMsg?: ChatMessage;
         tipMsg?: ChatMessage;
       }) => {
+        console.log('test:zuoyu:data:onRecallMessageResult:2', params);
         if (params.isOk === true) {
           if (params.orgMsg && params.tipMsg) {
             onMessage([params.tipMsg]);
@@ -586,15 +588,12 @@ export function useConversationList(props: ConversationListProps) {
         }
       },
       onAddedEvent: (data) => {
-        const isExisted = dataRef.current.find((item) => {
-          return item.data.convId === data.groupId;
+        onAddDataToUI({
+          convId: data.groupId,
+          convType: 1,
+          convName: data.groupName,
+          convAvatar: data.groupAvatar,
         });
-        if (isExisted) {
-          if (data.groupName) {
-            isExisted.data.convName = data.groupName;
-            onUpdateDataToUI(isExisted.data);
-          }
-        }
       },
       type: UIListenerType.Group,
     };
@@ -602,7 +601,7 @@ export function useConversationList(props: ConversationListProps) {
     return () => {
       im.removeUIListener(uiListener);
     };
-  }, [dataRef, im, onUpdateDataToUI]);
+  }, [dataRef, im, onAddDataToUI, onUpdateDataToUI]);
 
   React.useEffect(() => {
     init({ onFinished: onInitialized });
