@@ -63,7 +63,13 @@ export function useApp() {
         const isExisted = list.current.get(group.id);
         list.current.set(
           group.id,
-          isExisted ? { ...group, ...isExisted } : group
+          isExisted
+            ? {
+                ...group,
+                ...isExisted,
+                avatar: isExisted.avatar ?? group.avatar,
+              }
+            : group
         );
       }
       const finalUsers = userIds?.map<DataModel>((id) => {

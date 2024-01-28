@@ -515,7 +515,6 @@ export function useConversationList(props: ConversationListProps) {
   React.useEffect(() => {
     const listener = {
       onSendMessageChanged: (msg: ChatMessage) => {
-        console.log('test:zuoyu:data:onSendMessageChanged:2', msg);
         onMessage([msg]);
       },
       onRecvRecallMessage: (_orgMsg: ChatMessage, tipMsg: ChatMessage) => {
@@ -526,7 +525,6 @@ export function useConversationList(props: ConversationListProps) {
         orgMsg?: ChatMessage;
         tipMsg?: ChatMessage;
       }) => {
-        console.log('test:zuoyu:data:onRecallMessageResult:2', params);
         if (params.isOk === true) {
           if (params.orgMsg && params.tipMsg) {
             onMessage([params.tipMsg]);

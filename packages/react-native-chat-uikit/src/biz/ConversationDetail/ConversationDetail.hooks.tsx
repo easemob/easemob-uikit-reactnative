@@ -96,9 +96,12 @@ export function useConversationDetail(props: ConversationDetailProps) {
                   : result.value.groupId;
               ownerIdRef.current = result.value.owner;
               setConvName(conv.convName);
+              console.log('dev:ConversationDetail:', result.value);
               if (result.value.groupAvatar) {
                 conv.convAvatar = result.value.groupAvatar;
                 setConvAvatar(result.value.groupAvatar);
+              } else {
+                setConvAvatar(conv.convAvatar);
               }
               im.messageManager.setCurrentConvId({ ...conv });
             }

@@ -569,6 +569,7 @@ export class ChatServiceImpl
     return {
       ...others,
       ...group,
+      groupAvatar: this._getAvatarFromCache(group.groupId),
     };
   }
 
@@ -771,7 +772,7 @@ export class ChatServiceImpl
     return ret;
   }
 
-  _requestData(list: string[]): Promise<void> {
+  _requestData(list: string[], type: DataModelType = 'user'): Promise<void> {
     const ret = new Promise<void>((resolve, reject) => {
       if (this._basicDataRequestCallback) {
         const needRequest = new Set<DataModel>();
@@ -784,14 +785,14 @@ export class ChatServiceImpl
           ) {
             needRequest.add({
               id: v,
-              type: 'user',
+              type: type,
               name: undefined,
               avatar: undefined,
             });
             this._dataList.set(v, {
               ...old,
               id: v,
-              type: 'user' as DataModelType,
+              type: type,
             } as DataModel);
           }
         });
@@ -802,16 +803,16 @@ export class ChatServiceImpl
         this._basicDataRequestCallback({
           ids: new Map([
             [
-              'user',
+              type,
               Array.from(needRequest.values())
                 .filter(
                   (v) =>
-                    (v?.type === 'user' &&
+                    (v?.type === type &&
                       (v.id === v?.name ||
                         v?.name === undefined ||
                         v.name === null ||
                         v.name.length === 0)) ||
-                    (v?.type === 'user' && v?.avatar === undefined)
+                    (v?.type === type && v?.avatar === undefined)
                 )
                 .map((v) => v.id),
             ],
@@ -1521,6 +1522,10 @@ export class ChatServiceImpl
       promise: this.client.groupManager.getJoinedGroups(),
       event: 'getJoinedGroups',
       onFinished: async (groups) => {
+        await this._requestData(
+          groups.map((v) => v.groupId),
+          'group'
+        );
         let list: GroupModel[] = [];
         for (const group of groups) {
           list.push(this.toUIGroup(group));
@@ -1544,46 +1549,13 @@ export class ChatServiceImpl
       ),
       event: 'getPageGroups',
       onFinished: async (value) => {
+        await this._requestData(
+          value.map((v) => v.groupId),
+          'group'
+        );
         value.forEach(async (v) => {
-          this._groupList.set(v.groupId, {
-            ...v,
-          });
+          this._groupList.set(v.groupId, this.toUIGroup(v));
         });
-
-        // if (this._groupDataRequestCallback) {
-        //   this._groupDataRequestCallback({
-        //     ids: Array.from(this._groupList.values())
-        //       .filter(
-        //         (v) =>
-        //           v.groupName === undefined ||
-        //           v.groupName === v.groupId ||
-        //           v.groupName.length === 0
-        //       )
-        //       .map((v) => v.groupId),
-        //     result: async (data?: DataModel[], error?: UIKitError) => {
-        //       if (data) {
-        //         data.forEach((item) => {
-        //           const group = this._groupList.get(item.id);
-        //           if (group) {
-        //             group.groupName = item.name;
-        //             group.groupAvatar = item.avatar;
-        //           }
-        //         });
-        //       }
-
-        //       params.onResult({
-        //         isOk: true,
-        //         value: Array.from(value).map((v) => this.toUIGroup(v)),
-        //         error,
-        //       });
-        //     },
-        //   });
-        // } else {
-        //   params.onResult({
-        //     isOk: true,
-        //     value: Array.from(value).map((v) => this.toUIGroup(v)),
-        //   });
-        // }
         params.onResult({
           isOk: true,
           value: Array.from(value).map((v) => this.toUIGroup(v)),
