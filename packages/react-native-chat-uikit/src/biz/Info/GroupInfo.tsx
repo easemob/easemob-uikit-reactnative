@@ -107,7 +107,12 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
             <TopNavigationBar
               Left={
                 <Pressable
-                  style={{ flexDirection: 'row', alignItems: 'center' }}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    height: 40,
+                    width: 40,
+                  }}
                   onPress={onBack}
                 >
                   <Icon
@@ -121,7 +126,15 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                 </Pressable>
               }
               Right={
-                <Pressable style={{ width: 32, height: 32 }} onPress={onMore}>
+                <Pressable
+                  style={{
+                    width: 32,
+                    height: 32,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={onMore}
+                >
                   <Icon
                     name={'ellipsis_vertical'}
                     style={{ height: 24, width: 24 }}
@@ -143,17 +156,19 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
             >
               {groupName ?? groupId}
             </Text>
-            <View style={{ height: 4 }} />
             <Text
               textType={'medium'}
               paletteType={'label'}
-              style={{ color: getColor('t2') }}
+              style={{ color: getColor('t2'), paddingTop: 4 }}
             >
               {groupDescription ?? 'test description'}
             </Text>
-            <View style={{ height: 4 }} />
             <Pressable
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingTop: 4,
+              }}
               onPress={onCopyId}
             >
               <Text
@@ -206,7 +221,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               <View>
                 <Icon
                   name={'chevron_right'}
-                  style={{ height: 20, width: 20 }}
+                  style={{ height: 20, width: 20, tintColor: getColor('icon') }}
                 />
               </View>
             }
@@ -234,7 +249,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               <View>
                 <Icon
                   name={'chevron_right'}
-                  style={{ height: 20, width: 20 }}
+                  style={{ height: 20, width: 20, tintColor: getColor('icon') }}
                 />
               </View>
             }
@@ -302,7 +317,11 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                   <View>
                     <Icon
                       name={'chevron_right'}
-                      style={{ height: 20, width: 20 }}
+                      style={{
+                        height: 20,
+                        width: 20,
+                        tintColor: getColor('icon'),
+                      }}
                     />
                   </View>
                 }
@@ -323,7 +342,11 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                   <View>
                     <Icon
                       name={'chevron_right'}
-                      style={{ height: 20, width: 20 }}
+                      style={{
+                        height: 20,
+                        width: 20,
+                        tintColor: getColor('icon'),
+                      }}
                     />
                   </View>
                 }

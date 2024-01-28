@@ -72,6 +72,10 @@ export function GroupList(props: GroupListProps) {
       light: colors.neutral[3],
       dark: colors.neutral[95],
     },
+    text: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
   });
 
   return (
@@ -98,7 +102,13 @@ export function GroupList(props: GroupListProps) {
                   name={'chevron_left'}
                   style={{ width: 24, height: 24, tintColor: getColor('icon') }}
                 />
-                <Text>{tr('_uikit_group_title', groupCount)}</Text>
+                <Text
+                  paletteType={'title'}
+                  textType={'medium'}
+                  style={{ color: getColor('text') }}
+                >
+                  {tr('_uikit_group_title', groupCount)}
+                </Text>
               </Pressable>
             }
             Right={<View style={{ width: 32, height: 32 }} />}

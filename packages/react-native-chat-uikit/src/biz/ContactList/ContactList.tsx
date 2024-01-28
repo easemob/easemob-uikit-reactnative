@@ -59,14 +59,12 @@ export function ContactList(props: ContactListProps) {
     onClickedCreateGroup,
     selectedMemberCount,
     onClickedAddGroupParticipant,
-    requestCount,
-    groupCount,
     avatarUrl,
     tr,
     ListItemRender,
     ListItemHeaderRender,
     sectionListProps,
-    contactItems,
+    ListHeaderComponent,
   } = useContactList(props);
   const {
     style,
@@ -136,10 +134,11 @@ export function ContactList(props: ContactListProps) {
         )
       ) : null}
 
-      {contactItems({ groupCount, requestCount })}
+      {/* {contactItems({ groupCount, requestCount })} */}
 
       <View style={{ flex: 1 }}>
         <SectionList
+          ListHeaderComponent={ListHeaderComponent}
           ref={ref}
           style={[{ flexGrow: 1 }, style]}
           contentContainerStyle={[{ flexGrow: 1 }, contentContainerStyle]}

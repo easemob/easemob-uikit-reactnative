@@ -46,13 +46,13 @@ export function GroupListItem(props: GroupListItemProps) {
       <View
         style={{
           width: '100%',
-          height: 75.5,
+          height: 59.5,
           flexDirection: 'row',
           alignItems: 'center',
           paddingHorizontal: 16,
         }}
       >
-        <Avatar url={data.groupAvatar} size={50} />
+        <Avatar url={data.groupAvatar} size={40} />
         <View
           style={{
             flexDirection: 'column',

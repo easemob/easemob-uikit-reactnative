@@ -1078,6 +1078,25 @@ export class ChatServiceImpl
     }
     return undefined;
   }
+  async removeConversationAllMessages(params: {
+    convId: string;
+    convType: ChatConversationType;
+  }): Promise<void> {
+    const ret = this.tryCatchSync({
+      promise: this.client.chatManager.deleteConversationAllMessages(
+        params.convId,
+        params.convType
+      ),
+      event: 'removeConversationAllMessages',
+    });
+    Services.dcs
+      .deleteConversationDir(params.convId)
+      .then()
+      .catch((e) => {
+        console.warn('dev:remove:', e);
+      });
+    return ret;
+  }
   async removeConversation(params: {
     convId: string;
     removeMessage?: boolean;

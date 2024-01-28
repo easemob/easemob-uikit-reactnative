@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { SectionListData } from 'react-native';
+import { SectionListData, View } from 'react-native';
 import {
   ChatConversationType,
   ChatMultiDeviceEvent,
@@ -724,6 +724,11 @@ export function useContactList(props: ContactListProps) {
     }
   }, [addContact, onShowContactListMoreActions, propsOnClickedNewContact]);
 
+  const ListHeaderComponent = React.useCallback(() => {
+    const ret = contactItems({ groupCount, requestCount });
+    return <View>{ret}</View>;
+  }, [contactItems, groupCount, requestCount]);
+
   if (propsRef?.current) {
     propsRef.current.addItem = (item) => {
       addContact(item.userId);
@@ -844,6 +849,7 @@ export function useContactList(props: ContactListProps) {
     ListItemRender: ListItemRenderRef.current,
     ListItemHeaderRender: ListItemHeaderRenderRef.current,
     contactItems,
+    ListHeaderComponent,
   };
 }
 

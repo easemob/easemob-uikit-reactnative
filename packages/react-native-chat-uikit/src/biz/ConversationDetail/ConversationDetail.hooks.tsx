@@ -68,6 +68,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     console.log('dev:ConversationDetail:', conv);
     if (conv) {
       if (conv.convType === ChatConversationType.PeerChat) {
+        // todo: get user info
         // im.getUserInfo({
         //   userId: conv.convId,
         //   onResult: (result) => {
@@ -85,6 +86,8 @@ export function useConversationDetail(props: ConversationDetailProps) {
         //     }
         //   },
         // });
+        setConvName(conv.convName);
+        setConvAvatar(conv.convAvatar);
       } else if (conv.convType === ChatConversationType.GroupChat) {
         im.getGroupInfo({
           groupId: conv.convId,

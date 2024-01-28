@@ -28,8 +28,11 @@ export function useContactInfoActions(props: UseContactInfoActionsProps) {
         onClicked: () => {
           menuRef.current?.startHide?.(() => {
             alertRef.current?.alertWithInit({
-              title: 'Delete Contact',
-              message: tr('_uikit_info_alert_content', userName ?? userId),
+              title: tr('_uikit_info_alert_title_delete_contact'),
+              message: tr(
+                '_uikit_info_alert_content_delete_contact',
+                userName ?? userId
+              ),
               buttons: [
                 {
                   text: tr('cancel'),

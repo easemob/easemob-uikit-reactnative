@@ -146,7 +146,7 @@ export function useGroupInfo(
       return;
     }
     alertRef.current.alertWithInit({
-      message: tr('_uikit_info_alert_clear_chat_title'),
+      title: tr('_uikit_info_alert_clear_chat_title'),
       buttons: [
         {
           text: tr('cancel'),
@@ -159,7 +159,10 @@ export function useGroupInfo(
           isPreferred: true,
           onPress: () => {
             alertRef.current.close(() => {
-              im.removeConversation({ convId: groupId });
+              im.removeConversationAllMessages({
+                convId: groupId,
+                convType: 1,
+              });
             });
           },
         },

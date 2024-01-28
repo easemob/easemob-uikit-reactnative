@@ -124,7 +124,7 @@ export function useContactInfo(props: ContactInfoProps) {
       return;
     }
     alertRef.current.alertWithInit({
-      message: tr('_uikit_info_alert_clear_chat_title'),
+      title: tr('_uikit_info_alert_clear_chat_title'),
       buttons: [
         {
           text: tr('cancel'),
@@ -137,7 +137,7 @@ export function useContactInfo(props: ContactInfoProps) {
           isPreferred: true,
           onPress: () => {
             alertRef.current.close(() => {
-              im.removeConversation({ convId: userId });
+              im.removeConversationAllMessages({ convId: userId, convType: 0 });
             });
           },
         },

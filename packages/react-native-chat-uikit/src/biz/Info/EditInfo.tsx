@@ -97,7 +97,13 @@ export function EditInfo(props: EditInfoProps) {
         ) : (
           <TopNavigationBar
             Left={
-              <View style={{ flexDirection: 'row' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: 40,
+                }}
+              >
                 <IconButton
                   iconName={'chevron_left'}
                   style={{ width: 24, height: 24, tintColor: getColor('icon') }}

@@ -98,7 +98,12 @@ export function ContactInfo(props: ContactInfoProps) {
           <TopNavigationBar
             Left={
               <Pressable
-                style={{ flexDirection: 'row', alignItems: 'center' }}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: 40,
+                  width: 40,
+                }}
                 onPress={onBack}
               >
                 <Icon
@@ -112,6 +117,8 @@ export function ContactInfo(props: ContactInfoProps) {
                 style={{
                   width: 32,
                   height: 32,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                   display:
                     isSelf === true || isContact === false ? 'none' : 'flex',
                 }}
@@ -137,19 +144,10 @@ export function ContactInfo(props: ContactInfoProps) {
         >
           {userName}
         </Text>
-        <View style={{ height: 4 }} />
-        {/* <Text
-          textType={'medium'}
-          paletteType={'label'}
-          style={{ color: getColor('t2') }}
-        >
-          {'Sign'}
-        </Text>
-        <View style={{ height: 4 }} /> */}
         <Text
           textType={'small'}
           paletteType={'label'}
-          style={{ color: getColor('t3') }}
+          style={{ color: getColor('t3'), paddingTop: 4 }}
         >
           {userId}
         </Text>

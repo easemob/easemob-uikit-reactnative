@@ -86,7 +86,11 @@ export const ContactListNavigationBar = (
       <TopNavigationBar
         Left={
           <Pressable style={{ flexDirection: 'row' }} onPress={onBack}>
-            <Text paletteType={'label'} textType={'medium'}>
+            <Text
+              paletteType={'label'}
+              textType={'medium'}
+              style={{ color: getColor('icon') }}
+            >
               {tr('cancel')}
             </Text>
           </Pressable>
@@ -100,11 +104,17 @@ export const ContactListNavigationBar = (
     return (
       <TopNavigationBar
         Left={
-          <View style={{ flexDirection: 'row' }}>
+          <Pressable
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              height: 40,
+            }}
+            onPress={onBack}
+          >
             <IconButton
               iconName={'chevron_left'}
               style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-              onPress={onBack}
             />
             <Text
               paletteType={'title'}
@@ -113,7 +123,7 @@ export const ContactListNavigationBar = (
             >
               {tr('_uikit_create_group_title')}
             </Text>
-          </View>
+          </Pressable>
         }
         Right={
           <Pressable
@@ -141,11 +151,17 @@ export const ContactListNavigationBar = (
     return (
       <TopNavigationBar
         Left={
-          <View style={{ flexDirection: 'row' }}>
+          <Pressable
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              height: 40,
+            }}
+            onPress={onBack}
+          >
             <IconButton
               iconName={'chevron_left'}
               style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-              onPress={onBack}
             />
             <Text
               paletteType={'title'}
@@ -154,7 +170,7 @@ export const ContactListNavigationBar = (
             >
               {tr('_uikit_add_group_member_title')}
             </Text>
-          </View>
+          </Pressable>
         }
         Right={
           <Pressable
@@ -185,7 +201,11 @@ export const ContactListNavigationBar = (
       <TopNavigationBar
         Left={
           <Pressable style={{ flexDirection: 'row' }} onPress={onBack}>
-            <Text paletteType={'label'} textType={'medium'}>
+            <Text
+              paletteType={'label'}
+              textType={'medium'}
+              style={{ color: getColor('icon') }}
+            >
               {tr('cancel')}
             </Text>
           </Pressable>

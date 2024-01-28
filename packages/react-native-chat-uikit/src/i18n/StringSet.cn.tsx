@@ -69,8 +69,8 @@ export function createStringSetCn(): StringSet {
     '_uikit_info_clear_msg': '清空聊天记录',
     '_uikit_info_button_add_contact': '添加联系人',
     '_uikit_info_menu_del_contact': '删除联系人',
-    '_uikit_info_alert_title': '确认删除联系人',
-    '_uikit_info_alert_content': (name) =>
+    '_uikit_info_alert_title_delete_contact': '确认删除联系人',
+    '_uikit_info_alert_content_delete_contact': (name) =>
       `确认删除${name}，同时删除与该联系人的聊天记录`,
     '_uikit_info_item_member': '群成员',
     '_uikit_info_item_my_remark': '我在本群的昵称',

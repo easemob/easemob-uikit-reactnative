@@ -99,7 +99,12 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
           <TopNavigationBar
             Left={
               <Pressable
-                style={{ flexDirection: 'row', alignItems: 'center' }}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: 40,
+                  width: 40,
+                }}
                 onPress={onBack}
               >
                 <Icon
@@ -115,6 +120,8 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
                     isSelf === true || isContact === false ? 'none' : 'flex',
                   width: 32,
                   height: 32,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
                 onPress={onMore}
               >

@@ -307,6 +307,13 @@ export interface ConversationServices {
     fromNative?: boolean;
   }): Promise<ConversationModel | undefined>;
   /**
+   * Remove local conversation all messages.
+   */
+  removeConversationAllMessages(params: {
+    convId: string;
+    convType: ChatConversationType;
+  }): Promise<void>;
+  /**
    * Remove local conversation.
    *
    * Only when users actively delete the session, if they exit the group, be kicked out of the group, delete contact, add blacklist, etc., will not delete the session list.

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ListRenderItemInfo, View } from 'react-native';
+import { ListRenderItemInfo, Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
@@ -85,11 +85,17 @@ export function NewRequests(props: NewRequestsProps) {
         ) : (
           <TopNavigationBar
             Left={
-              <View style={{ flexDirection: 'row' }}>
+              <Pressable
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  height: 40,
+                }}
+                onPress={onBack}
+              >
                 <IconButton
                   iconName={'chevron_left'}
                   style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-                  onPress={onBack}
                 />
                 <Text
                   paletteType={'title'}
@@ -98,7 +104,7 @@ export function NewRequests(props: NewRequestsProps) {
                 >
                   {tr('_uikit_new_quest_title')}
                 </Text>
-              </View>
+              </Pressable>
             }
             Right={TopNavigationBarRight}
             RightProps={{

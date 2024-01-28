@@ -70,8 +70,8 @@ export function createStringSetEn(): StringSet {
     '_uikit_info_clear_msg': 'Clear Chat History',
     '_uikit_info_button_add_contact': 'Add Contact',
     '_uikit_info_menu_del_contact': 'Delete Contact',
-    '_uikit_info_alert_title': 'Confirm Contact Deletion',
-    '_uikit_info_alert_content': (name) =>
+    '_uikit_info_alert_title_delete_contact': 'Confirm Contact Deletion',
+    '_uikit_info_alert_content_delete_contact': (name) =>
       `Confirm deletion of ${name} and all chat history with this contact`,
     '_uikit_info_item_member': 'Group Members',
     '_uikit_info_item_my_remark': 'My Nickname in this Group',

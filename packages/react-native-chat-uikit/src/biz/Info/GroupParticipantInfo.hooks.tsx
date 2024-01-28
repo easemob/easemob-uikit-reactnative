@@ -98,7 +98,7 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
       return;
     }
     alertRef.current.alertWithInit({
-      message: tr('_uikit_info_alert_clear_chat_title'),
+      title: tr('_uikit_info_alert_clear_chat_title'),
       buttons: [
         {
           text: tr('cancel'),
@@ -111,7 +111,7 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
           isPreferred: true,
           onPress: () => {
             alertRef.current.close(() => {
-              im.removeConversation({ convId: userId });
+              im.removeConversationAllMessages({ convId: userId, convType: 0 });
             });
           },
         },

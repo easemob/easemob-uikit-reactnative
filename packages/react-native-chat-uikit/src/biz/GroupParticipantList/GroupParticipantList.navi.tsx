@@ -69,7 +69,7 @@ export const GroupParticipantListNavigationBar = (
       <TopNavigationBar
         Left={
           <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center' }}
+            style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}
             onPress={onBack}
           >
             <Icon
@@ -114,7 +114,7 @@ export const GroupParticipantListNavigationBar = (
         Left={
           isOwner === true ? (
             <Pressable
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}
               onPress={onBack}
             >
               <Icon
@@ -140,7 +140,7 @@ export const GroupParticipantListNavigationBar = (
       <TopNavigationBar
         Left={
           <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center' }}
+            style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}
             onPress={onBack}
           >
             <Icon
@@ -163,7 +163,7 @@ export const GroupParticipantListNavigationBar = (
       <TopNavigationBar
         Left={
           <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center' }}
+            style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}
             onPress={onBack}
           >
             <Icon
