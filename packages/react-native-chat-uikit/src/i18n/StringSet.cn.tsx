@@ -74,6 +74,7 @@ export function createStringSetCn(): StringSet {
       `确认删除${name}，同时删除与该联系人的聊天记录`,
     '_uikit_info_item_member': '群成员',
     '_uikit_info_item_my_remark': '我在本群的昵称',
+    '_uikit_info_item_group_id': '群ID:',
     '_uikit_info_item_group_name': '群组名',
     '_uikit_info_item_group_desc': '群描述',
     '_uikit_info_alert_clear_chat_title': '确认清空聊天记录？',
@@ -128,5 +129,8 @@ export function createStringSetCn(): StringSet {
 
     'copy_success': '拷贝成功',
     'online_state': '在线状态',
+
+    '@all': '[有人@你] ',
+    '@me': '[有人@你] ',
   };
 }

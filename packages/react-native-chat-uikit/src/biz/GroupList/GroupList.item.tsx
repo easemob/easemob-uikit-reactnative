@@ -4,7 +4,7 @@ import { Pressable, View } from 'react-native';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SingleLineText } from '../../ui/Text';
-import { Avatar } from '../Avatar';
+import { GroupAvatar } from '../Avatar';
 import type { GroupListItemProps } from './types';
 
 /**
@@ -52,7 +52,7 @@ export function GroupListItem(props: GroupListItemProps) {
           paddingHorizontal: 16,
         }}
       >
-        <Avatar url={data.groupAvatar} size={40} />
+        <GroupAvatar url={data.groupAvatar} size={40} />
         <View
           style={{
             flexDirection: 'column',

@@ -14,6 +14,7 @@ export function useAlert(props: AlertProps) {
   const [_props, setProps] = React.useState(props);
   const { tr } = useI18nContext();
   const { cornerRadius: corner } = useThemeContext();
+  const { input } = corner;
   const { cornerRadius } = usePaletteContext();
   const { getBorderRadius } = useGetStyleProps();
   const [disabled, setDisabled] = React.useState(
@@ -43,7 +44,7 @@ export function useAlert(props: AlertProps) {
           key={i}
           disabled={lastIndex === i ? disabled : false}
           sizesType={'large'}
-          radiusType={'large'}
+          radiusType={input}
           contentType={'only-text'}
           onPress={() => v.onPress?.(value)}
           text={v.text}

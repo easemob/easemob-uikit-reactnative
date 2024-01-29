@@ -78,11 +78,12 @@ export type ContainerProps = React.PropsWithChildren<{
     createGroupMemberLimit?: number;
   };
   /**
-   * Avatar option.
+   * Default avatar option.
    */
   avatar?: {
     borderRadiusStyle?: CornerRadiusPaletteType;
-    localIcon?: number | undefined;
+    personAvatar?: number | undefined;
+    groupAvatar?: number | undefined;
   };
   /**
    * Input component option.

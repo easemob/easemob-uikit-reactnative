@@ -48,7 +48,7 @@ export function EditInfo(props: EditInfoProps) {
       dark: colors.neutral[2],
     },
     t1: {
-      light: colors.neutral[1],
+      light: colors.primary[1],
       dark: colors.neutral[98],
     },
     t2: {
@@ -58,6 +58,10 @@ export function EditInfo(props: EditInfoProps) {
     icon: {
       light: colors.neutral[3],
       dark: colors.neutral[95],
+    },
+    save: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
     },
   });
 
@@ -132,48 +136,63 @@ export function EditInfo(props: EditInfoProps) {
                   textType={'medium'}
                   paletteType={'label'}
                   style={{
-                    color: getColor(disable !== true ? 't1' : 't2'),
+                    color: getColor(disable !== true ? 'save' : 't2'),
                   }}
                 >
                   {saveName}
                 </Text>
               </Pressable>
             }
-            containerStyle={{ paddingHorizontal: 12 }}
           />
         )
       ) : null}
       <KeyboardAvoidingView style={{ paddingHorizontal: 12 }}>
-        <TextInput
-          ref={inputRef}
-          numberOfLines={10}
-          multiline={true}
-          unitHeight={Platform.OS === 'ios' ? 22 : 22}
+        <View
           style={{
-            fontSize: 16,
-            fontStyle: 'normal',
-            fontWeight: '400',
-            lineHeight: 22,
-            // fontFamily: fontFamily,
-            color: getColor('t1'),
-          }}
-          containerStyle={{
-            width: '100%',
-            minHeight: 22,
+            paddingBottom: 13,
+            paddingLeft: 16,
+            paddingRight: 16,
+            paddingTop: 13,
             backgroundColor: getColor('bg2'),
-            paddingHorizontal: 8,
-            borderTopLeftRadius: 4,
-            borderTopRightRadius: 4,
           }}
-          // onFocus={onFocus}
-          // onBlur={onBlur}
-          onChangeText={onValue}
-          value={value}
-          keyboardAppearance={style === 'light' ? 'light' : 'dark'}
-          maxLength={maxLength}
-        />
+        >
+          <TextInput
+            ref={inputRef}
+            numberOfLines={10}
+            multiline={true}
+            unitHeight={Platform.OS === 'ios' ? 22 : 22}
+            autoFocus={true}
+            style={{
+              fontSize: 16,
+              fontStyle: 'normal',
+              fontWeight: '400',
+              lineHeight: 22,
+              // fontFamily: fontFamily,
+              color: getColor('t1'),
+            }}
+            containerStyle={{
+              width: '100%',
+              // minHeight: 22,
+              // backgroundColor: 'red',
+              // backgroundColor: getColor('bg2'),
+              // paddingHorizontal: 8,
+              // borderTopLeftRadius: 4,
+              // borderTopRightRadius: 4,
+            }}
+            // onFocus={onFocus}
+            // onBlur={onBlur}
+            onChangeText={onValue}
+            value={value}
+            keyboardAppearance={style === 'light' ? 'light' : 'dark'}
+            // maxLength={maxLength}
+            statistics={{
+              maxCount: maxLength,
+              count: count,
+            }}
+          />
+        </View>
       </KeyboardAvoidingView>
-      <View
+      {/* <View
         style={{
           // width: '100%',
           alignItems: 'flex-end',
@@ -191,7 +210,7 @@ export function EditInfo(props: EditInfoProps) {
         >
           {`${count}/${maxLength}`}
         </Text>
-      </View>
+      </View> */}
       <View
         style={{ flexGrow: 1, backgroundColor: getColor('bg') }}
         onTouchEnd={() => {

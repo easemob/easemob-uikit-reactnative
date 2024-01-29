@@ -8,7 +8,7 @@ import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
 import { Text } from '../../ui/Text';
 import { SimpleToast } from '../../ui/Toast';
-import { Avatar } from '../Avatar';
+import { GroupAvatar } from '../Avatar';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { ListItem } from '../ListItem';
 import { TopNavigationBar } from '../TopNavigationBar';
@@ -89,6 +89,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
         dark: colors.neutral[95],
       },
     });
+    console.log('test:zuoyu:goup:info: ', doNotDisturb);
 
     return (
       <View
@@ -141,28 +142,44 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                   />
                 </Pressable>
               }
-              containerStyle={{ paddingHorizontal: 12 }}
             />
           )
         ) : null}
         <ScrollView style={{ flex: 1 }}>
           <View style={{ alignItems: 'center', paddingTop: 20 }}>
-            <Avatar size={100} url={groupAvatar} />
-            <View style={{ height: 12 }} />
-            <Text
-              textType={'large'}
-              paletteType={'headline'}
-              style={{ color: getColor('fg') }}
+            <GroupAvatar size={100} url={groupAvatar} />
+            <View
+              style={{
+                flexDirection: 'row',
+                paddingTop: 12,
+                alignItems: 'center',
+              }}
             >
-              {groupName ?? groupId}
-            </Text>
-            <Text
-              textType={'medium'}
-              paletteType={'label'}
-              style={{ color: getColor('t2'), paddingTop: 4 }}
-            >
-              {groupDescription ?? 'test description'}
-            </Text>
+              <Text
+                textType={'large'}
+                paletteType={'headline'}
+                style={{ color: getColor('fg'), paddingTop: 12 }}
+              >
+                {groupName ?? groupId}
+              </Text>
+              {doNotDisturb === true ? (
+                <Icon
+                  name={'bell_slash'}
+                  style={{ height: 20, width: 20, tintColor: getColor('t3') }}
+                />
+              ) : null}
+            </View>
+
+            {groupDescription ? (
+              <Text
+                textType={'medium'}
+                paletteType={'label'}
+                style={{ color: getColor('t2'), paddingTop: 4 }}
+              >
+                {groupDescription ?? 'test description'}
+              </Text>
+            ) : null}
+
             <Pressable
               style={{
                 flexDirection: 'row',
@@ -176,7 +193,14 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
                 paletteType={'label'}
                 style={{ color: getColor('t3') }}
               >
-                {groupId}
+                {tr('_uikit_info_item_group_id')}
+                <Text
+                  textType={'small'}
+                  paletteType={'label'}
+                  style={{ color: getColor('t3') }}
+                >
+                  {`${groupId}`}
+                </Text>
               </Text>
               <Icon
                 name={'doc_on_doc'}

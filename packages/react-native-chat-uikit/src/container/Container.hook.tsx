@@ -139,7 +139,6 @@ export const useGetTheme = (params: {
   releaseArea?: ReleaseArea;
   avatar?: {
     borderRadiusStyle?: CornerRadiusPaletteType;
-    localIcon?: number | undefined;
   };
   input?: {
     borderRadiusStyle?: CornerRadiusPaletteType;

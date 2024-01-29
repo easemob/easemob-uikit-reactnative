@@ -114,7 +114,6 @@ export function NewRequests(props: NewRequestsProps) {
               iconName: 'person_add',
             }}
             Title={TopNavigationBarTitle({ text: '' })}
-            containerStyle={{ paddingHorizontal: 12 }}
           />
         )
       ) : null}

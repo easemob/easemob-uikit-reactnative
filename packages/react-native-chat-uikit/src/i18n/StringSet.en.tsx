@@ -75,6 +75,7 @@ export function createStringSetEn(): StringSet {
       `Confirm deletion of ${name} and all chat history with this contact`,
     '_uikit_info_item_member': 'Group Members',
     '_uikit_info_item_my_remark': 'My Nickname in this Group',
+    '_uikit_info_item_group_id': 'GroupID:',
     '_uikit_info_item_group_name': 'Group Name',
     '_uikit_info_item_group_desc': 'Group Description',
     '_uikit_info_alert_clear_chat_title': 'Confirm clearing chat history?',
@@ -129,5 +130,8 @@ export function createStringSetEn(): StringSet {
 
     'copy_success': 'Copy Successful',
     'online_state': 'Online Status',
+
+    '@all': '[Mentioned] ',
+    '@me': '[Mentioned] ',
   };
 }

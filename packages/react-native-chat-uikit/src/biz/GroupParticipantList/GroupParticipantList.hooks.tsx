@@ -58,7 +58,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
       if (ret !== false) {
         if (participantType === 'change-owner') {
           alertRef.current.alertWithInit({
-            message: tr(
+            title: tr(
               '_uikit_group_alert_change_owner_title',
               data?.memberName ?? data?.memberId
             ),

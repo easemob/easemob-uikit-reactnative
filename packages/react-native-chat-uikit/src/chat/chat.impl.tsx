@@ -910,7 +910,16 @@ export class ChatServiceImpl
   }
 
   setCurrentConversation(params: { conv?: ConversationModel }): void {
-    this._currentConversation = params.conv;
+    if (params.conv && params.conv.convId) {
+      const conv = this._convList.get(params.conv.convId);
+      if (conv) {
+        this._currentConversation = conv;
+      } else {
+        this._currentConversation = params.conv;
+      }
+    } else {
+      this._currentConversation = params.conv;
+    }
   }
   getCurrentConversation(): ConversationModel | undefined {
     return this._currentConversation;
@@ -1695,8 +1704,8 @@ export class ChatServiceImpl
         groupMember.set(ret.owner, {
           memberId: ret.owner,
           ...member,
-          memberAvatar: this._dataList.get(ret.owner)?.avatar,
-          memberName: this._dataList.get(ret.owner)?.name,
+          memberAvatar: this._getAvatarFromCache(ret.owner),
+          memberName: this._getNameFromCache(ret.owner),
         } as GroupParticipantModel);
       } else {
         groupMember = new Map([
@@ -1705,8 +1714,8 @@ export class ChatServiceImpl
         await this._requestData([ret.owner]);
         groupMember.set(ret.owner, {
           memberId: ret.owner,
-          memberAvatar: this._dataList.get(ret.owner)?.avatar,
-          memberName: this._dataList.get(ret.owner)?.name,
+          memberAvatar: this._getAvatarFromCache(ret.owner),
+          memberName: this._getNameFromCache(ret.owner),
         } as GroupParticipantModel);
         this._groupMemberList.set(params.groupId, groupMember);
       }
@@ -1939,6 +1948,10 @@ export class ChatServiceImpl
         const group = this._groupList.get(params.groupId);
         if (group) {
           group.groupName = params.groupNewName;
+          const g = this._dataList.get(group.groupId);
+          if (g) {
+            g.name = group.groupName;
+          }
           this.sendUIEvent(UIListenerType.Group, 'onUpdatedEvent', group);
         }
         params.onResult?.({
@@ -2040,11 +2053,10 @@ export class ChatServiceImpl
           await this._requestData(params.members.map((item) => item.memberId));
 
           for (const member of params.members) {
-            const s = this._dataList.get(member.memberId);
             groupMembers.set(member.memberId, {
               ...member,
-              memberName: s?.name,
-              memberAvatar: s?.avatar,
+              memberName: this._getNameFromCache(member.memberId),
+              memberAvatar: this._getAvatarFromCache(member.memberId),
             });
           }
 

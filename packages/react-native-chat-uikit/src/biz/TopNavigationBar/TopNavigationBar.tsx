@@ -36,6 +36,7 @@ export function TopNavigationBar<LeftProps = any, RightProps = any>(
           justifyContent: 'space-between',
           alignItems: 'center',
           backgroundColor: getColor('bg'),
+          paddingHorizontal: 8,
         },
         containerStyle,
       ]}

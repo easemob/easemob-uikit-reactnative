@@ -77,3 +77,10 @@ export function randomId(): string {
   }
   return result;
 }
+
+export const defaultAvatars: number[] = [
+  require('../assets/group_avatar_ondark.png'),
+  require('../assets/group_avatar_onlight.png'),
+  require('../assets/persion_avatar_ondark.png'),
+  require('../assets/persion_avatar_onlight.png'),
+];

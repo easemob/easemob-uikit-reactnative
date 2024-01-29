@@ -36,7 +36,8 @@ export type SearchProps = {
 export function Search(props: SearchProps) {
   const { onCancel, onChangeText, value, onBack } = props;
   const { tr } = useI18nContext();
-  const { style } = useThemeContext();
+  const { style, cornerRadius } = useThemeContext();
+  const { input } = cornerRadius;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -129,7 +130,7 @@ export function Search(props: SearchProps) {
         {onCancel ? (
           <Text1Button
             sizesType={'middle'}
-            radiusType={'large'}
+            radiusType={input}
             contentType={'only-text'}
             text={tr('cancel')}
             onPress={onCancel}

@@ -3,6 +3,7 @@ import {
   Pressable,
   PressableStateCallbackType,
   StyleProp,
+  TextStyle,
   View,
   ViewStyle,
 } from 'react-native';
@@ -32,6 +33,7 @@ export type BottomSheetMenuItemProps = {
   frequencyInterval?: number;
   iconResolution?: IconResolutionType;
   containerStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 };
 
 export function BottomSheetMenuItem(props: BottomSheetMenuItemProps) {
@@ -151,7 +153,14 @@ const ItemDivider = () => {
 };
 
 const ItemContent = (props: BottomSheetMenuItemProps) => {
-  const { initState, text, iconName, iconResolution, id: pid } = props;
+  const {
+    initState,
+    text,
+    iconName,
+    iconResolution,
+    id: pid,
+    textStyle,
+  } = props;
 
   const { colors } = usePaletteContext();
   const { addListener, removeListener } = useDispatchContext();
@@ -198,7 +207,7 @@ const ItemContent = (props: BottomSheetMenuItemProps) => {
       <Text
         paletteType={'body'}
         textType={'large'}
-        style={{ color: getColor(buttonState) }}
+        style={[{ color: getColor(buttonState) }, textStyle]}
       >
         {text}
       </Text>

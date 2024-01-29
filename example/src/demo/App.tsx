@@ -53,6 +53,7 @@ import {
   TopMenuScreen,
   VideoMessagePreviewScreen,
 } from './screens';
+import { defaultAvatars } from './utils/utils';
 
 const env = require('../env');
 const demoType = env.demoType;
@@ -220,6 +221,10 @@ export function App() {
         palette={palette}
         theme={theme}
         language={language}
+        avatar={{
+          personAvatar: defaultAvatars[2],
+          groupAvatar: defaultAvatars[0],
+        }}
         // fontFamily={fontFamily}
         // languageExtensionFactory={languageExtensionFactory}
         onInitialized={onInitialized}

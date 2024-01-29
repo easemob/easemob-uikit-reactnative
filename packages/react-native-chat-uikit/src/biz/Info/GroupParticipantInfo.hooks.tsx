@@ -13,7 +13,7 @@ import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
-import { useCloseMenu, useContactListMoreActions } from '../hooks';
+import { useCloseMenu } from '../hooks';
 import type { GroupParticipantInfoProps } from './types';
 
 export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
@@ -46,10 +46,6 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
   const im = useChatContext();
   const { tr } = useI18nContext();
   const { closeMenu } = useCloseMenu({ menuRef });
-  const { onShowContactListMoreActions } = useContactListMoreActions({
-    menuRef,
-    alertRef,
-  });
 
   const addContact = React.useCallback(
     (userId: string) => {
@@ -141,7 +137,7 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
       propsOnAddContact(userId);
       return;
     }
-    onShowContactListMoreActions(addContact);
+    addContact(userId);
   };
 
   const onSendMessage = () => {

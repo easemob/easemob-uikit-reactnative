@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
+import { usePaletteContext, useThemeContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { CmnButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
@@ -52,7 +52,10 @@ export function ContactInfo(props: ContactInfoProps) {
     tr,
     isSelf,
     onAddContact,
+    onCopyId,
   } = useContactInfo(props);
+  const { cornerRadius } = useThemeContext();
+  const { input } = cornerRadius;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -130,27 +133,60 @@ export function ContactInfo(props: ContactInfoProps) {
                 />
               </Pressable>
             }
-            containerStyle={{ paddingHorizontal: 12 }}
           />
         )
       ) : null}
       <View style={{ alignItems: 'center', paddingTop: 20 }}>
         <Avatar size={100} url={userAvatar} />
-        <View style={{ height: 12 }} />
-        <Text
-          textType={'large'}
-          paletteType={'headline'}
-          style={{ color: getColor('fg') }}
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingTop: 12,
+            alignItems: 'center',
+          }}
         >
-          {userName}
-        </Text>
-        <Text
-          textType={'small'}
-          paletteType={'label'}
-          style={{ color: getColor('t3'), paddingTop: 4 }}
+          <Text
+            textType={'large'}
+            paletteType={'headline'}
+            style={{
+              color: getColor('fg'),
+            }}
+          >
+            {userName ?? userId}
+          </Text>
+          {doNotDisturb === true ? (
+            <Icon
+              name={'bell_slash'}
+              style={{
+                height: 20,
+                width: 20,
+                tintColor: getColor('t3'),
+              }}
+            />
+          ) : null}
+        </View>
+
+        <Pressable
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingTop: 4,
+          }}
+          onPress={onCopyId}
         >
-          {userId}
-        </Text>
+          <Text
+            textType={'small'}
+            paletteType={'label'}
+            style={{ color: getColor('t3') }}
+          >
+            {userId}
+          </Text>
+          <Icon
+            name={'doc_on_doc'}
+            style={{ width: 16, height: 16, tintColor: getColor('t3') }}
+          />
+        </Pressable>
+
         {isContact === true ? (
           <>
             <View style={{ height: 20 }} />
@@ -218,7 +254,7 @@ export function ContactInfo(props: ContactInfoProps) {
         <View style={{ alignItems: 'center', marginTop: 20 }}>
           <CmnButton
             sizesType={'large'}
-            radiusType={'small'}
+            radiusType={input}
             contentType={'only-text'}
             text={tr('_uikit_info_button_add_contact')}
             style={{ width: 180, height: 50 }}

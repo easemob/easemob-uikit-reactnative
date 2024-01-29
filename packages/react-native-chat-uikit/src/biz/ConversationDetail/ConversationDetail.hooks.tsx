@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ChatConversationType } from 'react-native-chat-sdk';
 
 import {
+  UIConversationListListener,
   UIGroupListListener,
   UIListenerType,
   useChatContext,
@@ -27,11 +28,9 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const {
     convId,
     convType,
-    convName: propsConvName,
     testMode,
     input,
     list,
-    onInitialized,
     onClickedAvatar: propsOnClickedAvatar,
   } = props;
   const permissionsRef = React.useRef(false);
@@ -47,16 +46,17 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const messageListProps = list?.props
     ? { ...list.props, convId, convType, testMode }
     : { convId, convType, testMode };
-  const [convName, setConvName] = React.useState<string | undefined>(
-    propsConvName
-  );
+  const [convName, setConvName] = React.useState<string | undefined>();
   const [convAvatar, setConvAvatar] = React.useState<string>();
   const ownerIdRef = React.useRef<string>();
+  const [doNotDisturb, setDoNotDisturb] = React.useState<boolean | undefined>(
+    false
+  );
 
   const { getPermission } = usePermissions();
   const { createDirectoryIfNotExisted } = useCreateConversationDirectory();
   const im = useChatContext();
-  im.messageManager.setCurrentConvId({ convId, convType, convName });
+  im.messageManager.setCurrentConv({ convId, convType });
 
   const setConversation = React.useCallback(async () => {
     const conv = await im.getConversation({
@@ -67,6 +67,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     });
     console.log('dev:ConversationDetail:', conv);
     if (conv) {
+      setDoNotDisturb(conv.doNotDisturb);
       if (conv.convType === ChatConversationType.PeerChat) {
         // todo: get user info
         // im.getUserInfo({
@@ -82,7 +83,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
         //         conv.convAvatar = result.value.avatarURL;
         //         setConvAvatar(result.value.avatarURL);
         //       }
-        //       im.messageManager.setCurrentConvId({ ...conv });
         //     }
         //   },
         // });
@@ -106,85 +106,13 @@ export function useConversationDetail(props: ConversationDetailProps) {
               } else {
                 setConvAvatar(conv.convAvatar);
               }
-              im.messageManager.setCurrentConvId({ ...conv });
             }
           },
         });
       }
-      im.setCurrentConversation({ conv });
       im.setConversationRead({ convId, convType });
     }
   }, [convId, convType, im]);
-
-  React.useEffect(() => {
-    getPermission({
-      onResult: (isSuccess: boolean) => {
-        permissionsRef.current = isSuccess;
-      },
-    });
-  }, [getPermission]);
-
-  React.useEffect(() => {
-    const conv = im.getCurrentConversation();
-    if (testMode === 'only-ui') {
-      if (conv === undefined || conv.convId !== convId) {
-        im.setCurrentConversation({ conv: { convId, convType, convName } });
-        onInitialized?.(true);
-      } else {
-        onInitialized?.(false);
-      }
-    } else {
-      setConversation()
-        .then(() => {
-          onInitialized?.(true);
-        })
-        .catch(() => {
-          onInitialized?.(false);
-        });
-    }
-    return () => {
-      const conv = im.getCurrentConversation();
-      if (conv) {
-        im.setCurrentConversation({ conv: undefined });
-      }
-    };
-  }, [
-    convId,
-    convName,
-    convType,
-    im,
-    onInitialized,
-    setConversation,
-    testMode,
-  ]);
-
-  React.useEffect(() => {
-    const uiListener: UIGroupListListener = {
-      onUpdatedEvent: (data) => {
-        if (data.groupId === convId) {
-          if (data.groupName) {
-            setConvName(data.groupName);
-          }
-        }
-      },
-      onAddedEvent: (data) => {
-        if (data.groupId === convId) {
-          if (data.groupName) {
-            setConvName(data.groupName);
-          }
-        }
-      },
-      type: UIListenerType.Group,
-    };
-    im.addUIListener(uiListener);
-    return () => {
-      im.removeUIListener(uiListener);
-    };
-  }, [convId, im]);
-
-  React.useEffect(() => {
-    createDirectoryIfNotExisted(convId);
-  }, [convId, createDirectoryIfNotExisted]);
 
   const onClickedSend = React.useCallback(
     (
@@ -230,6 +158,65 @@ export function useConversationDetail(props: ConversationDetailProps) {
     });
   }, [convId, convType, propsOnClickedAvatar]);
 
+  React.useEffect(() => {
+    getPermission({
+      onResult: (isSuccess: boolean) => {
+        permissionsRef.current = isSuccess;
+      },
+    });
+  }, [getPermission]);
+
+  React.useEffect(() => {
+    im.messageManager.setCurrentConv({ convId, convType });
+    setConversation();
+    return () => {
+      im.messageManager.setCurrentConv(undefined);
+    };
+  }, [convId, convName, convType, im, setConversation, testMode]);
+
+  React.useEffect(() => {
+    const listener: UIConversationListListener = {
+      onUpdatedEvent: (data) => {
+        if (data.convId === convId) {
+          setDoNotDisturb(data.doNotDisturb);
+        }
+      },
+      type: UIListenerType.Conversation,
+    };
+    im.addUIListener(listener);
+    return () => {
+      im.removeUIListener(listener);
+    };
+  }, [convId, im]);
+
+  React.useEffect(() => {
+    const uiListener: UIGroupListListener = {
+      onUpdatedEvent: (data) => {
+        if (data.groupId === convId) {
+          if (data.groupName) {
+            setConvName(data.groupName);
+          }
+        }
+      },
+      onAddedEvent: (data) => {
+        if (data.groupId === convId) {
+          if (data.groupName) {
+            setConvName(data.groupName);
+          }
+        }
+      },
+      type: UIListenerType.Group,
+    };
+    im.addUIListener(uiListener);
+    return () => {
+      im.removeUIListener(uiListener);
+    };
+  }, [convId, im]);
+
+  React.useEffect(() => {
+    createDirectoryIfNotExisted(convId);
+  }, [convId, createDirectoryIfNotExisted]);
+
   return {
     onClickedSend,
     _messageInputRef,
@@ -244,5 +231,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
     convName,
     convAvatar,
     onClickedAvatar,
+    doNotDisturb,
   };
 }

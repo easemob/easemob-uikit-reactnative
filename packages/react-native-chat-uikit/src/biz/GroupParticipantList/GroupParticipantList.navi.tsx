@@ -105,7 +105,6 @@ export const GroupParticipantListNavigationBar = (
             </Pressable>
           ) : null
         }
-        containerStyle={{ paddingHorizontal: 12 }}
       />
     );
   } else if (participantType === 'change-owner') {
@@ -132,7 +131,6 @@ export const GroupParticipantListNavigationBar = (
           ) : null
         }
         Right={<View style={{ width: 1, height: 1 }} />}
-        containerStyle={{ paddingHorizontal: 12 }}
       />
     );
   } else if (participantType === 'mention') {
@@ -155,7 +153,6 @@ export const GroupParticipantListNavigationBar = (
           </Pressable>
         }
         Right={<View style={{ width: 1, height: 1 }} />}
-        containerStyle={{ paddingHorizontal: 12 }}
       />
     );
   } else {
@@ -178,21 +175,24 @@ export const GroupParticipantListNavigationBar = (
         Right={
           isOwner === true ? (
             <View style={{ flexDirection: 'row' }}>
-              <IconButton
-                iconName={'person_add'}
-                style={{ width: 24, height: 24, padding: 6 }}
-                onPress={onClickedAddParticipant}
-              />
+              <Pressable style={{ padding: 6 }}>
+                <IconButton
+                  iconName={'person_add'}
+                  style={{ width: 24, height: 24 }}
+                  onPress={onClickedAddParticipant}
+                />
+              </Pressable>
               <View style={{ width: 4 }} />
-              <IconButton
-                iconName={'person_minus'}
-                style={{ width: 24, height: 24, padding: 6 }}
-                onPress={onClickedDelParticipant}
-              />
+              <Pressable style={{ padding: 6 }}>
+                <IconButton
+                  iconName={'person_minus'}
+                  style={{ width: 24, height: 24, padding: 6 }}
+                  onPress={onClickedDelParticipant}
+                />
+              </Pressable>
             </View>
           ) : null
         }
-        containerStyle={{ paddingHorizontal: 12 }}
       />
     );
   }

@@ -14,6 +14,7 @@ import {
   UIKIT_VERSION,
   useColors,
   usePaletteContext,
+  useThemeContext,
 } from 'react-native-chat-uikit';
 
 import { useMineInfo } from './MineInfo.hooks';
@@ -40,6 +41,8 @@ export function MineInfo(props: MineInfoProps) {
     setLanguage,
     tr,
   } = useMineInfo(props);
+  const { cornerRadius } = useThemeContext();
+  const { input } = cornerRadius;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -275,7 +278,7 @@ export function MineInfo(props: MineInfoProps) {
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Text1Button
               sizesType={'middle'}
-              radiusType={'small'}
+              radiusType={input}
               contentType={'only-text'}
               text={tr('logout')}
               onPress={onClickedLogout}

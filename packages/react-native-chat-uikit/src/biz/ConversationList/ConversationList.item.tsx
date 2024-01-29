@@ -2,9 +2,11 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 import type { ChatMessage } from 'react-native-chat-sdk';
 
+import { gMessageAttributeMentions, useChatContext } from '../../chat';
 import { getMessageSnapshot } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { SingleLineText } from '../../ui/Text';
@@ -18,6 +20,7 @@ import type { ConversationListItemProps } from './types';
  */
 export function ConversationListItem(props: ConversationListItemProps) {
   const { onClicked, onLongPressed, data } = props;
+  const { lastMessage } = data;
   const { formatTime } = useConfigContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -41,7 +44,37 @@ export function ConversationListItem(props: ConversationListItemProps) {
       light: colors.neutral[9],
       dark: colors.neutral[2],
     },
+    mention: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
   });
+  const im = useChatContext();
+  const { tr } = useI18nContext();
+
+  const getMention = React.useCallback(
+    (msg?: ChatMessage) => {
+      if (msg?.attributes?.[gMessageAttributeMentions]) {
+        const mentions = msg.attributes?.[gMessageAttributeMentions];
+        console.log('test:zuoyu:mention:', mentions, im.userId);
+        if (typeof mentions === 'string') {
+          if (mentions === 'ALL') {
+            return tr('@all');
+          }
+        } else if (Array.isArray(mentions)) {
+          const ret = (mentions as string[]).find((item) => {
+            if (item === im.userId) {
+              return true;
+            }
+            return false;
+          });
+          return ret ? tr('@me') : null;
+        }
+      }
+      return null;
+    },
+    [im.userId, tr]
+  );
 
   const getMessageFormatTime = React.useCallback(
     (msg?: ChatMessage, timestamp?: number): string => {
@@ -110,9 +143,16 @@ export function ConversationListItem(props: ConversationListItemProps) {
           <SingleLineText
             paletteType={'body'}
             textType={'medium'}
-            style={{ color: getColor('t2') }}
+            style={{ color: getColor('mention') }}
           >
-            {getMessageSnapshot(data.lastMessage)}
+            {getMention(lastMessage)}
+            <SingleLineText
+              paletteType={'body'}
+              textType={'medium'}
+              style={{ color: getColor('t2') }}
+            >
+              {getMessageSnapshot(data.lastMessage)}
+            </SingleLineText>
           </SingleLineText>
         </View>
         <View style={{ flex: 1 }} />

@@ -6,7 +6,6 @@ import type { TopNavigationBarElementType } from '../TopNavigationBar';
 import type {
   PropsWithBack,
   PropsWithError,
-  PropsWithInit,
   PropsWithSearch,
   PropsWithTest,
 } from '../types';
@@ -124,7 +123,6 @@ export type MessageInputState = 'normal' | 'emoji' | 'voice' | 'keyboard';
  */
 export type ConversationDetailProps = PropsWithError &
   PropsWithTest &
-  PropsWithInit &
   PropsWithBack &
   PropsWithSearch & {
     /**
@@ -135,12 +133,6 @@ export type ConversationDetailProps = PropsWithError &
      * Conversation type.
      */
     convType: ChatConversationType;
-    /**
-     * Conversation name.
-     *
-     * If not provided, an internal attempt is made to obtain it.
-     */
-    convName?: string;
     /**
      * A collection of properties for the input component. As an internal component of conversation details, settings are provided directly through collections.
      */

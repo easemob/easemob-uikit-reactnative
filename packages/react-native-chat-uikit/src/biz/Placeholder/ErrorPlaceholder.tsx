@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
-import { usePaletteContext } from '../../theme';
+import { usePaletteContext, useThemeContext } from '../../theme';
 import { CmnButton } from '../../ui/Button';
 import { Image } from '../../ui/Image';
 import { Text } from '../../ui/Text';
@@ -15,6 +15,8 @@ import { Text } from '../../ui/Text';
  */
 export function ErrorPlaceholder({ onClicked }: { onClicked: () => void }) {
   const { tr } = useI18nContext();
+  const { cornerRadius } = useThemeContext();
+  const { input } = cornerRadius;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -45,7 +47,7 @@ export function ErrorPlaceholder({ onClicked }: { onClicked: () => void }) {
       <View>
         <CmnButton
           sizesType={'middle'}
-          radiusType={'large'}
+          radiusType={input}
           contentType={'only-text'}
           text={tr('Refresh')}
           onPress={onClicked}

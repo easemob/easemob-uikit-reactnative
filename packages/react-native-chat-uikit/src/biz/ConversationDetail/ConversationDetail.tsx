@@ -34,6 +34,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
     convName,
     convAvatar,
     onClickedAvatar,
+    doNotDisturb,
   } = useConversationDetail(props);
 
   const getContent = () => (
@@ -46,6 +47,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
           onBack={onBack}
           onClickedAvatar={onClickedAvatar}
           NavigationBar={propsNavigationBar}
+          doNotDisturb={doNotDisturb}
         />
       ) : null}
       <_MessageList

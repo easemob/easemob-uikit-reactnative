@@ -10,6 +10,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useI18nContext } from '../../i18n';
+import { useThemeContext } from '../../theme';
 import { BorderButton, CmnButton } from '../../ui/Button';
 import { gBottomSheetHeaderHeight } from '../const';
 import { gTabHeaderHeight } from './MessageReport.const';
@@ -68,6 +69,8 @@ export function MessageReport(props: MessageReportProps) {
   const { isScrollingRef, handles } = useScrollGesture(requestUseScrollGesture);
   const ref = React.useRef<FlatList<MessageReportItemProps>>({} as any);
   const { height: winHeight } = useWindowDimensions();
+  const { cornerRadius } = useThemeContext();
+  const { input } = cornerRadius;
   const { bottom } = useSafeAreaInsets();
   const { tr } = useI18nContext();
   let height =
@@ -124,7 +127,7 @@ export function MessageReport(props: MessageReportProps) {
       >
         <BorderButton
           sizesType={'large'}
-          radiusType={'large'}
+          radiusType={input}
           contentType={'only-text'}
           text={tr('cancel')}
           style={{ width: '42%', height: 40 }}
@@ -132,7 +135,7 @@ export function MessageReport(props: MessageReportProps) {
         />
         <CmnButton
           sizesType={'large'}
-          radiusType={'large'}
+          radiusType={input}
           contentType={'only-text'}
           text={tr('report')}
           style={{ width: '42%', height: 40 }}

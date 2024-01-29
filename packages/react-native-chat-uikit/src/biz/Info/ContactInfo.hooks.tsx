@@ -9,10 +9,10 @@ import {
 } from '../../chat';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
-import { useContactListMoreActions } from '../hooks';
 import { useContactInfoActions } from '../hooks/useContactInfoActions';
 import type { ContactInfoProps } from './types';
 
@@ -31,6 +31,7 @@ export function useContactInfo(props: ContactInfoProps) {
     onVideoCall: propsOnVideoCall,
     onClickedNavigationBarButton,
     onAddContact: propsOnAddContact,
+    onCopyId: propsOnCopyId,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(propsUserName);
@@ -48,10 +49,6 @@ export function useContactInfo(props: ContactInfoProps) {
       im.removeContact({ userId });
       im.removeConversation({ convId: userId });
     },
-  });
-  const { onShowContactListMoreActions } = useContactListMoreActions({
-    menuRef,
-    alertRef,
   });
 
   const im = useChatContext();
@@ -180,7 +177,18 @@ export function useContactInfo(props: ContactInfoProps) {
       propsOnAddContact(userId);
       return;
     }
-    onShowContactListMoreActions(addContact);
+    addContact(userId);
+  };
+
+  const onCopyId = () => {
+    if (propsOnCopyId) {
+      propsOnCopyId(userId);
+      return;
+    }
+    Services.cbs.setString(userId);
+    toastRef.current.show({
+      message: tr('copy_success'),
+    });
   };
 
   React.useEffect(() => {
@@ -257,5 +265,6 @@ export function useContactInfo(props: ContactInfoProps) {
     onAudioCall,
     onVideoCall,
     onAddContact,
+    onCopyId,
   };
 }

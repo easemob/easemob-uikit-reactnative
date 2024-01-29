@@ -239,6 +239,12 @@ function useGetListItems(onGetData?: () => any) {
             initState={'enabled'}
             text={tr('cancel')}
             onPress={onRequestModalClose}
+            textStyle={{
+              fontSize: 16,
+              fontStyle: 'normal',
+              fontWeight: '500',
+              lineHeight: 22,
+            }}
           />,
         ];
         return data;

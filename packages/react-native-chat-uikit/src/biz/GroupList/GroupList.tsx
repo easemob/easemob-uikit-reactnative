@@ -112,7 +112,6 @@ export function GroupList(props: GroupListProps) {
               </Pressable>
             }
             Right={<View style={{ width: 32, height: 32 }} />}
-            containerStyle={{ paddingHorizontal: 12 }}
           />
         )
       ) : null}

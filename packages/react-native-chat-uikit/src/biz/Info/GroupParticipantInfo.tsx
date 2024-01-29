@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
+import { usePaletteContext, useThemeContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { CmnButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
@@ -54,6 +54,8 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
     menuRef,
     alertRef,
   } = useGroupParticipantInfo(props);
+  const { cornerRadius } = useThemeContext();
+  const { input } = cornerRadius;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -131,7 +133,6 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
                 />
               </Pressable>
             }
-            containerStyle={{ paddingHorizontal: 12 }}
           />
         )
       ) : null}
@@ -176,7 +177,7 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
         ) : isSelf === true ? null : (
           <CmnButton
             sizesType={'large'}
-            radiusType={'small'}
+            radiusType={input}
             contentType={'only-text'}
             text={tr('_uikit_info_button_add_contact')}
             onPress={onAddContact}

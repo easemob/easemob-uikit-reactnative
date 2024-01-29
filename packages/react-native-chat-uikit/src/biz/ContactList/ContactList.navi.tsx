@@ -78,7 +78,6 @@ export const ContactListNavigationBar = (
           iconName: 'person_add',
         }}
         Title={TopNavigationBarTitle({ text: 'Contacts' })}
-        containerStyle={{ paddingHorizontal: 12 }}
       />
     );
   } else if (contactType === 'new-conversation') {
@@ -97,7 +96,6 @@ export const ContactListNavigationBar = (
         }
         Right={<View style={{ width: 32, height: 32 }} />}
         Title={TopNavigationBarTitle({ text: tr('_uikit_new_conv_title') })}
-        containerStyle={{ paddingHorizontal: 12 }}
       />
     );
   } else if (contactType === 'create-group') {
@@ -144,7 +142,6 @@ export const ContactListNavigationBar = (
           </Pressable>
         }
         Title={TopNavigationBarTitle({ text: '' })}
-        containerStyle={{ paddingHorizontal: 12 }}
       />
     );
   } else if (contactType === 'add-group-member') {
@@ -193,7 +190,6 @@ export const ContactListNavigationBar = (
           </Pressable>
         }
         Title={TopNavigationBarTitle({ text: '' })}
-        containerStyle={{ paddingHorizontal: 12 }}
       />
     );
   } else if (contactType === 'share-contact') {
@@ -212,7 +208,6 @@ export const ContactListNavigationBar = (
         }
         Right={<View style={{ width: 32, height: 32 }} />}
         Title={TopNavigationBarTitle({ text: tr('_uikit_share_card_title') })}
-        containerStyle={{ paddingHorizontal: 12 }}
       />
     );
   } else {

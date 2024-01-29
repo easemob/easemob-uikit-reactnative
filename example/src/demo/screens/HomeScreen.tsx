@@ -100,6 +100,7 @@ export function HomeScreen(props: Props) {
               index: 0,
               currentIndex: 0,
             },
+            scrollEnabled: false,
           },
         }}
         headerPosition="down"

@@ -137,22 +137,22 @@ export function useApp() {
     };
   }, [im]);
 
-  React.useEffect(() => {
-    im.getJoinedGroups({
-      onResult: (result) => {
-        if (result.isOk) {
-          result.value?.forEach((group) => {
-            list.current.set(group.groupId, {
-              id: group.groupId,
-              name: group.groupName,
-              avatar: group.groupAvatar,
-              type: 'group',
-            });
-          });
-        }
-      },
-    });
-  }, [im]);
+  // React.useEffect(() => {
+  //   im.getJoinedGroups({
+  //     onResult: (result) => {
+  //       if (result.isOk) {
+  //         result.value?.forEach((group) => {
+  //           list.current.set(group.groupId, {
+  //             id: group.groupId,
+  //             name: group.groupName,
+  //             avatar: group.groupAvatar,
+  //             type: 'group',
+  //           });
+  //         });
+  //       }
+  //     },
+  //   });
+  // }, [im]);
 
   return {
     onRequestMultiData,

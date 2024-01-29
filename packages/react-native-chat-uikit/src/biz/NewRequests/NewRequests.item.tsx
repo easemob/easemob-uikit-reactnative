@@ -4,7 +4,7 @@ import { Pressable, View } from 'react-native';
 import { getNewRequest } from '../../chat/utils';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
-import { usePaletteContext } from '../../theme';
+import { usePaletteContext, useThemeContext } from '../../theme';
 import { CmnButton } from '../../ui/Button';
 import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
@@ -15,6 +15,8 @@ import type { NewRequestsItemProps } from './types';
  */
 export function NewRequestsItem(props: NewRequestsItemProps) {
   const { onClicked, onLongPressed, onButtonClicked, data } = props;
+  const { cornerRadius } = useThemeContext();
+  const { input } = cornerRadius;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -54,7 +56,7 @@ export function NewRequestsItem(props: NewRequestsItemProps) {
       <View
         style={{
           width: '100%',
-          height: 75.5,
+          height: 59.5,
           flexDirection: 'row',
           alignItems: 'center',
           paddingHorizontal: 16,
@@ -66,21 +68,33 @@ export function NewRequestsItem(props: NewRequestsItemProps) {
             flexDirection: 'column',
             flexGrow: 1,
             paddingLeft: 12,
-            maxWidth: '55%',
+            maxWidth: '65%',
           }}
         >
-          <SingleLineText paletteType={'title'} textType={'medium'}>
+          <SingleLineText
+            paletteType={'title'}
+            textType={'medium'}
+            style={{
+              color: getColor('t1'),
+            }}
+          >
             {data.name ?? data.requestId}
           </SingleLineText>
-          <SingleLineText paletteType={'body'} textType={'medium'}>
-            {getNewRequest(data.msg)?.tip}
+          <SingleLineText
+            paletteType={'title'}
+            textType={'small'}
+            style={{
+              color: getColor('t2'),
+            }}
+          >
+            {tr(getNewRequest(data.msg)?.tip ?? '')}
           </SingleLineText>
         </View>
         <View style={{ flex: 1 }} />
         <View style={{ flexDirection: 'column' }}>
           <CmnButton
             sizesType={'small'}
-            radiusType={'small'}
+            radiusType={input}
             contentType={'only-text'}
             style={{ height: 28, width: 74 }}
             text={tr('add')}
@@ -96,7 +110,7 @@ export function NewRequestsItem(props: NewRequestsItemProps) {
           width: '100%',
           borderBottomWidth: 0.5,
           borderBottomColor: getColor('divider'),
-          marginLeft: 78,
+          marginLeft: 68,
         }}
       />
     </Pressable>

@@ -118,6 +118,8 @@ export function Container(props: ContainerProps) {
                       createGroupMemberLimit: 1000,
                     }
                   ),
+                  personAvatar: avatar?.personAvatar,
+                  groupAvatar: avatar?.groupAvatar,
                 }}
               >
                 <SafeAreaProvider>{children}</SafeAreaProvider>

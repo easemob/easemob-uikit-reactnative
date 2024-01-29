@@ -69,7 +69,11 @@ export interface MessageCacheManager
   /**
    * Set current conversation.
    */
-  setCurrentConvId(conv: ConversationModel): void;
+  setCurrentConv(conv?: ConversationModel): void;
+  /**
+   * Get current conversation.
+   */
+  getCurrentConv(): ConversationModel | undefined;
   /**
    * Send changed message.
    */

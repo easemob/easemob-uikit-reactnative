@@ -34,7 +34,6 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   _userListener: Map<string, MessageManagerListener>;
   _sendList: Map<string, { msg: ChatMessage }>;
   _downloadList: Map<string, { msg: ChatMessage }>;
-  _conv?: ConversationModel;
   _recallTimeout: number;
   constructor(client: ChatService) {
     console.log('dev:MessageCacheManager:constructor');
@@ -187,8 +186,11 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     });
   }
 
-  setCurrentConvId(conv: ConversationModel): void {
-    this._conv = conv;
+  setCurrentConv(conv?: ConversationModel): void {
+    this._client.setCurrentConversation({ conv });
+  }
+  getCurrentConv(): ConversationModel | undefined {
+    return this._client.getCurrentConversation();
   }
   sendMessageReadAck(params: { message: ChatMessage }): void {
     this._client.sendMessageReadAck({

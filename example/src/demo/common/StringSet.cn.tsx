@@ -13,5 +13,7 @@ export function createStringSetCn(): StringSet {
     'edit_group_name': '编辑群名称',
     'edit_group_description': '编辑群描述',
     'edit_group_my_remark': '编辑群我的备注',
+
+    'save': '保存',
   };
 }

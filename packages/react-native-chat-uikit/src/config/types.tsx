@@ -84,4 +84,12 @@ export type Config = {
    * Default value is `120000`. (2 minutes)
    */
   recallTimeout?: number;
+  /**
+   * The default person avatar.
+   */
+  personAvatar?: number | undefined;
+  /**
+   * The default group avatar.
+   */
+  groupAvatar?: number | undefined;
 };

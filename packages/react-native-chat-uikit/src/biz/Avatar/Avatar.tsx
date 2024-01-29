@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { ICON_ASSETS } from '../../assets';
+import { useConfigContext } from '../../config';
 import { useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { DefaultIconImage, DefaultIconImageProps } from '../../ui/Image';
@@ -17,10 +18,13 @@ export function Avatar(props: AvatarProps) {
   const { cornerRadius: corner } = useThemeContext();
   const { cornerRadius } = usePaletteContext();
   const { getBorderRadius } = useGetStyleProps();
+  const { personAvatar } = useConfigContext();
 
   return (
     <DefaultIconImage
-      localIcon={localIcon ?? ICON_ASSETS.person_single_outline('3x')}
+      localIcon={
+        localIcon ?? personAvatar ?? ICON_ASSETS.person_single_outline('3x')
+      }
       size={size}
       style={[
         style,
@@ -40,6 +44,17 @@ export function Avatar(props: AvatarProps) {
         style,
       })}
       {...others}
+    />
+  );
+}
+
+export function GroupAvatar(props: AvatarProps) {
+  const { localIcon, ...others } = props;
+  const { groupAvatar } = useConfigContext();
+  return (
+    <Avatar
+      {...others}
+      localIcon={localIcon ?? groupAvatar ?? ICON_ASSETS.person_double('3x')}
     />
   );
 }

@@ -92,7 +92,6 @@ export function ConversationList(props: ConversationListProps) {
               iconName: 'plus_in_circle',
             }}
             Title={TopNavigationBarTitle({ text: 'Chat' })}
-            containerStyle={{ paddingHorizontal: 12 }}
           />
         )
       ) : null}

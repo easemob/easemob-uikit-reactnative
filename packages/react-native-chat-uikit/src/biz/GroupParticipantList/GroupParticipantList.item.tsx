@@ -119,9 +119,9 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
       </Pressable>
       <View
         style={{
-          height: 0.5,
           width: '100%',
-          backgroundColor: getColor('divider'),
+          borderBottomWidth: 0.5,
+          borderBottomColor: getColor('divider'),
           marginLeft: 68,
         }}
       />

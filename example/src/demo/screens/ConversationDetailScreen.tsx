@@ -42,7 +42,6 @@ export function ConversationDetailScreen(props: Props) {
   const { navigation, route } = props;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
-  const convName = ((route.params as any)?.params as any)?.convName;
   const operateType = ((route.params as any)?.params as any)?.operateType;
   // const selectedParticipants = ((route.params as any)?.params as any)
   //   ?.selectedParticipants;
@@ -104,7 +103,6 @@ export function ConversationDetailScreen(props: Props) {
         }}
         convId={convId}
         convType={convType}
-        convName={convName}
         input={{
           ref: inputRef,
           props: {
@@ -123,7 +121,6 @@ export function ConversationDetailScreen(props: Props) {
                 params: {
                   convId,
                   convType,
-                  convName,
                   operateType: 'share_card',
                 },
               });

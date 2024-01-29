@@ -332,7 +332,7 @@ export function getSystemTip(
     }
   } else if (body.event === gCustomMessageCreateGroupEventType) {
     try {
-      const content = JSON.parse(body.params?.recall as any) as {
+      const content = JSON.parse(body.params?.create_group as any) as {
         text: string;
         self: string;
       };
