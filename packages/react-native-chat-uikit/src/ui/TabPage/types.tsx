@@ -96,6 +96,7 @@ export type TabPageBodyTProps<BodyProps extends {} = {}> = Omit<
   containerStyle?: StyleProp<ViewStyle>;
   initIndex?: number;
   onCurrentIndex?: (currentIndex: number) => void;
+  scrollEnabled?: boolean;
 };
 
 export type TabPageBodyLISTRef = TabPageBodyRef;
@@ -120,6 +121,7 @@ export type TabPageBodyLISTProps<BodyProps extends {} = {}> = Omit<
   initIndex?: number;
   onCurrentIndex?: (currentIndex: number) => void;
   enableCurrentIndex?: boolean;
+  scrollEnabled?: boolean;
 };
 
 export type TabPageBodyLISTContentProps<BodyProps extends {} = {}> = {

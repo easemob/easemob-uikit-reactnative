@@ -29,6 +29,7 @@ export function TabPageBodyLIST<Props extends {} = {}>(
     onScroll: propsScroll,
     onMomentumScrollEnd: propsOnMomentumScrollEnd,
     enableCurrentIndex,
+    scrollEnabled,
     ...others
   } = props;
   const ref = React.useRef<ScrollView>({} as any);
@@ -83,6 +84,7 @@ export function TabPageBodyLIST<Props extends {} = {}>(
         pagingEnabled={true}
         showsHorizontalScrollIndicator={false}
         bounces={false}
+        scrollEnabled={scrollEnabled}
         onLayout={(e) => {
           if (propsOnLayout) {
             propsOnLayout(e);
