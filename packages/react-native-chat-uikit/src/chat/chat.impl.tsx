@@ -682,6 +682,10 @@ export class ChatServiceImpl
     this.sendUIEvent(UIListenerType.Conversation, 'onRequestReloadEvent');
   }
 
+  getRequestData(id: string): DataModel | undefined {
+    return this._dataList.get(id);
+  }
+
   async _requestConvData(list: ChatConversation[]): Promise<void> {
     const ret = new Promise<void>((resolve, reject) => {
       if (this._basicDataRequestCallback) {

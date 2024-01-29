@@ -258,6 +258,7 @@ export const MessageInputEditMessage = React.forwardRef<
                 onChangeText={setValue}
                 value={value}
                 keyboardAppearance={style === 'light' ? 'light' : 'dark'}
+                autoFocus={true}
               />
             </View>
             <View style={{ paddingVertical: 7 }}>

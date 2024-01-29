@@ -413,6 +413,8 @@ export function useMessageInput(
 
   const onShowQuoteMessage = React.useCallback((model: MessageModel) => {
     quoteMessageRef.current = model;
+    isClosedKeyboard.current = false;
+    inputRef.current?.focus();
     setShowQuote(true);
   }, []);
   const onHideQuoteMessage = React.useCallback(() => {

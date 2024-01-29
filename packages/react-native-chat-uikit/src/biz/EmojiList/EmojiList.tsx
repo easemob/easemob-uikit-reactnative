@@ -1,10 +1,9 @@
 import * as React from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, ViewStyle } from 'react-native';
 import {
   Platform,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -120,7 +119,7 @@ export function EmojiList(props: EmojiListProps) {
             {_emojiList.map((v, i) => {
               const r = emoji.convert.fromCodePoint(v.substring(2));
               return (
-                <View
+                <Pressable
                   key={i}
                   style={{
                     justifyContent: 'center',
@@ -129,22 +128,19 @@ export function EmojiList(props: EmojiListProps) {
                     height: getUnitSize(),
                     // alignSelf: 'baseline', // !!! crash
                   }}
+                  onPress={() => {
+                    onFace?.(v);
+                  }}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      onFace?.(v);
+                  <Text
+                    style={{
+                      fontSize: Platform.OS === 'ios' ? 32 : 26,
+                      fontFamily: fontFamily,
                     }}
                   >
-                    <Text
-                      style={{
-                        fontSize: Platform.OS === 'ios' ? 32 : 26,
-                        fontFamily: fontFamily,
-                      }}
-                    >
-                      {r}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                    {r}
+                  </Text>
+                </Pressable>
               );
             })}
           </View>

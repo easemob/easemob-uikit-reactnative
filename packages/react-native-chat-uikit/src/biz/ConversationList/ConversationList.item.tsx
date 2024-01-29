@@ -150,7 +150,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
               textType={'medium'}
               style={{ color: getColor('t2') }}
             >
-              {getMessageSnapshot(data.lastMessage)}
+              {tr(getMessageSnapshot(data.lastMessage))}
             </SingleLineText>
           </SingleLineText>
         </View>

@@ -127,6 +127,8 @@ export function createStringSetCn(): StringSet {
     'file': '文件',
     'set': '设置',
 
+    'contact': '联系人',
+
     'copy_success': '拷贝成功',
     'online_state': '在线状态',
 
@@ -138,5 +140,13 @@ export function createStringSetCn(): StringSet {
     'voice_bar_tip_recording': '正在录音',
     'voice_bar_tip_click_play': '点击播放',
     'voice_bar_tip_playing': '播放中',
+
+    '[image]': '[图片]',
+    '[video]': '[视频]',
+    '[file]': '[文件]',
+    '[location]': '[定位]',
+    '[voice]': '[语音]',
+    '[custom]': '[自定义]',
+    '[unknown]': '[未知类型]',
   };
 }

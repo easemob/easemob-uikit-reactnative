@@ -447,38 +447,16 @@ export function MessageFile(props: MessageFileProps) {
       style={{
         flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
         width: maxWidth,
+        padding: 8,
       }}
     >
-      <View
-        style={{
-          padding: 6,
-          backgroundColor: getColor(
-            layoutType === 'left' ? 'left_file_bg' : 'right_file_bg'
-          ),
-          borderRadius: getBorderRadius({
-            height: 32,
-            crt: corner.bubble[0]!,
-            cr: cornerRadius,
-          }),
-        }}
-      >
-        <Icon
-          name={'doc'}
-          style={{
-            width: 32,
-            height: 32,
-            tintColor: getColor(
-              layoutType === 'left' ? 'left_file_fg' : 'right_file_fg'
-            ),
-          }}
-        />
-      </View>
+      {layoutType !== 'right' ? null : <View style={{ flexGrow: 1 }} />}
 
-      {layoutType === 'left' ? null : <View style={{ flexGrow: 1 }} />}
       <View
         style={{
           maxWidth: '75%',
-          paddingHorizontal: layoutType === 'left' ? 12 : undefined,
+          paddingHorizontal: layoutType === 'left' ? undefined : 12,
+          justifyContent: 'space-between',
         }}
       >
         <SingleLineText
@@ -492,13 +470,42 @@ export function MessageFile(props: MessageFileProps) {
         </SingleLineText>
         <SingleLineText
           textType={'medium'}
-          paletteType={'title'}
+          paletteType={'body'}
           style={{
             color: getColor(layoutType === 'left' ? 'left_size' : 'right_size'),
           }}
         >
           {fileSize}
         </SingleLineText>
+      </View>
+
+      {layoutType === 'left' ? <View style={{ flexGrow: 1 }} /> : null}
+
+      <View
+        style={{
+          padding: 6,
+          backgroundColor: getColor(
+            layoutType === 'left' ? 'left_file_bg' : 'right_file_bg'
+          ),
+          borderRadius: getBorderRadius({
+            height: 32,
+            crt: corner.bubble[0]!,
+            cr: cornerRadius,
+          }),
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Icon
+          name={'doc'}
+          style={{
+            width: 32,
+            height: 32,
+            tintColor: getColor(
+              layoutType === 'left' ? 'left_file_fg' : 'right_file_fg'
+            ),
+          }}
+        />
       </View>
     </View>
   );
@@ -510,6 +517,7 @@ export function MessageCustomCard(props: MessageCustomCardProps) {
   const avatar = body.params?.avatar;
   const userId = body.params?.userId;
   const userName = body.params?.nickname;
+  const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     left_divider: {
@@ -550,7 +558,7 @@ export function MessageCustomCard(props: MessageCustomCardProps) {
             maxWidth: '70%',
           }}
         >
-          {userId ?? userName}
+          {userName ?? userId}
         </SingleLineText>
       </View>
       <View
@@ -573,7 +581,7 @@ export function MessageCustomCard(props: MessageCustomCardProps) {
             maxWidth: '100%',
           }}
         >
-          {'contact'}
+          {tr('contact')}
         </SingleLineText>
       </View>
     </View>

@@ -113,7 +113,7 @@ export function useMessageLongPressActions(
             initItems.push({
               name: tr('_uikit_chat_list_long_press_menu_edit'),
               isHigh: false,
-              icon: 'img',
+              icon: 'slash_in_rectangle',
               onClicked: () => {
                 closeMenu(() => {
                   onEditMessageForInput?.(model as MessageModel);

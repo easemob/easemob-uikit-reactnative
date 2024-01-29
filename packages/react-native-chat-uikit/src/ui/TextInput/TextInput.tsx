@@ -120,13 +120,10 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       return undefined;
     };
     const maxHeightRef = React.useRef<number | undefined>(getMaxHeight());
-    console.log('test:zuoyu:maxHeightRef:', maxHeightRef.current);
     let [_maxHeight, setMaxHeight] = React.useState<number | undefined>(
       maxHeightRef.current
     );
-    let [_height, setHeight] = React.useState<number | undefined>(
-      maxHeightRef.current
-    );
+    let [_height, setHeight] = React.useState<number | undefined>(minHeight);
 
     const _onChangeText = React.useCallback(
       (text: string) => {
@@ -149,10 +146,9 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       }
       const maxHeight = getStyleProp('maxHeight', containerStyle);
       const minHeight = getStyleProp('minHeight', containerStyle);
-      console.log('test:zuoyu:getStyle', maxHeight, minHeight);
       if (Platform.OS === 'ios') {
         return {
-          maxHeight: maxHeight,
+          maxHeight: _maxHeight,
           minHeight: minHeight,
         };
       } else if (Platform.OS === 'android') {
@@ -196,13 +192,6 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
           ]}
           onContentSizeChange={(e) => {
             onContentSizeChange?.(e);
-            console.log(
-              'test:zuoyu:onContentSizeChange',
-              minHeight,
-              maxHeight,
-              e.nativeEvent.contentSize.height,
-              maxHeightRef.current
-            );
             if (Platform.OS === 'ios') {
               if (maxHeightRef.current) {
                 setMaxHeight(

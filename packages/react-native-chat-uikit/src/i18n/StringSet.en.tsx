@@ -128,6 +128,8 @@ export function createStringSetEn(): StringSet {
     'file': 'File',
     'set': 'Set',
 
+    'contact': 'contact',
+
     'copy_success': 'Copy Successful',
     'online_state': 'Online Status',
 
@@ -139,5 +141,13 @@ export function createStringSetEn(): StringSet {
     'voice_bar_tip_recording': 'recording',
     'voice_bar_tip_click_play': 'click play',
     'voice_bar_tip_playing': 'playing',
+
+    '[image]': '[image]',
+    '[video]': '[video]',
+    '[file]': '[file]',
+    '[location]': '[location]',
+    '[voice]': '[voice]',
+    '[custom]': '[custom]',
+    '[unknown]': '[unknown]',
   };
 }

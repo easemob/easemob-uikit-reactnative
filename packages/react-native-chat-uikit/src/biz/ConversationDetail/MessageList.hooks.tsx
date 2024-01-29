@@ -940,8 +940,9 @@ export function useMessageList(
           {
             params: {
               userId: card.userId,
-              nickname: card.userName ?? card.userId,
-              avatar: card.userAvatar ?? g_not_existed_url,
+              nickname: im.getRequestData(card.userId)?.name ?? card.userId,
+              avatar:
+                im.getRequestData(card.userId)?.avatar ?? g_not_existed_url,
             },
           }
         );
@@ -1004,6 +1005,7 @@ export function useMessageList(
       convId,
       convType,
       getStyle,
+      im,
       messageLayoutType,
       onAddDataToUI,
       scrollToBottom,

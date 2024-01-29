@@ -1061,6 +1061,11 @@ export interface ChatService
    * Actively update user information and take effect in subsequent loaded components.
    */
   updateRequestData(params: { data: Map<DataModelType, DataModel[]> }): void;
+
+  /**
+   * Get the request data information.
+   */
+  getRequestData(id: string): DataModel | undefined;
 }
 
 type _ChatOptionsType = PartialUndefinable<ChatOptions>;
