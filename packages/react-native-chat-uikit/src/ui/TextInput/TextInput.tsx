@@ -109,6 +109,10 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       },
     });
 
+    const { getStyleProp } = useGetStyleProps();
+    const minHeight = getStyleProp('minHeight', containerStyle);
+    const maxHeight = getStyleProp('maxHeight', containerStyle);
+
     const getMaxHeight = () => {
       if (multiline === true && numberOfLines && unitHeight) {
         return numberOfLines * unitHeight;
@@ -116,7 +120,11 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       return undefined;
     };
     const maxHeightRef = React.useRef<number | undefined>(getMaxHeight());
-    let [maxHeight, setMaxHeight] = React.useState<number | undefined>(
+    console.log('test:zuoyu:maxHeightRef:', maxHeightRef.current);
+    let [_maxHeight, setMaxHeight] = React.useState<number | undefined>(
+      maxHeightRef.current
+    );
+    let [_height, setHeight] = React.useState<number | undefined>(
       maxHeightRef.current
     );
 
@@ -136,24 +144,28 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
     }, [_onChangeText, onClear]);
 
     const getStyle = (): StyleProp<TextStyle> => {
-      const s = containerStyle as any;
-      const max = s?.maxHeight ?? maxHeight;
-      const min = s?.minHeight ?? unitHeight;
-      if (max || min) {
-        if (Platform.OS === 'ios') {
-          return {
-            maxHeight: max,
-            minHeight: min,
-          };
-        } else {
-          return {
-            maxHeight: max,
-            minHeight: min,
-            // flex: 1,
-          };
-        }
+      if (multiline !== true) {
+        return undefined;
       }
-      return undefined;
+      const maxHeight = getStyleProp('maxHeight', containerStyle);
+      const minHeight = getStyleProp('minHeight', containerStyle);
+      console.log('test:zuoyu:getStyle', maxHeight, minHeight);
+      if (Platform.OS === 'ios') {
+        return {
+          maxHeight: maxHeight,
+          minHeight: minHeight,
+        };
+      } else if (Platform.OS === 'android') {
+        return {
+          height: _height,
+          minHeight: minHeight,
+        };
+      } else {
+        return {
+          maxHeight: maxHeight,
+          minHeight: minHeight,
+        };
+      }
     };
 
     return (
@@ -184,12 +196,28 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
           ]}
           onContentSizeChange={(e) => {
             onContentSizeChange?.(e);
-            if (Platform.OS !== 'ios') {
+            console.log(
+              'test:zuoyu:onContentSizeChange',
+              minHeight,
+              maxHeight,
+              e.nativeEvent.contentSize.height,
+              maxHeightRef.current
+            );
+            if (Platform.OS === 'ios') {
               if (maxHeightRef.current) {
                 setMaxHeight(
                   Math.min(
-                    e.nativeEvent.contentSize.height,
-                    maxHeightRef.current
+                    Math.max(minHeight, e.nativeEvent.contentSize.height),
+                    maxHeight ?? maxHeightRef.current
+                  )
+                );
+              }
+            } else if (Platform.OS === 'android') {
+              if (maxHeightRef.current) {
+                setHeight(
+                  Math.min(
+                    Math.max(minHeight, e.nativeEvent.contentSize.height),
+                    maxHeight ?? maxHeightRef.current
                   )
                 );
               }

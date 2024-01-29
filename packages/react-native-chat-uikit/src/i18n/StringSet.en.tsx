@@ -133,5 +133,11 @@ export function createStringSetEn(): StringSet {
 
     '@all': '[Mentioned] ',
     '@me': '[Mentioned] ',
+
+    'voice_bar_remain': (v) => `${v}s Remaining`,
+    'voice_bar_tip_click_record': 'click record',
+    'voice_bar_tip_recording': 'recording',
+    'voice_bar_tip_click_play': 'click play',
+    'voice_bar_tip_playing': 'playing',
   };
 }

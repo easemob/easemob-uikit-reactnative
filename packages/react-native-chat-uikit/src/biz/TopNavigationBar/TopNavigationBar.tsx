@@ -31,7 +31,7 @@ export function TopNavigationBar<LeftProps = any, RightProps = any>(
     <View
       style={[
         {
-          height: 52,
+          height: 44,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -97,7 +97,7 @@ export function TopNavigationBarRightList({
     },
   });
   return (
-    <View style={{ flexDirection: 'row' }}>
+    <View style={{ flexDirection: 'row', backgroundColor: 'red', }}>
       {iconNameList.map((name, index) => {
         return (
           <IconButton

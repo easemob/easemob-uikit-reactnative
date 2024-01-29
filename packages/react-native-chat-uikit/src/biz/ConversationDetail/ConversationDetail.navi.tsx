@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { Platform, Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -66,7 +66,13 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   return (
     <TopNavigationBar
       Left={
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            maxWidth: Platform.select({ ios: '70%', android: '80%' }),
+          }}
+        >
           <IconButton
             iconName={'chevron_left'}
             style={{ width: 24, height: 24, tintColor: getColor('icon') }}
@@ -79,14 +85,16 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
           <View
             style={{
               marginLeft: 10,
-              maxWidth: '60%',
             }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
-                style={{ color: getColor('text') }}
+                style={{
+                  color: getColor('text'),
+                  maxWidth: Platform.select({ ios: '85%', android: '90%' }),
+                }}
               >
                 {convName ?? convId}
               </SingleLineText>

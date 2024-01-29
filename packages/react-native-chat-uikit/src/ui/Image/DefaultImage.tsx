@@ -5,6 +5,7 @@ import {
   ImageURISource,
   StyleProp,
   View,
+  ViewStyle,
 } from 'react-native';
 
 import { Image, ImageProps } from './Image';
@@ -13,7 +14,8 @@ export type DefaultImageProps = Omit<ImageProps, 'source' | 'defaultSource'> & {
   defaultSource: ImageSourcePropType;
   source: ImageURISource;
   defaultStyle?: StyleProp<ImageStyle>;
-  defaultContainerStyle?: StyleProp<ImageStyle>;
+  defaultContainerStyle?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 /**
@@ -24,6 +26,7 @@ export function DefaultImage(props: DefaultImageProps) {
     style,
     defaultStyle = style,
     defaultContainerStyle,
+    containerStyle,
     defaultSource,
     onLoad,
     source,
@@ -31,7 +34,7 @@ export function DefaultImage(props: DefaultImageProps) {
   } = props;
   const [visible, setVisible] = React.useState(true);
   return (
-    <View>
+    <View style={[containerStyle]}>
       <View style={[defaultContainerStyle]}>
         <Image
           style={[

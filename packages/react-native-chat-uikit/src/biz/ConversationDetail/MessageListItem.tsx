@@ -10,6 +10,7 @@ import {
   ChatCustomMessageBody,
   ChatFileMessageBody,
   ChatMessage,
+  ChatMessageChatType,
   ChatMessageDirection,
   ChatMessageType,
   ChatTextMessageBody,
@@ -160,6 +161,10 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
       light: colors.neutral[7],
       dark: colors.neutral[2],
     },
+    border: {
+      light: colors.neutral[9],
+      dark: colors.neutral[3],
+    },
   });
   return (
     <DefaultImage
@@ -170,11 +175,6 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
         {
           width: width,
           height: height,
-          borderRadius: getBorderRadius({
-            height: width,
-            crt: corner.bubble[0]!,
-            cr: cornerRadius,
-          }),
         },
       ]}
       defaultSource={ICON_ASSETS[iconName]('3x')}
@@ -189,13 +189,18 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
         backgroundColor: getColor('bg'),
         justifyContent: 'center',
         alignItems: 'center',
+      }}
+      onError={onError}
+      containerStyle={{
+        borderWidth: 1,
+        borderColor: getColor('border'),
         borderRadius: getBorderRadius({
-          height: width,
+          height: width + 1,
           crt: corner.bubble[0]!,
           cr: cornerRadius,
         }),
+        overflow: 'hidden',
       }}
-      onError={onError}
     />
   );
 }
@@ -241,15 +246,15 @@ export function MessageVoice(props: MessageVoiceProps) {
     maxWidth: propsMaxWidth,
   } = props;
   const body = msg.body as ChatVoiceMessageBody;
-  const { duration } = body;
+  const { duration: propsDuration } = body;
+  const safeDuration =
+    propsDuration > 60 ? 60 : propsDuration < 1 ? 1 : propsDuration;
+  const duration = safeDuration * 1000;
   const maxWidth = propsMaxWidth ?? Dimensions.get('window').width * 0.6;
   const minWidth = Dimensions.get('window').width * 0.1;
   const width =
     Math.floor(((maxWidth - minWidth) * duration) / gMaxVoiceDuration) +
     minWidth;
-  // const loopCount = React.useRef(
-  //   Math.floor(duration / (gFrameInterval * 3))
-  // ).current;
   const loopCount = -1;
   const ref = React.useRef<DynamicIconRef>({} as any);
   // const isPlayRef = React.useRef(false);
@@ -287,7 +292,7 @@ export function MessageVoice(props: MessageVoiceProps) {
       ];
     }
   }, [layoutType]);
-  const seconds = duration;
+  const seconds = safeDuration;
 
   React.useEffect(() => {
     if (propsIsPlay === true) {
@@ -310,6 +315,7 @@ export function MessageVoice(props: MessageVoiceProps) {
         propsRef={ref}
         names={voiceIcons}
         loopCount={loopCount}
+        resolution={'3x'}
         // onPlayStart={onPlayStart}
         // onPlayFinished={onPlayFinished}
         initialIndex={2}
@@ -1377,6 +1383,9 @@ export function MessageView(props: MessageViewProps) {
   const [userName, setUserName] = React.useState<string>(
     model.userName ?? model.userId
   );
+  const isSingleChat = React.useRef(
+    model.msg.chatType === ChatMessageChatType.PeerChat
+  ).current;
   // const avatar = avatarIsVisible === true ? model.userAvatar : undefined;
   const [userAvatar, setUserAvatar] = React.useState<string | undefined>(
     avatarIsVisible === true ? model.userAvatar : undefined
@@ -1424,7 +1433,7 @@ export function MessageView(props: MessageViewProps) {
           alignItems: layoutType === 'left' ? 'flex-start' : 'flex-end',
         }}
       >
-        {nameIsVisible ? (
+        {nameIsVisible && isSingleChat !== true ? (
           <NameView
             layoutType={layoutType}
             name={userName}

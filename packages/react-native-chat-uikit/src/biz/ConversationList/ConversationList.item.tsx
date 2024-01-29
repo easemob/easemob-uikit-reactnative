@@ -56,7 +56,6 @@ export function ConversationListItem(props: ConversationListItemProps) {
     (msg?: ChatMessage) => {
       if (msg?.attributes?.[gMessageAttributeMentions]) {
         const mentions = msg.attributes?.[gMessageAttributeMentions];
-        console.log('test:zuoyu:mention:', mentions, im.userId);
         if (typeof mentions === 'string') {
           if (mentions === 'ALL') {
             return tr('@all');

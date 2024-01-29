@@ -132,5 +132,11 @@ export function createStringSetCn(): StringSet {
 
     '@all': '[有人@你] ',
     '@me': '[有人@你] ',
+
+    'voice_bar_remain': (v) => `${v}秒后结束录音`,
+    'voice_bar_tip_click_record': '点击录音',
+    'voice_bar_tip_recording': '正在录音',
+    'voice_bar_tip_click_play': '点击播放',
+    'voice_bar_tip_playing': '播放中',
   };
 }

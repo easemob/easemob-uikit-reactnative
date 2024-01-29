@@ -35,6 +35,9 @@ type SizeType = {
 export function useGetStyleProps() {
   const ret = React.useMemo(() => {
     return {
+      getStyleProp: (prop: string, style?: StyleProp<ViewStyle>) => {
+        return getPropValueFromStyleT(style, prop);
+      },
       getStyleSize: (style?: StyleProp<ViewStyle>) => {
         const height = getPropValueFromStyleT(style, 'height');
         const width = getPropValueFromStyleT(style, 'width');

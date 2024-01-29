@@ -28,7 +28,7 @@ export const MessageInput = React.forwardRef<
   props: React.PropsWithChildren<MessageInputProps>,
   ref?: React.ForwardedRef<MessageInputRef>
 ) {
-  const { top, numberOfLines, emojiList } = props;
+  const { top, numberOfLines = 4, emojiList } = props;
 
   const testRef = React.useRef<View>(null);
   const { fontFamily } = useConfigContext();
@@ -55,6 +55,10 @@ export const MessageInput = React.forwardRef<
     text_enable: {
       light: colors.primary[5],
       dark: colors.primary[6],
+    },
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
     },
   });
 
@@ -168,38 +172,35 @@ export const MessageInput = React.forwardRef<
               <View
                 style={{
                   flexDirection: 'row',
-                  // paddingHorizontal: 16,
-                  // paddingVertical: 7,
-                  // backgroundColor: getColor('input_bg'),
-                  // borderRadius: 18,
+                  alignItems: 'center',
                 }}
               >
                 <TextInput
                   ref={inputRef}
                   numberOfLines={numberOfLines}
                   multiline={true}
-                  unitHeight={Platform.OS === 'ios' ? 22 : 22}
+                  unitHeight={Platform.OS === 'ios' ? 20 : 22}
                   style={{
                     fontSize: 16,
                     fontStyle: 'normal',
                     fontWeight: '400',
-                    lineHeight: 22,
+                    // lineHeight: 22,
                     fontFamily: fontFamily,
-                    // color: getColor('input_text'),
+                    flex: Platform.select({ ios: undefined, android: 1 }),
                   }}
                   containerStyle={{
                     width: '100%',
-                    minHeight: 22,
-                    paddingHorizontal: 16,
+                    minHeight: 36,
+                    paddingHorizontal: 8,
                     paddingVertical: 7,
-                    // backgroundColor: getColor('input_bg'),
-                    // borderRadius: 18,
+                    maxHeight: Platform.OS === 'ios' ? 96 : 96,
                   }}
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChangeText={setValue}
                   value={value}
                   keyboardAppearance={style === 'light' ? 'light' : 'dark'}
+                  placeholder={'Aa'}
                 />
               </View>
             </View>
@@ -207,7 +208,7 @@ export const MessageInput = React.forwardRef<
               style={{
                 width: 30,
                 height: 30,
-                tintColor: getColor('tintColor'),
+                tintColor: getColor('icon'),
               }}
               containerStyle={{
                 alignSelf: 'flex-end',
@@ -220,7 +221,9 @@ export const MessageInput = React.forwardRef<
               style={{
                 width: 30,
                 height: 30,
-                tintColor: getColor('tintColor2'),
+                tintColor: getColor(
+                  sendIconName === 'plus_in_circle' ? 'icon' : 'text_enable'
+                ),
                 backgroundColor: undefined,
                 borderRadius: 30,
               }}

@@ -30,7 +30,7 @@ export function Ripple(props: RippleProps) {
     children,
     rippleStyle,
     rippleDuration,
-    rippleStartOpacity: startOpacity,
+    rippleStartOpacity: startOpacity = 0.2,
     childrenStyle,
     playAnimated,
   } = props;
@@ -45,9 +45,7 @@ export function Ripple(props: RippleProps) {
     backgroundColor: rippleBackgroundColor,
   } = rippleStyle ?? {};
   const timestamp = React.useRef(rippleDuration ?? 1500).current;
-  const opacity = React.useRef(
-    new Animated.Value(startOpacity !== undefined ? startOpacity : 0.7)
-  ).current;
+  const opacity = React.useRef(new Animated.Value(1)).current;
   const scale = React.useRef(new Animated.Value(0)).current;
   React.useEffect(() => {
     const a = Animated.loop(
@@ -67,13 +65,14 @@ export function Ripple(props: RippleProps) {
     if (playAnimated === true) {
       a.start();
     } else {
-      scale.setValue(0);
+      opacity.setValue(startOpacity);
+      scale.setValue(1);
       a.stop();
     }
     return () => {
       a.stop();
     };
-  }, [opacity, scale, timestamp, playAnimated]);
+  }, [opacity, scale, timestamp, playAnimated, startOpacity]);
   const height = scale.interpolate({
     inputRange: [0, 1],
     outputRange: [childrenHeight, rippleHeight ?? childrenHeight * 1.1],

@@ -28,9 +28,14 @@ export type TimerTextProps = {
    * The style of the text.
    */
   textStyle?: TextProps;
+  /**
+   * Callback notification when the value changes.
+   */
+  onChanged?: (value: number) => void;
 };
 export function TimerText(props: TimerTextProps) {
-  const { isIncrease, startValue, stopValue, propsRef, textStyle } = props;
+  const { isIncrease, startValue, stopValue, propsRef, textStyle, onChanged } =
+    props;
   const [value, setValue] = React.useState(startValue);
   const timerRef = React.useRef<NodeJS.Timeout | null>(null);
   if (propsRef?.current) {
@@ -42,14 +47,21 @@ export function TimerText(props: TimerTextProps) {
     };
     propsRef.current.reset = () => {
       setValue(startValue);
+      onChanged?.(startValue);
     };
   }
   const start = () => {
     timerRef.current = setInterval(() => {
       if (isIncrease === true) {
-        setValue((v) => v + 1);
+        setValue((v) => {
+          onChanged?.(v + 1);
+          return v + 1;
+        });
       } else {
-        setValue((v) => v - 1);
+        setValue((v) => {
+          onChanged?.(v - 1);
+          return v - 1;
+        });
       }
     }, 1000);
   };

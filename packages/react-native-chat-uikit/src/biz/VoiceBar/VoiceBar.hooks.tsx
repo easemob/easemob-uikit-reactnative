@@ -29,7 +29,6 @@ export function useVoiceBar(props: VoiceBarProps) {
   const isPlayingRef = React.useRef<boolean>(false);
   const recordTimeoutRef = React.useRef<NodeJS.Timeout>();
   const im = useChatContext();
-  const tipTimerRef = React.useRef<TimerTextRef>({} as any);
   const contentTimerRef = React.useRef<TimerTextRef>({} as any);
   const [playRipple, setPlayRipple] = React.useState<boolean>(false);
 
@@ -42,6 +41,11 @@ export function useVoiceBar(props: VoiceBarProps) {
     AVNumberOfChannelsKeyIOS: 2,
     AVFormatIDKeyIOS: AVEncodingOption.aac, // !!! amr is not supported
   });
+  const [currentTime, setCurrentTime] = React.useState<number>(0);
+
+  const onContentTimeChanged = React.useCallback((v: number) => {
+    setCurrentTime(v);
+  }, []);
 
   const onState = React.useCallback(
     (s: VoiceBarState) => {
@@ -59,8 +63,6 @@ export function useVoiceBar(props: VoiceBarProps) {
     recordTimeoutRef.current = setTimeout(() => {
       stopRecord();
     }, 60000);
-    tipTimerRef.current?.reset?.();
-    tipTimerRef.current?.start?.();
     contentTimerRef.current?.reset?.();
     contentTimerRef.current?.start?.();
     setPlayRipple(true);
@@ -76,7 +78,6 @@ export function useVoiceBar(props: VoiceBarProps) {
         onFailed: (error) => {
           console.warn('dev:startRecordAudio:onFailed:', error);
           onFailed?.({ reason: 'record voice is failed.', error: error });
-          tipTimerRef.current?.stop?.();
           contentTimerRef.current?.stop?.();
           setPlayRipple(false);
         },
@@ -90,13 +91,11 @@ export function useVoiceBar(props: VoiceBarProps) {
       .catch((error) => {
         console.warn('dev:startRecordAudio:error:', error);
         onFailed?.({ reason: 'record voice is failed.', error: error });
-        tipTimerRef.current?.stop?.();
         contentTimerRef.current?.stop?.();
         setPlayRipple(false);
       });
   };
   const stopRecord = React.useCallback(() => {
-    tipTimerRef.current?.stop?.();
     contentTimerRef.current?.stop?.();
     if (recordTimeoutRef.current) {
       clearTimeout(recordTimeoutRef.current);
@@ -194,6 +193,7 @@ export function useVoiceBar(props: VoiceBarProps) {
   const _onClickedClearButton = () => {
     onClickedClearButton?.();
     onState('idle');
+    setCurrentTime(0);
     if (isPlayingRef.current === true) {
       Services.ms.stopAudio();
       isPlayingRef.current = false;
@@ -203,7 +203,6 @@ export function useVoiceBar(props: VoiceBarProps) {
       recordTimeoutRef.current = undefined;
     }
     contentTimerRef.current?.stop?.();
-    tipTimerRef.current?.stop?.();
     voiceFilePathRef.current = '';
   };
   const _onClickedSendButton = () => {
@@ -234,8 +233,9 @@ export function useVoiceBar(props: VoiceBarProps) {
     onClickedRecordButton: _onClickedRecordButton,
     onClickedClearButton: _onClickedClearButton,
     onClickedSendButton: _onClickedSendButton,
-    tipTimerRef,
     contentTimerRef,
     playRipple,
+    onContentTimeChanged,
+    currentTime: currentTime,
   };
 }

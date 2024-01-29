@@ -89,7 +89,6 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
         dark: colors.neutral[95],
       },
     });
-    console.log('test:zuoyu:goup:info: ', doNotDisturb);
 
     return (
       <View

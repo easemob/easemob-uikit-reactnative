@@ -50,21 +50,22 @@ export function VoiceBar(props: VoiceBarProps) {
     onClickedClearButton,
     onClickedRecordButton,
     onClickedSendButton,
-    tipTimerRef,
     contentTimerRef,
     playRipple,
+    onContentTimeChanged,
+    currentTime,
   } = useVoiceBar(props);
 
   const getTextTip = () => {
     switch (state) {
       case 'idle':
-        return tr('press to record');
+        return tr('voice_bar_tip_click_record');
       case 'recording':
-        return tr('recording');
+        return tr('voice_bar_tip_recording');
       case 'playing':
-        return tr('playing');
+        return tr('voice_bar_tip_playing');
       case 'stopping':
-        return tr('press to play');
+        return tr('voice_bar_tip_click_play');
     }
   };
   return (
@@ -122,7 +123,7 @@ export function VoiceBar(props: VoiceBarProps) {
             backgroundColor: getColor('enable') as string,
           }}
           playAnimated={playRipple}
-          rippleStartOpacity={0.8}
+          rippleStartOpacity={0.1}
         >
           <Pressable
             style={{
@@ -162,6 +163,7 @@ export function VoiceBar(props: VoiceBarProps) {
                   isIncrease={true}
                   startValue={0}
                   stopValue={60}
+                  onChanged={onContentTimeChanged}
                   propsRef={contentTimerRef}
                 />
                 <Text
@@ -216,22 +218,9 @@ export function VoiceBar(props: VoiceBarProps) {
           style={{
             flexDirection: 'row',
             marginTop: 8,
-            display: state === 'recording' ? 'flex' : 'none',
+            display: currentTime > 50 ? 'flex' : 'none',
           }}
         >
-          <TimerText
-            textStyle={{
-              textType: 'small',
-              paletteType: 'body',
-              style: {
-                color: getColor('trash'),
-              },
-            }}
-            isIncrease={false}
-            startValue={60}
-            stopValue={0}
-            propsRef={tipTimerRef}
-          />
           <Text
             textType={'small'}
             paletteType={'body'}
@@ -239,7 +228,7 @@ export function VoiceBar(props: VoiceBarProps) {
               color: getColor('trash'),
             }}
           >
-            {tr('s Remaining')}
+            {tr('voice_bar_remain', 60 - currentTime)}
           </Text>
         </View>
       </View>
