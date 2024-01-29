@@ -103,6 +103,10 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
         light: colors.neutral[3],
         dark: colors.neutral[8],
       },
+      count: {
+        light: colors.neutral[7],
+        dark: colors.neutral[8],
+      },
     });
 
     const getMaxHeight = () => {
@@ -207,6 +211,7 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
                   // paddingRight: 12,
                   width: '100%',
                   textAlign: 'right',
+                  color: getColor('count'),
                 },
                 statistics.textStyles,
               ]}
