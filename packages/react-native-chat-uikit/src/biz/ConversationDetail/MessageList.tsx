@@ -65,6 +65,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onLayout,
       bounces,
       onContentSizeChange,
+      onRenderItem,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -113,10 +114,12 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             inverted={inverted}
             scrollEventThrottle={scrollEventThrottle}
             renderItem={(info: ListRenderItemInfo<MessageListItemProps>) => {
-              const { item } = info;
+              const { item, index } = info;
+              onRenderItem(info);
               return (
                 <ListItemRender
                   {...item}
+                  index={index}
                   onClicked={onClickedItem}
                   onLongPress={onLongPressItem}
                   onAvatarClicked={onClickedItemAvatar}

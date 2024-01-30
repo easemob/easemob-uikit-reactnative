@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type {
   LayoutChangeEvent,
+  ListRenderItemInfo,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
@@ -174,13 +175,23 @@ export function useMessageList(
 
   const scrollTo = React.useCallback(
     (index: number, animated?: boolean) => {
-      if (needScrollToBottom() === true) {
-        timeoutTask(0, () => {
-          listRef?.current?.scrollToIndex?.({ index, animated });
-        });
+      timeoutTask(0, () => {
+        listRef?.current?.scrollToIndex?.({ index, animated, viewPosition: 1 });
+      });
+    },
+    [listRef]
+  );
+
+  const onRenderItem = React.useCallback(
+    (info: ListRenderItemInfo<MessageListItemProps>) => {
+      for (const d of dataRef.current) {
+        if (d.id === info.item.id) {
+          d.index = info.index;
+          break;
+        }
       }
     },
-    [listRef, needScrollToBottom]
+    [dataRef]
   );
 
   const removeDuplicateData = React.useCallback(
@@ -227,21 +238,21 @@ export function useMessageList(
 
   const _refreshToUI = React.useCallback(
     (items: MessageListItemProps[]) => {
-      items = removeDuplicateData(items);
       setData([...items]);
     },
-    [removeDuplicateData, setData]
+    [setData]
   );
 
   const refreshToUI = React.useCallback(
     (items: MessageListItemProps[]) => {
+      dataRef.current = removeDuplicateData(items);
       if (needScrollToBottom() === true) {
-        if (items.length > 0) {
-          preBottomDataRef.current = items[0];
+        if (dataRef.current.length > 0) {
+          preBottomDataRef.current = dataRef.current[0];
         }
-        _refreshToUI(items);
+        _refreshToUI(dataRef.current);
       } else {
-        const index = items.findIndex((d) => {
+        const index = dataRef.current.findIndex((d) => {
           if (d.id === preBottomDataRef.current?.id) {
             return true;
           }
@@ -249,14 +260,14 @@ export function useMessageList(
         });
         if (index !== -1) {
           // !!!: Get the element after the specified position in the array and return
-          const tmp = items.slice(index);
+          const tmp = dataRef.current.slice(index);
           _refreshToUI(tmp);
         } else {
-          _refreshToUI(items);
+          _refreshToUI(dataRef.current);
         }
       }
     },
-    [needScrollToBottom, _refreshToUI]
+    [dataRef, removeDuplicateData, needScrollToBottom, _refreshToUI]
   );
 
   // !!! Both gestures and scrolling methods are triggered on the ios platform. However, the android platform only has gesture triggering.
@@ -271,14 +282,14 @@ export function useMessageList(
           setNeedScroll(true);
           const preId = preBottomDataRef.current?.id;
           refreshToUI(dataRef.current);
-          const index = dataRef.current.findIndex((d) => {
+          const item = dataRef.current.find((d) => {
             if (d.id === preId) {
               return true;
             }
             return false;
           });
-          if (index !== -1) {
-            scrollTo(index, false);
+          if (item?.index !== undefined) {
+            scrollTo(item.index, false);
           }
         } else {
           setNeedScroll(false);
@@ -520,9 +531,20 @@ export function useMessageList(
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
-      propsOnClickedItemQuote?.(id, model);
+      const ret = propsOnClickedItemQuote?.(id, model);
+      if (ret !== false) {
+        const item = dataRef.current.find((d) => {
+          if (d.id === id) {
+            return true;
+          }
+          return false;
+        });
+        if (item && item.index !== undefined) {
+          scrollTo(item.index, false);
+        }
+      }
     },
-    [propsOnClickedItemQuote]
+    [dataRef, propsOnClickedItemQuote, scrollTo]
   );
 
   const getStyle = React.useCallback(() => {
@@ -1298,5 +1320,6 @@ export function useMessageList(
     bounces,
     enableListItemUserInfoUpdateFromMessage,
     onContentSizeChange,
+    onRenderItem,
   };
 }

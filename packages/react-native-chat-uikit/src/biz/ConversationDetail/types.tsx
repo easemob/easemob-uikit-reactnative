@@ -490,6 +490,10 @@ export type MessageListItemProps = MessageListItemRenders &
      * Component style properties.
      */
     containerStyle?: StyleProp<ViewStyle>;
+    /**
+     * The index of the message in the list.
+     */
+    index?: number;
   };
 
 /**

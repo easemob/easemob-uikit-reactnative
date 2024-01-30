@@ -40,6 +40,10 @@ export function ConversationListItem(props: ConversationListItemProps) {
       light: colors.neutral[5],
       dark: colors.neutral[6],
     },
+    t3: {
+      light: colors.neutral[7],
+      dark: colors.neutral[5],
+    },
     divider: {
       light: colors.neutral[9],
       dark: colors.neutral[2],
@@ -136,7 +140,14 @@ export function ConversationListItem(props: ConversationListItemProps) {
               {data.convName ?? data.convId}
             </SingleLineText>
             {data.doNotDisturb === true ? (
-              <Icon name={'bell_slash'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'bell_slash'}
+                style={{
+                  height: 20,
+                  width: 20,
+                  tintColor: getColor('t3'),
+                }}
+              />
             ) : null}
           </View>
           <SingleLineText
