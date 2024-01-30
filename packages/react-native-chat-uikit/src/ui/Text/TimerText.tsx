@@ -54,12 +54,12 @@ export function TimerText(props: TimerTextProps) {
     timerRef.current = setInterval(() => {
       if (isIncrease === true) {
         setValue((v) => {
-          onChanged?.(v + 1);
+          // onChanged?.(v + 1); // !!! Warning: Cannot update a component (`VoiceBar`) while rendering a different component (`TimerText`). To locate the bad setState() call inside `TimerText`, follow the stack trace as described in https://reactjs.org/link/setstate-in-render
           return v + 1;
         });
       } else {
         setValue((v) => {
-          onChanged?.(v - 1);
+          // onChanged?.(v - 1);
           return v - 1;
         });
       }
@@ -81,5 +81,8 @@ export function TimerText(props: TimerTextProps) {
       stop();
     }
   }, [stopValue, value]);
+  React.useEffect(() => {
+    onChanged?.(value);
+  }, [onChanged, value]);
   return <Text {...textStyle}>{value}</Text>;
 }
