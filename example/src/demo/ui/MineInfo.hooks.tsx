@@ -29,7 +29,7 @@ export function useMineInfo(props: MineInfoProps) {
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(propsUserName);
-  const [userAvatar] = React.useState(propsUserAvatar);
+  const [userAvatar, setUserAvatar] = React.useState(propsUserAvatar);
   const [userSign, setUserSign] = React.useState<string>();
   const [userState, setUserState] = React.useState<UserState>('offline');
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
@@ -54,6 +54,7 @@ export function useMineInfo(props: MineInfoProps) {
           if (self) {
             setUserName(self.userName);
             setUserSign('self.sign');
+            setUserAvatar(self.avatarURL);
           }
         }
       },
