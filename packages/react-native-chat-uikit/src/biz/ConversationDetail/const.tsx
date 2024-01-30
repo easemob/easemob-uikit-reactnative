@@ -1,1 +1,1 @@
-export const gRequestMaxMessageCount = 10;
+export const gRequestMaxMessageCount = 30;

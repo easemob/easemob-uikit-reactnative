@@ -43,6 +43,7 @@ export type MessageDefaultImageProps = {
   thumbHeight: number;
   iconName: IconNameType;
   onError?: () => void;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 /**
  * Message Default Image component render type.

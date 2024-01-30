@@ -60,6 +60,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_msg_tip_not_support': '不支持的消息类型',
     '_uikit_msg_edit': '已编辑',
     '_uikit_msg_tip_create_group_success': '创建群聊成功',
+    '_uikit_msg_tip_create_group_success_with_params': '创建群聊成功',
 
     '_uikit_info_send_msg': '发消息',
     '_uikit_info_send_audio': '音频通话',

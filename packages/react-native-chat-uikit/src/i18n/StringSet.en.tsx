@@ -61,6 +61,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_msg_tip_not_support': 'Unsupported message type',
     '_uikit_msg_edit': 'Edited',
     '_uikit_msg_tip_create_group_success': 'Create group success.',
+    '_uikit_msg_tip_create_group_success_with_params': 'Create group success.',
 
     '_uikit_info_send_msg': 'Send Message',
     '_uikit_info_send_audio': 'Audio Call',

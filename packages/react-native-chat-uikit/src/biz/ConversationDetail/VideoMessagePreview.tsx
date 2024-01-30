@@ -20,7 +20,6 @@ import Video, { LoadError } from 'react-native-video';
 
 import { useChatContext } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
-import { g_not_existed_url } from '../../const';
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
 import { Services } from '../../services';
@@ -186,7 +185,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
   const { msgId: propsMsgId } = props;
   const im = useChatContext();
   const videoRef = React.useRef<Video>(null);
-  const [url, setUrl] = React.useState<string>(g_not_existed_url);
+  const [url, setUrl] = React.useState<string>();
   const [size, setSize] = React.useState<ImageSize>({
     width: 300,
     height: 300,

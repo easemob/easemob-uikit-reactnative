@@ -650,4 +650,8 @@ export type MessageListProps = PropsWithError &
      * Callback notification when copying ID is completed.
      */
     onCopyFinished?: (content: string) => void;
+    /**
+     * Callback notification when there are no more messages.
+     */
+    onNoMoreMessage?: () => void;
   };

@@ -26,7 +26,6 @@ import {
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
-import { g_not_existed_url } from '../../const';
 // import { useDispatchContext } from '../../dispatch';
 import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -87,6 +86,7 @@ export function useMessageList(
     onInitMenu,
     onCopyFinished: propsOnCopyFinished,
     messageLayoutType,
+    onNoMoreMessage,
   } = props;
   const { tr } = useI18nContext();
   const flatListProps = useFlatList<MessageListItemProps>({
@@ -553,6 +553,14 @@ export function useMessageList(
 
   const onAddDataToUI = React.useCallback(
     (d: MessageListItemProps, pos: MessageAddPosition) => {
+      if (d.model.modelType === 'message') {
+        const msgModel = d.model as MessageModel;
+        const user = im.getRequestData(msgModel.msg.from);
+        if (user) {
+          msgModel.userName = user.name;
+          msgModel.userAvatar = user.avatar;
+        }
+      }
       if (pos === 'bottom') {
         dataRef.current = [d, ...dataRef.current];
       } else {
@@ -560,7 +568,7 @@ export function useMessageList(
       }
       refreshToUI(dataRef.current);
     },
-    [dataRef, refreshToUI]
+    [dataRef, im, refreshToUI]
   );
 
   const onAddMessageListToUI = React.useCallback(
@@ -594,6 +602,7 @@ export function useMessageList(
                 messageId: quote.msgID,
               });
             }
+            const user = im.getRequestData(msg.from);
             return {
               userId: msg.from,
               modelType: 'message',
@@ -602,6 +611,8 @@ export function useMessageList(
                 (msg.from === im.userId ? 'right' : 'left'),
               msg: msg,
               quoteMsg: quoteMsg,
+              userName: user?.name,
+              userAvatar: user?.avatar,
             } as MessageModel;
           }
         };
@@ -963,8 +974,7 @@ export function useMessageList(
             params: {
               userId: card.userId,
               nickname: im.getRequestData(card.userId)?.name ?? card.userId,
-              avatar:
-                im.getRequestData(card.userId)?.avatar ?? g_not_existed_url,
+              avatar: im.getRequestData(card.userId)?.avatar!,
             },
           }
         );
@@ -1074,6 +1084,7 @@ export function useMessageList(
 
   const requestHistoryMessage = React.useCallback(() => {
     if (hasNoMoreRef.current === true) {
+      onNoMoreMessage?.();
       return;
     }
     im.messageManager.loadHistoryMessage({
@@ -1107,6 +1118,7 @@ export function useMessageList(
     convType,
     im.messageManager,
     onAddMessageListToUI,
+    onNoMoreMessage,
     sendRecvMessageReadAck,
   ]);
 

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
 import type { DataModel } from '../../chat';
-import { g_not_existed_url } from '../../const';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
@@ -164,7 +163,7 @@ export function StateListSearchItem(
             />
           </View>
         ) : null}
-        <Avatar url={g_not_existed_url} size={50} />
+        <Avatar url={data.avatar} size={50} />
         <HighText
           paletteType={'title'}
           textType={'medium'}

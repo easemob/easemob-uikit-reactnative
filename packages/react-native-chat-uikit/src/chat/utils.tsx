@@ -6,7 +6,6 @@ import {
   ChatTextMessageBody,
 } from 'react-native-chat-sdk';
 
-import { g_not_existed_url } from '../const';
 import { emoji } from '../utils';
 import {
   gMessageAttributeUserInfo,
@@ -33,7 +32,7 @@ export function userInfoFromMessage(msg?: ChatMessage): UserData | undefined {
     const ret = {
       userId: msg.from,
       userName: userInfo.nickname,
-      avatarURL: userInfo.avatarURL ?? g_not_existed_url,
+      avatarURL: userInfo.avatarURL,
       from: {
         type: msg.chatType === ChatMessageChatType.GroupChat ? 'group' : 'user',
         groupId:
@@ -56,14 +55,18 @@ export function setUserInfoToMessage(params: {
   user?: UserData;
 }): void {
   const { msg, user } = params;
-  if (user === undefined || user === null) {
+  if (
+    user === undefined ||
+    user === null ||
+    (user.userName === undefined && user.avatarURL === undefined)
+  ) {
     return;
   }
   msg.attributes = {
     ...msg.attributes,
     [gMessageAttributeUserInfo]: {
       nickname: user.userName,
-      avatarURL: user.avatarURL ?? g_not_existed_url,
+      avatarURL: user.avatarURL,
     } as UserServiceDataFromMessage,
   };
 }

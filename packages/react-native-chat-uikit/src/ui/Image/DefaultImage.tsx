@@ -41,22 +41,25 @@ export function DefaultImage(props: DefaultImageProps) {
             defaultStyle,
             {
               // display: visible ? 'flex' : 'none',
-              opacity: visible === true ? 1 : 0,
+              opacity: visible === true ? 0 : 1,
             },
           ]}
           source={defaultSource}
+          {...others}
         />
       </View>
 
-      <Image
-        style={[style, { position: 'absolute' }]}
-        onLoad={(e) => {
-          onLoad?.(e);
-          setVisible(false);
-        }}
-        source={{ ...source, cache: source.cache ?? 'default' }}
-        {...others}
-      />
+      {source.uri !== undefined && source.uri !== null ? (
+        <Image
+          style={[style, { position: 'absolute' }]}
+          onLoad={(e) => {
+            onLoad?.(e);
+            setVisible(false);
+          }}
+          source={{ ...source, cache: source.cache ?? 'default' }}
+          {...others}
+        />
+      ) : null}
     </View>
   );
 }

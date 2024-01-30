@@ -341,7 +341,7 @@ export function getSystemTip(
         text: string;
         self: string;
       };
-      return tr(content.text);
+      return tr(content.text, content.self);
     } catch (error) {
       return tr('_uikit_msg_tip_create_group_success');
     }

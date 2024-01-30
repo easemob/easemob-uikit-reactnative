@@ -9,11 +9,12 @@ import {
 import {
   ChatCustomMessageBody,
   ChatFileMessageBody,
+  ChatImageMessageBody,
   ChatMessage,
   ChatMessageChatType,
-  ChatMessageDirection,
   ChatMessageType,
   ChatTextMessageBody,
+  ChatVideoMessageBody,
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 
@@ -32,14 +33,12 @@ import {
   DynamicIcon,
   DynamicIconRef,
   Icon,
-  Image,
   LoadingIcon,
 } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
 import { formatTsForConvDetail } from '../../utils';
 import { Avatar } from '../Avatar';
 import { gMaxVoiceDuration } from '../const';
-import { useMessageContext } from '../Context';
 import {
   getFileSize,
   getImageShowSize,
@@ -80,8 +79,6 @@ import type {
   SystemMessageModel,
   TimeMessageModel,
 } from './types';
-
-let gEnableListItemUserInfoUpdateFromMessage: boolean | undefined = false;
 
 export function MessageText(props: MessageTextProps) {
   const { layoutType, msg, isSupport } = props;
@@ -147,8 +144,16 @@ export function MessageText(props: MessageTextProps) {
 }
 
 export function MessageDefaultImage(props: MessageDefaultImageProps) {
-  const { url, width, height, thumbHeight, thumbWidth, iconName, onError } =
-    props;
+  const {
+    url,
+    width,
+    height,
+    thumbHeight,
+    thumbWidth,
+    iconName,
+    onError,
+    containerStyle,
+  } = props;
   const { colors, cornerRadius } = usePaletteContext();
   const { cornerRadius: corner } = useThemeContext();
   const { getBorderRadius } = useGetStyleProps();
@@ -175,6 +180,11 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
         {
           width: width,
           height: height,
+          borderRadius: getBorderRadius({
+            height: width + 1,
+            crt: corner.bubble[0]!,
+            cr: cornerRadius,
+          }),
         },
       ]}
       defaultSource={ICON_ASSETS[iconName]('3x')}
@@ -187,20 +197,31 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
         width: width,
         height: height,
         backgroundColor: getColor('bg'),
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-      onError={onError}
-      containerStyle={{
-        borderWidth: 1,
-        borderColor: getColor('border'),
         borderRadius: getBorderRadius({
           height: width + 1,
           crt: corner.bubble[0]!,
           cr: cornerRadius,
         }),
+        justifyContent: 'center',
+        alignItems: 'center',
         overflow: 'hidden',
       }}
+      onError={onError}
+      containerStyle={[
+        {
+          borderWidth: 1,
+          borderColor: getColor('border'),
+          borderRadius: getBorderRadius({
+            height: width + 1,
+            crt: corner.bubble[0]!,
+            cr: cornerRadius,
+          }),
+          justifyContent: 'center',
+          alignItems: 'center',
+          overflow: 'hidden',
+        },
+        containerStyle,
+      ]}
     />
   );
 }
@@ -215,7 +236,7 @@ export function MessageImage(props: MessageImageProps) {
   //   'file:///storage/emulated/0/Android/data/com.hyphenate.rn.ChatUikitExample/1135220126133718#demo/files/asterisk003/asterisk001/53e8d540-a144-11ee-a811-ab4c303d7025.jpg';
   // const url2 =
   //   '/var/mobile/Containers/Data/Application/CC0AD493-D627-463B-B351-44500E6FB1E2/tmp/AD1256B8-B32C-4CFE-B5F5-ECA21662B4E8.jpg';
-  // const url4 = g_not_existed_url;
+
   const [thumbUrl, setThumbUrl] = React.useState<string | undefined>(undefined);
   const { width, height } = getImageShowSize(msg, maxWidth);
   React.useEffect(() => {
@@ -1070,6 +1091,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         );
       }
       case ChatMessageType.IMAGE: {
+        const body = msg.body as ChatImageMessageBody;
         return (
           <View style={{ flexDirection: 'row' }}>
             <View style={{ paddingRight: 12 }}>
@@ -1109,25 +1131,19 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 </Text>
               </View>
             </View>
-            <View
-              style={{
-                borderRadius: getBorderRadius({
-                  height: 36,
-                  crt: corner.bubble[0]!,
-                  cr: cornerRadius,
-                }),
-                width: 36,
-                height: 36,
-                overflow: 'hidden',
-              }}
-            >
-              <Image
-                source={{
-                  uri: user?.avatarURL,
-                }}
-                style={{ width: 36, height: 36 }}
-              />
-            </View>
+            <MessageDefaultImage
+              url={
+                body.thumbnailRemotePath
+                  ? body.thumbnailRemotePath
+                  : body.thumbnailLocalPath
+              }
+              width={36}
+              height={36}
+              thumbWidth={24}
+              thumbHeight={24}
+              iconName={'img'}
+              containerStyle={{ borderWidth: 0 }}
+            />
           </View>
         );
       }
@@ -1187,6 +1203,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         );
       }
       case ChatMessageType.VIDEO: {
+        const body = msg.body as ChatVideoMessageBody;
         return (
           <View style={{ flexDirection: 'row' }}>
             <View style={{ paddingRight: 12 }}>
@@ -1226,25 +1243,19 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 </Text>
               </View>
             </View>
-            <View
-              style={{
-                borderRadius: getBorderRadius({
-                  height: 36,
-                  crt: corner.bubble[0]!,
-                  cr: cornerRadius,
-                }),
-                width: 36,
-                height: 36,
-                overflow: 'hidden',
-              }}
-            >
-              <Image
-                source={{
-                  uri: user?.avatarURL,
-                }}
-                style={{ width: 36, height: 36 }}
-              />
-            </View>
+            <MessageDefaultImage
+              url={
+                body.thumbnailRemotePath
+                  ? body.thumbnailRemotePath
+                  : body.thumbnailLocalPath
+              }
+              width={36}
+              height={36}
+              thumbWidth={24}
+              thumbHeight={24}
+              iconName={'triangle_in_rectangle'}
+              containerStyle={{ borderWidth: 0 }}
+            />
           </View>
         );
       }
@@ -1412,7 +1423,6 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
           maxWidth: maxWidth ?? '70%',
           marginLeft: layoutType === 'left' ? marginWidth : marginWidth,
           marginBottom: 2,
-          // marginRight: layoutType === 'left' ? marginWidth : undefined,
         },
         containerStyle,
       ]}
@@ -1464,17 +1474,21 @@ export function MessageView(props: MessageViewProps) {
   const bubblePadding = 12;
   const hasTriangle = true;
   const isQuote = isQuoteMessage(model.msg, model.quoteMsg);
-  const { addListener } = useMessageContext();
+  const info = userInfoFromMessage(model.msg);
   // const userName = model.userName ?? model.userId;
-  const [userName, setUserName] = React.useState<string>(
-    model.userName ?? model.userId
+  const [userName] = React.useState<string>(
+    info?.userName ?? model.userName ?? model.userId
   );
   const isSingleChat = React.useRef(
     model.msg.chatType === ChatMessageChatType.PeerChat
   ).current;
   // const avatar = avatarIsVisible === true ? model.userAvatar : undefined;
-  const [userAvatar, setUserAvatar] = React.useState<string | undefined>(
-    avatarIsVisible === true ? model.userAvatar : undefined
+  const [userAvatar] = React.useState<string | undefined>(
+    avatarIsVisible === true
+      ? info?.avatarURL && info?.avatarURL?.length > 0
+        ? info.avatarURL
+        : model.userAvatar
+      : undefined
   );
 
   const onClickedAvatar = React.useCallback(() => {
@@ -1484,26 +1498,6 @@ export function MessageView(props: MessageViewProps) {
   const onClickedState = React.useCallback(() => {
     onStateClicked?.(model.msg.msgId, model);
   }, [model, onStateClicked]);
-
-  React.useEffect(() => {
-    const deleter =
-      gEnableListItemUserInfoUpdateFromMessage === true &&
-      model.msg.direction === ChatMessageDirection.RECEIVE
-        ? addListener(
-            (params: {
-              userId: string;
-              userName?: string | undefined;
-              userAvatar?: string | undefined;
-            }) => {
-              setUserName(params.userName ?? params.userId);
-              setUserAvatar(
-                avatarIsVisible === true ? model.userAvatar : undefined
-              );
-            }
-          )
-        : null;
-    return () => deleter?.();
-  }, [addListener, avatarIsVisible, model.msg, model.userAvatar]);
 
   return (
     <View
@@ -1648,7 +1642,6 @@ export function MessageListItem(props: MessageListItemProps) {
     TimeTipView: propsTimeTipView,
     ...others
   } = props;
-  gEnableListItemUserInfoUpdateFromMessage = false;
   const { modelType } = model;
   const _MessageView = propsMessageView ?? MessageView;
   const _SystemTipView = propsSystemTipView ?? SystemTipView;

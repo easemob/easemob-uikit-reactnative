@@ -215,6 +215,9 @@ export function ConversationDetailScreen(props: Props) {
             //   MessageContent: MyMessageContent,
             // },
             // messageLayoutType: 'left',
+            onNoMoreMessage: React.useCallback(() => {
+              console.log('onNoMoreMessage');
+            }, []),
           },
         }}
         onBack={() => {
