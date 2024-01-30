@@ -40,8 +40,8 @@ export function createStringSetCn(): StringSet {
       `确认删除${names}等选中成员？`,
     '_uikit_group_create_name': (key) => `${key}的群聊`,
 
-    '_uikit_chat_input_quote_file': (name) => `附件 ${name}`,
-    '_uikit_chat_input_quote_title_1': '正在回复',
+    '_uikit_chat_input_quote_file': '附件 ',
+    '_uikit_chat_input_quote_title_1': ' 正在回复 ',
     '_uikit_chat_input_long_press_menu_picture': '照片',
     '_uikit_chat_input_long_press_menu_video': '视频',
     '_uikit_chat_input_long_press_menu_camera': '相机',
@@ -92,6 +92,7 @@ export function createStringSetCn(): StringSet {
       '确认解散群组，同时删除该群组的聊天记录',
 
     '_uikit_new_quest_title': '新请求',
+    '_uikit_new_quest_list_item_tip': '请求添加您为好友。',
 
     '_uikit_report_title': '消息举报',
     'Unwelcome commercial content': '不受欢迎的商业内容',
@@ -125,7 +126,9 @@ export function createStringSetCn(): StringSet {
     'video': '视频',
     'voice': '语音',
     'file': '文件',
+    'card': '联系人',
     'set': '设置',
+    'you': '你',
 
     'contact': '联系人',
 

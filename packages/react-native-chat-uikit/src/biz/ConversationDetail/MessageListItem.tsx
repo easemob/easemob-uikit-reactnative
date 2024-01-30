@@ -844,6 +844,7 @@ export function NameView(props: NameViewProps) {
         display: isVisible === true ? 'flex' : 'none',
         paddingLeft: layoutType === 'left' ? paddingWidth : undefined,
         paddingRight: layoutType === 'left' ? undefined : paddingWidth,
+        marginBottom: 2,
       }}
     >
       <SingleLineText
@@ -892,6 +893,7 @@ export function TimeView(props: TimeViewProps) {
         display: isVisible === true ? 'flex' : 'none',
         paddingLeft: layoutType === 'left' ? paddingWidth : undefined,
         paddingRight: layoutType === 'left' ? undefined : paddingWidth,
+        marginTop: 2,
       }}
     >
       <Text
@@ -1140,6 +1142,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 color: getColor(
                   layoutType === 'left' ? 'left_name' : 'right_name'
                 ),
+                alignSelf: layoutType === 'left' ? 'flex-start' : 'flex-end',
               }}
             >
               {user?.userName ?? user?.userId ?? msg.from}
@@ -1168,7 +1171,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 {tr('voice')}
                 <Text
                   textType={'medium'}
-                  paletteType={'label'}
+                  paletteType={'body'}
                   numberOfLines={2}
                   style={{
                     color: getColor(
@@ -1176,7 +1179,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                     ),
                   }}
                 >
-                  {`: ${Math.floor(body.duration / 1000)}`}
+                  {`: ${Math.floor(body.duration)}`}
                 </Text>
               </Text>
             </View>
@@ -1299,6 +1302,81 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
               </Text>
             </View>
           </View>
+        );
+      }
+      case ChatMessageType.CUSTOM: {
+        const body = msg?.body as ChatCustomMessageBody;
+        if (body.event === gCustomMessageCardEventType) {
+          const cardParams = body.params as {
+            userId: string;
+            nickname: string;
+            avatar: string;
+          };
+          return (
+            <View>
+              <SingleLineText
+                textType={'small'}
+                paletteType={'label'}
+                style={{
+                  color: getColor(
+                    layoutType === 'left' ? 'left_name' : 'right_name'
+                  ),
+                  alignSelf: layoutType === 'left' ? 'flex-start' : 'flex-end',
+                }}
+              >
+                {user?.userName ?? user?.userId ?? msg.from}
+              </SingleLineText>
+              <View style={{ flexDirection: 'row' }}>
+                <Icon
+                  name={'person_single_fill'}
+                  style={{
+                    width: 18,
+                    height: 18,
+                    tintColor: getColor(
+                      layoutType === 'left' ? 'left_text' : 'left_text'
+                    ),
+                  }}
+                />
+                <Text
+                  textType={'medium'}
+                  paletteType={'label'}
+                  numberOfLines={2}
+                  style={{
+                    color: getColor(
+                      layoutType === 'left' ? 'left_text' : 'right_text'
+                    ),
+                  }}
+                >
+                  {tr('card')}
+                  <Text
+                    textType={'medium'}
+                    paletteType={'body'}
+                    numberOfLines={2}
+                    style={{
+                      color: getColor(
+                        layoutType === 'left' ? 'left_text' : 'right_text'
+                      ),
+                    }}
+                  >
+                    {`: ${cardParams.nickname ?? cardParams.userId}`}
+                  </Text>
+                </Text>
+              </View>
+            </View>
+          );
+        }
+        return (
+          <Text
+            textType={'large'}
+            paletteType={'body'}
+            style={{
+              color: getColor(
+                layoutType === 'left' ? 'left_text' : 'right_text'
+              ),
+            }}
+          >
+            {tr('_uikit_msg_tip_not_support')}
+          </Text>
         );
       }
       default: {

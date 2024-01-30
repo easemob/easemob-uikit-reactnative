@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Dimensions, View } from 'react-native';
 import {
+  ChatCustomMessageBody,
   ChatFileMessageBody,
   ChatMessage,
   ChatMessageType,
@@ -8,6 +9,7 @@ import {
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 
+import { gCustomMessageCardEventType } from '../../chat';
 import { userInfoFromMessage } from '../../chat/utils';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -65,7 +67,7 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
       return (
         <SingleLineText
           textType={'small'}
-          paletteType={'label'}
+          paletteType={'body'}
           style={{
             color: getColor('t2'),
             maxWidth: maxWidth,
@@ -81,7 +83,12 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
         <View style={{ flexDirection: 'row', maxWidth: maxWidth }}>
           <Icon
             name={'doc'}
-            style={{ width: 16, height: 16, tintColor: getColor('t2') }}
+            style={{
+              width: 16,
+              height: 16,
+              tintColor: getColor('t2'),
+              marginRight: 2,
+            }}
           />
           <SingleLineText
             textType={'small'}
@@ -90,7 +97,16 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
               color: getColor('t2'),
             }}
           >
-            {tr('_uikit_chat_input_quote_file', body.displayName.substring(0))}
+            {tr('_uikit_chat_input_quote_file')}
+            <SingleLineText
+              textType={'small'}
+              paletteType={'body'}
+              style={{
+                color: getColor('t2'),
+              }}
+            >
+              {body.displayName.substring(0)}
+            </SingleLineText>
           </SingleLineText>
         </View>
       );
@@ -100,7 +116,12 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
         <View style={{ flexDirection: 'row', maxWidth: maxWidth }}>
           <Icon
             name={'img'}
-            style={{ width: 16, height: 16, tintColor: getColor('t2') }}
+            style={{
+              width: 16,
+              height: 16,
+              tintColor: getColor('t2'),
+              marginRight: 2,
+            }}
           />
           <SingleLineText
             textType={'small'}
@@ -119,7 +140,12 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
         <View style={{ flexDirection: 'row', maxWidth: maxWidth }}>
           <Icon
             name={'triangle_in_rectangle'}
-            style={{ width: 16, height: 16, tintColor: getColor('t2') }}
+            style={{
+              width: 16,
+              height: 16,
+              tintColor: getColor('t2'),
+              marginRight: 2,
+            }}
           />
           <SingleLineText
             textType={'small'}
@@ -135,12 +161,17 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
     } else if (msg.body.type === ChatMessageType.VOICE) {
       maxWidth = maxWidth * 0.6;
       const body = msg.body as ChatVoiceMessageBody;
-      const second = Math.floor((body.duration ?? 0) / 1000);
+      const second = Math.floor(body.duration ?? 0);
       return (
         <View style={{ flexDirection: 'row', maxWidth: maxWidth }}>
           <Icon
             name={'3th_frame_lft_lgt_sdy'}
-            style={{ width: 16, height: 16, tintColor: getColor('t2') }}
+            style={{
+              width: 16,
+              height: 16,
+              tintColor: getColor('t2'),
+              marginRight: 2,
+            }}
           />
           <SingleLineText
             textType={'small'}
@@ -153,7 +184,7 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
           </SingleLineText>
           <SingleLineText
             textType={'small'}
-            paletteType={'label'}
+            paletteType={'body'}
             style={{
               color: getColor('t2'),
             }}
@@ -162,6 +193,48 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
           </SingleLineText>
         </View>
       );
+    } else if (msg.body.type === ChatMessageType.CUSTOM) {
+      const body = msg.body as ChatCustomMessageBody;
+      const event = body.event;
+      if (event === gCustomMessageCardEventType) {
+        const cardParams = body.params as {
+          userId: string;
+          nickname: string;
+          avatar: string;
+        };
+        maxWidth = maxWidth * 0.8;
+        return (
+          <View style={{ flexDirection: 'row', maxWidth: maxWidth }}>
+            <Icon
+              name={'person_single_fill'}
+              style={{
+                width: 16,
+                height: 16,
+                tintColor: getColor('t2'),
+                marginRight: 2,
+              }}
+            />
+            <SingleLineText
+              textType={'small'}
+              paletteType={'label'}
+              style={{
+                color: getColor('t2'),
+              }}
+            >
+              {tr('card')}
+              <SingleLineText
+                textType={'small'}
+                paletteType={'body'}
+                style={{
+                  color: getColor('t2'),
+                }}
+              >
+                {cardParams.nickname ?? cardParams.userId}
+              </SingleLineText>
+            </SingleLineText>
+          </View>
+        );
+      }
     }
     return null;
   };
@@ -208,22 +281,36 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
           paletteType={'label'}
           style={{
             color: getColor('t1'),
-            maxWidth: '70%',
+            fontWeight: '500',
+            maxWidth: '60%',
           }}
         >
-          {tr('_uikit_chat_input_quote_title_1')}
+          {tr('you')}
           <SingleLineText
             textType={'small'}
-            paletteType={'label'}
+            paletteType={'body'}
             style={{
               color: getColor('t1'),
-              fontWeight: '500',
-              maxWidth: '60%',
+              maxWidth: '70%',
             }}
           >
-            {getUserName(propsMsg)}
+            {tr('_uikit_chat_input_quote_title_1')}
+            <SingleLineText
+              textType={'small'}
+              paletteType={'label'}
+              style={{
+                color: getColor('t1'),
+                fontWeight: '500',
+                maxWidth: '60%',
+              }}
+            >
+              {getUserName(propsMsg)}
+            </SingleLineText>
           </SingleLineText>
         </SingleLineText>
+
+        <View style={{ height: 4 }} />
+
         {getContent(propsMsg)}
       </View>
 

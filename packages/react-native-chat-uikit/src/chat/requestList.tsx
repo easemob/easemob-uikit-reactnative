@@ -96,9 +96,8 @@ export class RequestListImpl implements RequestList {
     newMsg.attributes[gNewRequestConversationUserAvatar] = '';
     newMsg.attributes[gNewRequestConversationState] =
       'pending' as NewRequestStateType;
-    newMsg.attributes[
-      gNewRequestConversationTip
-    ] = `requests to add you as a friend.`;
+    newMsg.attributes[gNewRequestConversationTip] =
+      '_uikit_new_quest_list_item_tip';
 
     const item = getNewRequest(newMsg);
     if (item) {

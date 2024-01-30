@@ -41,8 +41,8 @@ export function createStringSetEn(): StringSet {
       `Confirm removal of selected members ${names}?`,
     '_uikit_group_create_name': (key) => `${key}'s Group Chat`,
 
-    '_uikit_chat_input_quote_file': (name) => `Attachment ${name}`,
-    '_uikit_chat_input_quote_title_1': 'Replying to',
+    '_uikit_chat_input_quote_file': 'attachment ',
+    '_uikit_chat_input_quote_title_1': ' replying to ',
     '_uikit_chat_input_long_press_menu_picture': 'Photo',
     '_uikit_chat_input_long_press_menu_video': 'Video',
     '_uikit_chat_input_long_press_menu_camera': 'Camera',
@@ -93,6 +93,7 @@ export function createStringSetEn(): StringSet {
       'Confirm disbanding group and deleting group chat history',
 
     '_uikit_new_quest_title': 'New Request',
+    '_uikit_new_quest_list_item_tip': 'requests to add you as a friend.',
 
     '_uikit_report_title': 'Report Message',
     'Unwelcome commercial content': 'Unwelcome Commercial Content',
@@ -126,7 +127,9 @@ export function createStringSetEn(): StringSet {
     'video': 'Video',
     'voice': 'Voice',
     'file': 'File',
+    'card': 'card',
     'set': 'Set',
+    'you': 'You',
 
     'contact': 'contact',
 

@@ -157,7 +157,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               <Text
                 textType={'large'}
                 paletteType={'headline'}
-                style={{ color: getColor('fg'), paddingTop: 12 }}
+                style={{ color: getColor('fg') }}
               >
                 {groupName ?? groupId}
               </Text>

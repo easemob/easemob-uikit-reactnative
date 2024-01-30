@@ -1,11 +1,12 @@
 import {
+  ChatCustomMessageBody,
   ChatMessage,
   ChatMessageStatus,
   ChatMessageType,
   ChatTextMessageBody,
 } from 'react-native-chat-sdk';
 
-import { useChatContext } from '../../chat';
+import { gCustomMessageCardEventType, useChatContext } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { InitMenuItemsType } from '../BottomSheetMenu';
@@ -59,6 +60,16 @@ export function useMessageLongPressActions(
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
   const im = useChatContext();
+
+  const isCardMessage = (msg: ChatMessage) => {
+    if (msg.body.type === ChatMessageType.CUSTOM) {
+      const body = msg.body as ChatCustomMessageBody;
+      if (body.event === gCustomMessageCardEventType) {
+        return true;
+      }
+    }
+    return false;
+  };
   const onShowMenu = (
     _id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
@@ -88,7 +99,9 @@ export function useMessageLongPressActions(
         msgModel.msg.body.type === ChatMessageType.VOICE ||
         msgModel.msg.body.type === ChatMessageType.IMAGE ||
         msgModel.msg.body.type === ChatMessageType.VIDEO ||
-        msgModel.msg.body.type === ChatMessageType.FILE
+        msgModel.msg.body.type === ChatMessageType.FILE ||
+        (msgModel.msg.body.type === ChatMessageType.CUSTOM &&
+          isCardMessage(msgModel.msg))
       ) {
         if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
           initItems.push({
