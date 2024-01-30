@@ -32,7 +32,9 @@ export function DefaultImage(props: DefaultImageProps) {
     source,
     ...others
   } = props;
-  const [visible, setVisible] = React.useState(true);
+  const [visible, setVisible] = React.useState(
+    source.uri !== undefined && source.uri !== null ? false : true
+  );
   return (
     <View style={[containerStyle]}>
       <View style={[defaultContainerStyle]}>
@@ -41,7 +43,7 @@ export function DefaultImage(props: DefaultImageProps) {
             defaultStyle,
             {
               // display: visible ? 'flex' : 'none',
-              opacity: visible === true ? 0 : 1,
+              opacity: visible === true ? 1 : 0,
             },
           ]}
           source={defaultSource}

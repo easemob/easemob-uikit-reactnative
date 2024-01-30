@@ -1094,7 +1094,12 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         const body = msg.body as ChatImageMessageBody;
         return (
           <View style={{ flexDirection: 'row' }}>
-            <View style={{ paddingRight: 12 }}>
+            <View
+              style={{
+                paddingRight: 12,
+                justifyContent: 'space-between',
+              }}
+            >
               <SingleLineText
                 textType={'small'}
                 paletteType={'label'}
@@ -1106,7 +1111,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
               >
                 {user?.userName ?? user?.userId ?? msg.from}
               </SingleLineText>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Icon
                   name={'img'}
                   style={{
@@ -1117,6 +1122,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                     ),
                   }}
                 />
+                <View style={{ width: 2 }} />
                 <Text
                   textType={'medium'}
                   paletteType={'label'}
@@ -1163,7 +1169,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             >
               {user?.userName ?? user?.userId ?? msg.from}
             </SingleLineText>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
                 name={'3th_frame_lft_lgt_sdy'}
                 style={{
@@ -1206,7 +1212,12 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         const body = msg.body as ChatVideoMessageBody;
         return (
           <View style={{ flexDirection: 'row' }}>
-            <View style={{ paddingRight: 12 }}>
+            <View
+              style={{
+                paddingRight: 12,
+                justifyContent: 'space-between',
+              }}
+            >
               <SingleLineText
                 textType={'small'}
                 paletteType={'label'}
@@ -1218,7 +1229,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
               >
                 {user?.userName ?? user?.userId ?? msg.from}
               </SingleLineText>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Icon
                   name={'triangle_in_rectangle'}
                   style={{
@@ -1229,6 +1240,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                     ),
                   }}
                 />
+                <View style={{ width: 2 }} />
                 <Text
                   textType={'medium'}
                   paletteType={'label'}
@@ -1274,7 +1286,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             >
               {user?.userName ?? user?.userId ?? msg.from}
             </SingleLineText>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
                 name={'doc'}
                 style={{
