@@ -10,4 +10,10 @@ export type MineInfoProps = InfoProps & {
   userName?: string;
   userAvatar?: string;
   onClickedLogout?: () => void;
+  onClickedCommon?: () => void;
+  onClickedMessageNotification?: () => void;
+  onClickedPrivacy?: () => void;
+};
+export type CommonInfoProps = InfoProps & {
+  onBack?: () => void;
 };

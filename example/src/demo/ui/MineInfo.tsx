@@ -1,22 +1,23 @@
 import * as React from 'react';
-import { DeviceEventEmitter, View } from 'react-native';
+import { View } from 'react-native';
 import {
   Alert,
   Avatar,
   BottomSheetNameMenu,
-  CommonSwitch,
   Icon,
-  LanguageCode,
   ListItem,
   SimpleToast,
   Text,
   Text1Button,
   UIKIT_VERSION,
   useColors,
+  useI18nContext,
   usePaletteContext,
   useThemeContext,
 } from 'react-native-chat-uikit';
+import { ScrollView } from 'react-native-gesture-handler';
 
+import { mineInfo } from '../utils/utils';
 import { useMineInfo } from './MineInfo.hooks';
 import type { MineInfoProps } from './types';
 
@@ -33,16 +34,13 @@ export function MineInfo(props: MineInfoProps) {
     userSign,
     onClickedState,
     onClickedLogout,
-    onClickedLanguage,
-    onClickedTheme,
-    value,
-    onValueChange,
-    language,
-    setLanguage,
-    tr,
+    onClickedCommon,
+    onClickedMessageNotification,
+    onClickedPrivacy,
   } = useMineInfo(props);
   const { cornerRadius } = useThemeContext();
   const { input } = cornerRadius;
+  const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -107,188 +105,231 @@ export function MineInfo(props: MineInfoProps) {
       </View>
 
       <View style={{ height: 10 }} />
-      <ListItem
-        header={
-          <View
-            style={{
-              paddingHorizontal: 16,
-              height: 26,
-              justifyContent: 'center',
-            }}
-          >
-            <Text
-              textType={'small'}
-              paletteType={'title'}
-              style={{ color: getColor('t3') }}
-            >
-              {tr('set')}
-            </Text>
-          </View>
-        }
-        onClicked={onClickedState}
-        containerStyle={{ paddingHorizontal: 16 }}
-        LeftName={
-          <View style={{ flexDirection: 'row' }}>
-            <Icon name={'link'} style={{ height: 28, width: 28 }} />
-            <View style={{ width: 8 }} />
-            <Text
-              textType={'medium'}
-              paletteType={'title'}
-              style={{ color: getColor('fg') }}
-            >
-              {tr('online_state')}
-            </Text>
-          </View>
-        }
-        RightIcon={
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Text
-              textType={'medium'}
-              paletteType={'label'}
-              style={{ color: getColor('t3') }}
-            >
-              {tr('set')}
-            </Text>
-            <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
-          </View>
-        }
-      />
 
-      <ListItem
-        onClicked={onClickedState}
-        containerStyle={{ paddingHorizontal: 16 }}
-        LeftName={
-          <View style={{ flexDirection: 'row' }}>
-            <Icon name={'link'} style={{ height: 28, width: 28 }} />
-            <View style={{ width: 8 }} />
-            <Text
-              textType={'medium'}
-              paletteType={'title'}
-              style={{ color: getColor('fg') }}
-            >
-              {tr('about')}
-            </Text>
-          </View>
-        }
-        RightIcon={
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Text
-              textType={'medium'}
-              paletteType={'label'}
-              style={{ color: getColor('t3') }}
-            >
-              {`Easemob UIKit v${UIKIT_VERSION}`}
-            </Text>
-            <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
-          </View>
-        }
-      />
-
-      <ListItem
-        onClicked={onClickedTheme}
-        containerStyle={{ paddingHorizontal: 16 }}
-        LeftName={
-          <View style={{ flexDirection: 'row' }}>
-            <Icon name={'link'} style={{ height: 28, width: 28 }} />
-            <View style={{ width: 8 }} />
-            <Text
-              textType={'medium'}
-              paletteType={'title'}
-              style={{ color: getColor('fg') }}
-            >
-              {tr('theme')}
-            </Text>
-          </View>
-        }
-        RightIcon={
-          <View style={{ justifyContent: 'center' }}>
-            <CommonSwitch
-              height={31}
-              width={51}
-              value={value}
-              onValueChange={(v) => {
-                onValueChange(v);
-                DeviceEventEmitter.emit(
-                  'example_change_theme',
-                  value === true ? 'light' : 'dark'
-                );
+      <ScrollView>
+        <ListItem
+          header={
+            <View
+              style={{
+                paddingHorizontal: 16,
+                height: 26,
+                justifyContent: 'center',
               }}
-            />
-          </View>
-        }
-      />
-
-      <ListItem
-        onClicked={onClickedLanguage}
-        containerStyle={{ paddingHorizontal: 16 }}
-        LeftName={
-          <View style={{ flexDirection: 'row' }}>
-            <Icon name={'link'} style={{ height: 28, width: 28 }} />
-            <View style={{ width: 8 }} />
-            <Text
-              textType={'medium'}
-              paletteType={'title'}
-              style={{ color: getColor('fg') }}
             >
-              {tr('language')}
-            </Text>
-          </View>
-        }
-        RightIcon={
-          <View style={{ justifyContent: 'center' }}>
-            <CommonSwitch
-              height={31}
-              width={51}
-              value={language}
-              onValueChange={(v) => {
-                setLanguage(v);
-                DeviceEventEmitter.emit(
-                  'example_change_language',
-                  language === false
-                    ? ('en' as LanguageCode)
-                    : ('zh-Hans' as LanguageCode)
-                );
+              <Text
+                textType={'small'}
+                paletteType={'title'}
+                style={{ color: getColor('t3') }}
+              >
+                {tr('_demo_info_state_set')}
+              </Text>
+            </View>
+          }
+          onClicked={onClickedState}
+          containerStyle={{ paddingHorizontal: 16 }}
+          LeftName={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon
+                name={mineInfo[5]!}
+                style={{ height: 28, width: 28, borderRadius: 4 }}
+              />
+              <View style={{ width: 8 }} />
+              <Text
+                textType={'medium'}
+                paletteType={'title'}
+                style={{ color: getColor('fg') }}
+              >
+                {tr('_demo_info_online_state')}
+              </Text>
+            </View>
+          }
+          RightIcon={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text
+                textType={'medium'}
+                paletteType={'label'}
+                style={{ color: getColor('t3') }}
+              >
+                {tr('set')}
+              </Text>
+              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+            </View>
+          }
+        />
+
+        <ListItem
+          onClicked={onClickedState}
+          containerStyle={{ paddingHorizontal: 16 }}
+          LeftName={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon
+                name={mineInfo[3]!}
+                style={{ height: 28, width: 28, borderRadius: 4 }}
+              />
+              <View style={{ width: 8 }} />
+              <Text
+                textType={'medium'}
+                paletteType={'title'}
+                style={{ color: getColor('fg') }}
+              >
+                {tr('_demo_info_person_info')}
+              </Text>
+            </View>
+          }
+          RightIcon={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+            </View>
+          }
+        />
+
+        <ListItem
+          onClicked={onClickedCommon}
+          containerStyle={{ paddingHorizontal: 16 }}
+          LeftName={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon
+                name={mineInfo[2]!}
+                style={{ height: 28, width: 28, borderRadius: 4 }}
+              />
+              <View style={{ width: 8 }} />
+              <Text
+                textType={'medium'}
+                paletteType={'title'}
+                style={{ color: getColor('fg') }}
+              >
+                {tr('_demo_info_common_setting')}
+              </Text>
+            </View>
+          }
+          RightIcon={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+            </View>
+          }
+        />
+
+        <ListItem
+          onClicked={onClickedMessageNotification}
+          containerStyle={{ paddingHorizontal: 16 }}
+          LeftName={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon
+                name={mineInfo[0]!}
+                style={{ height: 28, width: 28, borderRadius: 4 }}
+              />
+              <View style={{ width: 8 }} />
+              <Text
+                textType={'medium'}
+                paletteType={'title'}
+                style={{ color: getColor('fg') }}
+              >
+                {tr('_demo_info_message_notification')}
+              </Text>
+            </View>
+          }
+          RightIcon={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+            </View>
+          }
+        />
+
+        <ListItem
+          onClicked={onClickedPrivacy}
+          containerStyle={{ paddingHorizontal: 16 }}
+          LeftName={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon
+                name={mineInfo[4]!}
+                style={{ height: 28, width: 28, borderRadius: 4 }}
+              />
+              <View style={{ width: 8 }} />
+              <Text
+                textType={'medium'}
+                paletteType={'title'}
+                style={{ color: getColor('fg') }}
+              >
+                {tr('_demo_info_show_privacy')}
+              </Text>
+            </View>
+          }
+          RightIcon={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+            </View>
+          }
+        />
+
+        <ListItem
+          onClicked={onClickedState}
+          containerStyle={{ paddingHorizontal: 16 }}
+          LeftName={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon
+                name={mineInfo[1]!}
+                style={{ height: 28, width: 28, borderRadius: 4 }}
+              />
+              <View style={{ width: 8 }} />
+              <Text
+                textType={'medium'}
+                paletteType={'title'}
+                style={{ color: getColor('fg') }}
+              >
+                {tr('about')}
+              </Text>
+            </View>
+          }
+          RightIcon={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text
+                textType={'medium'}
+                paletteType={'label'}
+                style={{ color: getColor('t3') }}
+              >
+                {`Easemob UIKit v${UIKIT_VERSION}`}
+              </Text>
+              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+            </View>
+          }
+        />
+
+        <ListItem
+          header={
+            <View
+              style={{
+                paddingHorizontal: 16,
+                height: 26,
+                justifyContent: 'center',
               }}
-            />
-          </View>
-        }
-      />
-
-      <ListItem
-        header={
-          <View
-            style={{
-              paddingHorizontal: 16,
-              height: 26,
-              justifyContent: 'center',
-            }}
-          >
-            <Text
-              textType={'small'}
-              paletteType={'title'}
-              style={{ color: getColor('t3') }}
             >
-              {tr('login')}
-            </Text>
-          </View>
-        }
-        onClicked={onClickedState}
-        containerStyle={{ paddingHorizontal: 16 }}
-        LeftName={
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Text1Button
-              sizesType={'middle'}
-              radiusType={input}
-              contentType={'only-text'}
-              text={tr('logout')}
-              onPress={onClickedLogout}
-            />
-          </View>
-        }
-        RightIcon={
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }} />
-        }
-      />
+              <Text
+                textType={'small'}
+                paletteType={'title'}
+                style={{ color: getColor('t3') }}
+              >
+                {tr('login')}
+              </Text>
+            </View>
+          }
+          onClicked={onClickedState}
+          containerStyle={{ paddingHorizontal: 16 }}
+          LeftName={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text1Button
+                sizesType={'middle'}
+                radiusType={input}
+                contentType={'only-text'}
+                text={tr('logout')}
+                onPress={onClickedLogout}
+              />
+            </View>
+          }
+          RightIcon={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }} />
+          }
+        />
+      </ScrollView>
 
       <Alert ref={alertRef} />
       <BottomSheetNameMenu

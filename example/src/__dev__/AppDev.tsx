@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { usePermissions } from 'react-native-chat-uikit';
 
 // import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { default as Test } from './test_updater';
+import { default as Test } from './test_text';
 
 // if (
 //   Platform.OS === 'android' &&

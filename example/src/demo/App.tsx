@@ -26,6 +26,7 @@ import type { RootParamsList, RootParamsName } from './routes';
 import {
   AddGroupParticipantScreen,
   ChangeGroupOwnerScreen,
+  CommonSettingScreen,
   ConfigScreen,
   ContactInfoScreen,
   ContactListScreen,
@@ -477,6 +478,13 @@ export function App() {
                 headerShown: false,
               }}
               component={EditInfoScreen}
+            />
+            <Root.Screen
+              name={'CommonSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={CommonSettingScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

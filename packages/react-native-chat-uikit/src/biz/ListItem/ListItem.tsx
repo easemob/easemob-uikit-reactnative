@@ -78,6 +78,7 @@ export function ListItem<
     onClicked,
     enableDivider = true,
     header,
+    tail,
   } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -128,6 +129,7 @@ export function ListItem<
           }}
         />
       ) : null}
+      {getElement(tail, {})}
     </View>
   );
 }

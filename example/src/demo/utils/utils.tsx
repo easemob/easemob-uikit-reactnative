@@ -84,3 +84,12 @@ export const defaultAvatars: number[] = [
   require('../assets/persion_avatar_ondark.png'),
   require('../assets/persion_avatar_onlight.png'),
 ];
+
+export const mineInfo: number[] = [
+  require('../assets/info/bell_3x.png'),
+  require('../assets/info/doc_3x.png'),
+  require('../assets/info/gear_3x.png'),
+  require('../assets/info/info_3x.png'),
+  require('../assets/info/lock_3x.png'),
+  require('../assets/info/status_3x.png'),
+];

@@ -13,7 +13,7 @@ import {
   useThemeContext,
 } from 'react-native-chat-uikit';
 
-import type { MineInfoProps, UserState } from './types';
+import type { CommonInfoProps, MineInfoProps, UserState } from './types';
 
 export function useMineInfo(props: MineInfoProps) {
   const {
@@ -23,6 +23,9 @@ export function useMineInfo(props: MineInfoProps) {
     doNotDisturb: propsDoNotDisturb,
     onClearChat: propsOnClearChat,
     onClickedLogout: propsOnClickedLogout,
+    onClickedCommon: propsOnClickedCommon,
+    onClickedMessageNotification: propsOnClickedMessageNotification,
+    onClickedPrivacy: propsOnClickedPrivacy,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(propsUserName);
@@ -42,7 +45,7 @@ export function useMineInfo(props: MineInfoProps) {
     currentLanguage() === 'en' ? true : false
   );
   const im = useChatContext();
-  const { tr } = useI18nContext();
+
   useLifecycle(
     React.useCallback(
       (state: any) => {
@@ -52,15 +55,6 @@ export function useMineInfo(props: MineInfoProps) {
             setUserName(self.userName);
             setUserSign('self.sign');
           }
-          // im.getUserInfo({
-          //   userId: userId,
-          //   onResult: (result) => {
-          //     if (result.isOk && result.value) {
-          //       setUserName(result.value.userName);
-          //       setUserSign(result.value.sign);
-          //     }
-          //   },
-          // });
         }
       },
       [im, userId]
@@ -97,17 +91,21 @@ export function useMineInfo(props: MineInfoProps) {
     onShowMineInfoActions();
   }, [onShowMineInfoActions]);
 
-  const onClickedTheme = React.useCallback(() => {
-    // todo: change theme
-  }, []);
-
-  const onClickedLanguage = React.useCallback(() => {
-    // todo: change language
-  }, []);
-
   const onClickedLogout = React.useCallback(() => {
     propsOnClickedLogout?.();
   }, [propsOnClickedLogout]);
+
+  const onClickedCommon = React.useCallback(() => {
+    propsOnClickedCommon?.();
+  }, [propsOnClickedCommon]);
+
+  const onClickedMessageNotification = React.useCallback(() => {
+    propsOnClickedMessageNotification?.();
+  }, [propsOnClickedMessageNotification]);
+
+  const onClickedPrivacy = React.useCallback(() => {
+    propsOnClickedPrivacy?.();
+  }, [propsOnClickedPrivacy]);
 
   const listener = React.useMemo(() => {
     return {
@@ -138,13 +136,60 @@ export function useMineInfo(props: MineInfoProps) {
     userSign,
     onClickedState,
     onClickedLogout,
-    onClickedTheme,
-    onClickedLanguage,
+    onClickedCommon,
+    onClickedMessageNotification,
+    onClickedPrivacy,
     userState,
-    tr,
     value,
     onValueChange,
     language,
     setLanguage,
+  };
+}
+
+export function useCommonInfo(props: CommonInfoProps) {
+  const {} = props;
+  const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const alertRef = React.useRef<AlertRef>({} as any);
+  const toastRef = React.useRef<SimpleToastRef>({} as any);
+  const { style } = useThemeContext();
+  const { currentLanguage } = useI18nContext();
+  const [stateValue, onStateValueChange] = React.useState(false);
+  const [groupValue, onGroupValueChange] = React.useState(false);
+  const [themeValue, onThemeValueChange] = React.useState(
+    style === 'light' ? false : true
+  );
+  const [languageValue, onLanguageValueChange] = React.useState(
+    currentLanguage() === 'en' ? true : false
+  );
+  const onClickedInputState = React.useCallback(() => {}, []);
+  const onRequestCloseMenu = React.useCallback(() => {
+    menuRef.current?.startHide?.();
+  }, []);
+  const onClickedAutoAcceptGroupInvite = React.useCallback(() => {}, []);
+  const onClickedTheme = React.useCallback(() => {
+    // todo: change theme
+  }, []);
+
+  const onClickedLanguage = React.useCallback(() => {
+    // todo: change language
+  }, []);
+  return {
+    menuRef,
+    alertRef,
+    toastRef,
+    onClickedInputState,
+    stateValue,
+    onStateValueChange,
+    onRequestCloseMenu,
+    onClickedAutoAcceptGroupInvite,
+    groupValue,
+    onGroupValueChange,
+    onClickedTheme,
+    onClickedLanguage,
+    themeValue,
+    onThemeValueChange,
+    languageValue,
+    onLanguageValueChange,
   };
 }
