@@ -525,6 +525,7 @@ export type MessageListRef = {
       | SendTimeProps
       | SendSystemProps
       | SendCardProps
+      | SendCustomProps
   ) => void;
   /**
    * Remove a message from the message list.

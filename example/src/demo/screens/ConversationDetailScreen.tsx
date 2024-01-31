@@ -27,10 +27,10 @@ import type { RootScreenParamsList } from '../routes';
 
 // export function MyMessageContent(props: MessageContentProps) {
 //   const { msg } = props;
-//   if (msg.body.type === ChatMessageType.TXT) {
+//   if (msg.body.type === ChatMessageType.CUSTOM) {
 //     return (
 //       <View>
-//         <Text>{(msg.body as ChatTextMessageBody).content + 'test'}</Text>
+//         <Text>{(msg.body as ChatCustomMessageBody).params?.test}</Text>
 //       </View>
 //     );
 //   }
@@ -125,6 +125,25 @@ export function ConversationDetailScreen(props: Props) {
                 },
               });
             },
+            // onInitMenu: (menu) => {
+            //   return [
+            //     ...menu,
+            //     {
+            //       name: 'test',
+            //       isHigh: false,
+            //       icon: 'bell',
+            //       onClicked: () => {
+            //         console.log('test');
+            //         listRef.current?.addSendMessage({
+            //           type: 'custom',
+            //           msg: ChatMessage.createCustomMessage(convId, 'test', 1, {
+            //             params: { test: '111' },
+            //           }),
+            //         });
+            //       },
+            //     },
+            //   ];
+            // },
           },
         }}
         list={{
