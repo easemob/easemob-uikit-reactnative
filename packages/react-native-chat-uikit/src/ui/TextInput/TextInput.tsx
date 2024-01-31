@@ -192,23 +192,35 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
           ]}
           onContentSizeChange={(e) => {
             onContentSizeChange?.(e);
+            // console.log(
+            //   'dev:onContentSizeChange',
+            //   minHeight,
+            //   maxHeight,
+            //   maxHeightRef.current,
+            //   e.nativeEvent.contentSize.height,
+            //   Math.min(
+            //     Math.max(minHeight, e.nativeEvent.contentSize.height),
+            //     maxHeight ?? maxHeightRef.current
+            //   )
+            // );
             if (Platform.OS === 'ios') {
-              if (maxHeightRef.current) {
-                setMaxHeight(
-                  Math.min(
-                    Math.max(minHeight, e.nativeEvent.contentSize.height),
-                    maxHeight ?? maxHeightRef.current
-                  )
-                );
+              if (maxHeightRef.current && maxHeight) {
+                setMaxHeight(Math.min(maxHeight, maxHeightRef.current));
               }
             } else if (Platform.OS === 'android') {
-              if (maxHeightRef.current) {
-                setHeight(
-                  Math.min(
-                    Math.max(minHeight, e.nativeEvent.contentSize.height),
-                    maxHeight ?? maxHeightRef.current
-                  )
-                );
+              if (numberOfLines !== undefined) {
+                if (maxHeightRef.current) {
+                  setHeight(
+                    Math.min(
+                      Math.max(minHeight, e.nativeEvent.contentSize.height),
+                      maxHeight ?? maxHeightRef.current
+                    )
+                  );
+                }
+              } else {
+                if (maxHeightRef.current && maxHeight) {
+                  setHeight(Math.min(maxHeight, maxHeightRef.current));
+                }
               }
             }
           }}
@@ -218,7 +230,14 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
           {...others}
         />
         {statistics ? (
-          <View style={{ height: 22, width: '100%' }}>
+          <View
+            style={{
+              height: 22,
+              width: '100%',
+              position: 'absolute',
+              bottom: -22,
+            }}
+          >
             <Text
               textType={'large'}
               paletteType={'body'}

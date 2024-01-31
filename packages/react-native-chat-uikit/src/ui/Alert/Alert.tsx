@@ -166,7 +166,15 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
           ) : null}
           <View style={{ height: 24 }} />
           {supportInput === true ? (
-            <View style={{ width: '100%', minHeight: 48 + 24 }}>
+            <View
+              style={{
+                width: '100%',
+                minHeight: supportInputStatistics === true ? 48 + 22 : 48,
+                paddingBottom: supportInputStatistics === true ? 22 : undefined,
+                backgroundColor: getColor('bg2'),
+                justifyContent: 'center',
+              }}
+            >
               <TextInput
                 value={value}
                 onChangeText={onChangeText}
@@ -180,8 +188,11 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                   //   cr: cornerRadius,
                   //   style: containerStyle,
                   // }),
-                  minHeight: 48,
+                  // minHeight: 48,
                   width: '100%',
+                  minHeight: 36,
+                  paddingVertical: 7,
+                  maxHeight: Platform.OS === 'ios' ? 96 : 96,
                 }}
                 style={{
                   paddingHorizontal: 20,
@@ -193,7 +204,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 }}
                 numberOfLines={4}
                 multiline={true}
-                unitHeight={Platform.OS === 'ios' ? 22 : 22}
+                unitHeight={Platform.OS === 'ios' ? 24 : 22}
                 statistics={
                   supportInputStatistics === true
                     ? {
@@ -210,9 +221,10 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 enableClearButton={enableClearButton}
                 autoFocus={autoFocus}
               />
-              <View style={{ height: 24 }} />
             </View>
           ) : null}
+
+          {supportInput === true ? <View style={{ height: 24 }} /> : null}
 
           <View
             style={{

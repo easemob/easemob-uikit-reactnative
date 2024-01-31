@@ -43,6 +43,10 @@ export type UseMessageLongPressActionsProps = BasicActionsProps & {
    * Callback notification of recall message.
    */
   onRecallMessage?: (msg: ChatMessage, fromType: 'send' | 'recv') => void;
+  /**
+   * Callback notification of translate message.
+   */
+  onTranslateMessage?: (model: MessageModel) => void;
 };
 export function useMessageLongPressActions(
   props: UseMessageLongPressActionsProps
@@ -55,6 +59,7 @@ export function useMessageLongPressActions(
     onDeleteMessage,
     onRecallMessage,
     onCopyFinished,
+    onTranslateMessage,
     onInit,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
@@ -114,6 +119,23 @@ export function useMessageLongPressActions(
               });
             },
           });
+        }
+      }
+      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+        if (msgModel.msg.body.type === ChatMessageType.TXT) {
+          const textBody = msgModel.msg.body as ChatTextMessageBody;
+          if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
+            initItems.push({
+              name: tr('_uikit_chat_list_long_press_menu_translate'),
+              isHigh: false,
+              icon: 'a_in_arrows_round',
+              onClicked: () => {
+                closeMenu(() => {
+                  onTranslateMessage?.(model as MessageModel);
+                });
+              },
+            });
+          }
         }
       }
       if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {

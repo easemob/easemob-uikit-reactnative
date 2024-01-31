@@ -179,7 +179,7 @@ export const MessageInput = React.forwardRef<
                   ref={inputRef}
                   numberOfLines={numberOfLines}
                   multiline={true}
-                  unitHeight={Platform.OS === 'ios' ? 20 : 20}
+                  unitHeight={Platform.OS === 'ios' ? 24 : 20}
                   style={{
                     fontSize: 16,
                     fontStyle: 'normal',

@@ -170,10 +170,10 @@ export function useGroupInfo(
     });
   };
   const onGroupName = () => {
-    if (propsOnGroupName) {
-      propsOnGroupName(groupId, groupName);
-      return;
-    }
+    // if (propsOnGroupName) {
+    //   propsOnGroupName(groupId, groupName);
+    //   return;
+    // }
     alertRef.current.alertWithInit({
       message: tr('_uikit_info_alert_modify_group_name'),
       supportInput: true,

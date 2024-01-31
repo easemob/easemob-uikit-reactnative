@@ -85,7 +85,7 @@ export const MessageInputEditMessage = React.forwardRef<
   const {
     onRequestModalClose,
     initMsg,
-    numberOfLines,
+    numberOfLines = 2,
     bottom: propsBottom,
     onEditMessageFinished,
   } = props;
@@ -238,20 +238,23 @@ export const MessageInputEditMessage = React.forwardRef<
                 ref={inputRef}
                 numberOfLines={numberOfLines}
                 multiline={true}
-                unitHeight={Platform.OS === 'ios' ? 22 : 22}
+                unitHeight={Platform.OS === 'ios' ? 29 : 20}
                 style={{
                   fontSize: 16,
                   fontStyle: 'normal',
                   fontWeight: '400',
-                  lineHeight: 22,
+                  // lineHeight: 22,
                   fontFamily: fontFamily,
                   color: getColor('input_text'),
                 }}
                 containerStyle={{
                   // width: '100%',
-                  minHeight: 22,
                   backgroundColor: getColor('bg2'),
-                  // borderRadius: 4,
+                  minHeight: 36,
+                  paddingHorizontal: 8,
+                  paddingVertical: 7,
+                  // !!! ios: maxHeight = single * 3 + 1
+                  maxHeight: Platform.OS === 'ios' ? 58 : 54,
                 }}
                 onFocus={onFocus}
                 onBlur={onBlur}

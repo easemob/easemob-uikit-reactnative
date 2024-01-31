@@ -51,6 +51,7 @@ export function createStringSetEn(): StringSet {
 
     '_uikit_chat_list_long_press_menu_copy': 'Copy',
     '_uikit_chat_list_long_press_menu_replay': 'Reply',
+    '_uikit_chat_list_long_press_menu_translate': 'translate',
     '_uikit_chat_list_long_press_menu_edit': 'Edit',
     '_uikit_chat_list_long_press_menu_report': 'Report',
     '_uikit_chat_list_long_press_menu_delete': 'Delete',

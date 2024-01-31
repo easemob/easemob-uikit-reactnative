@@ -149,10 +149,7 @@ export function EditInfo(props: EditInfoProps) {
       <KeyboardAvoidingView style={{ paddingHorizontal: 12 }}>
         <View
           style={{
-            paddingBottom: 13,
-            paddingLeft: 16,
-            paddingRight: 16,
-            paddingTop: 13,
+            paddingBottom: 22,
             backgroundColor: getColor('bg2'),
           }}
         >
@@ -160,7 +157,7 @@ export function EditInfo(props: EditInfoProps) {
             ref={inputRef}
             numberOfLines={10}
             multiline={true}
-            unitHeight={Platform.OS === 'ios' ? 22 : 22}
+            unitHeight={Platform.OS === 'ios' ? 20 : 20}
             autoFocus={true}
             style={{
               fontSize: 16,
@@ -169,15 +166,16 @@ export function EditInfo(props: EditInfoProps) {
               lineHeight: 22,
               // fontFamily: fontFamily,
               color: getColor('t1'),
+              // backgroundColor: 'green',
             }}
             containerStyle={{
-              width: '100%',
-              // minHeight: 22,
-              // backgroundColor: 'red',
-              // backgroundColor: getColor('bg2'),
-              // paddingHorizontal: 8,
-              // borderTopLeftRadius: 4,
-              // borderTopRightRadius: 4,
+              marginBottom: 13,
+              marginLeft: 16,
+              marginRight: 16,
+              marginTop: 13,
+              // width: '100%',
+              minHeight: 36,
+              maxHeight: 200,
             }}
             // onFocus={onFocus}
             // onBlur={onBlur}
