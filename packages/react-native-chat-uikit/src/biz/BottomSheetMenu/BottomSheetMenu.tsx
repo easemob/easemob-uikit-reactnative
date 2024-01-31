@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -44,6 +45,12 @@ export type BottomSheetMenuProps = {
    * If it is not set here, it can be set dynamically when calling `startShowWithInit`.
    */
   initItems?: React.ReactElement[];
+  /**
+   * The maximum height of the component.
+   *
+   * @default half of the entire screen.
+   */
+  maxHeight?: number;
 };
 
 /**
@@ -75,10 +82,16 @@ export const BottomSheetMenu = React.forwardRef<
   props: BottomSheetMenuProps,
   ref?: React.ForwardedRef<BottomSheetMenuRef>
 ) {
-  const { onRequestModalClose, initItems, title } = props;
+  const {
+    onRequestModalClose,
+    initItems,
+    title,
+    maxHeight: propsMaxHeight,
+  } = props;
   const { colors } = usePaletteContext();
   const { bottom } = useSafeAreaInsets();
   const modalRef = React.useRef<SlideModalRef>({} as any);
+  const { height: winHeight } = useWindowDimensions();
   const othersRef = React.useRef();
   const { items, updateItems } = useGetItems(initItems);
   const { getColor } = useColors({
@@ -177,7 +190,19 @@ export const BottomSheetMenu = React.forwardRef<
           </View>
         ) : null}
 
-        {items}
+        {items.length > 6 ? (
+          <ScrollView
+            style={{
+              maxHeight: propsMaxHeight ?? winHeight * 0.5,
+              width: '100%',
+            }}
+            bounces={false}
+          >
+            <View>{items}</View>
+          </ScrollView>
+        ) : (
+          items
+        )}
 
         <View style={{ height: bottom }} />
       </SafeAreaView>
