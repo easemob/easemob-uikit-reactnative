@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 
-import type { IconNameType } from '../../assets';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
@@ -10,17 +9,7 @@ import { calculateLeft } from '../../ui/TabPage/TabPageHeader.hooks';
 import { Text } from '../../ui/Text';
 import { gHeaderHeight } from './BottomTabBar.const';
 
-export type BottomTabBarProps = Omit<TabPageHeaderProps, 'titles'> & {
-  /**
-   * Set the tab list item.
-   */
-  items: {
-    title?: string;
-    icon: IconNameType | number;
-  }[];
-  // selectedColor?: ColorValue;
-  // unselectedColor?: ColorValue;
-};
+export type BottomTabBarProps = TabPageHeaderProps;
 
 /**
  * tab component.
@@ -31,7 +20,7 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
   const {
     propRef,
     onClicked,
-    items,
+    titles: items,
     width: initWidth,
     containerStyle,
     content,
@@ -81,6 +70,8 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
       style={{
         flexDirection: 'column',
         height: gHeaderHeight,
+        justifyContent: 'center',
+        marginVertical: 3,
       }}
     >
       <View
@@ -89,7 +80,7 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
             flexDirection: 'row',
             justifyContent: 'space-around',
             alignItems: 'center',
-            height: '100%',
+            // height: '100%',
           },
           containerStyle,
         ]}

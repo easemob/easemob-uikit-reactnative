@@ -7,6 +7,8 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import type { IconNameType } from '../../assets';
+
 export type TabPageHeaderRef = {
   toLeft: (movedCount: number) => void;
   toRight: (movedCount: number) => void;
@@ -14,7 +16,10 @@ export type TabPageHeaderRef = {
 export type TabPageHeaderProps = {
   propRef: React.RefObject<TabPageHeaderRef>;
   onClicked?: (index: number) => void;
-  titles: string[];
+  titles: {
+    title?: string;
+    icon: IconNameType | number;
+  }[];
   width?: number;
   indicatorStyle?: StyleProp<ViewStyle>;
   /**

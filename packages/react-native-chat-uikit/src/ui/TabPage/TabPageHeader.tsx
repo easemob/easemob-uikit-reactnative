@@ -134,7 +134,7 @@ export function TabPageHeader(props: TabPageHeaderProps) {
                   },
                 ]}
               >
-                {v}
+                {v.title}
               </Text>
             </View>
           );

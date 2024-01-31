@@ -69,7 +69,8 @@ export function MineInfo(props: MineInfoProps) {
     <View
       style={[
         {
-          flexGrow: 1,
+          flex: 1,
+          // flexGrow: 1,
           backgroundColor: getColor('bg'),
           // backgroundColor: 'red',
         },
@@ -106,7 +107,9 @@ export function MineInfo(props: MineInfoProps) {
 
       <View style={{ height: 10 }} />
 
-      <ScrollView>
+      {/* <View style={{ flexGrow: 1 }} /> */}
+
+      <ScrollView style={{ flex: 1 }}>
         <ListItem
           header={
             <View

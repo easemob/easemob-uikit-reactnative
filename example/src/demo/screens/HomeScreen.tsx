@@ -62,8 +62,7 @@ export function HomeScreen(props: Props) {
         header={{
           Header: BottomTabBar as any,
           HeaderProps: {
-            titles: ['1', '2', '3'],
-            items: [
+            titles: [
               {
                 title: tr('_demo_tab_conv_list'),
                 icon: 'bubble_fill',

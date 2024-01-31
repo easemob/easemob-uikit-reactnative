@@ -25,5 +25,8 @@
         "Usecase",
         "viewability",
         "zuoyu"
-    ]
+    ],
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/estuary/flow/master/flow.schema.json": "untitled:Untitled-1"
+    }
 }

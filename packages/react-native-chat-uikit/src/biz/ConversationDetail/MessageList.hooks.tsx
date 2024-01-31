@@ -1087,6 +1087,7 @@ export function useMessageList(
       onNoMoreMessage?.();
       return;
     }
+    console.log('test:zuoyu:requestHistoryMessage:', startMsgIdRef.current);
     im.messageManager.loadHistoryMessage({
       convId,
       convType,
@@ -1102,6 +1103,7 @@ export function useMessageList(
             return;
           }
           startMsgIdRef.current = msgs[0]!.msgId.toString();
+          console.log('test:zuoyu:requestHistoryMessage:2', startMsgIdRef.current);
           onAddMessageListToUI(msgs, 'top', (list) => {
             list.map((v) => {
               if (v.model.modelType === 'message') {
@@ -1121,16 +1123,6 @@ export function useMessageList(
     onNoMoreMessage,
     sendRecvMessageReadAck,
   ]);
-
-  // React.useEffect(() => {
-  //   const listener = (msg: ChatMessage) => {
-  //     setRecvMessageRead(msg);
-  //   };
-  //   addListener('setRecvMessageRead', listener);
-  //   return () => {
-  //     removeListener('setRecvMessageRead', listener);
-  //   };
-  // }, [addListener, removeListener, setRecvMessageRead]);
 
   React.useImperativeHandle(
     ref,
