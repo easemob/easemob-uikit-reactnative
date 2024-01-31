@@ -210,17 +210,7 @@ function useGetListItems(onGetData?: () => any) {
         .filter((v) => v !== null) as JSX.Element[];
 
       if (hasCancel === false) {
-        const data = [
-          ...d,
-          <View
-            key={99}
-            style={{
-              height: 8,
-              width: '100%',
-              backgroundColor: getColor('divider'),
-            }}
-          />,
-        ];
+        const data = [...d];
         return data;
       } else {
         const data = [

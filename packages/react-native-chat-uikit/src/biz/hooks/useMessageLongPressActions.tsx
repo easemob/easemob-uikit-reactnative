@@ -191,7 +191,7 @@ export function useMessageLongPressActions(
       initItems: initItems,
       onRequestModalClose: closeMenu,
       layoutType: 'left',
-      hasCancel: true,
+      hasCancel: false,
     });
   };
 
