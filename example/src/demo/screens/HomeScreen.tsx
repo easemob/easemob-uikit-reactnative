@@ -10,9 +10,12 @@ import {
   ChatServiceListener,
   ContactList,
   ConversationList,
+  DataModel,
   DisconnectReasonType,
+  EventServiceListener,
   TabPage,
   TabPageRef,
+  timeoutTask,
   useChatContext,
   useChatListener,
   useColors,
@@ -158,36 +161,49 @@ function HomeTabConversationListScreen(
   const navigation =
     useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
 
-  // const im = useChatContext();
-  // const updatedRef = React.useRef<boolean>(false);
-  // const updateData = React.useCallback(() => {
-  //   if (updatedRef.current) {
-  //     return;
-  //   }
-  //   updatedRef.current = true;
-  //   im.getAllConversations({
-  //     onResult: (result) => {
-  //       // 假设需要获取所有会话列表项的头像和昵称
-  //       if (result.isOk && result.value) {
-  //         const users: DataModel[] = [];
-  //         const groups: DataModel[] = [];
-  //         result.value.forEach((conv) => {
-  //           if (conv.convType === ChatConversationType.PeerChat) {
-  //             users.push({ id: conv.convId, type: 'user', name: 'xxx' });
-  //           } else {
-  //             groups.push({ id: conv.convId, type: 'group', name: 'yyy' });
-  //           }
-  //         });
-  //         im.updateRequestData({
-  //           data: new Map([
-  //             ['user', users ?? []],
-  //             ['group', groups ?? []],
-  //           ]),
-  //         });
-  //       }
-  //     },
-  //   });
-  // }, [im]);
+  const im = useChatContext();
+  const updatedRef = React.useRef<boolean>(false);
+  const updateData = React.useCallback(() => {
+    if (updatedRef.current) {
+      return;
+    }
+    updatedRef.current = true;
+    im.getJoinedGroups({
+      onResult: (r) => {
+        if (r.value) {
+          const groups: DataModel[] = [];
+          r.value.forEach((conv) => {
+            groups.push({
+              id: conv.groupId,
+              type: 'group',
+              name: conv.groupName,
+            });
+          });
+          im.updateRequestData({
+            data: new Map([['group', groups ?? []]]),
+          });
+        }
+      },
+    });
+  }, [im]);
+
+  React.useEffect(() => {
+    const listener: EventServiceListener = {
+      onFinished: (params) => {
+        if (params.event === 'getAllConversations') {
+          timeoutTask(500, updateData);
+        }
+      },
+    };
+    im.addListener(listener);
+    return () => {
+      im.removeListener(listener);
+    };
+  }, [im, updateData]);
+
+  // React.useEffect(() => {
+  //   timeoutTask(3000, updateData);
+  // }, [im, updateData]);
 
   return (
     <ConversationList
