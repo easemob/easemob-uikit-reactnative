@@ -22,7 +22,9 @@ import type { NewRequestModel } from './types.ui';
 /**
  * Get user info from message.
  */
-export function userInfoFromMessage(msg?: ChatMessage): UserData | undefined {
+export function userInfoFromMessage(
+  msg?: ChatMessage | undefined | null
+): UserData | undefined {
   if (msg === undefined || msg === null) {
     return undefined;
   }

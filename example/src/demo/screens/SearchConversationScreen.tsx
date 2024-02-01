@@ -37,7 +37,7 @@ export function SearchConversationScreen(props: Props) {
         onClicked={(data) => {
           if (data) {
             navigation.pop();
-            navigation.push('ConversationDetail', {
+            navigation.navigate('ConversationDetail', {
               params: {
                 convId: data?.convId,
                 convType: data?.convType,

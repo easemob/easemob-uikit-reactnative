@@ -97,7 +97,7 @@ export function TopNavigationBarRightList({
     },
   });
   return (
-    <View style={{ flexDirection: 'row', backgroundColor: 'red', }}>
+    <View style={{ flexDirection: 'row' }}>
       {iconNameList.map((name, index) => {
         return (
           <IconButton

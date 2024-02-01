@@ -1057,11 +1057,11 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
       ? 17
       : 12;
 
-  const getContent = (msg?: ChatMessage) => {
-    const user = userInfoFromMessage(msg);
-    switch (msg?.body.type) {
+  const getContent = (originalMsg: ChatMessage, quoteMsg?: ChatMessage) => {
+    const user = userInfoFromMessage(quoteMsg);
+    switch (quoteMsg?.body.type) {
       case ChatMessageType.TXT: {
-        const body = msg?.body as ChatTextMessageBody;
+        const body = quoteMsg?.body as ChatTextMessageBody;
         return (
           <View>
             <SingleLineText
@@ -1073,7 +1073,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 ),
               }}
             >
-              {user?.userName ?? user?.userId ?? msg.from}
+              {user?.userName ?? user?.userId ?? quoteMsg.from}
             </SingleLineText>
             <Text
               textType={'medium'}
@@ -1091,7 +1091,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         );
       }
       case ChatMessageType.IMAGE: {
-        const body = msg.body as ChatImageMessageBody;
+        const body = quoteMsg.body as ChatImageMessageBody;
         return (
           <View style={{ flexDirection: 'row' }}>
             <View
@@ -1109,7 +1109,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                   ),
                 }}
               >
-                {user?.userName ?? user?.userId ?? msg.from}
+                {user?.userName ?? user?.userId ?? quoteMsg.from}
               </SingleLineText>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Icon
@@ -1154,7 +1154,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         );
       }
       case ChatMessageType.VOICE: {
-        const body = msg?.body as ChatVoiceMessageBody;
+        const body = quoteMsg?.body as ChatVoiceMessageBody;
         return (
           <View>
             <SingleLineText
@@ -1167,7 +1167,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 alignSelf: layoutType === 'left' ? 'flex-start' : 'flex-end',
               }}
             >
-              {user?.userName ?? user?.userId ?? msg.from}
+              {user?.userName ?? user?.userId ?? quoteMsg.from}
             </SingleLineText>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
@@ -1209,7 +1209,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         );
       }
       case ChatMessageType.VIDEO: {
-        const body = msg.body as ChatVideoMessageBody;
+        const body = quoteMsg.body as ChatVideoMessageBody;
         return (
           <View style={{ flexDirection: 'row' }}>
             <View
@@ -1227,7 +1227,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                   ),
                 }}
               >
-                {user?.userName ?? user?.userId ?? msg.from}
+                {user?.userName ?? user?.userId ?? quoteMsg.from}
               </SingleLineText>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Icon
@@ -1272,7 +1272,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         );
       }
       case ChatMessageType.FILE: {
-        const body = msg?.body as ChatFileMessageBody;
+        const body = quoteMsg?.body as ChatFileMessageBody;
         return (
           <View>
             <SingleLineText
@@ -1284,7 +1284,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                 ),
               }}
             >
-              {user?.userName ?? user?.userId ?? msg.from}
+              {user?.userName ?? user?.userId ?? quoteMsg.from}
             </SingleLineText>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
@@ -1328,7 +1328,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         );
       }
       case ChatMessageType.CUSTOM: {
-        const body = msg?.body as ChatCustomMessageBody;
+        const body = quoteMsg?.body as ChatCustomMessageBody;
         if (body.event === gCustomMessageCardEventType) {
           const cardParams = body.params as {
             userId: string;
@@ -1347,7 +1347,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
                   alignSelf: layoutType === 'left' ? 'flex-start' : 'flex-end',
                 }}
               >
-                {user?.userName ?? user?.userId ?? msg.from}
+                {user?.userName ?? user?.userId ?? quoteMsg.from}
               </SingleLineText>
               <View style={{ flexDirection: 'row' }}>
                 <Icon
@@ -1403,19 +1403,35 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         );
       }
       default: {
-        return (
-          <Text
-            textType={'large'}
-            paletteType={'body'}
-            style={{
-              color: getColor(
-                layoutType === 'left' ? 'left_text' : 'right_text'
-              ),
-            }}
-          >
-            {tr('_uikit_msg_tip_not_support')}
-          </Text>
-        );
+        if (originalMsg.attributes?.[gMessageAttributeQuote] && !quoteMsg) {
+          return (
+            <Text
+              textType={'large'}
+              paletteType={'body'}
+              style={{
+                color: getColor(
+                  layoutType === 'left' ? 'left_text' : 'right_text'
+                ),
+              }}
+            >
+              {tr('_uikit_msg_tip_msg_not_exist')}
+            </Text>
+          );
+        } else {
+          return (
+            <Text
+              textType={'large'}
+              paletteType={'body'}
+              style={{
+                color: getColor(
+                  layoutType === 'left' ? 'left_text' : 'right_text'
+                ),
+              }}
+            >
+              {tr('_uikit_msg_tip_not_support')}
+            </Text>
+          );
+        }
       }
     }
   };
@@ -1457,7 +1473,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         ]}
         onPress={() => _onClicked(originalMsg, quoteMsg)}
       >
-        {getContent(quoteMsg)}
+        {getContent(originalMsg, quoteMsg)}
       </Pressable>
     </View>
   );

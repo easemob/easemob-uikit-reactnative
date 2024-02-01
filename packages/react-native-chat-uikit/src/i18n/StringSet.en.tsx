@@ -60,6 +60,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_msg_tip_recall': (isSelf: boolean, name) =>
       isSelf === true ? `You recalled a message` : `${name} recalled a message`,
     '_uikit_msg_tip_not_support': 'Unsupported message type',
+    '_uikit_msg_tip_msg_not_exist': 'Original message does not exist',
     '_uikit_msg_edit': 'Edited',
     '_uikit_msg_tip_create_group_success': 'Create group success.',
     '_uikit_msg_tip_create_group_success_with_params': 'Create group success.',

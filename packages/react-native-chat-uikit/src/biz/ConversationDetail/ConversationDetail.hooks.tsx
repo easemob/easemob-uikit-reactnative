@@ -68,7 +68,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     });
     console.log('dev:ConversationDetail:', conv);
     if (conv) {
-      setDoNotDisturb(conv.doNotDisturb);
+      setDoNotDisturb(conv.doNotDisturb ?? false);
       if (conv.convType === ChatConversationType.PeerChat) {
         // todo: get user info
         // im.getUserInfo({
@@ -180,7 +180,17 @@ export function useConversationDetail(props: ConversationDetailProps) {
     const listener: UIConversationListListener = {
       onUpdatedEvent: (data) => {
         if (data.convId === convId) {
-          setDoNotDisturb(data.doNotDisturb);
+          setDoNotDisturb(data.doNotDisturb ?? false);
+        }
+      },
+      onRequestRefreshEvent: (id) => {
+        if (id === convId) {
+          setConversation();
+        }
+      },
+      onRequestReloadEvent: (id) => {
+        if (id === convId) {
+          setConversation();
         }
       },
       type: UIListenerType.Conversation,
@@ -189,7 +199,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     return () => {
       im.removeUIListener(listener);
     };
-  }, [convId, im]);
+  }, [convId, im, setConversation]);
 
   React.useEffect(() => {
     const uiListener: UIGroupListListener = {

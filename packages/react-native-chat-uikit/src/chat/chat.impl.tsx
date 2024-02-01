@@ -1102,6 +1102,14 @@ export class ChatServiceImpl
       ),
       event: 'removeConversationAllMessages',
     });
+    const conv = this._convList.get(params.convId);
+    if (conv) {
+      this.sendUIEvent(
+        UIListenerType.Conversation,
+        'onRequestReloadEvent',
+        conv.convId
+      );
+    }
     Services.dcs
       .deleteConversationDir(params.convId)
       .then()
@@ -1607,7 +1615,7 @@ export class ChatServiceImpl
   }): void {
     const { isReset = false, owner } = params;
     const memberList = this._groupMemberList.get(params.groupId);
-    if (memberList && memberList.size > 0 && isReset === false) {
+    if (memberList && memberList.size > 1 && isReset === false) {
       params.onResult({
         isOk: true,
         value: Array.from(memberList.values()),

@@ -162,7 +162,7 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     const listener: UIConversationListListener = {
       onUpdatedEvent: (data) => {
         if (data.convId === groupId) {
-          setDoNotDisturb(data.doNotDisturb);
+          setDoNotDisturb(data.doNotDisturb ?? false);
         }
       },
       type: UIListenerType.Conversation,

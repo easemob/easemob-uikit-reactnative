@@ -12,6 +12,7 @@ import {
   ChatMessageDirection,
   ChatMessageStatus,
   ChatMessageType,
+  ChatTextMessageBody,
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 
@@ -175,11 +176,12 @@ export function useMessageList(
 
   const scrollTo = React.useCallback(
     (index: number, animated?: boolean) => {
+      setNeedScroll(false);
       timeoutTask(0, () => {
         listRef?.current?.scrollToIndex?.({ index, animated, viewPosition: 1 });
       });
     },
-    [listRef]
+    [listRef, setNeedScroll]
   );
 
   const onRenderItem = React.useCallback(
@@ -461,16 +463,46 @@ export function useMessageList(
     [dataRef, refreshToUI]
   );
 
+  const onDelMessageQuoteToUI = React.useCallback(
+    (msg: ChatMessage) => {
+      const index = dataRef.current.findIndex((d) => {
+        if (d.model.modelType === 'message') {
+          const msgModel = d.model as MessageModel;
+          if (msg.status === ChatMessageStatus.SUCCESS) {
+            if (msgModel.quoteMsg?.msgId === msg.msgId) {
+              return true;
+            }
+          } else {
+            if (msgModel.quoteMsg?.localMsgId === msg.localMsgId) {
+              return true;
+            }
+          }
+        }
+        return false;
+      });
+      if (index !== -1) {
+        const item = dataRef.current[index];
+        if (item) {
+          const msgModel = item.model as MessageModel;
+          msgModel.quoteMsg = undefined;
+          refreshToUI(dataRef.current);
+        }
+      }
+    },
+    [dataRef, refreshToUI]
+  );
+
   const deleteMessage = React.useCallback(
     (msg: ChatMessage) => {
       im.removeMessage({
         message: msg,
         onResult: () => {
           onDelMessageToUI(msg);
+          onDelMessageQuoteToUI(msg);
         },
       });
     },
-    [im, onDelMessageToUI]
+    [im, onDelMessageQuoteToUI, onDelMessageToUI]
   );
 
   const { onShowMessageLongPressActions } = useMessageLongPressActions({
@@ -784,9 +816,10 @@ export function useMessageList(
   const onRecvRecallMessage = React.useCallback(
     (orgMsg: ChatMessage, tipMsg: ChatMessage) => {
       onDelMessageToUI(orgMsg);
+      onDelMessageQuoteToUI(orgMsg);
       onRecallMessageToUI(tipMsg);
     },
-    [onDelMessageToUI, onRecallMessageToUI]
+    [onDelMessageQuoteToUI, onDelMessageToUI, onRecallMessageToUI]
   );
 
   const sendRecvMessageReadAck = React.useCallback(
@@ -851,7 +884,7 @@ export function useMessageList(
           msg.attributes = {
             [gMessageAttributeQuote]: {
               msgID: quoteMsg.msgId,
-              msgPreview: 'rn',
+              msgPreview: (quoteMsg.body as ChatTextMessageBody).content,
               msgSender: quoteMsg.from,
               msgType: quoteMsg.body.type,
             },
@@ -1208,13 +1241,23 @@ export function useMessageList(
           refreshToUI(dataRef.current);
         }
       },
+      onRequestRefreshEvent: (id) => {
+        if (id === convId) {
+          refreshToUI(dataRef.current);
+        }
+      },
+      onRequestReloadEvent: (id) => {
+        if (id === convId) {
+          init();
+        }
+      },
       type: UIListenerType.Conversation,
     };
     im.addUIListener(uiListener);
     return () => {
       im.removeUIListener(uiListener);
     };
-  }, [convId, dataRef, im, refreshToUI]);
+  }, [convId, dataRef, im, init, refreshToUI]);
 
   React.useEffect(() => {
     const listener = {

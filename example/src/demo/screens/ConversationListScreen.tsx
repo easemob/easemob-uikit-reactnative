@@ -84,7 +84,7 @@ export function ConversationListScreen(props: Props) {
           const convId = data?.convId;
           const convType = data?.convType;
           const convName = data?.convName;
-          navigation.push('ConversationDetail', {
+          navigation.navigate('ConversationDetail', {
             params: {
               convId,
               convType,

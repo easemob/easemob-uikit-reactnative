@@ -51,7 +51,9 @@ export function DefaultImage(props: DefaultImageProps) {
         />
       </View>
 
-      {source.uri !== undefined && source.uri !== null ? (
+      {source.uri !== undefined &&
+      source.uri !== null &&
+      source.uri.length > 0 ? (
         <Image
           style={[style, { position: 'absolute' }]}
           onLoad={(e) => {

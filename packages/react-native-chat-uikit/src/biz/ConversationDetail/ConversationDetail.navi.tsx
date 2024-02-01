@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, Pressable, View } from 'react-native';
+import { Dimensions, Platform, Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -85,6 +85,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
           <View
             style={{
               marginLeft: 10,
+              maxWidth: Dimensions.get('window').width - 200,
             }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -93,7 +94,6 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
                 paletteType={'title'}
                 style={{
                   color: getColor('text'),
-                  maxWidth: Platform.select({ ios: '85%', android: '90%' }),
                 }}
               >
                 {convName ?? convId}

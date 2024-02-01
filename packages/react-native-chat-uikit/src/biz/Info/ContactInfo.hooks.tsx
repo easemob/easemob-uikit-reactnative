@@ -78,9 +78,11 @@ export function useContactInfo(props: ContactInfoProps) {
               createIfNotExist: true,
             })
               .then((value) => {
+                console.log('test:zuoyu:getConversation', value);
                 setDoNotDisturb(value?.doNotDisturb ?? false);
               })
               .catch((e) => {
+                console.log('test:zuoyu:getConversation:catch:', e);
                 im.sendError({ error: e });
               });
 
@@ -195,7 +197,7 @@ export function useContactInfo(props: ContactInfoProps) {
     const listener: UIConversationListListener = {
       onUpdatedEvent: (data) => {
         if (data.convId === userId) {
-          setDoNotDisturb(data.doNotDisturb);
+          setDoNotDisturb(data.doNotDisturb ?? false);
         }
       },
       type: UIListenerType.Conversation,

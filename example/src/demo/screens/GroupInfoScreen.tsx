@@ -1,13 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
-  ChatServiceListener,
   GroupInfo,
   GroupInfoRef,
-  UIGroupListListener,
-  UIListenerType,
-  useChatContext,
-  useChatListener,
   useColors,
   useI18nContext,
   usePaletteContext,
@@ -31,7 +26,6 @@ export function GroupInfoScreen(props: Props) {
   const groupInfoRef = React.useRef<GroupInfoRef>({} as any);
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
-  const im = useChatContext();
 
   const goBack = (data: any) => {
     // !!! warning: react navigation
@@ -44,39 +38,6 @@ export function GroupInfoScreen(props: Props) {
     }
   };
   const testRef = React.useRef<(data: any) => void>(goBack);
-
-  React.useEffect(() => {
-    const uiListener: UIGroupListListener = {
-      onDeletedEvent: (data) => {
-        if (data.groupId === groupId) {
-          navigation.goBack();
-        }
-      },
-      type: UIListenerType.Group,
-    };
-    im.addUIListener(uiListener);
-    return () => {
-      im.removeUIListener(uiListener);
-    };
-  }, [groupId, im, navigation, ownerId]);
-
-  const listener = React.useRef<ChatServiceListener>({
-    onDestroyed: (params: { groupId: string }) => {
-      if (params.groupId === groupId) {
-        navigation.goBack();
-      }
-    },
-    onOwnerChanged: (params: {
-      groupId: string;
-      newOwner: string;
-      oldOwner: string;
-    }) => {
-      if (params.groupId === groupId) {
-        navigation.goBack();
-      }
-    },
-  });
-  useChatListener(listener.current);
 
   return (
     <SafeAreaView

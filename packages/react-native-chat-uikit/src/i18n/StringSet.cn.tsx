@@ -59,6 +59,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_msg_tip_recall': (isSelf: boolean, name) =>
       isSelf === true ? `你撤回了一条消息` : `${name}撤回了一条消息`,
     '_uikit_msg_tip_not_support': '不支持的消息类型',
+    '_uikit_msg_tip_msg_not_exist': '原消息不存在',
     '_uikit_msg_edit': '已编辑',
     '_uikit_msg_tip_create_group_success': '创建群聊成功',
     '_uikit_msg_tip_create_group_success_with_params': '创建群聊成功',

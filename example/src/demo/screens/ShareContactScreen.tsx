@@ -40,7 +40,7 @@ export function ShareContactScreen(props: Props) {
           });
         }}
         onClickedItem={(data) => {
-          navigation.navigate('ConversationDetail', {
+          navigation.replace('ConversationDetail', {
             params: {
               convId,
               convType,

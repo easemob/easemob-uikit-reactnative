@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { ChatConversationType } from 'react-native-chat-sdk';
+import {
+  ChatConversationType,
+  ChatMultiDeviceEvent,
+} from 'react-native-chat-sdk';
 
 import {
   ChatServiceListener,
@@ -63,53 +66,57 @@ export function useGroupInfo(
   const [groupMemberCount, setGroupMemberCount] = React.useState(0);
   const [isOwner, setIsOwner] = React.useState(false);
 
+  const init = React.useCallback(() => {
+    im.getGroupInfoFromServer({
+      groupId,
+      onResult: (value) => {
+        ownerId;
+        const { isOk } = value;
+        if (isOk === true && value.value) {
+          // todo: useReducer
+          ownerIdRef.current = value.value.owner;
+          setGroupDescription(value.value?.description);
+          setGroupName(value.value?.groupName);
+          setGroupAvatar(value.value.groupAvatar);
+          setGroupMemberCount(value.value.memberCount ?? 0);
+          setGroupMyRemark(value.value?.myRemark);
+          setIsOwner(im.userId === value.value.owner);
+        }
+      },
+    });
+    im.getConversation({
+      convId: groupId,
+      convType: ChatConversationType.GroupChat,
+      createIfNotExist: true,
+      fromNative: true,
+    })
+      .then((result) => {
+        if (result) {
+          setDoNotDisturb(result.doNotDisturb ?? false);
+        }
+      })
+      .catch();
+    if (im.userId) {
+      im.getGroupMyRemark({
+        groupId,
+        memberId: im.userId,
+        onResult: (value) => {
+          if (value.isOk && value.value) {
+            setGroupMyRemark(value.value);
+          }
+        },
+      });
+    }
+  }, [groupId, im, ownerId]);
+
   useLifecycle(
     React.useCallback(
       (state: any) => {
         if (state === 'load') {
-          im.getGroupInfoFromServer({
-            groupId,
-            onResult: (value) => {
-              ownerId;
-              const { isOk } = value;
-              if (isOk === true && value.value) {
-                // todo: useReducer
-                ownerIdRef.current = value.value.owner;
-                setGroupDescription(value.value?.description);
-                setGroupName(value.value?.groupName);
-                setGroupAvatar(value.value.groupAvatar);
-                setGroupMemberCount(value.value.memberCount ?? 0);
-                setGroupMyRemark(value.value?.myRemark);
-                setIsOwner(im.userId === value.value.owner);
-              }
-            },
-          });
-          im.getConversation({
-            convId: groupId,
-            convType: ChatConversationType.GroupChat,
-            createIfNotExist: true,
-            fromNative: true,
-          })
-            .then((result) => {
-              if (result) {
-                setDoNotDisturb(result.doNotDisturb ?? false);
-              }
-            })
-            .catch();
-          if (im.userId) {
-            im.getGroupMyRemark({
-              groupId,
-              memberId: im.userId,
-              onResult: (value) => {
-                if (value.isOk && value.value) {
-                  setGroupMyRemark(value.value);
-                }
-              },
-            });
-          }
+          init();
         }
       },
-      [im, groupId, ownerId]
+      [init]
     )
   );
 
@@ -371,18 +378,48 @@ export function useGroupInfo(
           });
         }
       },
+      onOwnerChanged: (params: {
+        groupId: string;
+        newOwner: string;
+        oldOwner: string;
+      }) => {
+        if (params.groupId === groupId) {
+          if (im.userId === params.newOwner) {
+            ownerIdRef.current = params.newOwner;
+            setIsOwner(true);
+          } else {
+            setIsOwner(false);
+          }
+        }
+      },
+      onGroupEvent: (
+        event?: ChatMultiDeviceEvent,
+        target?: string,
+        _usernames?: Array<string>
+      ): void => {
+        if (event === ChatMultiDeviceEvent.GROUP_ASSIGN_OWNER) {
+          if (target === groupId) {
+            if (im.userId === target) {
+              ownerIdRef.current = target;
+              setIsOwner(true);
+            } else {
+              setIsOwner(false);
+            }
+          }
+        }
+      },
     };
     im.addListener(listener);
     return () => {
       im.removeListener(listener);
     };
-  }, [groupId, im, onGroupDestroy, onGroupKicked, onGroupQuit]);
+  }, [groupId, im, init, onGroupDestroy, onGroupKicked, onGroupQuit]);
 
   React.useEffect(() => {
     const listener: UIConversationListListener = {
       onUpdatedEvent: (data) => {
         if (data.convId === groupId) {
-          setDoNotDisturb(data.doNotDisturb);
+          setDoNotDisturb(data.doNotDisturb ?? false);
         }
       },
       type: UIListenerType.Conversation,
@@ -409,6 +446,10 @@ export function useGroupInfo(
             }
             return data.description;
           });
+          if (data.owner !== ownerIdRef.current) {
+            ownerIdRef.current = data.owner;
+            setIsOwner(im.userId === data.owner);
+          }
         }
       },
       onDeletedEvent: (data) => {
