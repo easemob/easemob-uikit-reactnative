@@ -89,7 +89,7 @@ const useLoopAnimated = (duration: number, useNativeDriver = true) => {
     ).start();
 
     return () => {
-      animated.stopPlay();
+      animated.stopAnimation();
       animated.setValue(0);
     };
   }, [animated, duration, useNativeDriver]);

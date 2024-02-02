@@ -1,8 +1,0 @@
-{
-  "extends": "../../tsconfig",
-  "compilerOptions": {
-    // Avoid expo-cli auto-generating a tsconfig
-    "paths": {}
-  },
-  "exclude": ["generate-env.js"]
-}

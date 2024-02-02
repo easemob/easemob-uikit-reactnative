@@ -18,7 +18,7 @@ export type TabPageHeaderProps = {
   onClicked?: (index: number) => void;
   titles: {
     title?: string;
-    icon: IconNameType | number;
+    icon?: IconNameType | number;
   }[];
   width?: number;
   indicatorStyle?: StyleProp<ViewStyle>;

@@ -103,7 +103,7 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
               }}
             >
               <Icon
-                name={v.icon}
+                name={v.icon ?? 'loading'}
                 style={[
                   {
                     height: 32,
