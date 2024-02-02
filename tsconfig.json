@@ -27,5 +27,5 @@
     "target": "esnext",
     "composite": true
   },
-  "exclude": ["packages/*/lib", "**/babel.config.js", "scripts"]
+  "exclude": ["packages/*/lib", "babel.config.js", "scripts/*"]
 }
