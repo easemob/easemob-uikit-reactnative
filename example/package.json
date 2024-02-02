@@ -104,5 +104,7 @@
       ]
     }
   },
-  "eslintIgnore": []
+  "eslintIgnore": [
+    "babel.config.js"
+  ]
 }
