@@ -55,7 +55,7 @@
   "eslintIgnore": [
     "node_modules/",
     "scripts/",
-    "babel.config.js"
+    "**/babel.config.js"
   ],
   "jest": {
     "testEnvironment": "node",
