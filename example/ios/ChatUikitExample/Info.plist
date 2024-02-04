@@ -47,11 +47,13 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>Use camera.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string></string>
+	<string>Use a microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>Use picture gallery.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Use the media library.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

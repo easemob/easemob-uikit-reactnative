@@ -118,9 +118,9 @@ PODS:
     - GoogleUtilities/Logger (~> 7.8)
   - FirebaseCoreExtension (10.10.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.10.0):
+  - FirebaseCoreInternal (10.20.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.10.0):
+  - FirebaseInstallations (10.20.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -196,99 +196,74 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
-  - GoogleDataTransport (9.2.3):
+  - GoogleDataTransport (9.3.0):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities (7.11.1):
-    - GoogleUtilities/AppDelegateSwizzler (= 7.11.1)
-    - GoogleUtilities/Environment (= 7.11.1)
-    - GoogleUtilities/ISASwizzler (= 7.11.1)
-    - GoogleUtilities/Logger (= 7.11.1)
-    - GoogleUtilities/MethodSwizzler (= 7.11.1)
-    - GoogleUtilities/Network (= 7.11.1)
-    - "GoogleUtilities/NSData+zlib (= 7.11.1)"
-    - GoogleUtilities/Reachability (= 7.11.1)
-    - GoogleUtilities/SwizzlerTestHelpers (= 7.11.1)
-    - GoogleUtilities/UserDefaults (= 7.11.1)
-  - GoogleUtilities/AppDelegateSwizzler (7.11.1):
+  - GoogleUtilities (7.12.0):
+    - GoogleUtilities/AppDelegateSwizzler (= 7.12.0)
+    - GoogleUtilities/Environment (= 7.12.0)
+    - GoogleUtilities/ISASwizzler (= 7.12.0)
+    - GoogleUtilities/Logger (= 7.12.0)
+    - GoogleUtilities/MethodSwizzler (= 7.12.0)
+    - GoogleUtilities/Network (= 7.12.0)
+    - "GoogleUtilities/NSData+zlib (= 7.12.0)"
+    - GoogleUtilities/Reachability (= 7.12.0)
+    - GoogleUtilities/SwizzlerTestHelpers (= 7.12.0)
+    - GoogleUtilities/UserDefaults (= 7.12.0)
+  - GoogleUtilities/AppDelegateSwizzler (7.12.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.11.1):
+  - GoogleUtilities/Environment (7.12.0):
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/ISASwizzler (7.11.1)
-  - GoogleUtilities/Logger (7.11.1):
+  - GoogleUtilities/ISASwizzler (7.12.0)
+  - GoogleUtilities/Logger (7.12.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (7.11.1):
+  - GoogleUtilities/MethodSwizzler (7.12.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (7.11.1):
+  - GoogleUtilities/Network (7.12.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.11.1)"
-  - GoogleUtilities/Reachability (7.11.1):
+  - "GoogleUtilities/NSData+zlib (7.12.0)"
+  - GoogleUtilities/Reachability (7.12.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/SwizzlerTestHelpers (7.11.1):
+  - GoogleUtilities/SwizzlerTestHelpers (7.12.0):
     - GoogleUtilities/MethodSwizzler
-  - GoogleUtilities/UserDefaults (7.11.1):
+  - GoogleUtilities/UserDefaults (7.12.0):
     - GoogleUtilities/Logger
   - HyphenateChat (4.2.0)
   - libevent (2.1.12)
-  - libwebp (1.2.4):
-    - libwebp/demux (= 1.2.4)
-    - libwebp/mux (= 1.2.4)
-    - libwebp/webp (= 1.2.4)
-  - libwebp/demux (1.2.4):
+  - libwebp (1.3.2):
+    - libwebp/demux (= 1.3.2)
+    - libwebp/mux (= 1.3.2)
+    - libwebp/sharpyuv (= 1.3.2)
+    - libwebp/webp (= 1.3.2)
+  - libwebp/demux (1.3.2):
     - libwebp/webp
-  - libwebp/mux (1.2.4):
+  - libwebp/mux (1.3.2):
     - libwebp/demux
-  - libwebp/webp (1.2.4)
-  - nanopb (2.30909.0):
-    - nanopb/decode (= 2.30909.0)
-    - nanopb/encode (= 2.30909.0)
-  - nanopb/decode (2.30909.0)
-  - nanopb/encode (2.30909.0)
+  - libwebp/sharpyuv (1.3.2)
+  - libwebp/webp (1.3.2):
+    - libwebp/sharpyuv
+  - nanopb (2.30909.1):
+    - nanopb/decode (= 2.30909.1)
+    - nanopb/encode (= 2.30909.1)
+  - nanopb/decode (2.30909.1)
+  - nanopb/encode (2.30909.1)
   - OpenSSL-Universal (1.1.1100)
-  - Permission-AppTrackingTransparency (3.8.0):
-    - RNPermissions
-  - Permission-BluetoothPeripheral (3.8.0):
-    - RNPermissions
-  - Permission-Calendars (3.8.0):
-    - RNPermissions
   - Permission-Camera (3.8.0):
-    - RNPermissions
-  - Permission-Contacts (3.8.0):
-    - RNPermissions
-  - Permission-FaceID (3.8.0):
-    - RNPermissions
-  - Permission-LocationAccuracy (3.8.0):
-    - RNPermissions
-  - Permission-LocationAlways (3.8.0):
-    - RNPermissions
-  - Permission-LocationWhenInUse (3.8.0):
     - RNPermissions
   - Permission-MediaLibrary (3.8.0):
     - RNPermissions
   - Permission-Microphone (3.8.0):
     - RNPermissions
-  - Permission-Motion (3.8.0):
-    - RNPermissions
   - Permission-Notifications (3.8.0):
     - RNPermissions
   - Permission-PhotoLibrary (3.8.0):
     - RNPermissions
-  - Permission-PhotoLibraryAddOnly (3.8.0):
-    - RNPermissions
-  - Permission-Reminders (3.8.0):
-    - RNPermissions
-  - Permission-Siri (3.8.0):
-    - RNPermissions
-  - Permission-SpeechRecognition (3.8.0):
-    - RNPermissions
-  - Permission-StoreKit (3.8.0):
-    - RNPermissions
-  - PromisesObjC (2.2.0)
+  - PromisesObjC (2.3.1)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -518,7 +493,7 @@ PODS:
   - react-native-chat-sdk (1.3.1-beta.2):
     - HyphenateChat (= 4.2.0)
     - React-Core
-  - react-native-chat-uikit (1.2.0):
+  - react-native-chat-uikit (2.0.0-beta.0):
     - React-Core
   - react-native-create-thumbnail (1.6.6):
     - RCT-Folly (= 2021.07.22.00)
@@ -689,7 +664,7 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - SocketRocket (0.6.0)
+  - SocketRocket (0.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -741,25 +716,11 @@ DEPENDENCIES:
   - glog (from `../../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - GoogleUtilities
   - OpenSSL-Universal (= 1.1.1100)
-  - Permission-AppTrackingTransparency (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/AppTrackingTransparency`)
-  - Permission-BluetoothPeripheral (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/BluetoothPeripheral`)
-  - Permission-Calendars (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Calendars`)
   - Permission-Camera (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Camera`)
-  - Permission-Contacts (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Contacts`)
-  - Permission-FaceID (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/FaceID`)
-  - Permission-LocationAccuracy (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/LocationAccuracy`)
-  - Permission-LocationAlways (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/LocationAlways`)
-  - Permission-LocationWhenInUse (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/LocationWhenInUse`)
   - Permission-MediaLibrary (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/MediaLibrary`)
   - Permission-Microphone (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Microphone`)
-  - Permission-Motion (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Motion`)
   - Permission-Notifications (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Notifications`)
   - Permission-PhotoLibrary (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/PhotoLibrary`)
-  - Permission-PhotoLibraryAddOnly (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/PhotoLibraryAddOnly`)
-  - Permission-Reminders (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Reminders`)
-  - Permission-Siri (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Siri`)
-  - Permission-SpeechRecognition (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/SpeechRecognition`)
-  - Permission-StoreKit (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/StoreKit`)
   - RCT-Folly (from `../../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../../node_modules/react-native/Libraries/TypeSafety`)
@@ -891,44 +852,16 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../../node_modules/react-native/third-party-podspecs/glog.podspec"
-  Permission-AppTrackingTransparency:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/AppTrackingTransparency"
-  Permission-BluetoothPeripheral:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/BluetoothPeripheral"
-  Permission-Calendars:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Calendars"
   Permission-Camera:
     :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Camera"
-  Permission-Contacts:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Contacts"
-  Permission-FaceID:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/FaceID"
-  Permission-LocationAccuracy:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/LocationAccuracy"
-  Permission-LocationAlways:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/LocationAlways"
-  Permission-LocationWhenInUse:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/LocationWhenInUse"
   Permission-MediaLibrary:
     :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/MediaLibrary"
   Permission-Microphone:
     :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Microphone"
-  Permission-Motion:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Motion"
   Permission-Notifications:
     :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Notifications"
   Permission-PhotoLibrary:
     :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/PhotoLibrary"
-  Permission-PhotoLibraryAddOnly:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/PhotoLibraryAddOnly"
-  Permission-Reminders:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Reminders"
-  Permission-Siri:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Siri"
-  Permission-SpeechRecognition:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/SpeechRecognition"
-  Permission-StoreKit:
-    :path: "/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/StoreKit"
   RCT-Folly:
     :podspec: "../../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -1059,8 +992,8 @@ SPEC CHECKSUMS:
   Firebase: facd334e557a979bd03a0b58d90fd56b52b8aba0
   FirebaseCore: d027ff503d37edb78db98429b11f580a24a7df2a
   FirebaseCoreExtension: 8d93ebbf6838a874b4ed82a564c9d6705f8365dd
-  FirebaseCoreInternal: 971029061d326000d65bfdc21f5502c75c8b0893
-  FirebaseInstallations: 52153982b057d3afcb4e1fbb3eb0b6d00611e681
+  FirebaseCoreInternal: efeeb171ac02d623bdaefe121539939821e10811
+  FirebaseInstallations: 558b1da7d65afeb996fd5c814332f013234ece4e
   FirebaseMessaging: 8a3b9a8b98ce72a42d22e69865cf662e38d2d6f5
   Flipper: 6edb735e6c3e332975d1b17956bcc584eccf5818
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
@@ -1073,33 +1006,19 @@ SPEC CHECKSUMS:
   FlipperKit: 2efad7007d6745a3f95e4034d547be637f89d3f6
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  GoogleDataTransport: f0308f5905a745f94fb91fea9c6cbaf3831cb1bd
-  GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
+  GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
+  GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
   HyphenateChat: e43d1ec9ccf404eeb2ee7d3265cd12a4e83f0d3a
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  libwebp: f62cb61d0a484ba548448a4bd52aabf150ff6eef
-  nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
+  libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
+  nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
-  Permission-AppTrackingTransparency: 7a48e816f801d10f2402c5b4edbe620ad8a412d9
-  Permission-BluetoothPeripheral: 2d2d32c4651752655c19345abbb45ad15651f987
-  Permission-Calendars: cd50284b7a311813fb893a488bad61771e6cb494
   Permission-Camera: e6d142d7d8b714afe0a83e5e6ae17eb949f1e3e9
-  Permission-Contacts: 113bcfffb98667533e4e6611e9df92e57ea786d7
-  Permission-FaceID: 257965cb6ba2dc098cd485642df13e8ee6e281ef
-  Permission-LocationAccuracy: d6aa5146c084e7077e7efc4cbb543c7f6c72c51a
-  Permission-LocationAlways: e7ce67f3091ec096b6ac274bc30a18830a66b33c
-  Permission-LocationWhenInUse: 1c80e4797ae587642a83125e80b86686cefeba53
   Permission-MediaLibrary: 6a5888dd77669b568716bea80c21340aaab74c51
   Permission-Microphone: 644b1de8bcc2afcaf934e09a22bee507a95796a7
-  Permission-Motion: 2ba822d0b1bc753276209f770f172205a00ee0d2
   Permission-Notifications: aa91ec29236626ff59cb60e08389c0a59a9d32c5
   Permission-PhotoLibrary: 31787bbe77d0d3ae6a5267b8435e4a2e9ef78f1d
-  Permission-PhotoLibraryAddOnly: 16c92ad62b802514f3f788e00b298080be996337
-  Permission-Reminders: be7699ff02c2ef670647204c0f759258cdfad07c
-  Permission-Siri: a54e8ac247b67cdcf27de068e27d291a47c5fb06
-  Permission-SpeechRecognition: 39eb2398ca66ba3ac07d502e33c2f92da70ea7e0
-  Permission-StoreKit: df32d0883219ddb237d673eed9165734203bfecc
-  PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
+  PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: f6187ec763637e6a57f5728dd9a3bdabc6d6b4e0
   RCTTypeSafety: a01aca2dd3b27fa422d5239252ad38e54e958750
@@ -1117,7 +1036,7 @@ SPEC CHECKSUMS:
   react-native-cameraroll: 755bcc628148a90a7c9cf3f817a252be3a601bc5
   react-native-chat-callkit: f3c26620cbfd756a184eb61cfb9fe5660067ebef
   react-native-chat-sdk: b4e72ff3f806cb594d7cdbe0a5aef22f0344ae64
-  react-native-chat-uikit: b47322b12e761d243fb5418f2f5239d70581f09c
+  react-native-chat-uikit: 0f8ee416f7416193518e5382cbb3f002566f2678
   react-native-create-thumbnail: e4fc6953a754bcfa3a03d74ec8687850134b1b93
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
@@ -1153,11 +1072,11 @@ SPEC CHECKSUMS:
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
-  SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: f7decafdc5e8c125e6fa0da38a687e35238420fa
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: fe60f304c70641ba240fdd5ebb04c155982cb143
+PODFILE CHECKSUM: 449f5e7e76ef885e5fed96665ceb1b3dec2419ac
 
 COCOAPODS: 1.14.2
