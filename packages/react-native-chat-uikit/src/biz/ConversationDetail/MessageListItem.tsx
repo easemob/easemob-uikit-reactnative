@@ -22,6 +22,7 @@ import { ICON_ASSETS, IconNameType } from '../../assets';
 import {
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
+  // gMessageAttributeTranslate,
 } from '../../chat';
 import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
@@ -101,6 +102,14 @@ export function MessageText(props: MessageTextProps) {
       light: colors.neutral[98],
       dark: colors.neutral[1],
     },
+    left_divider: {
+      light: colors.neutralSpecial[8],
+      dark: colors.primary[6],
+    },
+    right_divider: {
+      light: colors.primary[8],
+      dark: colors.primary[6],
+    },
   });
   const body = msg.body as ChatTextMessageBody;
   // const content = emoji.toCodePointText(body.content);
@@ -112,6 +121,19 @@ export function MessageText(props: MessageTextProps) {
   if (isSupport !== true) {
     content = tr('_uikit_msg_tip_not_support');
   }
+
+  const codes = body.targetLanguages;
+  const translated = codes && codes?.length > 0;
+  const translatedContent =
+    body.translations &&
+    body.targetLanguages &&
+    body.targetLanguages?.length > 0
+      ? body.translations[body.targetLanguages[0]!]
+      : undefined;
+
+  // const translated = msg.attributes?.[gMessageAttributeTranslate] as
+  //   | boolean
+  //   | undefined;
 
   return (
     <View>
@@ -125,7 +147,23 @@ export function MessageText(props: MessageTextProps) {
         {content}
       </Text>
       {editable === 'edited' ? (
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}
+        >
+          <Icon
+            name={'slash_in_rectangle'}
+            style={{
+              height: 16,
+              width: 16,
+              tintColor: getColor(
+                layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
+              ),
+            }}
+          />
           <SingleLineText
             textType={'extraSmall'}
             paletteType={'body'}
@@ -136,6 +174,67 @@ export function MessageText(props: MessageTextProps) {
             }}
           >
             {tr('_uikit_msg_edit')}
+          </SingleLineText>
+        </View>
+      ) : null}
+
+      {translated === true ? (
+        <View
+          style={{
+            borderBottomColor: getColor(
+              layoutType === 'left' ? 'left_divider' : 'right_divider'
+            ),
+            borderBottomWidth: 0.5,
+            marginHorizontal: 0,
+          }}
+        />
+      ) : null}
+
+      {translated === true ? (
+        <Pressable onPress={() => {}}>
+          <Text
+            textType={'large'}
+            paletteType={'body'}
+            selectable={true}
+            style={{
+              color: getColor(
+                layoutType === 'left' ? 'left_text' : 'right_text'
+              ),
+            }}
+          >
+            {translatedContent}
+          </Text>
+        </Pressable>
+      ) : null}
+
+      {translated === true ? (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }}
+        >
+          <Icon
+            name={'a_in_arrows_round'}
+            style={{
+              height: 16,
+              width: 16,
+              tintColor: getColor(
+                layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
+              ),
+            }}
+          />
+          <SingleLineText
+            textType={'extraSmall'}
+            paletteType={'body'}
+            style={{
+              color: getColor(
+                layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
+              ),
+            }}
+          >
+            {tr('_uikit_msg_translate')}
           </SingleLineText>
         </View>
       ) : null}

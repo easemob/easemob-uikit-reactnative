@@ -61,6 +61,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_msg_tip_not_support': '不支持的消息类型',
     '_uikit_msg_tip_msg_not_exist': '原消息不存在',
     '_uikit_msg_edit': '已编辑',
+    '_uikit_msg_translate': '已翻译',
     '_uikit_msg_tip_create_group_success': '创建群聊成功',
     '_uikit_msg_tip_create_group_success_with_params': '创建群聊成功',
 

@@ -222,6 +222,7 @@ export function App() {
         palette={palette}
         theme={theme}
         language={language}
+        // enableTranslate={false}
         avatar={{
           personAvatar: defaultAvatars[2],
           groupAvatar: defaultAvatars[0],

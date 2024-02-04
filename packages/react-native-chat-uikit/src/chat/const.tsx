@@ -19,3 +19,4 @@ export const gMessageAttributeUserInfo = 'ease_chat_uikit_user_info';
 export const gMessageAttributeVoiceReadFlag = '_$uikit_voice_read_flag';
 export const gMessageAttributeFileProgress = '_$uikit_file_progress';
 export const gMessageAttributeMentions = 'em_at_list';
+export const gMessageAttributeTranslate = '_$uikit_text_translate';

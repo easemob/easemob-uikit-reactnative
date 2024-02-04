@@ -19,6 +19,7 @@ import {
 import {
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
+  gMessageAttributeTranslate,
   gMessageAttributeVoiceReadFlag,
   UIConversationListListener,
   UIListenerType,
@@ -147,6 +148,7 @@ export function useMessageList(
   });
   const { dispatchUserInfo } = useMessageContext();
   const { recallTimeout } = useConfigContext();
+  const { languageCode } = useConfigContext();
 
   const setNeedScroll = React.useCallback((needScroll: boolean) => {
     needScrollRef.current = needScroll;
@@ -492,93 +494,6 @@ export function useMessageList(
     [dataRef, refreshToUI]
   );
 
-  const deleteMessage = React.useCallback(
-    (msg: ChatMessage) => {
-      im.removeMessage({
-        message: msg,
-        onResult: () => {
-          onDelMessageToUI(msg);
-          onDelMessageQuoteToUI(msg);
-        },
-      });
-    },
-    [im, onDelMessageQuoteToUI, onDelMessageToUI]
-  );
-
-  const { onShowMessageLongPressActions } = useMessageLongPressActions({
-    menuRef,
-    alertRef,
-    onQuoteMessageForInput: propsOnQuoteMessageForInput,
-    onEditMessageForInput: propsOnEditMessageForInput,
-    showReportMessage: showReportMessageMenu,
-    onDeleteMessage: deleteMessage,
-    onRecallMessage: recallMessage,
-    onInit: onInitMenu,
-    onCopyFinished: propsOnCopyFinished,
-  });
-
-  const onClickedListItem = React.useCallback(
-    (
-      id: string,
-      model: SystemMessageModel | TimeMessageModel | MessageModel
-    ) => {
-      const ret = propsOnClicked?.(id, model);
-      if (ret !== false) {
-        if (model.modelType === 'message') {
-          const msgModel = model as MessageModel;
-          if (msgModel.msg.body.type === ChatMessageType.VOICE) {
-            startVoicePlay(msgModel);
-          }
-        }
-      }
-    },
-    [propsOnClicked, startVoicePlay]
-  );
-
-  const onLongPressListItem = React.useCallback(
-    (
-      id: string,
-      model: SystemMessageModel | TimeMessageModel | MessageModel
-    ) => {
-      const ret = propsOnLongPress?.(id, model);
-      if (ret !== false) {
-        onShowMessageLongPressActions(id, model);
-      }
-    },
-    [onShowMessageLongPressActions, propsOnLongPress]
-  );
-
-  const onClickedListItemAvatar = React.useCallback(
-    (
-      id: string,
-      model: SystemMessageModel | TimeMessageModel | MessageModel
-    ) => {
-      propsOnClickedItemAvatar?.(id, model);
-    },
-    [propsOnClickedItemAvatar]
-  );
-
-  const onClickedListItemQuote = React.useCallback(
-    (
-      id: string,
-      model: SystemMessageModel | TimeMessageModel | MessageModel
-    ) => {
-      const ret = propsOnClickedItemQuote?.(id, model);
-      if (ret !== false) {
-        const item = dataRef.current.find((d) => {
-          if (d.id === id) {
-            return true;
-          }
-          return false;
-        });
-        if (item && item.index !== undefined) {
-          scrollTo(item.index, false);
-        }
-      }
-    },
-    [dataRef, propsOnClickedItemQuote, scrollTo]
-  );
-
   const getStyle = React.useCallback(() => {
     return undefined;
   }, []);
@@ -666,26 +581,6 @@ export function useMessageList(
     [dataRef, getStyle, im, messageLayoutType, refreshToUI]
   );
 
-  const reportMessage = React.useCallback(
-    (result?: ReportItemModel) => {
-      if (result) {
-        const msg = currentReportMessageRef.current?.msg;
-        if (msg) {
-          im.reportMessage({
-            messageId: msg.msgId,
-            tag: result.tag,
-            reason: tr(result.title),
-            onResult: () => {
-              currentReportMessageRef.current = undefined;
-              reportRef.current?.startHide?.();
-            },
-          });
-        }
-      }
-    },
-    [im, tr]
-  );
-
   const onUpdateMessageToUI = React.useCallback(
     (msg: ChatMessage, fromType: 'send' | 'recv') => {
       const isExisted = dataRef.current.find((d) => {
@@ -712,6 +607,133 @@ export function useMessageList(
       }
     },
     [dataRef, refreshToUI]
+  );
+
+  const deleteMessage = React.useCallback(
+    (msg: ChatMessage) => {
+      im.removeMessage({
+        message: msg,
+        onResult: () => {
+          onDelMessageToUI(msg);
+          onDelMessageQuoteToUI(msg);
+        },
+      });
+    },
+    [im, onDelMessageQuoteToUI, onDelMessageToUI]
+  );
+
+  const translateMessage = React.useCallback(
+    (model: MessageModel) => {
+      im.translateMessage({
+        message: model.msg,
+        languages: [languageCode],
+        onResult: (result) => {
+          if (result.isOk === true && result.value) {
+            result.value.attributes = {
+              [gMessageAttributeTranslate]: true,
+            };
+            // im.updateMessage({ message: result.value, onResult: () => {} });
+            onUpdateMessageToUI(result.value, 'recv');
+          }
+        },
+      });
+    },
+    [im, languageCode, onUpdateMessageToUI]
+  );
+
+  const { onShowMessageLongPressActions } = useMessageLongPressActions({
+    menuRef,
+    alertRef,
+    onQuoteMessageForInput: propsOnQuoteMessageForInput,
+    onEditMessageForInput: propsOnEditMessageForInput,
+    showReportMessage: showReportMessageMenu,
+    onDeleteMessage: deleteMessage,
+    onRecallMessage: recallMessage,
+    onInit: onInitMenu,
+    onCopyFinished: propsOnCopyFinished,
+    onTranslateMessage: translateMessage,
+  });
+
+  const onClickedListItem = React.useCallback(
+    (
+      id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel
+    ) => {
+      const ret = propsOnClicked?.(id, model);
+      if (ret !== false) {
+        if (model.modelType === 'message') {
+          const msgModel = model as MessageModel;
+          if (msgModel.msg.body.type === ChatMessageType.VOICE) {
+            startVoicePlay(msgModel);
+          }
+        }
+      }
+    },
+    [propsOnClicked, startVoicePlay]
+  );
+
+  const onLongPressListItem = React.useCallback(
+    (
+      id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel
+    ) => {
+      const ret = propsOnLongPress?.(id, model);
+      if (ret !== false) {
+        onShowMessageLongPressActions(id, model);
+      }
+    },
+    [onShowMessageLongPressActions, propsOnLongPress]
+  );
+
+  const onClickedListItemAvatar = React.useCallback(
+    (
+      id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel
+    ) => {
+      propsOnClickedItemAvatar?.(id, model);
+    },
+    [propsOnClickedItemAvatar]
+  );
+
+  const onClickedListItemQuote = React.useCallback(
+    (
+      id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel
+    ) => {
+      const ret = propsOnClickedItemQuote?.(id, model);
+      if (ret !== false) {
+        const item = dataRef.current.find((d) => {
+          if (d.id === id) {
+            return true;
+          }
+          return false;
+        });
+        if (item && item.index !== undefined) {
+          scrollTo(item.index, false);
+        }
+      }
+    },
+    [dataRef, propsOnClickedItemQuote, scrollTo]
+  );
+
+  const reportMessage = React.useCallback(
+    (result?: ReportItemModel) => {
+      if (result) {
+        const msg = currentReportMessageRef.current?.msg;
+        if (msg) {
+          im.reportMessage({
+            messageId: msg.msgId,
+            tag: result.tag,
+            reason: tr(result.title),
+            onResult: () => {
+              currentReportMessageRef.current = undefined;
+              reportRef.current?.startHide?.();
+            },
+          });
+        }
+      }
+    },
+    [im, tr]
   );
 
   const resendMessage = React.useCallback(

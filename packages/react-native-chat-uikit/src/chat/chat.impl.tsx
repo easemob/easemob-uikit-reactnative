@@ -2356,6 +2356,32 @@ export class ChatServiceImpl
     });
   }
 
+  translateMessage(params: {
+    message: ChatMessage;
+    languages: string[];
+    onResult: ResultCallback<ChatMessage>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.translateMessage(
+        params.message,
+        params.languages
+      ),
+      event: 'translateMessage',
+      onFinished: async (msg) => {
+        params.onResult({
+          isOk: true,
+          value: msg,
+        });
+      },
+      onError: (e) => {
+        params.onResult({
+          isOk: false,
+          error: e,
+        });
+      },
+    });
+  }
+
   getNewRequestList(params: {
     convId: string;
     convType: ChatConversationType;

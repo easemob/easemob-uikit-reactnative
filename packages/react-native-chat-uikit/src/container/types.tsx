@@ -14,8 +14,22 @@ export type ContainerProps = React.PropsWithChildren<{
   options: ChatOptionsType;
   /**
    * The language code.
+   *
+   * Default value is system language.
    */
   language?: LanguageCode;
+  /**
+   * The target language code for the translation function.
+   *
+   * Default value is system language.
+   */
+  translateLanguage?: LanguageCode;
+  /**
+   * Whether to enable translation.
+   *
+   * Default value is `true`.
+   */
+  enableTranslate?: boolean;
   /**
    * The palette.
    */

@@ -525,6 +525,15 @@ export interface MessageServices {
     message: ChatMessage;
     onResult: ResultCallback<ChatMessage>;
   }): void;
+
+  /**
+   * Translate the message.
+   */
+  translateMessage(params: {
+    message: ChatMessage;
+    languages: string[];
+    onResult: ResultCallback<ChatMessage>;
+  }): void;
   /**
    * Get the message list.
    */

@@ -92,4 +92,10 @@ export type Config = {
    * The default group avatar.
    */
   groupAvatar?: number | undefined;
+  /**
+   * Whether to enable translation.
+   *
+   * Default value is `true`.
+   */
+  enableTranslate: boolean;
 };

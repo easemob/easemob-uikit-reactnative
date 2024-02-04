@@ -7,6 +7,7 @@ import {
 } from 'react-native-chat-sdk';
 
 import { gCustomMessageCardEventType, useChatContext } from '../../chat';
+import { useConfigContext } from '../../config';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { InitMenuItemsType } from '../BottomSheetMenu';
@@ -65,6 +66,7 @@ export function useMessageLongPressActions(
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
   const im = useChatContext();
+  const { enableTranslate } = useConfigContext();
 
   const isCardMessage = (msg: ChatMessage) => {
     if (msg.body.type === ChatMessageType.CUSTOM) {
@@ -121,7 +123,10 @@ export function useMessageLongPressActions(
           });
         }
       }
-      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+      if (
+        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
+        enableTranslate === true
+      ) {
         if (msgModel.msg.body.type === ChatMessageType.TXT) {
           const textBody = msgModel.msg.body as ChatTextMessageBody;
           if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
