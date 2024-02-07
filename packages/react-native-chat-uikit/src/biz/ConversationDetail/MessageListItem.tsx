@@ -122,13 +122,13 @@ export function MessageText(props: MessageTextProps) {
     content = tr('_uikit_msg_tip_not_support');
   }
 
-  const codes = body.targetLanguages;
+  const codes = body.targetLanguageCodes;
   const translated = codes && codes?.length > 0;
   const translatedContent =
     body.translations &&
-    body.targetLanguages &&
-    body.targetLanguages?.length > 0
-      ? body.translations[body.targetLanguages[0]!]
+    body.targetLanguageCodes &&
+    body.targetLanguageCodes?.length > 0
+      ? body.translations[body.targetLanguageCodes[0]!]
       : undefined;
 
   // const translated = msg.attributes?.[gMessageAttributeTranslate] as

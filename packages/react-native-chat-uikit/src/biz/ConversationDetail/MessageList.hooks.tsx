@@ -632,7 +632,7 @@ export function useMessageList(
             result.value.attributes = {
               [gMessageAttributeTranslate]: true,
             };
-            // im.updateMessage({ message: result.value, onResult: () => {} });
+            im.updateMessage({ message: result.value, onResult: () => {} });
             onUpdateMessageToUI(result.value, 'recv');
           }
         },
