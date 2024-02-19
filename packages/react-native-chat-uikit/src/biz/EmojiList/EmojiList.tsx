@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import emoji from 'twemoji';
 
-import { FACE_ASSETS } from '../../assets';
+import { FACE_ASSETS, IconNameType } from '../../assets';
 import { useConfigContext } from '../../config';
 import {
   useCheckType,
@@ -17,8 +17,9 @@ import {
   useCompare,
   useGetStyleProps,
 } from '../../hook';
-import { usePaletteContext } from '../../theme';
+import { usePaletteContext, useThemeContext } from '../../theme';
 import { Text } from '../../ui/Text';
+import type { EmojiIconItem } from '../types';
 import { gCountPerRow } from './EmojiList.const';
 import { EmojiListFloatButtonMemo } from './EmojiListFloatButton';
 
@@ -29,15 +30,15 @@ export type EmojiListProps = {
   /**
    * Callback function when an emoji is selected.
    */
-  onFace: (id: string) => void;
+  onFace?: (id: string) => void;
   /**
    * Callback function when the delete button is clicked.
    */
-  onDel: () => void;
+  onDel?: () => void;
   /**
    * Callback function when the send button is clicked.
    */
-  onSend: () => void;
+  onSend?: () => void;
   /**
    * The style of the container.
    */
@@ -51,7 +52,7 @@ export type EmojiListProps = {
    *
    * The format needs to be followed. For example: `U+1F641` {@link FACE_ASSETS}. It will replace the built-in emoji  list.
    */
-  emojiList?: string[];
+  emojiList?: EmojiIconItem[];
 };
 
 /**
@@ -76,6 +77,10 @@ export function EmojiList(props: EmojiListProps) {
       light: colors.primary[5],
       dark: colors.primary[6],
     },
+    selected: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
   });
   const {
     onFace,
@@ -85,10 +90,12 @@ export function EmojiList(props: EmojiListProps) {
     onDel,
     onSend,
   } = props;
-  const { getStyleSize } = useGetStyleProps();
+  const { getStyleSize, getBorderRadius } = useGetStyleProps();
   const { width: propsWidth } = getStyleSize(containerStyle);
   const { checkType } = useCheckType();
   const { fontFamily } = useConfigContext();
+  const { cornerRadius: corner } = useThemeContext();
+  const { cornerRadius } = usePaletteContext();
   if (propsWidth) {
     checkType(propsWidth, 'number');
   }
@@ -101,7 +108,14 @@ export function EmojiList(props: EmojiListProps) {
   const { enableCompare } = useConfigContext();
   useCompare(getColor, { enabled: enableCompare });
 
-  const _emojiList = emojiList ?? FACE_ASSETS;
+  const _emojiList =
+    emojiList ??
+    FACE_ASSETS.map((v) => {
+      return {
+        name: v as IconNameType,
+        state: 'common',
+      } as EmojiIconItem;
+    });
 
   return (
     <View
@@ -117,7 +131,7 @@ export function EmojiList(props: EmojiListProps) {
         <View style={styles.group}>
           <View style={styles.list}>
             {_emojiList.map((v, i) => {
-              const r = emoji.convert.fromCodePoint(v.substring(2));
+              const r = emoji.convert.fromCodePoint(v.name.substring(2));
               return (
                 <Pressable
                   key={i}
@@ -129,51 +143,76 @@ export function EmojiList(props: EmojiListProps) {
                     // alignSelf: 'baseline', // !!! crash
                   }}
                   onPress={() => {
-                    onFace?.(v);
+                    onFace?.(v.name);
                   }}
                 >
-                  <Text
+                  <View
                     style={{
-                      fontSize: Platform.OS === 'ios' ? 32 : 26,
-                      fontFamily: fontFamily,
+                      backgroundColor: getColor(
+                        v.state === 'selected' ? 'selected' : ''
+                      ),
+                      borderRadius: getBorderRadius({
+                        height: Platform.OS === 'ios' ? 32 : 26,
+                        crt: corner.avatar,
+                        cr: cornerRadius,
+                      }),
                     }}
                   >
-                    {r}
-                  </Text>
+                    <Text
+                      style={{
+                        fontSize: Platform.OS === 'ios' ? 32 : 26,
+                        fontFamily: fontFamily,
+                      }}
+                    >
+                      {r}
+                    </Text>
+                  </View>
                 </Pressable>
               );
             })}
           </View>
         </View>
       </ScrollView>
-      <EmojiListFloatButtonMemo
-        iconName={'arrow_left_thick'}
-        isVisible={true}
-        onClicked={onDel}
-        containerStyle={{
-          right: 16 + 36 + 12,
-          bottom: 16,
-          borderRadius: 4,
-          backgroundColor: getColor('bg1'),
-        }}
-        style={{
-          tintColor: getColor('btn1'),
-        }}
-      />
-      <EmojiListFloatButtonMemo
-        iconName={'airplane'}
-        isVisible={true}
-        onClicked={onSend}
-        containerStyle={{
-          right: 16,
-          bottom: 16,
-          borderRadius: 4,
-          backgroundColor: getColor('btn2'),
-        }}
-        style={{
-          tintColor: getColor('bg1'),
-        }}
-      />
+      {onDel ? (
+        <EmojiListFloatButtonMemo
+          iconName={'arrow_left_thick'}
+          isVisible={true}
+          onClicked={onDel}
+          containerStyle={{
+            right: 16 + 36 + 12,
+            bottom: 16,
+            borderRadius: getBorderRadius({
+              height: 36,
+              crt: corner.avatar,
+              cr: cornerRadius,
+            }),
+            backgroundColor: getColor('bg1'),
+          }}
+          style={{
+            tintColor: getColor('btn1'),
+          }}
+        />
+      ) : null}
+      {onSend ? (
+        <EmojiListFloatButtonMemo
+          iconName={'airplane'}
+          isVisible={true}
+          onClicked={onSend}
+          containerStyle={{
+            right: 16,
+            bottom: 16,
+            borderRadius: getBorderRadius({
+              height: 36,
+              crt: corner.avatar,
+              cr: cornerRadius,
+            }),
+            backgroundColor: getColor('btn2'),
+          }}
+          style={{
+            tintColor: getColor('bg1'),
+          }}
+        />
+      ) : null}
     </View>
   );
 }

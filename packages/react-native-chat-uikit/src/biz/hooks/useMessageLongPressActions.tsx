@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   ChatCustomMessageBody,
   ChatMessage,
@@ -10,12 +11,14 @@ import { gCustomMessageCardEventType, useChatContext } from '../../chat';
 import { useConfigContext } from '../../config';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
-import type { InitMenuItemsType } from '../BottomSheetMenu';
+import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList';
+import { BottomSheetMenuHeader, InitMenuItemsType } from '../BottomSheetMenu';
 import type {
   MessageModel,
   SystemMessageModel,
   TimeMessageModel,
 } from '../ConversationDetail';
+import type { EmojiIconItem } from '../types';
 import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
 
@@ -77,9 +80,17 @@ export function useMessageLongPressActions(
     }
     return false;
   };
+
+  const header = (
+    emojiList: EmojiIconItem[],
+    onFace?: (face: string) => void
+  ) => <BottomSheetMenuHeader emojiList={emojiList} onClickedEmoji={onFace} />;
+
   const onShowMenu = (
     _id: string,
-    model: SystemMessageModel | TimeMessageModel | MessageModel
+    model: SystemMessageModel | TimeMessageModel | MessageModel,
+    emojiList?: EmojiIconItem[],
+    onFace?: (face: string) => void
   ) => {
     if (model.modelType !== 'message') {
       return;
@@ -219,10 +230,37 @@ export function useMessageLongPressActions(
       onRequestModalClose: closeMenu,
       layoutType: 'left',
       hasCancel: false,
+      header: emojiList ? header(emojiList, onFace) : undefined,
     });
   };
 
   return {
     onShowMessageLongPressActions: onShowMenu,
+  };
+}
+
+export type UseEmojiLongPressActionsProps = {
+  menuRef: React.RefObject<BottomSheetEmojiListRef>;
+};
+
+export function useEmojiLongPressActionsProps(
+  props: UseEmojiLongPressActionsProps
+) {
+  const { menuRef } = props;
+  const closeMenu = React.useCallback(() => {
+    menuRef.current?.startHide?.();
+  }, [menuRef]);
+  const onShowMenu = React.useCallback(
+    (emojiList: EmojiIconItem[], onFace?: (face: string) => void) => {
+      menuRef.current?.startShowWithProps?.({
+        onRequestModalClose: closeMenu,
+        emojiList,
+        onFace,
+      });
+    },
+    [closeMenu, menuRef]
+  );
+  return {
+    onShowEmojiLongPressActions: onShowMenu,
   };
 }

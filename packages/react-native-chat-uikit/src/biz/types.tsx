@@ -6,6 +6,7 @@ import type {
   ViewToken,
 } from 'react-native';
 
+import type { IconNameType } from '../assets';
 import type { DataModelType } from '../chat';
 import type { UIKitError } from '../error';
 import type { AlertRef } from '../ui/Alert';
@@ -522,4 +523,10 @@ export type SectionListRefType<
   getSectionListRef: () => React.RefObject<
     SectionListRef<ListItemProps, SectionT>
   >;
+};
+
+export type EmojiIconStateType = 'selected' | 'common';
+export type EmojiIconItem = {
+  name: IconNameType | string;
+  state: EmojiIconStateType;
 };

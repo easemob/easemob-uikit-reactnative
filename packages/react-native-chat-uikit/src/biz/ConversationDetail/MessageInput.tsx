@@ -28,7 +28,7 @@ export const MessageInput = React.forwardRef<
   props: React.PropsWithChildren<MessageInputProps>,
   ref?: React.ForwardedRef<MessageInputRef>
 ) {
-  const { top, numberOfLines = 4, emojiList } = props;
+  const { top, numberOfLines = 4 } = props;
 
   const testRef = React.useRef<View>(null);
   const { fontFamily } = useConfigContext();
@@ -90,6 +90,7 @@ export const MessageInput = React.forwardRef<
     onEditMessageFinished,
     quoteMsg,
     onClickedEmojiSend,
+    emojiList,
   } = useMessageInput(props, ref);
 
   return (

@@ -23,6 +23,7 @@ import {
   selectOnePicture,
   selectOneShortVideo,
 } from '../hooks/useSelectFile';
+import type { EmojiIconItem } from '../types';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
 import type { MessageInputEditMessageRef } from './MessageInputEditMessage';
 import type {
@@ -50,6 +51,7 @@ export function useMessageInput(
     // onInputMention: propsOnInputMention,
     onClickedCardMenu: propsOnClickedCardMenu,
     onInitMenu,
+    emojiList,
   } = props;
   const { keyboardHeight, keyboardCurrentHeight } = useKeyboardHeight();
   const inputRef = React.useRef<RNTextInput>({} as any);
@@ -78,6 +80,11 @@ export function useMessageInput(
   const msgModelRef = React.useRef<MessageModel>();
   const mentionListRef = React.useRef<{ id: string; name: string }[]>([]);
   const alertRef = React.useRef<AlertRef>(null);
+  const emojiListRef = React.useRef<EmojiIconItem[] | undefined>(
+    emojiList?.map((v) => {
+      return { name: v, state: 'common' } as EmojiIconItem;
+    })
+  );
 
   const onSetInputBarState = (state: MessageInputState) => {
     inputBarStateRef.current = state;
@@ -554,5 +561,6 @@ export function useMessageInput(
     onEditMessageFinished,
     quoteMsg: quoteMessageRef.current?.msg,
     onClickedEmojiSend,
+    emojiList: emojiListRef.current,
   };
 }

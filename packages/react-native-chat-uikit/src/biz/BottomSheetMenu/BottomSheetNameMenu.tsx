@@ -7,6 +7,10 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { BottomSheetMenu, BottomSheetMenuRef } from './BottomSheetMenu';
 import { BottomSheetMenuItem } from './BottomSheetMenu.item';
+import type {
+  BottomSheetMenuHeaderProps,
+  BottomSheetMenuHeaderType,
+} from './BottomSheetMenuHeader';
 
 export type InitMenuItemsType = {
   /**
@@ -31,7 +35,7 @@ export type InitMenuItemsType = {
 };
 export type BottomSheetNameMenuRef = Omit<
   BottomSheetMenuRef,
-  'startShowWithInit'
+  'startShowWithInit' | 'startShowWithProps'
 > & {
   startShowWithInit: (initItems: InitMenuItemsType[], others?: any) => void;
   startShowWithProps: (props: BottomSheetNameMenuProps) => void;
@@ -57,6 +61,9 @@ export type BottomSheetNameMenuProps = {
    * Whether to display the cancel button.
    */
   hasCancel?: boolean;
+
+  headerProps?: BottomSheetMenuHeaderProps;
+  header?: BottomSheetMenuHeaderType;
 };
 
 /**
@@ -111,7 +118,7 @@ export const BottomSheetNameMenu = React.forwardRef<
   props: BottomSheetNameMenuProps,
   ref?: React.ForwardedRef<BottomSheetNameMenuRef>
 ) {
-  const { onRequestModalClose, title } = props;
+  const { onRequestModalClose, title, header, headerProps } = props;
   const { getItems } = useGetListItems(() => {
     return menuRef?.current?.getData?.();
   });
@@ -131,8 +138,17 @@ export const BottomSheetNameMenu = React.forwardRef<
           menuRef?.current?.startShowWithInit?.(items, others);
         },
         startShowWithProps: (props: BottomSheetNameMenuProps) => {
-          const items = getItems({ ...props, onRequestModalClose });
-          menuRef?.current?.startShowWithInit?.(items);
+          const { initItems: _, ...others } = props;
+          _;
+          const items = getItems({
+            ...props,
+            onRequestModalClose,
+          });
+          menuRef?.current?.startShowWithProps?.({
+            initItems: items,
+            ...others,
+            onRequestModalClose,
+          });
         },
         getData: () => {
           return menuRef?.current?.getData?.();
@@ -147,6 +163,8 @@ export const BottomSheetNameMenu = React.forwardRef<
       onRequestModalClose={onRequestModalClose}
       initItems={getItems(props)}
       title={title}
+      header={header}
+      headerProps={headerProps}
     />
   );
 });

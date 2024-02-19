@@ -5,7 +5,9 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
+import { BottomSheetEmojiList } from '../BottomSheetEmojiList/BottomSheetEmojiList';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
+import { BottomSheetReactionDetail } from '../BottomSheetReactionDetail';
 import { BottomSheetMessageReport } from '../MessageReport';
 import {
   EmptyPlaceholder,
@@ -66,6 +68,13 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       bounces,
       onContentSizeChange,
       onRenderItem,
+      emojiRef,
+      emojiList,
+      onRequestCloseEmoji,
+      onClickedItemReaction,
+      onClickedFaceListItem,
+      reactionRef,
+      onRequestCloseReaction,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -125,6 +134,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
                   onAvatarClicked={onClickedItemAvatar}
                   onQuoteClicked={onClickedItemQuote}
                   onStateClicked={onClickedItemState}
+                  onReactionClicked={onClickedItemReaction}
                   {...listItemRenderProps}
                 />
               );
@@ -165,6 +175,25 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
         <BottomSheetNameMenu
           ref={menuRef}
           onRequestModalClose={onRequestCloseMenu}
+        />
+        <BottomSheetEmojiList
+          ref={emojiRef}
+          emojiList={emojiList}
+          onRequestModalClose={onRequestCloseEmoji}
+          onFace={onClickedFaceListItem}
+        />
+        <BottomSheetReactionDetail
+          ref={reactionRef}
+          onRequestModalClose={onRequestCloseReaction}
+          reactionList={[
+            {
+              reaction: 'like',
+              count: 1,
+              isAddedBySelf: false,
+              userList: ['xx'],
+            },
+          ]}
+          msgId={''}
         />
         <Alert ref={alertRef} />
         <BottomSheetMessageReport

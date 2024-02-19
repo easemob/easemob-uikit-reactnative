@@ -7,12 +7,16 @@ import {
 } from 'react-native-safe-area-context';
 
 import { ErrorCode, UIKitError } from '../../error';
-import { useColors } from '../../hook';
+import { getElement, useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { Text } from '../../ui/Text';
 import { gMaxItemCount } from './BottomSheetMenu.const';
-import { useGetItems } from './BottomSheetMenu.hooks';
+import { useGetProps } from './BottomSheetMenu.hooks';
+import type {
+  BottomSheetMenuHeaderProps,
+  BottomSheetMenuHeaderType,
+} from './BottomSheetMenuHeader';
 
 /**
  * Referencing Values of the `BottomSheetMenu` component.
@@ -22,6 +26,10 @@ export type BottomSheetMenuRef = SlideModalRef & {
    * While displaying the component, the menu items will also be dynamically changed.
    */
   startShowWithInit: (initItems: React.ReactElement[], others?: any) => void;
+  /**
+   * Start displaying the component with the specified properties.
+   */
+  startShowWithProps: (props: BottomSheetMenuProps) => void;
 
   /**
    * Get the data of the component.
@@ -51,6 +59,9 @@ export type BottomSheetMenuProps = {
    * @default half of the entire screen.
    */
   maxHeight?: number;
+
+  headerProps?: BottomSheetMenuHeaderProps;
+  header?: BottomSheetMenuHeaderType;
 };
 
 /**
@@ -89,11 +100,13 @@ export const BottomSheetMenu = React.forwardRef<
     maxHeight: propsMaxHeight,
   } = props;
   const { colors } = usePaletteContext();
-  const { bottom } = useSafeAreaInsets();
+  const {} = useSafeAreaInsets();
   const modalRef = React.useRef<SlideModalRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const othersRef = React.useRef();
-  const { items, updateItems } = useGetItems(initItems);
+  const { items, updateItems, header, headerProps, updateProps } =
+    useGetProps(props);
+  const count = header ? 5 : 6;
   const { getColor } = useColors({
     bg1: {
       light: colors.neutral[98],
@@ -132,12 +145,22 @@ export const BottomSheetMenu = React.forwardRef<
             modalRef?.current?.startShow?.();
           }
         },
+        startShowWithProps: (props: BottomSheetMenuProps) => {
+          const { initItems } = props;
+          if (initItems !== items && initItems) {
+            isShow.current = true;
+            updateProps(props);
+          } else {
+            isShow.current = true;
+            modalRef?.current?.startShow?.();
+          }
+        },
         getData: () => {
           return othersRef.current;
         },
       };
     },
-    [items, updateItems]
+    [items, updateProps, updateItems]
   );
 
   React.useEffect(() => {
@@ -190,7 +213,9 @@ export const BottomSheetMenu = React.forwardRef<
           </View>
         ) : null}
 
-        {items.length > 6 ? (
+        {header ? getElement(header, headerProps) : null}
+
+        {items.length > count ? (
           <ScrollView
             style={{
               maxHeight: propsMaxHeight ?? winHeight * 0.5,
@@ -204,7 +229,7 @@ export const BottomSheetMenu = React.forwardRef<
           items
         )}
 
-        <View style={{ height: bottom }} />
+        {/* <View style={{ height: bottom }} /> */}
       </SafeAreaView>
     </SlideModal>
   );

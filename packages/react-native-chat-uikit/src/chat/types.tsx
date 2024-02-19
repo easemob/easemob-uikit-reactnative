@@ -2,10 +2,12 @@ import type {
   ChatClient,
   ChatContactEventListener,
   ChatConversationType,
+  ChatCursorResult,
   ChatCustomEventListener,
   ChatGroupEventListener,
   ChatMessage,
   ChatMessageEventListener,
+  ChatMessageReaction,
   ChatMessageStatusCallback,
   ChatMultiDeviceEventListener,
   ChatOptions,
@@ -605,6 +607,43 @@ export interface MessageServices {
   }): void;
 }
 
+export interface MessageReactionServices {
+  /**
+   * Add reaction to message.
+   */
+  addReactionToMessage(params: {
+    msgId: string;
+    reaction: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  /**
+   * Remove reaction from message.
+   */
+  removeReactionFromMessage(params: {
+    msgId: string;
+    reaction: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  /**
+   * Get message reactions list.
+   */
+  getMessageReactionsList(params: {
+    msgId: string;
+    onResult: ResultCallback<ChatMessageReaction[]>;
+  }): void;
+
+  /**
+   * Get message reactions detail for the reaction.
+   */
+  getMessageReactionsDetail(params: {
+    msgId: string;
+    reaction: string;
+    cursor?: string;
+    pageSize?: number;
+    onResult: ResultCallback<ChatCursorResult<ChatMessageReaction>>;
+  }): void;
+}
+
 export interface GroupServices {
   // setGroupOnRequestData<DataT>(
   //   callback?: (params: {
@@ -836,6 +875,7 @@ export interface ChatService
     GroupServices,
     UserServices,
     MessageServices,
+    MessageReactionServices,
     PresenceServices {
   /**
    * Add listener.

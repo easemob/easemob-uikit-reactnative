@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Dimensions,
+  Platform,
   // Image as RNImage,
   Pressable,
   StyleSheet,
@@ -17,6 +18,7 @@ import {
   ChatVideoMessageBody,
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
+import emoji from 'twemoji';
 
 import { ICON_ASSETS, IconNameType } from '../../assets';
 import {
@@ -63,6 +65,7 @@ import type {
   MessageFileProps,
   MessageImageProps,
   MessageQuoteBubbleProps,
+  MessageReactionProps,
   MessageTextProps,
   MessageVideoProps,
   MessageViewProps,
@@ -1100,6 +1103,141 @@ export function CheckView(props: CheckViewProps) {
   );
 }
 
+export function MessageReaction(props: MessageReactionProps) {
+  const { reactions, hasAvatar, hasTriangle, layoutType, onClicked } = props;
+  // const test = [
+  //   { reaction: 'link', count: 12, isAddedBySelf: true, userList: [] },
+  //   { reaction: 'link', count: 100, isAddedBySelf: false, userList: [] },
+  //   { reaction: 'link', count: 100, isAddedBySelf: false, userList: [] },
+  //   { reaction: 'link', count: 100, isAddedBySelf: false, userList: [] },
+  // ] as ChatMessageReaction[];
+  const { colors, cornerRadius } = usePaletteContext();
+  const { cornerRadius: corner } = useThemeContext();
+  const { getBorderRadius } = useGetStyleProps();
+  const { fontFamily } = useConfigContext();
+  const { getColor } = useColors({
+    common: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+    dis: {
+      light: colors.neutral[3],
+      dark: colors.neutral[7],
+    },
+    bg: {
+      light: colors.primary[95],
+      dark: colors.primary[2],
+    },
+    green: {
+      light: colors.secondary[4],
+      dark: colors.secondary[5],
+    },
+  });
+
+  const paddingWidth =
+    hasAvatar === true
+      ? hasTriangle === true
+        ? 53
+        : 48
+      : hasTriangle === true
+      ? 17
+      : 12;
+
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: layoutType === 'left' ? paddingWidth : undefined,
+        paddingRight: layoutType === 'left' ? undefined : paddingWidth,
+        marginTop: 2,
+      }}
+    >
+      {reactions?.map((v, i) => {
+        if (i >= 0 && i < 3) {
+          const r = emoji.convert.fromCodePoint(v.reaction.substring(2));
+          return (
+            <Pressable key={i} onPress={() => onClicked?.(v.reaction)}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  borderColor: getColor('common'),
+                  borderWidth: 1,
+                  marginRight: layoutType === 'left' ? 4 : undefined,
+                  marginLeft: layoutType === 'left' ? undefined : 4,
+                  paddingRight: 8,
+                  paddingLeft: 6,
+                  backgroundColor: getColor(v.isAddedBySelf ? 'bg' : ''),
+                  borderRadius: getBorderRadius({
+                    height: 36,
+                    crt: corner.bubble[0]!,
+                    cr: cornerRadius,
+                  }),
+                  maxHeight: 28,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: Platform.OS === 'ios' ? 15 : 15,
+                    fontFamily: fontFamily,
+                    margin: 4,
+                  }}
+                >
+                  {r}
+                </Text>
+                <View style={{ width: 6 }} />
+                <Text
+                  paletteType={'label'}
+                  textType={'medium'}
+                  style={{
+                    color: getColor(v.isAddedBySelf ? 'common' : 'dis'),
+                  }}
+                >
+                  {v.count > 99 ? '+99' : v.count}
+                </Text>
+              </View>
+            </Pressable>
+          );
+        } else if (i === 3) {
+          return (
+            <Pressable
+              style={{
+                borderColor: getColor('common'),
+                borderWidth: 1,
+                paddingRight: 8,
+                paddingLeft: 6,
+                marginRight: layoutType === 'left' ? 4 : undefined,
+                marginLeft: layoutType === 'left' ? undefined : 4,
+                borderRadius: getBorderRadius({
+                  height: 36,
+                  crt: corner.bubble[0]!,
+                  cr: cornerRadius,
+                }),
+                maxHeight: 28,
+              }}
+              key={i}
+              onPress={() => onClicked?.('faceplus')}
+            >
+              <Icon
+                name={'ellipsis_horizontally' as IconNameType}
+                style={{
+                  width: 20,
+                  height: 20,
+                  margin: 4,
+                  tintColor: getColor('common'),
+                }}
+              />
+            </Pressable>
+          );
+        } else {
+          return null;
+        }
+      })}
+    </View>
+  );
+}
+
 export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
   const {
     hasAvatar,
@@ -1590,11 +1728,12 @@ export function MessageView(props: MessageViewProps) {
     onStateClicked,
     MessageQuoteBubble: propsMessageQuoteBubble,
     MessageBubble: propsMessageBubble,
+    onReactionClicked,
     ...others
   } = props;
   const _MessageQuoteBubble = propsMessageQuoteBubble ?? MessageQuoteBubble;
   const _MessageBubble = propsMessageBubble ?? MessageBubble;
-  const { layoutType } = model;
+  const { layoutType, reactions } = model;
   const state = getMessageState(model.msg);
   const maxWidth = Dimensions.get('window').width * 0.6;
   const time = model.msg.localTime ?? model.msg.serverTime;
@@ -1625,6 +1764,13 @@ export function MessageView(props: MessageViewProps) {
   const onClickedState = React.useCallback(() => {
     onStateClicked?.(model.msg.msgId, model);
   }, [model, onStateClicked]);
+
+  const _onReactionClicked = React.useCallback(
+    (face: string) => {
+      onReactionClicked?.(model.msg.msgId, model, face);
+    },
+    [model, onReactionClicked]
+  );
 
   return (
     <View
@@ -1684,6 +1830,15 @@ export function MessageView(props: MessageViewProps) {
             />
           ) : null}
         </View>
+        {reactions && reactions?.length > 0 ? (
+          <MessageReaction
+            layoutType={layoutType}
+            hasAvatar={avatarIsVisible}
+            hasTriangle={hasTriangle}
+            onClicked={_onReactionClicked}
+            reactions={reactions}
+          />
+        ) : null}
         {timeIsVisible ? (
           <TimeView
             layoutType={layoutType}

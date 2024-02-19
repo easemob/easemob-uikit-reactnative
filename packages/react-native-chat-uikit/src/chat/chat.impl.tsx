@@ -3,10 +3,12 @@ import {
   ChatContact,
   ChatConversation,
   ChatConversationType,
+  ChatCursorResult,
   ChatGroup,
   ChatGroupOptions,
   ChatGroupStyle,
   ChatMessage,
+  ChatMessageReaction,
   ChatMessageStatusCallback,
   ChatMessageType,
   ChatOptions,
@@ -2518,6 +2520,88 @@ export class ChatServiceImpl
       },
       onError: () => {
         params.onResult?.({ isOk: false });
+      },
+    });
+  }
+
+  addReactionToMessage(params: {
+    msgId: string;
+    reaction: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.addReaction(
+        params.reaction,
+        params.msgId
+      ),
+      event: 'addReactionToMessage',
+      onFinished: () => {
+        params.onResult?.({ isOk: true });
+      },
+      onError: () => {
+        params.onResult?.({ isOk: false });
+      },
+    });
+  }
+
+  removeReactionFromMessage(params: {
+    msgId: string;
+    reaction: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.removeReaction(
+        params.reaction,
+        params.msgId
+      ),
+      event: 'removeReactionFromMessage',
+      onFinished: () => {
+        params.onResult?.({ isOk: true });
+      },
+      onError: () => {
+        params.onResult?.({ isOk: false });
+      },
+    });
+  }
+
+  getMessageReactionsList(params: {
+    msgId: string;
+    onResult: ResultCallback<ChatMessageReaction[]>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.getReactionList(params.msgId),
+      event: 'getMessageReactionsList',
+      onFinished: (value) => {
+        params.onResult({
+          isOk: true,
+          value: value,
+        });
+        return false;
+      },
+    });
+  }
+
+  getMessageReactionsDetail(params: {
+    msgId: string;
+    reaction: string;
+    cursor?: string;
+    pageSize?: number;
+    onResult: ResultCallback<ChatCursorResult<ChatMessageReaction>>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.fetchReactionDetail(
+        params.msgId,
+        params.reaction,
+        params.cursor,
+        params.pageSize
+      ),
+      event: 'getMessageReactionsDetail',
+      onFinished: (value) => {
+        params.onResult({
+          isOk: true,
+          value: value,
+        });
+        return false;
       },
     });
   }

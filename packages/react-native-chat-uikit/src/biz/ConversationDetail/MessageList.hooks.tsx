@@ -10,17 +10,21 @@ import {
   ChatMessage,
   ChatMessageChatType,
   ChatMessageDirection,
+  ChatMessageReaction,
+  ChatMessageReactionEvent,
   ChatMessageStatus,
   ChatMessageType,
   ChatTextMessageBody,
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 
+import { FACE_ASSETS } from '../../assets';
 import {
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
   gMessageAttributeTranslate,
   gMessageAttributeVoiceReadFlag,
+  MessageServiceListener,
   UIConversationListListener,
   UIListenerType,
   useChatContext,
@@ -34,16 +38,22 @@ import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import { LocalPath, seqId, timeoutTask } from '../../utils';
+import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList/BottomSheetEmojiList';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import type { BottomSheetReactionDetailRef } from '../BottomSheetReactionDetail';
 import { gReportMessageList } from '../const';
 import { useMessageContext } from '../Context';
 import { useCloseMenu } from '../hooks/useCloseMenu';
-import { useMessageLongPressActions } from '../hooks/useMessageLongPressActions';
+import {
+  useEmojiLongPressActionsProps,
+  useMessageLongPressActions,
+} from '../hooks/useMessageLongPressActions';
 import { useFlatList } from '../List';
 import type {
   BottomSheetMessageReportRef,
   ReportItemModel,
 } from '../MessageReport';
+import type { EmojiIconItem } from '../types';
 import { gRequestMaxMessageCount } from './const';
 import { MessageListItemMemo } from './MessageListItem';
 import { getQuoteAttribute } from './MessageListItem.hooks';
@@ -157,6 +167,19 @@ export function useMessageList(
     userScrollGestureRef.current = isUserScroll;
   }, []);
   // const { addListener, removeListener, emit } = useDispatchContext();
+  const emojiRef = React.useRef<BottomSheetEmojiListRef>(null);
+  const onRequestCloseEmoji = React.useCallback(() => {
+    emojiRef.current?.startHide?.();
+  }, []);
+  const emojiListRef = React.useRef<EmojiIconItem[]>(
+    FACE_ASSETS.map((v) => {
+      return { name: v, state: 'common' } as EmojiIconItem;
+    })
+  );
+  const reactionRef = React.useRef<BottomSheetReactionDetailRef>(null);
+  const onRequestCloseReaction = React.useCallback(() => {
+    reactionRef.current?.startHide?.();
+  }, []);
 
   const needScrollToBottom = React.useCallback(() => {
     if (needScrollRef.current === true) {
@@ -558,6 +581,7 @@ export function useMessageList(
                 (msg.from === im.userId ? 'right' : 'left'),
               msg: msg,
               quoteMsg: quoteMsg,
+              reactions: await msg.reactionList,
               userName: user?.name,
               userAvatar: user?.avatar,
             } as MessageModel;
@@ -654,6 +678,10 @@ export function useMessageList(
     onTranslateMessage: translateMessage,
   });
 
+  const { onShowEmojiLongPressActions } = useEmojiLongPressActionsProps({
+    menuRef: emojiRef,
+  });
+
   const onClickedListItem = React.useCallback(
     (
       id: string,
@@ -672,6 +700,124 @@ export function useMessageList(
     [propsOnClicked, startVoicePlay]
   );
 
+  const updateMessageEmojiToUI = React.useCallback(
+    (msg: ChatMessage, reaction: ChatMessageReaction) => {
+      const item = dataRef.current.find((d) => {
+        if (d.model.modelType === 'message') {
+          const msgModel = d.model as MessageModel;
+          if (msgModel.msg.msgId === msg.msgId) {
+            return true;
+          }
+        }
+        return false;
+      });
+      if (item) {
+        const msgModel = item.model as MessageModel;
+        if (!msgModel.reactions) {
+          msgModel.reactions = [];
+        }
+        if (msgModel.reactions) {
+          const index = msgModel.reactions.findIndex(
+            (d) => d.reaction === reaction.reaction
+          );
+          if (index !== -1) {
+            const r = msgModel.reactions[index];
+            if (r) {
+              if (reaction.count > 0) {
+                msgModel.reactions[index] = reaction;
+              } else {
+                msgModel.reactions.splice(index, 1);
+              }
+            }
+          } else {
+            msgModel.reactions.push(reaction);
+          }
+          refreshToUI(dataRef.current);
+        }
+      }
+    },
+    [dataRef, refreshToUI]
+  );
+
+  const onEmojiClicked = React.useCallback(
+    (face: string, model: MessageModel) => {
+      im.getMessageReactionsList({
+        msgId: model.msg.msgId,
+        onResult: (result) => {
+          if (result.isOk && result.value) {
+            const reactions = result.value;
+            const isExisted = reactions.find((d) => {
+              if (d.reaction === face) {
+                return true;
+              }
+              return false;
+            });
+            if (isExisted && isExisted.isAddedBySelf === true) {
+              im.removeReactionFromMessage({
+                msgId: model.msg.msgId,
+                reaction: face,
+                onResult: () => {
+                  // removeMessageEmojiFromUI(model.msg, face);
+                },
+              });
+            } else if (isExisted && isExisted.isAddedBySelf === false) {
+              im.addReactionToMessage({
+                msgId: model.msg.msgId,
+                reaction: face,
+                onResult: () => {
+                  // AddMessageEmojiToUI(model.msg, face);
+                },
+              });
+            } else if (!isExisted) {
+              im.addReactionToMessage({
+                msgId: model.msg.msgId,
+                reaction: face,
+                onResult: () => {
+                  // AddMessageEmojiToUI(model.msg, face);
+                },
+              });
+            }
+          }
+        },
+      });
+    },
+    [im]
+  );
+
+  const getEmojiState = React.useCallback(
+    (
+      list: EmojiIconItem[],
+      msgId: string,
+      onFinished: (list?: EmojiIconItem[]) => void
+    ) => {
+      im.getMessageReactionsList({
+        msgId,
+        onResult: (result) => {
+          if (result.isOk && result.value) {
+            const reactions = result.value;
+            list.forEach((d) => {
+              const isExisted = reactions.find((r) => {
+                if (r.reaction === d.name) {
+                  return true;
+                }
+                return false;
+              });
+              if (isExisted) {
+                d.state = isExisted.isAddedBySelf ? 'selected' : 'common';
+              } else {
+                d.state = 'common';
+              }
+            });
+            onFinished(list);
+          } else {
+            onFinished();
+          }
+        },
+      });
+    },
+    [im]
+  );
+
   const onLongPressListItem = React.useCallback(
     (
       id: string,
@@ -679,10 +825,48 @@ export function useMessageList(
     ) => {
       const ret = propsOnLongPress?.(id, model);
       if (ret !== false) {
-        onShowMessageLongPressActions(id, model);
+        if (model.modelType === 'message') {
+          const list = emojiListRef.current.slice(0, 6);
+          const onFace = (face: string) => {
+            if (face === 'faceplus') {
+              menuRef.current?.startHide?.(() => {
+                const list = emojiListRef.current;
+                getEmojiState(list, msgModel.msg.msgId, (updateList) => {
+                  if (updateList) {
+                    msgModelRef.current = model as MessageModel;
+                    const onFace = (face: string) => {
+                      emojiRef.current?.startHide?.(() => {
+                        onEmojiClicked(face, model as MessageModel);
+                      });
+                    };
+                    onShowEmojiLongPressActions(updateList, onFace);
+                  }
+                });
+              });
+            } else {
+              menuRef.current?.startHide?.(() => {
+                onEmojiClicked(face, model as MessageModel);
+              });
+            }
+          };
+          const msgModel = model as MessageModel;
+          getEmojiState(list, msgModel.msg.msgId, (updateList) => {
+            if (updateList) {
+              onShowMessageLongPressActions(id, model, updateList, onFace);
+            } else {
+              onShowMessageLongPressActions(id, model);
+            }
+          });
+        }
       }
     },
-    [onShowMessageLongPressActions, propsOnLongPress]
+    [
+      getEmojiState,
+      onEmojiClicked,
+      onShowEmojiLongPressActions,
+      onShowMessageLongPressActions,
+      propsOnLongPress,
+    ]
   );
 
   const onClickedListItemAvatar = React.useCallback(
@@ -714,6 +898,41 @@ export function useMessageList(
       }
     },
     [dataRef, propsOnClickedItemQuote, scrollTo]
+  );
+
+  const msgModelRef = React.useRef({} as MessageModel);
+  const onClickedFaceListItem = React.useCallback(
+    (face: string) => {
+      emojiRef.current?.startHide?.(() => {
+        console.log('test:zuoyu:onClickedFaceListItem', msgModelRef.current);
+        onEmojiClicked(face, msgModelRef.current);
+      });
+    },
+    [onEmojiClicked]
+  );
+
+  const onClickedListItemReaction = React.useCallback(
+    (
+      _id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel,
+      face: string
+    ) => {
+      if (model.modelType === 'message') {
+        if (face === 'faceplus') {
+          const msgModel = model as MessageModel;
+          if (msgModel.reactions && msgModel.reactions?.length > 0) {
+            reactionRef.current?.startShowWithProps?.({
+              reactionList: msgModel.reactions,
+              msgId: msgModel.msg.msgId,
+              onRequestModalClose: onRequestCloseReaction,
+            });
+          }
+        } else {
+          onEmojiClicked(face, model as MessageModel);
+        }
+      }
+    },
+    [onEmojiClicked, onRequestCloseReaction]
   );
 
   const reportMessage = React.useCallback(
@@ -1351,6 +1570,34 @@ export function useMessageList(
   ]);
 
   React.useEffect(() => {
+    const listener = {
+      onMessageReactionDidChange: (list: Array<ChatMessageReactionEvent>) => {
+        for (const item of list) {
+          item.operations.forEach(async (op) => {
+            const msg = await im.getMessage({ messageId: item.msgId });
+            if (msg) {
+              const isExisted = item.reactions.find((d) => {
+                if (d.reaction === op.reaction) {
+                  return true;
+                }
+                return false;
+              });
+              // removeMessageEmojiFromUI(msg, op.reaction);
+              if (isExisted) {
+                updateMessageEmojiToUI(msg, isExisted);
+              }
+            }
+          });
+        }
+      },
+    } as MessageServiceListener;
+    im.addListener(listener);
+    return () => {
+      im.removeListener(listener);
+    };
+  }, [im, updateMessageEmojiToUI]);
+
+  React.useEffect(() => {
     init();
     requestHistoryMessage();
   }, [convId, convType, im.messageManager, init, requestHistoryMessage]);
@@ -1376,6 +1623,7 @@ export function useMessageList(
     onClickedItemAvatar: onClickedListItemAvatar,
     onClickedItemQuote: onClickedListItemQuote,
     onClickedItemState: onClickedListItemState,
+    onClickedItemReaction: onClickedListItemReaction,
     ListItemRender: MessageListItemRef.current,
     listItemRenderProps: listItemRenderPropsRef.current,
     scrollEventThrottle,
@@ -1388,5 +1636,11 @@ export function useMessageList(
     enableListItemUserInfoUpdateFromMessage,
     onContentSizeChange,
     onRenderItem,
+    emojiRef,
+    onRequestCloseEmoji,
+    emojiList: emojiListRef.current,
+    onClickedFaceListItem,
+    reactionRef,
+    onRequestCloseReaction,
   };
 }

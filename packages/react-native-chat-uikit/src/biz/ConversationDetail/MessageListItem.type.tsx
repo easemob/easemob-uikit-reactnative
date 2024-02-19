@@ -1,5 +1,5 @@
 import type { StyleProp, ViewStyle } from 'react-native';
-import type { ChatMessage } from 'react-native-chat-sdk';
+import type { ChatMessage, ChatMessageReaction } from 'react-native-chat-sdk';
 
 import type { IconNameType } from '../../assets';
 import type {
@@ -251,3 +251,21 @@ export type TimeTipViewProps = {
  * Message Time Tip component render type.
  */
 export type TimeTipViewRender = React.FC<TimeTipViewProps>;
+
+export type MessageReactionItemProps = ChatMessageReaction;
+
+/**
+ * Message Reaction Component properties.
+ */
+export type MessageReactionProps = {
+  layoutType: MessageLayoutType;
+  hasAvatar: boolean;
+  hasTriangle: boolean;
+  reactions?: ChatMessageReaction[];
+  onClicked?: (face: string) => void;
+};
+
+/**
+ * Message Reaction component render type.
+ */
+export type MessageReactionRender = React.FC<MessageReactionProps>;

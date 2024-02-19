@@ -1,5 +1,9 @@
 import type { StyleProp, ViewStyle } from 'react-native';
-import type { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
+import type {
+  ChatConversationType,
+  ChatMessage,
+  ChatMessageReaction,
+} from 'react-native-chat-sdk';
 
 import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type { TopNavigationBarElementType } from '../TopNavigationBar';
@@ -379,6 +383,10 @@ export type MessageModel = BasicModel &
      * Message quote object. (optional)
      */
     quoteMsg?: ChatMessage;
+    /**
+     * Message reactions.
+     */
+    reactions?: ChatMessageReaction[];
   };
 /**
  * Message list item actions properties.
@@ -428,6 +436,15 @@ export type MessageListItemActionsProps = {
   onStateClicked?: (
     id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
+
+  /**
+   * Callback notification when the message reaction is clicked.
+   */
+  onReactionClicked?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel,
+    face: string
   ) => void;
 };
 
