@@ -71,9 +71,7 @@ export function useContactList(props: ContactListProps) {
     ContactListItemProps,
     IndexModel,
     ListIndexProps
-  >({
-    // onInit: () => init({ onFinished: onInitialized }),
-  });
+  >({});
   const {
     isSort,
     setIndexTitles,

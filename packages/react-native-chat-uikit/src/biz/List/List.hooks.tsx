@@ -14,14 +14,7 @@ import type { DefaultListIndexPropsT, ListStateType } from '../types';
 import type { UseListBasicProps } from './types';
 
 export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
-  const {
-    onVisibleItems,
-    onRefresh: propsOnRefresh,
-    // onSearch: propsOnSearch,
-    onLoadMore: propsOnLoadMore,
-    onInit,
-    onUnInit,
-  } = props;
+  const { onVisibleItems, onInit, onUnInit } = props;
   const listType = React.useRef<'FlatList' | 'SectionList'>('FlatList').current;
   const loadType = React.useRef<'once' | 'multiple'>(
     props.loadType ?? 'once'
@@ -38,8 +31,8 @@ export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
   const isVisibleUpdate = React.useRef(props.isVisibleUpdate ?? false).current;
   const isAutoUpdate = React.useRef(props.isAutoUpdate ?? false).current;
   const isEventUpdate = React.useRef(props.isEventUpdate ?? true).current;
-  const enableRefresh = React.useRef(props.onRefresh ? true : false).current;
-  const enableMore = React.useRef(props.onLoadMore ? true : false).current;
+  const enableRefresh = React.useRef(props.enableRefresh ?? false).current;
+  const enableMore = React.useRef(props.enableMore ?? true).current;
   const [refreshing, setRefreshing] = React.useState(props.refreshing ?? false);
   const onSearchRef = React.useRef<(keyword: string) => void>({} as any);
 
@@ -82,13 +75,10 @@ export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
-      propsOnRefresh?.();
       setRefreshing(false);
     }, 1000);
-  }, [propsOnRefresh]);
-  const onMore = React.useCallback(() => {
-    propsOnLoadMore?.();
-  }, [propsOnLoadMore]);
+  }, []);
+  const onMore = React.useCallback(() => {}, []);
 
   useLifecycle(
     React.useCallback(async (state: any) => {
@@ -116,6 +106,7 @@ export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
     isAutoUpdate,
     isEventUpdate,
     refreshing: enableRefresh === true ? refreshing : undefined,
+    setRefreshing: enableRefresh === true ? setRefreshing : undefined,
     viewabilityConfig:
       isVisibleUpdate === true ? viewabilityConfigRef.current : undefined,
     onViewableItemsChanged:

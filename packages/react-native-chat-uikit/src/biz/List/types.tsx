@@ -5,9 +5,18 @@ export type UseListCommonProps<ItemT> = {
    * Callback notification when visible items change.
    */
   onVisibleItems?: (items: ItemT[]) => void;
-  onRefresh?: () => void;
-  onSearch?: (keyword: string) => void;
-  onLoadMore?: () => void;
+  /**
+   * enable refresh.
+   *
+   * default: false
+   */
+  enableRefresh?: boolean;
+  /**
+   * enable more.
+   *
+   * default: true
+   */
+  enableMore?: boolean;
   onInit?: () => void;
   onUnInit?: () => void;
 };

@@ -38,8 +38,6 @@ export function useGroupList(props: GroupListProps) {
   } = props;
   const flatListProps = useFlatList<GroupListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
-    // onInit: () => init(),
-    // onMore: () => onMore(),
     onVisibleItems: (items: GroupListItemProps[]) => onVisibleItems(items),
   });
   const { setData, dataRef, setListState, ref: flatListRef } = flatListProps;
@@ -182,7 +180,7 @@ export function useGroupList(props: GroupListProps) {
     requestList(0);
   }, [requestList]);
 
-  const onMore = React.useCallback(() => {
+  const _onMore = React.useCallback(() => {
     if (isNoMoreRef.current === true) {
       return;
     }
@@ -373,7 +371,7 @@ export function useGroupList(props: GroupListProps) {
 
   return {
     ...flatListProps,
-    onMore,
+    onMore: _onMore,
     onClicked: onClickedCallback,
     onLongPress: onLongPressCallback,
     tr,
