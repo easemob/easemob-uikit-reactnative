@@ -75,6 +75,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onClickedFaceListItem,
       reactionRef,
       onRequestCloseReaction,
+      onClickedItemThread,
     } = useMessageList(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -135,6 +136,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
                   onQuoteClicked={onClickedItemQuote}
                   onStateClicked={onClickedItemState}
                   onReactionClicked={onClickedItemReaction}
+                  onThreadClicked={onClickedItemThread}
                   {...listItemRenderProps}
                 />
               );

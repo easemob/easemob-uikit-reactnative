@@ -10,6 +10,7 @@ import {
   ChatMessage,
   ChatMessageReaction,
   ChatMessageStatusCallback,
+  ChatMessageThread,
   ChatMessageType,
   ChatOptions,
   ChatPresence,
@@ -2442,18 +2443,43 @@ export class ChatServiceImpl
     startMsgId: string;
     direction: ChatSearchDirection;
     loadCount: number;
+    isChatThread?: boolean;
     onResult: ResultCallback<ChatMessage[]>;
   }): void {
-    const { convId, convType, startMsgId, direction, loadCount } = params;
+    const { convId, convType, startMsgId, direction, loadCount, isChatThread } =
+      params;
     this.tryCatch({
       promise: this.client.chatManager.getMessages(
         convId,
         convType,
         startMsgId,
         direction,
-        loadCount
+        loadCount,
+        isChatThread
       ),
       event: 'getHistoryMessage',
+      onFinished: (value) => {
+        params.onResult({ isOk: true, value: value });
+        return false;
+      },
+    });
+  }
+  fetchHistoryMessages(params: {
+    convId: string;
+    convType: ChatConversationType;
+    startMsgId: string;
+    direction: ChatSearchDirection;
+    pageSize: number;
+    onResult: ResultCallback<ChatCursorResult<ChatMessage>>;
+  }): void {
+    const { convId, convType, startMsgId, direction, pageSize } = params;
+    this.tryCatch({
+      promise: this.client.chatManager.fetchHistoryMessages(convId, convType, {
+        startMsgId,
+        direction,
+        pageSize,
+      }),
+      event: 'fetchHistoryMessages',
       onFinished: (value) => {
         params.onResult({ isOk: true, value: value });
         return false;
@@ -2672,6 +2698,181 @@ export class ChatServiceImpl
       },
       onError: () => {
         params.onResult?.({ isOk: false });
+      },
+    });
+  }
+
+  createThread(params: {
+    name: string;
+    msgId: string;
+    parentId: string;
+    onResult: ResultCallback<ChatMessageThread>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.createChatThread(
+        params.name,
+        params.msgId,
+        params.parentId
+      ),
+      event: 'createThread',
+      onFinished: (value) => {
+        params.onResult({
+          isOk: true,
+          value: value,
+        });
+      },
+    });
+  }
+  joinThread(params: {
+    threadId: string;
+    onResult: ResultCallback<ChatMessageThread>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.joinChatThread(params.threadId),
+      event: 'joinThread',
+      onFinished: (value) => {
+        params.onResult({
+          isOk: true,
+          value: value,
+        });
+      },
+    });
+  }
+  leaveThread(params: {
+    threadId: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.leaveChatThread(params.threadId),
+      event: 'leaveThread',
+      onFinished: () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  destroyThread(params: {
+    threadId: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.destroyChatThread(params.threadId),
+      event: 'destroyThread',
+      onFinished: () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  updateThreadName(params: {
+    threadId: string;
+    name: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.updateChatThreadName(
+        params.threadId,
+        params.name
+      ),
+      event: 'updateThreadName',
+      onFinished: () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  removeMemberFromThread(params: {
+    threadId: string;
+    userId: string;
+    onResult: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.removeMemberWithChatThread(
+        params.threadId,
+        params.userId
+      ),
+      event: 'removeMemberFromThread',
+      onFinished: () => {
+        params.onResult({
+          isOk: true,
+        });
+      },
+    });
+  }
+  fetchMembersFromThread(params: {
+    threadId: string;
+    cursor: string;
+    pageSize: number;
+    onResult: ResultCallback<string[]>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.fetchMembersWithChatThreadFromServer(
+        params.threadId,
+        params.cursor,
+        params.pageSize
+      ),
+      event: 'fetchMembersFromThread',
+      onFinished: (value) => {
+        params.onResult({
+          isOk: true,
+          value: value,
+        });
+      },
+    });
+  }
+  fetchThreadsFromGroup(params: {
+    parentId: string;
+    cursor: string;
+    pageSize: number;
+    onResult: ResultCallback<ChatCursorResult<ChatMessageThread>>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.fetchChatThreadWithParentFromServer(
+        params.parentId,
+        params.cursor,
+        params.pageSize
+      ),
+      event: 'fetchThreadsFromGroup',
+      onFinished: (value) => {
+        params.onResult({
+          isOk: true,
+          value: value,
+        });
+      },
+    });
+  }
+  fetchThread(params: {
+    threadId: string;
+    onResult: ResultCallback<ChatMessageThread>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.fetchChatThreadFromServer(
+        params.threadId
+      ),
+      event: 'fetchThread',
+      onFinished: (value) => {
+        params.onResult({
+          isOk: true,
+          value: value,
+        });
+      },
+    });
+  }
+  getThread(params: {
+    threadId: string;
+    onResult: ResultCallback<ChatMessageThread>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.getMessageThread(params.threadId),
+      event: 'getThread',
+      onFinished: (value) => {
+        params.onResult({
+          isOk: true,
+          value: value,
+        });
       },
     });
   }

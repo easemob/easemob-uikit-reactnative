@@ -27,8 +27,13 @@ import type {
 
 export function useConversationDetail(props: ConversationDetailProps) {
   const {
+    type,
     convId,
     convType,
+    thread,
+    newThreadName,
+    msgId,
+    parentId,
     testMode,
     input,
     list,
@@ -40,13 +45,32 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const _messageInputRef = input?.ref ?? messageInputRef;
   const _MessageInput = input?.render ?? MessageInput;
   const messageInputProps = input?.props
-    ? { ...input.props, convId, convType, testMode }
-    : { convId, convType, testMode };
+    ? { ...input.props, convId, convType, type, thread, testMode }
+    : { convId, convType, type, thread, testMode };
   const _messageListRef = list?.ref ?? messageListRef;
   const _MessageList = list?.render ?? MessageList;
   const messageListProps = list?.props
-    ? { ...list.props, convId, convType, testMode }
-    : { convId, convType, testMode };
+    ? {
+        ...list.props,
+        convId,
+        convType,
+        type,
+        thread,
+        newThreadName,
+        msgId,
+        parentId,
+        testMode,
+      }
+    : {
+        convId,
+        convType,
+        type,
+        thread,
+        newThreadName,
+        msgId,
+        parentId,
+        testMode,
+      };
   const [convName, setConvName] = React.useState<string | undefined>();
   const [convAvatar, setConvAvatar] = React.useState<string>();
   const ownerIdRef = React.useRef<string>();
@@ -90,30 +114,43 @@ export function useConversationDetail(props: ConversationDetailProps) {
         setConvName(conv.convName);
         setConvAvatar(conv.convAvatar);
       } else if (conv.convType === ChatConversationType.GroupChat) {
-        im.getGroupInfo({
-          groupId: conv.convId,
-          onResult: (result) => {
-            if (result.isOk === true && result.value) {
-              conv.convName =
-                result.value.groupName && result.value?.groupName.length > 0
-                  ? result.value?.groupName
-                  : result.value.groupId;
-              ownerIdRef.current = result.value.owner;
-              setConvName(conv.convName);
-              console.log('dev:ConversationDetail:', result.value);
-              if (result.value.groupAvatar) {
-                conv.convAvatar = result.value.groupAvatar;
-                setConvAvatar(result.value.groupAvatar);
-              } else {
-                setConvAvatar(conv.convAvatar);
+        if (type === 'chat') {
+          im.getGroupInfo({
+            groupId: conv.convId,
+            onResult: (result) => {
+              if (result.isOk === true && result.value) {
+                conv.convName =
+                  result.value.groupName && result.value?.groupName.length > 0
+                    ? result.value?.groupName
+                    : result.value.groupId;
+                ownerIdRef.current = result.value.owner;
+                setConvName(conv.convName);
+                console.log('dev:ConversationDetail:', result.value);
+                if (result.value.groupAvatar) {
+                  conv.convAvatar = result.value.groupAvatar;
+                  setConvAvatar(result.value.groupAvatar);
+                } else {
+                  setConvAvatar(conv.convAvatar);
+                }
               }
-            }
-          },
-        });
+            },
+          });
+        } else if (type === 'thread') {
+          if (thread) {
+            im.fetchThread({
+              threadId: thread.threadId,
+              onResult: (res) => {
+                if (res.isOk && res.value) {
+                  setConvName(res.value.threadName);
+                }
+              },
+            });
+          }
+        }
       }
       im.setConversationRead({ convId, convType });
     }
-  }, [convId, convType, im]);
+  }, [convId, convType, im, thread, type]);
 
   const onClickedSend = React.useCallback(
     (

@@ -13,15 +13,18 @@ import {
   TopNavigationBarElementType,
   TopNavigationBarRightList,
 } from '../TopNavigationBar';
+import type { ConversationDetailModelType } from './types';
 
 type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
   convId: string;
   convName?: string;
   convAvatar?: string;
+  type: ConversationDetailModelType;
   onBack?: (data?: any) => void;
   onClickedAvatar?: () => void;
   NavigationBar?: TopNavigationBarElementType<LeftProps, RightProps>;
   doNotDisturb?: boolean;
+  newThreadName?: string;
 };
 export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   props: _ConversationDetailNavigationBarProps<LeftProps, RightProps>
@@ -34,6 +37,8 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     convId,
     NavigationBar,
     doNotDisturb,
+    type: comType,
+    newThreadName,
   } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -78,9 +83,11 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
             style={{ width: 24, height: 24, tintColor: getColor('icon') }}
             onPress={onBack}
           />
-          <Pressable onPress={onClickedAvatar}>
-            <Avatar url={convAvatar} size={32} />
-          </Pressable>
+          {comType === 'chat' ? (
+            <Pressable onPress={onClickedAvatar}>
+              <Avatar url={convAvatar} size={32} />
+            </Pressable>
+          ) : null}
 
           <View
             style={{
@@ -96,9 +103,11 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
                   color: getColor('text'),
                 }}
               >
-                {convName ?? convId}
+                {comType === 'chat'
+                  ? convName ?? convId
+                  : newThreadName ?? convId}
               </SingleLineText>
-              {doNotDisturb === true ? (
+              {comType === 'chat' && doNotDisturb === true ? (
                 <Icon
                   name={'bell_slash'}
                   style={{ height: 20, width: 20, tintColor: getColor('t3') }}
@@ -111,22 +120,39 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
               paletteType={'label'}
               style={{ color: getColor('text_enable') }}
             >
-              {tr('state')}
+              {comType === 'chat' ? tr('state') : tr('#group')}
             </Text>
           </View>
         </View>
       }
-      Right={TopNavigationBarRightList}
+      Right={
+        comType === 'chat' || comType === 'thread'
+          ? TopNavigationBarRightList
+          : null
+      }
       RightProps={{
-        onClickedList: [
-          () => {
-            // todo: click phone_pick
-          },
-          () => {
-            // todo: click video_camera
-          },
-        ],
+        onClickedList:
+          comType === 'chat'
+            ? [
+                () => {
+                  // todo: click thread for open.
+                },
+                () => {
+                  // todo: click phone_pick
+                },
+                () => {
+                  // todo: click video_camera
+                },
+              ]
+            : comType === 'thread'
+            ? [
+                () => {
+                  // todo: show thread bottom sheet menu.
+                },
+              ]
+            : [],
         iconNameList: [
+          // 'hashtag_in_bubble_fill',
           // 'phone_pick',
           // 'video_camera'
         ],

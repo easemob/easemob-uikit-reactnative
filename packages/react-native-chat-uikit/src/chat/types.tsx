@@ -9,6 +9,7 @@ import type {
   ChatMessageEventListener,
   ChatMessageReaction,
   ChatMessageStatusCallback,
+  ChatMessageThread,
   ChatMultiDeviceEventListener,
   ChatOptions,
   ChatPresenceEventListener,
@@ -570,7 +571,16 @@ export interface MessageServices {
     startMsgId: string;
     direction: ChatSearchDirection;
     loadCount: number;
+    isChatThread?: boolean;
     onResult: ResultCallback<ChatMessage[]>;
+  }): void;
+  fetchHistoryMessages(params: {
+    convId: string;
+    convType: ChatConversationType;
+    startMsgId: string;
+    direction: ChatSearchDirection;
+    pageSize: number;
+    onResult: ResultCallback<ChatCursorResult<ChatMessage>>;
   }): void;
   /**
    * Get the user information from the message.
@@ -641,6 +651,87 @@ export interface MessageReactionServices {
     cursor?: string;
     pageSize?: number;
     onResult: ResultCallback<ChatCursorResult<ChatMessageReaction>>;
+  }): void;
+}
+
+export interface MessageThreadServices {
+  /**
+   * Create a thread.
+   */
+  createThread(params: {
+    name: string;
+    msgId: string;
+    parentId: string;
+    onResult: ResultCallback<ChatMessageThread>;
+  }): void;
+  /**
+   * Join the thread.
+   */
+  joinThread(params: {
+    threadId: string;
+    onResult: ResultCallback<ChatMessageThread>;
+  }): void;
+  /**
+   * Leave the thread.
+   */
+  leaveThread(params: {
+    threadId: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  /**
+   * Destroy the thread.
+   */
+  destroyThread(params: {
+    threadId: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  /**
+   * Update the thread name.
+   */
+  updateThreadName(params: {
+    threadId: string;
+    name: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  /**
+   * remove member from thread.
+   */
+  removeMemberFromThread(params: {
+    threadId: string;
+    userId: string;
+    onResult: ResultCallback<void>;
+  }): void;
+  /**
+   * fetch member list from thread.
+   */
+  fetchMembersFromThread(params: {
+    threadId: string;
+    cursor: string;
+    pageSize: number;
+    onResult: ResultCallback<string[]>;
+  }): void;
+  /**
+   * fetch list thread from specific group.
+   */
+  fetchThreadsFromGroup(params: {
+    parentId: string;
+    cursor: string;
+    pageSize: number;
+    onResult: ResultCallback<ChatCursorResult<ChatMessageThread>>;
+  }): void;
+  /**
+   * fetch thread.
+   */
+  fetchThread(params: {
+    threadId: string;
+    onResult: ResultCallback<ChatMessageThread>;
+  }): void;
+  /**
+   * get thread.
+   */
+  getThread(params: {
+    threadId: string;
+    onResult: ResultCallback<ChatMessageThread>;
   }): void;
 }
 
@@ -876,6 +967,7 @@ export interface ChatService
     UserServices,
     MessageServices,
     MessageReactionServices,
+    MessageThreadServices,
     PresenceServices {
   /**
    * Add listener.

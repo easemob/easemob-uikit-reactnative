@@ -26,7 +26,7 @@ import {
   gMessageAttributeQuote,
   // gMessageAttributeTranslate,
 } from '../../chat';
-import { userInfoFromMessage } from '../../chat/utils';
+import { getMessageSnapshot, userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { useColors, useGetStyleProps } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -42,6 +42,7 @@ import { SingleLineText, Text } from '../../ui/Text';
 import { formatTsForConvDetail } from '../../utils';
 import { Avatar } from '../Avatar';
 import { gMaxVoiceDuration } from '../const';
+import { MessageHistoryListItem } from './MessageHistoryListItem';
 import {
   getFileSize,
   getImageShowSize,
@@ -67,6 +68,7 @@ import type {
   MessageQuoteBubbleProps,
   MessageReactionProps,
   MessageTextProps,
+  MessageThreadProps,
   MessageVideoProps,
   MessageViewProps,
   MessageVoiceProps,
@@ -78,6 +80,7 @@ import type {
 } from './MessageListItem.type';
 import type {
   MessageEditableStateType,
+  MessageHistoryModel,
   MessageListItemProps,
   MessageModel,
   SystemMessageModel,
@@ -1103,6 +1106,138 @@ export function CheckView(props: CheckViewProps) {
   );
 }
 
+export function MessageThread(props: MessageThreadProps) {
+  const { thread, hasAvatar, hasTriangle, layoutType, onClicked, maxWidth } =
+    props;
+  // const { lastMessage } = thread ?? {};
+  // const thread = {
+  //   threadName: 'threadName123123123123123',
+  //   threadId: 'threadId',
+  //   msgCount: 100,
+  //   lastMessage: ChatMessage.createTextMessage('test', 'test', 0),
+  // };
+  const { colors, cornerRadius } = usePaletteContext();
+  const { cornerRadius: corner } = useThemeContext();
+  const { getBorderRadius } = useGetStyleProps();
+  const { fontFamily } = useConfigContext();
+  const { tr } = useI18nContext();
+  const { getColor } = useColors({
+    common: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+    dis: {
+      light: colors.neutral[3],
+      dark: colors.neutral[7],
+    },
+    bg: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
+    text2: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+  });
+
+  const paddingWidth =
+    hasAvatar === true
+      ? hasTriangle === true
+        ? 53
+        : 48
+      : hasTriangle === true
+      ? 17
+      : 12;
+
+  const onLongPress = React.useCallback(() => {
+    if (thread) {
+      onClicked?.(thread.threadId);
+    }
+  }, [onClicked, thread]);
+
+  if (!thread) {
+    return null;
+  }
+
+  return (
+    <Pressable
+      style={{
+        flexDirection: 'column',
+        // alignItems: 'center',
+        marginLeft: layoutType === 'left' ? paddingWidth : undefined,
+        marginRight: layoutType === 'left' ? undefined : paddingWidth,
+        marginTop: 2,
+        backgroundColor: getColor('bg'),
+        maxWidth: maxWidth,
+        borderRadius: getBorderRadius({
+          height: 36,
+          crt: corner.bubble[0]!,
+          cr: cornerRadius,
+        }),
+      }}
+      onPress={onLongPress}
+    >
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 8,
+          paddingTop: 8,
+        }}
+      >
+        <Icon
+          name={'hashtag_in_bubble_fill' as IconNameType}
+          style={{
+            width: 20,
+            height: 20,
+            margin: 4,
+            tintColor: getColor('dis'),
+          }}
+        />
+        <SingleLineText
+          paletteType={'label'}
+          textType={'medium'}
+          style={{
+            color: getColor('dis'),
+            fontFamily: fontFamily,
+            maxWidth: '60%',
+          }}
+        >
+          {thread.threadName ?? thread.threadId}
+        </SingleLineText>
+        <View style={{ flexGrow: 1 }} />
+        <SingleLineText
+          paletteType={'label'}
+          textType={'medium'}
+          style={{
+            color: getColor('common'),
+            fontFamily: fontFamily,
+            maxWidth: '30%',
+          }}
+        >
+          {tr(
+            '_uikit_thread_msg_count',
+            `${thread.msgCount > 99 ? '+99' : thread.msgCount}`
+          )}
+        </SingleLineText>
+      </View>
+      <SingleLineText
+        paletteType={'label'}
+        textType={'medium'}
+        style={{
+          color: getColor('text2'),
+          fontFamily: fontFamily,
+          paddingHorizontal: 12,
+          paddingBottom: 8,
+          maxWidth: '100%',
+        }}
+      >
+        {tr(getMessageSnapshot(thread.lastMessage))}
+      </SingleLineText>
+    </Pressable>
+  );
+}
+
 export function MessageReaction(props: MessageReactionProps) {
   const { reactions, hasAvatar, hasTriangle, layoutType, onClicked } = props;
   // const test = [
@@ -1729,11 +1864,12 @@ export function MessageView(props: MessageViewProps) {
     MessageQuoteBubble: propsMessageQuoteBubble,
     MessageBubble: propsMessageBubble,
     onReactionClicked,
+    onThreadClicked,
     ...others
   } = props;
   const _MessageQuoteBubble = propsMessageQuoteBubble ?? MessageQuoteBubble;
   const _MessageBubble = propsMessageBubble ?? MessageBubble;
-  const { layoutType, reactions } = model;
+  const { layoutType, reactions, thread } = model;
   const state = getMessageState(model.msg);
   const maxWidth = Dimensions.get('window').width * 0.6;
   const time = model.msg.localTime ?? model.msg.serverTime;
@@ -1771,6 +1907,9 @@ export function MessageView(props: MessageViewProps) {
     },
     [model, onReactionClicked]
   );
+  const _onThreadClicked = React.useCallback(() => {
+    onThreadClicked?.(model.msg.msgId, model);
+  }, [model, onThreadClicked]);
 
   return (
     <View
@@ -1830,6 +1969,24 @@ export function MessageView(props: MessageViewProps) {
             />
           ) : null}
         </View>
+        {thread ? (
+          <MessageThread
+            layoutType={layoutType}
+            hasAvatar={avatarIsVisible}
+            hasTriangle={hasTriangle}
+            onClicked={_onThreadClicked}
+            maxWidth={maxWidth}
+            thread={thread}
+          />
+        ) : (
+          <MessageThread
+            layoutType={layoutType}
+            hasAvatar={avatarIsVisible}
+            hasTriangle={hasTriangle}
+            onClicked={_onThreadClicked}
+            thread={thread}
+          />
+        )}
         {reactions && reactions?.length > 0 ? (
           <MessageReaction
             layoutType={layoutType}
@@ -1958,6 +2115,9 @@ export function MessageListItem(props: MessageListItemProps) {
           isVisible={modelType === 'time' ? true : false}
           model={model as TimeMessageModel}
         />
+      ) : null}
+      {modelType === 'history' ? (
+        <MessageHistoryListItem model={model as MessageHistoryModel} />
       ) : null}
     </View>
   );

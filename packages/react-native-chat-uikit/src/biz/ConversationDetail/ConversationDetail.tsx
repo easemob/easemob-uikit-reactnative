@@ -18,6 +18,8 @@ export function ConversationDetail(props: ConversationDetailProps) {
     convId,
     enableNavigationBar = true,
     NavigationBar: propsNavigationBar,
+    type: comType,
+    newThreadName,
   } = props;
 
   const {
@@ -48,6 +50,8 @@ export function ConversationDetail(props: ConversationDetailProps) {
           onClickedAvatar={onClickedAvatar}
           NavigationBar={propsNavigationBar}
           doNotDisturb={doNotDisturb}
+          type={comType}
+          newThreadName={newThreadName}
         />
       ) : null}
       <_MessageList

@@ -389,15 +389,19 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     convType: ChatConversationType;
     startMsgId: string;
     loadCount: number;
+    direction?: ChatSearchDirection;
+    isChatThread?: boolean;
     onResult: (msgs: ChatMessage[]) => void;
   }): void {
-    const { convId, convType, startMsgId, loadCount } = params;
+    const { convId, convType, startMsgId, loadCount, direction, isChatThread } =
+      params;
     return this._client.getHistoryMessage({
       convId,
       convType,
       startMsgId,
-      direction: ChatSearchDirection.UP,
+      direction: direction ?? ChatSearchDirection.UP,
       loadCount: loadCount,
+      isChatThread: isChatThread,
       onResult: (result) => {
         if (result.isOk && result.value) {
           // todo: try download failed thumb. dispatch download result.

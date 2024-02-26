@@ -3,6 +3,7 @@ import type {
   ChatConversationType,
   ChatMessage,
   ChatMessageReaction,
+  ChatMessageThread,
 } from 'react-native-chat-sdk';
 
 import type { InitMenuItemsType } from '../BottomSheetMenu';
@@ -123,20 +124,51 @@ export type MessageInputProps = PropsWithError &
 export type MessageInputState = 'normal' | 'emoji' | 'voice' | 'keyboard';
 
 /**
+ * Conversation detail component type.
+ */
+export type ConversationDetailModelType = 'chat' | 'create_thread' | 'thread';
+
+/**
  * Conversation detail component properties.
+ *
+ * The session details component will be reused in various scenarios. For example: open conversation detail, create thread, open thread.
  */
 export type ConversationDetailProps = PropsWithError &
   PropsWithTest &
   PropsWithBack &
   PropsWithSearch & {
+    type: ConversationDetailModelType;
     /**
-     * Conversation ID.
+     * Conversation ID or thread ID.
      */
     convId: string;
     /**
      * Conversation type.
+     *
+     * In thread mode, this parameter is `ChatConversationType.GroupChat`.
      */
     convType: ChatConversationType;
+
+    /**
+     * The message thread. this parameter is required in thread mode.
+     */
+    thread?: ChatMessageThread;
+
+    /**
+     * The message ID. this parameter is required in create thread mode.
+     */
+    msgId?: string;
+
+    /**
+     * The parent ID. this parameter is required in create thread mode.
+     */
+    parentId?: string;
+
+    /**
+     * The name of the new thread. this parameter is required in create thread mode.
+     */
+    newThreadName?: string;
+
     /**
      * A collection of properties for the input component. As an internal component of conversation details, settings are provided directly through collections.
      */
@@ -144,7 +176,7 @@ export type ConversationDetailProps = PropsWithError &
       /**
        * The input component properties.
        */
-      props?: Omit<MessageInputProps, 'convId' | 'convType'> & {
+      props?: Omit<MessageInputProps, 'convId' | 'convType' | 'type'> & {
         convId?: string;
         convType?: ChatConversationType;
       };
@@ -166,7 +198,7 @@ export type ConversationDetailProps = PropsWithError &
       /**
        * The message list component properties.
        */
-      props?: Omit<MessageListProps, 'convId' | 'convType'> & {
+      props?: Omit<MessageListProps, 'convId' | 'convType' | 'type'> & {
         convId?: string;
         convType?: ChatConversationType;
       };
@@ -296,7 +328,7 @@ export type SendCustomProps = SendBasicProps & {
 /**
  * Message bubble type.
  */
-export type MessageBubbleType = 'system' | 'time' | 'message';
+export type MessageBubbleType = 'system' | 'time' | 'message' | 'history';
 /**
  * Message layout type.
  *
@@ -387,7 +419,19 @@ export type MessageModel = BasicModel &
      * Message reactions.
      */
     reactions?: ChatMessageReaction[];
+
+    /**
+     * Message thread. Only group chat is supported.
+     */
+    thread?: ChatMessageThread;
   };
+
+export type MessageHistoryModel = BasicModel & {
+  /**
+   * Message object.
+   */
+  msg: ChatMessage;
+};
 /**
  * Message list item actions properties.
  */
@@ -445,6 +489,11 @@ export type MessageListItemActionsProps = {
     id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel,
     face: string
+  ) => void;
+
+  onThreadClicked?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
   ) => void;
 };
 
@@ -579,6 +628,7 @@ export type MessageListRef = {
  */
 export type MessageListProps = PropsWithError &
   PropsWithTest & {
+    type: 'chat' | 'create_thread' | 'thread';
     /**
      * Conversation ID.
      */
@@ -587,6 +637,41 @@ export type MessageListProps = PropsWithError &
      * Conversation type.
      */
     convType: ChatConversationType;
+
+    /**
+     * The message thread.
+     */
+    thread?: ChatMessageThread;
+
+    /**
+     * The message ID. this parameter is required in create thread mode.
+     */
+    msgId?: string;
+
+    /**
+     * The parent ID. this parameter is required in create thread mode.
+     */
+    parentId?: string;
+
+    /**
+     * The name of the new thread. this parameter is required in create thread mode.
+     */
+    newThreadName?: string;
+
+    /**
+     * The first message to be sent. This parameter is required in thread mode.
+     */
+    firstMessage?:
+      | SendFileProps
+      | SendImageProps
+      | SendTextProps
+      | SendVideoProps
+      | SendVoiceProps
+      | SendTimeProps
+      | SendSystemProps
+      | SendCardProps
+      | SendCustomProps;
+
     /**
      * The callback notification for clicking the list is not the callback notification for clicking the list item.
      */
@@ -672,4 +757,40 @@ export type MessageListProps = PropsWithError &
      * Callback notification when there are no more messages.
      */
     onNoMoreMessage?: () => void;
+
+    /**
+     * Callback notification when request create thread.
+     * @returns
+     */
+    onCreateThread?: (params: {
+      newName: string;
+      parentId: string;
+      messageId: string;
+    }) => void;
+
+    /**
+     * Callback notification when open thread.
+     */
+    onOpenThread?: (thread: ChatMessageThread) => void;
+
+    /**
+     * Callback notification when create thread is completed.
+     *
+     * If the return thread is not undefined, the thread will be created successfully.
+     *
+     * Normally modify the necessary parameters. For example: type, msgId, threadId, etc.
+     */
+    onCreateThreadResult?: (
+      thread?: ChatMessageThread,
+      firstMessage?:
+        | SendFileProps
+        | SendImageProps
+        | SendTextProps
+        | SendVideoProps
+        | SendVoiceProps
+        | SendTimeProps
+        | SendSystemProps
+        | SendCardProps
+        | SendCustomProps
+    ) => void;
   };

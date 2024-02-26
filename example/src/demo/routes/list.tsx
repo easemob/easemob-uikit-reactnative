@@ -119,6 +119,14 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  MessageThreadDetail: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  CreateThread: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
 };
 export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
@@ -247,6 +255,14 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   CommonSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  MessageThreadDetail: {
+    option: undefined,
+    params: undefined,
+  },
+  CreateThread: {
     option: undefined,
     params: undefined,
   },

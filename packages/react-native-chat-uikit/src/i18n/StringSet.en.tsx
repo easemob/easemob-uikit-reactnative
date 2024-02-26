@@ -52,6 +52,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_chat_list_long_press_menu_copy': 'Copy',
     '_uikit_chat_list_long_press_menu_replay': 'Reply',
     '_uikit_chat_list_long_press_menu_translate': 'translate',
+    '_uikit_chat_list_long_press_menu_thread': 'thread',
     '_uikit_chat_list_long_press_menu_edit': 'Edit',
     '_uikit_chat_list_long_press_menu_report': 'Report',
     '_uikit_chat_list_long_press_menu_delete': 'Delete',
@@ -98,6 +99,8 @@ export function createStringSetEn(): StringSet {
 
     '_uikit_new_quest_title': 'New Request',
     '_uikit_new_quest_list_item_tip': 'requests to add you as a friend.',
+
+    '_uikit_thread_msg_count': (count) => `${count}replay`,
 
     '_uikit_report_title': 'Report Message',
     'Unwelcome commercial content': 'Unwelcome Commercial Content',
@@ -154,6 +157,7 @@ export function createStringSetEn(): StringSet {
     '[file]': '[file]',
     '[location]': '[location]',
     '[voice]': '[voice]',
+    '[contact]': '[contact]',
     '[custom]': '[custom]',
     '[unknown]': '[unknown]',
   };

@@ -8,6 +8,7 @@ import {
 
 import { emoji } from '../utils';
 import {
+  gCustomMessageCardEventType,
   gMessageAttributeUserInfo,
   gNewRequestConversationMsgEventType,
   gNewRequestConversationState,
@@ -104,6 +105,10 @@ export function getMessageSnapshot(msg?: ChatMessage): string {
     case ChatMessageType.VOICE:
       return '[voice]';
     case ChatMessageType.CUSTOM:
+      const body = msg.body as ChatCustomMessageBody;
+      if (body.event === gCustomMessageCardEventType) {
+        return '[contact]';
+      }
       return '[custom]';
 
     default:

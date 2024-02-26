@@ -3,6 +3,7 @@ export * from './ConversationDetail.hooks';
 export * from './ConversationDetail.navi';
 export * from './FileMessagePreview';
 export * from './ImageMessagePreview';
+export * from './MessageHistoryListItem';
 export * from './MessageInput';
 export * from './MessageInput.hooks';
 export * from './MessageInputEditMessage';

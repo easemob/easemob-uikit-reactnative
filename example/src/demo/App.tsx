@@ -33,6 +33,7 @@ import {
   ConversationDetailScreen,
   ConversationListScreen,
   CreateGroupScreen,
+  CreateThreadScreen,
   DelGroupParticipantScreen,
   EditInfoScreen,
   FileMessagePreviewScreen,
@@ -44,6 +45,7 @@ import {
   ImageMessagePreviewScreen,
   LoginListScreen,
   LoginScreen,
+  MessageThreadDetailScreen,
   NewConversationScreen,
   NewRequestScreen,
   SearchContactScreen,
@@ -486,6 +488,20 @@ export function App() {
                 headerShown: false,
               }}
               component={CommonSettingScreen}
+            />
+            <Root.Screen
+              name={'CreateThread'}
+              options={{
+                headerShown: false,
+              }}
+              component={CreateThreadScreen}
+            />
+            <Root.Screen
+              name={'MessageThreadDetail'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageThreadDetailScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

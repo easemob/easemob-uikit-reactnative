@@ -113,6 +113,7 @@ export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
       isVisibleUpdate === true ? onViewableItemsChanged : undefined,
     deferSearch,
     setOnSearch,
+    enableRefresh,
   };
 }
 export function useFlatList<ItemT>(

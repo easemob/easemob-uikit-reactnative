@@ -51,6 +51,10 @@ export type UseMessageLongPressActionsProps = BasicActionsProps & {
    * Callback notification of translate message.
    */
   onTranslateMessage?: (model: MessageModel) => void;
+  /**
+   * Callback notification of thread message.
+   */
+  onThread?: (model: MessageModel) => void;
 };
 export function useMessageLongPressActions(
   props: UseMessageLongPressActionsProps
@@ -64,6 +68,7 @@ export function useMessageLongPressActions(
     onRecallMessage,
     onCopyFinished,
     onTranslateMessage,
+    onThread,
     onInit,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
@@ -153,6 +158,18 @@ export function useMessageLongPressActions(
             });
           }
         }
+      }
+      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+        initItems.push({
+          name: tr('_uikit_chat_list_long_press_menu_thread'),
+          isHigh: false,
+          icon: 'hashtag_in_bubble_fill',
+          onClicked: () => {
+            closeMenu(() => {
+              onThread?.(model as MessageModel);
+            });
+          },
+        });
       }
       if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
         if (

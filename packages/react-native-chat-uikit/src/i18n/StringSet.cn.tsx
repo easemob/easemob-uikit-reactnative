@@ -51,6 +51,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_chat_list_long_press_menu_copy': '复制',
     '_uikit_chat_list_long_press_menu_replay': '回复',
     '_uikit_chat_list_long_press_menu_translate': '翻译',
+    '_uikit_chat_list_long_press_menu_thread': '话题',
     '_uikit_chat_list_long_press_menu_edit': '编辑',
     '_uikit_chat_list_long_press_menu_report': '举报',
     '_uikit_chat_list_long_press_menu_delete': '删除',
@@ -97,6 +98,8 @@ export function createStringSetCn(): StringSet {
 
     '_uikit_new_quest_title': '新请求',
     '_uikit_new_quest_list_item_tip': '请求添加您为好友。',
+
+    '_uikit_thread_msg_count': (count) => `${count}回复`,
 
     '_uikit_report_title': '消息举报',
     'Unwelcome commercial content': '不受欢迎的商业内容',
@@ -150,9 +153,10 @@ export function createStringSetCn(): StringSet {
 
     '[image]': '[图片]',
     '[video]': '[视频]',
-    '[file]': '[文件]',
+    '[file]': (v) => (v ? `[文件]${v}` : '[文件]'),
     '[location]': '[定位]',
-    '[voice]': '[语音]',
+    '[voice]': (v) => (v ? `[语音]${v}'` : '[语音]'),
+    '[contact]': (v) => (v ? `[联系人]${v}` : '[联系人]'),
     '[custom]': '[自定义]',
     '[unknown]': '[未知类型]',
   };

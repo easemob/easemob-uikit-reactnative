@@ -4,6 +4,7 @@ import {
   ChatConversationType,
   ChatCustomMessageBody,
   ChatMessageChatType,
+  ChatMessageThread,
   ChatMessageType,
 } from 'react-native-chat-sdk';
 import {
@@ -12,6 +13,15 @@ import {
   MessageInputRef,
   MessageListRef,
   MessageModel,
+  SendCardProps,
+  SendCustomProps,
+  SendFileProps,
+  SendImageProps,
+  SendSystemProps,
+  SendTextProps,
+  SendTimeProps,
+  SendVideoProps,
+  SendVoiceProps,
   SystemMessageModel,
   TimeMessageModel,
   useChatContext,
@@ -39,10 +49,13 @@ import type { RootScreenParamsList } from '../routes';
 // }
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ConversationDetailScreen(props: Props) {
+export function CreateThreadScreen(props: Props) {
   const { navigation, route } = props;
-  const convId = ((route.params as any)?.params as any)?.convId;
+  const convId = React.useRef(uuid()).current;
   const convType = ((route.params as any)?.params as any)?.convType;
+  const newName = ((route.params as any)?.params as any)?.newName;
+  const parentId = ((route.params as any)?.params as any)?.parentId;
+  const messageId = ((route.params as any)?.params as any)?.messageId;
   const operateType = ((route.params as any)?.params as any)?.operateType;
   // const selectedParticipants = ((route.params as any)?.params as any)
   //   ?.selectedParticipants;
@@ -59,6 +72,34 @@ export function ConversationDetailScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
+
+  const onCreateThreadResult = (
+    thread?: ChatMessageThread,
+    firstMessage?:
+      | SendFileProps
+      | SendImageProps
+      | SendTextProps
+      | SendVideoProps
+      | SendVoiceProps
+      | SendTimeProps
+      | SendSystemProps
+      | SendCardProps
+      | SendCustomProps
+  ) => {
+    console.log('test:zuoyu:onCreateThreadResult', thread, firstMessage);
+    if (!thread) {
+      navigation.goBack();
+    } else {
+      navigation.replace('MessageThreadDetail', {
+        params: {
+          thread: thread,
+          convId: thread.threadId,
+          convType: ChatConversationType.GroupChat,
+          firstMessage: firstMessage,
+        },
+      });
+    }
+  };
 
   // React.useEffect(() => {
   //   if (selectedParticipants && operateType === 'mention') {
@@ -98,13 +139,16 @@ export function ConversationDetailScreen(props: Props) {
       }}
     >
       <ConversationDetail
-        type="chat"
+        type="create_thread"
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
         convId={convId}
         convType={convType}
+        newThreadName={newName}
+        msgId={messageId}
+        parentId={parentId}
         input={{
           ref: inputRef,
           props: {
@@ -239,26 +283,7 @@ export function ConversationDetailScreen(props: Props) {
             onNoMoreMessage: React.useCallback(() => {
               console.log('onNoMoreMessage');
             }, []),
-            onCreateThread: (params) => {
-              console.log('test:zuoyu:onCreateThread:', params);
-              navigation.push('CreateThread', {
-                params: {
-                  ...params,
-                  convId: uuid(),
-                  convType: ChatConversationType.GroupChat,
-                },
-              });
-            },
-            onOpenThread: (params) => {
-              console.log('test:zuoyu:onOpenThread:', params);
-              navigation.push('MessageThreadDetail', {
-                params: {
-                  thread: params,
-                  convId: params.threadId,
-                  convType: ChatConversationType.GroupChat,
-                },
-              });
-            },
+            onCreateThreadResult: onCreateThreadResult,
           },
         }}
         onBack={() => {

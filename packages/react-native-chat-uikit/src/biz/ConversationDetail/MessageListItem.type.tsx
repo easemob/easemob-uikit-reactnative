@@ -1,5 +1,9 @@
 import type { StyleProp, ViewStyle } from 'react-native';
-import type { ChatMessage, ChatMessageReaction } from 'react-native-chat-sdk';
+import type {
+  ChatMessage,
+  ChatMessageReaction,
+  ChatMessageThread,
+} from 'react-native-chat-sdk';
 
 import type { IconNameType } from '../../assets';
 import type {
@@ -269,3 +273,19 @@ export type MessageReactionProps = {
  * Message Reaction component render type.
  */
 export type MessageReactionRender = React.FC<MessageReactionProps>;
+
+/**
+ * Message Thread Component properties.
+ */
+export type MessageThreadProps = {
+  layoutType: MessageLayoutType;
+  hasAvatar: boolean;
+  hasTriangle: boolean;
+  thread?: ChatMessageThread;
+  maxWidth?: number;
+  onClicked?: (threadId: string) => void;
+};
+/**
+ * Message Thread component render type.
+ */
+export type MessageThreadRender = React.FC<MessageThreadProps>;

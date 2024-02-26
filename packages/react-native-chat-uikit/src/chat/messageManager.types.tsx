@@ -1,4 +1,8 @@
-import type { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
+import type {
+  ChatConversationType,
+  ChatMessage,
+  ChatSearchDirection,
+} from 'react-native-chat-sdk';
 
 import type { CommonManager } from './commonManager.types';
 import type { ConversationModel } from './types.ui';
@@ -114,6 +118,8 @@ export interface MessageCacheManager
     convType: ChatConversationType;
     startMsgId: string;
     loadCount: number;
+    direction?: ChatSearchDirection;
+    isChatThread?: boolean;
     onResult: (msgs: ChatMessage[]) => void;
   }): void;
   /**

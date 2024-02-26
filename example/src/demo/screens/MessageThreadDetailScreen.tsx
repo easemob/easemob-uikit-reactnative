@@ -17,7 +17,6 @@ import {
   useChatContext,
   useColors,
   usePaletteContext,
-  uuid,
 } from 'react-native-chat-uikit';
 import {
   SafeAreaView,
@@ -39,10 +38,12 @@ import type { RootScreenParamsList } from '../routes';
 // }
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ConversationDetailScreen(props: Props) {
+export function MessageThreadDetailScreen(props: Props) {
   const { navigation, route } = props;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
+  const thread = ((route.params as any)?.params as any)?.thread;
+  const firstMessage = ((route.params as any)?.params as any)?.firstMessage;
   const operateType = ((route.params as any)?.params as any)?.operateType;
   // const selectedParticipants = ((route.params as any)?.params as any)
   //   ?.selectedParticipants;
@@ -59,6 +60,7 @@ export function ConversationDetailScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
+  console.log('test:zuoyu:thread:', thread);
 
   // React.useEffect(() => {
   //   if (selectedParticipants && operateType === 'mention') {
@@ -98,13 +100,14 @@ export function ConversationDetailScreen(props: Props) {
       }}
     >
       <ConversationDetail
-        type="chat"
+        type="thread"
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
         convId={convId}
         convType={convType}
+        thread={thread}
         input={{
           ref: inputRef,
           props: {
@@ -239,26 +242,7 @@ export function ConversationDetailScreen(props: Props) {
             onNoMoreMessage: React.useCallback(() => {
               console.log('onNoMoreMessage');
             }, []),
-            onCreateThread: (params) => {
-              console.log('test:zuoyu:onCreateThread:', params);
-              navigation.push('CreateThread', {
-                params: {
-                  ...params,
-                  convId: uuid(),
-                  convType: ChatConversationType.GroupChat,
-                },
-              });
-            },
-            onOpenThread: (params) => {
-              console.log('test:zuoyu:onOpenThread:', params);
-              navigation.push('MessageThreadDetail', {
-                params: {
-                  thread: params,
-                  convId: params.threadId,
-                  convType: ChatConversationType.GroupChat,
-                },
-              });
-            },
+            firstMessage: firstMessage,
           },
         }}
         onBack={() => {
