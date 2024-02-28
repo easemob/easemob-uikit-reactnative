@@ -46,6 +46,8 @@ import {
   LoginListScreen,
   LoginScreen,
   MessageThreadDetailScreen,
+  MessageThreadListScreen,
+  MessageThreadMemberListScreen,
   NewConversationScreen,
   NewRequestScreen,
   SearchContactScreen,
@@ -502,6 +504,20 @@ export function App() {
                 headerShown: false,
               }}
               component={MessageThreadDetailScreen}
+            />
+            <Root.Screen
+              name={'MessageThreadList'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageThreadListScreen}
+            />
+            <Root.Screen
+              name={'MessageThreadMemberList'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageThreadMemberListScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

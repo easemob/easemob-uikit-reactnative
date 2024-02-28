@@ -259,6 +259,8 @@ export function ConversationDetailScreen(props: Props) {
                 },
               });
             },
+            onClickedOpenThreadMemberList: () => {},
+            onClickedLeaveThread: () => {},
           },
         }}
         onBack={() => {
@@ -284,6 +286,12 @@ export function ConversationDetailScreen(props: Props) {
               merge: true,
             });
           }
+        }}
+        onClickedThread={() => {
+          navigation.navigate({
+            name: 'MessageThreadList',
+            params: { params: { parentId: convId } },
+          });
         }}
         // ConversationDetailNavigationBar={
         //   <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />

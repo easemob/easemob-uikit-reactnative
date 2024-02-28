@@ -101,6 +101,16 @@ export function createStringSetEn(): StringSet {
     '_uikit_new_quest_list_item_tip': 'requests to add you as a friend.',
 
     '_uikit_thread_msg_count': (count) => `${count}replay`,
+    '_uikit_thread_list': (count) => `thread(${count})`,
+
+    '_uikit_thread_menu_edit_thread_name': 'Edit Thread Name',
+    '_uikit_thread_menu_open_thread_member_list': 'Thread Members',
+    '_uikit_thread_menu_leave_thread': 'Leave Thread',
+    '_uikit_thread_member': 'Thread Members',
+    '_uikit_thread_owner': 'Owner',
+    '_uikit_thread_kick_member': 'Remove from Thread',
+    '_uikit_thread_leave_confirm': (isOwner) =>
+      isOwner === true ? 'Confirm destroy thread?' : 'Confirm leave thread?',
 
     '_uikit_report_title': 'Report Message',
     'Unwelcome commercial content': 'Unwelcome Commercial Content',

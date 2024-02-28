@@ -2725,13 +2725,13 @@ export class ChatServiceImpl
   }
   joinThread(params: {
     threadId: string;
-    onResult: ResultCallback<ChatMessageThread>;
+    onResult?: ResultCallback<ChatMessageThread>;
   }): void {
     this.tryCatch({
       promise: this.client.chatManager.joinChatThread(params.threadId),
       event: 'joinThread',
       onFinished: (value) => {
-        params.onResult({
+        params.onResult?.({
           isOk: true,
           value: value,
         });
@@ -2740,13 +2740,13 @@ export class ChatServiceImpl
   }
   leaveThread(params: {
     threadId: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.chatManager.leaveChatThread(params.threadId),
       event: 'leaveThread',
       onFinished: () => {
-        params.onResult({
+        params.onResult?.({
           isOk: true,
         });
       },
@@ -2754,13 +2754,13 @@ export class ChatServiceImpl
   }
   destroyThread(params: {
     threadId: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.chatManager.destroyChatThread(params.threadId),
       event: 'destroyThread',
       onFinished: () => {
-        params.onResult({
+        params.onResult?.({
           isOk: true,
         });
       },
@@ -2769,7 +2769,7 @@ export class ChatServiceImpl
   updateThreadName(params: {
     threadId: string;
     name: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.chatManager.updateChatThreadName(
@@ -2778,7 +2778,7 @@ export class ChatServiceImpl
       ),
       event: 'updateThreadName',
       onFinished: () => {
-        params.onResult({
+        params.onResult?.({
           isOk: true,
         });
       },
@@ -2796,7 +2796,7 @@ export class ChatServiceImpl
       ),
       event: 'removeMemberFromThread',
       onFinished: () => {
-        params.onResult({
+        params.onResult?.({
           isOk: true,
         });
       },
@@ -2806,7 +2806,7 @@ export class ChatServiceImpl
     threadId: string;
     cursor: string;
     pageSize: number;
-    onResult: ResultCallback<string[]>;
+    onResult: ResultCallback<ChatCursorResult<string>>;
   }): void {
     this.tryCatch({
       promise: this.client.chatManager.fetchMembersWithChatThreadFromServer(
@@ -2836,6 +2836,23 @@ export class ChatServiceImpl
         params.pageSize
       ),
       event: 'fetchThreadsFromGroup',
+      onFinished: (value) => {
+        params.onResult({
+          isOk: true,
+          value: value,
+        });
+      },
+    });
+  }
+  fetchThreadsLastMessage(params: {
+    threadId: string[];
+    onResult: ResultCallback<Map<string, ChatMessage>>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.fetchLastMessageWithChatThread(
+        params.threadId
+      ),
+      event: 'fetchThreadsLastMessage',
       onFinished: (value) => {
         params.onResult({
           isOk: true,

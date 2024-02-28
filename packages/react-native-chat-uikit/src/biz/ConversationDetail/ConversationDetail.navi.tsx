@@ -25,6 +25,10 @@ type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
   NavigationBar?: TopNavigationBarElementType<LeftProps, RightProps>;
   doNotDisturb?: boolean;
   newThreadName?: string;
+  onClickedThread?: () => void;
+  onClickedVoice?: () => void;
+  onClickedVideo?: () => void;
+  onClickedThreadMore?: () => void;
 };
 export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   props: _ConversationDetailNavigationBarProps<LeftProps, RightProps>
@@ -39,6 +43,10 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     doNotDisturb,
     type: comType,
     newThreadName,
+    onClickedVoice,
+    onClickedThread,
+    onClickedVideo,
+    onClickedThreadMore,
   } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -135,27 +143,28 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
           comType === 'chat'
             ? [
                 () => {
-                  // todo: click thread for open.
+                  onClickedThread?.();
                 },
                 () => {
-                  // todo: click phone_pick
+                  onClickedVoice?.();
                 },
                 () => {
-                  // todo: click video_camera
+                  onClickedVideo?.();
                 },
               ]
             : comType === 'thread'
             ? [
                 () => {
-                  // todo: show thread bottom sheet menu.
+                  onClickedThreadMore?.();
                 },
               ]
             : [],
-        iconNameList: [
-          // 'hashtag_in_bubble_fill',
-          // 'phone_pick',
-          // 'video_camera'
-        ],
+        iconNameList:
+          comType === 'chat'
+            ? ['hashtag_in_bubble_fill', 'phone_pick', 'video_camera']
+            : comType === 'thread'
+            ? ['ellipsis_vertical']
+            : [],
       }}
     />
   );

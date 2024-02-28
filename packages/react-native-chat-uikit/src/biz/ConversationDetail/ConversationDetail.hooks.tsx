@@ -1,7 +1,12 @@
 import * as React from 'react';
-import { ChatConversationType } from 'react-native-chat-sdk';
+import {
+  ChatConversationType,
+  ChatMessageThreadEvent,
+  ChatMessageThreadOperation,
+} from 'react-native-chat-sdk';
 
 import {
+  MessageServiceListener,
   UIConversationListListener,
   UIGroupListListener,
   UIListenerType,
@@ -27,7 +32,7 @@ import type {
 
 export function useConversationDetail(props: ConversationDetailProps) {
   const {
-    type,
+    type: comType,
     convId,
     convType,
     thread,
@@ -38,6 +43,8 @@ export function useConversationDetail(props: ConversationDetailProps) {
     input,
     list,
     onClickedAvatar: propsOnClickedAvatar,
+    onThreadDestroyed,
+    onThreadKicked,
   } = props;
   const permissionsRef = React.useRef(false);
   const messageInputRef = React.useRef<MessageInputRef>({} as any);
@@ -45,8 +52,8 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const _messageInputRef = input?.ref ?? messageInputRef;
   const _MessageInput = input?.render ?? MessageInput;
   const messageInputProps = input?.props
-    ? { ...input.props, convId, convType, type, thread, testMode }
-    : { convId, convType, type, thread, testMode };
+    ? { ...input.props, convId, convType, type: comType, thread, testMode }
+    : { convId, convType, type: comType, thread, testMode };
   const _messageListRef = list?.ref ?? messageListRef;
   const _MessageList = list?.render ?? MessageList;
   const messageListProps = list?.props
@@ -54,7 +61,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
         ...list.props,
         convId,
         convType,
-        type,
+        type: comType,
         thread,
         newThreadName,
         msgId,
@@ -64,7 +71,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     : {
         convId,
         convType,
-        type,
+        type: comType,
         thread,
         newThreadName,
         msgId,
@@ -72,6 +79,9 @@ export function useConversationDetail(props: ConversationDetailProps) {
         testMode,
       };
   const [convName, setConvName] = React.useState<string | undefined>();
+  const [threadName, setThreadName] = React.useState<string | undefined>(
+    newThreadName
+  );
   const [convAvatar, setConvAvatar] = React.useState<string>();
   const ownerIdRef = React.useRef<string>();
   const [doNotDisturb, setDoNotDisturb] = React.useState<boolean | undefined>(
@@ -114,7 +124,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
         setConvName(conv.convName);
         setConvAvatar(conv.convAvatar);
       } else if (conv.convType === ChatConversationType.GroupChat) {
-        if (type === 'chat') {
+        if (comType === 'chat') {
           im.getGroupInfo({
             groupId: conv.convId,
             onResult: (result) => {
@@ -135,13 +145,13 @@ export function useConversationDetail(props: ConversationDetailProps) {
               }
             },
           });
-        } else if (type === 'thread') {
+        } else if (comType === 'thread') {
           if (thread) {
             im.fetchThread({
               threadId: thread.threadId,
               onResult: (res) => {
                 if (res.isOk && res.value) {
-                  setConvName(res.value.threadName);
+                  setThreadName(res.value.threadName);
                 }
               },
             });
@@ -150,7 +160,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
       }
       im.setConversationRead({ convId, convType });
     }
-  }, [convId, convType, im, thread, type]);
+  }, [convId, convType, im, thread, comType]);
 
   const onClickedSend = React.useCallback(
     (
@@ -196,6 +206,10 @@ export function useConversationDetail(props: ConversationDetailProps) {
       ownerId: ownerIdRef.current,
     });
   }, [convId, convType, propsOnClickedAvatar]);
+
+  const onClickedThreadMore = React.useCallback(() => {
+    _messageListRef.current?.startShowThreadMoreMenu?.();
+  }, [_messageListRef]);
 
   React.useEffect(() => {
     getPermission({
@@ -263,6 +277,36 @@ export function useConversationDetail(props: ConversationDetailProps) {
   }, [convId, im]);
 
   React.useEffect(() => {
+    const listener = {
+      onChatMessageThreadUpdated: (event: ChatMessageThreadEvent) => {
+        if (
+          thread?.threadId === event.thread.threadId &&
+          threadName !== event.thread.threadName
+        ) {
+          setThreadName(event.thread.threadName);
+        }
+      },
+      onChatMessageThreadDestroyed: (event: ChatMessageThreadEvent) => {
+        if (thread?.threadId === event.thread.threadId) {
+          onThreadDestroyed?.(thread);
+        }
+      },
+      onChatMessageThreadUserRemoved: (event: ChatMessageThreadEvent) => {
+        if (
+          thread?.threadId === event.thread.threadId &&
+          event.type === ChatMessageThreadOperation.Delete
+        ) {
+          onThreadKicked?.(thread);
+        }
+      },
+    } as MessageServiceListener;
+    im.addListener(listener);
+    return () => {
+      im.removeListener(listener);
+    };
+  }, [im, onThreadDestroyed, onThreadKicked, thread, threadName]);
+
+  React.useEffect(() => {
     createDirectoryIfNotExisted(convId);
   }, [convId, createDirectoryIfNotExisted]);
 
@@ -281,5 +325,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     convAvatar,
     onClickedAvatar,
     doNotDisturb,
+    onClickedThreadMore,
+    threadName,
   };
 }

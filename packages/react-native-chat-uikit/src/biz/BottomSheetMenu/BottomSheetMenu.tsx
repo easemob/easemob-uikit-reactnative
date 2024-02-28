@@ -100,7 +100,7 @@ export const BottomSheetMenu = React.forwardRef<
     maxHeight: propsMaxHeight,
   } = props;
   const { colors } = usePaletteContext();
-  const {} = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
   const modalRef = React.useRef<SlideModalRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const othersRef = React.useRef();
@@ -229,7 +229,7 @@ export const BottomSheetMenu = React.forwardRef<
           items
         )}
 
-        {/* <View style={{ height: bottom }} /> */}
+        <View style={{ height: bottom }} />
       </SafeAreaView>
     </SlideModal>
   );

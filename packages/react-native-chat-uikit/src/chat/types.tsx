@@ -669,21 +669,21 @@ export interface MessageThreadServices {
    */
   joinThread(params: {
     threadId: string;
-    onResult: ResultCallback<ChatMessageThread>;
+    onResult?: ResultCallback<ChatMessageThread>;
   }): void;
   /**
    * Leave the thread.
    */
   leaveThread(params: {
     threadId: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   /**
    * Destroy the thread.
    */
   destroyThread(params: {
     threadId: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   /**
    * Update the thread name.
@@ -691,7 +691,7 @@ export interface MessageThreadServices {
   updateThreadName(params: {
     threadId: string;
     name: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   /**
    * remove member from thread.
@@ -699,7 +699,7 @@ export interface MessageThreadServices {
   removeMemberFromThread(params: {
     threadId: string;
     userId: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   /**
    * fetch member list from thread.
@@ -708,7 +708,7 @@ export interface MessageThreadServices {
     threadId: string;
     cursor: string;
     pageSize: number;
-    onResult: ResultCallback<string[]>;
+    onResult: ResultCallback<ChatCursorResult<string>>;
   }): void;
   /**
    * fetch list thread from specific group.
@@ -718,6 +718,11 @@ export interface MessageThreadServices {
     cursor: string;
     pageSize: number;
     onResult: ResultCallback<ChatCursorResult<ChatMessageThread>>;
+  }): void;
+
+  fetchThreadsLastMessage(params: {
+    threadId: string[];
+    onResult: ResultCallback<Map<string, ChatMessage>>;
   }): void;
   /**
    * fetch thread.

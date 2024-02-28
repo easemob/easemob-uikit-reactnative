@@ -46,6 +46,7 @@ import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import type { BottomSheetReactionDetailRef } from '../BottomSheetReactionDetail';
 import { gReportMessageList } from '../const';
 import { useMessageContext } from '../Context';
+import { useMessageThreadListMoreActions } from '../hooks';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import {
   useEmojiLongPressActionsProps,
@@ -112,6 +113,9 @@ export function useMessageList(
     onNoMoreMessage,
     onCreateThreadResult,
     firstMessage,
+    onClickedEditThreadName,
+    onClickedLeaveThread,
+    onClickedOpenThreadMemberList,
   } = props;
   const inverted = React.useRef(comType === 'chat' ? true : false).current;
 
@@ -844,6 +848,23 @@ export function useMessageList(
     [convId, propsOnCreateThread]
   );
 
+  const _onClickedLeaveThread = React.useCallback(
+    (threadId: string) => {
+      if (onClickedLeaveThread) {
+        onClickedLeaveThread(threadId);
+      } else {
+        if (thread) {
+          if (thread?.owner === im.userId) {
+            im.destroyThread({ threadId: thread.threadId });
+          } else {
+            im.leaveThread({ threadId: thread.threadId });
+          }
+        }
+      }
+    },
+    [im, onClickedLeaveThread, thread]
+  );
+
   const { onShowMessageLongPressActions } = useMessageLongPressActions({
     menuRef,
     alertRef,
@@ -861,6 +882,15 @@ export function useMessageList(
   const { onShowEmojiLongPressActions } = useEmojiLongPressActionsProps({
     menuRef: emojiRef,
   });
+
+  const { onShowMessageThreadListMoreActions } =
+    useMessageThreadListMoreActions({
+      menuRef,
+      alertRef,
+      onClickedEditThreadName,
+      onClickedLeaveThread: _onClickedLeaveThread,
+      onClickedOpenThreadMemberList,
+    });
 
   const onClickedListItem = React.useCallback(
     (
@@ -1858,6 +1888,11 @@ export function useMessageList(
         scrollToBottom: () => {
           scrollToBottom();
         },
+        startShowThreadMoreMenu: () => {
+          if (thread) {
+            onShowMessageThreadListMoreActions(thread);
+          }
+        },
       };
     },
     [
@@ -1869,12 +1904,14 @@ export function useMessageList(
       inverted,
       onAddMessageListToUI,
       onCreateThreadResult,
+      onShowMessageThreadListMoreActions,
       onUpdateMessageToUI,
       recallMessage,
       scrollToBottom,
       sendMessageToServer,
       sendRecvMessageReadAck,
       setNeedScroll,
+      thread,
     ]
   );
 

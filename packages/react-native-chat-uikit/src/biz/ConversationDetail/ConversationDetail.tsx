@@ -19,7 +19,9 @@ export function ConversationDetail(props: ConversationDetailProps) {
     enableNavigationBar = true,
     NavigationBar: propsNavigationBar,
     type: comType,
-    newThreadName,
+    onClickedThread,
+    onClickedVideo,
+    onClickedVoice,
   } = props;
 
   const {
@@ -37,6 +39,8 @@ export function ConversationDetail(props: ConversationDetailProps) {
     convAvatar,
     onClickedAvatar,
     doNotDisturb,
+    onClickedThreadMore,
+    threadName,
   } = useConversationDetail(props);
 
   const getContent = () => (
@@ -51,7 +55,11 @@ export function ConversationDetail(props: ConversationDetailProps) {
           NavigationBar={propsNavigationBar}
           doNotDisturb={doNotDisturb}
           type={comType}
-          newThreadName={newThreadName}
+          newThreadName={threadName}
+          onClickedThread={onClickedThread}
+          onClickedVideo={onClickedVideo}
+          onClickedVoice={onClickedVoice}
+          onClickedThreadMore={onClickedThreadMore}
         />
       ) : null}
       <_MessageList

@@ -13,5 +13,7 @@ export * from './MessageList.hooks';
 export * from './MessageListItem';
 export * from './MessageListItem.hooks';
 export * from './MessageListItem.type';
+export * from './MessageThreadList';
+export * from './MessageThreadMemberList';
 export * from './types';
 export * from './VideoMessagePreview';

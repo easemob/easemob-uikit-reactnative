@@ -100,6 +100,16 @@ export function createStringSetCn(): StringSet {
     '_uikit_new_quest_list_item_tip': '请求添加您为好友。',
 
     '_uikit_thread_msg_count': (count) => `${count}回复`,
+    '_uikit_thread_list': (count) => `所有话题(${count})`,
+
+    '_uikit_thread_menu_edit_thread_name': '编辑话题',
+    '_uikit_thread_menu_open_thread_member_list': '话题成员',
+    '_uikit_thread_menu_leave_thread': '离开话题',
+    '_uikit_thread_member': '话题成员',
+    '_uikit_thread_owner': '群主',
+    '_uikit_thread_kick_member': '从话题中移除',
+    '_uikit_thread_leave_confirm': (isOwner) =>
+      isOwner === true ? '确定销毁话题吗？' : '确定离开话题吗？',
 
     '_uikit_report_title': '消息举报',
     'Unwelcome commercial content': '不受欢迎的商业内容',

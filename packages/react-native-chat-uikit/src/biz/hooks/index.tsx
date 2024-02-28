@@ -9,4 +9,5 @@ export * from './useGroupInfoActions';
 export * from './useImageSize';
 export * from './useMessageInputExtendActions';
 export * from './useMessageLongPressActions';
+export * from './useMessageThreadListMoreActions';
 export * from './useMineInfoActions';

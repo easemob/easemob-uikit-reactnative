@@ -30,6 +30,8 @@ export function createStringSetEn(): StringSet {
     'edit_group_description': 'Edit group description',
     'edit_group_my_remark': 'Edit group my remark',
 
+    'edit_thread_name': 'Edit thread name',
+
     'save': 'Save',
   };
 }

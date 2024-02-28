@@ -16,6 +16,7 @@ import {
   TimeMessageModel,
   useChatContext,
   useColors,
+  useI18nContext,
   usePaletteContext,
 } from 'react-native-chat-uikit';
 import {
@@ -60,6 +61,19 @@ export function MessageThreadDetailScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
+  const editTypeRef = React.useRef<string>();
+  const { tr } = useI18nContext();
+
+  const goBack = (data: any) => {
+    // !!! warning: react navigation
+    if (editTypeRef.current === 'threadName') {
+      im.updateThreadName({
+        threadId: convId,
+        name: data,
+      });
+    }
+  };
+  const testRef = React.useRef<(data: any) => void>(goBack);
   console.log('test:zuoyu:thread:', thread);
 
   // React.useEffect(() => {
@@ -243,6 +257,25 @@ export function MessageThreadDetailScreen(props: Props) {
               console.log('onNoMoreMessage');
             }, []),
             firstMessage: firstMessage,
+            onClickedEditThreadName: (_threadId, threadName) => {
+              editTypeRef.current = 'threadName';
+              navigation.push('EditInfo', {
+                params: {
+                  backName: tr('edit_thread_name'),
+                  saveName: tr('save'),
+                  initialData: threadName,
+                  maxLength: 128,
+                  testRef,
+                },
+              });
+            },
+            onClickedOpenThreadMemberList: (thread) => {
+              navigation.push('MessageThreadMemberList', {
+                params: {
+                  thread: thread,
+                },
+              });
+            },
           },
         }}
         onBack={() => {

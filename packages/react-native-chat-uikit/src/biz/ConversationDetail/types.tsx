@@ -5,12 +5,15 @@ import type {
   ChatMessageReaction,
   ChatMessageThread,
 } from 'react-native-chat-sdk';
+import type { DataModel } from 'src/chat';
 
 import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type { TopNavigationBarElementType } from '../TopNavigationBar';
 import type {
+  ListActions,
   PropsWithBack,
   PropsWithError,
+  PropsWithNavigationBar,
   PropsWithSearch,
   PropsWithTest,
 } from '../types';
@@ -235,6 +238,33 @@ export type ConversationDetailProps = PropsWithError &
      * Default is true.
      */
     enableNavigationBar?: boolean;
+
+    /**
+     * Callback notification when open thread.
+     */
+    onClickedThread?: () => void;
+    /**
+     * Callback notification when start voice phone.
+     */
+    onClickedVoice?: () => void;
+    /**
+     * Callback notification when start video phone.
+     */
+    onClickedVideo?: () => void;
+
+    /**
+     * Callback notification when thread is destroyed.
+     *
+     * this parameter is options in thread mode.
+     */
+    onThreadDestroyed?: (thread: ChatMessageThread) => void;
+
+    /**
+     * Callback notification when current user is kicked by owner.
+     *
+     * this parameter is options in thread mode.
+     */
+    onThreadKicked?: (thread: ChatMessageThread) => void;
   };
 
 /**
@@ -425,6 +455,17 @@ export type MessageModel = BasicModel &
      */
     thread?: ChatMessageThread;
   };
+
+export type MessageThreadModel = {
+  id: string;
+  title: string;
+  count: number;
+  thread: ChatMessageThread;
+};
+
+export type ThreadMemberModel = DataModel & {
+  isOwner?: boolean;
+};
 
 export type MessageHistoryModel = BasicModel & {
   /**
@@ -621,6 +662,11 @@ export type MessageListRef = {
    * Scroll the list to the bottom.
    */
   scrollToBottom: () => void;
+
+  /**
+   * Start the thread more menu.
+   */
+  startShowThreadMoreMenu: () => void;
 };
 
 /**
@@ -793,4 +839,72 @@ export type MessageListProps = PropsWithError &
         | SendCardProps
         | SendCustomProps
     ) => void;
+
+    /**
+     * Callback notification when click edit thread name.
+     *
+     * this parameter is options in thread mode.
+     */
+    onClickedEditThreadName?: (threadId: string, threadName: string) => void;
+    /**
+     * Callback notification when click open thread member list.
+     *
+     * this parameter is options in thread mode.
+     */
+    onClickedOpenThreadMemberList?: (thread: ChatMessageThread) => void;
+    /**
+     * Callback notification when click leave thread.
+     *
+     * this parameter is options in thread mode.
+     */
+    onClickedLeaveThread?: (threadId: string) => void;
   };
+
+export type MessageThreadListRef = {};
+export type MessageThreadListProps = PropsWithError &
+  PropsWithTest &
+  PropsWithNavigationBar &
+  PropsWithBack & {
+    /**
+     * The container style of the conversation details component.
+     */
+    containerStyle?: StyleProp<ViewStyle>;
+    /**
+     * The thread parent ID. this parameter is group ID normally.
+     */
+    parentId: string;
+    /**
+     * The Callback notification when a list item is clicked.
+     */
+    onClickedItem?: (model: MessageThreadModel) => void | boolean | undefined;
+  };
+export type MessageThreadListItemProps = {
+  model: MessageThreadModel;
+  onClicked?: (model: MessageThreadModel) => void | boolean | undefined;
+};
+
+export type MessageThreadMemberListProps = PropsWithError &
+  PropsWithTest &
+  PropsWithNavigationBar &
+  PropsWithBack & {
+    /**
+     * The container style of the conversation details component.
+     */
+    containerStyle?: StyleProp<ViewStyle>;
+
+    /**
+     * The thread object.
+     */
+    thread: ChatMessageThread;
+
+    /**
+     * The callback notification when a list item is clicked.
+     */
+    onClickedItem?: ((data?: ThreadMemberModel) => boolean | void) | undefined;
+  };
+export type MessageThreadMemberListItemProps = Omit<
+  ListActions<ThreadMemberModel>,
+  'onToRightSlideItem' | 'onToLeftSlideItem'
+> & {
+  model: ThreadMemberModel;
+};
