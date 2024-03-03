@@ -10,6 +10,15 @@ export const ICON_ASSETS = {
       return require('./icons/2_bars_in_circle_2x.png');
     }
   },
+  '3pm': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/3pm_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/3pm_2x.png');
+    } else {
+      return require('./icons/3pm.png');
+    }
+  },
   '3vertical_in_house': (size: string) => {
     if (size === '3x') {
       return require('./icons/3vertical_in_house_3x.png');
@@ -451,6 +460,15 @@ export const ICON_ASSETS = {
       return require('./icons/check_2x.png');
     }
   },
+  'check_n_3lines': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/check_n_3lines_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/check_n_3lines_2x.png');
+    } else {
+      return require('./icons/check_n_3lines.png');
+    }
+  },
   'checked_ellipse': (size: string) => {
     if (size === '3x') {
       return require('./icons/checked_ellipse_3x.png');
@@ -764,6 +782,15 @@ export const ICON_ASSETS = {
       return require('./icons/face_3x.png');
     } else {
       return require('./icons/face_2x.png');
+    }
+  },
+  'face_n_ellipsis': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/face_n_ellipsis_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/face_n_ellipsis_2x.png');
+    } else {
+      return require('./icons/face_n_ellipsis.png');
     }
   },
   'faceplus': (size: string) => {
@@ -1304,6 +1331,15 @@ export const ICON_ASSETS = {
       return require('./icons/phone_xmark_3x.png');
     } else {
       return require('./icons/phone_xmark_2x.png');
+    }
+  },
+  'phonen_camera': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/phonen_camera_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/phonen_camera_2x.png');
+    } else {
+      return require('./icons/phonen_camera.png');
     }
   },
   'picto_san': (size: string) => {

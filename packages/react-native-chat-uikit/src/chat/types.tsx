@@ -522,6 +522,10 @@ export interface MessageServices {
     onResult: ResultCallback<void>;
   }): void;
   /**
+   * Remove the message list.
+   */
+  removeMessages(params: { message: ChatMessage[] }): Promise<void[]>;
+  /**
    * Edit the message.
    */
   editMessage(params: {
@@ -615,6 +619,10 @@ export interface MessageServices {
     reason: string;
     onResult: ResultCallback<void>;
   }): void;
+
+  fetchCombineMessageDetail(params: {
+    msg: ChatMessage;
+  }): Promise<ChatMessage[]>;
 }
 
 export interface MessageReactionServices {

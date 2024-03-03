@@ -2,8 +2,9 @@ import * as React from 'react';
 import { Pressable, SectionListData, View } from 'react-native';
 
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
-import { IconButton } from '../../ui/Button';
+import { IconButton, Text2Button } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
@@ -15,8 +16,16 @@ import type { ContactItemProps, ContactListItemProps } from './types';
  * Contact list item component.
  */
 export function ContactListItem(props: ContactListItemProps) {
-  const { section, onClicked, onCheckClicked, onLongPressed } = props;
-  const { checked, disable } = section;
+  const {
+    section,
+    onClicked,
+    onCheckClicked,
+    onLongPressed,
+    contactType,
+    onForwardClicked,
+  } = props;
+  const { checked, disable, forwarded } = section;
+  const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -43,7 +52,18 @@ export function ContactListItem(props: ContactListItemProps) {
       light: colors.primary[5],
       dark: colors.primary[6],
     },
+    btn_bg: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
   });
+
+  const _onForwardClicked = React.useCallback(() => {
+    if (contactType === 'forward-message' && forwarded !== true) {
+      onForwardClicked?.(section);
+    }
+  }, [contactType, forwarded, onForwardClicked, section]);
+
   return (
     <View
       style={{
@@ -59,6 +79,9 @@ export function ContactListItem(props: ContactListItemProps) {
           paddingHorizontal: 16,
         }}
         onPress={() => {
+          if (contactType === 'forward-message') {
+            return;
+          }
           if (checked !== undefined) {
             if (disable !== true) {
               onCheckClicked?.(section);
@@ -68,6 +91,9 @@ export function ContactListItem(props: ContactListItemProps) {
           }
         }}
         onLongPress={() => {
+          if (contactType === 'forward-message') {
+            return;
+          }
           onLongPressed?.(section);
         }}
       >
@@ -108,6 +134,25 @@ export function ContactListItem(props: ContactListItemProps) {
             {section.userName ?? section.userId}
           </SingleLineText>
         </View>
+
+        {contactType === 'forward-message' ? (
+          <>
+            <View style={{ flexGrow: 1 }} />
+            <Text2Button
+              sizesType={'small'}
+              radiusType={'extraSmall'}
+              contentType={'only-text'}
+              text={tr(forwarded === true ? 'forwarded' : 'forward')}
+              style={{
+                backgroundColor: getColor('btn_bg'),
+              }}
+              textStyle={{
+                color: getColor(forwarded === true ? 'disable' : 't1'),
+              }}
+              onPress={_onForwardClicked}
+            />
+          </>
+        ) : null}
       </Pressable>
       <View
         style={{

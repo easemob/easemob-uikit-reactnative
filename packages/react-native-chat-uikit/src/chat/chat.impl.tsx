@@ -502,6 +502,19 @@ export class ChatServiceImpl
     }
   }
 
+  async tryCatchSyncList<T>(params: { promises: Promise<T>[]; event: string }) {
+    const { promises, event } = params;
+    try {
+      return await Promise.all(promises);
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.chat_uikit,
+        tag: event,
+        desc: this._fromChatError(error),
+      });
+    }
+  }
+
   toUserData(
     user: ChatUserInfo,
     from?: {
@@ -2323,7 +2336,8 @@ export class ChatServiceImpl
       promise: this.client.chatManager.deleteMessage(
         params.message.conversationId,
         params.message.chatType as number as ChatConversationType,
-        params.message.msgId
+        params.message.msgId,
+        params.message.isChatThread
       ),
       event: 'removeMessage',
       onFinished: async () => {
@@ -2331,6 +2345,20 @@ export class ChatServiceImpl
           isOk: true,
         });
       },
+    });
+  }
+
+  removeMessages(params: { message: ChatMessage[] }): Promise<void[]> {
+    return this.tryCatchSyncList({
+      promises: params.message.map((item) =>
+        this.client.chatManager.deleteMessage(
+          item.conversationId,
+          item.chatType as number as ChatConversationType,
+          item.msgId,
+          item.isChatThread
+        )
+      ),
+      event: 'removeMessages',
     });
   }
 
@@ -2547,6 +2575,15 @@ export class ChatServiceImpl
       onError: () => {
         params.onResult?.({ isOk: false });
       },
+    });
+  }
+
+  fetchCombineMessageDetail(params: {
+    msg: ChatMessage;
+  }): Promise<ChatMessage[]> {
+    return this.tryCatchSync({
+      promise: this.client.chatManager.fetchCombineMessageDetail(params.msg),
+      event: 'fetchCombineMessageDetail',
     });
   }
 

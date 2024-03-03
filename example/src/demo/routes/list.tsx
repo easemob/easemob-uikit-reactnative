@@ -135,6 +135,14 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  MessageForwardSelector: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  MessageHistoryList: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
 };
 export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
@@ -279,6 +287,14 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   MessageThreadMemberList: {
+    option: undefined,
+    params: undefined,
+  },
+  MessageForwardSelector: {
+    option: undefined,
+    params: undefined,
+  },
+  MessageHistoryList: {
     option: undefined,
     params: undefined,
   },

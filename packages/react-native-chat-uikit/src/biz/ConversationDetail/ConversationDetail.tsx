@@ -41,6 +41,14 @@ export function ConversationDetail(props: ConversationDetailProps) {
     doNotDisturb,
     onClickedThreadMore,
     threadName,
+    onClickedMultiSelected,
+    onCancelMultiSelected,
+    selectMode,
+    onClickedMultiSelectDeleteButton,
+    onClickedMultiSelectShareButton,
+    multiSelectCount,
+    onChangeMultiItems,
+    onClickedSingleSelect,
   } = useConversationDetail(props);
 
   const getContent = () => (
@@ -60,6 +68,8 @@ export function ConversationDetail(props: ConversationDetailProps) {
           onClickedVideo={onClickedVideo}
           onClickedVoice={onClickedVoice}
           onClickedThreadMore={onClickedThreadMore}
+          selectMode={selectMode}
+          onCancelMultiSelected={onCancelMultiSelected}
         />
       ) : null}
       <_MessageList
@@ -68,6 +78,10 @@ export function ConversationDetail(props: ConversationDetailProps) {
         }}
         onQuoteMessageForInput={onQuoteMessageForInput}
         onEditMessageForInput={onEditMessageForInput}
+        onClickedMultiSelected={onClickedMultiSelected}
+        onChangeMultiItems={onChangeMultiItems}
+        onClickedSingleSelect={onClickedSingleSelect}
+        selectType={selectMode}
         ref={_messageListRef}
         {...messageListProps}
       />
@@ -75,6 +89,10 @@ export function ConversationDetail(props: ConversationDetailProps) {
         ref={_messageInputRef}
         onClickedSend={onClickedSend}
         onEditMessageFinished={onEditMessageFinished}
+        selectType={selectMode}
+        multiSelectCount={multiSelectCount}
+        onClickedMultiSelectDeleteButton={onClickedMultiSelectDeleteButton}
+        onClickedMultiSelectShareButton={onClickedMultiSelectShareButton}
         onHeightChange={(height) => {
           _messageListRef?.current?.onInputHeightChange?.(height);
         }}

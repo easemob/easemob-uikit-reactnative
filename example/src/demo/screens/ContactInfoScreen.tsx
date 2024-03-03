@@ -52,6 +52,8 @@ export function ContactInfoScreen(props: Props) {
               convId: userId,
               convType: 0,
               convName: userId,
+              from: 'ContactInfo',
+              hash: Date.now(),
             },
           });
         }}

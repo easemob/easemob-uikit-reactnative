@@ -14,6 +14,7 @@ import type {
   PropsWithBack,
   PropsWithError,
   PropsWithNavigationBar,
+  PropsWithRef,
   PropsWithSearch,
   PropsWithTest,
 } from '../types';
@@ -46,6 +47,16 @@ export type MessageInputRef = {
    * Mention selected user.
    */
   // mentionSelected: (list: { id: string; name: string }[]) => void;
+
+  /**
+   * Show the multi select component.
+   */
+  showMultiSelect: () => void;
+
+  /**
+   * Hide the multi select component.
+   */
+  hideMultiSelect: () => void;
 };
 
 /**
@@ -53,6 +64,12 @@ export type MessageInputRef = {
  */
 export type MessageInputProps = PropsWithError &
   PropsWithTest & {
+    /**
+     * The type of the conversation selection mode.
+     *
+     * Supports normal mode and multi-selection mode.
+     */
+    selectType?: ConversationSelectModeType;
     /**
      * Conversation ID.
      */
@@ -119,17 +136,44 @@ export type MessageInputProps = PropsWithError &
      * The format needs to be followed. For example: `U+1F641` {@link FACE_ASSETS}. It will replace the built-in emoji  list.
      */
     emojiList?: string[];
+
+    /**
+     * The multi select message count properties.
+     */
+    multiSelectCount?: number;
+
+    /**
+     * Callback notification when click multi select delete message button.
+     */
+    onClickedMultiSelectDeleteButton?: () => void;
+
+    /**
+     * Callback notification when click multi select share message button.
+     */
+    onClickedMultiSelectShareButton?: () => void;
   };
 
 /**
  * Message input component state.
  */
-export type MessageInputState = 'normal' | 'emoji' | 'voice' | 'keyboard';
+export type MessageInputState =
+  | 'normal'
+  | 'emoji'
+  | 'voice'
+  | 'keyboard'
+  | 'multi-select';
 
 /**
  * Conversation detail component type.
  */
 export type ConversationDetailModelType = 'chat' | 'create_thread' | 'thread';
+
+export type ConversationSelectModeType = 'common' | 'multi';
+
+export type ConversationDetailRef = {
+  sendCardMessage: (props: SendCardProps) => void;
+  changeSelectType: (type: ConversationSelectModeType) => void;
+};
 
 /**
  * Conversation detail component properties.
@@ -139,8 +183,21 @@ export type ConversationDetailModelType = 'chat' | 'create_thread' | 'thread';
 export type ConversationDetailProps = PropsWithError &
   PropsWithTest &
   PropsWithBack &
-  PropsWithSearch & {
+  PropsWithSearch &
+  PropsWithRef<ConversationDetailRef> & {
+    /**
+     * The type of the conversation details component.
+     *
+     * This component can be reused on chat pages, thread pages, and thread creation pages.
+     */
     type: ConversationDetailModelType;
+
+    /**
+     * The type of the conversation selection mode.
+     *
+     * Supports normal mode and multi-selection mode.
+     */
+    selectType?: ConversationSelectModeType;
     /**
      * Conversation ID or thread ID.
      */
@@ -265,6 +322,11 @@ export type ConversationDetailProps = PropsWithError &
      * this parameter is options in thread mode.
      */
     onThreadKicked?: (thread: ChatMessageThread) => void;
+
+    /**
+     * Callback notification when forward message.
+     */
+    onForwardMessage?: (msgs: ChatMessage[]) => void;
   };
 
 /**
@@ -454,6 +516,15 @@ export type MessageModel = BasicModel &
      * Message thread. Only group chat is supported.
      */
     thread?: ChatMessageThread;
+
+    /**
+     * The item check state.
+     *
+     * true is checked.
+     * false is uncheck.
+     * undefined is hide.
+     */
+    checked?: boolean;
   };
 
 export type MessageThreadModel = {
@@ -533,6 +604,11 @@ export type MessageListItemActionsProps = {
   ) => void;
 
   onThreadClicked?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel
+  ) => void;
+
+  onChecked?: (
     id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel
   ) => void;
@@ -667,6 +743,21 @@ export type MessageListRef = {
    * Start the thread more menu.
    */
   startShowThreadMoreMenu: () => void;
+
+  /**
+   * Cancel multi message select mode.
+   */
+  cancelMultiSelected: () => void;
+
+  /**
+   * Remove multi selected message.
+   */
+  removeMultiSelected: (onResult: (confirmed: boolean) => void) => void;
+
+  /**
+   * Get multi selected messages.
+   */
+  getMultiSelectedMessages: () => ChatMessage[];
 };
 
 /**
@@ -674,7 +765,19 @@ export type MessageListRef = {
  */
 export type MessageListProps = PropsWithError &
   PropsWithTest & {
-    type: 'chat' | 'create_thread' | 'thread';
+    /**
+     * The type of the conversation details component.
+     *
+     * This component can be reused on chat pages, thread pages, and thread creation pages.
+     */
+    type: ConversationDetailModelType;
+
+    /**
+     * The type of the conversation selection mode.
+     *
+     * Supports normal mode and multi-selection mode.
+     */
+    selectType?: ConversationSelectModeType;
     /**
      * Conversation ID.
      */
@@ -858,6 +961,26 @@ export type MessageListProps = PropsWithError &
      * this parameter is options in thread mode.
      */
     onClickedLeaveThread?: (threadId: string) => void;
+
+    /**
+     * Callback notification when change to multi select mode.
+     */
+    onClickedMultiSelected?: () => void;
+
+    /**
+     * Callback notification when update select multi message.
+     */
+    onChangeMultiItems?: (items: MessageModel[]) => void;
+
+    /**
+     * Callback notification when forward message.
+     */
+    onClickedSingleSelect?: (item: MessageModel) => void;
+
+    /**
+     * Callback notification when click history message.
+     */
+    onClickedHistoryDetail?: (item: MessageModel) => void;
   };
 
 export type MessageThreadListRef = {};
@@ -908,3 +1031,17 @@ export type MessageThreadMemberListItemProps = Omit<
 > & {
   model: ThreadMemberModel;
 };
+
+export type MessageHistoryListItemProps = {
+  model: MessageHistoryModel;
+};
+
+export type MessageHistoryListProps = PropsWithTest &
+  PropsWithBack &
+  PropsWithNavigationBar & {
+    /**
+     * The container style of the message history list component.
+     */
+    containerStyle?: StyleProp<ViewStyle>;
+    message: ChatMessage;
+  };

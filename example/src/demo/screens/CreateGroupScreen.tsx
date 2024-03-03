@@ -48,6 +48,8 @@ export function CreateGroupScreen(props: Props) {
                 convId: result.value?.groupId,
                 convType: 1,
                 convName: result.value?.groupName ?? result.value?.groupId,
+                from: 'CreateGroup',
+                hash: Date.now(),
               },
             });
           } else {

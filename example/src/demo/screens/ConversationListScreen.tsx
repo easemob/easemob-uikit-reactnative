@@ -89,6 +89,8 @@ export function ConversationListScreen(props: Props) {
               convId,
               convType,
               convName: convName ?? convId,
+              from: 'ConversationList',
+              hash: Date.now(),
             },
           });
         }}

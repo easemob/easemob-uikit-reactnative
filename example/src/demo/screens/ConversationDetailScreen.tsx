@@ -8,6 +8,7 @@ import {
 } from 'react-native-chat-sdk';
 import {
   ConversationDetail,
+  ConversationDetailRef,
   gCustomMessageCardEventType,
   MessageInputRef,
   MessageListRef,
@@ -43,6 +44,9 @@ export function ConversationDetailScreen(props: Props) {
   const { navigation, route } = props;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
+  const selectType = ((route.params as any)?.params as any)?.selectType;
+  const from = ((route.params as any)?.params as any)?.from;
+  const hash = ((route.params as any)?.params as any)?.hash;
   const operateType = ((route.params as any)?.params as any)?.operateType;
   // const selectedParticipants = ((route.params as any)?.params as any)
   //   ?.selectedParticipants;
@@ -59,6 +63,8 @@ export function ConversationDetailScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
+  const convRef = React.useRef<ConversationDetailRef>({} as any);
+  console.log('test:zuoyu:ConversationDetailScreen', hash, from, selectType);
 
   // React.useEffect(() => {
   //   if (selectedParticipants && operateType === 'mention') {
@@ -80,15 +86,22 @@ export function ConversationDetailScreen(props: Props) {
     if (selectedContacts && operateType === 'share_card') {
       try {
         const p = JSON.parse(selectedContacts);
-        listRef.current?.addSendMessage?.({
-          type: 'card',
-          userId: p.userId,
-          userName: p.nickName,
-          userAvatar: p.avatar,
-        });
+        convRef.current?.sendCardMessage({ ...p, type: 'card' });
+        // listRef.current?.addSendMessage?.({
+        //   type: 'card',
+        //   userId: p.userId,
+        //   userName: p.nickName,
+        //   userAvatar: p.avatar,
+        // });
       } catch {}
     }
   }, [selectedContacts, operateType]);
+
+  React.useEffect(() => {
+    if (from === 'MessageForwardSelector' && hash) {
+      convRef.current?.changeSelectType(selectType);
+    }
+  }, [from, selectType, hash]);
 
   return (
     <SafeAreaView
@@ -98,6 +111,7 @@ export function ConversationDetailScreen(props: Props) {
       }}
     >
       <ConversationDetail
+        propsRef={convRef}
         type="chat"
         containerStyle={{
           flexGrow: 1,
@@ -105,6 +119,7 @@ export function ConversationDetailScreen(props: Props) {
         }}
         convId={convId}
         convType={convType}
+        selectType={selectType}
         input={{
           ref: inputRef,
           props: {
@@ -250,7 +265,6 @@ export function ConversationDetailScreen(props: Props) {
               });
             },
             onOpenThread: (params) => {
-              console.log('test:zuoyu:onOpenThread:', params);
               navigation.push('MessageThreadDetail', {
                 params: {
                   thread: params,
@@ -261,6 +275,11 @@ export function ConversationDetailScreen(props: Props) {
             },
             onClickedOpenThreadMemberList: () => {},
             onClickedLeaveThread: () => {},
+            onClickedHistoryDetail: (item) => {
+              navigation.push('MessageHistoryList', {
+                params: { message: item.msg },
+              });
+            },
           },
         }}
         onBack={() => {
@@ -291,6 +310,16 @@ export function ConversationDetailScreen(props: Props) {
           navigation.navigate({
             name: 'MessageThreadList',
             params: { params: { parentId: convId } },
+          });
+        }}
+        onForwardMessage={(msgs) => {
+          // todo: navigation to forward message screen.
+          navigation.push('MessageForwardSelector', {
+            params: {
+              msgs,
+              convId,
+              convType,
+            },
           });
         }}
         // ConversationDetailNavigationBar={

@@ -224,7 +224,6 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
 
   const requestMore = React.useCallback(() => {
     if (thread) {
-      console.log('test:zuoyu:requestMore:thread:', thread);
       im.fetchMembersFromThread({
         threadId: thread.threadId,
         cursor: currentCursorRef.current,

@@ -110,6 +110,30 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
           </SingleLineText>
         </View>
       );
+    } else if (msg.body.type === ChatMessageType.COMBINE) {
+      maxWidth = maxWidth * 0.8;
+      return (
+        <View style={{ flexDirection: 'row', maxWidth: maxWidth }}>
+          <Icon
+            name={'3pm'}
+            style={{
+              width: 16,
+              height: 16,
+              tintColor: getColor('t2'),
+              marginRight: 2,
+            }}
+          />
+          <SingleLineText
+            textType={'small'}
+            paletteType={'label'}
+            style={{
+              color: getColor('t2'),
+            }}
+          >
+            {tr('_uikit_msg_record')}
+          </SingleLineText>
+        </View>
+      );
     } else if (msg.body.type === ChatMessageType.IMAGE) {
       maxWidth = maxWidth * 0.6;
       return (

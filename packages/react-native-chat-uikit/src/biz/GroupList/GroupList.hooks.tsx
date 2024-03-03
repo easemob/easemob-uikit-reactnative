@@ -34,7 +34,9 @@ export function useGroupList(props: GroupListProps) {
     onStateChanged,
     propsRef,
     flatListProps: propsFlatListProps,
+    groupType = 'common',
     // onRequestGroupData,
+    onForwardMessage,
   } = props;
   const flatListProps = useFlatList<GroupListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
@@ -59,20 +61,6 @@ export function useGroupList(props: GroupListProps) {
       onStateChanged?.(state);
     },
     [onStateChanged, setListState]
-  );
-
-  const onClickedCallback = React.useCallback(
-    (data?: GroupModel | undefined) => {
-      onClickedItem?.(data);
-    },
-    [onClickedItem]
-  );
-
-  const onLongPressCallback = React.useCallback(
-    (data?: GroupModel | undefined) => {
-      onLongPressedItem?.(data);
-    },
-    [onLongPressedItem]
   );
 
   const removeDuplicateData = React.useCallback(
@@ -100,6 +88,7 @@ export function useGroupList(props: GroupListProps) {
         return {
           id: v.groupId,
           data: v,
+          groupType: groupType,
         } as GroupListItemProps;
       });
       if (pos === 'before') {
@@ -110,7 +99,7 @@ export function useGroupList(props: GroupListProps) {
       refreshToUI(dataRef.current);
       setGroupCount(dataRef.current.length);
     },
-    [dataRef, refreshToUI]
+    [dataRef, groupType, refreshToUI]
   );
 
   const updateGroupToUI = React.useCallback(
@@ -135,6 +124,27 @@ export function useGroupList(props: GroupListProps) {
     [dataRef, refreshToUI]
   );
 
+  const onClickedCallback = React.useCallback(
+    (data?: GroupModel | undefined) => {
+      onClickedItem?.(data);
+      if (groupType === 'forward-message') {
+        if (data && data.forwarded === false) {
+          data.forwarded = !data.forwarded;
+          updateGroupToUI(data);
+          onForwardMessage?.(data);
+        }
+      }
+    },
+    [groupType, onClickedItem, onForwardMessage, updateGroupToUI]
+  );
+
+  const onLongPressCallback = React.useCallback(
+    (data?: GroupModel | undefined) => {
+      onLongPressedItem?.(data);
+    },
+    [onLongPressedItem]
+  );
+
   const requestList = React.useCallback(
     (pageNum: number) => {
       if (testMode === 'only-ui') {
@@ -149,6 +159,12 @@ export function useGroupList(props: GroupListProps) {
                 currentPageNumberRef.current = 0;
                 dataRef.current = [];
                 isNoMoreRef.current = false;
+              }
+
+              if (groupType === 'forward-message') {
+                value?.forEach((item) => {
+                  item.forwarded = false;
+                });
               }
 
               if (value) {
@@ -172,7 +188,7 @@ export function useGroupList(props: GroupListProps) {
         });
       }
     },
-    [addGroupToUI, dataRef, im, onNoMore, testMode, updateState]
+    [addGroupToUI, dataRef, groupType, im, onNoMore, testMode, updateState]
   );
 
   const init = React.useCallback(() => {

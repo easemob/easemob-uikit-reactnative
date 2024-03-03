@@ -6,19 +6,13 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  ChatCustomMessageBody,
-  ChatFileMessageBody,
-  ChatMessage,
-  ChatMessageType,
-  ChatVoiceMessageBody,
-} from 'react-native-chat-sdk';
+import { ChatMessage, ChatMessageType } from 'react-native-chat-sdk';
 
 import {
-  gCustomMessageCardEventType,
-  // gMessageAttributeTranslate,
-} from '../../chat';
-import { getMessageSnapshot, userInfoFromMessage } from '../../chat/utils';
+  getMessageSnapshot,
+  getMessageSnapshotParams,
+  userInfoFromMessage,
+} from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -33,11 +27,7 @@ import {
   getImageThumbUrl,
   getVideoThumbUrl,
 } from './MessageListItem.hooks';
-import type { MessageHistoryModel } from './types';
-
-export type MessageHistoryListItemProps = {
-  model: MessageHistoryModel;
-};
+import type { MessageHistoryListItemProps } from './types';
 
 export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
   const { model } = props;
@@ -80,34 +70,6 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
     },
     [formatTime?.conversationListCallback]
   );
-
-  const getMessageSnapshotParams = React.useCallback((msg: ChatMessage) => {
-    if (msg === undefined) {
-      return '';
-    }
-    switch (msg.body.type) {
-      case ChatMessageType.VOICE: {
-        const body = msg.body as ChatVoiceMessageBody;
-        return body.duration;
-      }
-
-      case ChatMessageType.FILE: {
-        const body = msg.body as ChatFileMessageBody;
-        return body.displayName;
-      }
-
-      case ChatMessageType.CUSTOM: {
-        const body = msg.body as ChatCustomMessageBody;
-        if (body.event === gCustomMessageCardEventType) {
-          return body.params?.nickname ?? body.params?.userId;
-        }
-        return '';
-      }
-
-      default:
-        return '';
-    }
-  }, []);
 
   return (
     <Pressable

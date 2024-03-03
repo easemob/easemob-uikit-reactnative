@@ -2,7 +2,9 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
+import { Text2Button } from '../../ui/Button';
 import { SingleLineText } from '../../ui/Text';
 import { GroupAvatar } from '../Avatar';
 import type { GroupListItemProps } from './types';
@@ -11,7 +13,9 @@ import type { GroupListItemProps } from './types';
  * Group List Item Component.
  */
 export function GroupListItem(props: GroupListItemProps) {
-  const { data, onClicked, onLongPressed } = props;
+  const { data, onClicked, onLongPressed, groupType = 'common' } = props;
+  const { forwarded } = data;
+  const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -29,6 +33,14 @@ export function GroupListItem(props: GroupListItemProps) {
     divider: {
       light: colors.neutral[9],
       dark: colors.neutral[2],
+    },
+    btn_bg: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
+    disable: {
+      light: colors.neutral[7],
+      dark: colors.neutral[4],
     },
   });
   return (
@@ -58,7 +70,7 @@ export function GroupListItem(props: GroupListItemProps) {
             flexDirection: 'column',
             flexGrow: 1,
             paddingLeft: 12,
-            maxWidth: '80%',
+            maxWidth: groupType === 'common' ? '80%' : '60%',
           }}
         >
           <SingleLineText paletteType={'title'} textType={'medium'}>
@@ -67,6 +79,27 @@ export function GroupListItem(props: GroupListItemProps) {
               : data.groupName}
           </SingleLineText>
         </View>
+
+        {groupType === 'forward-message' ? (
+          <>
+            <View style={{ flexGrow: 1 }} />
+            <Text2Button
+              sizesType={'small'}
+              radiusType={'extraSmall'}
+              contentType={'only-text'}
+              text={tr(forwarded === true ? 'forwarded' : 'forward')}
+              style={{
+                backgroundColor: getColor('btn_bg'),
+              }}
+              textStyle={{
+                color: getColor(forwarded === true ? 'disable' : 't1'),
+              }}
+              onPress={() => {
+                onClicked?.(data);
+              }}
+            />
+          </>
+        ) : null}
       </View>
 
       <View

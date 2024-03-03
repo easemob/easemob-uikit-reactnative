@@ -116,6 +116,11 @@ export function useMessageList(
     onClickedEditThreadName,
     onClickedLeaveThread,
     onClickedOpenThreadMemberList,
+    onClickedMultiSelected,
+    selectType,
+    onChangeMultiItems,
+    onClickedSingleSelect,
+    onClickedHistoryDetail,
   } = props;
   const inverted = React.useRef(comType === 'chat' ? true : false).current;
 
@@ -153,6 +158,7 @@ export function useMessageList(
   const im = useChatContext();
   const startMsgIdRef = React.useRef('');
   const [maxListHeight, setMaxListHeight] = React.useState<number>(0);
+  const tmpMessageListRef = React.useRef<MessageModel[]>([]);
   // !!! https://github.com/facebook/react-native/issues/36529
   // !!! https://github.com/facebook/react-native/issues/14312
   // !!! only android, FlatList onEndReached no work android
@@ -701,6 +707,7 @@ export function useMessageList(
               thread: threadMsg,
               userName: user?.name,
               userAvatar: user?.avatar,
+              checked: selectType === 'multi' ? false : undefined,
             } as MessageModel;
           }
         };
@@ -728,7 +735,16 @@ export function useMessageList(
       refreshToUI(dataRef.current);
       onFinished?.(l as MessageListItemProps[]);
     },
-    [comType, dataRef, getStyle, im, inverted, messageLayoutType, refreshToUI]
+    [
+      comType,
+      dataRef,
+      getStyle,
+      im,
+      inverted,
+      messageLayoutType,
+      refreshToUI,
+      selectType,
+    ]
   );
 
   const onUpdateMessageToUI = React.useCallback(
@@ -818,6 +834,20 @@ export function useMessageList(
     [im, onDelMessageQuoteToUI, onDelMessageToUI]
   );
 
+  const deleteMessages = React.useCallback(
+    (msgs: ChatMessage[]) => {
+      im.removeMessages({ message: msgs })
+        .then(() => {
+          msgs.forEach((msg) => {
+            onDelMessageToUI(msg);
+            onDelMessageQuoteToUI(msg);
+          });
+        })
+        .catch();
+    },
+    [im, onDelMessageQuoteToUI, onDelMessageToUI]
+  );
+
   const translateMessage = React.useCallback(
     (model: MessageModel) => {
       im.translateMessage({
@@ -865,6 +895,35 @@ export function useMessageList(
     [im, onClickedLeaveThread, thread]
   );
 
+  const _onMultiSelected = React.useCallback(() => {
+    onClickedMultiSelected?.();
+    dataRef.current.forEach((d) => {
+      if (d.model.modelType === 'message') {
+        const msgModel = d.model as MessageModel;
+        msgModel.checked = false;
+      }
+    });
+    refreshToUI([...dataRef.current]);
+    tmpMessageListRef.current = [];
+  }, [dataRef, onClickedMultiSelected, refreshToUI]);
+
+  const cancelMultiSelected = React.useCallback(() => {
+    dataRef.current.forEach((d) => {
+      if (d.model.modelType === 'message') {
+        const msgModel = d.model as MessageModel;
+        msgModel.checked = undefined;
+      }
+    });
+    refreshToUI([...dataRef.current]);
+  }, [dataRef, refreshToUI]);
+
+  const _onForwardMessage = React.useCallback(
+    (data: MessageModel) => {
+      onClickedSingleSelect?.(data);
+    },
+    [onClickedSingleSelect]
+  );
+
   const { onShowMessageLongPressActions } = useMessageLongPressActions({
     menuRef,
     alertRef,
@@ -877,6 +936,8 @@ export function useMessageList(
     onCopyFinished: propsOnCopyFinished,
     onTranslateMessage: translateMessage,
     onThread: onCreateThread,
+    onClickedMultiSelected: _onMultiSelected,
+    onForwardMessage: _onForwardMessage,
   });
 
   const { onShowEmojiLongPressActions } = useEmojiLongPressActionsProps({
@@ -893,7 +954,7 @@ export function useMessageList(
     });
 
   const onClickedListItem = React.useCallback(
-    (
+    async (
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
@@ -903,11 +964,53 @@ export function useMessageList(
           const msgModel = model as MessageModel;
           if (msgModel.msg.body.type === ChatMessageType.VOICE) {
             startVoicePlay(msgModel);
+          } else if (msgModel.msg.body.type === ChatMessageType.COMBINE) {
+            onClickedHistoryDetail?.(msgModel);
           }
         }
       }
     },
-    [propsOnClicked, startVoicePlay]
+    [onClickedHistoryDetail, propsOnClicked, startVoicePlay]
+  );
+
+  const onCheckedItem = React.useCallback(
+    (
+      id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel
+    ) => {
+      if (model.modelType === 'message') {
+        const isExisted = dataRef.current.find((d) => {
+          if (d.id === id) {
+            const msgModel = d.model as MessageModel;
+            d.model = { ...msgModel, checked: !msgModel.checked };
+            return true;
+          }
+          return false;
+        });
+        if (isExisted) {
+          refreshToUI([...dataRef.current]);
+        }
+
+        if (onChangeMultiItems) {
+          const list = dataRef.current
+            .filter((d) => {
+              if (d.model.modelType === 'message') {
+                const msgModel = d.model as MessageModel;
+                if (msgModel.checked === true) {
+                  return true;
+                }
+              }
+              return false;
+            })
+            .map((d) => {
+              return d.model as MessageModel;
+            });
+          tmpMessageListRef.current = list;
+          onChangeMultiItems(list);
+        }
+      }
+    },
+    [dataRef, onChangeMultiItems, refreshToUI]
   );
 
   const updateMessageEmojiToUI = React.useCallback(
@@ -1033,6 +1136,9 @@ export function useMessageList(
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
+      if (selectType === 'multi') {
+        return;
+      }
       const ret = propsOnLongPress?.(id, model);
       if (ret !== false) {
         if (model.modelType === 'message') {
@@ -1076,6 +1182,7 @@ export function useMessageList(
       onShowEmojiLongPressActions,
       onShowMessageLongPressActions,
       propsOnLongPress,
+      selectType,
     ]
   );
 
@@ -1264,6 +1371,7 @@ export function useMessageList(
               userId: msg.from,
               modelType: 'history',
               msg: msg,
+              checked: selectType === 'multi' ? false : undefined,
             },
             containerStyle: getStyle(),
           },
@@ -1280,6 +1388,7 @@ export function useMessageList(
               msg: msg,
               quoteMsg: quoteMsg,
               thread: threadMsg,
+              checked: selectType === 'multi' ? false : undefined,
             },
             containerStyle: getStyle(),
           },
@@ -1288,7 +1397,7 @@ export function useMessageList(
       }
       scrollToBottom(true);
     },
-    [getStyle, im, inverted, onAddDataToUI, scrollToBottom, comType]
+    [comType, scrollToBottom, im, onAddDataToUI, selectType, getStyle, inverted]
   );
 
   const onRecallMessageToUI = React.useCallback(
@@ -1397,6 +1506,7 @@ export function useMessageList(
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
             quoteMsg: quoteMsg,
+            checked: selectType === 'multi' ? false : undefined,
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
@@ -1422,6 +1532,7 @@ export function useMessageList(
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
+            checked: selectType === 'multi' ? false : undefined,
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
@@ -1446,6 +1557,7 @@ export function useMessageList(
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
+            checked: selectType === 'multi' ? false : undefined,
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
@@ -1473,6 +1585,7 @@ export function useMessageList(
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
+            checked: selectType === 'multi' ? false : undefined,
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
@@ -1496,6 +1609,7 @@ export function useMessageList(
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
+            checked: selectType === 'multi' ? false : undefined,
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
@@ -1522,6 +1636,7 @@ export function useMessageList(
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
+            checked: selectType === 'multi' ? false : undefined,
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
@@ -1536,6 +1651,7 @@ export function useMessageList(
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
+            checked: selectType === 'multi' ? false : undefined,
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
@@ -1580,6 +1696,7 @@ export function useMessageList(
       messageLayoutType,
       onAddDataToUI,
       scrollToBottom,
+      selectType,
     ]
   );
 
@@ -1893,13 +2010,44 @@ export function useMessageList(
             onShowMessageThreadListMoreActions(thread);
           }
         },
+        cancelMultiSelected: () => {
+          cancelMultiSelected();
+        },
+        removeMultiSelected: (onResult: (confirmed: boolean) => void) => {
+          alertRef.current?.alertWithInit({
+            message: tr('_uikit_alert_remove_message'),
+            buttons: [
+              {
+                text: 'cancel',
+                onPress: () => {
+                  alertRef.current?.close?.();
+                  onResult(false);
+                },
+              },
+              {
+                text: 'confirm',
+                isPreferred: true,
+                onPress: () => {
+                  alertRef.current?.close?.();
+                  deleteMessages(tmpMessageListRef.current.map((d) => d.msg));
+                  onResult(true);
+                },
+              },
+            ],
+          });
+        },
+        getMultiSelectedMessages: () => {
+          return tmpMessageListRef.current.map((d) => d.msg);
+        },
       };
     },
     [
       addSendMessageToUI,
+      cancelMultiSelected,
       comType,
       createThread,
       deleteMessage,
+      deleteMessages,
       editMessage,
       inverted,
       onAddMessageListToUI,
@@ -1912,6 +2060,7 @@ export function useMessageList(
       sendRecvMessageReadAck,
       setNeedScroll,
       thread,
+      tr,
     ]
   );
 
@@ -2100,5 +2249,6 @@ export function useMessageList(
     onClickedFaceListItem,
     reactionRef,
     onRequestCloseReaction,
+    onCheckedItem,
   };
 }

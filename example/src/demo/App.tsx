@@ -45,6 +45,8 @@ import {
   ImageMessagePreviewScreen,
   LoginListScreen,
   LoginScreen,
+  MessageForwardSelectorScreen,
+  MessageHistoryListScreen,
   MessageThreadDetailScreen,
   MessageThreadListScreen,
   MessageThreadMemberListScreen,
@@ -518,6 +520,20 @@ export function App() {
                 headerShown: false,
               }}
               component={MessageThreadMemberListScreen}
+            />
+            <Root.Screen
+              name={'MessageForwardSelector'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageForwardSelectorScreen}
+            />
+            <Root.Screen
+              name={'MessageHistoryList'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageHistoryListScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

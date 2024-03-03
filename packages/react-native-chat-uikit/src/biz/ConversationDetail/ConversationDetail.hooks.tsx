@@ -18,6 +18,7 @@ import { MessageInput } from './MessageInput';
 import { MessageList } from './MessageList';
 import type {
   ConversationDetailProps,
+  ConversationSelectModeType,
   MessageInputRef,
   MessageListRef,
   MessageModel,
@@ -32,7 +33,9 @@ import type {
 
 export function useConversationDetail(props: ConversationDetailProps) {
   const {
+    propsRef,
     type: comType,
+    selectType = 'common',
     convId,
     convType,
     thread,
@@ -45,10 +48,13 @@ export function useConversationDetail(props: ConversationDetailProps) {
     onClickedAvatar: propsOnClickedAvatar,
     onThreadDestroyed,
     onThreadKicked,
+    onForwardMessage,
   } = props;
   const permissionsRef = React.useRef(false);
   const messageInputRef = React.useRef<MessageInputRef>({} as any);
   const messageListRef = React.useRef<MessageListRef>({} as any);
+  const [selectMode, setSelectMode] = React.useState(selectType);
+  const [multiSelectCount, setMultiSelectCount] = React.useState(0);
   const _messageInputRef = input?.ref ?? messageInputRef;
   const _MessageInput = input?.render ?? MessageInput;
   const messageInputProps = input?.props
@@ -211,6 +217,41 @@ export function useConversationDetail(props: ConversationDetailProps) {
     _messageListRef.current?.startShowThreadMoreMenu?.();
   }, [_messageListRef]);
 
+  const onClickedMultiSelected = React.useCallback(() => {
+    setSelectMode('multi');
+    _messageInputRef.current?.showMultiSelect?.();
+  }, [_messageInputRef]);
+
+  const onCancelMultiSelected = React.useCallback(() => {
+    setSelectMode('common');
+    _messageInputRef.current?.hideMultiSelect?.();
+  }, [_messageInputRef]);
+
+  const onClickedMultiSelectDeleteButton = React.useCallback(() => {
+    _messageListRef.current?.removeMultiSelected?.((confirmed) => {
+      if (confirmed === true) {
+        onCancelMultiSelected();
+      }
+    });
+  }, [_messageListRef, onCancelMultiSelected]);
+  const onClickedMultiSelectShareButton = React.useCallback(() => {
+    const list = _messageListRef.current?.getMultiSelectedMessages?.();
+    if (list) {
+      onForwardMessage?.(list);
+    }
+  }, [_messageListRef, onForwardMessage]);
+
+  const onChangeMultiItems = React.useCallback((items: MessageModel[]) => {
+    setMultiSelectCount(items.length);
+  }, []);
+
+  const onClickedSingleSelect = React.useCallback(
+    (item: MessageModel) => {
+      onForwardMessage?.([item.msg]);
+    },
+    [onForwardMessage]
+  );
+
   React.useEffect(() => {
     getPermission({
       onResult: (isSuccess: boolean) => {
@@ -310,6 +351,19 @@ export function useConversationDetail(props: ConversationDetailProps) {
     createDirectoryIfNotExisted(convId);
   }, [convId, createDirectoryIfNotExisted]);
 
+  if (propsRef && propsRef.current) {
+    propsRef.current.sendCardMessage = (props: SendCardProps) => {
+      onClickedSend(props);
+    };
+    propsRef.current.changeSelectType = (type: ConversationSelectModeType) => {
+      if (type === 'common') {
+        onCancelMultiSelected();
+      } else {
+        onClickedMultiSelected();
+      }
+    };
+  }
+
   return {
     onClickedSend,
     _messageInputRef,
@@ -327,5 +381,13 @@ export function useConversationDetail(props: ConversationDetailProps) {
     doNotDisturb,
     onClickedThreadMore,
     threadName,
+    onClickedMultiSelected,
+    onCancelMultiSelected,
+    selectMode,
+    onClickedMultiSelectDeleteButton,
+    onClickedMultiSelectShareButton,
+    multiSelectCount,
+    onChangeMultiItems,
+    onClickedSingleSelect,
   };
 }

@@ -18,7 +18,13 @@ export function useListSearch<
     ListItemActions<ComponentModel>,
     'onToRightSlide' | 'onToLeftSlide' | 'onLongPressed'
   > {
-  const { onClicked, testMode, initData, onSearch: propsOnSearch } = props;
+  const {
+    onClicked,
+    testMode,
+    initData,
+    onSearch: propsOnSearch,
+    searchType,
+  } = props;
   const flatListProps = useFlatList<ListSearchItemProps<ComponentModel>>({
     isShowAfterLoaded: false,
     // onSearch: (keyword: string) => onSearch(keyword),
@@ -41,6 +47,7 @@ export function useListSearch<
               return {
                 id: item.id,
                 data: item,
+                searchType: searchType,
                 keyword: keyword,
               } as ListSearchItemProps<ComponentModel>;
             })
@@ -56,7 +63,7 @@ export function useListSearch<
         }
       }
     },
-    [dataRef, propsOnSearch, setData]
+    [dataRef, propsOnSearch, searchType, setData]
   );
 
   const onClickedCallback = React.useCallback(
@@ -82,6 +89,7 @@ export function useListSearch<
           return {
             id: item.id,
             data: item,
+            searchType: searchType,
             keyword: keywordRef.current,
           } as ListSearchItemProps<ComponentModel>;
         });
@@ -94,6 +102,7 @@ export function useListSearch<
           return {
             id: item.id,
             data: item,
+            searchType: searchType,
             keyword: keywordRef.current,
           } as ListSearchItemProps<ComponentModel>;
         });
@@ -109,6 +118,7 @@ export function useListSearch<
     isLocalSearch,
     isShowAfterLoaded,
     onSearch,
+    searchType,
     testMode,
   ]);
   const unInit = () => {};

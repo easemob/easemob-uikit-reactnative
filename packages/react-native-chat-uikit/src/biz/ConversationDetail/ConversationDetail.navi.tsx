@@ -12,14 +12,19 @@ import {
   TopNavigationBar,
   TopNavigationBarElementType,
   TopNavigationBarRightList,
+  TopNavigationBarRightText,
 } from '../TopNavigationBar';
-import type { ConversationDetailModelType } from './types';
+import type {
+  ConversationDetailModelType,
+  ConversationSelectModeType,
+} from './types';
 
 type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
   convId: string;
   convName?: string;
   convAvatar?: string;
   type: ConversationDetailModelType;
+  selectMode?: ConversationSelectModeType;
   onBack?: (data?: any) => void;
   onClickedAvatar?: () => void;
   NavigationBar?: TopNavigationBarElementType<LeftProps, RightProps>;
@@ -29,6 +34,7 @@ type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
   onClickedVoice?: () => void;
   onClickedVideo?: () => void;
   onClickedThreadMore?: () => void;
+  onCancelMultiSelected?: () => void;
 };
 export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   props: _ConversationDetailNavigationBarProps<LeftProps, RightProps>
@@ -47,6 +53,8 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     onClickedThread,
     onClickedVideo,
     onClickedThreadMore,
+    selectMode = 'common',
+    onCancelMultiSelected,
   } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -72,6 +80,77 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
       dark: colors.neutral[5],
     },
   });
+
+  const getRight = (): any => {
+    if (comType === 'chat') {
+      if (selectMode === 'common') {
+        return TopNavigationBarRightList;
+      } else {
+        return TopNavigationBarRightText;
+      }
+    } else if (comType === 'thread') {
+      if (selectMode === 'common') {
+        return TopNavigationBarRightList;
+      } else {
+        return TopNavigationBarRightText;
+      }
+    } else {
+      return null;
+    }
+  };
+
+  const getRightProps = (): any => {
+    if (comType === 'chat') {
+      if (selectMode === 'common') {
+        return {
+          onClickedList: [
+            () => {
+              onClickedThread?.();
+            },
+            () => {
+              onClickedVoice?.();
+            },
+            () => {
+              onClickedVideo?.();
+            },
+          ],
+          iconNameList: [
+            'hashtag_in_bubble_fill',
+            'phone_pick',
+            'video_camera',
+          ],
+        };
+      } else {
+        return {
+          onClicked: () => {
+            onCancelMultiSelected?.();
+          },
+          text: tr('cancel'),
+        };
+      }
+    } else if (comType === 'thread') {
+      if (selectMode === 'common') {
+        return {
+          onClickedList: [
+            () => {
+              onClickedThreadMore?.();
+            },
+          ],
+          iconNameList: ['ellipsis_vertical'],
+        };
+      } else {
+        return {
+          onClicked: () => {
+            onCancelMultiSelected?.();
+          },
+          text: tr('cancel'),
+        };
+      }
+    } else {
+      return {};
+    }
+  };
+
   if (NavigationBar) {
     // return { NavigationBar };
     return <>{NavigationBar}</>;
@@ -133,39 +212,8 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
           </View>
         </View>
       }
-      Right={
-        comType === 'chat' || comType === 'thread'
-          ? TopNavigationBarRightList
-          : null
-      }
-      RightProps={{
-        onClickedList:
-          comType === 'chat'
-            ? [
-                () => {
-                  onClickedThread?.();
-                },
-                () => {
-                  onClickedVoice?.();
-                },
-                () => {
-                  onClickedVideo?.();
-                },
-              ]
-            : comType === 'thread'
-            ? [
-                () => {
-                  onClickedThreadMore?.();
-                },
-              ]
-            : [],
-        iconNameList:
-          comType === 'chat'
-            ? ['hashtag_in_bubble_fill', 'phone_pick', 'video_camera']
-            : comType === 'thread'
-            ? ['ellipsis_vertical']
-            : [],
-      }}
+      Right={getRight()}
+      RightProps={getRightProps()}
     />
   );
 };

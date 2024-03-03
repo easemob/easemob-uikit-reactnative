@@ -61,7 +61,6 @@ export function useMessageThreadListMoreActions(
           isHigh: false,
           icon: 'arrow_right_square_fill',
           onClicked: () => {
-            console.log('test:zuoyu:234');
             closeMenu(() => {
               alertRef?.current?.alertWithInit({
                 message: tr('_uikit_thread_leave_confirm'),

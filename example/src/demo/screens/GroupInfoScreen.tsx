@@ -67,6 +67,8 @@ export function GroupInfoScreen(props: Props) {
               convType: 1,
               convName: groupId,
               testRef,
+              from: 'GroupInfo',
+              hash: Date.now(),
             },
           });
         }}

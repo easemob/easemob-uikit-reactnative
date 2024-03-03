@@ -33,6 +33,10 @@ export type StateModel = {
    * Whether to disable.
    */
   disable?: boolean;
+  /**
+   * Whether to forward.
+   */
+  forwarded?: boolean;
 };
 
 type _ConversationModel = PartialUndefinable<ChatConversation>;
@@ -90,28 +94,29 @@ type _GroupModel = Omit<
 /**
  * GroupModel: The data model of the group list UI component.
  */
-export type GroupModel = _GroupModel & {
-  /**
-   * The group ID.
-   */
-  groupId: string;
-  /**
-   * The group name.
-   */
-  groupName: string;
-  /**
-   * The group owner ID.
-   */
-  owner: string;
-  /**
-   * The group avatar url.
-   */
-  groupAvatar?: string;
-  /**
-   * The group my remark.
-   */
-  myRemark?: string;
-};
+export type GroupModel = _GroupModel &
+  StateModel & {
+    /**
+     * The group ID.
+     */
+    groupId: string;
+    /**
+     * The group name.
+     */
+    groupName: string;
+    /**
+     * The group owner ID.
+     */
+    owner: string;
+    /**
+     * The group avatar url.
+     */
+    groupAvatar?: string;
+    /**
+     * The group my remark.
+     */
+    myRemark?: string;
+  };
 
 /**
  * GroupParticipantModel: The data model of the group member list UI component.

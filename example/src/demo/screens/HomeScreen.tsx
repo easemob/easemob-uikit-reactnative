@@ -263,6 +263,8 @@ function HomeTabConversationListScreen(
             convId,
             convType,
             convName: convName ?? convId,
+            from: 'ConversationList',
+            hash: Date.now(),
           },
         });
       }}
@@ -289,6 +291,7 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
         // backgroundColor: 'red',
         // height: 400,
       }}
+      // navigationBarVisible={false}
       // onRequestMultiData={(params: {
       //   ids: Map<DataModelType, string[]>;
       //   result: (

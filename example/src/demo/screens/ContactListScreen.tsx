@@ -58,6 +58,7 @@ export function ContactListScreen(props: Props) {
           flexGrow: 1,
           // backgroundColor: 'red',
         }}
+        // navigationBarVisible={false}
         // onInitialized={updateData}
         // onRequestMultiData={async (params: {
         //   ids: Map<DataModelType, string[]>;

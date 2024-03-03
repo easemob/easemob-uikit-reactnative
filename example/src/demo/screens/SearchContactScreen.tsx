@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+import { DeviceEventEmitter } from 'react-native';
 import { ChatConversationType } from 'react-native-chat-sdk';
 import {
   ContactSearchModel,
@@ -64,6 +65,19 @@ export function SearchContactScreen(props: Props) {
               },
               merge: true,
             });
+          } else if (searchType === 'forward-message') {
+            navigation.navigate({
+              name: 'MessageForwardSelector',
+              params: {
+                params: {
+                  searchType: 'forward-message',
+                  data: data ? JSON.stringify(data) : undefined,
+                  convId,
+                  convType,
+                },
+              },
+              merge: true,
+            });
           } else {
             navigation.goBack();
           }
@@ -79,6 +93,8 @@ export function SearchContactScreen(props: Props) {
                 convName,
                 selectedContacts: JSON.stringify(data),
                 operateType: 'share_card',
+                from: 'SearchContact',
+                hash: Date.now(),
               },
             });
           } else if (searchType === 'new-conversation') {
@@ -89,6 +105,8 @@ export function SearchContactScreen(props: Props) {
                   convId: data.userId,
                   convType: ChatConversationType.PeerChat,
                   convName: data.userName ?? data.userId,
+                  from: 'SearchContact',
+                  hash: Date.now(),
                 },
               });
             }
@@ -97,6 +115,11 @@ export function SearchContactScreen(props: Props) {
               navigation.navigate('ContactInfo', {
                 params: { userId: data.userId },
               });
+            }
+          } else if (searchType === 'forward-message') {
+            if (data) {
+              console.log('test:zuoyu:123234:forward', data);
+              DeviceEventEmitter.emit('forwardMessage', data);
             }
           }
         }}

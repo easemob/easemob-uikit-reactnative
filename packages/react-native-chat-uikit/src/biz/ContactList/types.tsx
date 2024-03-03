@@ -90,6 +90,11 @@ export type ContactListItemProps = ListItemProps &
      * Callback when the item check button is clicked.
      */
     onCheckClicked?: ((data?: ContactModel) => void) | undefined;
+
+    /**
+     * Callback when the item forward button is clicked.
+     */
+    onForwardClicked?: ((data?: ContactModel) => void) | undefined;
   };
 
 /**
@@ -131,7 +136,7 @@ export type ContactListNavigationBarProps = PropsWithNavigationBar &
      */
     onAddGroupParticipantResult?: (added: ContactModel[]) => void;
     /**
-     * When the contact type is `create-group` or `add-group-member`, Pass in the selected contacts.
+     * When the contact type is `create-group` or `add-group-member` or `forward-message`, Pass in the selected contacts.
      */
     selectedData?: ContactModel[]; // todo: changed to selectedData
   };
@@ -207,6 +212,11 @@ export type ContactListProps = Pick<
      * The reference object of the component. Components can be manipulated. For example: add, modify and delete.
      */
     propsRef?: React.MutableRefObject<ContactListRef>;
+
+    /**
+     * Callback notification when forward message.
+     */
+    onForwardMessage?: (data: ContactModel) => void;
   };
 
 /**
@@ -240,4 +250,8 @@ export type ContactSearchModel = ContactModel &
      * Callback notification when the check button is clicked.
      */
     onCheckClicked?: ((data?: ContactModel) => void) | undefined;
+    /**
+     * Callback notification when the forward button is clicked.
+     */
+    onClickedForward?: ((data?: ContactModel) => void) | undefined;
   };

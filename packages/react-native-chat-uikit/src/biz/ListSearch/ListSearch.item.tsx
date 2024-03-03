@@ -3,8 +3,9 @@ import { Pressable, View } from 'react-native';
 
 import type { DataModel } from '../../chat';
 import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
-import { IconButton } from '../../ui/Button';
+import { IconButton, Text2Button } from '../../ui/Button';
 import { HighText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { ContactSearchModel } from '../ContactList';
@@ -17,6 +18,9 @@ export function ListSearchItem<ComponentModel extends DataModel = DataModel>(
   if (searchType === 'create-group' || searchType === 'add-group-member') {
     const p = props as any as ListSearchItemProps<ContactSearchModel>;
     return <StateListSearchItem {...p} />;
+  } else if (searchType === 'forward-message') {
+    const p = props as any as ListSearchItemProps<ContactSearchModel>;
+    return <ForwardListSearchItem {...p} />;
   }
   return <DefaultListSearchItem {...props} />;
 }
@@ -175,6 +179,112 @@ export function StateListSearchItem(
           keyword={keyword}
           content={data.name ?? data.userId}
         />
+      </View>
+
+      <View
+        style={{
+          width: '100%',
+          borderBottomWidth: 0.5,
+          borderBottomColor: getColor('divider'),
+          marginLeft: 78,
+        }}
+      />
+    </Pressable>
+  );
+}
+export function ForwardListSearchItem(
+  props: ListSearchItemProps<ContactSearchModel>
+) {
+  const { data, keyword, searchType } = props;
+  const { forwarded, onClickedForward } = data;
+  const { tr } = useI18nContext();
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    t1: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    t2: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+    divider: {
+      light: colors.neutral[9],
+      dark: colors.neutral[2],
+    },
+    disable: {
+      light: colors.neutral[7],
+      dark: colors.neutral[4],
+    },
+    enable: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+    btn_bg: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
+  });
+
+  const _onForwardClicked = React.useCallback(() => {
+    if (searchType === 'forward-message' && forwarded !== true) {
+      onClickedForward?.(data);
+    }
+  }, [data, forwarded, onClickedForward, searchType]);
+
+  return (
+    <Pressable
+      style={{
+        backgroundColor: getColor('bg'),
+      }}
+      onPress={_onForwardClicked}
+    >
+      <View
+        style={{
+          width: '100%',
+          height: 59.5,
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 16,
+        }}
+      >
+        <Avatar url={data.avatar} size={40} />
+        <HighText
+          paletteType={'title'}
+          textType={'medium'}
+          containerStyle={{
+            flexDirection: 'row',
+            flexGrow: 1,
+            paddingLeft: 12,
+          }}
+          keyword={keyword}
+          content={data.name ?? data.userId}
+        />
+
+        {searchType === 'forward-message' ? (
+          <>
+            <View style={{ flexGrow: 1 }} />
+            <Text2Button
+              sizesType={'small'}
+              radiusType={'extraSmall'}
+              contentType={'only-text'}
+              text={tr(forwarded === true ? 'forwarded' : 'forward')}
+              style={{
+                backgroundColor: getColor('btn_bg'),
+              }}
+              textStyle={{
+                color: getColor(forwarded === true ? 'disable' : 't1'),
+              }}
+              onPress={() => {
+                onClickedForward?.(data);
+              }}
+            />
+          </>
+        ) : null}
       </View>
 
       <View

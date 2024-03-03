@@ -7,7 +7,7 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
-import { Text } from '../../ui/Text';
+import { SingleLineText, Text } from '../../ui/Text';
 import type { TopNavigationBarProps } from './types';
 
 /**
@@ -79,6 +79,40 @@ export function TopNavigationBarRight({
         name={iconName}
         style={{ height: 24, width: 24, tintColor: getColor('bg') }}
       />
+    </Pressable>
+  );
+}
+export function TopNavigationBarRightText({
+  onClicked,
+  text,
+}: {
+  onClicked?: () => void;
+  text: string;
+}) {
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    text: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+  });
+  return (
+    <Pressable
+      style={{
+        width: 36,
+        height: 36,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      onPress={onClicked}
+    >
+      <SingleLineText
+        paletteType={'label'}
+        textType={'medium'}
+        style={{ color: getColor('text') }}
+      >
+        {text}
+      </SingleLineText>
     </Pressable>
   );
 }

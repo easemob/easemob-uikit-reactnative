@@ -18,6 +18,8 @@ export * from './HomeScreen';
 export * from './ImageMessagePreviewScreen';
 export * from './LoginListScreen';
 export * from './LoginScreen';
+export * from './MessageForwardSelectorScreen';
+export * from './MessageHistoryListScreen';
 export * from './MessageThreadDetailScreen';
 export * from './MessageThreadListScreen';
 export * from './MessageThreadMemberListScreen';

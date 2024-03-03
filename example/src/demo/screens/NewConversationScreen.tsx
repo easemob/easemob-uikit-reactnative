@@ -46,6 +46,8 @@ export function NewConversationScreen(props: Props) {
               convId: data?.userId,
               convType: ChatConversationType.PeerChat,
               convName: data?.userId,
+              from: 'NewConversation',
+              hash: Date.now(),
             },
           });
         }}

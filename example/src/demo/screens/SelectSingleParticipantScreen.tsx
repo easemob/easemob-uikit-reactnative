@@ -47,6 +47,7 @@ export function SelectSingleParticipantScreen(props: Props) {
                 convName: groupId,
                 selectedParticipants: JSON.stringify(data),
                 operateType: 'mention',
+                from: 'SelectSingleParticipant',
               },
             },
             merge: true,

@@ -55,6 +55,15 @@ export type UseMessageLongPressActionsProps = BasicActionsProps & {
    * Callback notification of thread message.
    */
   onThread?: (model: MessageModel) => void;
+  /**
+   * Callback notification of multi selected.
+   */
+  onClickedMultiSelected?: () => void;
+
+  /**
+   * Callback notification of forward message.
+   */
+  onForwardMessage?: (model: MessageModel) => void;
 };
 export function useMessageLongPressActions(
   props: UseMessageLongPressActionsProps
@@ -68,6 +77,8 @@ export function useMessageLongPressActions(
     onRecallMessage,
     onCopyFinished,
     onTranslateMessage,
+    onClickedMultiSelected,
+    onForwardMessage,
     onThread,
     onInit,
   } = props;
@@ -191,6 +202,26 @@ export function useMessageLongPressActions(
           }
         }
       }
+      initItems.push({
+        name: tr('_uikit_chat_list_long_press_menu_multi_select'),
+        isHigh: false,
+        icon: 'check_n_3lines',
+        onClicked: () => {
+          closeMenu(() => {
+            onClickedMultiSelected?.();
+          });
+        },
+      });
+      initItems.push({
+        name: tr('_uikit_chat_list_long_press_menu_forward_message'),
+        isHigh: false,
+        icon: 'check_n_3lines',
+        onClicked: () => {
+          closeMenu(() => {
+            onForwardMessage?.(model as MessageModel);
+          });
+        },
+      });
       if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
         initItems.push({
           name: tr('_uikit_chat_list_long_press_menu_report'),

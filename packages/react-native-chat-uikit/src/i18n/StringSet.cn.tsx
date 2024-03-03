@@ -53,6 +53,8 @@ export function createStringSetCn(): StringSet {
     '_uikit_chat_list_long_press_menu_translate': '翻译',
     '_uikit_chat_list_long_press_menu_thread': '话题',
     '_uikit_chat_list_long_press_menu_edit': '编辑',
+    '_uikit_chat_list_long_press_menu_multi_select': '多选',
+    '_uikit_chat_list_long_press_menu_forward_message': '转发',
     '_uikit_chat_list_long_press_menu_report': '举报',
     '_uikit_chat_list_long_press_menu_delete': '删除',
     '_uikit_chat_list_long_press_menu_recall': '撤回',
@@ -63,6 +65,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_msg_tip_msg_not_exist': '原消息不存在',
     '_uikit_msg_edit': '已编辑',
     '_uikit_msg_translate': '已翻译',
+    '_uikit_msg_record': '聊天记录',
     '_uikit_msg_tip_create_group_success': '创建群聊成功',
     '_uikit_msg_tip_create_group_success_with_params': '创建群聊成功',
 
@@ -111,6 +114,12 @@ export function createStringSetCn(): StringSet {
     '_uikit_thread_leave_confirm': (isOwner) =>
       isOwner === true ? '确定销毁话题吗？' : '确定离开话题吗？',
 
+    '_uikit_tab_contact_list': '联系人',
+    '_uikit_tab_group_list': '群聊',
+    '_uikit_forward_to': '转发给',
+    '_uikit_alert_remove_message': '移除消息？',
+    '_uikit_history_record': '聊天记录',
+
     '_uikit_report_title': '消息举报',
     'Unwelcome commercial content': '不受欢迎的商业内容',
     'Pornographic or explicit content': '色情或露骨内容',
@@ -138,6 +147,8 @@ export function createStringSetCn(): StringSet {
     'login': '登录',
     'logout': '退出',
     'report': '举报',
+    'forward': '转发',
+    'forwarded': '已转发',
 
     'picture': '图片',
     'video': '视频',
@@ -168,6 +179,7 @@ export function createStringSetCn(): StringSet {
     '[voice]': (v) => (v ? `[语音]${v}'` : '[语音]'),
     '[contact]': (v) => (v ? `[联系人]${v}` : '[联系人]'),
     '[custom]': '[自定义]',
+    '[combine]': '[聊天记录]',
     '[unknown]': '[未知类型]',
   };
 }

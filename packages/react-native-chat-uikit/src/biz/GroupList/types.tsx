@@ -18,6 +18,8 @@ import type {
   PropsWithTest,
 } from '../types';
 
+export type GroupReuseType = 'common' | 'forward-message';
+
 /**
  * Group List Item Component.
  */
@@ -25,6 +27,7 @@ export type GroupListItemProps = ListItemProps &
   ListItemRequestProps<DataModel> &
   Omit<ListItemActions<GroupModel>, 'onToRightSlide' | 'onToLeftSlide'> & {
     data: GroupModel;
+    groupType?: GroupReuseType;
   };
 
 export type GroupListItemComponentType =
@@ -58,6 +61,10 @@ export type GroupListProps = PropsWithTest &
   PropsWithMenu &
   Omit<ListActions<GroupModel>, 'onToRightSlideItem' | 'onToLeftSlideItem'> & {
     /**
+     * Group type.
+     */
+    groupType?: GroupReuseType;
+    /**
      * Container style for the session list component.
      */
     containerStyle?: StyleProp<ViewStyle>;
@@ -80,6 +87,11 @@ export type GroupListProps = PropsWithTest &
      * Please see {@link GroupListRef} for more operations.
      */
     propsRef?: React.MutableRefObject<GroupListRef>;
+
+    /**
+     * Callback notification when forward message.
+     */
+    onForwardMessage?: (data: GroupModel) => void;
   };
 
 /**

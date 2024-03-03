@@ -65,6 +65,7 @@ export function ContactList(props: ContactListProps) {
     ListItemHeaderRender,
     sectionListProps,
     ListHeaderComponent,
+    onClickedForward,
   } = useContactList(props);
   const {
     style,
@@ -128,7 +129,7 @@ export function ContactList(props: ContactListProps) {
           <SearchStyle
             title={tr('search')}
             onPress={() => {
-              onClickedSearch?.();
+              onClickedSearch?.(contactType);
             }}
           />
         )
@@ -159,6 +160,7 @@ export function ContactList(props: ContactListProps) {
                 onClicked={onClicked}
                 onLongPressed={onLongPressed}
                 onCheckClicked={onCheckClicked}
+                onForwardClicked={onClickedForward}
               />
             );
           }}

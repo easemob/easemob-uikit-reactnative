@@ -47,6 +47,8 @@ export function ShareContactScreen(props: Props) {
               convName: convName ?? convId,
               selectedContacts: JSON.stringify(data),
               operateType: 'share_card',
+              from: 'ShareContact',
+              hash: Date.now(),
             },
           });
         }}

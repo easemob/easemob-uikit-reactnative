@@ -5,7 +5,7 @@ import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext, useThemeContext } from '../../theme';
-import { IconButtonMemo } from '../../ui/Button';
+import { IconButton, IconButtonMemo } from '../../ui/Button';
 import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
@@ -28,7 +28,7 @@ export const MessageInput = React.forwardRef<
   props: React.PropsWithChildren<MessageInputProps>,
   ref?: React.ForwardedRef<MessageInputRef>
 ) {
-  const { top, numberOfLines = 4 } = props;
+  const { top, numberOfLines = 4, multiSelectCount } = props;
 
   const testRef = React.useRef<View>(null);
   const { fontFamily } = useConfigContext();
@@ -48,11 +48,15 @@ export const MessageInput = React.forwardRef<
       light: colors.neutral[1],
       dark: colors.neutral[98],
     },
-    text_disable: {
+    disable: {
       light: colors.neutral[7],
       dark: colors.neutral[3],
     },
-    text_enable: {
+    enable_trash: {
+      light: colors.error[5],
+      dark: colors.error[6],
+    },
+    enable_share: {
       light: colors.primary[5],
       dark: colors.primary[6],
     },
@@ -91,171 +95,224 @@ export const MessageInput = React.forwardRef<
     quoteMsg,
     onClickedEmojiSend,
     emojiList,
+    multiSelectVisible,
+    onClickedMultiSelectDeleteButton,
+    onClickedMultiSelectShareButton,
   } = useMessageInput(props, ref);
 
   return (
     <>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={top}
-      >
-        {showQuote === true ? (
-          <MessageInputQuoteView
-            showQuote={showQuote}
-            onDel={onHideQuoteMessage}
-            msg={quoteMsg}
-          />
-        ) : null}
-
+      {multiSelectVisible === true ? (
         <View
-          ref={testRef}
           style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 12,
             backgroundColor: getColor('bg'),
-            display: 'flex',
-          }}
-          onLayout={() => {
-            // testRef.current?.measure(
-            //   (
-            //     _x: number,
-            //     _y: number,
-            //     _width: number,
-            //     _height: number,
-            //     _pageX: number,
-            //     pageY: number
-            //   ) => {
-            //     console.log(
-            //       'Sub:Sub:measure:',
-            //       _x,
-            //       _y,
-            //       _width,
-            //       _height,
-            //       _pageX,
-            //       pageY
-            //     );
-            //     // setPageY(pageY);
-            //   }
-            // );
-            // testRef.current?.measureInWindow(
-            //   (_x: number, _y: number, _width: number, _height: number) => {
-            //     // console.log('Sub:Sub:measureInWindow:', _x, _y, _width, _height);
-            //   }
-            // );
+            borderTopWidth: 0.5,
+            borderTopColor: '#E6E6E6',
           }}
         >
-          <View
+          <IconButton
             style={{
-              flexDirection: 'row',
-              margin: 8,
+              width: 24,
+              height: 24,
+              tintColor: getColor(
+                multiSelectCount !== undefined && multiSelectCount > 0
+                  ? 'enable_trash'
+                  : 'disable'
+              ),
             }}
+            containerStyle={{
+              margin: 12,
+            }}
+            onPress={onClickedMultiSelectDeleteButton}
+            iconName={'trash'}
+          />
+          <View style={{ flexGrow: 1 }} />
+          <IconButton
+            style={{
+              width: 24,
+              height: 24,
+              tintColor: getColor(
+                multiSelectCount !== undefined && multiSelectCount > 0
+                  ? 'enable_share'
+                  : 'disable'
+              ),
+            }}
+            containerStyle={{
+              margin: 12,
+            }}
+            onPress={onClickedMultiSelectShareButton}
+            iconName={'arrowshape_right'}
+          />
+        </View>
+      ) : (
+        <>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={top}
           >
-            <IconButtonMemo
-              style={{
-                width: 30,
-                height: 30,
-                tintColor: getColor('tintColor'),
-              }}
-              containerStyle={{
-                alignSelf: 'flex-end',
-                margin: 6,
-              }}
-              onPress={onClickedVoiceButton}
-              iconName={'wave_in_circle'}
-            />
+            {showQuote === true ? (
+              <MessageInputQuoteView
+                showQuote={showQuote}
+                onDel={onHideQuoteMessage}
+                msg={quoteMsg}
+              />
+            ) : null}
+
             <View
+              ref={testRef}
               style={{
-                flexDirection: 'column',
-                flexGrow: 1,
-                justifyContent: 'center',
-                flexShrink: 1,
-                marginHorizontal: 6,
+                backgroundColor: getColor('bg'),
+                display: 'flex',
+              }}
+              onLayout={() => {
+                // testRef.current?.measure(
+                //   (
+                //     _x: number,
+                //     _y: number,
+                //     _width: number,
+                //     _height: number,
+                //     _pageX: number,
+                //     pageY: number
+                //   ) => {
+                //     console.log(
+                //       'Sub:Sub:measure:',
+                //       _x,
+                //       _y,
+                //       _width,
+                //       _height,
+                //       _pageX,
+                //       pageY
+                //     );
+                //     // setPageY(pageY);
+                //   }
+                // );
+                // testRef.current?.measureInWindow(
+                //   (_x: number, _y: number, _width: number, _height: number) => {
+                //     // console.log('Sub:Sub:measureInWindow:', _x, _y, _width, _height);
+                //   }
+                // );
               }}
             >
               <View
                 style={{
                   flexDirection: 'row',
-                  alignItems: 'center',
+                  margin: 8,
                 }}
               >
-                <TextInput
-                  ref={inputRef}
-                  numberOfLines={numberOfLines}
-                  multiline={true}
-                  unitHeight={Platform.OS === 'ios' ? 24 : 20}
+                <IconButtonMemo
                   style={{
-                    fontSize: 16,
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    // lineHeight: 22,
-                    fontFamily: fontFamily,
-                    flex: Platform.select({ ios: undefined, android: 1 }),
+                    width: 30,
+                    height: 30,
+                    tintColor: getColor('tintColor'),
                   }}
                   containerStyle={{
-                    width: '100%',
-                    minHeight: 36,
-                    paddingHorizontal: 8,
-                    paddingVertical: 7,
-                    maxHeight: Platform.OS === 'ios' ? 96 : 96,
+                    alignSelf: 'flex-end',
+                    margin: 6,
                   }}
-                  onFocus={onFocus}
-                  onBlur={onBlur}
-                  onChangeText={setValue}
-                  value={value}
-                  keyboardAppearance={style === 'light' ? 'light' : 'dark'}
-                  placeholder={'Aa'}
+                  onPress={onClickedVoiceButton}
+                  iconName={'wave_in_circle'}
+                />
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    flexGrow: 1,
+                    justifyContent: 'center',
+                    flexShrink: 1,
+                    marginHorizontal: 6,
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <TextInput
+                      ref={inputRef}
+                      numberOfLines={numberOfLines}
+                      multiline={true}
+                      unitHeight={Platform.OS === 'ios' ? 24 : 20}
+                      style={{
+                        fontSize: 16,
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        // lineHeight: 22,
+                        fontFamily: fontFamily,
+                        flex: Platform.select({ ios: undefined, android: 1 }),
+                      }}
+                      containerStyle={{
+                        width: '100%',
+                        minHeight: 36,
+                        paddingHorizontal: 8,
+                        paddingVertical: 7,
+                        maxHeight: Platform.OS === 'ios' ? 96 : 96,
+                      }}
+                      onFocus={onFocus}
+                      onBlur={onBlur}
+                      onChangeText={setValue}
+                      value={value}
+                      keyboardAppearance={style === 'light' ? 'light' : 'dark'}
+                      placeholder={'Aa'}
+                    />
+                  </View>
+                </View>
+                <IconButtonMemo
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: getColor('icon'),
+                  }}
+                  containerStyle={{
+                    alignSelf: 'flex-end',
+                    margin: 6,
+                  }}
+                  onPress={onClickedEmojiButton}
+                  iconName={emojiIconName}
+                />
+                <IconButtonMemo
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: getColor(
+                      sendIconName === 'plus_in_circle' ? 'icon' : 'text_enable'
+                    ),
+                    backgroundColor: undefined,
+                    borderRadius: 30,
+                  }}
+                  containerStyle={{
+                    alignSelf: 'flex-end',
+                    margin: 6,
+                  }}
+                  onPress={onClickedSend}
+                  iconName={sendIconName}
                 />
               </View>
             </View>
-            <IconButtonMemo
-              style={{
-                width: 30,
-                height: 30,
-                tintColor: getColor('icon'),
-              }}
+          </KeyboardAvoidingView>
+          <View
+            style={{
+              backgroundColor:
+                emojiHeight === 0 ? undefined : getColor('backgroundColor'),
+              height: emojiHeight,
+              overflow: 'hidden',
+            }}
+          >
+            <EmojiListMemo
               containerStyle={{
-                alignSelf: 'flex-end',
-                margin: 6,
+                flex: 1,
               }}
-              onPress={onClickedEmojiButton}
-              iconName={emojiIconName}
-            />
-            <IconButtonMemo
-              style={{
-                width: 30,
-                height: 30,
-                tintColor: getColor(
-                  sendIconName === 'plus_in_circle' ? 'icon' : 'text_enable'
-                ),
-                backgroundColor: undefined,
-                borderRadius: 30,
-              }}
-              containerStyle={{
-                alignSelf: 'flex-end',
-                margin: 6,
-              }}
-              onPress={onClickedSend}
-              iconName={sendIconName}
+              onFace={onClickedFaceListItem}
+              onDel={onClickedDelButton}
+              onSend={onClickedEmojiSend}
+              emojiList={emojiList}
             />
           </View>
-        </View>
-      </KeyboardAvoidingView>
-      <View
-        style={{
-          backgroundColor:
-            emojiHeight === 0 ? undefined : getColor('backgroundColor'),
-          height: emojiHeight,
-          overflow: 'hidden',
-        }}
-      >
-        <EmojiListMemo
-          containerStyle={{
-            flex: 1,
-          }}
-          onFace={onClickedFaceListItem}
-          onDel={onClickedDelButton}
-          onSend={onClickedEmojiSend}
-          emojiList={emojiList}
-        />
-      </View>
+        </>
+      )}
+
       <BottomVoiceBar
         ref={voiceBarRef}
         onRequestModalClose={onCloseVoiceBar}

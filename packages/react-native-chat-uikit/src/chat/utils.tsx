@@ -1,9 +1,12 @@
 import {
+  ChatConversationType,
   ChatCustomMessageBody,
+  ChatFileMessageBody,
   ChatMessage,
   ChatMessageChatType,
   ChatMessageType,
   ChatTextMessageBody,
+  ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 
 import { emoji } from '../utils';
@@ -110,9 +113,39 @@ export function getMessageSnapshot(msg?: ChatMessage): string {
         return '[contact]';
       }
       return '[custom]';
+    case ChatMessageType.COMBINE:
+      return '[combine]';
 
     default:
       return '[unknown]';
+  }
+}
+
+export function getMessageSnapshotParams(msg: ChatMessage) {
+  if (msg === undefined) {
+    return '';
+  }
+  switch (msg.body.type) {
+    case ChatMessageType.VOICE: {
+      const body = msg.body as ChatVoiceMessageBody;
+      return body.duration;
+    }
+
+    case ChatMessageType.FILE: {
+      const body = msg.body as ChatFileMessageBody;
+      return body.displayName;
+    }
+
+    case ChatMessageType.CUSTOM: {
+      const body = msg.body as ChatCustomMessageBody;
+      if (body.event === gCustomMessageCardEventType) {
+        return body.params?.nickname ?? body.params?.userId;
+      }
+      return '';
+    }
+
+    default:
+      return '';
   }
 }
 
@@ -141,4 +174,52 @@ export function getNewRequest(msg?: ChatMessage): NewRequestModel | undefined {
     state: msg.attributes[gNewRequestConversationState],
     msg: msg,
   };
+}
+
+export function createForwardMessage(params: {
+  msgs: ChatMessage[];
+  targetId: string;
+  targetType: ChatConversationType;
+  getSummary: (msgs: ChatMessage[]) => string;
+}): ChatMessage | undefined {
+  const { msgs, targetId, targetType, getSummary } = params;
+  if (msgs.length === 1) {
+    const msg = msgs[0]!;
+    const newMsg = ChatMessage.createSendMessage({
+      body: msg.body,
+      targetId: targetId,
+      chatType: targetType as number,
+      isChatThread: msg.isChatThread,
+      isOnline: msg.isOnline,
+      deliverOnlineOnly: msg.deliverOnlineOnly,
+      receiverList: msg.receiverList,
+    });
+    if (msg.body.type === ChatMessageType.TXT) {
+    } else if (msg.body.type === ChatMessageType.IMAGE) {
+    } else if (msg.body.type === ChatMessageType.VOICE) {
+    } else if (msg.body.type === ChatMessageType.VIDEO) {
+    } else if (msg.body.type === ChatMessageType.FILE) {
+    } else if (msg.body.type === ChatMessageType.LOCATION) {
+    } else if (msg.body.type === ChatMessageType.COMBINE) {
+    } else if (msg.body.type === ChatMessageType.CUSTOM) {
+    }
+    return newMsg;
+  } else if (msgs.length > 1) {
+    const msg = msgs[0]!;
+    const msgIds = msgs.map((msg) => msg.msgId);
+    const newMsg = ChatMessage.createCombineMessage(
+      targetId,
+      msgIds,
+      targetType as number,
+      {
+        summary: getSummary(msgs),
+        isChatThread: msg.isChatThread,
+        isOnline: msg.isOnline,
+        deliverOnlineOnly: msg.deliverOnlineOnly,
+        receiverList: msg.receiverList,
+      }
+    );
+    return newMsg;
+  }
+  return undefined;
 }

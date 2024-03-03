@@ -27,8 +27,6 @@ export function isSupportMessage(msg: ChatMessage) {
     return false;
   } else if (msg.body.type === ChatMessageType.LOCATION) {
     return false;
-  } else if (msg.body.type === ChatMessageType.COMBINE) {
-    return false;
   } else if (msg.body.type === ChatMessageType.CUSTOM) {
     const body = msg.body as ChatCustomMessageBody;
     if (body.event === gCustomMessageCardEventType) {

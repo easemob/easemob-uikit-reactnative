@@ -66,6 +66,7 @@ export function useContactList(props: ContactListProps) {
     onInitListItemActions: propsOnInitListItemActions,
     onClickedNewRequest,
     onClickedGroupList,
+    onForwardMessage,
   } = props;
   const sectionListProps = useSectionList<
     ContactListItemProps,
@@ -330,6 +331,15 @@ export function useContactList(props: ContactListProps) {
             }
           }
         }
+        if (data.forwarded !== undefined) {
+          if (contactType === 'forward-message') {
+            im.setModelState({
+              tag: contactType,
+              id: data.userId,
+              state: { forwarded: data.forwarded },
+            });
+          }
+        }
 
         refreshToUI(list);
       }
@@ -354,6 +364,19 @@ export function useContactList(props: ContactListProps) {
       }
     },
     [choiceType, contactType, updateContactToUI]
+  );
+
+  const onClickedForward = React.useCallback(
+    (data?: ContactModel) => {
+      if (contactType === 'forward-message' && data) {
+        if (data.forwarded !== true) {
+          const tmp = { ...data, forwarded: !data.forwarded };
+          updateContactToUI(tmp);
+          onForwardMessage?.(data);
+        }
+      }
+    },
+    [contactType, onForwardMessage, updateContactToUI]
   );
 
   const onIndexSelected = React.useCallback(
@@ -428,6 +451,8 @@ export function useContactList(props: ContactListProps) {
             if (groupId) {
               im.clearModelState({ tag: groupId });
             }
+          } else if (contactType === 'forward-message') {
+            im.clearModelState({ tag: contactType });
           }
         }
 
@@ -503,6 +528,15 @@ export function useContactList(props: ContactListProps) {
                                     tag: contactType,
                                     id: item.userId,
                                   })?.checked ?? false,
+                              }
+                            : contactType === 'forward-message'
+                            ? {
+                                ...item,
+                                forwarded:
+                                  im.getModelState({
+                                    tag: contactType,
+                                    id: item.userId,
+                                  })?.forwarded ?? false,
                               }
                             : item,
                         contactType: contactType,
@@ -848,6 +882,7 @@ export function useContactList(props: ContactListProps) {
     ListItemHeaderRender: ListItemHeaderRenderRef.current,
     contactItems,
     ListHeaderComponent,
+    onClickedForward,
   };
 }
 

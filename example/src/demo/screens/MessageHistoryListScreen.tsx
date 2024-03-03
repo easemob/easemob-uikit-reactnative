@@ -1,7 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
-  SearchConversation,
+  MessageHistoryList,
   useColors,
   usePaletteContext,
 } from 'react-native-chat-uikit';
@@ -10,8 +10,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function SearchConversationScreen(props: Props) {
-  const { navigation } = props;
+export function MessageHistoryListScreen(props: Props) {
+  const { route, navigation } = props;
+  const message = ((route.params as any)?.params as any)?.message;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -19,6 +20,7 @@ export function SearchConversationScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
+
   return (
     <SafeAreaView
       style={{
@@ -26,28 +28,10 @@ export function SearchConversationScreen(props: Props) {
         flex: 1,
       }}
     >
-      <SearchConversation
-        containerStyle={{
-          flexGrow: 1,
-          // backgroundColor: 'red',
-        }}
-        onCancel={() => {
+      <MessageHistoryList
+        message={message}
+        onBack={() => {
           navigation.goBack();
-        }}
-        onClicked={(data) => {
-          if (data) {
-            navigation.pop();
-            navigation.navigate('ConversationDetail', {
-              params: {
-                convId: data?.convId,
-                convType: data?.convType,
-                convName: data?.convName,
-                convAvatar: data?.convAvatar,
-                from: 'SearchConversation',
-                hash: Date.now(),
-              },
-            });
-          }
         }}
       />
     </SafeAreaView>

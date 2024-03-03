@@ -113,6 +113,10 @@ export type PropsWithMenu = {
   onInitMenu?: (initItems: InitMenuItemsType[]) => InitMenuItemsType[];
 };
 
+export type PropsWithRef<Ref> = {
+  propsRef?: React.RefObject<Ref>;
+};
+
 /**
  * The type of contact component. Contact components can be used in multiple scenarios. For example: contact list, create new conversation, create group, add group members, share contact card, etc.
  */
@@ -121,7 +125,8 @@ export type ContactType =
   | 'new-conversation'
   | 'create-group'
   | 'add-group-member'
-  | 'share-contact';
+  | 'share-contact'
+  | 'forward-message';
 
 /**
  * Group member list component. This component can be used in multiple scenarios. For example: group member list, deleting group members, changing group owner, etc.
@@ -144,7 +149,8 @@ export type SearchType =
   | 'share-contact'
   | 'group-list'
   | 'group-member-list'
-  | 'request-list';
+  | 'request-list'
+  | 'forward-message';
 
 /**
  * List item type. Mainly include: conversation list, contact list, group list, group member list.

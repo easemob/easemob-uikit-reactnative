@@ -54,6 +54,8 @@ export function createStringSetEn(): StringSet {
     '_uikit_chat_list_long_press_menu_translate': 'translate',
     '_uikit_chat_list_long_press_menu_thread': 'thread',
     '_uikit_chat_list_long_press_menu_edit': 'Edit',
+    '_uikit_chat_list_long_press_menu_multi_select': 'multiSelect',
+    '_uikit_chat_list_long_press_menu_forward_message': 'forward',
     '_uikit_chat_list_long_press_menu_report': 'Report',
     '_uikit_chat_list_long_press_menu_delete': 'Delete',
     '_uikit_chat_list_long_press_menu_recall': 'Recall',
@@ -64,6 +66,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_msg_tip_msg_not_exist': 'Original message does not exist',
     '_uikit_msg_edit': 'Edited',
     '_uikit_msg_translate': 'Translated',
+    '_uikit_msg_record': 'Chat Record',
     '_uikit_msg_tip_create_group_success': 'Create group success.',
     '_uikit_msg_tip_create_group_success_with_params': 'Create group success.',
 
@@ -112,6 +115,12 @@ export function createStringSetEn(): StringSet {
     '_uikit_thread_leave_confirm': (isOwner) =>
       isOwner === true ? 'Confirm destroy thread?' : 'Confirm leave thread?',
 
+    '_uikit_tab_contact_list': 'Contacts',
+    '_uikit_tab_group_list': 'Group Chat',
+    '_uikit_forward_to': 'Forward to',
+    '_uikit_alert_remove_message': 'Confirm deletion of selected messages?',
+    '_uikit_history_record': 'Chat Record',
+
     '_uikit_report_title': 'Report Message',
     'Unwelcome commercial content': 'Unwelcome Commercial Content',
     'Pornographic or explicit content': 'Pornographic or Explicit Content',
@@ -139,6 +148,8 @@ export function createStringSetEn(): StringSet {
     'login': 'Login',
     'logout': 'Logout',
     'report': 'Report',
+    'forward': 'forward',
+    'forwarded': 'forwarded',
 
     'picture': 'Picture',
     'video': 'Video',
@@ -169,6 +180,7 @@ export function createStringSetEn(): StringSet {
     '[voice]': '[voice]',
     '[contact]': '[contact]',
     '[custom]': '[custom]',
+    '[combine]': '[combine]',
     '[unknown]': '[unknown]',
   };
 }

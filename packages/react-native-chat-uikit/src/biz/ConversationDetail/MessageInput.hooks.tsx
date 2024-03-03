@@ -52,6 +52,10 @@ export function useMessageInput(
     onClickedCardMenu: propsOnClickedCardMenu,
     onInitMenu,
     emojiList,
+    selectType = 'common',
+    onClickedMultiSelectDeleteButton,
+    onClickedMultiSelectShareButton,
+    multiSelectCount,
   } = props;
   const { keyboardHeight, keyboardCurrentHeight } = useKeyboardHeight();
   const inputRef = React.useRef<RNTextInput>({} as any);
@@ -85,6 +89,7 @@ export function useMessageInput(
       return { name: v, state: 'common' } as EmojiIconItem;
     })
   );
+  const [multiSelectVisible, setMultiSelectVisible] = React.useState(false);
 
   const onSetInputBarState = (state: MessageInputState) => {
     inputBarStateRef.current = state;
@@ -114,6 +119,7 @@ export function useMessageInput(
       closeEmojiList();
       closeVoiceBar();
       closeKeyboard();
+      hideMultiSelectBar();
     } else if (nextState === 'emoji') {
       isClosedEmoji.current = false;
       isClosedKeyboard.current = true;
@@ -123,6 +129,7 @@ export function useMessageInput(
       closeKeyboard();
       closeVoiceBar();
       showEmojiList();
+      hideMultiSelectBar();
     } else if (nextState === 'voice') {
       isClosedEmoji.current = true;
       isClosedKeyboard.current = true;
@@ -132,6 +139,17 @@ export function useMessageInput(
       closeKeyboard();
       closeEmojiList();
       showVoiceBar();
+      hideMultiSelectBar();
+    } else if (nextState === 'multi-select') {
+      isClosedEmoji.current = true;
+      isClosedKeyboard.current = true;
+      isClosedVoiceBar.current = true;
+      onSetInputBarState('multi-select');
+      setEmojiIconName('face');
+      closeKeyboard();
+      closeEmojiList();
+      onCloseVoiceBar();
+      showMultiSelectBar();
     } else if (nextState === 'keyboard') {
       isClosedKeyboard.current = false;
       onSetInputBarState('keyboard');
@@ -141,6 +159,7 @@ export function useMessageInput(
         isClosedVoiceBar.current = true;
         closeEmojiList();
         closeVoiceBar();
+        hideMultiSelectBar();
       }
     }
   };
@@ -321,6 +340,14 @@ export function useMessageInput(
     voiceBarRef.current?.startShow?.();
   }, []);
 
+  const showMultiSelectBar = React.useCallback(() => {
+    setMultiSelectVisible(true);
+  }, []);
+
+  const hideMultiSelectBar = React.useCallback(() => {
+    setMultiSelectVisible(false);
+  }, []);
+
   const onCloseVoiceBar = () => {
     if (voiceBarStateRef.current === 'recording') {
       return;
@@ -467,7 +494,9 @@ export function useMessageInput(
   React.useImperativeHandle(ref, () => {
     return {
       close: () => {
-        changeInputBarState('normal');
+        if (selectType === 'common') {
+          changeInputBarState('normal');
+        }
       },
       quoteMessage: (model) => {
         onShowQuoteMessage(model);
@@ -489,6 +518,12 @@ export function useMessageInput(
       //     setInputValue(newText);
       //   }
       // },
+      showMultiSelect: () => {
+        changeInputBarState('multi-select');
+      },
+      hideMultiSelect: () => {
+        changeInputBarState('normal');
+      },
     };
   });
 
@@ -530,6 +565,17 @@ export function useMessageInput(
     }
   }, []);
 
+  const _onClickedMultiSelectDeleteButton = React.useCallback(() => {
+    if (multiSelectCount !== undefined && multiSelectCount > 0) {
+      onClickedMultiSelectDeleteButton?.();
+    }
+  }, [multiSelectCount, onClickedMultiSelectDeleteButton]);
+  const _onClickedMultiSelectShareButton = React.useCallback(() => {
+    if (multiSelectCount !== undefined && multiSelectCount > 0) {
+      onClickedMultiSelectShareButton?.();
+    }
+  }, [multiSelectCount, onClickedMultiSelectShareButton]);
+
   return {
     value: _value,
     setValue: setInputValue,
@@ -562,5 +608,8 @@ export function useMessageInput(
     quoteMsg: quoteMessageRef.current?.msg,
     onClickedEmojiSend,
     emojiList: emojiListRef.current,
+    multiSelectVisible,
+    onClickedMultiSelectDeleteButton: _onClickedMultiSelectDeleteButton,
+    onClickedMultiSelectShareButton: _onClickedMultiSelectShareButton,
   };
 }

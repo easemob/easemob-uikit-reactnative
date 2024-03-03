@@ -102,6 +102,15 @@ export type MessageCustomCardProps = MessageBasicProps & {};
 export type MessageCustomCardRender = React.FC<MessageCustomCardProps>;
 
 /**
+ * Message Combine Component properties.
+ */
+export type MessageCombineProps = MessageBasicProps & {};
+/**
+ * Message Combine component render type.
+ */
+export type MessageCombineRender = React.FC<MessageCombineProps>;
+
+/**
  * Message Location Component properties.
  */
 export type MessageContentProps = {
@@ -195,6 +204,16 @@ export type StateViewRender = React.FC<StateViewProps>;
 export type CheckViewProps = {
   isVisible?: boolean;
   layoutType: MessageLayoutType;
+  children?: React.ReactNode;
+  /**
+   * The item check state.
+   *
+   * true is checked.
+   * false is uncheck.
+   * undefined is hide.
+   */
+  checked: boolean;
+  onClicked?: () => void;
 };
 /**
  * Message Check component render type.

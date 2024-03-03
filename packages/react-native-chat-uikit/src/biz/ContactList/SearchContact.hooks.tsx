@@ -51,8 +51,38 @@ export function useSearchContact(props: SearchContactProps) {
     [dataRef, groupId, im, searchType, setData]
   );
 
+  const onClickedForwardCallback = React.useCallback(
+    (data?: ContactSearchModel) => {
+      if (data?.forwarded !== undefined) {
+        for (let i = 0; i < dataRef.current.length; i++) {
+          const item = dataRef.current[i];
+          if (item) {
+            if (item.userId === data.userId) {
+              dataRef.current[i] = { ...item, forwarded: !data.forwarded };
+              setData([...dataRef.current]);
+              if (searchType === 'forward-message') {
+                im.setModelState({
+                  tag: searchType,
+                  id: data.userId,
+                  state: { forwarded: !data.forwarded },
+                });
+                onClicked?.(dataRef.current[i]);
+              }
+              break;
+            }
+          }
+        }
+      }
+    },
+    [dataRef, im, onClicked, searchType, setData]
+  );
+
   const onCancelCallback = React.useCallback(() => {
-    if (searchType === 'create-group' || searchType === 'add-group-member') {
+    if (
+      searchType === 'create-group' ||
+      searchType === 'add-group-member' ||
+      searchType === 'forward-message'
+    ) {
       if (onCancel) {
         onCancel([...dataRef.current]);
       }
@@ -98,6 +128,17 @@ export function useSearchContact(props: SearchContactProps) {
                   }
                   return undefined;
                 };
+                const getForward = () => {
+                  if (searchType === 'forward-message') {
+                    return (
+                      im.getModelState({
+                        tag: searchType,
+                        id: item.userId,
+                      })?.forwarded ?? false
+                    );
+                  }
+                  return false;
+                };
                 const getState = () => {
                   if (groupId && item.userId) {
                     return (
@@ -115,9 +156,16 @@ export function useSearchContact(props: SearchContactProps) {
                   name: item.userName,
                   checked: getChecked(),
                   disable: getState(),
-                  onCheckClicked: 'create-group'
-                    ? onCheckClickedCallback
-                    : undefined,
+                  forwarded: getForward(),
+                  onCheckClicked:
+                    searchType === 'create-group' ||
+                    searchType === 'add-group-member'
+                      ? onCheckClickedCallback
+                      : undefined,
+                  onClickedForward:
+                    searchType === 'forward-message'
+                      ? onClickedForwardCallback
+                      : undefined,
                 } as ContactSearchModel;
               });
               setData([...dataRef.current]);

@@ -18,6 +18,7 @@ import {
   ChatVideoMessageBody,
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
+import type { ChatCombineMessageBody } from 'react-native-chat-sdk/lib/typescript/common/ChatMessage';
 import emoji from 'twemoji';
 
 import { ICON_ASSETS, IconNameType } from '../../assets';
@@ -60,6 +61,7 @@ import type {
   AvatarViewProps,
   CheckViewProps,
   MessageBubbleProps,
+  MessageCombineProps,
   MessageContentProps,
   MessageCustomCardProps,
   MessageDefaultImageProps,
@@ -244,6 +246,85 @@ export function MessageText(props: MessageTextProps) {
           </SingleLineText>
         </View>
       ) : null}
+    </View>
+  );
+}
+
+export function MessageCombine(props: MessageCombineProps) {
+  const { layoutType, msg } = props;
+  const { tr } = useI18nContext();
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    left_text: {
+      light: colors.neutral[1],
+      dark: colors.neutral[1],
+    },
+    right_text: {
+      light: colors.neutral[98],
+      dark: colors.neutral[98],
+    },
+    left_text_flag: {
+      light: colors.neutralSpecial[5],
+      dark: colors.neutralSpecial[7],
+    },
+    right_text_flag: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    left_divider: {
+      light: colors.neutralSpecial[8],
+      dark: colors.primary[6],
+    },
+    right_divider: {
+      light: colors.primary[8],
+      dark: colors.primary[6],
+    },
+  });
+  const body = msg.body as ChatCombineMessageBody;
+  // const content = emoji.toCodePointText(body.content);
+  let content = body.summary;
+
+  return (
+    <View>
+      <Text
+        textType={'large'}
+        paletteType={'body'}
+        style={{
+          color: getColor(layoutType === 'left' ? 'left_text' : 'right_text'),
+        }}
+        numberOfLines={4}
+      >
+        {content}
+      </Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+        }}
+      >
+        <Icon
+          name={'3pm'}
+          style={{
+            height: 16,
+            width: 16,
+            tintColor: getColor(
+              layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
+            ),
+          }}
+        />
+        <SingleLineText
+          textType={'extraSmall'}
+          paletteType={'body'}
+          style={{
+            color: getColor(
+              layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
+            ),
+          }}
+        >
+          {tr('_uikit_msg_record')}
+        </SingleLineText>
+      </View>
     </View>
   );
 }
@@ -765,6 +846,15 @@ export function MessageContent(props: MessageContentProps) {
           />
         );
       }
+      case ChatMessageType.COMBINE: {
+        return (
+          <MessageCombine
+            msg={msg}
+            layoutType={layoutType}
+            maxWidth={contentMaxWidth}
+          />
+        );
+      }
       case ChatMessageType.CUSTOM: {
         const body = msg.body as ChatCustomMessageBody;
         if (body.event === gCustomMessageCardEventType) {
@@ -1091,18 +1181,45 @@ export function StateView(props: StateViewProps) {
 }
 
 export function CheckView(props: CheckViewProps) {
-  const { isVisible = false, layoutType } = props;
+  const { isVisible = false, layoutType, children, checked, onClicked } = props;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    uncheck: {
+      light: colors.neutral[7],
+      dark: colors.neutral[6],
+    },
+    checked: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+  });
   return (
-    <View
+    <Pressable
       style={{
-        display: isVisible === true ? 'flex' : 'none',
-        justifyContent: 'center',
-        paddingLeft: layoutType === 'left' ? 12 : undefined,
-        paddingRight: layoutType === 'left' ? undefined : 12,
+        display: isVisible === false ? 'flex' : 'none',
+        paddingLeft: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: Dimensions.get('window').width,
       }}
+      onPress={onClicked}
     >
-      <Icon name={'checked_ellipse'} style={{ width: 20, height: 20 }} />
-    </View>
+      <Icon
+        name={checked === true ? 'checked_rectangle' : 'unchecked_rectangle'}
+        style={{
+          width: 20,
+          height: 20,
+          tintColor: getColor(checked === true ? 'checked' : 'uncheck'),
+        }}
+      />
+      <View
+        style={{
+          flexGrow: layoutType === 'left' ? undefined : 1,
+          height: 10,
+        }}
+      />
+      {children}
+    </Pressable>
   );
 }
 
@@ -1699,6 +1816,48 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
           </View>
         );
       }
+      case ChatMessageType.COMBINE: {
+        return (
+          <View>
+            <SingleLineText
+              textType={'small'}
+              paletteType={'label'}
+              style={{
+                color: getColor(
+                  layoutType === 'left' ? 'left_name' : 'right_name'
+                ),
+              }}
+            >
+              {user?.userName ?? user?.userId ?? quoteMsg.from}
+            </SingleLineText>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon
+                name={'3pm'}
+                style={{
+                  width: 18,
+                  height: 18,
+                  tintColor: getColor(
+                    layoutType === 'left' ? 'left_text' : 'left_text'
+                  ),
+                }}
+              />
+              <SingleLineText
+                textType={'medium'}
+                paletteType={'label'}
+                numberOfLines={2}
+                style={{
+                  width: '90%',
+                  color: getColor(
+                    layoutType === 'left' ? 'left_text' : 'right_text'
+                  ),
+                }}
+              >
+                {tr('_uikit_msg_record')}
+              </SingleLineText>
+            </View>
+          </View>
+        );
+      }
       case ChatMessageType.CUSTOM: {
         const body = quoteMsg?.body as ChatCustomMessageBody;
         if (body.event === gCustomMessageCardEventType) {
@@ -1918,7 +2077,6 @@ export function MessageView(props: MessageViewProps) {
         display: isVisible === true ? 'flex' : 'none',
       }}
     >
-      <CheckView layoutType={layoutType} />
       <View
         style={{
           flexDirection: 'column',
@@ -2075,16 +2233,26 @@ export function TimeTipView(props: TimeTipViewProps) {
 
 export function MessageListItem(props: MessageListItemProps) {
   const {
+    id,
     model,
     MessageView: propsMessageView,
     SystemTipView: propsSystemTipView,
     TimeTipView: propsTimeTipView,
+    onChecked: propsOnChecked,
     ...others
   } = props;
   const { modelType } = model;
   const _MessageView = propsMessageView ?? MessageView;
   const _SystemTipView = propsSystemTipView ?? SystemTipView;
   const _TimeTipView = propsTimeTipView ?? TimeTipView;
+  const checked = (model as MessageModel)?.checked;
+
+  const _onChecked = React.useCallback(() => {
+    if (propsOnChecked) {
+      propsOnChecked(id, model);
+    }
+  }, [id, model, propsOnChecked]);
+
   return (
     <View
       style={{
@@ -2098,11 +2266,25 @@ export function MessageListItem(props: MessageListItemProps) {
       }}
     >
       {modelType === 'message' ? (
-        <_MessageView
-          isVisible={modelType === 'message' ? true : false}
-          model={model as MessageModel}
-          {...others}
-        />
+        checked !== undefined ? (
+          <CheckView
+            layoutType={(model as MessageModel).layoutType}
+            checked={checked}
+            onClicked={_onChecked}
+          >
+            <_MessageView
+              isVisible={modelType === 'message' ? true : false}
+              model={model as MessageModel}
+              {...others}
+            />
+          </CheckView>
+        ) : (
+          <_MessageView
+            isVisible={modelType === 'message' ? true : false}
+            model={model as MessageModel}
+            {...others}
+          />
+        )
       ) : null}
       {modelType === 'system' ? (
         <_SystemTipView
