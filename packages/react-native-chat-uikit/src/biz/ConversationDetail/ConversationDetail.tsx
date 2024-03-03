@@ -49,6 +49,9 @@ export function ConversationDetail(props: ConversationDetailProps) {
     multiSelectCount,
     onChangeMultiItems,
     onClickedSingleSelect,
+    onChangeUnreadCount,
+    unreadCount,
+    onClickedUnreadCount,
   } = useConversationDetail(props);
 
   const getContent = () => (
@@ -82,6 +85,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
         onChangeMultiItems={onChangeMultiItems}
         onClickedSingleSelect={onClickedSingleSelect}
         selectType={selectMode}
+        onChangeUnreadCount={onChangeUnreadCount}
         ref={_messageListRef}
         {...messageListProps}
       />
@@ -93,9 +97,11 @@ export function ConversationDetail(props: ConversationDetailProps) {
         multiSelectCount={multiSelectCount}
         onClickedMultiSelectDeleteButton={onClickedMultiSelectDeleteButton}
         onClickedMultiSelectShareButton={onClickedMultiSelectShareButton}
+        onClickedUnreadCount={onClickedUnreadCount}
         onHeightChange={(height) => {
           _messageListRef?.current?.onInputHeightChange?.(height);
         }}
+        unreadCount={unreadCount}
         {...messageInputProps}
       />
     </View>

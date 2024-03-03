@@ -151,6 +151,16 @@ export type MessageInputProps = PropsWithError &
      * Callback notification when click multi select share message button.
      */
     onClickedMultiSelectShareButton?: () => void;
+
+    /**
+     * The message unread count.
+     */
+    unreadCount?: number;
+
+    /**
+     * Callback notification when click unread count button for clear unread message.
+     */
+    onClickedUnreadCount?: () => void;
   };
 
 /**
@@ -981,6 +991,11 @@ export type MessageListProps = PropsWithError &
      * Callback notification when click history message.
      */
     onClickedHistoryDetail?: (item: MessageModel) => void;
+
+    /**
+     * Callback notification when change unread count.
+     */
+    onChangeUnreadCount?: (count: number) => void;
   };
 
 export type MessageThreadListRef = {};

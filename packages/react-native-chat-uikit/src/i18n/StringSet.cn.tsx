@@ -119,6 +119,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_forward_to': '转发给',
     '_uikit_alert_remove_message': '移除消息？',
     '_uikit_history_record': '聊天记录',
+    '_uikit_unread_count': (count) => `${count}条未读数`,
 
     '_uikit_report_title': '消息举报',
     'Unwelcome commercial content': '不受欢迎的商业内容',

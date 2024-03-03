@@ -120,6 +120,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_forward_to': 'Forward to',
     '_uikit_alert_remove_message': 'Confirm deletion of selected messages?',
     '_uikit_history_record': 'Chat Record',
+    '_uikit_unread_count': (count) => `${count} unread count`,
 
     '_uikit_report_title': 'Report Message',
     'Unwelcome commercial content': 'Unwelcome Commercial Content',

@@ -121,6 +121,7 @@ export function useMessageList(
     onChangeMultiItems,
     onClickedSingleSelect,
     onClickedHistoryDetail,
+    onChangeUnreadCount,
   } = props;
   const inverted = React.useRef(comType === 'chat' ? true : false).current;
 
@@ -190,6 +191,7 @@ export function useMessageList(
   const { recallTimeout, languageCode } = useConfigContext();
 
   const setNeedScroll = React.useCallback((needScroll: boolean) => {
+    console.log('test:zuoyu:needScroll:', needScroll);
     needScrollRef.current = needScroll;
   }, []);
   const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
@@ -334,6 +336,7 @@ export function useMessageList(
           }
         }
         _refreshToUI(dataRef.current);
+        onChangeUnreadCount?.(0);
       } else {
         const index = dataRef.current.findIndex((d) => {
           if (d.id === preBottomDataRef.current?.id) {
@@ -346,16 +349,26 @@ export function useMessageList(
           if (inverted === true) {
             const tmp = dataRef.current.slice(index);
             _refreshToUI(tmp);
+            onChangeUnreadCount?.(dataRef.current.length - tmp.length);
           } else {
             const tmp = dataRef.current.slice(0, index + 1);
             _refreshToUI(tmp);
+            onChangeUnreadCount?.(dataRef.current.length - tmp.length);
           }
         } else {
           _refreshToUI(dataRef.current);
+          onChangeUnreadCount?.(0);
         }
       }
     },
-    [dataRef, removeDuplicateData, needScrollToBottom, _refreshToUI, inverted]
+    [
+      dataRef,
+      removeDuplicateData,
+      needScrollToBottom,
+      _refreshToUI,
+      onChangeUnreadCount,
+      inverted,
+    ]
   );
 
   // !!! Both gestures and scrolling methods are triggered on the ios platform. However, the android platform only has gesture triggering.
@@ -367,6 +380,7 @@ export function useMessageList(
       (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const y = event.nativeEvent.contentOffset.y;
         if (inverted === true) {
+          console.log('test:zuoyu:delayExecTask:', y);
           if (y < 10) {
             setNeedScroll(true);
             const preId = preBottomDataRef.current?.id;
@@ -2003,6 +2017,8 @@ export function useMessageList(
           editMessage(model.msg);
         },
         scrollToBottom: () => {
+          setNeedScroll(true);
+          refreshToUI(dataRef.current);
           scrollToBottom();
         },
         startShowThreadMoreMenu: () => {
@@ -2046,6 +2062,7 @@ export function useMessageList(
       cancelMultiSelected,
       comType,
       createThread,
+      dataRef,
       deleteMessage,
       deleteMessages,
       editMessage,
@@ -2055,6 +2072,7 @@ export function useMessageList(
       onShowMessageThreadListMoreActions,
       onUpdateMessageToUI,
       recallMessage,
+      refreshToUI,
       scrollToBottom,
       sendMessageToServer,
       sendRecvMessageReadAck,

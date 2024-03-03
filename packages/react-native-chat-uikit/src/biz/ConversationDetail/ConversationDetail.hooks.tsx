@@ -93,6 +93,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const [doNotDisturb, setDoNotDisturb] = React.useState<boolean | undefined>(
     false
   );
+  const [unreadCount, setUnreadCount] = React.useState<number>(0);
 
   const { getPermission } = usePermissions();
   const { createDirectoryIfNotExisted } = useCreateConversationDirectory();
@@ -252,6 +253,15 @@ export function useConversationDetail(props: ConversationDetailProps) {
     [onForwardMessage]
   );
 
+  const onChangeUnreadCount = React.useCallback((unreadCount: number) => {
+    setUnreadCount(unreadCount);
+  }, []);
+
+  const onClickedUnreadCount = React.useCallback(() => {
+    im.setConversationRead({ convId, convType });
+    _messageListRef.current?.scrollToBottom?.();
+  }, [_messageListRef, convId, convType, im]);
+
   React.useEffect(() => {
     getPermission({
       onResult: (isSuccess: boolean) => {
@@ -389,5 +399,8 @@ export function useConversationDetail(props: ConversationDetailProps) {
     multiSelectCount,
     onChangeMultiItems,
     onClickedSingleSelect,
+    onChangeUnreadCount,
+    unreadCount,
+    onClickedUnreadCount,
   };
 }

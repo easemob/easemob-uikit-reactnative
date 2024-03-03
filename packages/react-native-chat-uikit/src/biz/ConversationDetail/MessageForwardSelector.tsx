@@ -34,7 +34,13 @@ export type SelectContactListProps = Pick<
   selectedMsgs?: ChatMessage[];
 };
 export function SelectContactList(props: SelectContactListProps) {
-  return <ContactList contactType={'forward-message'} {...props} />;
+  return (
+    <ContactList
+      contactType={'forward-message'}
+      navigationBarVisible={false}
+      {...props}
+    />
+  );
 }
 
 export type SelectGroupListProps = Pick<GroupListProps, 'containerStyle'> & {

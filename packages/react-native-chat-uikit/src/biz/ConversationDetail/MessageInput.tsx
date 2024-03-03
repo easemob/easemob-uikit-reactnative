@@ -5,7 +5,7 @@ import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext, useThemeContext } from '../../theme';
-import { IconButton, IconButtonMemo } from '../../ui/Button';
+import { CmnButton, IconButton, IconButtonMemo } from '../../ui/Button';
 import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
@@ -28,11 +28,17 @@ export const MessageInput = React.forwardRef<
   props: React.PropsWithChildren<MessageInputProps>,
   ref?: React.ForwardedRef<MessageInputRef>
 ) {
-  const { top, numberOfLines = 4, multiSelectCount } = props;
+  const {
+    top,
+    numberOfLines = 4,
+    multiSelectCount,
+    unreadCount,
+    onClickedUnreadCount,
+  } = props;
 
   const testRef = React.useRef<View>(null);
   const { fontFamily } = useConfigContext();
-  const {} = useI18nContext();
+  const { tr } = useI18nContext();
   const { style } = useThemeContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -153,6 +159,32 @@ export const MessageInput = React.forwardRef<
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             keyboardVerticalOffset={top}
           >
+            {unreadCount && unreadCount > 0 ? (
+              <View
+                style={{
+                  flex: 1,
+                  position: 'absolute',
+                  top: -40,
+                  alignItems: 'center',
+                  left: 0,
+                  right: 0,
+                }}
+              >
+                <CmnButton
+                  sizesType={'middle'}
+                  radiusType={'extraSmall'}
+                  contentType={'icon-text'}
+                  icon={'arrow_down_thick'}
+                  text={tr(
+                    '_uikit_unread_count',
+                    unreadCount > 99 ? '99+' : unreadCount
+                  )}
+                  style={{ backgroundColor: getColor('bg') }}
+                  textStyle={{ color: getColor('enable_share') }}
+                  onPress={onClickedUnreadCount}
+                />
+              </View>
+            ) : null}
             {showQuote === true ? (
               <MessageInputQuoteView
                 showQuote={showQuote}
