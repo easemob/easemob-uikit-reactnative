@@ -160,6 +160,7 @@ export function useMessageList(
   const startMsgIdRef = React.useRef('');
   const [maxListHeight, setMaxListHeight] = React.useState<number>(0);
   const tmpMessageListRef = React.useRef<MessageModel[]>([]);
+  const unreadCountRef = React.useRef(0);
   // !!! https://github.com/facebook/react-native/issues/36529
   // !!! https://github.com/facebook/react-native/issues/14312
   // !!! only android, FlatList onEndReached no work android
@@ -336,7 +337,8 @@ export function useMessageList(
           }
         }
         _refreshToUI(dataRef.current);
-        onChangeUnreadCount?.(0);
+        unreadCountRef.current = 0;
+        onChangeUnreadCount?.(unreadCountRef.current);
       } else {
         const index = dataRef.current.findIndex((d) => {
           if (d.id === preBottomDataRef.current?.id) {
@@ -349,15 +351,18 @@ export function useMessageList(
           if (inverted === true) {
             const tmp = dataRef.current.slice(index);
             _refreshToUI(tmp);
-            onChangeUnreadCount?.(dataRef.current.length - tmp.length);
+            unreadCountRef.current = dataRef.current.length - tmp.length;
+            onChangeUnreadCount?.(unreadCountRef.current);
           } else {
             const tmp = dataRef.current.slice(0, index + 1);
             _refreshToUI(tmp);
-            onChangeUnreadCount?.(dataRef.current.length - tmp.length);
+            unreadCountRef.current = dataRef.current.length - tmp.length;
+            onChangeUnreadCount?.(unreadCountRef.current);
           }
         } else {
           _refreshToUI(dataRef.current);
-          onChangeUnreadCount?.(0);
+          unreadCountRef.current = 0;
+          onChangeUnreadCount?.(unreadCountRef.current);
         }
       }
     },
@@ -787,29 +792,6 @@ export function useMessageList(
       }
     },
     [dataRef, refreshToUI]
-  );
-
-  const onUpdateMessageThreadToUI = React.useCallback(
-    (msgId: string, thread: ChatMessageThread) => {
-      if (comType !== 'chat') {
-        return;
-      }
-      const isExisted = dataRef.current.find((d) => {
-        if (d.model.modelType === 'message') {
-          const msgModel = d.model as MessageModel;
-          if (msgModel.msg.msgId === msgId) {
-            msgModel.thread = thread;
-            d.model = { ...msgModel };
-            return true;
-          }
-        }
-        return false;
-      });
-      if (isExisted) {
-        refreshToUI(dataRef.current);
-      }
-    },
-    [comType, dataRef, refreshToUI]
   );
 
   const onremoveMessageThreadToUI = React.useCallback(
@@ -1389,7 +1371,7 @@ export function useMessageList(
             },
             containerStyle: getStyle(),
           },
-          inverted === true ? 'bottom' : 'top'
+          inverted === true ? 'bottom' : 'bottom'
         );
       } else {
         onAddDataToUI(
@@ -1406,12 +1388,40 @@ export function useMessageList(
             },
             containerStyle: getStyle(),
           },
-          inverted === true ? 'bottom' : 'top'
+          inverted === true ? 'bottom' : 'bottom'
         );
       }
       scrollToBottom(true);
     },
     [comType, scrollToBottom, im, onAddDataToUI, selectType, getStyle, inverted]
+  );
+
+  const onUpdateMessageThreadToUI = React.useCallback(
+    (msgId: string, thread: ChatMessageThread) => {
+      console.log('test:zuoyu:onUpdateMessageThreadToUI:', msgId, thread);
+      const isExisted = dataRef.current.find((d) => {
+        if (d.model.modelType === 'message') {
+          const msgModel = d.model as MessageModel;
+          if (msgModel.msg.msgId === msgId) {
+            msgModel.thread = thread;
+            d.model = { ...msgModel };
+            return true;
+          }
+        }
+        return false;
+      });
+      if (isExisted) {
+        console.log('test:zuoyu:onUpdateMessageThreadToUI:2', msgId, thread);
+        refreshToUI(dataRef.current);
+      } else {
+        console.log('test:zuoyu:onUpdateMessageThreadToUI:3', msgId, thread);
+        const msg = thread.lastMessage;
+        if (msg) {
+          onAddMessageToUI(msg);
+        }
+      }
+    },
+    [dataRef, onAddMessageToUI, refreshToUI]
   );
 
   const onRecallMessageToUI = React.useCallback(
@@ -1928,8 +1938,13 @@ export function useMessageList(
   }, [requestHistoryMessage]);
 
   const _onMore = React.useCallback(() => {
-    requestHistoryMessage();
-  }, [requestHistoryMessage]);
+    if (unreadCountRef.current > 0) {
+      setNeedScroll(true);
+      refreshToUI(dataRef.current);
+    } else {
+      requestHistoryMessage();
+    }
+  }, [dataRef, refreshToUI, requestHistoryMessage, setNeedScroll]);
 
   const createThread = React.useCallback(
     (onResult: ResultCallback<ChatMessageThread>) => {
@@ -2191,13 +2206,13 @@ export function useMessageList(
       },
       onChatMessageThreadCreated: (event: ChatMessageThreadEvent) => {
         const msgId = event.thread.msgId;
-        if (msgId) {
+        if (msgId && convId === event.thread.threadId) {
           onUpdateMessageThreadToUI(msgId, event.thread);
         }
       },
       onChatMessageThreadUpdated: (event: ChatMessageThreadEvent) => {
         const msgId = event.thread.msgId;
-        if (msgId) {
+        if (msgId && convId === event.thread.threadId) {
           onUpdateMessageThreadToUI(msgId, event.thread);
         }
       },
@@ -2214,6 +2229,7 @@ export function useMessageList(
       im.removeListener(listener);
     };
   }, [
+    convId,
     im,
     onUpdateMessageThreadToUI,
     onremoveMessageThreadToUI,
