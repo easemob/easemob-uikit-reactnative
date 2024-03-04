@@ -702,6 +702,15 @@ export class ChatServiceImpl
     return this._dataList.get(id);
   }
 
+  _updateContactRemark(list: ContactModel[]): void {
+    list.forEach((v) => {
+      const isExisted = this._dataList.get(v.userId);
+      if (isExisted && v.remark) {
+        isExisted.remark = v.remark;
+      }
+    });
+  }
+
   async _requestConvData(list: ChatConversation[]): Promise<void> {
     const ret = new Promise<void>((resolve, reject) => {
       if (this._basicDataRequestCallback) {
@@ -1355,6 +1364,9 @@ export class ChatServiceImpl
           await this._requestData(
             Array.from(list.values()).map((v) => v.userId)
           );
+
+          this._updateContactRemark(Array.from(this._contactList.values()));
+
           list.forEach((v) => {
             const item = this._dataList.get(v.userId);
             if (item && item.avatar) {
@@ -1362,6 +1374,9 @@ export class ChatServiceImpl
             }
             if (item && item.name) {
               v.userName = item.name;
+            }
+            if (item && item.remark) {
+              v.remark = item.remark;
             }
           });
 
@@ -1385,12 +1400,16 @@ export class ChatServiceImpl
         value.forEach(async (v) => {
           this._contactList.set(v.userId, {
             userId: v.userId,
+            remark: v.remark,
           } as ContactModel);
         });
 
         await this._requestData(
           Array.from(this._contactList.values()).map((v) => v.userId)
         );
+
+        this._updateContactRemark(Array.from(this._contactList.values()));
+
         this._contactList.forEach((v) => {
           const item = this._dataList.get(v.userId);
           if (item && item.avatar) {
@@ -1398,6 +1417,9 @@ export class ChatServiceImpl
           }
           if (item && item.name) {
             v.userName = item.name;
+          }
+          if (item && item.remark) {
+            v.remark = item.remark;
           }
         });
 
@@ -1517,9 +1539,14 @@ export class ChatServiceImpl
       }),
       event: 'setContactRemark',
       onFinished: () => {
+        const item = this._dataList.get(params.userId);
+        if (item) {
+          item.remark = params.remark;
+        }
         const contact = this._contactList.get(params.userId);
         if (contact) {
           contact.remark = params.remark;
+
           this.sendUIEvent(UIListenerType.Contact, 'onUpdatedEvent', contact);
         }
         params.onResult?.({ isOk: true });

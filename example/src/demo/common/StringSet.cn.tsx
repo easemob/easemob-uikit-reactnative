@@ -30,6 +30,7 @@ export function createStringSetCn(): StringSet {
     'edit_group_my_remark': '编辑群我的备注',
 
     'edit_thread_name': '编辑话题名称',
+    'edit_contact_remark': '编辑联系人备注',
 
     'save': '保存',
   };

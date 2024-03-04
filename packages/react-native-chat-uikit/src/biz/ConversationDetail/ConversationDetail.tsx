@@ -36,7 +36,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
     onQuoteMessageForInput,
     onEditMessageForInput,
     onEditMessageFinished,
-    convName,
+    getNickName,
     convAvatar,
     onClickedAvatar,
     doNotDisturb,
@@ -61,7 +61,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
         <ConversationDetailNavigationBar
           convId={convId}
           convType={convType}
-          convName={convName}
+          convName={getNickName()}
           convAvatar={convAvatar}
           onBack={onBack}
           onClickedAvatar={onClickedAvatar}

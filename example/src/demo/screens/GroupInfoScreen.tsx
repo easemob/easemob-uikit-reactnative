@@ -83,6 +83,8 @@ export function GroupInfoScreen(props: Props) {
               // goBack: goBack,
               groupInfoRef,
               testRef,
+              from: 'GroupInfo',
+              hash: Date.now(),
             },
           });
         }}
@@ -97,6 +99,8 @@ export function GroupInfoScreen(props: Props) {
               // goBack: goBack,
               groupInfoRef,
               testRef,
+              from: 'GroupInfo',
+              hash: Date.now(),
             },
           });
         }}
@@ -111,6 +115,8 @@ export function GroupInfoScreen(props: Props) {
               // goBack: goBack,
               groupInfoRef,
               testRef,
+              from: 'GroupInfo',
+              hash: Date.now(),
             },
           });
         }}

@@ -14,9 +14,12 @@ import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useContactInfoActions } from '../hooks/useContactInfoActions';
-import type { ContactInfoProps } from './types';
+import type { ContactInfoProps, ContactInfoRef } from './types';
 
-export function useContactInfo(props: ContactInfoProps) {
+export function useContactInfo(
+  props: ContactInfoProps,
+  ref?: React.ForwardedRef<ContactInfoRef>
+) {
   const {
     userId,
     userName: propsUserName,
@@ -32,9 +35,11 @@ export function useContactInfo(props: ContactInfoProps) {
     onClickedNavigationBarButton,
     onAddContact: propsOnAddContact,
     onCopyId: propsOnCopyId,
+    onClickedContactRemark,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(propsUserName);
+  const [userRemark, setUserRemark] = React.useState(propsUserName);
   const [userAvatar, setUserAvatar] = React.useState(propsUserAvatar);
   const [isContact, setIsContact] = React.useState(propsIsContact);
   const [isSelf, setIsSelf] = React.useState(false);
@@ -90,6 +95,7 @@ export function useContactInfo(props: ContactInfoProps) {
                 if (value) {
                   setUserAvatar(value.value?.userAvatar);
                   setUserName(value.value?.userName);
+                  setUserRemark(value.value?.remark);
                 }
               },
             });
@@ -191,6 +197,27 @@ export function useContactInfo(props: ContactInfoProps) {
     });
   };
 
+  const onClickedRemark = () => {
+    im.getContact({
+      userId,
+      onResult: (res) => {
+        if (res.isOk === true) {
+          onClickedContactRemark?.(userId, res.value?.remark);
+        }
+      },
+    });
+  };
+
+  const getNickName = React.useCallback(() => {
+    if (userRemark && userRemark.length > 0) {
+      return userRemark;
+    } else if (userName && userName.length > 0) {
+      return userName;
+    } else {
+      return userId;
+    }
+  }, [userId, userName, userRemark]);
+
   React.useEffect(() => {
     const listener: UIConversationListListener = {
       onUpdatedEvent: (data) => {
@@ -216,6 +243,13 @@ export function useContactInfo(props: ContactInfoProps) {
       onDeletedEvent: (data) => {
         if (data.userId === userId) {
           setIsContact(false);
+        }
+      },
+      onUpdatedEvent: (data) => {
+        if (data.userId === userId) {
+          setUserAvatar(data.userAvatar);
+          setUserName(data.userName);
+          setUserRemark(data.remark);
         }
       },
       type: UIListenerType.Contact,
@@ -245,12 +279,25 @@ export function useContactInfo(props: ContactInfoProps) {
     };
   }, [im, userId]);
 
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        setContactRemark: (userId, remark) => {
+          if (remark) im.setContactRemark({ userId, remark });
+        },
+      };
+    },
+    [im]
+  );
+
   return {
     ...props,
     doNotDisturb,
     onDoNotDisturb,
     onClearChat,
     userName,
+    userRemark,
     userAvatar,
     userId,
     isContact,
@@ -266,5 +313,7 @@ export function useContactInfo(props: ContactInfoProps) {
     onVideoCall,
     onAddContact,
     onCopyId,
+    onClickedRemark,
+    getNickName,
   };
 }

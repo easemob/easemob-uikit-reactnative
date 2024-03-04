@@ -81,6 +81,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_info_alert_content_delete_contact': (name) =>
       `确认删除${name}，同时删除与该联系人的聊天记录`,
     '_uikit_info_item_member': '群成员',
+    '_uikit_info_item_contact_remark': '好友备注',
     '_uikit_info_item_my_remark': '我在本群的昵称',
     '_uikit_info_item_group_id': '群ID:',
     '_uikit_info_item_group_name': '群组名',

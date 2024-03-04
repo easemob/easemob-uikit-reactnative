@@ -95,10 +95,22 @@ export type UserInfoProps = InfoProps & {
   onAddContact?: (id: string) => void;
 };
 
+export type ContactInfoRef = {
+  /**
+   * Set the contact remark.
+   */
+  setContactRemark: (userId: string, remark?: string) => void;
+};
+
 /**
  * ContactInfo Component properties.
  */
-export type ContactInfoProps = UserInfoProps;
+export type ContactInfoProps = UserInfoProps & {
+  /**
+   * Set the contact remark.
+   */
+  onClickedContactRemark?: (userId: string, remark?: string) => void;
+};
 
 /**
  * GroupInfo Component reference.

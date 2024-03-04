@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Pressable, SectionListData, View } from 'react-native';
 
+import type { ContactModel } from '../../chat';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
@@ -63,6 +64,16 @@ export function ContactListItem(props: ContactListItemProps) {
       onForwardClicked?.(section);
     }
   }, [contactType, forwarded, onForwardClicked, section]);
+
+  const getNickName = React.useCallback((section: ContactModel) => {
+    if (section.remark && section.remark.length > 0) {
+      return section.remark;
+    } else if (section.userName && section.userName.length > 0) {
+      return section.userName;
+    } else {
+      return section.userId;
+    }
+  }, []);
 
   return (
     <View
@@ -131,7 +142,7 @@ export function ContactListItem(props: ContactListItemProps) {
             textType={'medium'}
             style={{ color: getColor('t1') }}
           >
-            {section.userName ?? section.userId}
+            {getNickName(section)}
           </SingleLineText>
         </View>
 

@@ -580,12 +580,14 @@ export function useContactList(props: ContactListProps) {
       }
       const items = [
         <ContactItem
+          key={'_uikit_contact_new_request'}
           name={tr('_uikit_contact_new_request')}
           count={<Badges count={requestCount} />}
           hasArrow={true}
           onClicked={onClickedNewRequest}
         />,
         <ContactItem
+          key={'_uikit_contact_group_list'}
           name={tr('_uikit_contact_group_list')}
           count={
             <Text paletteType={'label'} textType={'medium'}>

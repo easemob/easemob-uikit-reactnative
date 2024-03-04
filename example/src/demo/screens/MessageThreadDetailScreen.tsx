@@ -266,6 +266,8 @@ export function MessageThreadDetailScreen(props: Props) {
                   initialData: threadName,
                   maxLength: 128,
                   testRef,
+                  from: 'MessageThreadDetail',
+                  hash: Date.now(),
                 },
               });
             },

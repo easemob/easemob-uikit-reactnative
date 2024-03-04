@@ -10,6 +10,7 @@ import {
   ChatServiceListener,
   ConversationModel,
   gNewRequestConversationId,
+  UIContactListListener,
   UIConversationListListener,
   UIGroupListListener,
   UIListenerType,
@@ -616,6 +617,32 @@ export function useConversationList(props: ConversationListProps) {
       im.removeUIListener(uiListener);
     };
   }, [dataRef, im, onAddDataToUI, onUpdateDataToUI]);
+
+  React.useEffect(() => {
+    const listener: UIContactListListener = {
+      onUpdatedEvent: (data) => {
+        const isExisted = dataRef.current.find((item) => {
+          if (item.data.convId === data.userId) {
+            if (data.remark && data.remark.length > 0) {
+              item.data.convName = data.remark;
+              item.data = { ...item.data };
+            } else if (data.userName && data.userName.length > 0) {
+              item.data.convName = data.userName;
+              item.data = { ...item.data };
+            }
+            return true;
+          }
+          return false;
+        });
+        if (isExisted) refreshToUI(dataRef.current);
+      },
+      type: UIListenerType.Contact,
+    };
+    im.addUIListener(listener);
+    return () => {
+      im.removeUIListener(listener);
+    };
+  }, [dataRef, im, refreshToUI]);
 
   React.useEffect(() => {
     init({ onFinished: onInitialized });

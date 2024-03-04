@@ -222,7 +222,12 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
           {comType === 'chat' ? (
             <Pressable onPress={onClickedAvatar}>
               {convType === 0 ? (
-                <StatusAvatar url={convAvatar} size={32} userId={convId} />
+                <StatusAvatar
+                  url={convAvatar}
+                  size={32}
+                  userId={convId}
+                  onClicked={onClickedAvatar}
+                />
               ) : (
                 <Avatar url={convAvatar} size={32} />
               )}

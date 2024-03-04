@@ -7,6 +7,7 @@ import {
 
 import {
   MessageServiceListener,
+  UIContactListListener,
   UIConversationListListener,
   UIGroupListListener,
   UIListenerType,
@@ -85,6 +86,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
         testMode,
       };
   const [convName, setConvName] = React.useState<string | undefined>();
+  const [convRemark, setConvRemark] = React.useState<string | undefined>();
   const [threadName, setThreadName] = React.useState<string | undefined>(
     newThreadName
   );
@@ -270,6 +272,16 @@ export function useConversationDetail(props: ConversationDetailProps) {
     });
   }, [getPermission]);
 
+  const getNickName = React.useCallback(() => {
+    if (convRemark && convRemark.length > 0) {
+      return convRemark;
+    } else if (convName && convName.length > 0) {
+      return convName;
+    } else {
+      return convId;
+    }
+  }, [convId, convName, convRemark]);
+
   React.useEffect(() => {
     im.messageManager.setCurrentConv({ convId, convType });
     setConversation();
@@ -324,6 +336,21 @@ export function useConversationDetail(props: ConversationDetailProps) {
     im.addUIListener(uiListener);
     return () => {
       im.removeUIListener(uiListener);
+    };
+  }, [convId, im]);
+
+  React.useEffect(() => {
+    const listener: UIContactListListener = {
+      onUpdatedEvent: (data) => {
+        if (data.userId === convId) {
+          setConvRemark(data.remark);
+        }
+      },
+      type: UIListenerType.Contact,
+    };
+    im.addUIListener(listener);
+    return () => {
+      im.removeUIListener(listener);
     };
   }, [convId, im]);
 
@@ -402,5 +429,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
     onChangeUnreadCount,
     unreadCount,
     onClickedUnreadCount,
+    getNickName,
   };
 }
