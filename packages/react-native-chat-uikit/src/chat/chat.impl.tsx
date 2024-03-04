@@ -2671,7 +2671,7 @@ export class ChatServiceImpl
 
   subPresence(params: {
     userIds: string[];
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<ChatPresence[]>;
   }): void {
     this.tryCatch({
       promise: this.client.presenceManager.subscribe(
@@ -2679,15 +2679,40 @@ export class ChatServiceImpl
         60 * 60 * 24 * 3
       ),
       event: 'subPresence',
+      onFinished: params.onResult
+        ? (res) => {
+            params.onResult?.({
+              isOk: true,
+              value: res,
+            });
+          }
+        : undefined,
+      onError: params.onResult
+        ? (e) => {
+            params.onResult?.({ isOk: false, error: e });
+          }
+        : undefined,
     });
   }
   unSubPresence(params: {
     userIds: string[];
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.presenceManager.unsubscribe(params.userIds),
       event: 'unSubPresence',
+      onFinished: params.onResult
+        ? () => {
+            params.onResult?.({
+              isOk: true,
+            });
+          }
+        : undefined,
+      onError: params.onResult
+        ? (e) => {
+            params.onResult?.({ isOk: false, error: e });
+          }
+        : undefined,
     });
   }
   publishPresence(params: {
@@ -2719,7 +2744,7 @@ export class ChatServiceImpl
   }
   fetchPresence(params: {
     userIds: string[];
-    onResult: ResultCallback<string[]>;
+    onResult: ResultCallback<ChatPresence[]>;
   }): void {
     this.tryCatch({
       promise: this.client.presenceManager.fetchPresenceStatus(params.userIds),
@@ -2727,10 +2752,7 @@ export class ChatServiceImpl
       onFinished: (result) => {
         params.onResult?.({
           isOk: true,
-          value:
-            result.map((v) => {
-              return v.statusDescription;
-            }) ?? [],
+          value: result,
         });
       },
       onError: () => {

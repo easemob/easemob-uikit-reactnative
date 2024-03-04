@@ -5,7 +5,7 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
-import { Avatar } from '../Avatar';
+import { StatusAvatar } from '../Avatar';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import {
   EmptyPlaceholder,
@@ -52,6 +52,8 @@ export function ConversationList(props: ConversationListProps) {
     onShowConversationListMoreActions,
     ListItemRender,
     propsFlatListProps,
+    onClickedAvatar,
+    userId,
   } = useConversationList(props);
   const {
     style,
@@ -71,6 +73,18 @@ export function ConversationList(props: ConversationListProps) {
     },
   });
 
+  // const s = (status: string) => {
+  //   return (
+  //     <View
+  //       style={{
+  //         height: 20,
+  //         width: 20,
+  //         backgroundColor: status === 'online' ? 'red' : 'blue',
+  //       }}
+  //     />
+  //   );
+  // };
+
   return (
     <View
       style={[
@@ -85,7 +99,14 @@ export function ConversationList(props: ConversationListProps) {
           <>{customNavigationBar}</>
         ) : (
           <TopNavigationBar
-            Left={<Avatar url={avatarUrl} size={32} />}
+            Left={
+              <StatusAvatar
+                url={avatarUrl}
+                size={32}
+                onClicked={onClickedAvatar}
+                userId={userId}
+              />
+            }
             Right={TopNavigationBarRight}
             RightProps={{
               onClicked: onShowConversationListMoreActions,

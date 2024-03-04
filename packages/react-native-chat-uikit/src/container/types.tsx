@@ -1,3 +1,4 @@
+import type { StatusType } from '../biz/types';
 import type { ChatOptionsType, DataModel, DataModelType } from '../chat';
 import type { ConversationDetailType } from '../config';
 import type { UIKitError } from '../error';
@@ -193,4 +194,11 @@ export type ContainerProps = React.PropsWithChildren<{
       error?: UIKitError
     ) => void;
   }) => void | Promise<void>;
+
+  /**
+   * Returns the custom state component.
+   * @param status current status.
+   * @returns component.
+   */
+  onChangeStatus?: (status: StatusType) => React.ReactElement;
 }>;

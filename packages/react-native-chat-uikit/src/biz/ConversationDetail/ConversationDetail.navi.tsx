@@ -1,13 +1,18 @@
 import * as React from 'react';
 import { Dimensions, Platform, Pressable, View } from 'react-native';
 
+import {
+  ChatServiceListener,
+  useChatContext,
+  useChatListener,
+} from '../../chat';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
-import { Avatar } from '../Avatar';
+import { Avatar, StatusAvatar } from '../Avatar';
 import {
   TopNavigationBar,
   TopNavigationBarElementType,
@@ -21,6 +26,7 @@ import type {
 
 type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
   convId: string;
+  convType: number;
   convName?: string;
   convAvatar?: string;
   type: ConversationDetailModelType;
@@ -45,6 +51,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     convAvatar,
     convName,
     convId,
+    convType,
     NavigationBar,
     doNotDisturb,
     type: comType,
@@ -56,6 +63,8 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     selectMode = 'common',
     onCancelMultiSelected,
   } = props;
+  const [status, setStatus] = React.useState<string>();
+  const im = useChatContext();
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -151,6 +160,46 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     }
   };
 
+  const listener = React.useMemo(() => {
+    return {
+      onPresenceStatusChanged: (list) => {
+        if (list.length > 0) {
+          const user = list.find((u) => {
+            return u.publisher === convId;
+          });
+          if (user) {
+            setStatus(user.statusDescription);
+          }
+        }
+      },
+    } as ChatServiceListener;
+  }, [convId]);
+  useChatListener(listener);
+
+  React.useEffect(() => {
+    if (convId) {
+      im.subPresence({ userIds: [convId] });
+      im.fetchPresence({
+        userIds: [convId],
+        onResult: (res) => {
+          if (res.isOk === true) {
+            const user = res.value?.find((u) => {
+              return u.publisher === convId;
+            });
+            if (user) {
+              setStatus(user.statusDescription);
+            }
+          }
+        },
+      });
+    }
+    return () => {
+      if (convId) {
+        im.unSubPresence({ userIds: [convId] });
+      }
+    };
+  }, [convId, im]);
+
   if (NavigationBar) {
     // return { NavigationBar };
     return <>{NavigationBar}</>;
@@ -172,7 +221,11 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
           />
           {comType === 'chat' ? (
             <Pressable onPress={onClickedAvatar}>
-              <Avatar url={convAvatar} size={32} />
+              {convType === 0 ? (
+                <StatusAvatar url={convAvatar} size={32} userId={convId} />
+              ) : (
+                <Avatar url={convAvatar} size={32} />
+              )}
             </Pressable>
           ) : null}
 
@@ -207,7 +260,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
               paletteType={'label'}
               style={{ color: getColor('text_enable') }}
             >
-              {comType === 'chat' ? tr('state') : tr('#group')}
+              {comType === 'chat' ? tr(status ?? '') : tr('#group')}
             </Text>
           </View>
         </View>

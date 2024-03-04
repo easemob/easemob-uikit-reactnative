@@ -120,6 +120,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_alert_remove_message': '移除消息？',
     '_uikit_history_record': '聊天记录',
     '_uikit_unread_count': (count) => `${count}条未读数`,
+    '_uikit_alert_title_custom_status': '自定义在线状态',
 
     '_uikit_report_title': '消息举报',
     'Unwelcome commercial content': '不受欢迎的商业内容',
@@ -172,6 +173,13 @@ export function createStringSetCn(): StringSet {
     'voice_bar_tip_recording': '正在录音',
     'voice_bar_tip_click_play': '点击播放',
     'voice_bar_tip_playing': '播放中',
+
+    'online': '在线',
+    'offline': '离线',
+    'busy': '忙碌',
+    'leave': '离开',
+    'not disturb': '免打扰',
+    'custom': '自定义',
 
     '[image]': '[图片]',
     '[video]': '[视频]',

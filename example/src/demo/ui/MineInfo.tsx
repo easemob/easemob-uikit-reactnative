@@ -2,11 +2,11 @@ import * as React from 'react';
 import { View } from 'react-native';
 import {
   Alert,
-  Avatar,
   BottomSheetNameMenu,
   Icon,
   ListItem,
   SimpleToast,
+  StatusAvatar,
   Text,
   Text1Button,
   UIKIT_VERSION,
@@ -78,7 +78,19 @@ export function MineInfo(props: MineInfoProps) {
       ]}
     >
       <View style={{ alignItems: 'center', paddingTop: 64 }}>
-        <Avatar size={100} url={userAvatar} />
+        <StatusAvatar
+          size={100}
+          url={userAvatar}
+          userId={userId}
+          statusContainerStyle={{
+            height: 22,
+            width: 22,
+            borderRadius: 11,
+            right: -2,
+            bottom: -2,
+          }}
+          statusStyle={{ height: 18, width: 18, borderRadius: 9 }}
+        />
         <View style={{ height: 12 }} />
         <Text
           textType={'large'}

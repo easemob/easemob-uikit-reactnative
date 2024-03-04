@@ -16,6 +16,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
     containerStyle,
     onBack,
     convId,
+    convType,
     enableNavigationBar = true,
     NavigationBar: propsNavigationBar,
     type: comType,
@@ -59,6 +60,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
       {enableNavigationBar === true ? (
         <ConversationDetailNavigationBar
           convId={convId}
+          convType={convType}
           convName={convName}
           convAvatar={convAvatar}
           onBack={onBack}

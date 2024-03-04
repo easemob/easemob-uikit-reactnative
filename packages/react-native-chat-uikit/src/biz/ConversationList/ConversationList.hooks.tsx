@@ -22,6 +22,7 @@ import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { FlatListRef } from '../../ui/FlatList';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { useMineInfoActions } from '../hooks';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useConversationListMoreActions } from '../hooks/useConversationListMoreActions';
 import { useConversationLongPressActions } from '../hooks/useConversationLongPressActions';
@@ -78,6 +79,7 @@ export function useConversationList(props: ConversationListProps) {
     propsListItemRender ?? ConversationListItemMemo
   );
   const im = useChatContext();
+  const [userId, setUserId] = React.useState<string>();
 
   const onAddContact = (userId: string) => {
     im.addNewContact({ userId });
@@ -92,6 +94,8 @@ export function useConversationList(props: ConversationListProps) {
     onInit: onInitNavigationBarMenu,
     onAddContact: onAddContact,
   });
+
+  const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
 
   const onSetState = React.useCallback(
     (state: ListStateType) => {
@@ -130,6 +134,10 @@ export function useConversationList(props: ConversationListProps) {
       onClickedItem?.(data);
     }
   });
+
+  const onClickedAvatar = React.useCallback(() => {
+    onShowMineInfoActions();
+  }, [onShowMineInfoActions]);
 
   const removeDuplicateData = React.useCallback(
     (list: ConversationListItemProps[]) => {
@@ -227,6 +235,9 @@ export function useConversationList(props: ConversationListProps) {
       }
       // im.setOnRequestData(onRequestMultiData);
       if (isAutoLoad === true) {
+        if (im.userId) {
+          setUserId(im.userId);
+        }
         const url = im.user(im.userId)?.avatarURL;
         if (url) {
           setAvatarUrl(url);
@@ -460,6 +471,11 @@ export function useConversationList(props: ConversationListProps) {
 
   const listener = React.useMemo(() => {
     return {
+      onConnected: () => {
+        if (im.userId) {
+          setUserId(im.userId);
+        }
+      },
       onMessagesReceived: (msgs) => {
         onMessage(msgs);
       },
@@ -508,7 +524,7 @@ export function useConversationList(props: ConversationListProps) {
         }
       },
     } as ChatServiceListener;
-  }, [onMessage, init, onPin, onUnPin, dataRef, onUpdateDataToUI]);
+  }, [onMessage, init, onPin, onUnPin, dataRef, onUpdateDataToUI, im.userId]);
 
   useChatListener(listener);
 
@@ -664,6 +680,8 @@ export function useConversationList(props: ConversationListProps) {
     tr,
     onShowConversationListMoreActions,
     ListItemRender: ListItemRenderRef.current,
+    onClickedAvatar,
+    userId,
   };
 }
 

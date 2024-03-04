@@ -51,6 +51,7 @@ export function Container(props: ContainerProps) {
     recallTimeout,
     onInitLanguageSet,
     onRequestMultiData,
+    onChangeStatus,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -123,6 +124,7 @@ export function Container(props: ContainerProps) {
                   ),
                   personAvatar: avatar?.personAvatar,
                   groupAvatar: avatar?.groupAvatar,
+                  onChangeStatus: onChangeStatus,
                 }}
               >
                 <SafeAreaProvider>{children}</SafeAreaProvider>

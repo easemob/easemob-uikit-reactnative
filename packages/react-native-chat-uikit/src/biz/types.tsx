@@ -17,6 +17,14 @@ import type {
   InitMenuItemsType,
 } from './BottomSheetMenu';
 
+export type StatusType =
+  | 'online'
+  | 'offline'
+  | 'busy'
+  | 'leave'
+  | 'no-disturb'
+  | string;
+
 export type PropsWithTest = { testMode?: 'only-ui' | undefined };
 export type PropsWithError = { onError?: (error: UIKitError) => void };
 export type PropsWithChildren = React.PropsWithChildren<{}>;

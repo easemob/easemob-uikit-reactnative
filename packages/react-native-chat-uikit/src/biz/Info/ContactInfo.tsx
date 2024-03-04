@@ -9,7 +9,7 @@ import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
 import { Text } from '../../ui/Text';
 import { SimpleToast } from '../../ui/Toast';
-import { Avatar } from '../Avatar';
+import { StatusAvatar } from '../Avatar';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { ListItem } from '../ListItem';
 import { TopNavigationBar } from '../TopNavigationBar';
@@ -137,7 +137,19 @@ export function ContactInfo(props: ContactInfoProps) {
         )
       ) : null}
       <View style={{ alignItems: 'center', paddingTop: 20 }}>
-        <Avatar size={100} url={userAvatar} />
+        <StatusAvatar
+          size={100}
+          url={userAvatar}
+          userId={userId}
+          statusContainerStyle={{
+            height: 22,
+            width: 22,
+            borderRadius: 11,
+            right: -2,
+            bottom: -2,
+          }}
+          statusStyle={{ height: 18, width: 18, borderRadius: 9 }}
+        />
         <View
           style={{
             flexDirection: 'row',

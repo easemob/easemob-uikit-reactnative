@@ -1,3 +1,4 @@
+import type { StatusType } from '../biz/types';
 import type { LanguageCode } from '../i18n';
 
 export type ConversationDetailType = {
@@ -98,4 +99,11 @@ export type Config = {
    * Default value is `true`.
    */
   enableTranslate: boolean;
+
+  /**
+   * Returns the custom state component.
+   * @param status current status.
+   * @returns component.
+   */
+  onChangeStatus?: (status: StatusType) => React.ReactElement;
 };

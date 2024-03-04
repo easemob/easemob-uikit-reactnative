@@ -9,7 +9,7 @@ export function useMineInfoActions(props: UseMineInfoActionsProps) {
   const { menuRef, alertRef } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const {} = useCloseAlert({ alertRef });
-  const {} = useI18nContext();
+  const { tr } = useI18nContext();
   const im = useChatContext();
   const onShowMenu = () => {
     menuRef.current?.startShowWithProps({
@@ -18,7 +18,7 @@ export function useMineInfoActions(props: UseMineInfoActionsProps) {
       hasCancel: true,
       initItems: [
         {
-          name: 'Online',
+          name: tr('online'),
           isHigh: false,
           onClicked: () => {
             closeMenu(() => {
@@ -27,7 +27,16 @@ export function useMineInfoActions(props: UseMineInfoActionsProps) {
           },
         },
         {
-          name: 'Busy',
+          name: tr('offline'),
+          isHigh: false,
+          onClicked: () => {
+            closeMenu(() => {
+              im.publishPresence({ status: 'offline', onResult: () => {} });
+            });
+          },
+        },
+        {
+          name: tr('busy'),
           isHigh: false,
           onClicked: () => {
             closeMenu(() => {
@@ -36,7 +45,7 @@ export function useMineInfoActions(props: UseMineInfoActionsProps) {
           },
         },
         {
-          name: 'Leave',
+          name: tr('leave'),
           isHigh: false,
           onClicked: () => {
             closeMenu(() => {
@@ -45,11 +54,49 @@ export function useMineInfoActions(props: UseMineInfoActionsProps) {
           },
         },
         {
-          name: 'Not Disturb',
+          name: tr('not disturb'),
           isHigh: false,
           onClicked: () => {
             closeMenu(() => {
               im.publishPresence({ status: 'no-disturb', onResult: () => {} });
+            });
+          },
+        },
+        {
+          name: tr('custom'),
+          isHigh: false,
+          onClicked: () => {
+            closeMenu(() => {
+              alertRef.current?.alertWithInit({
+                title: tr('_uikit_alert_title_custom_status'),
+                buttons: [
+                  {
+                    text: tr('cancel'),
+                    onPress: () => {
+                      alertRef.current?.close();
+                    },
+                    isPreferred: false,
+                  },
+                  {
+                    text: tr('confirm'),
+                    onPress: (value) => {
+                      if (value) {
+                        alertRef.current?.close();
+                        im.publishPresence({
+                          status: value,
+                          onResult: () => {},
+                        });
+                      }
+                    },
+                    isPreferred: true,
+                  },
+                ],
+                supportInput: true,
+                isSaveInput: false,
+                inputMaxCount: 20,
+                supportInputStatistics: true,
+                autoFocus: true,
+              });
             });
           },
         },

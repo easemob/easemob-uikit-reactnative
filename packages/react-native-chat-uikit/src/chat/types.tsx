@@ -12,6 +12,7 @@ import type {
   ChatMessageThread,
   ChatMultiDeviceEventListener,
   ChatOptions,
+  ChatPresence,
   ChatPresenceEventListener,
   ChatSearchDirection,
 } from 'react-native-chat-sdk';
@@ -943,14 +944,14 @@ export interface PresenceServices {
    */
   subPresence(params: {
     userIds: string[];
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<ChatPresence[]>;
   }): void;
   /**
    * Unsubscribe to user status.
    */
   unSubPresence(params: {
     userIds: string[];
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   /**
    * Publish user status.
@@ -964,7 +965,7 @@ export interface PresenceServices {
    */
   fetchPresence(params: {
     userIds: string[];
-    onResult: ResultCallback<string[]>;
+    onResult: ResultCallback<ChatPresence[]>;
   }): void;
 }
 

@@ -115,7 +115,7 @@ export function LoginScreen(props: Props) {
               userToken: token,
               userName: `${id}name`,
               userAvatarURL:
-                'https://cdn4.iconfinder.com/data/icons/small-n-flat/24/cat-512.png',
+                'https://cdn0.iconfinder.com/data/icons/user-pictures/100/boy-2-128.png',
               usePassword: isPass,
               result: ({ isOk, error }) => {
                 setS(isOk === true ? 'success' : 'failed');

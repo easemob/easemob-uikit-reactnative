@@ -121,6 +121,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_alert_remove_message': 'Confirm deletion of selected messages?',
     '_uikit_history_record': 'Chat Record',
     '_uikit_unread_count': (count) => `${count} unread count`,
+    '_uikit_alert_title_custom_status': 'Custom Online Status',
 
     '_uikit_report_title': 'Report Message',
     'Unwelcome commercial content': 'Unwelcome Commercial Content',
@@ -173,6 +174,13 @@ export function createStringSetEn(): StringSet {
     'voice_bar_tip_recording': 'recording',
     'voice_bar_tip_click_play': 'click play',
     'voice_bar_tip_playing': 'playing',
+
+    'online': 'online',
+    'offline': 'offline',
+    'busy': 'busy',
+    'leave': 'leave',
+    'not disturb': 'not disturb',
+    'custom': 'custom',
 
     '[image]': '[image]',
     '[video]': '[video]',
