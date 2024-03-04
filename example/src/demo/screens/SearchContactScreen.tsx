@@ -118,7 +118,6 @@ export function SearchContactScreen(props: Props) {
             }
           } else if (searchType === 'forward-message') {
             if (data) {
-              console.log('test:zuoyu:123234:forward', data);
               DeviceEventEmitter.emit('forwardMessage', data);
             }
           }

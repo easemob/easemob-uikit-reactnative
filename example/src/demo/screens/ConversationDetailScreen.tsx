@@ -64,7 +64,6 @@ export function ConversationDetailScreen(props: Props) {
     },
   });
   const convRef = React.useRef<ConversationDetailRef>({} as any);
-  console.log('test:zuoyu:ConversationDetailScreen', hash, from, selectType);
 
   // React.useEffect(() => {
   //   if (selectedParticipants && operateType === 'mention') {
@@ -255,7 +254,6 @@ export function ConversationDetailScreen(props: Props) {
               console.log('onNoMoreMessage');
             }, []),
             onCreateThread: (params) => {
-              console.log('test:zuoyu:onCreateThread:', params);
               navigation.push('CreateThread', {
                 params: {
                   ...params,

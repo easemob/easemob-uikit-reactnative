@@ -86,7 +86,6 @@ export function CreateThreadScreen(props: Props) {
       | SendCardProps
       | SendCustomProps
   ) => {
-    console.log('test:zuoyu:onCreateThreadResult', thread, firstMessage);
     if (!thread) {
       navigation.goBack();
     } else {

@@ -34,7 +34,6 @@ export function MessageForwardSelectorScreen(props: Props) {
   React.useEffect(() => {
     const sub = DeviceEventEmitter.addListener('forwardMessage', (data) => {
       const d = data as ContactModel;
-      console.log('test:zuoyu:d:', d);
       ref.current?.forwardMessage(d);
     });
     return () => {
@@ -53,11 +52,6 @@ export function MessageForwardSelectorScreen(props: Props) {
         propsRef={ref}
         onBack={() => {
           // navigation.goBack();
-          console.log(
-            'test:zuoyu:MessageForwardSelectorScreen: onBack',
-            convId,
-            convType
-          );
           navigation.navigate({
             name: 'ConversationDetail',
             params: {

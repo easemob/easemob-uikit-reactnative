@@ -74,7 +74,6 @@ export function MessageThreadDetailScreen(props: Props) {
     }
   };
   const testRef = React.useRef<(data: any) => void>(goBack);
-  console.log('test:zuoyu:thread:', thread);
 
   // React.useEffect(() => {
   //   if (selectedParticipants && operateType === 'mention') {

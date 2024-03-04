@@ -192,7 +192,6 @@ export function useMessageList(
   const { recallTimeout, languageCode } = useConfigContext();
 
   const setNeedScroll = React.useCallback((needScroll: boolean) => {
-    console.log('test:zuoyu:needScroll:', needScroll);
     needScrollRef.current = needScroll;
   }, []);
   const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
@@ -385,7 +384,6 @@ export function useMessageList(
       (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const y = event.nativeEvent.contentOffset.y;
         if (inverted === true) {
-          console.log('test:zuoyu:delayExecTask:', y);
           if (y < 10) {
             setNeedScroll(true);
             const preId = preBottomDataRef.current?.id;
@@ -1398,7 +1396,6 @@ export function useMessageList(
 
   const onUpdateMessageThreadToUI = React.useCallback(
     (msgId: string, thread: ChatMessageThread) => {
-      console.log('test:zuoyu:onUpdateMessageThreadToUI:', msgId, thread);
       const isExisted = dataRef.current.find((d) => {
         if (d.model.modelType === 'message') {
           const msgModel = d.model as MessageModel;
@@ -1411,10 +1408,8 @@ export function useMessageList(
         return false;
       });
       if (isExisted) {
-        console.log('test:zuoyu:onUpdateMessageThreadToUI:2', msgId, thread);
         refreshToUI(dataRef.current);
       } else {
-        console.log('test:zuoyu:onUpdateMessageThreadToUI:3', msgId, thread);
         const msg = thread.lastMessage;
         if (msg) {
           onAddMessageToUI(msg);
