@@ -14,6 +14,7 @@ import {
   useChatContext,
 } from '../../chat';
 import { usePermissions } from '../../hook';
+import { timeoutTask } from '../../utils';
 import { useCreateConversationDirectory } from '../hooks/useCreateConversationDirectory';
 import { MessageInput } from './MessageInput';
 import { MessageList } from './MessageList';
@@ -182,7 +183,9 @@ export function useConversationDetail(props: ConversationDetailProps) {
         | SendCardProps
         | SendCustomProps
     ) => {
-      _messageListRef.current?.addSendMessage(value);
+      timeoutTask(0, () => {
+        _messageListRef.current?.addSendMessage(value);
+      });
     },
     [_messageListRef]
   );
