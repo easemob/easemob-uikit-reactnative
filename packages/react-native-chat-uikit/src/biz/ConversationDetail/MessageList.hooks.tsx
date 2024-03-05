@@ -35,7 +35,7 @@ import {
 } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { useConfigContext } from '../../config';
-// import { useDispatchContext } from '../../dispatch';
+import { useDispatchContext } from '../../dispatch';
 import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
@@ -197,7 +197,7 @@ export function useMessageList(
   const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
     userScrollGestureRef.current = isUserScroll;
   }, []);
-  // const { addListener, removeListener, emit } = useDispatchContext();
+  const { addListener, removeListener } = useDispatchContext();
   const emojiRef = React.useRef<BottomSheetEmojiListRef>(null);
   const onRequestCloseEmoji = React.useCallback(() => {
     emojiRef.current?.startHide?.();
@@ -213,11 +213,14 @@ export function useMessageList(
   }, []);
 
   const needScrollToBottom = React.useCallback(() => {
+    if (comType === 'thread') {
+      return true;
+    }
     if (needScrollRef.current === true) {
       return true;
     }
     return false;
-  }, []);
+  }, [comType]);
 
   const scrollToBottom = React.useCallback(
     (animated?: boolean) => {
@@ -236,7 +239,6 @@ export function useMessageList(
 
   const scrollTo = React.useCallback(
     (index: number, animated?: boolean) => {
-      // setNeedScroll(false);
       timeoutTask(0, () => {
         listRef?.current?.scrollToIndex?.({ index, animated, viewPosition: 1 });
       });
@@ -792,7 +794,7 @@ export function useMessageList(
     [dataRef, refreshToUI]
   );
 
-  const onremoveMessageThreadToUI = React.useCallback(
+  const onRemoveMessageThreadToUI = React.useCallback(
     (msgId: string) => {
       if (comType !== 'chat') {
         return;
@@ -1354,23 +1356,22 @@ export function useMessageList(
       ) {
         threadMsg = await msg.threadInfo;
       }
-      if (
-        (comType === 'thread' || comType === 'create_thread') &&
-        msg.isChatThread !== true
-      ) {
-        onAddDataToUI(
-          {
-            id: msg.msgId.toString(),
-            model: {
-              userId: msg.from,
-              modelType: 'history',
-              msg: msg,
-              checked: selectType === 'multi' ? false : undefined,
+      if (comType === 'thread' || comType === 'create_thread') {
+        if (msg.isChatThread !== true) {
+          onAddDataToUI(
+            {
+              id: msg.msgId.toString(),
+              model: {
+                userId: msg.from,
+                modelType: 'history',
+                msg: msg,
+                checked: selectType === 'multi' ? false : undefined,
+              },
+              containerStyle: getStyle(),
             },
-            containerStyle: getStyle(),
-          },
-          inverted === true ? 'bottom' : 'bottom'
-        );
+            inverted === true ? 'bottom' : 'bottom'
+          );
+        }
       } else {
         onAddDataToUI(
           {
@@ -1389,9 +1390,9 @@ export function useMessageList(
           inverted === true ? 'bottom' : 'bottom'
         );
       }
-      scrollToBottom(true);
+      // scrollToBottom(true);
     },
-    [comType, scrollToBottom, im, onAddDataToUI, selectType, getStyle, inverted]
+    [comType, im, onAddDataToUI, selectType, getStyle, inverted]
   );
 
   const onUpdateMessageThreadToUI = React.useCallback(
@@ -1479,7 +1480,7 @@ export function useMessageList(
   //   [convId, convType, im.messageManager]
   // );
 
-  const addSendMessageToUI = React.useCallback(
+  const _addSendMessageToUI = React.useCallback(
     (
       value:
         | SendFileProps
@@ -1491,9 +1492,8 @@ export function useMessageList(
         | SendSystemProps
         | SendCardProps
         | SendCustomProps,
-
-      onFinished?: (item: MessageListItemProps) => void
-    ) => {
+      isShow: boolean
+    ): MessageListItemProps | undefined => {
       let ret: MessageListItemProps | undefined;
       if (value.type === 'text') {
         const v = value as SendTextProps;
@@ -1529,7 +1529,9 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddDataToUI(ret, 'bottom');
+        if (isShow === true) {
+          onAddDataToUI(ret, 'bottom');
+        }
       } else if (value.type === 'image') {
         const v = value as SendImageProps;
         const msg = ChatMessage.createImageMessage(
@@ -1555,7 +1557,9 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddDataToUI(ret, inverted === true ? 'bottom' : 'top');
+        if (isShow === true) {
+          onAddDataToUI(ret, 'bottom');
+        }
       } else if (value.type === 'voice') {
         const v = value as SendVoiceProps;
         const msg = ChatMessage.createVoiceMessage(
@@ -1580,7 +1584,9 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddDataToUI(ret, inverted === true ? 'bottom' : 'top');
+        if (isShow === true) {
+          onAddDataToUI(ret, 'bottom');
+        }
       } else if (value.type === 'video') {
         const v = value as SendVideoProps;
         const msg = ChatMessage.createVideoMessage(
@@ -1608,7 +1614,9 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddDataToUI(ret, inverted === true ? 'bottom' : 'top');
+        if (isShow === true) {
+          onAddDataToUI(ret, 'bottom');
+        }
       } else if (value.type === 'file') {
         const v = value as SendFileProps;
         const msg = ChatMessage.createFileMessage(
@@ -1632,7 +1640,9 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddDataToUI(ret, inverted === true ? 'bottom' : 'top');
+        if (isShow === true) {
+          onAddDataToUI(ret, 'bottom');
+        }
       } else if (value.type === 'card') {
         const card = value as SendCardProps;
         const msg = ChatMessage.createCustomMessage(
@@ -1659,7 +1669,9 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddDataToUI(ret, inverted === true ? 'bottom' : 'top');
+        if (isShow === true) {
+          onAddDataToUI(ret, 'bottom');
+        }
       } else if (value.type === 'custom') {
         const custom = value as SendCustomProps;
         const msg = custom.msg;
@@ -1674,7 +1686,9 @@ export function useMessageList(
           },
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddDataToUI(ret, inverted === true ? 'bottom' : 'top');
+        if (isShow === true) {
+          onAddDataToUI(ret, 'bottom');
+        }
       } else if (value.type === 'system') {
         const v = value as SendSystemProps;
         const msg = v.msg;
@@ -1687,7 +1701,9 @@ export function useMessageList(
           } as SystemMessageModel,
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddDataToUI(ret, inverted === true ? 'bottom' : 'top');
+        if (isShow === true) {
+          onAddDataToUI(ret, 'bottom');
+        }
       } else if (value.type === 'time') {
         const v = value as SendTimeProps;
         ret = {
@@ -1698,12 +1714,11 @@ export function useMessageList(
           } as TimeMessageModel,
           containerStyle: getStyle(),
         } as MessageListItemProps;
-        onAddDataToUI(ret, inverted === true ? 'bottom' : 'top');
+        if (isShow === true) {
+          onAddDataToUI(ret, 'bottom');
+        }
       }
-      if (ret) {
-        onFinished?.(ret);
-        scrollToBottom();
-      }
+      return ret;
     },
     [
       comType,
@@ -1711,12 +1726,52 @@ export function useMessageList(
       convType,
       getStyle,
       im,
-      inverted,
       messageLayoutType,
       onAddDataToUI,
-      scrollToBottom,
       selectType,
     ]
+  );
+
+  const addSendMessageToUI = React.useCallback(
+    (
+      value:
+        | SendFileProps
+        | SendImageProps
+        | SendTextProps
+        | SendVideoProps
+        | SendVoiceProps
+        | SendTimeProps
+        | SendSystemProps
+        | SendCardProps
+        | SendCustomProps,
+
+      onFinished?: (item: MessageListItemProps) => void
+    ) => {
+      let isShow = true;
+      if (comType === 'chat') {
+      } else if (comType === 'thread' && hasNoMoreRef.current === true) {
+      } else {
+        isShow = false;
+      }
+      let ret: MessageListItemProps | undefined = _addSendMessageToUI(
+        value,
+        isShow
+      );
+      console.log(
+        'dev:addSendMessageToUI:',
+        comType,
+        hasNoMoreRef.current,
+        needScrollToBottom(),
+        isShow
+      );
+      if (ret) {
+        onFinished?.(ret);
+        if (isShow === true) {
+          scrollToBottom();
+        }
+      }
+    },
+    [_addSendMessageToUI, comType, needScrollToBottom, scrollToBottom]
   );
 
   const sendMessageToServer = React.useCallback(
@@ -1829,6 +1884,7 @@ export function useMessageList(
       onResult: (res) => {
         if (res.isOk && res.value && res.value.list) {
           if (res.value.list.length === 0 && startMsgIdRef.current === '') {
+            hasNoMoreRef.current = true;
             if (firstMessage) {
               addSendMessageToUI(firstMessage, (item) => {
                 if (item.model.modelType === 'message') {
@@ -1844,9 +1900,6 @@ export function useMessageList(
               hasNoMoreRef.current = true;
             }
             if (msgs.length > 0) {
-              if (comType === 'thread') {
-                setNeedScroll(true);
-              }
               onAddMessageListToUI(msgs, 'bottom', () => {});
             }
           }
@@ -1855,7 +1908,6 @@ export function useMessageList(
     });
   }, [
     addSendMessageToUI,
-    comType,
     convId,
     convType,
     firstMessage,
@@ -1864,7 +1916,6 @@ export function useMessageList(
     onNoMoreMessage,
     requestThreadHeaderMessage,
     sendMessageToServer,
-    setNeedScroll,
     thread,
   ]);
 
@@ -2019,7 +2070,9 @@ export function useMessageList(
         onInputHeightChange: (height: number) => {
           if (inverted === false) {
             if (height > 0) {
-              scrollToBottom();
+              if (comType === 'chat') {
+                // scrollToBottom();
+              }
             }
           }
         },
@@ -2091,6 +2144,14 @@ export function useMessageList(
       tr,
     ]
   );
+
+  React.useEffect(() => {
+    const listener = () => {};
+    addListener(convId, listener);
+    return () => {
+      removeListener(convId, listener);
+    };
+  }, [addListener, convId, removeListener]);
 
   React.useEffect(() => {
     const uiListener: UIConversationListListener = {
@@ -2168,6 +2229,7 @@ export function useMessageList(
       im.messageManager.removeListener(convId);
     };
   }, [
+    comType,
     convId,
     im,
     onAddMessageToUI,
@@ -2214,7 +2276,7 @@ export function useMessageList(
       onChatMessageThreadDestroyed: (event: ChatMessageThreadEvent) => {
         const msgId = event.thread.msgId;
         if (msgId) {
-          onremoveMessageThreadToUI(msgId);
+          onRemoveMessageThreadToUI(msgId);
         }
       },
       onChatMessageThreadUserRemoved: (_event: ChatMessageThreadEvent) => {},
@@ -2227,7 +2289,7 @@ export function useMessageList(
     convId,
     im,
     onUpdateMessageThreadToUI,
-    onremoveMessageThreadToUI,
+    onRemoveMessageThreadToUI,
     updateMessageEmojiToUI,
   ]);
 
@@ -2235,6 +2297,8 @@ export function useMessageList(
     init();
     requestHistoryMessage();
   }, [convId, convType, im.messageManager, init, requestHistoryMessage]);
+
+  console.log('test:zuoyu:useMessageList');
 
   return {
     ...flatListProps,

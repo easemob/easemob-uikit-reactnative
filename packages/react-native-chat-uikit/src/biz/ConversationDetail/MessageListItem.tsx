@@ -43,7 +43,7 @@ import { SingleLineText, Text } from '../../ui/Text';
 import { formatTsForConvDetail } from '../../utils';
 import { Avatar } from '../Avatar';
 import { gMaxVoiceDuration } from '../const';
-import { MessageHistoryListItem } from './MessageHistoryListItem';
+import { MessageHistoryListItemMemo } from './MessageHistoryListItem';
 import {
   getFileSize,
   getImageShowSize,
@@ -1325,11 +1325,10 @@ export function MessageThread(props: MessageThreadProps) {
         <View style={{ flexGrow: 1 }} />
         <SingleLineText
           paletteType={'label'}
-          textType={'medium'}
+          textType={'small'}
           style={{
             color: getColor('common'),
             fontFamily: fontFamily,
-            maxWidth: '30%',
           }}
         >
           {tr(
@@ -1337,6 +1336,15 @@ export function MessageThread(props: MessageThreadProps) {
             `${thread.msgCount > 99 ? '+99' : thread.msgCount}`
           )}
         </SingleLineText>
+        <Icon
+          name={'chevron_right_small' as IconNameType}
+          style={{
+            width: 16,
+            height: 16,
+            margin: -4,
+            tintColor: getColor('common'),
+          }}
+        />
       </View>
       <SingleLineText
         paletteType={'label'}
@@ -2299,7 +2307,7 @@ export function MessageListItem(props: MessageListItemProps) {
         />
       ) : null}
       {modelType === 'history' ? (
-        <MessageHistoryListItem model={model as MessageHistoryModel} />
+        <MessageHistoryListItemMemo model={model as MessageHistoryModel} />
       ) : null}
     </View>
   );

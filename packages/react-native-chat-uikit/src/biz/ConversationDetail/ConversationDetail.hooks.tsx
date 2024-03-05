@@ -404,6 +404,8 @@ export function useConversationDetail(props: ConversationDetailProps) {
     };
   }
 
+  console.log('test:zuoyu:useConversationDetail');
+
   return {
     onClickedSend,
     _messageInputRef,

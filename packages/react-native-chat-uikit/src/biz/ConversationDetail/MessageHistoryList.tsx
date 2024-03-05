@@ -20,7 +20,7 @@ import {
   LoadingPlaceholder,
 } from '../Placeholder';
 import { TopNavigationBar } from '../TopNavigationBar';
-import { MessageHistoryListItem } from './MessageHistoryListItem';
+import { MessageHistoryListItemMemo } from './MessageHistoryListItem';
 import type {
   MessageHistoryListItemProps,
   MessageHistoryListProps,
@@ -94,7 +94,7 @@ export function MessageHistoryList(props: MessageHistoryListProps) {
             info: ListRenderItemInfo<MessageHistoryListItemProps>
           ) => {
             const { item } = info;
-            return <MessageHistoryListItem {...item} />;
+            return <MessageHistoryListItemMemo {...item} />;
           }}
           keyExtractor={(item: MessageHistoryListItemProps) => {
             return item.model.msg.msgId;

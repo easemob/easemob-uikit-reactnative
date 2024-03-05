@@ -245,3 +245,5 @@ export function MessageHistoryVideo(props: MessageHistoryVideoProps) {
     </View>
   );
 }
+
+export const MessageHistoryListItemMemo = React.memo(MessageHistoryListItem);
