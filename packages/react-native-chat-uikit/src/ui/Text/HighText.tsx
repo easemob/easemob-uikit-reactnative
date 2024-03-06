@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColorValue, StyleProp, View, ViewStyle } from 'react-native';
+import type { ColorValue, StyleProp, TextStyle } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
@@ -10,7 +10,7 @@ export type HighTextProps = Omit<TextProps, 'children'> & {
   content: string;
   highColors?: ColorValue[];
   textColors?: ColorValue[];
-  containerStyle?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<TextStyle>;
 };
 
 /**
@@ -22,16 +22,17 @@ export function HighText(props: HighTextProps) {
   const { containerStyle } = props;
   const { getContent } = useHighText(props);
   return (
-    <View
+    <Text
       style={[
         {
           flexDirection: 'row',
         },
         containerStyle,
       ]}
+      numberOfLines={1}
     >
       {getContent()}
-    </View>
+    </Text>
   );
 }
 
@@ -78,7 +79,7 @@ export function useHighText(props: HighTextProps) {
           );
         } else {
           return (
-            <View key={index} style={{ flexDirection: 'row' }}>
+            <Text key={index} style={{ flexDirection: 'row' }}>
               <Text
                 key={index * 10 + 1}
                 {...others}
@@ -93,7 +94,7 @@ export function useHighText(props: HighTextProps) {
               >
                 {keyword}
               </Text>
-            </View>
+            </Text>
           );
         }
       }
