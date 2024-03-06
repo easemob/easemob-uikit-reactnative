@@ -24,6 +24,10 @@ export type BlockButtonsProps = {
    */
   hasVideoCall?: boolean;
   /**
+   * Whether to display the search button.
+   */
+  hasSearch?: boolean;
+  /**
    * Send message button callback.
    */
   onSendMessage?: () => void;
@@ -36,6 +40,10 @@ export type BlockButtonsProps = {
    */
   onVideoCall?: () => void;
   /**
+   * Search button callback.
+   */
+  onSearch?: () => void;
+  /**
    * Registrar. Change custom button array component. Implement a custom method, provide a default button array component, and return a new button array component.
    */
   onInitButton?: (
@@ -47,10 +55,12 @@ export const BlockButtons = (props: BlockButtonsProps) => {
     hasAudioCall = false,
     hasSendMessage = true,
     hasVideoCall = false,
+    hasSearch = true,
     onSendMessage,
     onAudioCall,
     onVideoCall,
     onInitButton,
+    onSearch,
   } = props;
   const { tr } = useI18nContext();
   const items = [] as React.ReactElement<BlockButtonProps>[];
@@ -84,6 +94,17 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         text={tr('_uikit_info_send_video')}
         containerStyle={{ height: 62, width: 114 }}
         onPress={onVideoCall}
+      />
+    );
+  }
+  if (hasSearch) {
+    items.push(
+      <BlockButton
+        key={'102'}
+        iconName={'magnifier'}
+        text={tr('_uikit_info_search_message')}
+        containerStyle={{ height: 62, width: 114 }}
+        onPress={onSearch}
       />
     );
   }

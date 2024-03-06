@@ -85,6 +85,11 @@ export function ContactInfoScreen(props: Props) {
             },
           });
         }}
+        onSearch={(id) => {
+          navigation.push('MessageSearch', {
+            params: { convId: id, convType: 0 },
+          });
+        }}
       />
     </SafeAreaView>
   );

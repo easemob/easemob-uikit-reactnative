@@ -55,6 +55,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       onCopyId,
       onClickedRemark,
       getNickName,
+      onSearch,
     } = useContactInfo(props, ref);
     const { cornerRadius } = useThemeContext();
     const { input } = cornerRadius;
@@ -216,6 +217,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
                 onAudioCall={onAudioCall}
                 onVideoCall={onVideoCall}
                 onInitButton={onInitButton}
+                onSearch={onSearch}
               />
             </>
           ) : null}

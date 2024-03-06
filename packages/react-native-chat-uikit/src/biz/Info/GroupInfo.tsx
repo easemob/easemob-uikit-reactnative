@@ -57,6 +57,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
       onAudioCall,
       isOwner,
       tr,
+      onSearch,
     } = useGroupInfo(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -216,6 +217,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               onAudioCall={onAudioCall}
               onVideoCall={onVideoCall}
               onInitButton={onInitButton}
+              onSearch={onSearch}
             />
           </View>
           <View style={{ height: 20 }} />

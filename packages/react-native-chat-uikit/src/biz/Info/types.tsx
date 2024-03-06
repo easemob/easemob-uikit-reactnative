@@ -54,6 +54,10 @@ export type InfoProps = PropsWithBack &
      */
     onVideoCall?: (id: string) => void;
     /**
+     * Search button callback.
+     */
+    onSearch?: (id: string) => void;
+    /**
      * Callback notification of copy ID. If set it is up to the user to determine the behavior.
      */
     onCopyId?: (id: string) => void;

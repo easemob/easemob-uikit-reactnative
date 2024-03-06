@@ -133,7 +133,7 @@ export const MessageThreadList = React.forwardRef<
             info: ListRenderItemInfo<MessageThreadListItemProps>
           ) => {
             const { item } = info;
-            return <ListItemRender {...item} onClicked={onClickedItem} />;
+            return <ListItemRenderMemo {...item} onClicked={onClickedItem} />;
           }}
           keyExtractor={(item: MessageThreadListItemProps) => {
             return item.model.id;
@@ -352,3 +352,5 @@ function ListItemRender(props: MessageThreadListItemProps) {
     </Pressable>
   );
 }
+
+const ListItemRenderMemo = React.memo(ListItemRender);

@@ -73,6 +73,7 @@ export function DefaultListSearchItem<
             flexDirection: 'row',
             flexGrow: 1,
             paddingLeft: 12,
+            maxWidth: '80%',
           }}
           keyword={keyword}
           content={data.name ?? data.id}

@@ -132,6 +132,11 @@ export function GroupInfoScreen(props: Props) {
         onGroupQuit={() => {
           navigation.goBack();
         }}
+        onSearch={(id) => {
+          navigation.push('MessageSearch', {
+            params: { convId: id, convType: 1 },
+          });
+        }}
       />
     </SafeAreaView>
   );

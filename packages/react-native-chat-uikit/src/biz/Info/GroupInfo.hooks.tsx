@@ -48,6 +48,7 @@ export function useGroupInfo(
     onSendMessage: propsOnSendMessage,
     onAudioCall: propsOnAudioCall,
     onVideoCall: propsOnVideoCall,
+    onSearch: propsOnSearch,
     onClickedNavigationBarButton,
   } = props;
   const im = useChatContext();
@@ -341,6 +342,12 @@ export function useGroupInfo(
     }
   };
 
+  const onSearch = () => {
+    if (propsOnSearch) {
+      propsOnSearch(groupId);
+    }
+  };
+
   React.useEffect(() => {
     const listener: ChatServiceListener = {
       onDestroyed: (params: {
@@ -545,5 +552,6 @@ export function useGroupInfo(
     onAudioCall,
     onVideoCall,
     onSendMessage,
+    onSearch,
   };
 }

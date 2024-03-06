@@ -423,6 +423,7 @@ export function useMessageList(
             setNeedScroll(false);
           }
         }
+        // console.log('test:zuoyu:delayExecTask:', needScrollRef.current);
       },
       [dataRef, inverted, refreshToUI, scrollTo, setNeedScroll]
     )
@@ -457,6 +458,7 @@ export function useMessageList(
           isTopRef.current = false;
         }
       }
+      // console.log('test:zuoyu:onScroll:', isTopRef.current, isBottomRef.current);
       if (userScrollGestureRef.current === true) {
         delayExecTask({ ...event });
       }
@@ -2297,8 +2299,6 @@ export function useMessageList(
     init();
     requestHistoryMessage();
   }, [convId, convType, im.messageManager, init, requestHistoryMessage]);
-
-  console.log('test:zuoyu:useMessageList');
 
   return {
     ...flatListProps,

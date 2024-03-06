@@ -32,6 +32,7 @@ export function useContactInfo(
     onSendMessage: propsOnSendMessage,
     onAudioCall: propsOnAudioCall,
     onVideoCall: propsOnVideoCall,
+    onSearch: propsOnSearch,
     onClickedNavigationBarButton,
     onAddContact: propsOnAddContact,
     onCopyId: propsOnCopyId,
@@ -168,13 +169,19 @@ export function useContactInfo(
 
   const onAudioCall = () => {
     if (propsOnAudioCall) {
-      propsOnAudioCall(userId);
+      propsOnAudioCall?.(userId);
     }
   };
 
   const onVideoCall = () => {
     if (propsOnVideoCall) {
-      propsOnVideoCall(userId);
+      propsOnVideoCall?.(userId);
+    }
+  };
+
+  const onSearch = () => {
+    if (propsOnSearch) {
+      propsOnSearch?.(userId);
     }
   };
 
@@ -315,5 +322,6 @@ export function useContactInfo(
     onCopyId,
     onClickedRemark,
     getNickName,
+    onSearch,
   };
 }

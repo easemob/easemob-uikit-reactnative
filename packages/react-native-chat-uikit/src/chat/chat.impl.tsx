@@ -2614,6 +2614,31 @@ export class ChatServiceImpl
     });
   }
 
+  getMessagesByKeyword(params: {
+    keyword: string;
+    convId: string;
+    convType: ChatConversationType;
+    direction?: ChatSearchDirection;
+    timestamp?: number;
+    maxCount?: number;
+    onResult: ResultCallback<ChatMessage[]>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.searchMsgFromDB(
+        params.keyword,
+        params.timestamp,
+        params.maxCount ?? 200,
+        params.convId,
+        params.direction
+      ),
+      event: 'getMessagesByKeyword',
+      onFinished: (value) => {
+        params.onResult({ isOk: true, value: value });
+        return false;
+      },
+    });
+  }
+
   addReactionToMessage(params: {
     msgId: string;
     reaction: string;

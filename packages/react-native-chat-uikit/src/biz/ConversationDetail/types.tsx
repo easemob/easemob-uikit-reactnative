@@ -12,6 +12,7 @@ import type { TopNavigationBarElementType } from '../TopNavigationBar';
 import type {
   ListActions,
   PropsWithBack,
+  PropsWithCancel,
   PropsWithError,
   PropsWithNavigationBar,
   PropsWithRef,
@@ -554,6 +555,13 @@ export type MessageHistoryModel = BasicModel & {
    */
   msg: ChatMessage;
 };
+
+export type MessageSearchModel = MessageHistoryModel & {
+  /**
+   * The search keyword.
+   */
+  keyword: string;
+};
 /**
  * Message list item actions properties.
  */
@@ -1058,5 +1066,36 @@ export type MessageHistoryListProps = PropsWithTest &
      * The container style of the message history list component.
      */
     containerStyle?: StyleProp<ViewStyle>;
+    /**
+     * The message object.
+     *
+     * This message is combine type message.
+     */
     message: ChatMessage;
+  };
+
+export type MessageSearchItemProps = {
+  /**
+   * The message search model.
+   */
+  model: MessageSearchModel;
+  /**
+   * Callback notification when a list item is clicked.
+   */
+  onClicked?: (model: MessageSearchModel) => void;
+};
+export type MessageSearchProps = PropsWithTest &
+  PropsWithCancel<MessageSearchModel> & {
+    /**
+     * The container style of the message history list component.
+     */
+    containerStyle?: StyleProp<ViewStyle>;
+    /**
+     * The conversation ID.
+     */
+    convId: string;
+    /**
+     * The conversation type.
+     */
+    convType: ChatConversationType;
   };

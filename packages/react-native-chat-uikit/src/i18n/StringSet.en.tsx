@@ -73,6 +73,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_info_send_msg': 'Send Message',
     '_uikit_info_send_audio': 'Audio Call',
     '_uikit_info_send_video': 'Video Call',
+    '_uikit_info_search_message': 'Search Messages',
     '_uikit_info_search_msg': 'Search Messages',
     '_uikit_info_not_disturb': 'Do Not Disturb',
     '_uikit_info_clear_msg': 'Clear Chat History',

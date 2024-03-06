@@ -80,7 +80,10 @@ export function setUserInfoToMessage(params: {
 /**
  * Get message snapshot.
  */
-export function getMessageSnapshot(msg?: ChatMessage): string {
+export function getMessageSnapshot(
+  msg?: ChatMessage,
+  withName?: boolean
+): string {
   if (msg === undefined) {
     return '';
   }
@@ -91,7 +94,10 @@ export function getMessageSnapshot(msg?: ChatMessage): string {
       );
       if (msg.chatType === ChatMessageChatType.GroupChat) {
         const user = userInfoFromMessage(msg);
-        return `${user?.userName ?? user?.userId ?? msg.from}: ${content}`;
+        if (withName === undefined && withName === true) {
+          return `${user?.userName ?? user?.userId ?? msg.from}: ${content}`;
+        }
+        return `${content}`;
       } else {
         return content;
       }

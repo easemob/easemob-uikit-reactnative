@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ListRenderItemInfo, View } from 'react-native';
+import { ListRenderItemInfo, RefreshControl, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
@@ -117,11 +117,29 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             ref={flatListRef}
             onLayout={onLayout}
             onContentSizeChange={onContentSizeChange}
+            refreshControl={
+              refreshing !== undefined ? (
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  // size={100}
+                  enabled={false}
+                  colors={['blue', 'yellow', 'green']}
+                  progressBackgroundColor={getColor('bg')}
+                  tintColor={'red'}
+                  style={{
+                    height: 1,
+                    // width: 100,
+                    backgroundColor: 'green',
+                  }}
+                />
+              ) : undefined
+            }
             // style={{ flexGrow: 1 }}
             // contentContainerStyle={{ flexGrow: 1 }}
             data={data}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
+            // refreshing={refreshing}
+            // onRefresh={onRefresh}
             inverted={inverted}
             scrollEventThrottle={scrollEventThrottle}
             renderItem={(info: ListRenderItemInfo<MessageListItemProps>) => {

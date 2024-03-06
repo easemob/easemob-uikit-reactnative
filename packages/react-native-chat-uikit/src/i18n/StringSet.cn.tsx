@@ -72,6 +72,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_info_send_msg': '发消息',
     '_uikit_info_send_audio': '音频通话',
     '_uikit_info_send_video': '视频通话',
+    '_uikit_info_search_message': '搜索消息',
     '_uikit_info_search_msg': '搜索消息',
     '_uikit_info_not_disturb': '消息免打扰',
     '_uikit_info_clear_msg': '清空聊天记录',

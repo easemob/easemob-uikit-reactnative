@@ -624,6 +624,16 @@ export interface MessageServices {
   fetchCombineMessageDetail(params: {
     msg: ChatMessage;
   }): Promise<ChatMessage[]>;
+
+  getMessagesByKeyword(params: {
+    keyword: string;
+    convId: string;
+    convType: ChatConversationType;
+    direction?: ChatSearchDirection;
+    timestamp?: number;
+    maxCount?: number;
+    onResult: ResultCallback<ChatMessage[]>;
+  }): void;
 }
 
 export interface MessageReactionServices {

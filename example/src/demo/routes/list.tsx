@@ -143,6 +143,10 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  MessageSearch: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
 };
 export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
@@ -295,6 +299,10 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   MessageHistoryList: {
+    option: undefined,
+    params: undefined,
+  },
+  MessageSearch: {
     option: undefined,
     params: undefined,
   },
