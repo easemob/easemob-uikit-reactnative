@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ListRenderItemInfo, RefreshControl, View } from 'react-native';
+import { ListRenderItemInfo, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
@@ -36,9 +36,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
     const {
       ref: flatListRef,
       data,
-      refreshing,
-      onRefresh,
-      onMore,
+      onInit,
       viewabilityConfig,
       onViewableItemsChanged,
       listState,
@@ -62,6 +60,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       scrollEventThrottle,
       onMomentumScrollEnd,
       onScroll,
+      onTouchMove,
       onScrollBeginDrag,
       onScrollEndDrag,
       onLayout,
@@ -117,24 +116,26 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             ref={flatListRef}
             onLayout={onLayout}
             onContentSizeChange={onContentSizeChange}
-            refreshControl={
-              refreshing !== undefined ? (
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={onRefresh}
-                  // size={100}
-                  enabled={false}
-                  colors={['blue', 'yellow', 'green']}
-                  progressBackgroundColor={getColor('bg')}
-                  tintColor={'red'}
-                  style={{
-                    height: 1,
-                    // width: 100,
-                    backgroundColor: 'green',
-                  }}
-                />
-              ) : undefined
-            }
+            // refreshControl={
+            //   refreshing !== undefined ? (
+            //     <RefreshControl
+            //       refreshing={refreshing}
+            //       onRefresh={onRefresh}
+            //       // size={100}
+            //       // enabled={false}
+            //       colors={[getColor('bg') ?? 'white']}
+            //       progressBackgroundColor={getColor('bg')}
+            //       tintColor={getColor('bg')}
+            //       style={
+            //         {
+            //           // height: 1,
+            //           // width: 100,
+            //           // backgroundColor: 'green',
+            //         }
+            //       }
+            //     />
+            //   ) : undefined
+            // }
             // style={{ flexGrow: 1 }}
             // contentContainerStyle={{ flexGrow: 1 }}
             data={data}
@@ -164,7 +165,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             keyExtractor={(item: MessageListItemProps) => {
               return item.id;
             }}
-            onEndReached={onMore}
+            // onEndReached={onMore}
             onEndReachedThreshold={reachedThreshold}
             viewabilityConfig={viewabilityConfig}
             onViewableItemsChanged={onViewableItemsChanged}
@@ -173,6 +174,8 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             onScrollEndDrag={onScrollEndDrag}
             onScrollBeginDrag={onScrollBeginDrag}
             bounces={bounces}
+            onTouchMove={onTouchMove}
+            // overScrollMode={'always'}
             // !!! This effect does not work well when inserting the first element without scrolling.
             // maintainVisibleContentPosition={{
             //   minIndexForVisible: 0,
@@ -183,7 +186,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
               listState === 'error' ? (
                 <ErrorPlaceholder
                   onClicked={() => {
-                    onRefresh?.();
+                    onInit?.();
                   }}
                 />
               ) : null

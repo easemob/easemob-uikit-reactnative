@@ -391,8 +391,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     loadCount: number;
     direction?: ChatSearchDirection;
     isChatThread?: boolean;
-    onResult: (msgs: ChatMessage[]) => void;
-  }): void {
+  }): Promise<ChatMessage[]> {
     const { convId, convType, startMsgId, loadCount, direction, isChatThread } =
       params;
     return this._client.getHistoryMessage({
@@ -402,14 +401,6 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       direction: direction ?? ChatSearchDirection.UP,
       loadCount: loadCount,
       isChatThread: isChatThread,
-      onResult: (result) => {
-        if (result.isOk && result.value) {
-          // todo: try download failed thumb. dispatch download result.
-          params.onResult(result.value);
-        } else {
-          params.onResult([]);
-        }
-      },
     });
   }
 

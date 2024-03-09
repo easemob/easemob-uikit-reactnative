@@ -120,8 +120,7 @@ export interface MessageCacheManager
     loadCount: number;
     direction?: ChatSearchDirection;
     isChatThread?: boolean;
-    onResult: (msgs: ChatMessage[]) => void;
-  }): void;
+  }): Promise<ChatMessage[]>;
   /**
    * Send message read ack for received message.
    */

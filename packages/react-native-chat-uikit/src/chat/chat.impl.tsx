@@ -2499,11 +2499,10 @@ export class ChatServiceImpl
     direction: ChatSearchDirection;
     loadCount: number;
     isChatThread?: boolean;
-    onResult: ResultCallback<ChatMessage[]>;
-  }): void {
+  }): Promise<ChatMessage[]> {
     const { convId, convType, startMsgId, direction, loadCount, isChatThread } =
       params;
-    this.tryCatch({
+    return this.tryCatchSync({
       promise: this.client.chatManager.getMessages(
         convId,
         convType,
@@ -2513,10 +2512,6 @@ export class ChatServiceImpl
         isChatThread
       ),
       event: 'getHistoryMessage',
-      onFinished: (value) => {
-        params.onResult({ isOk: true, value: value });
-        return false;
-      },
     });
   }
   fetchHistoryMessages(params: {
@@ -2525,20 +2520,15 @@ export class ChatServiceImpl
     startMsgId: string;
     direction: ChatSearchDirection;
     pageSize: number;
-    onResult: ResultCallback<ChatCursorResult<ChatMessage>>;
-  }): void {
+  }): Promise<ChatCursorResult<ChatMessage>> {
     const { convId, convType, startMsgId, direction, pageSize } = params;
-    this.tryCatch({
+    return this.tryCatchSync({
       promise: this.client.chatManager.fetchHistoryMessages(convId, convType, {
         startMsgId,
         direction,
         pageSize,
       }),
       event: 'fetchHistoryMessages',
-      onFinished: (value) => {
-        params.onResult({ isOk: true, value: value });
-        return false;
-      },
     });
   }
 

@@ -177,7 +177,11 @@ export type MessageInputState =
 /**
  * Conversation detail component type.
  */
-export type ConversationDetailModelType = 'chat' | 'create_thread' | 'thread';
+export type ConversationDetailModelType =
+  | 'chat'
+  | 'create_thread'
+  | 'thread'
+  | 'search';
 
 export type ConversationSelectModeType = 'common' | 'multi';
 
@@ -1098,4 +1102,8 @@ export type MessageSearchProps = PropsWithTest &
      * The conversation type.
      */
     convType: ChatConversationType;
+    /**
+     * Callback notification when a list item is clicked.
+     */
+    onClickedItem: (model: MessageSearchModel) => void;
   };

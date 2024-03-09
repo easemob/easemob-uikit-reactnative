@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type {
+  GestureResponderEvent,
   LayoutChangeEvent,
   ListRenderItemInfo,
   NativeScrollEvent,
@@ -58,7 +59,7 @@ import type {
   ReportItemModel,
 } from '../MessageReport';
 import type { EmojiIconItem } from '../types';
-import { gRequestMaxMessageCount } from './const';
+import { gRequestMaxMessageCount, gRequestMaxThreadCount } from './const';
 import { MessageListItemMemo } from './MessageListItem';
 import { getQuoteAttribute } from './MessageListItem.hooks';
 import type {
@@ -145,19 +146,20 @@ export function useMessageList(
     ref: listRef,
   } = flatListProps;
 
-  const [refreshing, setRefreshing] = React.useState(false);
+  // const [refreshing, setRefreshing] = React.useState(false);
   const preBottomDataRef = React.useRef<MessageListItemProps>();
   const scrollEventThrottle = React.useRef(16).current;
-  const needScrollRef = React.useRef(true);
   const userScrollGestureRef = React.useRef(false);
-  const isBottomRef = React.useRef(true);
-  const isTopRef = React.useRef(true);
+  const isBottomRef = React.useRef(false);
+  const isTopRef = React.useRef(false);
   const heightRef = React.useRef(0);
-  const bounces = React.useRef(true).current;
+  const bounces = React.useRef(false).current;
   const currentVoicePlayingRef = React.useRef<MessageModel | undefined>();
   const { tr } = useI18nContext();
   const im = useChatContext();
   const startMsgIdRef = React.useRef('');
+  const beforeMsgIdRef = React.useRef('');
+  const afterMsgIdRef = React.useRef('');
   const [maxListHeight, setMaxListHeight] = React.useState<number>(0);
   const tmpMessageListRef = React.useRef<MessageModel[]>([]);
   const unreadCountRef = React.useRef(0);
@@ -176,7 +178,9 @@ export function useMessageList(
     })
   );
   // There is no more data.
-  const hasNoMoreRef = React.useRef(false);
+  const hasNoMoreRef = React.useRef(false); // !!! deprecated, use hasNoOldMsgRef and hasNoNewMsgRef
+  const hasNoOldMsgRef = React.useRef(false);
+  const hasNoNewMsgRef = React.useRef(false);
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
   const reportRef = React.useRef<BottomSheetMessageReportRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
@@ -190,10 +194,6 @@ export function useMessageList(
   });
   const {} = useMessageContext();
   const { recallTimeout, languageCode } = useConfigContext();
-
-  const setNeedScroll = React.useCallback((needScroll: boolean) => {
-    needScrollRef.current = needScroll;
-  }, []);
   const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
     userScrollGestureRef.current = isUserScroll;
   }, []);
@@ -212,29 +212,70 @@ export function useMessageList(
     reactionRef.current?.startHide?.();
   }, []);
 
-  const needScrollToBottom = React.useCallback(() => {
-    if (comType === 'thread') {
-      return true;
-    }
-    if (needScrollRef.current === true) {
+  const setIsTop = React.useCallback((isTop: boolean) => {
+    // console.log('test:zuoyu:setIsTop:', isTop, comType);
+    isTopRef.current = isTop;
+  }, []);
+  const setIsBottom = React.useCallback((isBottom: boolean) => {
+    // console.log('test:zuoyu:setIsBottom:', isBottom, comType);
+    isBottomRef.current = isBottom;
+  }, []);
+
+  const setNoNewMsg = React.useCallback((noNewMsg: boolean) => {
+    // console.log('test:zuoyu:setNoNewMsg:', noNewMsg);
+    hasNoNewMsgRef.current = noNewMsg;
+  }, []);
+  const setNoOldMsg = React.useCallback((noOldMsg: boolean) => {
+    // console.log('test:zuoyu:setNoOldMsg:', noOldMsg);
+    hasNoOldMsgRef.current = noOldMsg;
+  }, []);
+
+  const canAddNewMessageToUI = React.useCallback(() => {
+    // console.log(
+    //   'test:zuoyu:canAddNewMessageToUI:',
+    //   hasNoNewMsgRef.current,
+    //   isBottomRef.current
+    // );
+    if (hasNoNewMsgRef.current === true && isBottomRef.current === true) {
       return true;
     }
     return false;
-  }, [comType]);
+  }, []);
+
+  // const needScrollToBottom = React.useCallback(() => {
+  //   return true;
+  //   // if (comType === 'thread') {
+  //   //   return true;
+  //   // }
+  //   // if (needScrollRef.current === true) {
+  //   //   return true;
+  //   // }
+  //   // return false;
+  // }, []);
+
+  const setUnreadCount = React.useCallback(
+    (count: number) => {
+      if (comType === 'chat' || comType === 'search') {
+        unreadCountRef.current = count;
+        onChangeUnreadCount?.(count);
+      }
+    },
+    [comType, onChangeUnreadCount]
+  );
 
   const scrollToBottom = React.useCallback(
     (animated?: boolean) => {
-      if (needScrollToBottom() === true) {
-        timeoutTask(0, () => {
-          if (inverted === true) {
-            listRef?.current?.scrollToIndex?.({ index: 0, animated });
-          } else {
-            listRef?.current?.scrollToEnd?.();
-          }
-        });
-      }
+      timeoutTask(0, () => {
+        if (inverted === true) {
+          listRef?.current?.scrollToIndex?.({ index: 0, animated });
+        } else {
+          listRef?.current?.scrollToEnd?.();
+        }
+      });
+      setIsBottom(true);
+      setUnreadCount(0);
     },
-    [inverted, listRef, needScrollToBottom]
+    [inverted, listRef, setIsBottom, setUnreadCount]
   );
 
   const scrollTo = React.useCallback(
@@ -250,6 +291,7 @@ export function useMessageList(
     (info: ListRenderItemInfo<MessageListItemProps>) => {
       for (const d of dataRef.current) {
         if (d.id === info.item.id) {
+          // console.log('test:zuoyu:onRenderItem', d.id, info.item.index);
           d.index = info.index;
           break;
         }
@@ -328,149 +370,183 @@ export function useMessageList(
   const refreshToUI = React.useCallback(
     (items: MessageListItemProps[]) => {
       dataRef.current = removeDuplicateData(items);
-      if (needScrollToBottom() === true) {
-        if (dataRef.current.length > 0) {
-          if (inverted === true) {
-            preBottomDataRef.current = dataRef.current[0];
-          } else {
-            preBottomDataRef.current =
-              dataRef.current[dataRef.current.length - 1];
-          }
+      if (dataRef.current.length > 0) {
+        if (inverted === true) {
+          preBottomDataRef.current = dataRef.current[0];
+        } else {
+          preBottomDataRef.current =
+            dataRef.current[dataRef.current.length - 1];
         }
         _refreshToUI(dataRef.current);
-        unreadCountRef.current = 0;
-        onChangeUnreadCount?.(unreadCountRef.current);
-      } else {
-        const index = dataRef.current.findIndex((d) => {
-          if (d.id === preBottomDataRef.current?.id) {
-            return true;
-          }
-          return false;
-        });
-        if (index !== -1) {
-          // !!!: Get the element after the specified position in the array and return
-          if (inverted === true) {
-            const tmp = dataRef.current.slice(index);
-            _refreshToUI(tmp);
-            unreadCountRef.current = dataRef.current.length - tmp.length;
-            onChangeUnreadCount?.(unreadCountRef.current);
-          } else {
-            const tmp = dataRef.current.slice(0, index + 1);
-            _refreshToUI(tmp);
-            unreadCountRef.current = dataRef.current.length - tmp.length;
-            onChangeUnreadCount?.(unreadCountRef.current);
-          }
-        } else {
-          _refreshToUI(dataRef.current);
-          unreadCountRef.current = 0;
-          onChangeUnreadCount?.(unreadCountRef.current);
-        }
       }
     },
-    [
-      dataRef,
-      removeDuplicateData,
-      needScrollToBottom,
-      _refreshToUI,
-      onChangeUnreadCount,
-      inverted,
-    ]
+    [dataRef, removeDuplicateData, _refreshToUI, inverted]
   );
+
+  // const refreshToUI = React.useCallback(
+  //   (items: MessageListItemProps[]) => {
+  //     dataRef.current = removeDuplicateData(items);
+  //     if (needScrollToBottom() === true) {
+  //       if (dataRef.current.length > 0) {
+  //         if (inverted === true) {
+  //           preBottomDataRef.current = dataRef.current[0];
+  //         } else {
+  //           preBottomDataRef.current =
+  //             dataRef.current[dataRef.current.length - 1];
+  //         }
+  //       }
+  //       _refreshToUI(dataRef.current);
+  //       unreadCountRef.current = 0;
+  //       onChangeUnreadCount?.(unreadCountRef.current);
+  //     } else {
+  //       const index = dataRef.current.findIndex((d) => {
+  //         if (d.id === preBottomDataRef.current?.id) {
+  //           return true;
+  //         }
+  //         return false;
+  //       });
+  //       if (index !== -1) {
+  //         // !!!: Get the element after the specified position in the array and return
+  //         if (inverted === true) {
+  //           const tmp = dataRef.current.slice(index);
+  //           _refreshToUI(tmp);
+  //           unreadCountRef.current = dataRef.current.length - tmp.length;
+  //           onChangeUnreadCount?.(unreadCountRef.current);
+  //         } else {
+  //           const tmp = dataRef.current.slice(0, index + 1);
+  //           _refreshToUI(tmp);
+  //           unreadCountRef.current = dataRef.current.length - tmp.length;
+  //           onChangeUnreadCount?.(unreadCountRef.current);
+  //         }
+  //       } else {
+  //         _refreshToUI(dataRef.current);
+  //         unreadCountRef.current = 0;
+  //         onChangeUnreadCount?.(unreadCountRef.current);
+  //       }
+  //     }
+  //   },
+  //   [
+  //     dataRef,
+  //     removeDuplicateData,
+  //     needScrollToBottom,
+  //     _refreshToUI,
+  //     onChangeUnreadCount,
+  //     inverted,
+  //   ]
+  // );
 
   // !!! Both gestures and scrolling methods are triggered on the ios platform. However, the android platform only has gesture triggering.
   const onMomentumScrollEnd = React.useCallback(() => {}, []);
 
-  const { delayExecTask } = useDelayExecTask(
-    500,
-    React.useCallback(
-      (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const y = event.nativeEvent.contentOffset.y;
-        if (inverted === true) {
-          if (y < 10) {
-            setNeedScroll(true);
-            const preId = preBottomDataRef.current?.id;
-            refreshToUI(dataRef.current);
-            const item = dataRef.current.find((d) => {
-              if (d.id === preId) {
-                return true;
-              }
-              return false;
-            });
-            if (item?.index !== undefined) {
-              scrollTo(item.index, false);
-            }
-          } else {
-            setNeedScroll(false);
-          }
-        } else {
-          if (
-            y + heightRef.current >
-            event.nativeEvent.contentSize.height - 10
-          ) {
-            setNeedScroll(true);
-            // const preId = preBottomDataRef.current?.id;
-            // refreshToUI(dataRef.current);
-            // const item = dataRef.current.find((d) => {
-            //   if (d.id === preId) {
-            //     return true;
-            //   }
-            //   return false;
-            // });
-            // if (item?.index !== undefined) {
-            //   scrollTo(item.index, false);
-            // }
-          } else {
-            setNeedScroll(false);
-          }
-        }
-        // console.log('test:zuoyu:delayExecTask:', needScrollRef.current);
-      },
-      [dataRef, inverted, refreshToUI, scrollTo, setNeedScroll]
-    )
-  );
+  // const { delayExecTask } = useDelayExecTask(
+  //   500,
+  //   React.useCallback(
+  //     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  //       const y = event.nativeEvent.contentOffset.y;
+  //       if (inverted === true) {
+  //         if (y < 10) {
+  //           setNeedScroll(true);
+  //           const preId = preBottomDataRef.current?.id;
+  //           refreshToUI(dataRef.current);
+  //           const item = dataRef.current.find((d) => {
+  //             if (d.id === preId) {
+  //               return true;
+  //             }
+  //             return false;
+  //           });
+  //           if (item?.index !== undefined) {
+  //             scrollTo(item.index, false);
+  //           }
+  //         } else {
+  //           setNeedScroll(false);
+  //         }
+  //       } else {
+  //         if (
+  //           y + heightRef.current >
+  //           event.nativeEvent.contentSize.height - 10
+  //         ) {
+  //           setNeedScroll(true);
+  //           // const preId = preBottomDataRef.current?.id;
+  //           // refreshToUI(dataRef.current);
+  //           // const item = dataRef.current.find((d) => {
+  //           //   if (d.id === preId) {
+  //           //     return true;
+  //           //   }
+  //           //   return false;
+  //           // });
+  //           // if (item?.index !== undefined) {
+  //           //   scrollTo(item.index, false);
+  //           // }
+  //         } else {
+  //           setNeedScroll(false);
+  //         }
+  //       }
+  //       // console.log('test:zuoyu:delayExecTask:', needScrollRef.current);
+  //     },
+  //     [dataRef, inverted, refreshToUI, scrollTo, setNeedScroll]
+  //   )
+  // );
 
-  const onScroll = React.useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const y = event.nativeEvent.contentOffset.y;
-      if (y + heightRef.current > event.nativeEvent.contentSize.height - 10) {
-        if (inverted === true) {
-          isTopRef.current = true;
-        } else {
-          isBottomRef.current = true;
-        }
-      } else {
-        if (inverted === true) {
-          isTopRef.current = false;
-        } else {
-          isBottomRef.current = false;
-        }
-      }
-      if (y < 10) {
-        if (inverted === true) {
-          isBottomRef.current = true;
-        } else {
-          isTopRef.current = true;
-        }
-      } else {
-        if (inverted === true) {
-          isBottomRef.current = false;
-        } else {
-          isTopRef.current = false;
-        }
-      }
-      // console.log('test:zuoyu:onScroll:', isTopRef.current, isBottomRef.current);
-      if (userScrollGestureRef.current === true) {
-        delayExecTask({ ...event });
-      }
-    },
-    [delayExecTask, inverted]
+  // const requestDataTest = React.useCallback(() => {}, []);
+
+  // const onScroll = React.useCallback(
+  //   (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  //     const y = event.nativeEvent.contentOffset.y;
+  //     if (y + heightRef.current > event.nativeEvent.contentSize.height - 10) {
+  //       if (inverted === true) {
+  //         isTopRef.current = true;
+  //       } else {
+  //         isBottomRef.current = true;
+  //       }
+  //     } else {
+  //       if (inverted === true) {
+  //         isTopRef.current = false;
+  //       } else {
+  //         isBottomRef.current = false;
+  //       }
+  //     }
+  //     if (y < 10) {
+  //       if (inverted === true) {
+  //         isBottomRef.current = true;
+  //       } else {
+  //         isTopRef.current = true;
+  //       }
+  //     } else {
+  //       if (inverted === true) {
+  //         isBottomRef.current = false;
+  //       } else {
+  //         isTopRef.current = false;
+  //       }
+  //     }
+  //     console.log(
+  //       'test:zuoyu:onScroll:',
+  //       inverted,
+  //       isTopRef.current,
+  //       isBottomRef.current,
+  //       y,
+  //       heightRef.current,
+  //       event.nativeEvent.contentSize.height,
+  //       hasNoMoreRef.current
+  //     );
+  //     if (userScrollGestureRef.current === true) {
+  //       delayExecTask({ ...event });
+  //     }
+  //   },
+  //   [delayExecTask, inverted]
+  // );
+
+  const { delayExecTask: delayUserScrollGesture } = useDelayExecTask(
+    1000,
+    React.useCallback(() => {
+      setUserScrollGesture(false);
+    }, [setUserScrollGesture])
   );
 
   const onScrollEndDrag = React.useCallback(
     (_event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      setUserScrollGesture(false);
+      delayUserScrollGesture();
     },
-    [setUserScrollGesture]
+    [delayUserScrollGesture]
   );
   const onScrollBeginDrag = React.useCallback(
     (_event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -598,9 +674,19 @@ export function useMessageList(
         return false;
       });
       if (index !== -1) {
+        const preIndex = dataRef.current.findIndex((d) => {
+          if (d.model.modelType === 'message') {
+            const msgModel = d.model as MessageModel;
+            const preMsgModel = preBottomDataRef.current?.model as MessageModel;
+            if (msgModel.msg.msgId === preMsgModel.msg.msgId) {
+              return true;
+            }
+          }
+          return false;
+        });
         dataRef.current.splice(index, 1);
-        if (index === 0) {
-          preBottomDataRef.current = dataRef.current[0];
+        if (index === preIndex) {
+          preBottomDataRef.current = dataRef.current[index];
         }
         refreshToUI(dataRef.current);
       }
@@ -679,12 +765,8 @@ export function useMessageList(
   );
 
   const onAddMessageListToUI = React.useCallback(
-    async (
-      msgs: ChatMessage[],
-      position: MessageAddPosition,
-      onFinished?: (items: MessageListItemProps[]) => void
-    ) => {
-      const tmp = inverted === true ? msgs.reverse() : msgs;
+    async (msgs: ChatMessage[], position: MessageAddPosition) => {
+      const tmp = inverted === true ? msgs.slice().reverse() : msgs;
       const list = tmp.map(async (msg) => {
         const getModel = async () => {
           let modelType = 'message';
@@ -739,6 +821,14 @@ export function useMessageList(
         } as MessageListItemProps;
       });
       const l = await Promise.all(list);
+      // dataRef.current.forEach((d) => {
+      //   const msgModel = d.model as MessageModel;
+      //   console.log(
+      //     'test:zuoyu:dataref:1',
+      //     msgModel.msg.msgId,
+      //     msgModel.msg.serverTime
+      //   );
+      // });
       if (inverted === true) {
         if (position === 'bottom') {
           dataRef.current = [...l, ...dataRef.current];
@@ -752,9 +842,17 @@ export function useMessageList(
           dataRef.current = [...l, ...dataRef.current];
         }
       }
+      // dataRef.current.forEach((d) => {
+      //   const msgModel = d.model as MessageModel;
+      //   console.log(
+      //     'test:zuoyu:dataref:2',
+      //     msgModel.msg.msgId,
+      //     msgModel.msg.serverTime
+      //   );
+      // });
 
       refreshToUI(dataRef.current);
-      onFinished?.(l as MessageListItemProps[]);
+      return l as MessageListItemProps[];
     },
     [
       comType,
@@ -1365,6 +1463,8 @@ export function useMessageList(
               id: msg.msgId.toString(),
               model: {
                 userId: msg.from,
+                userAvatar: im.getRequestData(msg.from)?.avatar,
+                userName: im.getRequestData(msg.from)?.name,
                 modelType: 'history',
                 msg: msg,
                 checked: selectType === 'multi' ? false : undefined,
@@ -1380,6 +1480,8 @@ export function useMessageList(
             id: msg.msgId.toString(),
             model: {
               userId: msg.from,
+              userAvatar: im.getRequestData(msg.from)?.avatar,
+              userName: im.getRequestData(msg.from)?.name,
               modelType: 'message',
               layoutType: msg.from === im.userId ? 'right' : 'left',
               msg: msg,
@@ -1392,7 +1494,6 @@ export function useMessageList(
           inverted === true ? 'bottom' : 'bottom'
         );
       }
-      // scrollToBottom(true);
     },
     [comType, im, onAddDataToUI, selectType, getStyle, inverted]
   );
@@ -1464,6 +1565,27 @@ export function useMessageList(
     [im]
   );
 
+  const sendMessageToServer = React.useCallback(
+    (msg: ChatMessage) => {
+      im.messageManager.sendMessage(msg);
+    },
+    [im]
+  );
+
+  const createThread = React.useCallback(
+    (onResult: ResultCallback<ChatMessageThread>) => {
+      if (msgId && parentId) {
+        im.createThread({
+          name: newThreadName ?? 'default_name',
+          msgId: msgId,
+          parentId: parentId,
+          onResult: onResult,
+        });
+      }
+    },
+    [im, msgId, newThreadName, parentId]
+  );
+
   // todo: how to do?
   // const setRecvMessageRead = React.useCallback(
   //   (msg: ChatMessage) => {
@@ -1481,6 +1603,201 @@ export function useMessageList(
   //   },
   //   [convId, convType, im.messageManager]
   // );
+
+  const getDataMessage = React.useCallback(
+    (position: 'first' | 'last') => {
+      let data = dataRef.current;
+      if (position === 'first') {
+        if (inverted === true) {
+          data = dataRef.current.slice().reverse();
+        }
+      } else if (position === 'last') {
+        if (inverted === false) {
+          data = dataRef.current.slice().reverse();
+        }
+      }
+      const index = data.findIndex((d) => {
+        return d.model.modelType === 'message';
+      });
+      if (index !== -1) {
+        return data[index]!.model as MessageModel;
+      }
+      return undefined;
+    },
+    [dataRef, inverted]
+  );
+
+  const isGettingRef = React.useRef(false);
+  const setIsGetting = React.useCallback((value: boolean) => {
+    // console.log('test:zuoyu:setIsGetting:', value);
+    isGettingRef.current = value;
+  }, []);
+  const requestBeforeMessages = React.useCallback(
+    async (startId: string) => {
+      // console.log(
+      //   'test:zuoyu:requestBeforeMessages',
+      //   hasNoOldMsgRef.current,
+      //   isGettingRef.current
+      // );
+      if (hasNoOldMsgRef.current === true) {
+        onNoMoreMessage?.();
+        return;
+      }
+      if (isGettingRef.current === false) {
+        setIsGetting(true);
+      } else {
+        return;
+      }
+
+      try {
+        do {
+          const msgs = await im.messageManager.loadHistoryMessage({
+            convId,
+            convType,
+            startMsgId: startId,
+            loadCount: gRequestMaxMessageCount,
+            direction: ChatSearchDirection.UP,
+          });
+          if (msgs.length < gRequestMaxMessageCount) {
+            setNoOldMsg(true);
+          }
+          if (msgs.length > 0) {
+            const newStartMsgId = msgs[0]!.msgId;
+            if (newStartMsgId === beforeMsgIdRef.current) {
+              // console.log('test:zuoyu:ba:3', newStartMsgId);
+              break;
+            }
+            beforeMsgIdRef.current = msgs[0]!.msgId;
+            afterMsgIdRef.current =
+              dataRef.current.length === 0
+                ? msgs[msgs.length - 1]!.msgId
+                : getDataMessage('last')?.msg.msgId ?? '';
+            // console.log(
+            //   'test:zuoyu:ba:',
+            //   dataRef.current.length,
+            //   beforeMsgIdRef.current,
+            //   afterMsgIdRef.current
+            // );
+            // msgs.forEach((item) => {
+            //   console.log('test:zuoyu:msgs:', item.msgId, item.serverTime);
+            // });
+            const list = await onAddMessageListToUI(msgs, 'top');
+            list.map((v) => {
+              if (v.model.modelType === 'message') {
+                const msgModel = v.model as MessageModel;
+                sendRecvMessageReadAck(msgModel.msg);
+              }
+            });
+          }
+          setIsGetting(false);
+        } while (false);
+      } catch (error) {
+        console.warn('dev:requestBeforeMessages:', error);
+        setIsGetting(false);
+      }
+    },
+    [
+      convId,
+      convType,
+      dataRef,
+      getDataMessage,
+      im.messageManager,
+      onAddMessageListToUI,
+      onNoMoreMessage,
+      sendRecvMessageReadAck,
+      setIsGetting,
+      setNoOldMsg,
+    ]
+  );
+  const requestAfterMessages = React.useCallback(
+    async (startId: string, maxCount?: number) => {
+      // console.log(
+      //   'test:zuoyu:requestAfterMessages',
+      //   startId,
+      //   maxCount,
+      //   hasNoNewMsgRef.current,
+      //   isGettingRef.current
+      // );
+      if (hasNoNewMsgRef.current === true) {
+        setUnreadCount(0);
+        return;
+      }
+      if (isGettingRef.current === false) {
+        setIsGetting(true);
+      } else {
+        return;
+      }
+
+      try {
+        do {
+          const msgs = await im.messageManager.loadHistoryMessage({
+            convId,
+            convType,
+            startMsgId: startId,
+            loadCount: maxCount ?? gRequestMaxMessageCount,
+            direction: ChatSearchDirection.DOWN,
+          });
+          if (msgs.length < gRequestMaxMessageCount) {
+            setNoNewMsg(true);
+          }
+          if (msgs.length > 0) {
+            const newStartMsgId = msgs[msgs.length - 1]!.msgId;
+            if (newStartMsgId === afterMsgIdRef.current) {
+              // console.log('test:zuoyu:ba:1', newStartMsgId);
+              break;
+            }
+            beforeMsgIdRef.current =
+              dataRef.current.length === 0
+                ? msgs[0]!.msgId
+                : getDataMessage('first')?.msg.msgId ?? '';
+            afterMsgIdRef.current = msgs[msgs.length - 1]!.msgId;
+            // console.log(
+            //   'test:zuoyu:ba:2',
+            //   dataRef.current.length,
+            //   beforeMsgIdRef.current,
+            //   afterMsgIdRef.current
+            // );
+            // msgs.forEach((item) => {
+            //   console.log('test:zuoyu:msgs:', item.msgId, item.serverTime);
+            // });
+            const list = await onAddMessageListToUI(msgs, 'bottom');
+            list.map((v) => {
+              if (v.model.modelType === 'message') {
+                const msgModel = v.model as MessageModel;
+                sendRecvMessageReadAck(msgModel.msg);
+              }
+            });
+          }
+        } while (false);
+        setIsGetting(false);
+      } catch (error) {
+        console.warn('dev:requestAfterMessages:', error);
+        setIsGetting(false);
+      }
+    },
+    [
+      setUnreadCount,
+      setIsGetting,
+      im.messageManager,
+      convId,
+      convType,
+      setNoNewMsg,
+      dataRef,
+      getDataMessage,
+      onAddMessageListToUI,
+      sendRecvMessageReadAck,
+    ]
+  );
+
+  const loadAllLatestMessage = React.useCallback(async () => {
+    while (true) {
+      // console.log('test:zuoyu:loadAllLatestMessage:', hasNoNewMsgRef.current);
+      await requestAfterMessages(afterMsgIdRef.current, 400);
+      if (hasNoNewMsgRef.current === true) {
+        break;
+      }
+    }
+  }, [requestAfterMessages]);
 
   const _addSendMessageToUI = React.useCallback(
     (
@@ -1523,6 +1840,8 @@ export function useMessageList(
           id: msg.msgId.toString(),
           model: {
             userId: msg.from,
+            userAvatar: im.user(im.userId)?.avatarURL,
+            userName: im.user(im.userId)?.userName,
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
@@ -1552,6 +1871,8 @@ export function useMessageList(
           id: msg.msgId.toString(),
           model: {
             userId: msg.from,
+            userAvatar: im.user(im.userId)?.avatarURL,
+            userName: im.user(im.userId)?.userName,
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
@@ -1579,6 +1900,8 @@ export function useMessageList(
           id: msg.msgId.toString(),
           model: {
             userId: msg.from,
+            userAvatar: im.user(im.userId)?.avatarURL,
+            userName: im.user(im.userId)?.userName,
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
@@ -1609,6 +1932,8 @@ export function useMessageList(
           id: msg.msgId.toString(),
           model: {
             userId: msg.from,
+            userAvatar: im.user(im.userId)?.avatarURL,
+            userName: im.user(im.userId)?.userName,
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
@@ -1635,6 +1960,8 @@ export function useMessageList(
           id: msg.msgId.toString(),
           model: {
             userId: msg.from,
+            userAvatar: im.user(im.userId)?.avatarURL,
+            userName: im.user(im.userId)?.userName,
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
@@ -1664,6 +1991,8 @@ export function useMessageList(
           id: msg.msgId.toString(),
           model: {
             userId: msg.from,
+            userAvatar: im.user(im.userId)?.avatarURL,
+            userName: im.user(im.userId)?.userName,
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
@@ -1681,6 +2010,8 @@ export function useMessageList(
           id: msg.msgId.toString(),
           model: {
             userId: msg.from,
+            userAvatar: im.user(im.userId)?.avatarURL,
+            userName: im.user(im.userId)?.userName,
             modelType: 'message',
             layoutType: messageLayoutType ?? 'right',
             msg: msg,
@@ -1735,7 +2066,7 @@ export function useMessageList(
   );
 
   const addSendMessageToUI = React.useCallback(
-    (
+    async (params: {
       value:
         | SendFileProps
         | SendImageProps
@@ -1745,16 +2076,32 @@ export function useMessageList(
         | SendTimeProps
         | SendSystemProps
         | SendCardProps
-        | SendCustomProps,
+        | SendCustomProps;
 
-      onFinished?: (item: MessageListItemProps) => void
-    ) => {
-      let isShow = true;
-      if (comType === 'chat') {
-      } else if (comType === 'thread' && hasNoMoreRef.current === true) {
-      } else {
-        isShow = false;
+      onFinished?: (item: MessageListItemProps) => void;
+      onBeforeCallback?: () => void | Promise<void>;
+    }) => {
+      const { value, onFinished, onBeforeCallback } = params;
+      let isShow = canAddNewMessageToUI();
+      if (comType === 'chat' || comType === 'search') {
+        if (isShow === false) {
+          isShow = true;
+          await loadAllLatestMessage();
+          await onBeforeCallback?.();
+        }
+      } else if (comType === 'thread') {
+        if (isShow === false) {
+          setNoNewMsg(false);
+        }
       }
+      console.log(
+        'dev:addSendMessageToUI:',
+        comType,
+        hasNoNewMsgRef.current,
+        isBottomRef.current,
+        isShow,
+        canAddNewMessageToUI()
+      );
       let ret: MessageListItemProps | undefined = _addSendMessageToUI(
         value,
         isShow
@@ -1762,8 +2109,8 @@ export function useMessageList(
       console.log(
         'dev:addSendMessageToUI:',
         comType,
-        hasNoMoreRef.current,
-        needScrollToBottom(),
+        hasNoNewMsgRef.current,
+        isBottomRef.current,
         isShow
       );
       if (ret) {
@@ -1773,14 +2120,250 @@ export function useMessageList(
         }
       }
     },
-    [_addSendMessageToUI, comType, needScrollToBottom, scrollToBottom]
+    [
+      _addSendMessageToUI,
+      canAddNewMessageToUI,
+      comType,
+      loadAllLatestMessage,
+      scrollToBottom,
+      setNoNewMsg,
+    ]
   );
 
-  const sendMessageToServer = React.useCallback(
-    (msg: ChatMessage) => {
-      im.messageManager.sendMessage(msg);
+  const requestThreadAfterMessages = React.useCallback(
+    async (startId: string, maxCount?: number) => {
+      // console.log(
+      //   'test:zuoyu:requestThreadAfterMessages',
+      //   startId,
+      //   maxCount,
+      //   hasNoNewMsgRef.current,
+      //   isGettingRef.current,
+      //   comType
+      // );
+      if (hasNoNewMsgRef.current === true) {
+        setUnreadCount(0);
+        return;
+      }
+      if (isGettingRef.current === false) {
+        setIsGetting(true);
+      } else {
+        return;
+      }
+
+      try {
+        do {
+          const result = await im.fetchHistoryMessages({
+            convId,
+            convType,
+            startMsgId: startId,
+            direction: ChatSearchDirection.DOWN,
+            pageSize: maxCount ?? gRequestMaxThreadCount,
+          });
+          const msgs = result.list;
+          if (msgs === undefined) {
+            setNoNewMsg(true);
+            break;
+          }
+          if (msgs.length < gRequestMaxMessageCount) {
+            setNoNewMsg(true);
+          }
+          if (msgs.length === 0 && startId === '') {
+            if (firstMessage) {
+              addSendMessageToUI({
+                value: firstMessage,
+                onFinished: (item) => {
+                  if (item.model.modelType === 'message') {
+                    const msgModel = item.model as MessageModel;
+                    sendMessageToServer(msgModel.msg);
+                  }
+                },
+              });
+            }
+          }
+          if (msgs.length > 0) {
+            const newStartMsgId = msgs[msgs.length - 1]!.msgId;
+            if (newStartMsgId === afterMsgIdRef.current) {
+              console.log('/:ba:1', newStartMsgId);
+              break;
+            }
+            beforeMsgIdRef.current =
+              dataRef.current.length === 0
+                ? msgs[0]!.msgId
+                : getDataMessage('first')?.msg.msgId ?? '';
+            afterMsgIdRef.current = msgs[msgs.length - 1]!.msgId;
+            // console.log(
+            //   'test:zuoyu:ba:2',
+            //   dataRef.current.length,
+            //   beforeMsgIdRef.current,
+            //   afterMsgIdRef.current
+            // );
+            // msgs.forEach((item) => {
+            //   console.log('test:zuoyu:msgs:', item.msgId, item.serverTime);
+            // });
+            onAddMessageListToUI(msgs, 'bottom');
+          }
+        } while (false);
+        setIsGetting(false);
+      } catch (error) {
+        console.warn('dev:requestAfterMessages:', error);
+        setIsGetting(false);
+      }
     },
-    [im]
+    [
+      setUnreadCount,
+      setIsGetting,
+      im,
+      convId,
+      convType,
+      setNoNewMsg,
+      firstMessage,
+      addSendMessageToUI,
+      sendMessageToServer,
+      dataRef,
+      getDataMessage,
+      onAddMessageListToUI,
+    ]
+  );
+
+  // const _onRefresh = React.useCallback(() => {
+  //   // setRefreshing?.(true);
+  //   // requestHistoryMessage();
+  //   // setTimeout(() => {
+  //   //   setRefreshing?.(false);
+  //   // }, 100);
+  // }, []);
+
+  // const _onMore = React.useCallback(() => {
+  //   // if (unreadCountRef.current > 0) {
+  //   //   setNeedScroll(true);
+  //   //   refreshToUI(dataRef.current);
+  //   // } else {
+  //   //   requestHistoryMessage();
+  //   // }
+  // }, []);
+
+  const onRequestBeforeMessages = React.useCallback(() => {
+    requestBeforeMessages(beforeMsgIdRef.current);
+  }, [requestBeforeMessages]);
+
+  const onRequestAfterMessages = React.useCallback(() => {
+    requestAfterMessages(afterMsgIdRef.current);
+  }, [requestAfterMessages]);
+
+  const onRequestThreadAfterMessages = React.useCallback(() => {
+    requestThreadAfterMessages(afterMsgIdRef.current);
+  }, [requestThreadAfterMessages]);
+
+  const currentYRef = React.useRef(0);
+  const onScroll = React.useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const heightOffset = heightRef.current * reachedThreshold;
+      const y = event.nativeEvent.contentOffset.y;
+      if (currentYRef.current === 0) {
+        currentYRef.current = y;
+      }
+      const deltY = y - currentYRef.current;
+      currentYRef.current = y;
+      if (
+        y + heightRef.current >
+        event.nativeEvent.contentSize.height - heightOffset
+      ) {
+        if (inverted === true) {
+          setIsTop(true);
+        } else {
+          setIsBottom(true);
+        }
+      } else {
+        if (inverted === true) {
+          setIsTop(false);
+        } else {
+          setIsBottom(false);
+        }
+      }
+      if (y < heightOffset) {
+        if (inverted === true) {
+          setIsBottom(true);
+        } else {
+          setIsTop(true);
+        }
+      } else {
+        if (inverted === true) {
+          setIsBottom(false);
+        } else {
+          setIsTop(false);
+        }
+      }
+      // console.log(
+      //   'test:zuoyu:onScroll:',
+      //   comType,
+      //   heightOffset,
+      //   inverted,
+      //   isTopRef.current,
+      //   isBottomRef.current,
+      //   deltY,
+      //   y,
+      //   heightRef.current,
+      //   event.nativeEvent.contentSize.height,
+      //   hasNoMoreRef.current,
+      //   userScrollGestureRef.current
+      // );
+      if (userScrollGestureRef.current === true) {
+        if (isTopRef.current === true && deltY > 0) {
+          if (comType === 'chat' || comType === 'search') {
+            onRequestBeforeMessages();
+          }
+        } else if (isBottomRef.current === true && deltY < 0) {
+          if (comType === 'chat' || comType === 'search') {
+            onRequestAfterMessages();
+          } else if (comType === 'thread') {
+            onRequestThreadAfterMessages();
+          }
+        }
+      }
+    },
+    [
+      comType,
+      inverted,
+      onRequestAfterMessages,
+      onRequestBeforeMessages,
+      onRequestThreadAfterMessages,
+      reachedThreshold,
+      setIsBottom,
+      setIsTop,
+    ]
+  );
+
+  const currentY2Ref = React.useRef(0);
+  const onTouchMove = React.useCallback(
+    (event: GestureResponderEvent) => {
+      // Edge requests, a complement to `onScroll`.
+      if (isTopRef.current === true || isBottomRef.current === true) {
+        const y = event.nativeEvent.pageY;
+        if (currentY2Ref.current === 0) {
+          currentY2Ref.current = y;
+        }
+        const deltY = y - currentY2Ref.current;
+        currentY2Ref.current = y;
+        // console.log('test:zuoyu:onTouchMove:', deltY, y);
+        if (deltY > 0) {
+          if (comType === 'chat' || comType === 'search') {
+            onRequestBeforeMessages();
+          }
+        } else if (deltY < 0) {
+          if (comType === 'chat' || comType === 'search') {
+            onRequestAfterMessages();
+          } else if (comType === 'thread') {
+            onRequestThreadAfterMessages();
+          }
+        }
+      }
+    },
+    [
+      comType,
+      onRequestAfterMessages,
+      onRequestBeforeMessages,
+      onRequestThreadAfterMessages,
+    ]
   );
 
   const init = React.useCallback(async () => {
@@ -1789,24 +2372,43 @@ export function useMessageList(
       return;
     }
     if (isAutoLoad === true) {
-      setNeedScroll(true);
       setUserScrollGesture(false);
       currentVoicePlayingRef.current = undefined;
       startMsgIdRef.current = '';
+      beforeMsgIdRef.current = '';
+      afterMsgIdRef.current = '';
       hasNoMoreRef.current = false;
+      setNoNewMsg(false);
+      setNoOldMsg(false);
       dataRef.current = [];
+      if (comType === 'chat') {
+        setIsBottom(true);
+        setNoNewMsg(true);
+      } else if (comType === 'thread') {
+        setNoOldMsg(true);
+        if (inverted === true) {
+          setIsBottom(true);
+        } else {
+          setIsTop(true);
+        }
+      }
       im.messageManager.setRecallMessageTimeout(recallTimeout);
       refreshToUI(dataRef.current);
     }
   }, [
+    comType,
     convId,
     convType,
     dataRef,
     im.messageManager,
+    inverted,
     isAutoLoad,
     recallTimeout,
     refreshToUI,
-    setNeedScroll,
+    setIsBottom,
+    setIsTop,
+    setNoNewMsg,
+    setNoOldMsg,
     setUserScrollGesture,
     testMode,
   ]);
@@ -1833,180 +2435,157 @@ export function useMessageList(
     }
   }, [comType, im, onAddMessageToUI, thread, msgId]);
 
-  const requestThreadHistoryMessage = React.useCallback(async () => {
-    if (hasNoMoreRef.current === true) {
-      onNoMoreMessage?.();
-      return;
-    }
-    if (startMsgIdRef.current === '') {
-      if (thread && thread.owner !== im.userId) {
-        im.joinThread({
-          threadId: convId,
-          onResult: (res) => {
-            console.log('dev:joinThread:', res);
-          },
-        });
-      }
+  // const requestThreadHistoryMessage = React.useCallback(async () => {
+  //   if (hasNoMoreRef.current === true) {
+  //     onNoMoreMessage?.();
+  //     return;
+  //   }
+  //   if (startMsgIdRef.current === '') {
+  //     if (thread && thread.owner !== im.userId) {
+  //       im.joinThread({
+  //         threadId: convId,
+  //         onResult: (res) => {
+  //           console.log('dev:joinThread:', res);
+  //         },
+  //       });
+  //     }
 
+  //     await requestThreadHeaderMessage();
+  //   }
+
+  //   // im.messageManager.loadHistoryMessage({
+  //   //   convId,
+  //   //   convType,
+  //   //   startMsgId: startMsgIdRef.current,
+  //   //   loadCount: gRequestMaxMessageCount,
+  //   //   direction: ChatSearchDirection.DOWN,
+  //   //   isChatThread: true,
+  //   //   onResult: (msgs) => {
+  //   //     if (msgs.length < gRequestMaxMessageCount) {
+  //   //       hasNoMoreRef.current = true;
+  //   //     }
+  //   //     if (msgs.length > 0) {
+  //   //       const newStartMsgId = msgs[msgs.length - 1]!.msgId.toString();
+  //   //       if (newStartMsgId === startMsgIdRef.current) {
+  //   //         return;
+  //   //       }
+  //   //       startMsgIdRef.current = msgs[msgs.length - 1]!.msgId.toString();
+  //   //       if (comType === 'thread') {
+  //   //         setNeedScroll(true);
+  //   //       }
+  //   //       onAddMessageListToUI(msgs, 'bottom', () => {});
+  //   //     }
+  //   //   },
+  //   // });
+
+  //   // !!! bug for local message ID.
+  //   im.fetchHistoryMessages({
+  //     convId,
+  //     convType,
+  //     startMsgId: startMsgIdRef.current,
+  //     direction: ChatSearchDirection.DOWN,
+  //     pageSize: gRequestMaxMessageCount,
+  //     onResult: (res) => {
+  //       if (res.isOk && res.value && res.value.list) {
+  //         if (res.value.list.length === 0 && startMsgIdRef.current === '') {
+  //           hasNoMoreRef.current = true;
+  //           if (firstMessage) {
+  //             addSendMessageToUI(firstMessage, (item) => {
+  //               if (item.model.modelType === 'message') {
+  //                 const msgModel = item.model as MessageModel;
+  //                 sendMessageToServer(msgModel.msg);
+  //               }
+  //             });
+  //           }
+  //         } else {
+  //           const msgs = res.value.list;
+  //           startMsgIdRef.current = res.value.cursor;
+  //           if (msgs.length < gRequestMaxMessageCount) {
+  //             hasNoMoreRef.current = true;
+  //           }
+  //           if (msgs.length > 0) {
+  //             onAddMessageListToUI(msgs, 'bottom');
+  //           }
+  //         }
+  //       }
+  //     },
+  //   });
+  // }, [
+  //   addSendMessageToUI,
+  //   convId,
+  //   convType,
+  //   firstMessage,
+  //   im,
+  //   onAddMessageListToUI,
+  //   onNoMoreMessage,
+  //   requestThreadHeaderMessage,
+  //   sendMessageToServer,
+  //   thread,
+  // ]);
+
+  // const requestHistoryMessage = React.useCallback(() => {
+  //   // if (comType === 'create_thread') {
+  //   //   requestThreadHeaderMessage();
+  //   //   return;
+  //   // }
+  //   // if (comType === 'thread') {
+  //   //   requestThreadHistoryMessage();
+  //   //   return;
+  //   // }
+  //   // if (hasNoMoreRef.current === true) {
+  //   //   onNoMoreMessage?.();
+  //   //   return;
+  //   // }
+  //   // im.messageManager.loadHistoryMessage({
+  //   //   convId,
+  //   //   convType,
+  //   //   startMsgId: startMsgIdRef.current,
+  //   //   loadCount: gRequestMaxMessageCount,
+  //   //   onResult: (msgs) => {
+  //   //     if (msgs.length < gRequestMaxMessageCount) {
+  //   //       hasNoMoreRef.current = true;
+  //   //     }
+  //   //     if (msgs.length > 0) {
+  //   //       const newStartMsgId = msgs[0]!.msgId.toString();
+  //   //       if (newStartMsgId === startMsgIdRef.current) {
+  //   //         return;
+  //   //       }
+  //   //       startMsgIdRef.current = msgs[0]!.msgId.toString();
+  //   //       onAddMessageListToUI(
+  //   //         msgs,
+  //   //         inverted === true ? 'top' : 'bottom',
+  //   //         (list) => {
+  //   //           list.map((v) => {
+  //   //             if (v.model.modelType === 'message') {
+  //   //               const msgModel = v.model as MessageModel;
+  //   //               sendRecvMessageReadAck(msgModel.msg);
+  //   //             }
+  //   //           });
+  //   //         }
+  //   //       );
+  //   //     }
+  //   //   },
+  //   // });
+  // }, []);
+
+  const onInit = React.useCallback(async () => {
+    init();
+    if (comType === 'chat') {
+      await requestBeforeMessages(beforeMsgIdRef.current);
+    } else if (comType === 'create_thread') {
       await requestThreadHeaderMessage();
+    } else if (comType === 'thread') {
+      await requestThreadHeaderMessage();
+      await requestThreadAfterMessages(afterMsgIdRef.current);
+    } else if (comType === 'search') {
     }
-
-    // im.messageManager.loadHistoryMessage({
-    //   convId,
-    //   convType,
-    //   startMsgId: startMsgIdRef.current,
-    //   loadCount: gRequestMaxMessageCount,
-    //   direction: ChatSearchDirection.DOWN,
-    //   isChatThread: true,
-    //   onResult: (msgs) => {
-    //     if (msgs.length < gRequestMaxMessageCount) {
-    //       hasNoMoreRef.current = true;
-    //     }
-    //     if (msgs.length > 0) {
-    //       const newStartMsgId = msgs[msgs.length - 1]!.msgId.toString();
-    //       if (newStartMsgId === startMsgIdRef.current) {
-    //         return;
-    //       }
-    //       startMsgIdRef.current = msgs[msgs.length - 1]!.msgId.toString();
-    //       if (comType === 'thread') {
-    //         setNeedScroll(true);
-    //       }
-    //       onAddMessageListToUI(msgs, 'bottom', () => {});
-    //     }
-    //   },
-    // });
-
-    // !!! bug for local message ID.
-    im.fetchHistoryMessages({
-      convId,
-      convType,
-      startMsgId: startMsgIdRef.current,
-      direction: ChatSearchDirection.DOWN,
-      pageSize: gRequestMaxMessageCount,
-      onResult: (res) => {
-        if (res.isOk && res.value && res.value.list) {
-          if (res.value.list.length === 0 && startMsgIdRef.current === '') {
-            hasNoMoreRef.current = true;
-            if (firstMessage) {
-              addSendMessageToUI(firstMessage, (item) => {
-                if (item.model.modelType === 'message') {
-                  const msgModel = item.model as MessageModel;
-                  sendMessageToServer(msgModel.msg);
-                }
-              });
-            }
-          } else {
-            const msgs = res.value.list;
-            startMsgIdRef.current = res.value.cursor;
-            if (msgs.length < gRequestMaxMessageCount) {
-              hasNoMoreRef.current = true;
-            }
-            if (msgs.length > 0) {
-              onAddMessageListToUI(msgs, 'bottom', () => {});
-            }
-          }
-        }
-      },
-    });
   }, [
-    addSendMessageToUI,
-    convId,
-    convType,
-    firstMessage,
-    im,
-    onAddMessageListToUI,
-    onNoMoreMessage,
-    requestThreadHeaderMessage,
-    sendMessageToServer,
-    thread,
-  ]);
-
-  const requestHistoryMessage = React.useCallback(() => {
-    if (comType === 'create_thread') {
-      requestThreadHeaderMessage();
-      return;
-    }
-    if (comType === 'thread') {
-      requestThreadHistoryMessage();
-      return;
-    }
-    if (hasNoMoreRef.current === true) {
-      onNoMoreMessage?.();
-      return;
-    }
-    im.messageManager.loadHistoryMessage({
-      convId,
-      convType,
-      startMsgId: startMsgIdRef.current,
-      loadCount: gRequestMaxMessageCount,
-      onResult: (msgs) => {
-        if (msgs.length < gRequestMaxMessageCount) {
-          hasNoMoreRef.current = true;
-        }
-        if (msgs.length > 0) {
-          const newStartMsgId = msgs[0]!.msgId.toString();
-          if (newStartMsgId === startMsgIdRef.current) {
-            return;
-          }
-          startMsgIdRef.current = msgs[0]!.msgId.toString();
-          onAddMessageListToUI(
-            msgs,
-            inverted === true ? 'top' : 'bottom',
-            (list) => {
-              list.map((v) => {
-                if (v.model.modelType === 'message') {
-                  const msgModel = v.model as MessageModel;
-                  sendRecvMessageReadAck(msgModel.msg);
-                }
-              });
-            }
-          );
-        }
-      },
-    });
-  }, [
-    convId,
-    convType,
-    im.messageManager,
-    inverted,
-    onAddMessageListToUI,
-    onNoMoreMessage,
-    requestThreadHeaderMessage,
-    requestThreadHistoryMessage,
-    sendRecvMessageReadAck,
     comType,
+    init,
+    requestBeforeMessages,
+    requestThreadAfterMessages,
+    requestThreadHeaderMessage,
   ]);
-
-  const _onRefresh = React.useCallback(() => {
-    setRefreshing?.(true);
-    requestHistoryMessage();
-    setTimeout(() => {
-      setRefreshing?.(false);
-    }, 100);
-  }, [requestHistoryMessage]);
-
-  const _onMore = React.useCallback(() => {
-    if (unreadCountRef.current > 0) {
-      setNeedScroll(true);
-      refreshToUI(dataRef.current);
-    } else {
-      requestHistoryMessage();
-    }
-  }, [dataRef, refreshToUI, requestHistoryMessage, setNeedScroll]);
-
-  const createThread = React.useCallback(
-    (onResult: ResultCallback<ChatMessageThread>) => {
-      if (msgId && parentId) {
-        im.createThread({
-          name: newThreadName ?? 'default_name',
-          msgId: msgId,
-          parentId: parentId,
-          onResult: onResult,
-        });
-      }
-    },
-    [im, msgId, newThreadName, parentId]
-  );
 
   React.useImperativeHandle(
     ref,
@@ -2034,12 +2613,19 @@ export function useMessageList(
             });
             return;
           }
-          setNeedScroll(true);
-          addSendMessageToUI(value, (item) => {
-            if (item.model.modelType === 'message') {
-              const msgModel = item.model as MessageModel;
-              sendMessageToServer(msgModel.msg);
-            }
+          addSendMessageToUI({
+            value,
+            onFinished: (item) => {
+              if (item.model.modelType === 'message') {
+                const msgModel = item.model as MessageModel;
+                sendMessageToServer(msgModel.msg);
+              }
+            },
+            // onBeforeCallback: async () => {
+            //   if (comType === 'chat' || comType === 'search') {
+            //     return loadAllLatestMessage();
+            //   }
+            // },
           });
         },
         removeMessage: (msg: ChatMessage) => {
@@ -2051,7 +2637,10 @@ export function useMessageList(
         updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => {
           onUpdateMessageToUI(updatedMsg, fromType);
         },
-        loadHistoryMessage: (msgs: ChatMessage[], pos: MessageAddPosition) => {
+        loadHistoryMessage: async (
+          msgs: ChatMessage[],
+          pos: MessageAddPosition
+        ) => {
           if (pos === 'top') {
             if (msgs.length > 0) {
               if (startMsgIdRef.current === msgs[0]?.msgId) {
@@ -2060,19 +2649,18 @@ export function useMessageList(
               startMsgIdRef.current = msgs[0]!.msgId.toString();
             }
           }
-          onAddMessageListToUI(msgs, pos, (list) => {
-            list.map((v) => {
-              if (v.model.modelType === 'message') {
-                const msgModel = v.model as MessageModel;
-                sendRecvMessageReadAck(msgModel.msg);
-              }
-            });
+          const list = await onAddMessageListToUI(msgs, pos);
+          list.map((v) => {
+            if (v.model.modelType === 'message') {
+              const msgModel = v.model as MessageModel;
+              sendRecvMessageReadAck(msgModel.msg);
+            }
           });
         },
         onInputHeightChange: (height: number) => {
           if (inverted === false) {
             if (height > 0) {
-              if (comType === 'chat') {
+              if (comType === 'thread' && inverted === false) {
                 // scrollToBottom();
               }
             }
@@ -2081,9 +2669,8 @@ export function useMessageList(
         editMessageFinished: (model) => {
           editMessage(model.msg);
         },
-        scrollToBottom: () => {
-          setNeedScroll(true);
-          refreshToUI(dataRef.current);
+        scrollToBottom: async () => {
+          await loadAllLatestMessage();
           scrollToBottom();
         },
         startShowThreadMoreMenu: () => {
@@ -2127,21 +2714,19 @@ export function useMessageList(
       cancelMultiSelected,
       comType,
       createThread,
-      dataRef,
       deleteMessage,
       deleteMessages,
       editMessage,
       inverted,
+      loadAllLatestMessage,
       onAddMessageListToUI,
       onCreateThreadResult,
       onShowMessageThreadListMoreActions,
       onUpdateMessageToUI,
       recallMessage,
-      refreshToUI,
       scrollToBottom,
       sendMessageToServer,
       sendRecvMessageReadAck,
-      setNeedScroll,
       thread,
       tr,
     ]
@@ -2185,14 +2770,23 @@ export function useMessageList(
     const listener = {
       onSendMessageChanged: (msg: ChatMessage) => {
         onUpdateMessageToUI(msg, 'send');
+        if (comType === 'thread' && inverted === false) {
+          scrollToBottom();
+        }
       },
       onRecvMessage: async (msg: ChatMessage) => {
         if (msg.conversationId === convId) {
-          if (recvMessageAutoScroll === true) {
-            setNeedScroll(true);
+          if (canAddNewMessageToUI() || recvMessageAutoScroll === true) {
+            setUnreadCount(0);
+            onAddMessageToUI(msg);
+            sendRecvMessageReadAck(msg);
+            if (comType === 'thread' && inverted === false) {
+              scrollToBottom();
+            }
+          } else {
+            setNoNewMsg(false);
+            setUnreadCount(++unreadCountRef.current);
           }
-          onAddMessageToUI(msg);
-          sendRecvMessageReadAck(msg);
         }
       },
       onRecvMessageStatusChanged: (msg: ChatMessage) => {
@@ -2203,9 +2797,6 @@ export function useMessageList(
       },
       onRecvRecallMessage: (orgMsg: ChatMessage, tipMsg: ChatMessage) => {
         if (orgMsg.conversationId === convId) {
-          if (recvMessageAutoScroll === true) {
-            setNeedScroll(true);
-          }
           onRecvRecallMessage(orgMsg, tipMsg);
         }
       },
@@ -2217,9 +2808,6 @@ export function useMessageList(
         if (params.isOk === true) {
           if (params.orgMsg && params.tipMsg) {
             if (params.orgMsg.conversationId === convId) {
-              if (recvMessageAutoScroll === true) {
-                setNeedScroll(true);
-              }
               onRecvRecallMessage(params.orgMsg, params.tipMsg);
             }
           }
@@ -2231,15 +2819,19 @@ export function useMessageList(
       im.messageManager.removeListener(convId);
     };
   }, [
+    canAddNewMessageToUI,
     comType,
     convId,
     im,
+    inverted,
     onAddMessageToUI,
     onRecvRecallMessage,
     onUpdateMessageToUI,
     recvMessageAutoScroll,
+    scrollToBottom,
     sendRecvMessageReadAck,
-    setNeedScroll,
+    setNoNewMsg,
+    setUnreadCount,
   ]);
 
   React.useEffect(() => {
@@ -2296,9 +2888,10 @@ export function useMessageList(
   ]);
 
   React.useEffect(() => {
-    init();
-    requestHistoryMessage();
-  }, [convId, convType, im.messageManager, init, requestHistoryMessage]);
+    onInit();
+  }, [onInit]);
+
+  // console.log('test:zuoyu:useMessageList', comType, convId, convType);
 
   return {
     ...flatListProps,
@@ -2313,9 +2906,9 @@ export function useMessageList(
     maxListHeight,
     setMaxListHeight,
     reachedThreshold,
-    refreshing: enableRefresh === true ? refreshing : undefined,
-    onRefresh: enableRefresh === true ? _onRefresh : undefined,
-    onMore: enableMore === true ? _onMore : undefined,
+    // refreshing: enableRefresh === true ? refreshing : undefined,
+    // onRefresh: enableRefresh === true ? _onRefresh : undefined,
+    // onMore: enableMore === true ? _onMore : undefined,
     reportMessage: reportMessage,
     showReportMessage: showReportMessageMenu,
     reportData: reportDataRef.current,
@@ -2343,5 +2936,7 @@ export function useMessageList(
     reactionRef,
     onRequestCloseReaction,
     onCheckedItem,
+    onInit,
+    onTouchMove,
   };
 }

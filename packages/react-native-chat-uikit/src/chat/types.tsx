@@ -577,16 +577,14 @@ export interface MessageServices {
     direction: ChatSearchDirection;
     loadCount: number;
     isChatThread?: boolean;
-    onResult: ResultCallback<ChatMessage[]>;
-  }): void;
+  }): Promise<ChatMessage[]>;
   fetchHistoryMessages(params: {
     convId: string;
     convType: ChatConversationType;
     startMsgId: string;
     direction: ChatSearchDirection;
     pageSize: number;
-    onResult: ResultCallback<ChatCursorResult<ChatMessage>>;
-  }): void;
+  }): Promise<ChatCursorResult<ChatMessage>>;
   /**
    * Get the user information from the message.
    */

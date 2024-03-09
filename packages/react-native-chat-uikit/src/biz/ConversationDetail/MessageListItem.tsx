@@ -2051,14 +2051,12 @@ export function MessageView(props: MessageViewProps) {
   const isSingleChat = React.useRef(
     model.msg.chatType === ChatMessageChatType.PeerChat
   ).current;
-  // const avatar = avatarIsVisible === true ? model.userAvatar : undefined;
-  const [userAvatar] = React.useState<string | undefined>(
+  const userAvatar =
     avatarIsVisible === true
       ? info?.avatarURL && info?.avatarURL?.length > 0
         ? info.avatarURL
         : model.userAvatar
-      : undefined
-  );
+      : undefined;
 
   const onClickedAvatar = React.useCallback(() => {
     onAvatarClicked?.(model.msg.msgId, model);
@@ -2271,6 +2269,7 @@ export function MessageListItem(props: MessageListItemProps) {
         // borderTopWidth: 1,
         paddingVertical: 8,
         flexDirection: 'column',
+        // backgroundColor: 'blue',
       }}
     >
       {modelType === 'message' ? (

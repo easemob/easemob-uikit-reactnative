@@ -89,7 +89,7 @@ export function MessageSearch(props: MessageSearchProps) {
 }
 
 function useMessageSearch(props: MessageSearchProps) {
-  const { testMode, convType } = props;
+  const { testMode, convType, onClickedItem: propsOnClickedItem } = props;
   const flatListProps = useFlatList<MessageSearchItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'normal',
   });
@@ -97,9 +97,12 @@ function useMessageSearch(props: MessageSearchProps) {
   const [value, setValue] = React.useState('');
   const im = useChatContext();
 
-  const onClickedItem = React.useCallback((_model: MessageSearchModel) => {
-    // todo: jump to message position.
-  }, []);
+  const onClickedItem = React.useCallback(
+    (model: MessageSearchModel) => {
+      propsOnClickedItem?.(model);
+    },
+    [propsOnClickedItem]
+  );
 
   const onUpdate = React.useCallback(
     (keyword: string) => {
