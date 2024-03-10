@@ -39,6 +39,15 @@ export function MessageSearchScreen(props: Props) {
         }}
         convId={convId}
         convType={convType}
+        onClickedItem={(item) => {
+          navigation.push('MessageHistory', {
+            params: {
+              convId,
+              convType,
+              messageId: item.msg.msgId,
+            },
+          });
+        }}
       />
     </SafeAreaView>
   );

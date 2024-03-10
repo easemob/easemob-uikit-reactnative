@@ -20,6 +20,7 @@ export * from './LoginListScreen';
 export * from './LoginScreen';
 export * from './MessageForwardSelectorScreen';
 export * from './MessageHistoryListScreen';
+export * from './MessageHistoryScreen';
 export * from './MessageSearchScreen';
 export * from './MessageThreadDetailScreen';
 export * from './MessageThreadListScreen';

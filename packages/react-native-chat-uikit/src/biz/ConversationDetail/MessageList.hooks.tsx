@@ -93,7 +93,7 @@ export function useMessageList(
     convId,
     convType,
     thread,
-    msgId,
+    msgId: propsMsgId,
     parentId,
     newThreadName,
     testMode,
@@ -124,10 +124,15 @@ export function useMessageList(
     onClickedHistoryDetail,
     onChangeUnreadCount,
   } = props;
-  const inverted = React.useRef(comType === 'chat' ? true : false).current;
+  const inverted = React.useRef(
+    comType === 'chat' || comType === 'search' ? true : false
+  ).current;
 
   const enableRefresh =
-    comType === 'chat' || comType === 'create_thread' || comType === 'thread'
+    comType === 'chat' ||
+    comType === 'search' ||
+    comType === 'create_thread' ||
+    comType === 'thread'
       ? false
       : true;
   const enableMore = comType === 'create_thread' ? false : true;
@@ -795,7 +800,7 @@ export function useMessageList(
             const user = im.getRequestData(msg.from);
             const threadMsg =
               msg.chatType === ChatMessageChatType.GroupChat &&
-              comType === 'chat'
+              (comType === 'chat' || comType === 'search')
                 ? await msg.threadInfo
                 : undefined;
             return {
@@ -896,7 +901,7 @@ export function useMessageList(
 
   const onRemoveMessageThreadToUI = React.useCallback(
     (msgId: string) => {
-      if (comType !== 'chat') {
+      if (comType !== 'chat' && comType !== 'search') {
         return;
       }
       const isExisted = dataRef.current.find((d) => {
@@ -1440,8 +1445,25 @@ export function useMessageList(
     [im, onUpdateMessageToUI]
   );
 
+  const cancelHighLight = React.useCallback(() => {
+    const isExisted = dataRef.current.find((d) => {
+      if (d.model.modelType === 'message') {
+        const msgModel = d.model as MessageModel;
+        if (msgModel.isHightBackground !== undefined) {
+          msgModel.isHightBackground = false;
+          d.model = { ...msgModel };
+          return true;
+        }
+      }
+      return false;
+    });
+    if (isExisted) {
+      refreshToUI(dataRef.current);
+    }
+  }, [dataRef, refreshToUI]);
+
   const onAddMessageToUI = React.useCallback(
-    async (msg: ChatMessage) => {
+    async (msg: ChatMessage, isHigh?: boolean) => {
       let quoteMsg: ChatMessage | undefined;
       const quoteAttributes = getQuoteAttribute(msg);
       if (quoteAttributes) {
@@ -1452,7 +1474,7 @@ export function useMessageList(
       let threadMsg: ChatMessageThread | undefined;
       if (
         msg.chatType === ChatMessageChatType.GroupChat &&
-        comType === 'chat'
+        (comType === 'chat' || comType === 'search')
       ) {
         threadMsg = await msg.threadInfo;
       }
@@ -1488,14 +1510,29 @@ export function useMessageList(
               quoteMsg: quoteMsg,
               thread: threadMsg,
               checked: selectType === 'multi' ? false : undefined,
+              isHightBackground: isHigh !== undefined ? isHigh : undefined,
             },
             containerStyle: getStyle(),
           },
           inverted === true ? 'bottom' : 'bottom'
         );
       }
+
+      if (isHigh !== undefined) {
+        setTimeout(() => {
+          cancelHighLight();
+        }, 3000);
+      }
     },
-    [comType, im, onAddDataToUI, selectType, getStyle, inverted]
+    [
+      comType,
+      im,
+      onAddDataToUI,
+      selectType,
+      getStyle,
+      inverted,
+      cancelHighLight,
+    ]
   );
 
   const onUpdateMessageThreadToUI = React.useCallback(
@@ -1535,7 +1572,7 @@ export function useMessageList(
           } as SystemMessageModel,
           containerStyle: getStyle(),
         },
-        inverted === true ? 'bottom' : 'top'
+        inverted === true ? 'bottom' : 'bottom'
       );
     },
     [getStyle, inverted, onAddDataToUI]
@@ -1574,16 +1611,16 @@ export function useMessageList(
 
   const createThread = React.useCallback(
     (onResult: ResultCallback<ChatMessageThread>) => {
-      if (msgId && parentId) {
+      if (propsMsgId && parentId) {
         im.createThread({
           name: newThreadName ?? 'default_name',
-          msgId: msgId,
+          msgId: propsMsgId,
           parentId: parentId,
           onResult: onResult,
         });
       }
     },
-    [im, msgId, newThreadName, parentId]
+    [propsMsgId, parentId, im, newThreadName]
   );
 
   // todo: how to do?
@@ -1625,6 +1662,16 @@ export function useMessageList(
       return undefined;
     },
     [dataRef, inverted]
+  );
+
+  const addHightMessage = React.useCallback(
+    async (msgId: string) => {
+      const msg = await im.getMessage({ messageId: msgId });
+      if (msg) {
+        onAddMessageToUI(msg, true);
+      }
+    },
+    [im, onAddMessageToUI]
   );
 
   const isGettingRef = React.useRef(false);
@@ -1791,7 +1838,7 @@ export function useMessageList(
 
   const loadAllLatestMessage = React.useCallback(async () => {
     while (true) {
-      // console.log('test:zuoyu:loadAllLatestMessage:', hasNoNewMsgRef.current);
+      console.log('test:zuoyu:loadAllLatestMessage:', hasNoNewMsgRef.current);
       await requestAfterMessages(afterMsgIdRef.current, 400);
       if (hasNoNewMsgRef.current === true) {
         break;
@@ -2242,6 +2289,30 @@ export function useMessageList(
   //   // }
   // }, []);
 
+  // const scrollToMessage = React.useCallback(
+  //   (msgId: string) => {
+  //     console.log('test:zuoyu:scrollToMessage:', msgId);
+  //     timeoutTask(1000, () => {
+  //       if (msgId.length > 0) {
+  //         const isExisted = dataRef.current.find((d) => {
+  //           if (d.model.modelType === 'message') {
+  //             const msgModel = d.model as MessageModel;
+  //             if (msgModel.msg.msgId === msgId) {
+  //               return true;
+  //             }
+  //           }
+  //           return false;
+  //         });
+  //         if (isExisted && isExisted.index && isExisted.index > -1) {
+  //           console.log('test:zuoyu:scrollToMessage:', isExisted.index, msgId);
+  //           scrollTo(isExisted.index, false);
+  //         }
+  //       }
+  //     });
+  //   },
+  //   [dataRef, scrollTo]
+  // );
+
   const onRequestBeforeMessages = React.useCallback(() => {
     requestBeforeMessages(beforeMsgIdRef.current);
   }, [requestBeforeMessages]);
@@ -2333,6 +2404,31 @@ export function useMessageList(
     ]
   );
 
+  const { delayExecTask: delayRequestMessages } = useDelayExecTask(
+    100,
+    React.useCallback(
+      (deltY: number) => {
+        if (isTopRef.current === true && deltY > 0) {
+          if (comType === 'chat' || comType === 'search') {
+            onRequestBeforeMessages();
+          }
+        } else if (isBottomRef.current === true && deltY < 0) {
+          if (comType === 'chat' || comType === 'search') {
+            onRequestAfterMessages();
+          } else if (comType === 'thread') {
+            onRequestThreadAfterMessages();
+          }
+        }
+      },
+      [
+        comType,
+        onRequestAfterMessages,
+        onRequestBeforeMessages,
+        onRequestThreadAfterMessages,
+      ]
+    )
+  );
+
   const currentY2Ref = React.useRef(0);
   const onTouchMove = React.useCallback(
     (event: GestureResponderEvent) => {
@@ -2345,25 +2441,10 @@ export function useMessageList(
         const deltY = y - currentY2Ref.current;
         currentY2Ref.current = y;
         // console.log('test:zuoyu:onTouchMove:', deltY, y);
-        if (deltY > 0) {
-          if (comType === 'chat' || comType === 'search') {
-            onRequestBeforeMessages();
-          }
-        } else if (deltY < 0) {
-          if (comType === 'chat' || comType === 'search') {
-            onRequestAfterMessages();
-          } else if (comType === 'thread') {
-            onRequestThreadAfterMessages();
-          }
-        }
+        delayRequestMessages(deltY);
       }
     },
-    [
-      comType,
-      onRequestAfterMessages,
-      onRequestBeforeMessages,
-      onRequestThreadAfterMessages,
-    ]
+    [delayRequestMessages]
   );
 
   const init = React.useCallback(async () => {
@@ -2391,6 +2472,7 @@ export function useMessageList(
         } else {
           setIsTop(true);
         }
+      } else if (comType === 'search') {
       }
       im.messageManager.setRecallMessageTimeout(recallTimeout);
       refreshToUI(dataRef.current);
@@ -2419,7 +2501,7 @@ export function useMessageList(
   const requestThreadHeaderMessage = React.useCallback(async () => {
     let messageId;
     if (comType === 'create_thread') {
-      messageId = msgId;
+      messageId = propsMsgId;
     } else if (comType === 'thread') {
       messageId = thread?.msgId;
     }
@@ -2427,13 +2509,13 @@ export function useMessageList(
       return;
     }
 
-    if (msgId || thread) {
+    if (propsMsgId || thread) {
       const msg = await im.getMessage({ messageId: messageId });
       if (msg) {
         onAddMessageToUI(msg);
       }
     }
-  }, [comType, im, onAddMessageToUI, thread, msgId]);
+  }, [comType, im, onAddMessageToUI, thread, propsMsgId]);
 
   // const requestThreadHistoryMessage = React.useCallback(async () => {
   //   if (hasNoMoreRef.current === true) {
@@ -2578,10 +2660,16 @@ export function useMessageList(
       await requestThreadHeaderMessage();
       await requestThreadAfterMessages(afterMsgIdRef.current);
     } else if (comType === 'search') {
+      if (propsMsgId) {
+        await requestBeforeMessages(propsMsgId);
+        await addHightMessage(propsMsgId);
+      }
     }
   }, [
     comType,
+    addHightMessage,
     init,
+    propsMsgId,
     requestBeforeMessages,
     requestThreadAfterMessages,
     requestThreadHeaderMessage,
@@ -2755,7 +2843,7 @@ export function useMessageList(
       },
       onRequestReloadEvent: (id) => {
         if (id === convId) {
-          init();
+          onInit();
         }
       },
       type: UIListenerType.Conversation,
@@ -2764,7 +2852,7 @@ export function useMessageList(
     return () => {
       im.removeUIListener(uiListener);
     };
-  }, [convId, dataRef, im, init, refreshToUI]);
+  }, [convId, dataRef, im, onInit, refreshToUI]);
 
   React.useEffect(() => {
     const listener = {

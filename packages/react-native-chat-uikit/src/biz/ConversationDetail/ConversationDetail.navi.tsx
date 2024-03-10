@@ -91,7 +91,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   });
 
   const getRight = (): any => {
-    if (comType === 'chat') {
+    if (comType === 'chat' || comType === 'search') {
       if (selectMode === 'common') {
         return TopNavigationBarRightList;
       } else {
@@ -109,7 +109,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   };
 
   const getRightProps = (): any => {
-    if (comType === 'chat') {
+    if (comType === 'chat' || comType === 'search') {
       if (selectMode === 'common') {
         return {
           onClickedList: [
@@ -219,7 +219,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
             style={{ width: 24, height: 24, tintColor: getColor('icon') }}
             onPress={onBack}
           />
-          {comType === 'chat' ? (
+          {comType === 'chat' || comType === 'search' ? (
             <Pressable onPress={onClickedAvatar}>
               {convType === 0 ? (
                 <StatusAvatar
@@ -248,11 +248,12 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
                   color: getColor('text'),
                 }}
               >
-                {comType === 'chat'
+                {comType === 'chat' || comType === 'search'
                   ? convName ?? convId
                   : newThreadName ?? convId}
               </SingleLineText>
-              {comType === 'chat' && doNotDisturb === true ? (
+              {(comType === 'chat' || comType === 'search') &&
+              doNotDisturb === true ? (
                 <Icon
                   name={'bell_slash'}
                   style={{ height: 20, width: 20, tintColor: getColor('t3') }}
@@ -265,7 +266,9 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
               paletteType={'label'}
               style={{ color: getColor('text_enable') }}
             >
-              {comType === 'chat' ? tr(status ?? '') : tr('#group')}
+              {comType === 'chat' || comType === 'search'
+                ? tr(status ?? '')
+                : tr('#group')}
             </Text>
           </View>
         </View>

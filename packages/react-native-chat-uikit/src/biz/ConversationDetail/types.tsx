@@ -230,7 +230,9 @@ export type ConversationDetailProps = PropsWithError &
     thread?: ChatMessageThread;
 
     /**
-     * The message ID. this parameter is required in create thread mode.
+     * The message ID.
+     *
+     * this parameter is required in create thread mode or search mode.
      */
     msgId?: string;
 
@@ -486,6 +488,10 @@ type BasicModel = {
    * Message sender avatar.
    */
   userAvatar?: string;
+  /**
+   * Whether the message is high background.
+   */
+  isHightBackground?: boolean;
 };
 /**
  * Message list item voice model.
@@ -1105,5 +1111,5 @@ export type MessageSearchProps = PropsWithTest &
     /**
      * Callback notification when a list item is clicked.
      */
-    onClickedItem: (model: MessageSearchModel) => void;
+    onClickedItem?: (model: MessageSearchModel) => void;
   };

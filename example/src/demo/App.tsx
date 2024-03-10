@@ -47,6 +47,7 @@ import {
   LoginScreen,
   MessageForwardSelectorScreen,
   MessageHistoryListScreen,
+  MessageHistoryScreen,
   MessageSearchScreen,
   MessageThreadDetailScreen,
   MessageThreadListScreen,
@@ -542,6 +543,13 @@ export function App() {
                 headerShown: false,
               }}
               component={MessageSearchScreen}
+            />
+            <Root.Screen
+              name={'MessageHistory'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageHistoryScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

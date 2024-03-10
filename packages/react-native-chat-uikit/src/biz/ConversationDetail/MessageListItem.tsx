@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {
+  Animated,
   Dimensions,
+  Easing,
   Platform,
   // Image as RNImage,
   Pressable,
@@ -2036,7 +2038,7 @@ export function MessageView(props: MessageViewProps) {
   } = props;
   const _MessageQuoteBubble = propsMessageQuoteBubble ?? MessageQuoteBubble;
   const _MessageBubble = propsMessageBubble ?? MessageBubble;
-  const { layoutType, reactions, thread } = model;
+  const { layoutType, reactions, thread, isHightBackground } = model;
   const state = getMessageState(model.msg);
   const maxWidth = Dimensions.get('window').width * 0.6;
   const time = model.msg.localTime ?? model.msg.serverTime;
@@ -2057,7 +2059,26 @@ export function MessageView(props: MessageViewProps) {
         ? info.avatarURL
         : model.userAvatar
       : undefined;
-
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    h: {
+      light: colors.neutral[95],
+      dark: colors.neutral[6],
+    },
+  });
+  const animatedValue = React.useRef(new Animated.Value(0)).current;
+  const backgroundColor = animatedValue.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [
+      getColor('h') as string,
+      getColor('bg') as string,
+      getColor('h') as string,
+    ],
+  });
   const onClickedAvatar = React.useCallback(() => {
     onAvatarClicked?.(model.msg.msgId, model);
   }, [model, onAvatarClicked]);
@@ -2076,11 +2097,31 @@ export function MessageView(props: MessageViewProps) {
     onThreadClicked?.(model.msg.msgId, model);
   }, [model, onThreadClicked]);
 
+  React.useEffect(() => {
+    if (isHightBackground !== undefined) {
+      if (isHightBackground === true) {
+        console.log('isHightBackground', isHightBackground);
+        Animated.loop(
+          Animated.timing(animatedValue, {
+            useNativeDriver: false,
+            duration: 1500,
+            toValue: 1,
+            easing: Easing.linear,
+          })
+        ).start();
+      } else {
+        animatedValue.stopAnimation();
+      }
+    }
+  }, [isHightBackground, animatedValue]);
+
   return (
-    <View
+    <Animated.View
       style={{
         flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
         display: isVisible === true ? 'flex' : 'none',
+        backgroundColor:
+          isHightBackground !== undefined ? backgroundColor : undefined,
       }}
     >
       <View
@@ -2169,7 +2210,7 @@ export function MessageView(props: MessageViewProps) {
           />
         ) : null}
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
