@@ -2032,13 +2032,16 @@ export function MessageView(props: MessageViewProps) {
     onStateClicked,
     MessageQuoteBubble: propsMessageQuoteBubble,
     MessageBubble: propsMessageBubble,
+    MessageThread: propsMessageThread,
     onReactionClicked,
     onThreadClicked,
     ...others
   } = props;
   const _MessageQuoteBubble = propsMessageQuoteBubble ?? MessageQuoteBubble;
   const _MessageBubble = propsMessageBubble ?? MessageBubble;
+  const _MessageThread = propsMessageThread ?? MessageThread;
   const { layoutType, reactions, thread, isHightBackground } = model;
+  const { enableThread, enableReaction } = useConfigContext();
   const state = getMessageState(model.msg);
   const maxWidth = Dimensions.get('window').width * 0.6;
   const time = model.msg.localTime ?? model.msg.serverTime;
@@ -2174,8 +2177,8 @@ export function MessageView(props: MessageViewProps) {
             />
           ) : null}
         </View>
-        {thread ? (
-          <MessageThread
+        {thread && enableThread === true ? (
+          <_MessageThread
             layoutType={layoutType}
             hasAvatar={avatarIsVisible}
             hasTriangle={hasTriangle}
@@ -2183,16 +2186,8 @@ export function MessageView(props: MessageViewProps) {
             maxWidth={maxWidth}
             thread={thread}
           />
-        ) : (
-          <MessageThread
-            layoutType={layoutType}
-            hasAvatar={avatarIsVisible}
-            hasTriangle={hasTriangle}
-            onClicked={_onThreadClicked}
-            thread={thread}
-          />
-        )}
-        {reactions && reactions?.length > 0 ? (
+        ) : null}
+        {reactions && reactions?.length > 0 && enableReaction === true ? (
           <MessageReaction
             layoutType={layoutType}
             hasAvatar={avatarIsVisible}

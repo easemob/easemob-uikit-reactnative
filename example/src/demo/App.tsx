@@ -230,6 +230,11 @@ export function App() {
         palette={palette}
         theme={theme}
         language={language}
+        enablePresence={true}
+        enableReaction={true}
+        enableThread={true}
+        enableTranslate={true}
+        enableAVMeeting={true}
         // enableTranslate={false}
         avatar={{
           personAvatar: defaultAvatars[2],

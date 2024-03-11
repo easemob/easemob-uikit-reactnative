@@ -52,6 +52,10 @@ export function Container(props: ContainerProps) {
     onInitLanguageSet,
     onRequestMultiData,
     onChangeStatus,
+    enablePresence = false,
+    enableReaction = false,
+    enableThread = false,
+    enableAVMeeting = true,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -125,6 +129,10 @@ export function Container(props: ContainerProps) {
                   personAvatar: avatar?.personAvatar,
                   groupAvatar: avatar?.groupAvatar,
                   onChangeStatus: onChangeStatus,
+                  enablePresence: enablePresence,
+                  enableReaction: enableReaction,
+                  enableThread: enableThread,
+                  enableAVMeeting: enableAVMeeting,
                 }}
               >
                 <SafeAreaProvider>{children}</SafeAreaProvider>

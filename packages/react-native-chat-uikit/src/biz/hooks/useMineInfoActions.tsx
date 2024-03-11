@@ -1,4 +1,5 @@
 import { useChatContext } from '../../chat';
+import { useConfigContext } from '../../config';
 import { useI18nContext } from '../../i18n';
 import type { BasicActionsProps } from './types';
 import { useCloseAlert } from './useCloseAlert';
@@ -11,6 +12,7 @@ export function useMineInfoActions(props: UseMineInfoActionsProps) {
   const {} = useCloseAlert({ alertRef });
   const { tr } = useI18nContext();
   const im = useChatContext();
+  const { enablePresence } = useConfigContext();
   const onShowMenu = () => {
     menuRef.current?.startShowWithProps({
       onRequestModalClose: closeMenu,
@@ -105,6 +107,6 @@ export function useMineInfoActions(props: UseMineInfoActionsProps) {
   };
 
   return {
-    onShowMineInfoActions: onShowMenu,
+    onShowMineInfoActions: enablePresence === true ? onShowMenu : () => {},
   };
 }

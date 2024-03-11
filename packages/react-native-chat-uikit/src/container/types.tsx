@@ -201,4 +201,32 @@ export type ContainerProps = React.PropsWithChildren<{
    * @returns component.
    */
   onChangeStatus?: (status: StatusType) => React.ReactElement;
+
+  /**
+   * Whether to activate the thread function. If you do not activate it, you will not be able to actively use thread-related functions, if there are still problems after activation, check whether the relevant settings of the console are enabled.
+   *
+   * Default is `false`.
+   */
+  enableThread?: boolean;
+
+  /**
+   * Whether to activate the reaction function. If you do not activate it, you will not be able to actively use reaction-related functions, if there are still problems after activation, check whether the relevant settings of the console are enabled.
+   *
+   * Default is `false`.
+   */
+  enableReaction?: boolean;
+
+  /**
+   * Whether to activate the presence function. If you do not enable the presence-related feature, check whether the settings are enabled in the console.
+   *
+   * Default is `false`.
+   */
+  enablePresence?: boolean;
+
+  /**
+   * Whether to activate the AV meeting function. If you do not enable the AV meeting-related feature, check whether the settings are enabled in the console.
+   *
+   * Default is `true`.
+   */
+  enableAVMeeting?: boolean;
 }>;

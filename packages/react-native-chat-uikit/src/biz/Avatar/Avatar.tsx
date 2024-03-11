@@ -76,7 +76,7 @@ export function StatusAvatar(props: StatusAvatarProps) {
   const { userId, onClicked, statusContainerStyle, statusStyle, ...others } =
     props;
   const [status, setStatus] = React.useState<string>();
-  const { onChangeStatus } = useConfigContext();
+  const { onChangeStatus, enablePresence } = useConfigContext();
   const im = useChatContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -155,6 +155,10 @@ export function StatusAvatar(props: StatusAvatarProps) {
       }
     };
   }, [im, onChangeStatus, userId]);
+
+  if (enablePresence !== true) {
+    return <Avatar {...others} />;
+  }
 
   return (
     <Pressable style={{ overflow: 'hidden' }} onPress={onClicked}>

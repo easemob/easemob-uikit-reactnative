@@ -85,7 +85,7 @@ export function useMessageLongPressActions(
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
   const im = useChatContext();
-  const { enableTranslate } = useConfigContext();
+  const { enableTranslate, enableReaction } = useConfigContext();
 
   const isCardMessage = (msg: ChatMessage) => {
     if (msg.body.type === ChatMessageType.CUSTOM) {
@@ -278,7 +278,10 @@ export function useMessageLongPressActions(
       onRequestModalClose: closeMenu,
       layoutType: 'left',
       hasCancel: false,
-      header: emojiList ? header(emojiList, onFace) : undefined,
+      header:
+        emojiList && enableReaction === true
+          ? header(emojiList, onFace)
+          : undefined,
     });
   };
 

@@ -6,6 +6,7 @@ import {
   useChatContext,
   useChatListener,
 } from '../../chat';
+import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
@@ -64,6 +65,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     onCancelMultiSelected,
   } = props;
   const [status, setStatus] = React.useState<string>();
+  const { enableThread, enableAVMeeting } = useConfigContext();
   const im = useChatContext();
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -109,6 +111,16 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   };
 
   const getRightProps = (): any => {
+    const getIcons = () => {
+      const ret = [];
+      if (enableThread === true) {
+        ret.push('hashtag_in_bubble_fill');
+      } else if (enableAVMeeting === true) {
+        ret.push('phone_pick');
+        ret.push('video_camera');
+      }
+      return ret;
+    };
     if (comType === 'chat' || comType === 'search') {
       if (selectMode === 'common') {
         return {
@@ -123,11 +135,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
               onClickedVideo?.();
             },
           ],
-          iconNameList: [
-            'hashtag_in_bubble_fill',
-            'phone_pick',
-            'video_camera',
-          ],
+          iconNameList: getIcons(),
         };
       } else {
         return {
@@ -142,10 +150,12 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
         return {
           onClickedList: [
             () => {
-              onClickedThreadMore?.();
+              if (enableThread === true) {
+                onClickedThreadMore?.();
+              }
             },
           ],
-          iconNameList: ['ellipsis_vertical'],
+          iconNameList: enableThread === true ? ['ellipsis_vertical'] : [],
         };
       } else {
         return {

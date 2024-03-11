@@ -73,18 +73,6 @@ export function ConversationList(props: ConversationListProps) {
     },
   });
 
-  // const s = (status: string) => {
-  //   return (
-  //     <View
-  //       style={{
-  //         height: 20,
-  //         width: 20,
-  //         backgroundColor: status === 'online' ? 'red' : 'blue',
-  //       }}
-  //     />
-  //   );
-  // };
-
   return (
     <View
       style={[
