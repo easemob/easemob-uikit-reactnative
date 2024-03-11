@@ -1680,7 +1680,7 @@ export function useMessageList(
     isGettingRef.current = value;
   }, []);
   const requestBeforeMessages = React.useCallback(
-    async (startId: string) => {
+    async (startId: string, includeStartId?: boolean) => {
       // console.log(
       //   'test:zuoyu:requestBeforeMessages',
       //   hasNoOldMsgRef.current,
@@ -1728,6 +1728,18 @@ export function useMessageList(
             // msgs.forEach((item) => {
             //   console.log('test:zuoyu:msgs:', item.msgId, item.serverTime);
             // });
+
+            if (includeStartId && startId.length > 0) {
+              const startMsg = await im.getMessage({ messageId: startId });
+              if (startMsg) {
+                msgs.push(startMsg!);
+                afterMsgIdRef.current =
+                  dataRef.current.length === 0
+                    ? startId
+                    : getDataMessage('last')?.msg.msgId ?? '';
+              }
+            }
+
             const list = await onAddMessageListToUI(msgs, 'top');
             list.map((v) => {
               if (v.model.modelType === 'message') {
@@ -1748,7 +1760,7 @@ export function useMessageList(
       convType,
       dataRef,
       getDataMessage,
-      im.messageManager,
+      im,
       onAddMessageListToUI,
       onNoMoreMessage,
       sendRecvMessageReadAck,
@@ -1777,14 +1789,15 @@ export function useMessageList(
 
       try {
         do {
+          const _maxCount = maxCount ?? gRequestMaxMessageCount;
           const msgs = await im.messageManager.loadHistoryMessage({
             convId,
             convType,
             startMsgId: startId,
-            loadCount: maxCount ?? gRequestMaxMessageCount,
+            loadCount: _maxCount,
             direction: ChatSearchDirection.DOWN,
           });
-          if (msgs.length < gRequestMaxMessageCount) {
+          if (msgs.length < _maxCount) {
             setNoNewMsg(true);
           }
           if (msgs.length > 0) {
@@ -1838,7 +1851,7 @@ export function useMessageList(
 
   const loadAllLatestMessage = React.useCallback(async () => {
     while (true) {
-      console.log('test:zuoyu:loadAllLatestMessage:', hasNoNewMsgRef.current);
+      // console.log('test:zuoyu:loadAllLatestMessage:', hasNoNewMsgRef.current);
       await requestAfterMessages(afterMsgIdRef.current, 400);
       if (hasNoNewMsgRef.current === true) {
         break;
@@ -2199,19 +2212,20 @@ export function useMessageList(
 
       try {
         do {
+          const _maxCount = maxCount ?? gRequestMaxThreadCount;
           const result = await im.fetchHistoryMessages({
             convId,
             convType,
             startMsgId: startId,
             direction: ChatSearchDirection.DOWN,
-            pageSize: maxCount ?? gRequestMaxThreadCount,
+            pageSize: _maxCount,
           });
           const msgs = result.list;
           if (msgs === undefined) {
             setNoNewMsg(true);
             break;
           }
-          if (msgs.length < gRequestMaxMessageCount) {
+          if (msgs.length < _maxCount) {
             setNoNewMsg(true);
           }
           if (msgs.length === 0 && startId === '') {
@@ -2473,6 +2487,11 @@ export function useMessageList(
           setIsTop(true);
         }
       } else if (comType === 'search') {
+        if (inverted === true) {
+          setIsBottom(true);
+        } else {
+          setIsTop(true);
+        }
       }
       im.messageManager.setRecallMessageTimeout(recallTimeout);
       refreshToUI(dataRef.current);
@@ -2661,13 +2680,14 @@ export function useMessageList(
       await requestThreadAfterMessages(afterMsgIdRef.current);
     } else if (comType === 'search') {
       if (propsMsgId) {
-        await requestBeforeMessages(propsMsgId);
+        await requestBeforeMessages(propsMsgId, true);
         await addHightMessage(propsMsgId);
+        // await requestAfterMessages(propsMsgId, 1);
       }
     }
   }, [
-    comType,
     addHightMessage,
+    comType,
     init,
     propsMsgId,
     requestBeforeMessages,

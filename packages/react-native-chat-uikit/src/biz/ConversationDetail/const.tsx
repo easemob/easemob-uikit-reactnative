@@ -1,2 +1,2 @@
-export const gRequestMaxMessageCount = 10;
-export const gRequestMaxThreadCount = 10;
+export const gRequestMaxMessageCount = 30;
+export const gRequestMaxThreadCount = 30;

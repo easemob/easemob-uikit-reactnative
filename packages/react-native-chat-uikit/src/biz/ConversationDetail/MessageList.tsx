@@ -175,6 +175,13 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             onScrollBeginDrag={onScrollBeginDrag}
             bounces={bounces}
             onTouchMove={onTouchMove}
+            maintainVisibleContentPosition={{
+              // !!! This effect does not work well when inserting the first element without scrolling.
+              minIndexForVisible: 0,
+              // autoscrollToTopThreshold: -(Dimensions.get('window').height * 2),
+            }}
+            // renderScrollComponent={null}
+            // maxToRenderPerBatch={50}
             // overScrollMode={'always'}
             // !!! This effect does not work well when inserting the first element without scrolling.
             // maintainVisibleContentPosition={{
