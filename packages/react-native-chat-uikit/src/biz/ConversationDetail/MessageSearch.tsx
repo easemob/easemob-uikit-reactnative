@@ -89,7 +89,12 @@ export function MessageSearch(props: MessageSearchProps) {
 }
 
 function useMessageSearch(props: MessageSearchProps) {
-  const { testMode, convType, onClickedItem: propsOnClickedItem } = props;
+  const {
+    testMode,
+    convId,
+    convType,
+    onClickedItem: propsOnClickedItem,
+  } = props;
   const flatListProps = useFlatList<MessageSearchItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'normal',
   });
@@ -108,7 +113,7 @@ function useMessageSearch(props: MessageSearchProps) {
     (keyword: string) => {
       im.getMessagesByKeyword({
         keyword: keyword,
-        convId: undefined as any, // !!! need to fix
+        convId: convId, // !!! need to fix
         convType,
         onResult: (res) => {
           if (res.isOk && res.value) {
@@ -135,7 +140,7 @@ function useMessageSearch(props: MessageSearchProps) {
         },
       });
     },
-    [convType, dataRef, im, setData]
+    [convId, convType, dataRef, im, setData]
   );
 
   const onSearch = React.useCallback(

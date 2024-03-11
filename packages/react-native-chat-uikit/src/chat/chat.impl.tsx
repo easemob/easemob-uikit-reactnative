@@ -2614,12 +2614,13 @@ export class ChatServiceImpl
     onResult: ResultCallback<ChatMessage[]>;
   }): void {
     this.tryCatch({
-      promise: this.client.chatManager.searchMsgFromDB(
-        params.keyword,
-        params.timestamp,
-        params.maxCount ?? 200,
+      promise: this.client.chatManager.getMessagesWithKeyword(
         params.convId,
-        params.direction
+        params.convType,
+        params.keyword,
+        params.direction,
+        params.timestamp,
+        params.maxCount ?? 200
       ),
       event: 'getMessagesByKeyword',
       onFinished: (value) => {
