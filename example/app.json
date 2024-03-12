@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ChatUikitExample",
-    "slug": "ChatUikitExample",
+    "name": "ChatUikitFullExample",
+    "slug": "ChatUikitFullExample",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,15 +16,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hyphenate.rn.ChatUikitExample",
-      "googleServicesFile": "./ios/ChatUikitExample/GoogleService-Info.plist"
+      "bundleIdentifier": "com.hyphenate.rn.ChatUikitFullExample",
+      "googleServicesFile": "./ios/ChatUikitFullExample/GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.hyphenate.rn.ChatUikitExample",
+      "package": "com.hyphenate.rn.ChatUikitFullExample",
       "googleServicesFile": "./android/app/google-services.json"
     },
     "web": {

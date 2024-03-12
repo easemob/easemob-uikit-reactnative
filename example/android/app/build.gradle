@@ -115,9 +115,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'com.hyphenate.rn.ChatUikitExample'
+    namespace 'com.hyphenate.rn.ChatUikitFullExample'
     defaultConfig {
-        applicationId 'com.hyphenate.rn.ChatUikitExample'
+        applicationId 'com.hyphenate.rn.ChatUikitFullExample'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

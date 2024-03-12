@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "ChatUikitExample.app"
-               BlueprintName = "ChatUikitExample"
-               ReferencedContainer = "container:ChatUikitExample.xcodeproj">
+               BuildableName = "ChatUikitFullExample.app"
+               BlueprintName = "ChatUikitFullExample"
+               ReferencedContainer = "container:ChatUikitFullExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
                BuildableName = "ChatUikitExampleTests.xctest"
                BlueprintName = "ChatUikitExampleTests"
-               ReferencedContainer = "container:ChatUikitExample.xcodeproj">
+               ReferencedContainer = "container:ChatUikitFullExample.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "ChatUikitExample.app"
-            BlueprintName = "ChatUikitExample"
-            ReferencedContainer = "container:ChatUikitExample.xcodeproj">
+            BuildableName = "ChatUikitFullExample.app"
+            BlueprintName = "ChatUikitFullExample"
+            ReferencedContainer = "container:ChatUikitFullExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "ChatUikitExample.app"
-            BlueprintName = "ChatUikitExample"
-            ReferencedContainer = "container:ChatUikitExample.xcodeproj">
+            BuildableName = "ChatUikitFullExample.app"
+            BlueprintName = "ChatUikitFullExample"
+            ReferencedContainer = "container:ChatUikitFullExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

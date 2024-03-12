@@ -1,4 +1,4 @@
-package com.hyphenate.rn.ChatUikitExample;
+package com.hyphenate.rn.ChatUikitFullExample;
 
 import android.os.Build;
 import android.os.Bundle;
