@@ -334,7 +334,6 @@ export function MineInfo(props: MineInfoProps) {
               <Text1Button
                 sizesType={'middle'}
                 radiusType={input}
-                contentType={'only-text'}
                 text={tr('logout')}
                 onPress={onClickedLogout}
               />

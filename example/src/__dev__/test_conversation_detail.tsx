@@ -44,6 +44,7 @@ export function ConvDetail() {
             convId="xxx"
             convType={0}
             input={{ props: { top, bottom } }}
+            type={'search'}
           />
         </View>
       </SafeAreaView>

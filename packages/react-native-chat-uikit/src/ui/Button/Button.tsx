@@ -32,8 +32,8 @@ import {
 export type ButtonProps = Omit<PressableProps, 'style'> & {
   style?: StyleProp<ViewStyle> | undefined;
   buttonStyle: ButtonStyleType;
-  sizesType: ButtonSizesType;
-  radiusType: CornerRadiusPaletteType;
+  sizesType?: ButtonSizesType;
+  radiusType?: CornerRadiusPaletteType;
   contentType:
     | 'only-text'
     | 'only-icon'

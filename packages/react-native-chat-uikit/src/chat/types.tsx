@@ -1123,8 +1123,6 @@ export interface ChatService
    * - result: The result after performing the operation. If failed, an error object is returned.
    */
   autoLogin(params: {
-    userId: string;
-    userToken: string;
     userName?: string;
     userAvatarURL?: string;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;

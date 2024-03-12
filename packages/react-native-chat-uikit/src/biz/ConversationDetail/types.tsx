@@ -5,8 +5,8 @@ import type {
   ChatMessageReaction,
   ChatMessageThread,
 } from 'react-native-chat-sdk';
-import type { DataModel } from 'src/chat';
 
+import type { DataModel } from '../../chat';
 import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type { TopNavigationBarElementType } from '../TopNavigationBar';
 import type {

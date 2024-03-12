@@ -342,8 +342,6 @@ export class ChatServiceImpl
     }
   }
   async autoLogin(params: {
-    userId: string;
-    userToken: string;
     userName?: string;
     userAvatarURL?: string;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
@@ -361,7 +359,7 @@ export class ChatServiceImpl
           this._convStorage?.setCurrentId(userId);
 
           this._user = {
-            userName: params.userId,
+            userName: params.userName,
             remark: params.userName,
             avatarURL: params.userAvatarURL,
             userId: userId,

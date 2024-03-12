@@ -131,7 +131,6 @@ export function Search(props: SearchProps) {
           <Text1Button
             sizesType={'middle'}
             radiusType={input}
-            contentType={'only-text'}
             text={tr('cancel')}
             onPress={onCancel}
             style={{ paddingHorizontal: 20 }}

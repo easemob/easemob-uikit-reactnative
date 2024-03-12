@@ -17,7 +17,7 @@ export const useGetButtonSizeStyle = (
   icon: IconStyles;
 } => {
   const { button } = useThemeContext();
-  const { sizesType, contentType } = props;
+  const { sizesType = 'middle', contentType } = props;
   type RetType = ReturnType<typeof useGetButtonSizeStyle>;
 
   const trimming = (params: RetType) => {
@@ -97,7 +97,7 @@ export const useGetButtonStateStyle = (props: ButtonProps): ButtonColors => {
   });
 };
 export const useGetButtonRadiusStyle = (props: ButtonProps) => {
-  const { radiusType } = props;
+  const { radiusType = 'extraSmall' } = props;
   const { button } = useThemeContext();
   const { cornerRadius } = usePaletteContext();
   switch (radiusType) {

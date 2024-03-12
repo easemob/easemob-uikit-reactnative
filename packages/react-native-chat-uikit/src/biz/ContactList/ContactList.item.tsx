@@ -152,7 +152,6 @@ export function ContactListItem(props: ContactListItemProps) {
             <Text2Button
               sizesType={'small'}
               radiusType={'extraSmall'}
-              contentType={'only-text'}
               text={tr(forwarded === true ? 'forwarded' : 'forward')}
               style={{
                 backgroundColor: getColor('btn_bg'),

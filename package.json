@@ -9,7 +9,8 @@
   "workspaces": [
     "packages/react-native-chat-uikit",
     "packages/react-native-chat-callkit",
-    "example"
+    "example",
+    "examples/callkit-example"
   ],
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
