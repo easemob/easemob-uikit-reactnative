@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+// import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
 import {
@@ -69,7 +69,7 @@ const demoType = env.demoType;
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
-SplashScreen?.preventAutoHideAsync?.();
+// SplashScreen?.preventAutoHideAsync?.();
 
 export function App() {
   const [initialRouteName] = React.useState(
@@ -94,6 +94,17 @@ export function App() {
 
   const { onRequestMultiData } = useApp();
 
+  const options = React.useMemo(() => {
+    return {
+      appKey: env.appKey,
+      debugModel: env.isDevMode,
+      autoLogin: false,
+      autoAcceptGroupInvitation: true,
+      requireAck: true,
+      requireDeliveryAck: true,
+    };
+  }, []);
+
   const formatNavigationState = (
     state: NavigationState | undefined,
     result: string[] & string[][]
@@ -112,6 +123,58 @@ export function App() {
       result.push(ret);
     }
   };
+
+  const onReady = React.useCallback(async (_ready: boolean) => {
+    // This tells the splash screen to hide immediately! If we call this after
+    // `setAppIsReady`, then we may see a blank screen while the app is
+    // loading its initial state and rendering its first pixels. So instead,
+    // we hide the splash screen once we know the root view has already
+    // performed layout.
+    // setTimeout(async () => {
+    //   await SplashScreen.hideAsync();
+    // }, 2000);
+    if (isReadyRef.current === true) {
+      return;
+    }
+    isReadyRef.current = true;
+    // await SplashScreen?.hideAsync?.();
+  }, []);
+
+  const onContainerInitialized = React.useCallback(() => {
+    isContainerReadyRef.current = true;
+    if (
+      isFontReadyRef.current === true &&
+      isNavigationReadyRef.current === true &&
+      isContainerReadyRef.current === true
+    ) {
+      onReady(true);
+    }
+  }, [onReady]);
+
+  const onNavigationInitialized = React.useCallback(() => {
+    isNavigationReadyRef.current = true;
+    if (
+      isFontReadyRef.current === true &&
+      isNavigationReadyRef.current === true &&
+      isContainerReadyRef.current === true
+    ) {
+      onReady(true);
+    }
+  }, [onReady]);
+
+  React.useEffect(() => {
+    if (fontsLoaded) {
+      isFontReadyRef.current = true;
+      if (
+        isFontReadyRef.current === true &&
+        isNavigationReadyRef.current === true &&
+        isContainerReadyRef.current === true
+      ) {
+        console.log('dev:ready');
+        onReady(true);
+      }
+    }
+  }, [fontsLoaded, onReady]);
 
   React.useEffect(() => {
     getPermission({
@@ -142,87 +205,6 @@ export function App() {
     };
   }, [dark, light]);
 
-  const onReady = async (_ready: boolean) => {
-    // This tells the splash screen to hide immediately! If we call this after
-    // `setAppIsReady`, then we may see a blank screen while the app is
-    // loading its initial state and rendering its first pixels. So instead,
-    // we hide the splash screen once we know the root view has already
-    // performed layout.
-    // setTimeout(async () => {
-    //   await SplashScreen.hideAsync();
-    // }, 2000);
-    if (isReadyRef.current === true) {
-      return;
-    }
-    isReadyRef.current = true;
-    await SplashScreen?.hideAsync?.();
-  };
-
-  if (fontsLoaded) {
-    isFontReadyRef.current = true;
-    if (
-      isFontReadyRef.current === true &&
-      isNavigationReadyRef.current === true &&
-      isContainerReadyRef.current === true
-    ) {
-      onReady(true);
-    }
-  }
-
-  const options = React.useMemo(() => {
-    return {
-      appKey: env.appKey,
-      debugModel: env.isDevMode,
-      autoLogin: false,
-      autoAcceptGroupInvitation: true,
-      requireAck: true,
-      requireDeliveryAck: true,
-    };
-  }, []);
-
-  // const options2 = {
-  //   appKey: env.appKey,
-  //   debugModel: env.isDevMode,
-  //   autoLogin: false,
-  //   autoAcceptGroupInvitation: true,
-  //   requireAck: true,
-  //   requireDeliveryAck: true,
-  // };
-
-  const onInitialized = React.useCallback(() => {
-    isContainerReadyRef.current = true;
-    if (
-      isFontReadyRef.current === true &&
-      isNavigationReadyRef.current === true &&
-      isContainerReadyRef.current === true
-    ) {
-      onReady(true);
-    }
-  }, []);
-
-  // const languageExtensionFactory = React.useCallback(
-  //   (language: LanguageCode) => {
-  //     if (language === 'zh-Hans') {
-  //       return createStringSetCn();
-  //     } else {
-  //       return createStringSetEn();
-  //     }
-  //   },
-  //   []
-  // );
-
-  // const formatTime = React.useMemo(() => {
-  //   return {
-  //     locale: 'zh-Hans',
-  //     conversationListCallback: (timestamp: number, locale?: Locale) => {
-  //       return new Date(timestamp).getTime();
-  //     },
-  //     conversationDetailCallback: (timestamp: number, locale?: Locale) => {
-  //       return new Date(timestamp).getTime();
-  //     },
-  //   };
-  // }, []);
-
   return (
     <React.StrictMode>
       <Container
@@ -242,7 +224,7 @@ export function App() {
         }}
         // fontFamily={fontFamily}
         // languageExtensionFactory={languageExtensionFactory}
-        onInitialized={onInitialized}
+        onInitialized={onContainerInitialized}
         onInitLanguageSet={() => {
           const ret = (
             language: LanguageCode,
@@ -282,16 +264,7 @@ export function App() {
           onUnhandledAction={(action: NavigationAction) => {
             console.log('dev:onUnhandledAction:', action);
           }}
-          onReady={() => {
-            isNavigationReadyRef.current = true;
-            if (
-              isFontReadyRef.current === true &&
-              isNavigationReadyRef.current === true &&
-              isContainerReadyRef.current === true
-            ) {
-              onReady(true);
-            }
-          }}
+          onReady={onNavigationInitialized}
           fallback={
             <View style={{ height: 100, width: 100, backgroundColor: 'red' }} />
           }

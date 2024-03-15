@@ -3,8 +3,10 @@ import { Text, View } from 'react-native';
 import {
   Container,
   containsChinese,
+  ConversationStorage,
   getPinyinFirsLetter,
   HighText,
+  SingletonObjects,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -134,6 +136,17 @@ export function TestPinyin() {
   return <></>;
 }
 
+export function TestSingleton() {
+  const c = SingletonObjects.getInstanceWithParams(ConversationStorage, {
+    appKey: 'your-app-key',
+  });
+  const d = SingletonObjects.getInstanceWithParams(ConversationStorage, {
+    appKey: 'your-app-key-2',
+  });
+  console.log('testSingle:', c === d);
+  return <></>;
+}
+
 export default function TestUtils() {
   return (
     <Container
@@ -143,7 +156,7 @@ export default function TestUtils() {
         autoLogin: false,
       }}
     >
-      <TestPinyin />
+      <TestSingleton />
     </Container>
   );
 }

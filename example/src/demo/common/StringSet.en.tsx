@@ -26,6 +26,38 @@ export function createStringSetEn(): StringSet {
     '_demo_info_theme': 'theme',
     '_demo_info_language': 'language setting',
 
+    '_demo_splash_title': 'Easemob IM',
+
+    '_demo_login_title': 'Login',
+    '_demo_login_title_version': (v) => `V${v}`,
+    '_demo_login_input_phone_number_tip': 'Please enter your phone number',
+    '_demo_login_input_phone_number_captcha_tip': 'Please enter the captcha',
+    '_demo_login_input_phone_number_captcha_button_1': 'Get captcha',
+    '_demo_login_input_phone_number_captcha_button_2': (second) =>
+      `Resend captcha(${second}s)`,
+    '_demo_login_input_phone_number_captcha_button_3': 'Resend captcha',
+    '_demo_login_button': 'Login',
+    '_demo_login_tip_1': 'Please select agree to',
+    '_demo_login_tip_2': '《Easemob Service Agreement》',
+    '_demo_login_tip_3': 'and',
+    '_demo_login_tip_4': '《Easemob Privacy Agreement》',
+    '_demo_login_tip_reason_1': 'Please enter the correct phone number',
+    '_demo_login_tip_reason_2':
+      'Please agree to the "Easemob Agreement" and "Easemob Agreement" first',
+    '_demo_login_tip_reason_3': 'Please enter the captcha',
+    '_demo_login_loading_tip': 'Logging',
+
+    '_demo_server_setting_navi_title': 'Server Setting',
+    '_demo_server_setting_navi_save': 'Save',
+    '_demo_server_setting_input_appkey_tip': 'Input App key',
+    '_demo_server_setting_private_setting': 'Use private server',
+    '_demo_server_setting_input_im_server_tip': 'Input IM server address',
+    '_demo_server_setting_input_port_tip': 'Input port number',
+    '_demo_server_setting_input_rest_server_tip': 'Input Rest server address',
+
+    '_demo_alert_server_setting_save_title':
+      'Need to restart the app after saving',
+
     'edit_group_name': 'Edit group name',
     'edit_group_description': 'Edit group description',
     'edit_group_my_remark': 'Edit group my remark',

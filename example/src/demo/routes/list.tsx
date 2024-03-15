@@ -3,11 +3,23 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  Splash: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
   Config: {
     option?: {} | undefined;
     params?: {} | undefined;
   };
   Login: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  LoginV2: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  LoginV2Setting: {
     option?: {} | undefined;
     params?: {} | undefined;
   };
@@ -166,11 +178,23 @@ export const SCREEN_LIST: RootParamsList = {
     option: undefined,
     params: undefined,
   },
+  Splash: {
+    option: undefined,
+    params: undefined,
+  },
   Config: {
     option: undefined,
     params: undefined,
   },
   Login: {
+    option: undefined,
+    params: undefined,
+  },
+  LoginV2: {
+    option: undefined,
+    params: undefined,
+  },
+  LoginV2Setting: {
     option: undefined,
     params: undefined,
   },

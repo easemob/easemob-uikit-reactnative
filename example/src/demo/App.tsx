@@ -2,16 +2,19 @@ import {
   NavigationAction,
   NavigationContainer,
   NavigationState,
+  useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
 import {
+  AsyncStorageBasic,
+  ChatOptionsType,
   Container,
   createDefaultStringSet,
   LanguageCode,
+  SingletonObjects,
   StringSet,
   useChatListener,
   useDarkTheme,
@@ -21,6 +24,8 @@ import {
 } from 'react-native-chat-uikit';
 
 import { createStringSetCn, createStringSetEn, ToastView } from './common';
+import { enableDNSConfig, imPort, imServer, restServer } from './common/const';
+import { RestApi } from './common/rest.api';
 import { useApp } from './hooks/useApp';
 import type { RootParamsList, RootParamsName } from './routes';
 import {
@@ -45,6 +50,7 @@ import {
   ImageMessagePreviewScreen,
   LoginListScreen,
   LoginScreen,
+  LoginV2Screen,
   MessageForwardSelectorScreen,
   MessageHistoryListScreen,
   MessageHistoryScreen,
@@ -58,7 +64,9 @@ import {
   SearchConversationScreen,
   SearchGroupScreen,
   SelectSingleParticipantScreen,
+  ServerSettingScreen,
   ShareContactScreen,
+  SplashScreen,
   TopMenuScreen,
   VideoMessagePreviewScreen,
 } from './screens';
@@ -69,11 +77,13 @@ const demoType = env.demoType;
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
-SplashScreen?.preventAutoHideAsync?.();
+// SplashScreen?.preventAutoHideAsync?.();
 
 export function App() {
   const [initialRouteName] = React.useState(
-    demoType === 2 ? ('TopMenu' as RootParamsName) : ('Login' as RootParamsName)
+    demoType === 2
+      ? ('TopMenu' as RootParamsName)
+      : ('Splash' as RootParamsName)
   );
   const palette = usePresetPalette();
   const dark = useDarkTheme(palette);
@@ -88,11 +98,110 @@ export function App() {
   const [fontsLoaded] = useFonts({
     [fontFamily]: require('../../assets/Twemoji.Mozilla.ttf'),
   });
+  const rootRef = useNavigationContainerRef<RootParamsList>();
+  const imServerRef = React.useRef(imServer);
+  const imPortRef = React.useRef(imPort);
+  const enableDNSConfigRef = React.useRef(enableDNSConfig);
+  const [_initParams, setInitParams] = React.useState(false);
 
   const permissionsRef = React.useRef(false);
   const { getPermission } = usePermissions();
 
   const { onRequestMultiData } = useApp();
+
+  const getImServer = async () => {
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${env.appKey}/uikit/demo`,
+    });
+    try {
+      const ret = await s.getData({ key: 'imServer' });
+      if (ret.value === undefined) {
+        return imServer;
+      }
+      return ret.value;
+    } catch (error) {
+      return undefined;
+    }
+  };
+  const getImPort = async () => {
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${env.appKey}/uikit/demo`,
+    });
+    try {
+      const ret = await s.getData({ key: 'imPort' });
+      if (ret.value === undefined) {
+        return imPort;
+      }
+      if (ret.value) {
+        return ret.value;
+      }
+      return undefined;
+    } catch (error) {
+      return undefined;
+    }
+  };
+  const getEnableDNSConfig = async () => {
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${env.appKey}/uikit/demo`,
+    });
+    try {
+      const ret = await s.getData({ key: 'enablePrivateServer' });
+      if (ret.value === undefined) {
+        return enableDNSConfig;
+      }
+      return ret.value === 'true'
+        ? true
+        : ret.value === 'false'
+        ? false
+        : (env.useSendBox as boolean);
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const initParams = React.useCallback(async () => {
+    if (_initParams === true) {
+      return;
+    }
+    try {
+      imPortRef.current = await getImPort();
+      imServerRef.current = await getImServer();
+      enableDNSConfigRef.current = await getEnableDNSConfig();
+      setInitParams(true);
+    } catch (error) {
+      setInitParams(true);
+    }
+  }, [_initParams]);
+
+  // const options = React.useMemo(() => {
+  //   return {
+  //     appKey: env.appKey,
+  //     debugModel: env.isDevMode,
+  //     autoLogin: false,
+  //     autoAcceptGroupInvitation: true,
+  //     requireAck: true,
+  //     requireDeliveryAck: true,
+  //     restServer: restServer,
+  //     imServer: imServerRef.current,
+  //     imPort: imPortRef.current,
+  //     enableDNSConfig: enableDNSConfigRef.current,
+  //   } as ChatOptionsType;
+  // }, []);
+
+  const getOptions = React.useCallback(() => {
+    return {
+      appKey: env.appKey,
+      debugModel: env.isDevMode,
+      autoLogin: false,
+      autoAcceptGroupInvitation: true,
+      requireAck: true,
+      requireDeliveryAck: true,
+      restServer: restServer,
+      imServer: imServerRef.current,
+      imPort: imPortRef.current,
+      enableDNSConfig: enableDNSConfigRef.current,
+    } as ChatOptionsType;
+  }, []);
 
   const formatNavigationState = (
     state: NavigationState | undefined,
@@ -112,6 +221,51 @@ export function App() {
       result.push(ret);
     }
   };
+
+  const onReady = React.useCallback(
+    async (_ready: boolean) => {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      // setTimeout(async () => {
+      //   await SplashScreen.hideAsync();
+      // }, 2000);
+      if (isReadyRef.current === true) {
+        return;
+      }
+      isReadyRef.current = true;
+      RestApi.setServer('a1-hsb.easemob.com');
+      // await SplashScreen?.hideAsync?.();
+      setTimeout(() => {
+        rootRef.navigate('LoginV2', {});
+      }, 1000);
+    },
+    [rootRef]
+  );
+
+  const onContainerInitialized = React.useCallback(() => {
+    isContainerReadyRef.current = true;
+    if (
+      isFontReadyRef.current === true &&
+      isNavigationReadyRef.current === true &&
+      isContainerReadyRef.current === true
+    ) {
+      onReady(true);
+    }
+  }, [onReady]);
+
+  const onNavigationInitialized = React.useCallback(() => {
+    isNavigationReadyRef.current = true;
+    if (
+      isFontReadyRef.current === true &&
+      isNavigationReadyRef.current === true &&
+      isContainerReadyRef.current === true
+    ) {
+      onReady(true);
+    }
+  }, [onReady]);
 
   React.useEffect(() => {
     getPermission({
@@ -142,91 +296,34 @@ export function App() {
     };
   }, [dark, light]);
 
-  const onReady = async (_ready: boolean) => {
-    // This tells the splash screen to hide immediately! If we call this after
-    // `setAppIsReady`, then we may see a blank screen while the app is
-    // loading its initial state and rendering its first pixels. So instead,
-    // we hide the splash screen once we know the root view has already
-    // performed layout.
-    // setTimeout(async () => {
-    //   await SplashScreen.hideAsync();
-    // }, 2000);
-    if (isReadyRef.current === true) {
-      return;
-    }
-    isReadyRef.current = true;
-    await SplashScreen?.hideAsync?.();
-  };
+  React.useEffect(() => {
+    initParams().then().catch();
+  }, [initParams]);
 
-  if (fontsLoaded) {
-    isFontReadyRef.current = true;
-    if (
-      isFontReadyRef.current === true &&
-      isNavigationReadyRef.current === true &&
-      isContainerReadyRef.current === true
-    ) {
-      onReady(true);
+  React.useEffect(() => {
+    if (fontsLoaded) {
+      isFontReadyRef.current = true;
+      if (
+        isFontReadyRef.current === true &&
+        isNavigationReadyRef.current === true &&
+        isContainerReadyRef.current === true
+      ) {
+        console.log('dev:ready');
+        onReady(true);
+      }
     }
+  }, [fontsLoaded, onReady]);
+
+  if (_initParams === false) {
+    // !!! This is a workaround for the issue that the app will not start if the
+    // !!! `initParams` is not called in the `useEffect` hook.
+    return null;
   }
-
-  const options = React.useMemo(() => {
-    return {
-      appKey: env.appKey,
-      debugModel: env.isDevMode,
-      autoLogin: false,
-      autoAcceptGroupInvitation: true,
-      requireAck: true,
-      requireDeliveryAck: true,
-    };
-  }, []);
-
-  // const options2 = {
-  //   appKey: env.appKey,
-  //   debugModel: env.isDevMode,
-  //   autoLogin: false,
-  //   autoAcceptGroupInvitation: true,
-  //   requireAck: true,
-  //   requireDeliveryAck: true,
-  // };
-
-  const onInitialized = React.useCallback(() => {
-    isContainerReadyRef.current = true;
-    if (
-      isFontReadyRef.current === true &&
-      isNavigationReadyRef.current === true &&
-      isContainerReadyRef.current === true
-    ) {
-      onReady(true);
-    }
-  }, []);
-
-  // const languageExtensionFactory = React.useCallback(
-  //   (language: LanguageCode) => {
-  //     if (language === 'zh-Hans') {
-  //       return createStringSetCn();
-  //     } else {
-  //       return createStringSetEn();
-  //     }
-  //   },
-  //   []
-  // );
-
-  // const formatTime = React.useMemo(() => {
-  //   return {
-  //     locale: 'zh-Hans',
-  //     conversationListCallback: (timestamp: number, locale?: Locale) => {
-  //       return new Date(timestamp).getTime();
-  //     },
-  //     conversationDetailCallback: (timestamp: number, locale?: Locale) => {
-  //       return new Date(timestamp).getTime();
-  //     },
-  //   };
-  // }, []);
 
   return (
     <React.StrictMode>
       <Container
-        options={options}
+        options={getOptions()}
         palette={palette}
         theme={theme}
         language={language}
@@ -242,7 +339,7 @@ export function App() {
         }}
         // fontFamily={fontFamily}
         // languageExtensionFactory={languageExtensionFactory}
-        onInitialized={onInitialized}
+        onInitialized={onContainerInitialized}
         onInitLanguageSet={() => {
           const ret = (
             language: LanguageCode,
@@ -270,6 +367,7 @@ export function App() {
         // group={{ createGroupMemberLimit: 2 }}
       >
         <NavigationContainer
+          ref={rootRef}
           onStateChange={(state: NavigationState | undefined) => {
             const rr: string[] & string[][] = [];
             formatNavigationState(state, rr);
@@ -282,16 +380,7 @@ export function App() {
           onUnhandledAction={(action: NavigationAction) => {
             console.log('dev:onUnhandledAction:', action);
           }}
-          onReady={() => {
-            isNavigationReadyRef.current = true;
-            if (
-              isFontReadyRef.current === true &&
-              isNavigationReadyRef.current === true &&
-              isContainerReadyRef.current === true
-            ) {
-              onReady(true);
-            }
-          }}
+          onReady={onNavigationInitialized}
           fallback={
             <View style={{ height: 100, width: 100, backgroundColor: 'red' }} />
           }
@@ -555,6 +644,27 @@ export function App() {
                 headerShown: false,
               }}
               component={MessageHistoryScreen}
+            />
+            <Root.Screen
+              name={'Splash'}
+              options={{
+                headerShown: false,
+              }}
+              component={SplashScreen}
+            />
+            <Root.Screen
+              name={'LoginV2'}
+              options={{
+                headerShown: false,
+              }}
+              component={LoginV2Screen}
+            />
+            <Root.Screen
+              name={'LoginV2Setting'}
+              options={{
+                headerShown: false,
+              }}
+              component={ServerSettingScreen}
             />
           </Root.Navigator>
         </NavigationContainer>

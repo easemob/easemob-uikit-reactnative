@@ -15,3 +15,11 @@
 
 // export const gRemoveRoomUrl =
 //   'https://a1.easemob.com/internal/appserver/liverooms/';
+
+const env = require('../../env');
+const useSendBox = env.useSendBox as boolean;
+export const appKey = env.appKey as string;
+export const restServer = useSendBox ? 'a1-hsb.easemob.com' : undefined;
+export const imServer = useSendBox ? '180.184.143.60' : undefined;
+export const imPort = useSendBox ? '6717' : undefined;
+export const enableDNSConfig = useSendBox ? false : undefined;
