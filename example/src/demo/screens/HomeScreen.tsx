@@ -6,6 +6,7 @@ import type {
 import * as React from 'react';
 import { View } from 'react-native';
 import {
+  Badges,
   BottomTabBar,
   ChatServiceListener,
   ContactList,
@@ -19,6 +20,7 @@ import {
   useChatContext,
   useChatListener,
   useColors,
+  useDispatchContext,
   useI18nContext,
   usePaletteContext,
 } from 'react-native-chat-uikit';
@@ -32,6 +34,90 @@ const env = require('../../env');
 const demoType = env.demoType;
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
+
+function ConversationBadge() {
+  const [count, setCount] = React.useState<number>(0);
+  const { addListener, removeListener } = useDispatchContext();
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    fg: {
+      light: colors.error[5],
+      dark: colors.error[6],
+    },
+  });
+
+  React.useEffect(() => {
+    const listener = (params: { count: number }) => {
+      const { count } = params;
+      setCount(count);
+    };
+    addListener('_demo_conv_list_total_unread_count', listener);
+    return () => {
+      removeListener('_demo_conv_list_total_unread_count', listener);
+    };
+  }, [addListener, removeListener]);
+
+  return (
+    <View
+      style={{
+        borderColor: getColor('bg'),
+        borderWidth: 2,
+        borderRadius: 50,
+      }}
+    >
+      <Badges
+        count={count}
+        containerStyle={{ backgroundColor: getColor('fg') }}
+      />
+    </View>
+  );
+}
+
+function ContactBadge() {
+  const [count, setCount] = React.useState<number>(0);
+  const { addListener, removeListener } = useDispatchContext();
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    fg: {
+      light: colors.error[5],
+      dark: colors.error[6],
+    },
+  });
+
+  React.useEffect(() => {
+    const listener = (params: { count: number }) => {
+      const { count } = params;
+      setCount(count);
+    };
+    addListener('_demo_contact_list_total_request_count', listener);
+    return () => {
+      removeListener('_demo_contact_list_total_request_count', listener);
+    };
+  }, [addListener, removeListener]);
+
+  return (
+    <View
+      style={{
+        borderColor: getColor('bg'),
+        borderWidth: 2,
+        borderRadius: 50,
+      }}
+    >
+      <Badges
+        count={count}
+        containerStyle={{ backgroundColor: getColor('fg') }}
+      />
+    </View>
+  );
+}
 
 export function HomeScreen(props: Props) {
   const {} = props;
@@ -79,6 +165,7 @@ export function HomeScreen(props: Props) {
                 icon: 'person_single_fill',
               },
             ],
+            StateViews: [ConversationBadge, ContactBadge],
           } as any,
         }}
         // body={{
@@ -162,6 +249,7 @@ function HomeTabConversationListScreen(
     useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
 
   const im = useChatContext();
+  const { emit } = useDispatchContext();
   const updatedRef = React.useRef<boolean>(false);
   const updateData = React.useCallback(() => {
     if (updatedRef.current) {
@@ -186,6 +274,15 @@ function HomeTabConversationListScreen(
       },
     });
   }, [im]);
+
+  const onChangeUnreadCount = React.useCallback(
+    (count: number) => {
+      emit('_demo_conv_list_total_unread_count', {
+        count,
+      });
+    },
+    [emit]
+  );
 
   React.useEffect(() => {
     const listener: EventServiceListener = {
@@ -212,6 +309,7 @@ function HomeTabConversationListScreen(
         // backgroundColor: 'red',
         // height: 400,
       }}
+      onChangeUnreadCount={onChangeUnreadCount}
       // onInitialized={updateData}
       // onRequestMultiData={(params: {
       //   ids: Map<DataModelType, string[]>;
@@ -282,6 +380,14 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
   const {} = props;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
+  const { emit } = useDispatchContext();
+
+  const onChangeRequestCount = React.useCallback(
+    (count: number) => {
+      emit('_demo_contact_list_total_request_count', { count });
+    },
+    [emit]
+  );
 
   return (
     <ContactList
@@ -291,6 +397,7 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
         // backgroundColor: 'red',
         // height: 400,
       }}
+      onChangeRequestCount={onChangeRequestCount}
       // navigationBarVisible={false}
       // onRequestMultiData={(params: {
       //   ids: Map<DataModelType, string[]>;

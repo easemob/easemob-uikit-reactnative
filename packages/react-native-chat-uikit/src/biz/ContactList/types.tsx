@@ -217,6 +217,11 @@ export type ContactListProps = Pick<
      * Callback notification when forward message.
      */
     onForwardMessage?: (data: ContactModel) => void;
+
+    /**
+     * Callback notification when the request count changes.
+     */
+    onChangeRequestCount?: (count: number) => void;
   };
 
 /**

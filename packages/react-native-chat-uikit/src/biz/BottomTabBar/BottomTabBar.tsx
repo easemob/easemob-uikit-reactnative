@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useWindowDimensions, View } from 'react-native';
 
-import { useColors } from '../../hook';
+import { getElement, useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import type { TabPageHeaderProps } from '../../ui/TabPage';
@@ -9,7 +9,9 @@ import { calculateLeft } from '../../ui/TabPage/TabPageHeader.hooks';
 import { Text } from '../../ui/Text';
 import { gHeaderHeight } from './BottomTabBar.const';
 
-export type BottomTabBarProps = TabPageHeaderProps;
+export type BottomTabBarProps = TabPageHeaderProps & {
+  StateViews?: (React.FC | React.ReactElement | null | undefined)[];
+};
 
 /**
  * tab component.
@@ -25,6 +27,7 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
     containerStyle,
     content,
     initIndex,
+    StateViews,
   } = props;
   const { width: winWidth } = useWindowDimensions();
   const { colors } = usePaletteContext();
@@ -65,6 +68,8 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
     };
   }
 
+  console.log('test:zuoyu:unitWidth', unitWidth);
+
   return (
     <View
       style={{
@@ -86,6 +91,7 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
         ]}
       >
         {items.map((v, i) => {
+          const StateView = StateViews?.[i];
           return (
             <View
               key={i}
@@ -129,6 +135,17 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
                 >
                   {v.title}
                 </Text>
+              ) : null}
+              {StateView ? (
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: unitWidth / 2 - 4,
+                  }}
+                >
+                  {getElement(StateView)}
+                </View>
               ) : null}
             </View>
           );

@@ -54,6 +54,7 @@ export function useConversationList(props: ConversationListProps) {
     onInitBottomMenu,
     onInitialized,
     filterEmptyConversation,
+    onChangeUnreadCount,
   } = props;
   const flatListProps = useFlatList<ConversationListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'loading',
@@ -202,6 +203,16 @@ export function useConversationList(props: ConversationListProps) {
     [dataRef, refreshToUI]
   );
 
+  const calculateUnreadCount = React.useCallback(() => {
+    let count = 0;
+    for (const item of dataRef.current) {
+      if (item.data.unreadMessageCount) {
+        count += item.data.unreadMessageCount;
+      }
+    }
+    onChangeUnreadCount?.(count);
+  }, [dataRef, onChangeUnreadCount]);
+
   const init = React.useCallback(
     async (params: { onFinished?: () => void }) => {
       if (testMode === 'only-ui') {
@@ -273,6 +284,7 @@ export function useConversationList(props: ConversationListProps) {
                       );
                     }
                     refreshToUI([...dataRef.current]);
+                    calculateUnreadCount();
                   }
                 }
                 onSetState('normal');
@@ -292,6 +304,7 @@ export function useConversationList(props: ConversationListProps) {
       }
     },
     [
+      calculateUnreadCount,
       dataRef,
       filterEmptyConversation,
       im,
@@ -466,8 +479,9 @@ export function useConversationList(props: ConversationListProps) {
         }
       }
       refreshToUI(dataRef.current);
+      calculateUnreadCount();
     },
-    [dataRef, im, onAddDataToUI, refreshToUI]
+    [calculateUnreadCount, dataRef, im, onAddDataToUI, refreshToUI]
   );
 
   const listener = React.useMemo(() => {

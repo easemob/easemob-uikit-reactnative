@@ -67,6 +67,7 @@ export function useContactList(props: ContactListProps) {
     onClickedNewRequest,
     onClickedGroupList,
     onForwardMessage,
+    onChangeRequestCount,
   } = props;
   const sectionListProps = useSectionList<
     ContactListItemProps,
@@ -844,21 +845,23 @@ export function useContactList(props: ContactListProps) {
     const listener: RequestListListener = {
       onNewRequestListChanged: (list: NewRequestModel[]) => {
         setRequestCount(list.length);
+        onChangeRequestCount?.(list.length);
       },
     };
     im.requestList.addListener('ContactList', listener);
     return () => {
       im.requestList.removeListener('ContactList');
     };
-  }, [im.requestList, onChangeGroupCount]);
+  }, [im.requestList, onChangeGroupCount, onChangeRequestCount]);
 
   React.useEffect(() => {
     im.requestList.getRequestList({
       onResult: (result) => {
         setRequestCount(result.value?.length ?? 0);
+        onChangeRequestCount?.(result.value?.length ?? 0);
       },
     });
-  }, [im.requestList]);
+  }, [im.requestList, onChangeRequestCount]);
 
   return {
     ...sectionListProps,

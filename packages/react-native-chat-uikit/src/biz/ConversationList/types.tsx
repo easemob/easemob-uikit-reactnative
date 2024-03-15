@@ -148,6 +148,11 @@ export type ConversationListProps = Pick<
      * filter empty conversation.
      */
     filterEmptyConversation?: boolean;
+
+    /**
+     * The total number of unread message in the conversation list.
+     */
+    onChangeUnreadCount?: (unreadCount: number) => void;
   };
 
 /**
