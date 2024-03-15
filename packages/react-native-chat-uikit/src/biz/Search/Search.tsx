@@ -114,7 +114,7 @@ export function Search(props: SearchProps) {
             autoFocus={true}
             cursorColor={getColor('cursor')}
             enableClearButton={true}
-            clearButtonStyle={{ padding: 7 }}
+            clearButtonContainerStyle={{ padding: 7 }}
           />
           <Icon
             name={'magnifier'}

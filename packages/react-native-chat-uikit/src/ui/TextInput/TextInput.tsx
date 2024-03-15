@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  ImageStyle,
   Platform,
   Pressable,
   StyleProp,
@@ -29,9 +30,13 @@ export type TextInputProps = RNTextInputProps & {
    */
   enableClearButton?: boolean;
   /**
+   * Clear button container style.
+   */
+  clearButtonContainerStyle?: StyleProp<ViewStyle>;
+  /**
    * Clear button style.
    */
-  clearButtonStyle?: ViewStyle;
+  clearButtonStyle?: StyleProp<ImageStyle>;
   /**
    * Callback notification when clear button is pressed.
    */
@@ -81,6 +86,7 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       clearButtonMode: _,
       clearTextOnFocus: __,
       enableClearButton,
+      clearButtonContainerStyle,
       clearButtonStyle,
       onClear,
       ...others
@@ -264,14 +270,17 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
                 justifyContent: 'center',
                 alignItems: 'center',
               },
-              clearButtonStyle,
+              clearButtonContainerStyle,
             ]}
             onPress={_onClearValue}
           >
             <Icon
               name={'xmark_in_circle_fill'}
               resolution={'3x'}
-              style={{ height: 22, width: 22, tintColor: getColor('clear') }}
+              style={[
+                { height: 22, width: 22, tintColor: getColor('clear') },
+                clearButtonStyle,
+              ]}
             />
           </Pressable>
         ) : null}

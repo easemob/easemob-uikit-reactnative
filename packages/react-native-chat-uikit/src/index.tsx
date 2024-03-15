@@ -30,6 +30,7 @@ export * from './biz/VoiceBar';
 export * from './chat';
 export * from './config';
 export * from './container';
+export * from './db';
 export * from './dispatch';
 export * from './error';
 export * from './hook';

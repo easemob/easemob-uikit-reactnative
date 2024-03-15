@@ -114,11 +114,11 @@ export function Switch(props: SwitchProps) {
   const { getColor } = useColors({
     trackFalse: {
       light: colors.neutral[9],
-      dark: colors.neutral[9],
+      dark: colors.neutral[3],
     },
     trackTrue: {
-      light: colors.neutral[3],
-      dark: colors.neutral[3],
+      light: colors.primary[5],
+      dark: colors.primary[6],
     },
     thumbColor: {
       light: thumbColor ?? colors.neutral[98],
@@ -198,7 +198,6 @@ export function Switch(props: SwitchProps) {
             StyleSheet.absoluteFill,
             {
               position: 'absolute',
-              backgroundColor: 'red',
             },
           ]}
         >
@@ -211,7 +210,7 @@ export function Switch(props: SwitchProps) {
           height: height * 0.9,
           width: height * 0.9,
           borderRadius: width * 0.9,
-          backgroundColor: getColor('thumbBackgroundColor'),
+          backgroundColor: getColor('thumbColor'),
           justifyContent: 'center',
           alignItems: 'center',
         }}

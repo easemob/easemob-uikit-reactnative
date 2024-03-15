@@ -12,6 +12,11 @@ import {
   ThemeContextProvider,
   usePresetPalette,
 } from '../theme';
+import { AlertContextProvider } from '../ui/Alert';
+import {
+  SimpleToastContextProvider,
+  ToastViewContextProvider,
+} from '../ui/Toast';
 import { mergeObjects } from '../utils';
 import {
   getI18nLanguage,
@@ -135,7 +140,13 @@ export function Container(props: ContainerProps) {
                   enableAVMeeting: enableAVMeeting,
                 }}
               >
-                <SafeAreaProvider>{children}</SafeAreaProvider>
+                <SimpleToastContextProvider>
+                  <ToastViewContextProvider>
+                    <AlertContextProvider>
+                      <SafeAreaProvider>{children}</SafeAreaProvider>
+                    </AlertContextProvider>
+                  </ToastViewContextProvider>
+                </SimpleToastContextProvider>
               </ConfigContextProvider>
             </ChatContextProvider>
           </I18nContextProvider>

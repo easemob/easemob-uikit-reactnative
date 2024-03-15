@@ -1,5 +1,11 @@
 import type { AlertButton, StyleProp, ViewStyle } from 'react-native';
 
+export type AlertRef = {
+  alert: () => void;
+  alertWithInit: (props: AlertProps) => void;
+  close: (onFinished?: () => void) => void;
+};
+
 export type AlertProps = {
   title?: string;
   message?: string;
@@ -11,4 +17,8 @@ export type AlertProps = {
   containerStyle?: StyleProp<ViewStyle>;
   enableClearButton?: boolean;
   autoFocus?: boolean | undefined;
+};
+
+export type AlertContextType = {
+  getAlertRef: () => AlertRef;
 };

@@ -9,13 +9,7 @@ import { SlideModal, SlideModalRef } from '../Modal';
 import { Text } from '../Text';
 import { TextInput } from '../TextInput';
 import { useAlert } from './Alert.hooks';
-import type { AlertProps } from './types';
-
-export type AlertRef = {
-  alert: () => void;
-  alertWithInit: (props: AlertProps) => void;
-  close: (onFinished?: () => void) => void;
-};
+import type { AlertProps, AlertRef } from './types';
 
 export const Alert = React.forwardRef<AlertRef, AlertProps>(
   (props: AlertProps, ref?: React.ForwardedRef<AlertRef>) => {

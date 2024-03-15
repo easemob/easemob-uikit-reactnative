@@ -4,19 +4,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Queue, timeoutTask } from '../../utils';
+import type { SimpleToastProps, SimpleToastTask } from './types';
 
-export type SimpleToastTask = {
-  message: string;
-  timeout?: number;
-};
-
-export type SimpleToastRef = {
-  show: (task: SimpleToastTask) => void;
-};
-export type SimpleToastProps = {
-  propsRef: React.RefObject<SimpleToastRef>;
-  timeout?: number;
-};
 export function SimpleToast(props: SimpleToastProps) {
   const { propsRef, timeout = 3000 } = props;
   const tasks: Queue<SimpleToastTask> = React.useRef(
