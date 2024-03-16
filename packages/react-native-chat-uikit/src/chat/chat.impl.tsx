@@ -979,7 +979,8 @@ export class ChatServiceImpl
         this._convList.clear();
 
         const ret = list.map(async (v) => {
-          this._convList.set(v.convId, await this.toUIConversation(v));
+          const conv = await this.toUIConversation(v);
+          this._convList.set(v.convId, conv);
         });
         await Promise.all(ret);
       } else {
@@ -1078,6 +1079,7 @@ export class ChatServiceImpl
     convType: ChatConversationType;
     createIfNotExist?: boolean;
     fromNative?: boolean;
+    isChatThread?: boolean;
   }): Promise<ConversationModel | undefined> {
     const { fromNative = false } = params;
     if (fromNative === true) {
@@ -1085,7 +1087,8 @@ export class ChatServiceImpl
         promise: this.client.chatManager.getConversation(
           params.convId,
           params.convType,
-          params.createIfNotExist ?? true
+          params.createIfNotExist ?? true,
+          params.isChatThread ?? false
         ),
         event: 'getConversation',
       });
@@ -1104,7 +1107,9 @@ export class ChatServiceImpl
           return conv;
         } else {
           this._convList.set(c1.convId, c1);
-          this.sendUIEvent(UIListenerType.Conversation, 'onAddedEvent', c1);
+          if (params.isChatThread !== true) {
+            this.sendUIEvent(UIListenerType.Conversation, 'onAddedEvent', c1);
+          }
         }
         return c1;
       }
@@ -2631,7 +2636,7 @@ export class ChatServiceImpl
   addReactionToMessage(params: {
     msgId: string;
     reaction: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.chatManager.addReaction(
@@ -2651,7 +2656,7 @@ export class ChatServiceImpl
   removeReactionFromMessage(params: {
     msgId: string;
     reaction: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.chatManager.removeReaction(

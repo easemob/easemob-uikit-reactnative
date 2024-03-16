@@ -1,42 +1,46 @@
 import * as React from 'react';
 import type { ChatMessageThread } from 'react-native-chat-sdk';
 
+import { useChatContext } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
 
-export type UseMessageThreadListMoreActions = BasicActionsProps & {
-  /**
-   * Callback notification when click edit thread name.
-   */
-  onClickedEditThreadName?: (threadId: string, threadName: string) => void;
-  /**
-   * Callback notification when click open thread member list.
-   */
-  onClickedOpenThreadMemberList?: (thread: ChatMessageThread) => void;
-  /**
-   * Callback notification when click leave thread.
-   */
-  onClickedLeaveThread?: (threadId: string) => void;
-};
+export type UseMessageThreadListMoreActions = BasicActionsProps & {};
 export function useMessageThreadListMoreActions(
   props: UseMessageThreadListMoreActions
 ) {
-  const {
-    onClickedEditThreadName,
-    onClickedOpenThreadMemberList,
-    onClickedLeaveThread,
-    menuRef,
-    onInit,
-    alertRef,
-  } = props;
+  const { menuRef, onInit, alertRef } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
+  const im = useChatContext();
   const onShowMenu = React.useCallback(
-    (thread: ChatMessageThread) => {
-      let items = [
-        {
+    (params: {
+      thread: ChatMessageThread;
+      /**
+       * Callback notification when click edit thread name.
+       */
+      onClickedEditThreadName?: (threadId: string, threadName: string) => void;
+      /**
+       * Callback notification when click open thread member list.
+       */
+      onClickedOpenThreadMemberList?: (thread: ChatMessageThread) => void;
+      /**
+       * Callback notification when click leave thread.
+       */
+      onClickedLeaveThread?: (threadId: string) => void;
+    }) => {
+      const {
+        thread,
+        onClickedEditThreadName,
+        onClickedOpenThreadMemberList,
+        onClickedLeaveThread,
+      } = params;
+      let items = [] as InitMenuItemsType[];
+      console.log('test:zuoyu:thread:', thread, im.userId);
+      if (thread.owner === im.userId) {
+        items.push({
           name: tr('_uikit_thread_menu_edit_thread_name'),
           isHigh: false,
           icon: 'slash_in_rectangle',
@@ -45,64 +49,57 @@ export function useMessageThreadListMoreActions(
               onClickedEditThreadName?.(thread.threadId, thread.threadName);
             });
           },
+        });
+      }
+      items.push({
+        name: tr('_uikit_thread_menu_open_thread_member_list'),
+        isHigh: false,
+        icon: 'person_double_fill',
+        onClicked: () => {
+          closeMenu(() => {
+            onClickedOpenThreadMemberList?.(thread);
+          });
         },
-        {
-          name: tr('_uikit_thread_menu_open_thread_member_list'),
-          isHigh: false,
-          icon: 'person_double_fill',
-          onClicked: () => {
-            closeMenu(() => {
-              onClickedOpenThreadMemberList?.(thread);
-            });
-          },
-        },
-        {
-          name: tr('_uikit_thread_menu_leave_thread'),
-          isHigh: false,
-          icon: 'arrow_right_square_fill',
-          onClicked: () => {
-            closeMenu(() => {
-              alertRef?.current?.alertWithInit({
-                message: tr('_uikit_thread_leave_confirm'),
-                buttons: [
-                  {
-                    text: 'cancel',
-                    onPress: () => {
-                      alertRef.current?.close?.();
-                    },
-                  },
-                  {
-                    text: 'confirm',
-                    isPreferred: true,
-                    onPress: () => {
-                      alertRef?.current?.close?.();
-                      onClickedLeaveThread?.(thread.threadId);
-                    },
-                  },
-                ],
-              });
-            });
-          },
-        },
-      ] as InitMenuItemsType[];
-      items = onInit ? onInit(items) : items;
-      menuRef.current?.startShowWithProps?.({
-        initItems: items,
-        onRequestModalClose: closeMenu,
-        layoutType: 'left',
-        hasCancel: false,
       });
+      items.push({
+        name: tr('_uikit_thread_menu_leave_thread'),
+        isHigh: false,
+        icon: 'arrow_right_square_fill',
+        onClicked: () => {
+          closeMenu(() => {
+            alertRef?.current?.alertWithInit({
+              message: tr('_uikit_thread_leave_confirm'),
+              buttons: [
+                {
+                  text: 'cancel',
+                  onPress: () => {
+                    alertRef.current?.close?.();
+                  },
+                },
+                {
+                  text: 'confirm',
+                  isPreferred: true,
+                  onPress: () => {
+                    alertRef?.current?.close?.();
+                    onClickedLeaveThread?.(thread.threadId);
+                  },
+                },
+              ],
+            });
+          });
+        },
+      });
+      items = onInit ? onInit(items) : items;
+      if (items.length > 0) {
+        menuRef.current?.startShowWithProps?.({
+          initItems: items,
+          onRequestModalClose: closeMenu,
+          layoutType: 'left',
+          hasCancel: false,
+        });
+      }
     },
-    [
-      alertRef,
-      closeMenu,
-      menuRef,
-      onClickedEditThreadName,
-      onClickedLeaveThread,
-      onClickedOpenThreadMemberList,
-      onInit,
-      tr,
-    ]
+    [alertRef, closeMenu, im.userId, menuRef, onInit, tr]
   );
 
   return {

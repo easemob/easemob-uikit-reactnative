@@ -100,14 +100,23 @@ export function useMessageLongPressActions(
   const header = (
     emojiList: EmojiIconItem[],
     onFace?: (face: string) => void
-  ) => <BottomSheetMenuHeader emojiList={emojiList} onClickedEmoji={onFace} />;
+  ) => (
+    <BottomSheetMenuHeader
+      emojiList={emojiList}
+      onClickedEmoji={onFace}
+      isEmojiCharacter={true}
+    />
+  );
 
-  const onShowMenu = (
-    _id: string,
-    model: SystemMessageModel | TimeMessageModel | MessageModel,
-    emojiList?: EmojiIconItem[],
-    onFace?: (face: string) => void
-  ) => {
+  const onShowMenu = (params: {
+    id: string;
+    model: SystemMessageModel | TimeMessageModel | MessageModel;
+    emojiList?: EmojiIconItem[];
+    onFace?: (face: string) => void;
+    convId: string;
+    convType: number;
+  }) => {
+    const { model, emojiList, onFace, convType } = params;
     if (model.modelType !== 'message') {
       return;
     }
@@ -170,7 +179,7 @@ export function useMessageLongPressActions(
           }
         }
       }
-      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+      if (msgModel.msg.status === ChatMessageStatus.SUCCESS && convType === 1) {
         initItems.push({
           name: tr('_uikit_chat_list_long_press_menu_thread'),
           isHigh: false,

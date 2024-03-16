@@ -9,6 +9,7 @@ import {
 } from 'react-native-chat-sdk';
 import {
   ConversationDetail,
+  ConversationDetailModelType,
   gCustomMessageCardEventType,
   MessageInputRef,
   MessageListRef,
@@ -72,6 +73,8 @@ export function CreateThreadScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
+  const comType =
+    React.useRef<ConversationDetailModelType>('create_thread').current;
 
   const onCreateThreadResult = (
     thread?: ChatMessageThread,
@@ -138,7 +141,7 @@ export function CreateThreadScreen(props: Props) {
       }}
     >
       <ConversationDetail
-        type="create_thread"
+        type={comType}
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
@@ -300,6 +303,9 @@ export function CreateThreadScreen(props: Props) {
               merge: true,
             });
           } else if (params.convType === ChatConversationType.GroupChat) {
+            if (comType === 'create_thread') {
+              return;
+            }
             navigation.navigate({
               name: 'GroupInfo',
               params: {

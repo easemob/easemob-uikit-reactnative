@@ -3,7 +3,7 @@ import { Dimensions, Platform, Pressable, View } from 'react-native';
 
 import {
   ChatServiceListener,
-  useChatContext,
+  // useChatContext,
   useChatListener,
 } from '../../chat';
 import { useConfigContext } from '../../config';
@@ -66,7 +66,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   } = props;
   const [status, setStatus] = React.useState<string>();
   const { enableThread, enableAVMeeting } = useConfigContext();
-  const im = useChatContext();
+  // const im = useChatContext();
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -114,7 +114,9 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     const getIcons = () => {
       const ret = [];
       if (enableThread === true) {
-        ret.push('hashtag_in_bubble_fill');
+        if (convType === 1) {
+          ret.push('hashtag_in_bubble_fill');
+        }
       } else if (enableAVMeeting === true) {
         ret.push('phone_pick');
         ret.push('video_camera');
@@ -186,29 +188,29 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   }, [convId]);
   useChatListener(listener);
 
-  React.useEffect(() => {
-    if (convId) {
-      im.subPresence({ userIds: [convId] });
-      im.fetchPresence({
-        userIds: [convId],
-        onResult: (res) => {
-          if (res.isOk === true) {
-            const user = res.value?.find((u) => {
-              return u.publisher === convId;
-            });
-            if (user) {
-              setStatus(user.statusDescription);
-            }
-          }
-        },
-      });
-    }
-    return () => {
-      if (convId) {
-        im.unSubPresence({ userIds: [convId] });
-      }
-    };
-  }, [convId, im]);
+  // React.useEffect(() => {
+  //   if (convId && convType === 0) {
+  //     im.subPresence({ userIds: [convId] });
+  //     im.fetchPresence({
+  //       userIds: [convId],
+  //       onResult: (res) => {
+  //         if (res.isOk === true) {
+  //           const user = res.value?.find((u) => {
+  //             return u.publisher === convId;
+  //           });
+  //           if (user) {
+  //             setStatus(user.statusDescription);
+  //           }
+  //         }
+  //       },
+  //     });
+  //   }
+  //   return () => {
+  //     if (convId && convType === 0) {
+  //       im.unSubPresence({ userIds: [convId] });
+  //     }
+  //   };
+  // }, [convId, convType, im]);
 
   if (NavigationBar) {
     // return { NavigationBar };

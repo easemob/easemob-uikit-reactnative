@@ -8,13 +8,13 @@ import {
 } from 'react-native';
 import type { ChatMessageReaction } from 'react-native-chat-sdk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import emoji from 'twemoji';
 
 import { useChatContext } from '../../chat';
 import { useConfigContext } from '../../config';
 import { useColors, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
+import { Icon } from '../../ui/Image';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { SingleLineText, Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
@@ -88,6 +88,7 @@ export const BottomSheetReactionDetail = React.forwardRef<
     onClickedReaction,
     updateProps,
     maxHeight = Dimensions.get('window').height / 2,
+    onRemoveReaction,
   } = useGetProps(props);
 
   React.useImperativeHandle(
@@ -140,7 +141,11 @@ export const BottomSheetReactionDetail = React.forwardRef<
           onClicked={onClickedReaction}
           currentSelected={currentSelected}
         />
-        <UserList msgId={msgId} currentSelected={currentSelected} />
+        <UserList
+          msgId={msgId}
+          currentSelected={currentSelected}
+          onRemoveReaction={onRemoveReaction}
+        />
         {/* <View style={{ height: bottom }} /> */}
       </SafeAreaView>
     </SlideModal>
@@ -160,6 +165,7 @@ function useGetProps(props: BottomSheetReactionDetailProps) {
   const [data, setData] = React.useState<ChatMessageReaction[]>(
     reactionList ?? []
   );
+  const im = useChatContext();
   const _updateProps = (props: BottomSheetReactionDetailProps) => {
     const {
       reactionList,
@@ -174,12 +180,42 @@ function useGetProps(props: BottomSheetReactionDetailProps) {
   const onClickedReaction = React.useCallback((reaction: string) => {
     setCurrentSelected(reaction);
   }, []);
+
+  const onRemoveReaction = React.useCallback(
+    (msgId: string, reaction: string) => {
+      im.removeReactionFromMessage({
+        msgId: msgId,
+        reaction: reaction,
+        onResult: (res) => {
+          if (res.isOk) {
+            const index = data.findIndex((v) => v.reaction === reaction);
+            if (index !== -1) {
+              if (data[index]!.count > 1) {
+                data[index]!.count--;
+                setData([...data]);
+              } else {
+                data.splice(index, 1);
+                setData([...data]);
+              }
+              if (data.length > 0) {
+                setCurrentSelected(data[0]!.reaction);
+              } else {
+                setCurrentSelected('');
+              }
+            }
+          }
+        },
+      });
+    },
+    [im, data, setData]
+  );
   return {
     updateProps: _updateProps,
     list: data,
     msgId: _msgId,
     currentSelected: _currentSelected,
     onClickedReaction,
+    onRemoveReaction,
     ...others,
   };
 }
@@ -250,7 +286,7 @@ function TabItem(props: TabReactionItemProps) {
       dark: colors.secondary[5],
     },
   });
-  const r = emoji.convert.fromCodePoint(reaction.substring(2));
+  const r = reaction;
   return (
     <View
       style={{
@@ -308,15 +344,17 @@ const TabItemMemo = React.memo(TabItem);
 type UserListProps = {
   msgId: string;
   currentSelected: string;
+  onRemoveReaction?: (msgId: string, reaction: string) => void;
 };
 type UserListItemProps = {
   userId: string;
   isMyself?: boolean;
   userAvatar?: string;
   userName?: string;
+  onClickedItem?: (userId: string) => void;
 };
 function UserList(props: UserListProps) {
-  const { currentSelected, msgId } = props;
+  const { currentSelected, msgId, onRemoveReaction } = props;
   const FlatList = React.useMemo(
     () => FlatListFactory<UserListItemProps>(),
     []
@@ -325,6 +363,15 @@ function UserList(props: UserListProps) {
   const cursorRef = React.useRef('');
   const im = useChatContext();
   const [refreshing, setRefreshing] = React.useState(false);
+
+  const onClickedItem = React.useCallback(
+    (userId: string) => {
+      if (userId === im.userId) {
+        onRemoveReaction?.(msgId, currentSelected);
+      }
+    },
+    [currentSelected, im.userId, msgId, onRemoveReaction]
+  );
 
   const request = React.useCallback(() => {
     im.getMessageReactionsDetail({
@@ -411,7 +458,7 @@ function UserList(props: UserListProps) {
         data={data}
         renderItem={(info) => {
           const { item } = info;
-          return <UserListItemMemo {...item} />;
+          return <UserListItemMemo {...item} onClickedItem={onClickedItem} />;
           // return TabItemMemo(item);
         }}
         keyExtractor={(item) => item.userId}
@@ -421,7 +468,7 @@ function UserList(props: UserListProps) {
 }
 
 function UserListItem(props: UserListItemProps) {
-  const { userId, userAvatar, userName } = props;
+  const { userId, userAvatar, userName, onClickedItem } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -440,13 +487,19 @@ function UserListItem(props: UserListItemProps) {
       light: colors.neutral[9],
       dark: colors.neutral[2],
     },
+    trash: {
+      light: colors.neutral[7],
+      dark: colors.neutral[7],
+    },
   });
   return (
     <Pressable
       style={{
         backgroundColor: getColor('bg'),
       }}
-      onPress={() => {}}
+      onPress={() => {
+        onClickedItem?.(userId);
+      }}
       onLongPress={() => {}}
     >
       <View
@@ -455,7 +508,7 @@ function UserListItem(props: UserListItemProps) {
           height: 59.5,
           flexDirection: 'row',
           alignItems: 'center',
-          paddingHorizontal: 16,
+          paddingLeft: 16,
         }}
       >
         <Avatar url={userAvatar} size={40} />
@@ -473,6 +526,15 @@ function UserListItem(props: UserListItemProps) {
               : userName}
           </SingleLineText>
         </View>
+        <Icon
+          name={'trash'}
+          style={{
+            width: 16,
+            height: 16,
+            padding: 4,
+            tintColor: getColor('trash'),
+          }}
+        />
       </View>
 
       <View

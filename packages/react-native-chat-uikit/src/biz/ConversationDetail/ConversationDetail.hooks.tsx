@@ -109,6 +109,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
       convType,
       createIfNotExist: true,
       fromNative: true,
+      isChatThread: comType === 'thread' || comType === 'create_thread',
     });
     console.log('dev:ConversationDetail:', conv);
     if (conv) {
@@ -157,6 +158,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
           });
         } else if (comType === 'thread') {
           if (thread) {
+            im.joinThread({ threadId: thread?.threadId });
             im.fetchThread({
               threadId: thread.threadId,
               onResult: (res) => {
@@ -289,9 +291,21 @@ export function useConversationDetail(props: ConversationDetailProps) {
     im.messageManager.setCurrentConv({ convId, convType });
     setConversation();
     return () => {
+      if (comType === 'thread' && thread) {
+        im.leaveThread({ threadId: thread.threadId });
+      }
       im.messageManager.setCurrentConv(undefined);
     };
-  }, [convId, convName, convType, im, setConversation, testMode]);
+  }, [
+    comType,
+    convId,
+    convName,
+    convType,
+    im,
+    setConversation,
+    testMode,
+    thread,
+  ]);
 
   React.useEffect(() => {
     const listener: UIConversationListListener = {

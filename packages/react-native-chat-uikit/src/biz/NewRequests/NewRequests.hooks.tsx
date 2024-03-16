@@ -71,7 +71,6 @@ export function useNewRequests(props: NewRequestsProps) {
       } else {
         // !!! accept invite. no have reject.
         if (data) {
-          console.log('test:zuoyu:onButtonClickedCallback:', data);
           im.acceptInvitation({
             userId: data.requestId,
             onResult: () => {

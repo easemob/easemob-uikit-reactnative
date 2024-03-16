@@ -68,8 +68,6 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
     };
   }
 
-  console.log('test:zuoyu:unitWidth', unitWidth);
-
   return (
     <View
       style={{

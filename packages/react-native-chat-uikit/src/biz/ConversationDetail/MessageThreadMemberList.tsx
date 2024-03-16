@@ -179,16 +179,19 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
   const alertRef = React.useRef<any>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
 
-  const onClickedKickMember = (threadId: string, memberId: string) => {
-    im.removeMemberFromThread({
-      threadId: threadId,
-      userId: memberId,
-    });
-  };
+  const onClickedKickMember = React.useCallback(
+    (threadId: string, memberId: string) => {
+      im.removeMemberFromThread({
+        threadId: threadId,
+        userId: memberId,
+      });
+    },
+    [im]
+  );
 
   const { onShowMessageThreadMemberListMoreActions } =
     useMessageThreadMemberListMoreActions({
-      onClickedKickMember: onClickedKickMember,
+      thread,
       menuRef,
       alertRef,
     });
@@ -200,15 +203,20 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
           const ret = onClickedItem(data);
           if (ret === true) {
             if (thread.owner === im.userId && data.id !== im.userId) {
-              onShowMessageThreadMemberListMoreActions(
-                thread.threadId,
-                data.id
-              );
+              onShowMessageThreadMemberListMoreActions({
+                threadId: thread.threadId,
+                memberId: data.id,
+                onClickedKickMember: onClickedKickMember,
+              });
             }
           }
         } else {
           if (thread.owner === im.userId && data.id !== im.userId) {
-            onShowMessageThreadMemberListMoreActions(thread.threadId, data.id);
+            onShowMessageThreadMemberListMoreActions({
+              threadId: thread.threadId,
+              memberId: data.id,
+              onClickedKickMember: onClickedKickMember,
+            });
           }
         }
       }
@@ -216,6 +224,7 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
     [
       im.userId,
       onClickedItem,
+      onClickedKickMember,
       onShowMessageThreadMemberListMoreActions,
       thread.owner,
       thread.threadId,

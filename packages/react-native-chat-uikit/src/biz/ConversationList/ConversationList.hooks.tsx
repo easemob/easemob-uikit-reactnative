@@ -467,7 +467,7 @@ export function useConversationList(props: ConversationListProps) {
             break;
           }
         }
-        if (isExisted === false) {
+        if (isExisted === false && msg.isChatThread === false) {
           const conv = await im.getConversation({
             convId: msg.conversationId,
             convType: msg.chatType as number as ChatConversationType,

@@ -179,7 +179,6 @@ export class RequestListImpl implements RequestList {
       pageSize: 200,
       direction: ChatSearchDirection.UP,
       onResult: (result) => {
-        console.log('test:zuoyu:getNewRequestList:', result);
         if (result.isOk) {
           if (result.value) {
             const list = result.value
@@ -193,7 +192,6 @@ export class RequestListImpl implements RequestList {
               (item, index, self) =>
                 index === self.findIndex((t) => t.requestId === item.requestId)
             );
-            console.log('test:zuoyu:getNewRequestList:2', list, uniqueList);
             this._newRequestList = uniqueList;
             params.onResult({ isOk: true, value: this._newRequestList });
           } else {

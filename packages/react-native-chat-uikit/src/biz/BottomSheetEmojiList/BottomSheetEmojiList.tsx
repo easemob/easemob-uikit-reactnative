@@ -138,6 +138,7 @@ export const BottomSheetEmojiList = React.forwardRef<
           }}
           onFace={onFace}
           emojiList={emojiList}
+          isEmojiCharacter={true}
         />
 
         {/* <View style={{ height: bottom }} /> */}

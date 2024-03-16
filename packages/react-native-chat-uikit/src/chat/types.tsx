@@ -303,12 +303,14 @@ export interface ConversationServices {
    * - convType: Conversation type.
    * - createIfNotExist: Whether to create a new conversation if it does not exist.
    * - fromNative: Whether it is called from the native layer.
+   * - isChatThread: Whether it is a chat thread.
    */
   getConversation(params: {
     convId: string;
     convType: ChatConversationType;
     createIfNotExist?: boolean;
     fromNative?: boolean;
+    isChatThread?: boolean;
   }): Promise<ConversationModel | undefined>;
   /**
    * Remove local conversation all messages.
@@ -641,7 +643,7 @@ export interface MessageReactionServices {
   addReactionToMessage(params: {
     msgId: string;
     reaction: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   /**
    * Remove reaction from message.
@@ -649,7 +651,7 @@ export interface MessageReactionServices {
   removeReactionFromMessage(params: {
     msgId: string;
     reaction: string;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   /**
    * Get message reactions list.

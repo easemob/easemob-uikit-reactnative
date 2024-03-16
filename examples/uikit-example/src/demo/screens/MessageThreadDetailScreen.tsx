@@ -8,6 +8,7 @@ import {
 } from 'react-native-chat-sdk';
 import {
   ConversationDetail,
+  ConversationDetailModelType,
   gCustomMessageCardEventType,
   MessageInputRef,
   MessageListRef,
@@ -74,6 +75,7 @@ export function MessageThreadDetailScreen(props: Props) {
     }
   };
   const testRef = React.useRef<(data: any) => void>(goBack);
+  const comType = React.useRef<ConversationDetailModelType>('thread').current;
 
   // React.useEffect(() => {
   //   if (selectedParticipants && operateType === 'mention') {
@@ -113,7 +115,7 @@ export function MessageThreadDetailScreen(props: Props) {
       }}
     >
       <ConversationDetail
-        type="thread"
+        type={comType}
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
@@ -277,6 +279,12 @@ export function MessageThreadDetailScreen(props: Props) {
                 },
               });
             },
+            onClickedLeaveThread: (threadId) => {
+              im.leaveThread({
+                threadId,
+              });
+              navigation.goBack();
+            },
           },
         }}
         onBack={() => {
@@ -294,6 +302,9 @@ export function MessageThreadDetailScreen(props: Props) {
               merge: true,
             });
           } else if (params.convType === ChatConversationType.GroupChat) {
+            if (comType === 'thread') {
+              return;
+            }
             navigation.navigate({
               name: 'GroupInfo',
               params: {

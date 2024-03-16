@@ -8,6 +8,7 @@ import {
 } from 'react-native-chat-sdk';
 import {
   ConversationDetail,
+  ConversationDetailModelType,
   ConversationDetailRef,
   gCustomMessageCardEventType,
   MessageInputRef,
@@ -64,6 +65,7 @@ export function ConversationDetailScreen(props: Props) {
     },
   });
   const convRef = React.useRef<ConversationDetailRef>({} as any);
+  const comType = React.useRef<ConversationDetailModelType>('chat').current;
 
   // React.useEffect(() => {
   //   if (selectedParticipants && operateType === 'mention') {
@@ -111,7 +113,7 @@ export function ConversationDetailScreen(props: Props) {
     >
       <ConversationDetail
         propsRef={convRef}
-        type="chat"
+        type={comType}
         containerStyle={{
           flexGrow: 1,
           // backgroundColor: 'red',
@@ -272,7 +274,10 @@ export function ConversationDetailScreen(props: Props) {
               });
             },
             onClickedOpenThreadMemberList: () => {},
-            onClickedLeaveThread: () => {},
+            onClickedLeaveThread: (threadId) => {
+              im.leaveThread({ threadId });
+              navigation.goBack();
+            },
             onClickedHistoryDetail: (item) => {
               navigation.push('MessageHistoryList', {
                 params: { message: item.msg },

@@ -63,7 +63,8 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
       if (msg === undefined && timestamp) {
         return cb ? cb(timestamp) : formatTsForConvList(timestamp);
       } else if (msg) {
-        return cb ? cb(msg.localTime) : formatTsForConvList(msg.localTime);
+        // !!! local time is bug.
+        return cb ? cb(msg.serverTime) : formatTsForConvList(msg.serverTime);
       } else {
         return '';
       }

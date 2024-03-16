@@ -13,10 +13,18 @@ import type { EmojiIconItem } from '../types';
 export type BottomSheetMenuHeaderProps = {
   emojiList?: EmojiIconItem[];
   onClickedEmoji?: (emoji: IconNameType | string) => void;
+  /**
+   * Whether to use the emoji chat mode.
+   *
+   * Its setting will affect the type of the return value of `onClickedEmoji`. If true, returns the emoji string, otherwise returns the `U+xxxxx` string.
+   *
+   * @default false
+   */
+  isEmojiCharacter?: boolean;
 };
 
 export function BottomSheetMenuHeader(props: BottomSheetMenuHeaderProps) {
-  const { emojiList, onClickedEmoji } = props;
+  const { emojiList, onClickedEmoji, isEmojiCharacter = false } = props;
   const { fontFamily } = useConfigContext();
   const { cornerRadius } = usePaletteContext();
   const { getBorderRadius } = useGetStyleProps();
@@ -71,7 +79,9 @@ export function BottomSheetMenuHeader(props: BottomSheetMenuHeaderProps) {
                 cr: cornerRadius,
               }),
             }}
-            onPress={() => onClickedEmoji?.(v.name)}
+            onPress={() =>
+              onClickedEmoji?.(isEmojiCharacter === true ? r : v.name)
+            }
           >
             <Text
               style={{

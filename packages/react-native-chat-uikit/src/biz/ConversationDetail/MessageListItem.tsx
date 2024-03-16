@@ -21,7 +21,6 @@ import {
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
 import type { ChatCombineMessageBody } from 'react-native-chat-sdk/lib/typescript/common/ChatMessage';
-import emoji from 'twemoji';
 
 import { ICON_ASSETS, IconNameType } from '../../assets';
 import {
@@ -1417,7 +1416,7 @@ export function MessageReaction(props: MessageReactionProps) {
     >
       {reactions?.map((v, i) => {
         if (i >= 0 && i < 3) {
-          const r = emoji.convert.fromCodePoint(v.reaction.substring(2));
+          const r = v.reaction;
           return (
             <Pressable key={i} onPress={() => onClicked?.(v.reaction)}>
               <View

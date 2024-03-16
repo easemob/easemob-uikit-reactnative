@@ -127,6 +127,7 @@ export function useMessageList(
   const inverted = React.useRef(
     comType === 'chat' || comType === 'search' ? true : false
   ).current;
+  console.log('test:zuoyu:useMessageList', props);
 
   const enableRefresh =
     comType === 'chat' ||
@@ -158,7 +159,7 @@ export function useMessageList(
   const isBottomRef = React.useRef(false);
   const isTopRef = React.useRef(false);
   const heightRef = React.useRef(0);
-  const bounces = React.useRef(false).current;
+  const bounces = React.useRef(true).current;
   const currentVoicePlayingRef = React.useRef<MessageModel | undefined>();
   const { tr } = useI18nContext();
   const im = useChatContext();
@@ -382,8 +383,8 @@ export function useMessageList(
           preBottomDataRef.current =
             dataRef.current[dataRef.current.length - 1];
         }
-        _refreshToUI(dataRef.current);
       }
+      _refreshToUI(dataRef.current);
     },
     [dataRef, removeDuplicateData, _refreshToUI, inverted]
   );
@@ -996,6 +997,15 @@ export function useMessageList(
     [im, onClickedLeaveThread, thread]
   );
 
+  const _onClickedEditThreadName = React.useCallback(
+    (threadId: string, threadName: string) => {
+      if (thread?.owner === im.userId && thread?.threadId === threadId) {
+        onClickedEditThreadName?.(threadId, threadName);
+      }
+    },
+    [im.userId, onClickedEditThreadName, thread?.owner, thread?.threadId]
+  );
+
   const _onMultiSelected = React.useCallback(() => {
     onClickedMultiSelected?.();
     dataRef.current.forEach((d) => {
@@ -1049,9 +1059,6 @@ export function useMessageList(
     useMessageThreadListMoreActions({
       menuRef,
       alertRef,
-      onClickedEditThreadName,
-      onClickedLeaveThread: _onClickedLeaveThread,
-      onClickedOpenThreadMemberList,
     });
 
   const onClickedListItem = React.useCallback(
@@ -1135,7 +1142,7 @@ export function useMessageList(
             (d) => d.reaction === reaction.reaction
           );
           if (index !== -1) {
-            const r = msgModel.reactions[index];
+            const r = msgModel.reactions[index]!;
             if (r) {
               if (reaction.count > 0) {
                 msgModel.reactions[index] = reaction;
@@ -1170,25 +1177,16 @@ export function useMessageList(
               im.removeReactionFromMessage({
                 msgId: model.msg.msgId,
                 reaction: face,
-                onResult: () => {
-                  // removeMessageEmojiFromUI(model.msg, face);
-                },
               });
             } else if (isExisted && isExisted.isAddedBySelf === false) {
               im.addReactionToMessage({
                 msgId: model.msg.msgId,
                 reaction: face,
-                onResult: () => {
-                  // AddMessageEmojiToUI(model.msg, face);
-                },
               });
             } else if (!isExisted) {
               im.addReactionToMessage({
                 msgId: model.msg.msgId,
                 reaction: face,
-                onResult: () => {
-                  // AddMessageEmojiToUI(model.msg, face);
-                },
               });
             }
           }
@@ -1243,7 +1241,7 @@ export function useMessageList(
       const ret = propsOnLongPress?.(id, model);
       if (ret !== false) {
         if (model.modelType === 'message') {
-          const list = emojiListRef.current.slice(0, 6);
+          const list = emojiListRef.current.slice(0, 7);
           const onFace = (face: string) => {
             if (face === 'faceplus') {
               menuRef.current?.startHide?.(() => {
@@ -1269,15 +1267,24 @@ export function useMessageList(
           const msgModel = model as MessageModel;
           getEmojiState(list, msgModel.msg.msgId, (updateList) => {
             if (updateList) {
-              onShowMessageLongPressActions(id, model, updateList, onFace);
+              onShowMessageLongPressActions({
+                id,
+                model,
+                emojiList: updateList,
+                onFace,
+                convId,
+                convType,
+              });
             } else {
-              onShowMessageLongPressActions(id, model);
+              onShowMessageLongPressActions({ id, model, convId, convType });
             }
           });
         }
       }
     },
     [
+      convId,
+      convType,
       getEmojiState,
       onEmojiClicked,
       onShowEmojiLongPressActions,
@@ -1339,7 +1346,7 @@ export function useMessageList(
           const msgModel = model as MessageModel;
           if (msgModel.reactions && msgModel.reactions?.length > 0) {
             reactionRef.current?.startShowWithProps?.({
-              reactionList: msgModel.reactions,
+              reactionList: [...msgModel.reactions],
               msgId: msgModel.msg.msgId,
               onRequestModalClose: onRequestCloseReaction,
             });
@@ -2154,23 +2161,8 @@ export function useMessageList(
           setNoNewMsg(false);
         }
       }
-      console.log(
-        'dev:addSendMessageToUI:',
-        comType,
-        hasNoNewMsgRef.current,
-        isBottomRef.current,
-        isShow,
-        canAddNewMessageToUI()
-      );
       let ret: MessageListItemProps | undefined = _addSendMessageToUI(
         value,
-        isShow
-      );
-      console.log(
-        'dev:addSendMessageToUI:',
-        comType,
-        hasNoNewMsgRef.current,
-        isBottomRef.current,
         isShow
       );
       if (ret) {
@@ -2230,6 +2222,9 @@ export function useMessageList(
           }
           if (msgs.length === 0 && startId === '') {
             if (firstMessage) {
+              if (inverted === false) {
+                setIsBottom(true);
+              }
               addSendMessageToUI({
                 value: firstMessage,
                 onFinished: (item) => {
@@ -2278,7 +2273,9 @@ export function useMessageList(
       convType,
       setNoNewMsg,
       firstMessage,
+      inverted,
       addSendMessageToUI,
+      setIsBottom,
       sendMessageToServer,
       dataRef,
       getDataMessage,
@@ -2783,7 +2780,12 @@ export function useMessageList(
         },
         startShowThreadMoreMenu: () => {
           if (thread) {
-            onShowMessageThreadListMoreActions(thread);
+            onShowMessageThreadListMoreActions({
+              thread,
+              onClickedEditThreadName: _onClickedEditThreadName,
+              onClickedLeaveThread: _onClickedLeaveThread,
+              onClickedOpenThreadMemberList,
+            });
           }
         },
         cancelMultiSelected: () => {
@@ -2818,6 +2820,8 @@ export function useMessageList(
       };
     },
     [
+      _onClickedEditThreadName,
+      _onClickedLeaveThread,
       addSendMessageToUI,
       cancelMultiSelected,
       comType,
@@ -2828,6 +2832,7 @@ export function useMessageList(
       inverted,
       loadAllLatestMessage,
       onAddMessageListToUI,
+      onClickedOpenThreadMemberList,
       onCreateThreadResult,
       onShowMessageThreadListMoreActions,
       onUpdateMessageToUI,
@@ -2888,7 +2893,9 @@ export function useMessageList(
             setUnreadCount(0);
             onAddMessageToUI(msg);
             sendRecvMessageReadAck(msg);
-            if (comType === 'thread' && inverted === false) {
+            if (comType === 'chat') {
+              scrollToBottom();
+            } else if (comType === 'thread') {
               scrollToBottom();
             }
           } else {
@@ -2965,13 +2972,13 @@ export function useMessageList(
       },
       onChatMessageThreadCreated: (event: ChatMessageThreadEvent) => {
         const msgId = event.thread.msgId;
-        if (msgId && convId === event.thread.threadId) {
+        if (msgId && (comType === 'chat' || comType === 'search')) {
           onUpdateMessageThreadToUI(msgId, event.thread);
         }
       },
       onChatMessageThreadUpdated: (event: ChatMessageThreadEvent) => {
         const msgId = event.thread.msgId;
-        if (msgId && convId === event.thread.threadId) {
+        if (msgId && (comType === 'chat' || comType === 'search')) {
           onUpdateMessageThreadToUI(msgId, event.thread);
         }
       },
@@ -2993,6 +3000,7 @@ export function useMessageList(
     onUpdateMessageThreadToUI,
     onRemoveMessageThreadToUI,
     updateMessageEmojiToUI,
+    comType,
   ]);
 
   React.useEffect(() => {

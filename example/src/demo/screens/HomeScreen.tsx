@@ -310,6 +310,7 @@ function HomeTabConversationListScreen(
         // height: 400,
       }}
       onChangeUnreadCount={onChangeUnreadCount}
+      filterEmptyConversation={true}
       // onInitialized={updateData}
       // onRequestMultiData={(params: {
       //   ids: Map<DataModelType, string[]>;

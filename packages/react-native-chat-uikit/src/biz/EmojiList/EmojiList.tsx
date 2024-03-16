@@ -53,6 +53,15 @@ export type EmojiListProps = {
    * The format needs to be followed. For example: `U+1F641` {@link FACE_ASSETS}. It will replace the built-in emoji  list.
    */
   emojiList?: EmojiIconItem[];
+
+  /**
+   * Whether to use the emoji chat mode.
+   *
+   * Its setting will affect the type of the return value of `onFace`. If true, returns the emoji string, otherwise returns the `U+xxxxx` string.
+   *
+   * @default false
+   */
+  isEmojiCharacter?: boolean;
 };
 
 /**
@@ -89,6 +98,7 @@ export function EmojiList(props: EmojiListProps) {
     emojiList,
     onDel,
     onSend,
+    isEmojiCharacter = false,
   } = props;
   const { getStyleSize, getBorderRadius } = useGetStyleProps();
   const { width: propsWidth } = getStyleSize(containerStyle);
@@ -143,7 +153,7 @@ export function EmojiList(props: EmojiListProps) {
                     // alignSelf: 'baseline', // !!! crash
                   }}
                   onPress={() => {
-                    onFace?.(v.name);
+                    onFace?.(isEmojiCharacter === true ? r : v.name);
                   }}
                 >
                   <View
