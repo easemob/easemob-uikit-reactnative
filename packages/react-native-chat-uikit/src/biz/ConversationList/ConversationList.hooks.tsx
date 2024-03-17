@@ -292,7 +292,7 @@ export function useConversationList(props: ConversationListProps) {
               } else {
                 onSetState('error');
                 if (error) {
-                  im.sendError({ error });
+                  im.sendError({ error, from: 'getAllConversations' });
                 }
               }
               params.onFinished?.();

@@ -22,6 +22,7 @@ export type ImagePreviewProps = {
   onDupClicked?: () => void;
   onLongPress?: () => void;
   imageStyle?: StyleProp<ImageStyle>;
+  onChange?: (params: { x: number; y: number; scale: number }) => void;
 };
 
 /**
@@ -37,7 +38,24 @@ export function ImagePreview(props: ImagePreviewProps) {
     onClicked,
     onDupClicked,
     imageStyle,
+    onChange,
   } = props;
+  const ref = React.useRef<View>(null);
+  const scaleRef = React.useRef<number>(1);
+  const onChangeMoved = React.useCallback(() => {
+    ref.current?.measure((_x, _y, _width, _height, pageX, pageY) => {
+      onChange?.({ x: pageX, y: pageY, scale: scaleRef.current });
+    });
+  }, [onChange]);
+  const onChangeSized = React.useCallback(
+    (scale: number) => {
+      scaleRef.current = scale;
+      ref.current?.measure((_x, _y, _width, _height, pageX, pageY) => {
+        onChange?.({ x: pageX, y: pageY, scale: scaleRef.current });
+      });
+    },
+    [onChange]
+  );
 
   return (
     <Pressable
@@ -49,9 +67,9 @@ export function ImagePreview(props: ImagePreviewProps) {
         onLongPress?.();
       }}
     >
-      <Draggable2>
-        <Scalable onDoubleClicked={onDupClicked}>
-          <View>
+      <Draggable2 onChangeMoved={onChangeMoved}>
+        <Scalable onDoubleClicked={onDupClicked} onChangeSized={onChangeSized}>
+          <View ref={ref}>
             <Image
               source={source}
               style={imageStyle}

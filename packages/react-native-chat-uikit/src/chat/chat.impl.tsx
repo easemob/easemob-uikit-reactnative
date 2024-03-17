@@ -986,6 +986,7 @@ export class ChatServiceImpl
       } else {
         let cursor = '';
         const pageSize = 50;
+        const pageSize2 = 20;
         const pinList =
           await this.client.chatManager.fetchPinnedConversationsFromServerWithCursor(
             cursor,
@@ -1001,7 +1002,7 @@ export class ChatServiceImpl
           const list =
             await this.client.chatManager.fetchConversationsFromServerWithCursor(
               cursor,
-              pageSize
+              pageSize2
             );
           list.list?.forEach((v) => {
             map.set(v.convId, {

@@ -3039,6 +3039,16 @@
   resolved "https://registry.npmmirror.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.3.0.tgz#9e558170c106bbafaa1ef502bd8e6d4651012bf9"
   integrity sha512-+zDZ20NUnSWghj7Ku5aFphMzuM9JulqCW+aPXT6IfIXFbb8tzYTTOSeRFOtuekJ99ibW2fUCSsjuKNlwDIbHFg==
 
+"@react-native-community/image-editor@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.npmmirror.com/@react-native-community/image-editor/-/image-editor-4.1.0.tgz#dbd8dc8f0cae10cc3009cb7257a97f271b2066b2"
+  integrity sha512-H69e7VhOvz/U23s8eCi2fee6n7GHUQEPMdYDTNSYvvpgT0QGzXvVBfBXW8vN9492DXd6gciTNtI2nbSVdrOfJA==
+
+"@react-native-community/slider@~4.4.2":
+  version "4.4.4"
+  resolved "https://registry.npmmirror.com/@react-native-community/slider/-/slider-4.4.4.tgz#0b2168cd0f53683c27b36b4917d01514d6dda1bb"
+  integrity sha512-PEq9mTEVwOh+wuBvuuIslvC8gyGHfS2G01SJJWdbb4xz+u5559iuQXqDOUxQgFuN45dM0Ut1wMFDDdawN9RTEA==
+
 "@react-native-firebase/app@^18.0.0":
   version "18.0.0"
   resolved "https://registry.npmmirror.com/@react-native-firebase/app/-/app-18.0.0.tgz#10036e5a480b1143bd88a50643f14ba0e9c62f82"

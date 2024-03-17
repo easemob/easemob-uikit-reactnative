@@ -513,6 +513,9 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
+  - react-native-slider (4.4.4):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
   - react-native-video (5.2.1):
     - React-Core
     - react-native-video/Video (= 5.2.1)
@@ -747,6 +750,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../../node_modules/react-native-image-picker`)
   - react-native-pager-view (from `../../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../../node_modules/@react-native-community/slider`)"
   - react-native-video (from `../../node_modules/react-native-video`)
   - React-perflogger (from `../../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -910,6 +914,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../../node_modules/@react-native-community/slider"
   react-native-video:
     :path: "../../node_modules/react-native-video"
   React-perflogger:
@@ -1043,6 +1049,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: 5e076db26cd81660cfb6db5bcf517cfa12054d45
   react-native-pager-view: 54bed894cecebe28cede54c01038d9d1e122de43
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
+  react-native-slider: ae9441a884f8465762f1f68d31eafad42663adb4
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   React-perflogger: e706562ab7eb8eb590aa83a224d26fa13963d7f2
   React-RCTActionSheet: 57d4bd98122f557479a3359ad5dad8e109e20c5a

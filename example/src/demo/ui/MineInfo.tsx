@@ -37,6 +37,7 @@ export function MineInfo(props: MineInfoProps) {
     onClickedCommon,
     onClickedMessageNotification,
     onClickedPrivacy,
+    userState,
   } = useMineInfo(props);
   const { cornerRadius } = useThemeContext();
   const { input } = cornerRadius;
@@ -165,7 +166,7 @@ export function MineInfo(props: MineInfoProps) {
                 paletteType={'label'}
                 style={{ color: getColor('t3') }}
               >
-                {tr('set')}
+                {tr(userState)}
               </Text>
               <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
             </View>
@@ -334,7 +335,7 @@ export function MineInfo(props: MineInfoProps) {
               <Text1Button
                 sizesType={'middle'}
                 radiusType={input}
-                text={tr('logout')}
+                text={tr('_demo_info_logout')}
                 onPress={onClickedLogout}
               />
             </View>

@@ -55,6 +55,8 @@ export function createStringSetCn(): StringSet {
 
     '_demo_alert_server_setting_save_title': '保存后需要重启应用',
 
+    '_demo_info_logout': '退出登录',
+
     'edit_group_name': '编辑群名称',
     'edit_group_description': '编辑群描述',
     'edit_group_my_remark': '编辑群我的备注',

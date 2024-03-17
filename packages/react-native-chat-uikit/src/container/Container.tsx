@@ -17,6 +17,7 @@ import {
   SimpleToastContextProvider,
   ToastViewContextProvider,
 } from '../ui/Toast';
+import { AbsoluteViewContextProvider } from '../ui/View';
 import { mergeObjects } from '../utils';
 import {
   getI18nLanguage,
@@ -140,13 +141,15 @@ export function Container(props: ContainerProps) {
                   enableAVMeeting: enableAVMeeting,
                 }}
               >
-                <SimpleToastContextProvider>
-                  <ToastViewContextProvider>
-                    <AlertContextProvider>
-                      <SafeAreaProvider>{children}</SafeAreaProvider>
-                    </AlertContextProvider>
-                  </ToastViewContextProvider>
-                </SimpleToastContextProvider>
+                <AbsoluteViewContextProvider>
+                  <SimpleToastContextProvider>
+                    <ToastViewContextProvider>
+                      <AlertContextProvider>
+                        <SafeAreaProvider>{children}</SafeAreaProvider>
+                      </AlertContextProvider>
+                    </ToastViewContextProvider>
+                  </SimpleToastContextProvider>
+                </AbsoluteViewContextProvider>
               </ConfigContextProvider>
             </ChatContextProvider>
           </I18nContextProvider>

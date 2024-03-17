@@ -55,6 +55,8 @@ export function createStringSetEn(): StringSet {
     '_demo_server_setting_input_port_tip': 'Input port number',
     '_demo_server_setting_input_rest_server_tip': 'Input Rest server address',
 
+    '_demo_info_logout': 'Logout',
+
     '_demo_alert_server_setting_save_title':
       'Need to restart the app after saving',
 

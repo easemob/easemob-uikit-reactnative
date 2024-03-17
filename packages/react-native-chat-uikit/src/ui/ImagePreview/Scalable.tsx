@@ -15,9 +15,10 @@ export type ScalableProps = React.PropsWithChildren<{
   containerStyle?: StyleProp<ViewStyle>;
   onDoubleClicked?: () => void;
   onOneClicked?: () => void;
+  onChangeSized?: (scale: number) => void;
 }>;
 export function Scalable(props: ScalableProps) {
-  const { children, containerStyle, onDoubleClicked } = props;
+  const { children, containerStyle, onDoubleClicked, onChangeSized } = props;
   const baseScale = React.useRef(new Animated.Value(1)).current;
   const pinchScale = React.useRef(new Animated.Value(1)).current;
   const scale = React.useRef(Animated.multiply(baseScale, pinchScale));
@@ -34,6 +35,9 @@ export function Scalable(props: ScalableProps) {
       lastScale.current *= event.nativeEvent.scale;
       baseScale.setValue(lastScale.current);
       pinchScale.setValue(1);
+    }
+    if (event.nativeEvent.state === State.END) {
+      onChangeSized?.(lastScale.current);
     }
   };
 

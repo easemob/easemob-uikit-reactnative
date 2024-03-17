@@ -9,6 +9,7 @@ import {
 
 export type DraggableProps = React.PropsWithChildren<{
   containerStyle?: StyleProp<ViewStyle>;
+  onChangeMoved?: (x: number, y: number) => void;
 }>;
 export function Draggable(props: DraggableProps) {
   const { children, containerStyle } = props;
@@ -54,7 +55,7 @@ export function Draggable(props: DraggableProps) {
 }
 
 export function Draggable2(props: DraggableProps) {
-  const { children, containerStyle } = props;
+  const { children, containerStyle, onChangeMoved } = props;
   const translateXY = React.useRef(new Animated.ValueXY({ x: 0, y: 0 }));
 
   const onGestureEvent = Animated.event(
@@ -87,6 +88,14 @@ export function Draggable2(props: DraggableProps) {
       });
       translateXY.current.setValue({ x: 0, y: 0 });
     }
+    if (event.nativeEvent.oldState === State.ACTIVE) {
+      onChangeMoved?.(
+        // @ts-ignore
+        translateXY.current.x._value,
+        // @ts-ignore
+        translateXY.current.y._value
+      );
+    }
   };
 
   return (
@@ -109,6 +118,9 @@ export function Draggable2(props: DraggableProps) {
           },
           containerStyle,
         ]}
+        onLayout={(e) => {
+          console.log('test:zuoyu:e:', e.nativeEvent.layout);
+        }}
       >
         {children}
       </Animated.View>

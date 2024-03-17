@@ -9,8 +9,14 @@ import { useFonts } from 'expo-font';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
 import {
+  CallUser,
+  GlobalContainer as CallkitContainer,
+} from 'react-native-chat-callkit';
+import { ChatClient } from 'react-native-chat-sdk';
+import {
   AsyncStorageBasic,
   ChatOptionsType,
+  ChatServiceListener,
   Container,
   createDefaultStringSet,
   LanguageCode,
@@ -24,8 +30,19 @@ import {
 } from 'react-native-chat-uikit';
 
 import { createStringSetCn, createStringSetEn, ToastView } from './common';
-import { enableDNSConfig, imPort, imServer, restServer } from './common/const';
-import { RestApi } from './common/rest.api';
+import {
+  accountType,
+  agoraAppId,
+  appKey as gAppKey,
+  demoType,
+  enableDNSConfig,
+  imPort,
+  imServer,
+  isDevMode,
+  restServer,
+  useSendBox,
+} from './common/const';
+import { RestApi, RtcRestApi } from './common/rest.api';
 import { useApp } from './hooks/useApp';
 import type { RootParamsList, RootParamsName } from './routes';
 import {
@@ -72,17 +89,17 @@ import {
 } from './screens';
 import { defaultAvatars } from './utils/utils';
 
-const env = require('../env');
-const demoType = env.demoType;
-
 const Root = createNativeStackNavigator<RootParamsList>();
 
 // SplashScreen?.preventAutoHideAsync?.();
 
 export function App() {
+  console.log('test:dev:App:', demoType);
   const [initialRouteName] = React.useState(
     demoType === 2
       ? ('TopMenu' as RootParamsName)
+      : demoType === 3
+      ? ('Login' as RootParamsName)
       : ('Splash' as RootParamsName)
   );
   const palette = usePresetPalette();
@@ -111,7 +128,7 @@ export function App() {
 
   const getImServer = async () => {
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${env.appKey}/uikit/demo`,
+      appKey: `${gAppKey}/uikit/demo`,
     });
     try {
       const ret = await s.getData({ key: 'imServer' });
@@ -125,7 +142,7 @@ export function App() {
   };
   const getImPort = async () => {
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${env.appKey}/uikit/demo`,
+      appKey: `${gAppKey}/uikit/demo`,
     });
     try {
       const ret = await s.getData({ key: 'imPort' });
@@ -142,7 +159,7 @@ export function App() {
   };
   const getEnableDNSConfig = async () => {
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${env.appKey}/uikit/demo`,
+      appKey: `${gAppKey}/uikit/demo`,
     });
     try {
       const ret = await s.getData({ key: 'enablePrivateServer' });
@@ -153,7 +170,7 @@ export function App() {
         ? true
         : ret.value === 'false'
         ? false
-        : (env.useSendBox as boolean);
+        : (useSendBox as boolean);
     } catch (error) {
       return false;
     }
@@ -190,16 +207,16 @@ export function App() {
 
   const getOptions = React.useCallback(() => {
     return {
-      appKey: env.appKey,
-      debugModel: env.isDevMode,
+      appKey: gAppKey,
+      debugModel: isDevMode,
       autoLogin: false,
       autoAcceptGroupInvitation: true,
       requireAck: true,
       requireDeliveryAck: true,
-      restServer: restServer,
-      imServer: imServerRef.current,
-      imPort: imPortRef.current,
-      enableDNSConfig: enableDNSConfigRef.current,
+      restServer: useSendBox ? restServer : undefined,
+      imServer: useSendBox ? imServerRef.current : undefined,
+      imPort: useSendBox ? imPortRef.current : undefined,
+      enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
     } as ChatOptionsType;
   }, []);
 
@@ -236,11 +253,17 @@ export function App() {
         return;
       }
       isReadyRef.current = true;
-      RestApi.setServer('a1-hsb.easemob.com');
+      RestApi.setServer(restServer);
+      if (accountType !== 'easemob') {
+        RtcRestApi.rtcTokenUrl = 'http://a41.easemob.com/token/rtc/channel';
+        RtcRestApi.mapUrl = 'http://a41.easemob.com/agora/channel/mapper';
+      }
       // await SplashScreen?.hideAsync?.();
-      setTimeout(() => {
-        rootRef.navigate('LoginV2', {});
-      }, 1000);
+      if (demoType === 4) {
+        setTimeout(() => {
+          rootRef.navigate('LoginV2', {});
+        }, 1000);
+      }
     },
     [rootRef]
   );
@@ -366,308 +389,393 @@ export function App() {
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}
       >
-        <NavigationContainer
-          ref={rootRef}
-          onStateChange={(state: NavigationState | undefined) => {
-            const rr: string[] & string[][] = [];
-            formatNavigationState(state, rr);
-            console.log(
-              'dev:onStateChange:',
-              JSON.stringify(rr, undefined, '  ')
-            );
-            // console.log('onStateChange:o:', JSON.stringify(state));
+        <CallkitContainer
+          option={{
+            appKey: gAppKey,
+            agoraAppId: agoraAppId,
           }}
-          onUnhandledAction={(action: NavigationAction) => {
-            console.log('dev:onUnhandledAction:', action);
+          type={accountType as any}
+          enableLog={isDevMode}
+          requestRTCToken={(params: {
+            appKey: string;
+            channelId: string;
+            userId: string;
+            userChannelId?: number | undefined;
+            type?: 'easemob' | 'agora' | undefined;
+            onResult: (params: { data?: any; error?: any }) => void;
+          }) => {
+            console.log('requestRTCToken:', params);
+            RtcRestApi.getRtcToken({
+              userAccount: params.userId,
+              channelId: params.channelId,
+              appKey: gAppKey,
+              userChannelId: params.userChannelId,
+              type: params.type,
+              onResult: (pp: { data?: any; error?: any }) => {
+                console.log('test:', pp);
+                params.onResult(pp);
+              },
+            });
           }}
-          onReady={onNavigationInitialized}
-          fallback={
-            <View style={{ height: 100, width: 100, backgroundColor: 'red' }} />
-          }
+          requestUserMap={(params: {
+            appKey: string;
+            channelId: string;
+            userId: string;
+            onResult: (params: { data?: any; error?: any }) => void;
+          }) => {
+            console.log('requestUserMap:', params);
+            RtcRestApi.getRtcMap({
+              userAccount: params.userId,
+              channelId: params.channelId,
+              appKey: gAppKey,
+              onResult: (pp: { data?: any; error?: any }) => {
+                console.log('requestUserMap:getRtcMap:', pp);
+                params.onResult(pp);
+              },
+            });
+          }}
+          requestCurrentUser={(params: {
+            onResult: (params: { user: CallUser; error?: any }) => void;
+          }) => {
+            console.log('requestCurrentUser:', params);
+            ChatClient.getInstance()
+              .getCurrentUsername()
+              .then((result) => {
+                params.onResult({
+                  user: {
+                    userId: result,
+                    userName: `${result}_self_name`,
+                    userAvatarUrl:
+                      'https://cdn3.iconfinder.com/data/icons/vol-2/128/dog-128.png',
+                  },
+                });
+              })
+              .catch((error) => {
+                console.warn('test:getCurrentUsername:error:', error);
+              });
+          }}
+          requestUserInfo={(params: {
+            userId: string;
+            onResult: (params: { user: CallUser; error?: any }) => void;
+          }) => {
+            console.log('requestCurrentUser:', params);
+            // pseudo
+            params.onResult({
+              user: {
+                userId: params.userId,
+                userName: `${params.userId}_name2`,
+                userAvatarUrl:
+                  'https://cdn2.iconfinder.com/data/icons/pet-and-veterinary-1/85/dog_charity_love_adopt_adoption-128.png',
+              },
+            });
+          }}
         >
-          <Root.Navigator initialRouteName={initialRouteName}>
-            <Root.Screen
-              name={'TopMenu'}
-              options={{
-                headerShown: true,
-              }}
-              component={TopMenuScreen}
-            />
-            <Root.Screen
-              name={'Home'}
-              options={{
-                headerShown: false,
-              }}
-              component={HomeScreen}
-            />
-            <Root.Screen
-              name={'Config'}
-              options={{
-                headerShown: true,
-              }}
-              component={ConfigScreen}
-            />
-            <Root.Screen
-              name={'Login'}
-              options={{
-                headerShown: true,
-              }}
-              component={LoginScreen}
-            />
-            <Root.Screen
-              name={'LoginList'}
-              options={{
-                headerShown: true,
-              }}
-              component={LoginListScreen}
-            />
-            <Root.Screen
-              name={'ConversationList'}
-              options={{
-                headerShown: false,
-              }}
-              component={ConversationListScreen}
-            />
-            <Root.Screen
-              name={'ContactList'}
-              options={{
-                headerShown: false,
-              }}
-              component={ContactListScreen}
-            />
-            <Root.Screen
-              name={'SearchConversation'}
-              options={{
-                headerShown: false,
-              }}
-              component={SearchConversationScreen}
-            />
-            <Root.Screen
-              name={'SearchContact'}
-              options={{
-                headerShown: false,
-              }}
-              component={SearchContactScreen}
-            />
-            <Root.Screen
-              name={'GroupList'}
-              options={{
-                headerShown: false,
-              }}
-              component={GroupListScreen}
-            />
-            <Root.Screen
-              name={'SearchGroup'}
-              options={{
-                headerShown: false,
-              }}
-              component={SearchGroupScreen}
-            />
-            <Root.Screen
-              name={'GroupParticipantList'}
-              options={{
-                headerShown: false,
-              }}
-              component={GroupParticipantListScreen}
-            />
-            <Root.Screen
-              name={'NewConversation'}
-              options={{
-                headerShown: false,
-              }}
-              component={NewConversationScreen}
-            />
-            <Root.Screen
-              name={'NewRequests'}
-              options={{
-                headerShown: false,
-              }}
-              component={NewRequestScreen}
-            />
-            <Root.Screen
-              name={'CreateGroup'}
-              options={{
-                headerShown: false,
-              }}
-              component={CreateGroupScreen}
-            />
-            <Root.Screen
-              name={'ContactInfo'}
-              options={{
-                headerShown: false,
-              }}
-              component={ContactInfoScreen}
-            />
-            <Root.Screen
-              name={'GroupInfo'}
-              options={{
-                headerShown: false,
-              }}
-              component={GroupInfoScreen}
-            />
-            <Root.Screen
-              name={'GroupParticipantInfo'}
-              options={{
-                headerShown: false,
-              }}
-              component={GroupParticipantInfoScreen}
-            />
-            <Root.Screen
-              name={'AddGroupParticipant'}
-              options={{
-                headerShown: false,
-              }}
-              component={AddGroupParticipantScreen}
-            />
-            <Root.Screen
-              name={'DelGroupParticipant'}
-              options={{
-                headerShown: false,
-              }}
-              component={DelGroupParticipantScreen}
-            />
-            <Root.Screen
-              name={'ChangeGroupOwner'}
-              options={{
-                headerShown: false,
-              }}
-              component={ChangeGroupOwnerScreen}
-            />
-            <Root.Screen
-              name={'ConversationDetail'}
-              options={{
-                headerShown: false,
-              }}
-              component={ConversationDetailScreen}
-            />
-            <Root.Screen
-              name={'SelectSingleParticipant'}
-              options={{
-                headerShown: false,
-              }}
-              component={SelectSingleParticipantScreen}
-            />
-            <Root.Screen
-              name={'FileMessagePreview'}
-              options={{
-                headerShown: false,
-              }}
-              component={FileMessagePreviewScreen}
-            />
-            <Root.Screen
-              name={'ImageMessagePreview'}
-              options={{
-                headerShown: false,
-              }}
-              component={ImageMessagePreviewScreen}
-            />
-            <Root.Screen
-              name={'VideoMessagePreview'}
-              options={{
-                headerShown: false,
-              }}
-              component={VideoMessagePreviewScreen}
-            />
-            <Root.Screen
-              name={'ShareContact'}
-              options={{
-                headerShown: false,
-              }}
-              component={ShareContactScreen}
-            />
-            <Root.Screen
-              name={'EditInfo'}
-              options={{
-                headerShown: false,
-              }}
-              component={EditInfoScreen}
-            />
-            <Root.Screen
-              name={'CommonSetting'}
-              options={{
-                headerShown: false,
-              }}
-              component={CommonSettingScreen}
-            />
-            <Root.Screen
-              name={'CreateThread'}
-              options={{
-                headerShown: false,
-              }}
-              component={CreateThreadScreen}
-            />
-            <Root.Screen
-              name={'MessageThreadDetail'}
-              options={{
-                headerShown: false,
-              }}
-              component={MessageThreadDetailScreen}
-            />
-            <Root.Screen
-              name={'MessageThreadList'}
-              options={{
-                headerShown: false,
-              }}
-              component={MessageThreadListScreen}
-            />
-            <Root.Screen
-              name={'MessageThreadMemberList'}
-              options={{
-                headerShown: false,
-              }}
-              component={MessageThreadMemberListScreen}
-            />
-            <Root.Screen
-              name={'MessageForwardSelector'}
-              options={{
-                headerShown: false,
-              }}
-              component={MessageForwardSelectorScreen}
-            />
-            <Root.Screen
-              name={'MessageHistoryList'}
-              options={{
-                headerShown: false,
-              }}
-              component={MessageHistoryListScreen}
-            />
-            <Root.Screen
-              name={'MessageSearch'}
-              options={{
-                headerShown: false,
-              }}
-              component={MessageSearchScreen}
-            />
-            <Root.Screen
-              name={'MessageHistory'}
-              options={{
-                headerShown: false,
-              }}
-              component={MessageHistoryScreen}
-            />
-            <Root.Screen
-              name={'Splash'}
-              options={{
-                headerShown: false,
-              }}
-              component={SplashScreen}
-            />
-            <Root.Screen
-              name={'LoginV2'}
-              options={{
-                headerShown: false,
-              }}
-              component={LoginV2Screen}
-            />
-            <Root.Screen
-              name={'LoginV2Setting'}
-              options={{
-                headerShown: false,
-              }}
-              component={ServerSettingScreen}
-            />
-          </Root.Navigator>
-        </NavigationContainer>
+          <NavigationContainer
+            ref={rootRef}
+            onStateChange={(state: NavigationState | undefined) => {
+              const rr: string[] & string[][] = [];
+              formatNavigationState(state, rr);
+              console.log(
+                'dev:onStateChange:',
+                JSON.stringify(rr, undefined, '  ')
+              );
+              // console.log('onStateChange:o:', JSON.stringify(state));
+            }}
+            onUnhandledAction={(action: NavigationAction) => {
+              console.log('dev:onUnhandledAction:', action);
+            }}
+            onReady={onNavigationInitialized}
+            fallback={
+              <View
+                style={{ height: 100, width: 100, backgroundColor: 'red' }}
+              />
+            }
+          >
+            <Root.Navigator initialRouteName={initialRouteName}>
+              <Root.Screen
+                name={'TopMenu'}
+                options={{
+                  headerShown: true,
+                }}
+                component={TopMenuScreen}
+              />
+              <Root.Screen
+                name={'Home'}
+                options={{
+                  headerShown: false,
+                }}
+                component={HomeScreen}
+              />
+              <Root.Screen
+                name={'Config'}
+                options={{
+                  headerShown: true,
+                }}
+                component={ConfigScreen}
+              />
+              <Root.Screen
+                name={'Login'}
+                options={{
+                  headerShown: true,
+                }}
+                component={LoginScreen}
+              />
+              <Root.Screen
+                name={'LoginList'}
+                options={{
+                  headerShown: true,
+                }}
+                component={LoginListScreen}
+              />
+              <Root.Screen
+                name={'ConversationList'}
+                options={{
+                  headerShown: false,
+                }}
+                component={ConversationListScreen}
+              />
+              <Root.Screen
+                name={'ContactList'}
+                options={{
+                  headerShown: false,
+                }}
+                component={ContactListScreen}
+              />
+              <Root.Screen
+                name={'SearchConversation'}
+                options={{
+                  headerShown: false,
+                }}
+                component={SearchConversationScreen}
+              />
+              <Root.Screen
+                name={'SearchContact'}
+                options={{
+                  headerShown: false,
+                }}
+                component={SearchContactScreen}
+              />
+              <Root.Screen
+                name={'GroupList'}
+                options={{
+                  headerShown: false,
+                }}
+                component={GroupListScreen}
+              />
+              <Root.Screen
+                name={'SearchGroup'}
+                options={{
+                  headerShown: false,
+                }}
+                component={SearchGroupScreen}
+              />
+              <Root.Screen
+                name={'GroupParticipantList'}
+                options={{
+                  headerShown: false,
+                }}
+                component={GroupParticipantListScreen}
+              />
+              <Root.Screen
+                name={'NewConversation'}
+                options={{
+                  headerShown: false,
+                }}
+                component={NewConversationScreen}
+              />
+              <Root.Screen
+                name={'NewRequests'}
+                options={{
+                  headerShown: false,
+                }}
+                component={NewRequestScreen}
+              />
+              <Root.Screen
+                name={'CreateGroup'}
+                options={{
+                  headerShown: false,
+                }}
+                component={CreateGroupScreen}
+              />
+              <Root.Screen
+                name={'ContactInfo'}
+                options={{
+                  headerShown: false,
+                }}
+                component={ContactInfoScreen}
+              />
+              <Root.Screen
+                name={'GroupInfo'}
+                options={{
+                  headerShown: false,
+                }}
+                component={GroupInfoScreen}
+              />
+              <Root.Screen
+                name={'GroupParticipantInfo'}
+                options={{
+                  headerShown: false,
+                }}
+                component={GroupParticipantInfoScreen}
+              />
+              <Root.Screen
+                name={'AddGroupParticipant'}
+                options={{
+                  headerShown: false,
+                }}
+                component={AddGroupParticipantScreen}
+              />
+              <Root.Screen
+                name={'DelGroupParticipant'}
+                options={{
+                  headerShown: false,
+                }}
+                component={DelGroupParticipantScreen}
+              />
+              <Root.Screen
+                name={'ChangeGroupOwner'}
+                options={{
+                  headerShown: false,
+                }}
+                component={ChangeGroupOwnerScreen}
+              />
+              <Root.Screen
+                name={'ConversationDetail'}
+                options={{
+                  headerShown: false,
+                }}
+                component={ConversationDetailScreen}
+              />
+              <Root.Screen
+                name={'SelectSingleParticipant'}
+                options={{
+                  headerShown: false,
+                }}
+                component={SelectSingleParticipantScreen}
+              />
+              <Root.Screen
+                name={'FileMessagePreview'}
+                options={{
+                  headerShown: false,
+                }}
+                component={FileMessagePreviewScreen}
+              />
+              <Root.Screen
+                name={'ImageMessagePreview'}
+                options={{
+                  headerShown: false,
+                }}
+                component={ImageMessagePreviewScreen}
+              />
+              <Root.Screen
+                name={'VideoMessagePreview'}
+                options={{
+                  headerShown: false,
+                }}
+                component={VideoMessagePreviewScreen}
+              />
+              <Root.Screen
+                name={'ShareContact'}
+                options={{
+                  headerShown: false,
+                }}
+                component={ShareContactScreen}
+              />
+              <Root.Screen
+                name={'EditInfo'}
+                options={{
+                  headerShown: false,
+                }}
+                component={EditInfoScreen}
+              />
+              <Root.Screen
+                name={'CommonSetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={CommonSettingScreen}
+              />
+              <Root.Screen
+                name={'CreateThread'}
+                options={{
+                  headerShown: false,
+                }}
+                component={CreateThreadScreen}
+              />
+              <Root.Screen
+                name={'MessageThreadDetail'}
+                options={{
+                  headerShown: false,
+                }}
+                component={MessageThreadDetailScreen}
+              />
+              <Root.Screen
+                name={'MessageThreadList'}
+                options={{
+                  headerShown: false,
+                }}
+                component={MessageThreadListScreen}
+              />
+              <Root.Screen
+                name={'MessageThreadMemberList'}
+                options={{
+                  headerShown: false,
+                }}
+                component={MessageThreadMemberListScreen}
+              />
+              <Root.Screen
+                name={'MessageForwardSelector'}
+                options={{
+                  headerShown: false,
+                }}
+                component={MessageForwardSelectorScreen}
+              />
+              <Root.Screen
+                name={'MessageHistoryList'}
+                options={{
+                  headerShown: false,
+                }}
+                component={MessageHistoryListScreen}
+              />
+              <Root.Screen
+                name={'MessageSearch'}
+                options={{
+                  headerShown: false,
+                }}
+                component={MessageSearchScreen}
+              />
+              <Root.Screen
+                name={'MessageHistory'}
+                options={{
+                  headerShown: false,
+                }}
+                component={MessageHistoryScreen}
+              />
+              <Root.Screen
+                name={'Splash'}
+                options={{
+                  headerShown: false,
+                }}
+                component={SplashScreen}
+              />
+              <Root.Screen
+                name={'LoginV2'}
+                options={{
+                  headerShown: false,
+                }}
+                component={LoginV2Screen}
+              />
+              <Root.Screen
+                name={'LoginV2Setting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={ServerSettingScreen}
+              />
+            </Root.Navigator>
+          </NavigationContainer>
+        </CallkitContainer>
+
         <TestListener />
         <ToastView />
       </Container>
@@ -685,7 +793,7 @@ export function TestListener() {
         onFinished: (params) => {
           console.log('dev:app:onFinished:', params);
         },
-      };
+      } as ChatServiceListener;
     }, [])
   );
   return <></>;
