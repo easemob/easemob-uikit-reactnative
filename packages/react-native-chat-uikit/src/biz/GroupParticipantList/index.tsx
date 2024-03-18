@@ -1,4 +1,5 @@
 export * from './AddGroupParticipant';
+export * from './AVSelectGroupParticipant';
 export * from './ChangeGroupOwner';
 export * from './DelGroupParticipant';
 export * from './GroupParticipantList';

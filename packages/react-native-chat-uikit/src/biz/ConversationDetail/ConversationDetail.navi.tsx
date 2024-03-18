@@ -18,7 +18,7 @@ import {
   TopNavigationBar,
   TopNavigationBarElementType,
   TopNavigationBarRightList,
-  TopNavigationBarRightText,
+  TopNavigationBarRightTextList,
 } from '../TopNavigationBar';
 import type {
   ConversationDetailModelType,
@@ -92,85 +92,76 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     },
   });
 
-  const getRight = (): any => {
-    if (comType === 'chat' || comType === 'search') {
-      if (selectMode === 'common') {
-        return TopNavigationBarRightList;
-      } else {
-        return TopNavigationBarRightText;
-      }
-    } else if (comType === 'thread') {
-      if (selectMode === 'common') {
-        return TopNavigationBarRightList;
-      } else {
-        return TopNavigationBarRightText;
-      }
-    } else {
-      return null;
-    }
-  };
-
-  const getRightProps = (): any => {
-    const getIcons = () => {
-      const ret = [];
-      if (enableThread === true) {
-        if (convType === 1) {
-          ret.push('hashtag_in_bubble_fill');
-        }
-      } else if (enableAVMeeting === true) {
-        ret.push('phone_pick');
-        ret.push('video_camera');
-      }
-      return ret;
+  const getData = React.useCallback(() => {
+    const ret = {
+      textList: [] as string[],
+      iconNameList: [] as string[],
+      onClickedList: [] as (() => void)[],
+      render: null as any,
     };
-    if (comType === 'chat' || comType === 'search') {
-      if (selectMode === 'common') {
-        return {
-          onClickedList: [
-            () => {
+    do {
+      if (comType === 'chat' || comType === 'search') {
+        if (selectMode === 'common') {
+          if (enableThread && convType === 1) {
+            ret.iconNameList.push('hashtag_in_bubble_fill');
+            ret.onClickedList.push(() => {
               onClickedThread?.();
-            },
-            () => {
+            });
+            ret.render = TopNavigationBarRightList;
+          }
+          if (enableAVMeeting) {
+            ret.iconNameList.push('phone_pick');
+            ret.iconNameList.push('video_camera');
+            ret.onClickedList.push(() => {
               onClickedVoice?.();
-            },
-            () => {
+            });
+            ret.onClickedList.push(() => {
               onClickedVideo?.();
-            },
-          ],
-          iconNameList: getIcons(),
-        };
-      } else {
-        return {
-          onClicked: () => {
+            });
+            ret.render = TopNavigationBarRightList;
+          }
+        } else if (selectMode === 'multi') {
+          ret.textList.push(tr('cancel'));
+          ret.onClickedList.push(() => {
             onCancelMultiSelected?.();
-          },
-          text: tr('cancel'),
-        };
+          });
+          ret.render = TopNavigationBarRightTextList;
+        }
+      } else if (comType === 'thread') {
+        if (selectMode === 'common') {
+          ret.iconNameList.push('ellipsis');
+          ret.onClickedList.push(() => {
+            onClickedThreadMore?.();
+          });
+          ret.render = TopNavigationBarRightList;
+        } else if (selectMode === 'multi') {
+        }
       }
-    } else if (comType === 'thread') {
-      if (selectMode === 'common') {
-        return {
-          onClickedList: [
-            () => {
-              if (enableThread === true) {
-                onClickedThreadMore?.();
-              }
-            },
-          ],
-          iconNameList: enableThread === true ? ['ellipsis_vertical'] : [],
-        };
-      } else {
-        return {
-          onClicked: () => {
-            onCancelMultiSelected?.();
-          },
-          text: tr('cancel'),
-        };
-      }
-    } else {
-      return {};
-    }
-  };
+    } while (false);
+    return ret;
+  }, [
+    comType,
+    convType,
+    enableAVMeeting,
+    enableThread,
+    onCancelMultiSelected,
+    onClickedThread,
+    onClickedThreadMore,
+    onClickedVideo,
+    onClickedVoice,
+    selectMode,
+    tr,
+  ]);
+
+  const rightProps = React.useMemo(() => {
+    const ret = getData();
+    return {
+      textList: ret.textList,
+      iconNameList: ret.iconNameList,
+      onClickedList: ret.onClickedList,
+      render: ret.render,
+    };
+  }, [getData]);
 
   const listener = React.useMemo(() => {
     return {
@@ -285,8 +276,8 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
           </View>
         </View>
       }
-      Right={getRight()}
-      RightProps={getRightProps()}
+      Right={rightProps.render}
+      RightProps={rightProps}
     />
   );
 };

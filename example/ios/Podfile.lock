@@ -1,4 +1,34 @@
 PODS:
+  - AgoraIrisRTC_iOS (4.2.6-build.3)
+  - AgoraRtcEngine_iOS (4.2.6):
+    - AgoraRtcEngine_iOS/AIAEC (= 4.2.6)
+    - AgoraRtcEngine_iOS/AINS (= 4.2.6)
+    - AgoraRtcEngine_iOS/AudioBeauty (= 4.2.6)
+    - AgoraRtcEngine_iOS/ClearVision (= 4.2.6)
+    - AgoraRtcEngine_iOS/ContentInspect (= 4.2.6)
+    - AgoraRtcEngine_iOS/DRM (= 4.2.6)
+    - AgoraRtcEngine_iOS/FaceDetection (= 4.2.6)
+    - AgoraRtcEngine_iOS/ReplayKit (= 4.2.6)
+    - AgoraRtcEngine_iOS/RtcBasic (= 4.2.6)
+    - AgoraRtcEngine_iOS/SpatialAudio (= 4.2.6)
+    - AgoraRtcEngine_iOS/VideoCodecDec (= 4.2.6)
+    - AgoraRtcEngine_iOS/VideoCodecEnc (= 4.2.6)
+    - AgoraRtcEngine_iOS/VirtualBackground (= 4.2.6)
+    - AgoraRtcEngine_iOS/VQA (= 4.2.6)
+  - AgoraRtcEngine_iOS/AIAEC (4.2.6)
+  - AgoraRtcEngine_iOS/AINS (4.2.6)
+  - AgoraRtcEngine_iOS/AudioBeauty (4.2.6)
+  - AgoraRtcEngine_iOS/ClearVision (4.2.6)
+  - AgoraRtcEngine_iOS/ContentInspect (4.2.6)
+  - AgoraRtcEngine_iOS/DRM (4.2.6)
+  - AgoraRtcEngine_iOS/FaceDetection (4.2.6)
+  - AgoraRtcEngine_iOS/ReplayKit (4.2.6)
+  - AgoraRtcEngine_iOS/RtcBasic (4.2.6)
+  - AgoraRtcEngine_iOS/SpatialAudio (4.2.6)
+  - AgoraRtcEngine_iOS/VideoCodecDec (4.2.6)
+  - AgoraRtcEngine_iOS/VideoCodecEnc (4.2.6)
+  - AgoraRtcEngine_iOS/VirtualBackground (4.2.6)
+  - AgoraRtcEngine_iOS/VQA (4.2.6)
   - boost (1.76.0)
   - BVLinearGradient (2.8.3):
     - React-Core
@@ -486,11 +516,18 @@ PODS:
   - React-jsinspector (0.71.11)
   - React-logger (0.71.11):
     - glog
+  - react-native-agora (4.2.6):
+    - AgoraIrisRTC_iOS (= 4.2.6-build.3)
+    - AgoraRtcEngine_iOS (= 4.2.6)
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
+  - react-native-blur (4.3.2):
+    - React-Core
   - react-native-cameraroll (5.6.0):
     - React-Core
   - react-native-chat-callkit (1.0.1):
     - React-Core
-  - react-native-chat-sdk (1.3.1-beta.4):
+  - react-native-chat-sdk (1.3.1-beta.8):
     - HyphenateChat (= 4.2.0)
     - React-Core
   - react-native-chat-uikit (2.0.0-beta.0):
@@ -502,6 +539,10 @@ PODS:
     - React-Core
   - react-native-get-random-values (1.8.0):
     - React-Core
+  - react-native-image-editor (4.1.0):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
+    - React-RCTImage
   - react-native-image-picker (7.1.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
@@ -740,6 +781,8 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../../node_modules/react-native/ReactCommon/logger`)
+  - react-native-agora (from `../../node_modules/react-native-agora`)
+  - "react-native-blur (from `../../node_modules/@react-native-community/blur`)"
   - "react-native-cameraroll (from `../../node_modules/@react-native-camera-roll/camera-roll`)"
   - react-native-chat-callkit (from `../../packages/react-native-chat-callkit`)
   - react-native-chat-sdk (from `../../node_modules/react-native-chat-sdk`)
@@ -747,6 +790,7 @@ DEPENDENCIES:
   - "react-native-create-thumbnail (from `../../node_modules/@easemob/react-native-create-thumbnail`)"
   - react-native-document-picker (from `../../node_modules/react-native-document-picker`)
   - react-native-get-random-values (from `../../node_modules/react-native-get-random-values`)
+  - "react-native-image-editor (from `../../node_modules/@react-native-community/image-editor`)"
   - react-native-image-picker (from `../../node_modules/react-native-image-picker`)
   - react-native-pager-view (from `../../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../../node_modules/react-native-safe-area-context`)
@@ -782,6 +826,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AgoraIrisRTC_iOS
+    - AgoraRtcEngine_iOS
     - CocoaAsyncSocket
     - Firebase
     - FirebaseCore
@@ -894,6 +940,10 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../../node_modules/react-native/ReactCommon/logger"
+  react-native-agora:
+    :path: "../../node_modules/react-native-agora"
+  react-native-blur:
+    :path: "../../node_modules/@react-native-community/blur"
   react-native-cameraroll:
     :path: "../../node_modules/@react-native-camera-roll/camera-roll"
   react-native-chat-callkit:
@@ -908,6 +958,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native-document-picker"
   react-native-get-random-values:
     :path: "../../node_modules/react-native-get-random-values"
+  react-native-image-editor:
+    :path: "../../node_modules/@react-native-community/image-editor"
   react-native-image-picker:
     :path: "../../node_modules/react-native-image-picker"
   react-native-pager-view:
@@ -974,6 +1026,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AgoraIrisRTC_iOS: 8346499b82968a4967e3d0bec2cf14bf7c0c3f76
+  AgoraRtcEngine_iOS: ac647332ad8f86d79cf810601c9e62b28c3a4de0
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
@@ -1039,13 +1093,16 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 089cd07c76ecf498960a64ba8ae0f2dddd382f44
   React-jsinspector: b6ed4cb3ffa27a041cd440300503dc512b761450
   React-logger: 186dd536128ae5924bc38ed70932c00aa740cd5b
+  react-native-agora: 7026292738f2de759f532938db629c7acda377af
+  react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-cameraroll: 755bcc628148a90a7c9cf3f817a252be3a601bc5
   react-native-chat-callkit: f3c26620cbfd756a184eb61cfb9fe5660067ebef
-  react-native-chat-sdk: 85c86207a494618ddf180c71ddb6df8b6a980ebf
+  react-native-chat-sdk: ae8899f79702c76c477c7cf27a34988ceae7a2d5
   react-native-chat-uikit: 0f8ee416f7416193518e5382cbb3f002566f2678
   react-native-create-thumbnail: e4fc6953a754bcfa3a03d74ec8687850134b1b93
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
+  react-native-image-editor: ad8248fc404d17b697b531d692b9b1ca2d1c0896
   react-native-image-picker: 5e076db26cd81660cfb6db5bcf517cfa12054d45
   react-native-pager-view: 54bed894cecebe28cede54c01038d9d1e122de43
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc

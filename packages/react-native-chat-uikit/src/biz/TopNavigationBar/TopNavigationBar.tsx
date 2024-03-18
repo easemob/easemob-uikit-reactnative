@@ -82,12 +82,12 @@ export function TopNavigationBarRight({
     </Pressable>
   );
 }
-export function TopNavigationBarRightText({
-  onClicked,
-  text,
+export function TopNavigationBarRightTextList({
+  onClickedList,
+  textList,
 }: {
-  onClicked?: () => void;
-  text: string;
+  onClickedList?: (() => void)[];
+  textList: string[];
 }) {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -104,14 +104,14 @@ export function TopNavigationBarRightText({
         justifyContent: 'center',
         alignItems: 'center',
       }}
-      onPress={onClicked}
+      onPress={onClickedList![0]}
     >
       <SingleLineText
         paletteType={'label'}
         textType={'medium'}
         style={{ color: getColor('text') }}
       >
-        {text}
+        {textList[0]}
       </SingleLineText>
     </Pressable>
   );

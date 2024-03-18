@@ -14,6 +14,10 @@ buildscript {
 
         // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
         ndkVersion = "23.1.7779620"
+
+        // /Users/asterisk/.gradle/caches/transforms-3/09d38ac32e566424041db227e0d2b04b/transformed/jetified-kotlin-stdlib-common-1.8.20.jar!/META-INF/kotlin-stdlib-common.kotlin_module: Module was compiled with an incompatible version of Kotlin. The binary version of its metadata is 1.8.0, expected version is 1.6.0.
+        // issues: https://github.com/expo/expo/issues/26713
+        kotlinVersion = "1.8.0"
     }
     repositories {
         google()

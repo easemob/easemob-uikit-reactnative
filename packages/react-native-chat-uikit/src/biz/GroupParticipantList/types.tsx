@@ -46,6 +46,10 @@ export type GroupParticipantListNavigationBarProps = PropsWithBack &
      * Callback notification for changing the group owner.
      */
     onChangeOwner?: (data?: GroupParticipantModel) => void;
+    /**
+     * Callback notification for selecting group members.
+     */
+    onSelectParticipant?: (data?: GroupParticipantModel[]) => void;
   };
 
 /**

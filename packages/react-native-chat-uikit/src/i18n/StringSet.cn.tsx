@@ -34,6 +34,8 @@ export function createStringSetCn(): StringSet {
     '_uikit_group_del_member_title': '删除群成员',
     '_uikit_group_del_member_button': (count) => `删除(${count})`,
     '_uikit_group_change_owner_title': '选择新群主',
+    '_uikit_group_av_meeting': '群组音视频通话',
+    '_uikit_group_av_button': (count) => `呼叫(${count})`,
     '_uikit_group_member_list_title': (count) => `群成员(${count})`,
     '_uikit_group_alert_change_owner_title': (name) => `转让群主身份给${name}`,
     '_uikit_group_alert_del_member_title': (names) =>

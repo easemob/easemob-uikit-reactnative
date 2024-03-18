@@ -36,8 +36,9 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     participantCount,
     onClickedAddParticipant,
     onClickedDelParticipant,
-    deleteCount,
+    selectedCount,
     onDelParticipant,
+    onSelectParticipant,
     alertRef,
     onCheckClicked,
     menuRef,
@@ -83,7 +84,8 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
           participantType={participantType}
           onBack={onBack}
           onDelParticipant={onDelParticipant}
-          deleteCount={deleteCount}
+          onSelectParticipant={onSelectParticipant}
+          selectedCount={selectedCount}
           participantCount={participantCount}
           onClickedAddParticipant={onClickedAddParticipant}
           onClickedDelParticipant={onClickedDelParticipant}

@@ -7,7 +7,7 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
-import { Text } from '../../ui/Text';
+import { SingleLineText, Text } from '../../ui/Text';
 import { TopNavigationBar } from '../TopNavigationBar';
 import type { GroupParticipantListNavigationBarProps } from './types';
 
@@ -16,7 +16,8 @@ type _GroupParticipantListNavigationBarProps =
     groupId: string;
     ownerId?: string;
     onDelParticipant?: () => void;
-    deleteCount?: number;
+    onSelectParticipant?: () => void;
+    selectedCount?: number;
     participantCount?: number;
   };
 export const GroupParticipantListNavigationBar = (
@@ -26,7 +27,8 @@ export const GroupParticipantListNavigationBar = (
     participantType,
     onBack,
     onDelParticipant,
-    deleteCount,
+    onSelectParticipant,
+    selectedCount,
     participantCount,
     onClickedAddParticipant,
     onClickedDelParticipant,
@@ -57,6 +59,10 @@ export const GroupParticipantListNavigationBar = (
     icon: {
       light: colors.neutral[3],
       dark: colors.neutral[95],
+    },
+    p: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
     },
   });
 
@@ -96,11 +102,11 @@ export const GroupParticipantListNavigationBar = (
                 paletteType={'label'}
                 style={{
                   color: getColor(
-                    deleteCount === 0 ? 'text_disable' : 'text_enable'
+                    selectedCount === 0 ? 'text_disable' : 'text_enable'
                   ),
                 }}
               >
-                {tr('_uikit_group_del_member_button', deleteCount)}
+                {tr('_uikit_group_del_member_button', selectedCount)}
               </Text>
             </Pressable>
           ) : null
@@ -153,6 +159,49 @@ export const GroupParticipantListNavigationBar = (
           </Pressable>
         }
         Right={<View style={{ width: 1, height: 1 }} />}
+      />
+    );
+  } else if (participantType === 'av-meeting') {
+    return (
+      <TopNavigationBar
+        Left={
+          <Pressable
+            style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}
+            onPress={onBack}
+          >
+            <Icon
+              name={'chevron_left'}
+              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+            />
+            <Text
+              textType={'medium'}
+              paletteType={'label'}
+              style={{ color: getColor('text') }}
+            >
+              {tr('_uikit_group_av_meeting')}
+            </Text>
+          </Pressable>
+        }
+        Right={
+          isOwner === true ? (
+            <Pressable
+              style={{ flexDirection: 'row' }}
+              onPress={onSelectParticipant}
+            >
+              <SingleLineText
+                textType={'medium'}
+                paletteType={'label'}
+                style={{
+                  color: getColor(
+                    selectedCount && selectedCount > 0 ? 'p' : 'text_disable'
+                  ),
+                }}
+              >
+                {tr('_uikit_group_av_button', selectedCount ?? 0)}
+              </SingleLineText>
+            </Pressable>
+          ) : null
+        }
       />
     );
   } else {

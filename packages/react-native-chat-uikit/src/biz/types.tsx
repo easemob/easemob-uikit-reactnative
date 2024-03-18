@@ -143,7 +143,8 @@ export type GroupParticipantType =
   | 'common'
   | 'delete'
   | 'change-owner'
-  | 'mention';
+  | 'mention'
+  | 'av-meeting';
 
 /**
  * Search type. The search list component can be used in multiple scenarios. For example: conversation list search, contact list search, new conversation list search, create group list search, add group member list search, shared contact list search, etc.

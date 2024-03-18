@@ -34,6 +34,8 @@ export function createStringSetEn(): StringSet {
     '_uikit_group_del_member_title': 'Remove Group Members',
     '_uikit_group_del_member_button': (count) => `Remove (${count})`,
     '_uikit_group_change_owner_title': 'Select New Group Owner',
+    '_uikit_group_av_button': (count) => `Call (${count})`,
+    '_uikit_group_av_meeting': 'Group Audio/Video Call',
     '_uikit_group_member_list_title': (count) => `Group Members (${count})`,
     '_uikit_group_alert_change_owner_title': (name) =>
       `Transfer Group Ownership to ${name}`,

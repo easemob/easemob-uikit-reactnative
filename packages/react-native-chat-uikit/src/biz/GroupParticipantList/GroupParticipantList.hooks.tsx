@@ -30,6 +30,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     onClickedAddParticipant,
     onClickedDelParticipant,
     onDelParticipant,
+    onSelectParticipant,
     onChangeOwner,
     ListItemRender: propsListItemRender,
     onKicked: propsOnKicked,
@@ -40,7 +41,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
   });
   const { setData, dataRef } = flatListProps;
   const [participantCount, setParticipantCount] = React.useState(0);
-  const [deleteCount, setDeleteCount] = React.useState(0);
+  const [selectedCount, setSelectedCount] = React.useState(0);
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const { closeMenu } = useCloseMenu({ menuRef });
@@ -92,8 +93,8 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     [onLongPressedItem]
   );
 
-  const calculateDeleteCount = React.useCallback(() => {
-    if (participantType !== 'delete') {
+  const calculateSelectCount = React.useCallback(() => {
+    if (participantType !== 'delete' && participantType !== 'av-meeting') {
       return;
     }
     let count = 0;
@@ -105,22 +106,22 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
       }
       return item;
     });
-    setDeleteCount(count);
+    setSelectedCount(count);
   }, [dataRef, participantType]);
 
   const refreshToUI = React.useCallback(() => {
-    calculateDeleteCount();
+    calculateSelectCount();
     const uniqueList = dataRef.current.filter(
       (item, index, self) =>
         index === self.findIndex((t) => t.data.memberId === item.data.memberId)
     );
     dataRef.current = uniqueList;
     setData([...dataRef.current]);
-  }, [calculateDeleteCount, dataRef, setData]);
+  }, [calculateSelectCount, dataRef, setData]);
 
   const onCheckClickedCallback = React.useCallback(
     (data?: GroupParticipantModel) => {
-      if (participantType === 'delete') {
+      if (participantType === 'delete' || participantType === 'av-meeting') {
         if (data?.checked !== undefined) {
           im.setModelState({
             tag: groupId,
@@ -153,7 +154,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
       if (owner) {
         setOwnerId(owner.memberId);
       }
-      if (participantType === 'delete') {
+      if (participantType === 'delete' || participantType === 'av-meeting') {
         im.clearModelState({ tag: groupId });
       }
       im.getGroupAllMembers({
@@ -168,7 +169,10 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
           if (isOk === true) {
             if (value) {
               dataRef.current = value.map((item) => {
-                if (participantType === 'delete') {
+                if (
+                  participantType === 'delete' ||
+                  participantType === 'av-meeting'
+                ) {
                   const modelState = im.getModelState({
                     tag: groupId,
                     id: item.memberId,
@@ -199,7 +203,10 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
                     item.data.isOwner !== true
                   );
                 });
-              } else if (participantType === 'delete') {
+              } else if (
+                participantType === 'delete' ||
+                participantType === 'av-meeting'
+              ) {
                 dataRef.current = dataRef.current.filter((item) => {
                   return (
                     item.data.memberId !== im.userId ||
@@ -271,6 +278,21 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
       });
     }
   }, [dataRef, onDelParticipant, participantType, tr]);
+
+  const onSelectParticipantCallback = React.useCallback(() => {
+    if (participantType !== 'av-meeting') {
+      return;
+    }
+
+    if (onSelectParticipant) {
+      const list = dataRef.current
+        .filter((item) => {
+          return item.data.checked === true;
+        })
+        .map((item) => item.data);
+      onSelectParticipant?.(list);
+    }
+  }, [dataRef, onSelectParticipant, participantType]);
 
   const addDataToUI = (gid: string, memberId: string) => {
     if (gid === groupId) {
@@ -362,8 +384,9 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     participantCount: participantCount,
     onClickedAddParticipant: onClickedAddParticipantCallback,
     onClickedDelParticipant: onClickedDelParticipantCallback,
-    deleteCount,
+    selectedCount: selectedCount,
     onDelParticipant: onDelParticipantCallback,
+    onSelectParticipant: onSelectParticipantCallback,
     alertRef,
     menuRef,
     onRequestCloseMenu: closeMenu,

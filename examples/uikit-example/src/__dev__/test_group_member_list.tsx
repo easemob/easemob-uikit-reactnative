@@ -119,18 +119,6 @@ export function BodyPagesT({
       }}
     />
   );
-  // return (
-  //   <TabPageBodyItem
-  //     key={index}
-  //     style={{
-  //       backgroundColor: color(index)[0],
-  //       // height: 100,
-  //       // flexGrow: 1,
-  //     }}
-  //   >
-  //     <GroupParticipantList />
-  //   </TabPageBodyItem>
-  // );
 }
 
 export function CL2() {

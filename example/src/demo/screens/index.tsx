@@ -1,4 +1,5 @@
 export * from './AddGroupParticipantScreen';
+export * from './AVSelectGroupParticipantScreen';
 export * from './ChangeGroupOwnerScreen';
 export * from './ConfigScreen';
 export * from './ContactInfoScreen';

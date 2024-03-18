@@ -42,11 +42,12 @@ import {
   restServer,
   useSendBox,
 } from './common/const';
-import { RestApi, RtcRestApi } from './common/rest.api';
+import { RestApi } from './common/rest.api';
 import { useApp } from './hooks/useApp';
 import type { RootParamsList, RootParamsName } from './routes';
 import {
   AddGroupParticipantScreen,
+  AVSelectGroupParticipantScreen,
   ChangeGroupOwnerScreen,
   CommonSettingScreen,
   ConfigScreen,
@@ -254,10 +255,6 @@ export function App() {
       }
       isReadyRef.current = true;
       RestApi.setServer(restServer);
-      if (accountType !== 'easemob') {
-        RtcRestApi.rtcTokenUrl = 'http://a41.easemob.com/token/rtc/channel';
-        RtcRestApi.mapUrl = 'http://a41.easemob.com/agora/channel/mapper';
-      }
       // await SplashScreen?.hideAsync?.();
       if (demoType === 4) {
         setTimeout(() => {
@@ -405,17 +402,25 @@ export function App() {
             onResult: (params: { data?: any; error?: any }) => void;
           }) => {
             console.log('requestRTCToken:', params);
-            RtcRestApi.getRtcToken({
-              userAccount: params.userId,
+            RestApi.reqGetRtcToken({
+              userId: params.userId,
               channelId: params.channelId,
-              appKey: gAppKey,
-              userChannelId: params.userChannelId,
-              type: params.type,
-              onResult: (pp: { data?: any; error?: any }) => {
-                console.log('test:', pp);
-                params.onResult(pp);
-              },
-            });
+            })
+              .then((res) => {
+                params.onResult({
+                  error: res.isOk !== true ? res.error : undefined,
+                  data: {
+                    uid:
+                      res.value?.agoraUid !== undefined
+                        ? +res.value.agoraUid
+                        : 0,
+                    token: res.value?.accessToken,
+                  },
+                });
+              })
+              .catch((e) => {
+                console.warn('dev:reqGetRtcToken:error:', e);
+              });
           }}
           requestUserMap={(params: {
             appKey: string;
@@ -424,15 +429,20 @@ export function App() {
             onResult: (params: { data?: any; error?: any }) => void;
           }) => {
             console.log('requestUserMap:', params);
-            RtcRestApi.getRtcMap({
-              userAccount: params.userId,
+            RestApi.reqGetRtcMap({
               channelId: params.channelId,
-              appKey: gAppKey,
-              onResult: (pp: { data?: any; error?: any }) => {
-                console.log('requestUserMap:getRtcMap:', pp);
-                params.onResult(pp);
-              },
-            });
+            })
+              .then((res) => {
+                params.onResult({
+                  error: res.isOk !== true ? res.error : undefined,
+                  data: {
+                    result: res.value?.result,
+                  },
+                });
+              })
+              .catch((e) => {
+                console.warn('dev:reqGetRtcToken:error:', e);
+              });
           }}
           requestCurrentUser={(params: {
             onResult: (params: { user: CallUser; error?: any }) => void;
@@ -771,6 +781,13 @@ export function App() {
                   headerShown: false,
                 }}
                 component={ServerSettingScreen}
+              />
+              <Root.Screen
+                name={'AVSelectGroupParticipant'}
+                options={{
+                  headerShown: false,
+                }}
+                component={AVSelectGroupParticipantScreen}
               />
             </Root.Navigator>
           </NavigationContainer>
