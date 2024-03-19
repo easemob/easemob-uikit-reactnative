@@ -100,6 +100,14 @@ export function createStringSetCn(): StringSet {
     '_demo_about_setting_advise': '投诉建议',
     '_demo_about_setting_advise_email': 'issues@easemob.com',
 
+    '_demo_color_setting_navi_title': '颜色设置',
+    '_demo_color_setting_navi_confirm': '确认',
+    '_demo_color_setting_primary': '主题色色相',
+    '_demo_color_setting_second': '成功色色相',
+    '_demo_color_setting_error': '警告色色相',
+    '_demo_color_setting_neutral': '一般中性色色相',
+    '_demo_color_setting_neutralS': '特殊中性色色相',
+
     'save': '保存',
     'en': 'English',
     'zh-Hans': '简体中文',

@@ -103,6 +103,14 @@ export function createStringSetEn(): StringSet {
     '_demo_about_setting_advise': 'Complaints and suggestions',
     '_demo_about_setting_advise_email': 'issues@easemob.com',
 
+    '_demo_color_setting_navi_title': 'Color Setting',
+    '_demo_color_setting_navi_confirm': 'Confirm',
+    '_demo_color_setting_primary': 'Primary color hue',
+    '_demo_color_setting_second': 'Second color hue',
+    '_demo_color_setting_error': 'Warning color hue',
+    '_demo_color_setting_neutral': 'General neutral color hue',
+    '_demo_color_setting_neutralS': 'Special neutral color hue',
+
     'save': 'Save',
     'en': 'English',
     'zh-Hans': '简体中文',

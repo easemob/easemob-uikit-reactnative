@@ -165,7 +165,7 @@ export function ColorSettingScreen(props: Props) {
                   color: getColor('t1'),
                 }}
               >
-                {tr('_demo_language_setting_navi_title')}
+                {tr('_demo_color_setting_navi_title')}
               </Text>
             </Pressable>
           }
@@ -182,7 +182,7 @@ export function ColorSettingScreen(props: Props) {
                   color: getColor(changed ? 'enable' : 'disable'),
                 }}
               >
-                {tr('_demo_language_setting_navi_confim')}
+                {tr('_demo_color_setting_navi_confirm')}
               </Text>
             </Pressable>
           }
