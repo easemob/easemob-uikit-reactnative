@@ -167,6 +167,26 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  PersonInfo: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  LanguageSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  ColorSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  StyleSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  AboutSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
 };
 export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
@@ -343,6 +363,26 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   AVSelectGroupParticipant: {
+    option: undefined,
+    params: undefined,
+  },
+  PersonInfo: {
+    option: undefined,
+    params: undefined,
+  },
+  LanguageSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  ColorSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  StyleSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  AboutSetting: {
     option: undefined,
     params: undefined,
   },

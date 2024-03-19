@@ -4,6 +4,7 @@ import type { ConversationDetailType } from '../config';
 import type { UIKitError } from '../error';
 import type { CreateStringSet, LanguageCode, StringSet } from '../i18n';
 import type { CornerRadiusPaletteType, Palette, Theme } from '../theme';
+import type { ReleaseArea } from '../types';
 
 /**
  * Properties of the Container.
@@ -46,7 +47,7 @@ export type ContainerProps = React.PropsWithChildren<{
   /**
    * The release area.
    */
-  // releaseArea?: ReleaseArea;
+  releaseArea?: ReleaseArea;
 
   /**
    * Format timestamp. Users can provide a timestamp format string callback interface for session lists and session details.

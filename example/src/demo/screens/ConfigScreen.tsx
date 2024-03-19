@@ -45,7 +45,7 @@ export function ConfigScreen(props: Props) {
         onValueChange={(v) => {
           onValueChange(v);
           DeviceEventEmitter.emit(
-            'example_change_theme',
+            '_demo_emit_app_theme',
             value === true ? 'light' : 'dark'
           );
         }}
@@ -60,7 +60,7 @@ export function ConfigScreen(props: Props) {
         onValueChange={(v) => {
           setLanguage(v);
           DeviceEventEmitter.emit(
-            'example_change_language',
+            '_demo_emit_app_language',
             language === false
               ? ('en' as LanguageCode)
               : ('zh-Hans' as LanguageCode)

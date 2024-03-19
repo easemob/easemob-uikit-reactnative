@@ -38,6 +38,8 @@ export function MineInfo(props: MineInfoProps) {
     onClickedMessageNotification,
     onClickedPrivacy,
     userState,
+    onClickedPersonInfo,
+    onClickedAbout,
   } = useMineInfo(props);
   const { cornerRadius } = useThemeContext();
   const { input } = cornerRadius;
@@ -174,7 +176,7 @@ export function MineInfo(props: MineInfoProps) {
         />
 
         <ListItem
-          onClicked={onClickedState}
+          onClicked={onClickedPersonInfo}
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -278,7 +280,7 @@ export function MineInfo(props: MineInfoProps) {
         />
 
         <ListItem
-          onClicked={onClickedState}
+          onClicked={onClickedAbout}
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>

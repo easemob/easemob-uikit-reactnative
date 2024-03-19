@@ -13,6 +13,8 @@ export type MineInfoProps = InfoProps & {
   onClickedCommon?: () => void;
   onClickedMessageNotification?: () => void;
   onClickedPrivacy?: () => void;
+  onClickedPersonInfo?: () => void;
+  onClickedAbout?: () => void;
 };
 export type CommonInfoProps = InfoProps & {
   onBack?: () => void;

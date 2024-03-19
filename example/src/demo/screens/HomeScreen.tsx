@@ -27,7 +27,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { RootScreenParamsList } from '../routes';
-import { CommonInfo } from '../ui/CommonInfo';
 import { MineInfo } from '../ui/MineInfo';
 
 const env = require('../../env');
@@ -513,33 +512,15 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
         onClickedCommon={() => {
           navigation.push('CommonSetting', {});
         }}
+        onClickedPersonInfo={() => {
+          navigation.push('PersonInfo', {});
+        }}
+        onClickedAbout={() => {
+          navigation.push('AboutSetting', {});
+        }}
       />
     );
   } else {
     return <View />;
   }
-}
-
-export function CommonSettingScreen(props: Props) {
-  const { navigation } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
-  return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-      }}
-    >
-      <CommonInfo
-        onBack={() => {
-          navigation.goBack();
-        }}
-      />
-    </SafeAreaView>
-  );
 }

@@ -26,6 +26,8 @@ export function useMineInfo(props: MineInfoProps) {
     onClickedCommon: propsOnClickedCommon,
     onClickedMessageNotification: propsOnClickedMessageNotification,
     onClickedPrivacy: propsOnClickedPrivacy,
+    onClickedPersonInfo: propsOnClickedPersonInfo,
+    onClickedAbout: propsOnClickedAbout,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(propsUserName);
@@ -108,6 +110,14 @@ export function useMineInfo(props: MineInfoProps) {
     propsOnClickedPrivacy?.();
   }, [propsOnClickedPrivacy]);
 
+  const onClickedPersonInfo = React.useCallback(() => {
+    propsOnClickedPersonInfo?.();
+  }, [propsOnClickedPersonInfo]);
+
+  const onClickedAbout = React.useCallback(() => {
+    propsOnClickedAbout?.();
+  }, [propsOnClickedAbout]);
+
   const listener = React.useMemo(() => {
     return {
       onPresenceStatusChanged: (list: ChatPresence[]) => {
@@ -145,6 +155,8 @@ export function useMineInfo(props: MineInfoProps) {
     onValueChange,
     language,
     setLanguage,
+    onClickedPersonInfo,
+    onClickedAbout,
   };
 }
 

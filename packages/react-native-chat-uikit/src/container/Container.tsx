@@ -22,7 +22,7 @@ import { mergeObjects } from '../utils';
 import {
   getI18nLanguage,
   getLanguagePackage,
-  getReleaseArea,
+  getReleaseArea as _getReleaseArea,
   getTranslateLanguage,
   useGetTheme,
   useInitServices,
@@ -62,6 +62,7 @@ export function Container(props: ContainerProps) {
     enableReaction = false,
     enableThread = false,
     enableAVMeeting = true,
+    releaseArea,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -71,11 +72,11 @@ export function Container(props: ContainerProps) {
     _guessLanguage,
     onInitLanguageSet?.()
   );
-  const _releaseArea = getReleaseArea();
+  const _releaseArea = _getReleaseArea();
   const _theme = useGetTheme({
     theme: theme,
     palette: palette ?? _palette,
-    releaseArea: _releaseArea,
+    releaseArea: releaseArea ?? _releaseArea,
     avatar,
     input,
     alert,
@@ -158,3 +159,5 @@ export function Container(props: ContainerProps) {
     </DispatchContextProvider>
   );
 }
+
+export const getReleaseArea = _getReleaseArea;

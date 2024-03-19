@@ -64,6 +64,44 @@ export function createStringSetCn(): StringSet {
     'edit_thread_name': '编辑话题名称',
     'edit_contact_remark': '编辑联系人备注',
 
+    '_demo_person_info_navi_title': '个人信息',
+    '_demo_person_info_avatar': '头像',
+    '_demo_person_info_remark': '昵称',
+    '_demo_person_edit_person_remark': '修改昵称',
+
+    '_demo_general_setting_navi_title': '通用',
+    '_demo_general_setting_theme': '黑暗模式',
+    '_demo_general_setting_style': '切换主题',
+    '_demo_general_setting_color': '颜色设置',
+    '_demo_general_setting_feature': '特性开关',
+    '_demo_general_setting_language': '语言设置',
+
+    '_demo_language_setting_navi_title': '语言设置',
+    '_demo_language_setting_navi_confim': '确认',
+    '_demo_language_setting_language_cn': '简体中文',
+    '_demo_language_setting_language_en': 'English',
+
+    '_demo_style_setting_navi_title': '切换主题',
+    '_demo_about_title': '环信 IM',
+    '_demo_style_setting_navi_confim': '确认',
+    '_demo_style_setting_language_classic': '经典',
+    '_demo_style_setting_language_modern': '扬帆',
+
+    '_demo_about_setting_navi_title': '关于',
+    '_demo_about_setting_site': '访问官网',
+    '_demo_about_setting_site_url': 'www.huanxin.com',
+
+    '_demo_about_setting_phone': '服务热线',
+    '_demo_about_setting_phone_number': '400-622-1776',
+
+    '_demo_about_setting_partner': '商务合作',
+    '_demo_about_setting_partner_email': 'bd@easemob.com',
+
+    '_demo_about_setting_advise': '投诉建议',
+    '_demo_about_setting_advise_email': 'issues@easemob.com',
+
     'save': '保存',
+    'en': 'English',
+    'zh-Hans': '简体中文',
   };
 }

@@ -217,7 +217,7 @@ export function CommonInfo(props: CommonInfoProps) {
               onValueChange={(v) => {
                 onThemeValueChange(v);
                 DeviceEventEmitter.emit(
-                  'example_change_theme',
+                  '_demo_emit_app_theme',
                   themeValue === true ? 'light' : 'dark'
                 );
               }}
@@ -250,7 +250,7 @@ export function CommonInfo(props: CommonInfoProps) {
               onValueChange={(v) => {
                 onLanguageValueChange(v);
                 DeviceEventEmitter.emit(
-                  'example_change_language',
+                  '_demo_emit_app_language',
                   languageValue === false
                     ? ('en' as LanguageCode)
                     : ('zh-Hans' as LanguageCode)

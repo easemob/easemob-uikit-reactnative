@@ -26,7 +26,6 @@ import type { RootParamsList, RootParamsName } from './routes';
 import {
   AddGroupParticipantScreen,
   ChangeGroupOwnerScreen,
-  CommonSettingScreen,
   ConfigScreen,
   ContactInfoScreen,
   ContactListScreen,
@@ -186,7 +185,7 @@ export function App() {
   }, [getPermission]);
 
   React.useEffect(() => {
-    const ret = DeviceEventEmitter.addListener('example_change_theme', (e) => {
+    const ret = DeviceEventEmitter.addListener('_demo_emit_app_theme', (e) => {
       if (e === 'dark') {
         setTheme(dark);
       } else {
@@ -194,7 +193,7 @@ export function App() {
       }
     });
     const ret2 = DeviceEventEmitter.addListener(
-      'example_change_language',
+      '_demo_emit_app_language',
       (e) => {
         setLanguage(e);
       }
@@ -465,13 +464,6 @@ export function App() {
                 headerShown: false,
               }}
               component={EditInfoScreen}
-            />
-            <Root.Screen
-              name={'CommonSetting'}
-              options={{
-                headerShown: false,
-              }}
-              component={CommonSettingScreen}
             />
             <Root.Screen
               name={'CreateThread'}

@@ -149,6 +149,7 @@ export interface MediaService {
   getRootDir(): string;
   createDir(subDir: string): Promise<string>;
   deleteDir(subDir: string): Promise<void>;
+  deleteCustomDir(dir: string): Promise<void>;
   isDir(subDir: string): Promise<boolean>;
   isExistedDir(subDir: string): Promise<boolean>;
   isExistedFile(file: string): Promise<boolean>;

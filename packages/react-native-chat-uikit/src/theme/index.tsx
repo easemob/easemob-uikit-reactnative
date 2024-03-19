@@ -1,3 +1,4 @@
+export * from './generate.color';
 export * from './palette';
 export * from './palette.preset';
 export * from './theme';

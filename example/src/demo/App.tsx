@@ -14,16 +14,19 @@ import {
 } from 'react-native-chat-callkit';
 import { ChatClient } from 'react-native-chat-sdk';
 import {
-  AsyncStorageBasic,
   ChatOptionsType,
   ChatServiceListener,
   Container,
   createDefaultStringSet,
+  generateNeutralColor,
+  generateNeutralSpecialColor,
+  generatePrimaryColor,
+  getReleaseArea,
   LanguageCode,
-  SingletonObjects,
   StringSet,
   useChatListener,
   useDarkTheme,
+  useForceUpdate,
   useLightTheme,
   usePermissions,
   usePresetPalette,
@@ -43,13 +46,16 @@ import {
   useSendBox,
 } from './common/const';
 import { RestApi } from './common/rest.api';
+import { useGeneralSetting } from './common/useGeneralSetting';
+import { useServerConfig } from './common/useServerConfig';
 import { useApp } from './hooks/useApp';
 import type { RootParamsList, RootParamsName } from './routes';
 import {
+  AboutSettingScreen,
   AddGroupParticipantScreen,
   AVSelectGroupParticipantScreen,
   ChangeGroupOwnerScreen,
-  CommonSettingScreen,
+  ColorSettingScreen,
   ConfigScreen,
   ContactInfoScreen,
   ContactListScreen,
@@ -60,12 +66,14 @@ import {
   DelGroupParticipantScreen,
   EditInfoScreen,
   FileMessagePreviewScreen,
+  GeneralSettingScreen,
   GroupInfoScreen,
   GroupListScreen,
   GroupParticipantInfoScreen,
   GroupParticipantListScreen,
   HomeScreen,
   ImageMessagePreviewScreen,
+  LanguageSettingScreen,
   LoginListScreen,
   LoginScreen,
   LoginV2Screen,
@@ -78,6 +86,7 @@ import {
   MessageThreadMemberListScreen,
   NewConversationScreen,
   NewRequestScreen,
+  PersonInfoScreen,
   SearchContactScreen,
   SearchConversationScreen,
   SearchGroupScreen,
@@ -85,6 +94,7 @@ import {
   ServerSettingScreen,
   ShareContactScreen,
   SplashScreen,
+  StyleSettingScreen,
   TopMenuScreen,
   VideoMessagePreviewScreen,
 } from './screens';
@@ -96,18 +106,21 @@ const Root = createNativeStackNavigator<RootParamsList>();
 
 export function App() {
   console.log('test:dev:App:', demoType);
-  const [initialRouteName] = React.useState(
+  const initialRouteName = React.useRef(
     demoType === 2
       ? ('TopMenu' as RootParamsName)
       : demoType === 3
       ? ('Login' as RootParamsName)
       : ('Splash' as RootParamsName)
-  );
+  ).current;
   const palette = usePresetPalette();
-  const dark = useDarkTheme(palette);
-  const light = useLightTheme(palette);
-  const [theme, setTheme] = React.useState(light);
-  const [language, setLanguage] = React.useState<LanguageCode>('zh-Hans');
+  const paletteRef = React.useRef(palette);
+  const ra = getReleaseArea();
+  const releaseAreaRef = React.useRef(ra);
+  const dark = useDarkTheme(paletteRef.current, releaseAreaRef.current);
+  const light = useLightTheme(paletteRef.current, releaseAreaRef.current);
+  const isLightRef = React.useRef<boolean>(true);
+  const languageRef = React.useRef<LanguageCode>('zh-Hans');
   const isNavigationReadyRef = React.useRef(false);
   const isContainerReadyRef = React.useRef(false);
   const isFontReadyRef = React.useRef(false);
@@ -126,58 +139,17 @@ export function App() {
   const { getPermission } = usePermissions();
 
   const { onRequestMultiData } = useApp();
+  const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
+  const { initParams } = useGeneralSetting();
 
-  const getImServer = async () => {
-    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
-    });
-    try {
-      const ret = await s.getData({ key: 'imServer' });
-      if (ret.value === undefined) {
-        return imServer;
-      }
-      return ret.value;
-    } catch (error) {
-      return undefined;
-    }
-  };
-  const getImPort = async () => {
-    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
-    });
-    try {
-      const ret = await s.getData({ key: 'imPort' });
-      if (ret.value === undefined) {
-        return imPort;
-      }
-      if (ret.value) {
-        return ret.value;
-      }
-      return undefined;
-    } catch (error) {
-      return undefined;
-    }
-  };
-  const getEnableDNSConfig = async () => {
-    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
-    });
-    try {
-      const ret = await s.getData({ key: 'enablePrivateServer' });
-      if (ret.value === undefined) {
-        return enableDNSConfig;
-      }
-      return ret.value === 'true'
-        ? true
-        : ret.value === 'false'
-        ? false
-        : (useSendBox as boolean);
-    } catch (error) {
-      return false;
-    }
-  };
+  const { updater } = useForceUpdate();
+  try {
+    console.log('test:zuoyu:try:', releaseAreaRef.current);
+    console.log('test:zuoyu:try:2', JSON.stringify(light));
+    console.log('test:zuoyu:try:3', JSON.stringify(isLightRef.current));
+  } catch (error) {}
 
-  const initParams = React.useCallback(async () => {
+  const initParamsCallback = React.useCallback(async () => {
     if (_initParams === true) {
       return;
     }
@@ -185,11 +157,21 @@ export function App() {
       imPortRef.current = await getImPort();
       imServerRef.current = await getImServer();
       enableDNSConfigRef.current = await getEnableDNSConfig();
+      const ret = await initParams();
+      isLightRef.current = !ret.appTheme;
+      releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
+      languageRef.current = ret.appLanguage === 'en' ? 'en' : 'zh-Hans';
+      console.log(
+        'dev:init:params:',
+        isLightRef.current,
+        releaseAreaRef.current,
+        languageRef.current
+      );
       setInitParams(true);
     } catch (error) {
       setInitParams(true);
     }
-  }, [_initParams]);
+  }, [_initParams, getEnableDNSConfig, getImPort, getImServer, initParams]);
 
   // const options = React.useMemo(() => {
   //   return {
@@ -297,28 +279,87 @@ export function App() {
   }, [getPermission]);
 
   React.useEffect(() => {
-    const ret = DeviceEventEmitter.addListener('example_change_theme', (e) => {
+    const ret = DeviceEventEmitter.addListener('_demo_emit_app_theme', (e) => {
       if (e === 'dark') {
-        setTheme(dark);
+        isLightRef.current = false;
       } else {
-        setTheme(light);
+        isLightRef.current = true;
       }
+      updater();
     });
     const ret2 = DeviceEventEmitter.addListener(
-      'example_change_language',
+      '_demo_emit_app_language',
       (e) => {
-        setLanguage(e);
+        console.log('test:zuoyu:e:', e);
+        if (e === 'en') {
+          languageRef.current = 'en';
+        } else if (e === 'zh-Hans') {
+          languageRef.current = 'zh-Hans';
+        }
+        updater();
       }
     );
+    const ret3 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_primary_color',
+      (e) => {
+        console.log('test:zuoyu:e:', e);
+        paletteRef.current.colors.primary = generatePrimaryColor(e);
+        updater();
+      }
+    );
+    const ret4 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_neutral_s_color',
+      (e) => {
+        console.log('test:zuoyu:e:', e);
+        paletteRef.current.colors.neutralSpecial =
+          generateNeutralSpecialColor(e);
+        updater();
+      }
+    );
+    const ret5 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_neutral_color',
+      (e) => {
+        console.log('test:zuoyu:e:', e);
+        paletteRef.current.colors.neutral = generateNeutralColor(e);
+        updater();
+      }
+    );
+    const ret6 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_error_color',
+      (e) => {
+        console.log('test:zuoyu:e:', e);
+        paletteRef.current.colors.error = generatePrimaryColor(e);
+        updater();
+      }
+    );
+    const ret7 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_second_color',
+      (e) => {
+        console.log('test:zuoyu:e:', e);
+        paletteRef.current.colors.secondary = generatePrimaryColor(e);
+        updater();
+      }
+    );
+    const ret8 = DeviceEventEmitter.addListener('_demo_emit_app_style', (e) => {
+      console.log('test:zuoyu:e:ret8', e);
+      releaseAreaRef.current = e === 'classic' ? 'china' : 'global';
+      updater();
+    });
     return () => {
       ret.remove();
       ret2.remove();
+      ret3.remove();
+      ret4.remove();
+      ret5.remove();
+      ret6.remove();
+      ret7.remove();
+      ret8.remove();
     };
-  }, [dark, light]);
+  }, [dark, light, updater]);
 
   React.useEffect(() => {
-    initParams().then().catch();
-  }, [initParams]);
+    initParamsCallback().then().catch();
+  }, [initParamsCallback]);
 
   React.useEffect(() => {
     if (fontsLoaded) {
@@ -344,9 +385,10 @@ export function App() {
     <React.StrictMode>
       <Container
         options={getOptions()}
-        palette={palette}
-        theme={theme}
-        language={language}
+        palette={paletteRef.current}
+        theme={isLightRef.current ? light : dark}
+        language={languageRef.current}
+        releaseArea={releaseAreaRef.current}
         enablePresence={true}
         enableReaction={true}
         enableThread={true}
@@ -699,13 +741,6 @@ export function App() {
                 component={EditInfoScreen}
               />
               <Root.Screen
-                name={'CommonSetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={CommonSettingScreen}
-              />
-              <Root.Screen
                 name={'CreateThread'}
                 options={{
                   headerShown: false,
@@ -788,6 +823,48 @@ export function App() {
                   headerShown: false,
                 }}
                 component={AVSelectGroupParticipantScreen}
+              />
+              <Root.Screen
+                name={'PersonInfo'}
+                options={{
+                  headerShown: false,
+                }}
+                component={PersonInfoScreen}
+              />
+              <Root.Screen
+                name={'CommonSetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={GeneralSettingScreen}
+              />
+              <Root.Screen
+                name={'LanguageSetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={LanguageSettingScreen}
+              />
+              <Root.Screen
+                name={'ColorSetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={ColorSettingScreen}
+              />
+              <Root.Screen
+                name={'StyleSetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={StyleSettingScreen}
+              />
+              <Root.Screen
+                name={'AboutSetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={AboutSettingScreen}
               />
             </Root.Navigator>
           </NavigationContainer>

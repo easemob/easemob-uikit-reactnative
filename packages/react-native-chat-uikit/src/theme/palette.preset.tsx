@@ -61,3 +61,5 @@ export function usePresetPalette(): Palette {
   const { createPalette } = useCreatePalette(params);
   return createPalette();
 }
+
+export const presetPaletteColors = presetParams.colors;

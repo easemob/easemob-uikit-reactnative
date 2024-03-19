@@ -67,6 +67,44 @@ export function createStringSetEn(): StringSet {
     'edit_thread_name': 'Edit thread name',
     'edit_contact_remark': 'Edit contact remark',
 
+    '_demo_person_info_navi_title': 'Person Info',
+    '_demo_person_info_avatar': 'Avatar',
+    '_demo_person_info_remark': 'Remark',
+    '_demo_person_edit_person_remark': 'Edit remark',
+
+    '_demo_general_setting_navi_title': 'General Setting',
+    '_demo_general_setting_theme': 'Dark Theme',
+    '_demo_general_setting_style': 'Switch Style',
+    '_demo_general_setting_color': 'Color Setting',
+    '_demo_general_setting_feature': 'Feature Switch',
+    '_demo_general_setting_language': 'Language Setting',
+
+    '_demo_language_setting_navi_title': 'Language Setting',
+    '_demo_language_setting_navi_confim': 'Confirm',
+    '_demo_language_setting_language_cn': '简体中文',
+    '_demo_language_setting_language_en': 'English',
+
+    '_demo_style_setting_navi_title': 'Style Setting',
+    '_demo_style_setting_navi_confim': 'Confirm',
+    '_demo_style_setting_language_classic': 'Classic',
+    '_demo_style_setting_language_modern': 'Modern',
+
+    '_demo_about_setting_navi_title': 'About',
+    '_demo_about_title': 'Easemob IM',
+    '_demo_about_setting_site': 'Visit official website',
+    '_demo_about_setting_site_url': 'www.huanxin.com',
+
+    '_demo_about_setting_phone': 'Contact number',
+    '_demo_about_setting_phone_number': '400-622-1776',
+
+    '_demo_about_setting_partner': 'Business cooperation',
+    '_demo_about_setting_partner_email': 'bd@easemob.com',
+
+    '_demo_about_setting_advise': 'Complaints and suggestions',
+    '_demo_about_setting_advise_email': 'issues@easemob.com',
+
     'save': 'Save',
+    'en': 'English',
+    'zh-Hans': '简体中文',
   };
 }
