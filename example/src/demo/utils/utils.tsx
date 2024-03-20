@@ -1,3 +1,5 @@
+import type { NavigationState } from '@react-navigation/native';
+
 export function getHashCode(s?: string): number {
   let hash = 0;
   if (!s) return hash;
@@ -93,3 +95,19 @@ export const mineInfo: number[] = [
   require('../assets/info/lock_3x.png'),
   require('../assets/info/status_3x.png'),
 ];
+
+export function formatNavigationState(
+  state: NavigationState | undefined,
+  result: string[] & string[][]
+) {
+  if (state) {
+    const ret: string[] & string[][] = [];
+    for (const route of state.routes) {
+      ret.push(route.name);
+      if (route.state) {
+        formatNavigationState(route.state as NavigationState | undefined, ret);
+      }
+    }
+    result.push(ret);
+  }
+}

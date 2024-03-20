@@ -30,6 +30,19 @@ export function useGeneralSetting() {
     presetPaletteColors.neutralSpecial
   );
   const [appLanguage, setAppLanguage] = React.useState<string>('zh-Hans');
+  const [appTranslate, setAppTranslate] = React.useState<boolean | undefined>(
+    undefined
+  );
+  const [appThread, setAppThread] = React.useState<boolean | undefined>(
+    undefined
+  );
+  const [appReaction, setAppReaction] = React.useState<boolean | undefined>(
+    undefined
+  );
+  const [appPresence, setAppPresence] = React.useState<boolean | undefined>(
+    undefined
+  );
+  const [appAv, setAppAv] = React.useState<boolean | undefined>(undefined);
 
   const onSetAppTheme = React.useCallback((value: boolean) => {
     setAppTheme(value);
@@ -38,6 +51,63 @@ export function useGeneralSetting() {
     });
     s.setData({ key: 'theme', value: value ? 'dark' : 'light' });
     DeviceEventEmitter.emit('_demo_emit_app_theme', value ? 'dark' : 'light');
+  }, []);
+
+  const onSetAppTranslate = React.useCallback((value: boolean) => {
+    setAppTranslate(value);
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    s.setData({ key: 'translate', value: value ? 'enable' : 'disable' });
+    DeviceEventEmitter.emit(
+      '_demo_emit_app_translate',
+      value ? 'enable' : 'disable'
+    );
+  }, []);
+
+  const onSetAppThread = React.useCallback((value: boolean) => {
+    setAppThread(value);
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    s.setData({ key: 'thread', value: value ? 'enable' : 'disable' });
+    DeviceEventEmitter.emit(
+      '_demo_emit_app_thread',
+      value ? 'enable' : 'disable'
+    );
+  }, []);
+
+  const onSetAppReaction = React.useCallback((value: boolean) => {
+    setAppReaction(value);
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    s.setData({ key: 'reaction', value: value ? 'enable' : 'disable' });
+    DeviceEventEmitter.emit(
+      '_demo_emit_app_reaction',
+      value ? 'enable' : 'disable'
+    );
+  }, []);
+
+  const onSetAppPresence = React.useCallback((value: boolean) => {
+    setAppPresence(value);
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    s.setData({ key: 'presence', value: value ? 'enable' : 'disable' });
+    DeviceEventEmitter.emit(
+      '_demo_emit_app_presence',
+      value ? 'enable' : 'disable'
+    );
+  }, []);
+
+  const onSetAppAv = React.useCallback((value: boolean) => {
+    setAppAv(value);
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    s.setData({ key: 'av', value: value ? 'enable' : 'disable' });
+    DeviceEventEmitter.emit('_demo_emit_app_av', value ? 'enable' : 'disable');
   }, []);
 
   const onSetAppStyle = React.useCallback((value: string) => {
@@ -115,9 +185,19 @@ export function useGeneralSetting() {
     const res7 = await s.getData({ key: 'errorColor' });
     const res8 = await s.getData({ key: 'neutralColor' });
     const res9 = await s.getData({ key: 'neutralSColor' });
+    const res10 = await s.getData({ key: 'translate' });
+    const res11 = await s.getData({ key: 'thread' });
+    const res12 = await s.getData({ key: 'reaction' });
+    const res13 = await s.getData({ key: 'presence' });
+    const res14 = await s.getData({ key: 'av' });
     const releaseArea = getReleaseArea();
     return {
       appTheme: res.value ? res.value !== 'light' : false,
+      appTranslate: res10.value ? res10.value === 'enable' : false,
+      appThread: res11.value ? res11.value === 'enable' : false,
+      appReaction: res12.value ? res12.value === 'enable' : false,
+      appPresence: res13.value ? res13.value === 'enable' : false,
+      appAv: res14.value ? res14.value === 'enable' : false,
       appStyle: res2.value ?? (releaseArea === 'china' ? 'classic' : 'modern'),
       appLanguage: res4.value ?? 'zh-Hans',
       appPrimaryColor: res5.value ? +res5.value : presetPaletteColors.primary,
@@ -141,6 +221,11 @@ export function useGeneralSetting() {
         setAppErrorColor(res.appErrorColor);
         setAppNeutralColor(res.appNeutralColor);
         setAppNeutralSColor(res.appNeutralSColor);
+        setAppTranslate(res.appTranslate);
+        setAppThread(res.appThread);
+        setAppReaction(res.appReaction);
+        setAppPresence(res.appPresence);
+        setAppAv(res.appAv);
       })
       .catch((e) => {
         console.warn('dev:initParams:', e);
@@ -170,5 +255,15 @@ export function useGeneralSetting() {
     onSetAppNeutralColor,
     appNeutralSColor,
     onSetAppNeutralSColor,
+    appTranslate,
+    onSetAppTranslate,
+    appThread,
+    onSetAppThread,
+    appReaction,
+    onSetAppReaction,
+    appPresence,
+    onSetAppPresence,
+    appAv,
+    onSetAppAv,
   };
 }

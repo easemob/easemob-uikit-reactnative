@@ -86,7 +86,7 @@ export function useMessageLongPressActions(
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
   const im = useChatContext();
-  const { enableTranslate, enableReaction } = useConfigContext();
+  const { enableTranslate, enableReaction, enableThread } = useConfigContext();
 
   const isCardMessage = (msg: ChatMessage) => {
     if (msg.body.type === ChatMessageType.CUSTOM) {
@@ -148,7 +148,10 @@ export function useMessageLongPressActions(
         (msgModel.msg.body.type === ChatMessageType.CUSTOM &&
           isCardMessage(msgModel.msg))
       ) {
-        if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+        if (
+          msgModel.msg.status === ChatMessageStatus.SUCCESS &&
+          enableReaction === true
+        ) {
           initItems.push({
             name: tr('_uikit_chat_list_long_press_menu_replay'),
             isHigh: false,
@@ -181,7 +184,11 @@ export function useMessageLongPressActions(
           }
         }
       }
-      if (msgModel.msg.status === ChatMessageStatus.SUCCESS && convType === 1) {
+      if (
+        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
+        convType === 1 &&
+        enableThread === true
+      ) {
         initItems.push({
           name: tr('_uikit_chat_list_long_press_menu_thread'),
           isHigh: false,

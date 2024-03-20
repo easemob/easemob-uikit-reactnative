@@ -90,13 +90,10 @@ export function createStringSetCn(): StringSet {
     '_demo_about_setting_navi_title': '关于',
     '_demo_about_setting_site': '访问官网',
     '_demo_about_setting_site_url': 'www.huanxin.com',
-
     '_demo_about_setting_phone': '服务热线',
     '_demo_about_setting_phone_number': '400-622-1776',
-
     '_demo_about_setting_partner': '商务合作',
     '_demo_about_setting_partner_email': 'bd@easemob.com',
-
     '_demo_about_setting_advise': '投诉建议',
     '_demo_about_setting_advise_email': 'issues@easemob.com',
 
@@ -107,6 +104,18 @@ export function createStringSetCn(): StringSet {
     '_demo_color_setting_error': '警告色色相',
     '_demo_color_setting_neutral': '一般中性色色相',
     '_demo_color_setting_neutralS': '特殊中性色色相',
+
+    '_demo_feature_setting_navi_title': '特性开关',
+    '_demo_feature_setting_translate': '消息翻译',
+    '_demo_feature_setting_translate_tip': '通过长按将消息翻译为系统语言',
+    '_demo_feature_setting_thread': '群组话题',
+    '_demo_feature_setting_thread_tip': '通过群组内的一条消息创建一个话题',
+    '_demo_feature_setting_reaction': '消息表情回应',
+    '_demo_feature_setting_reaction_tip': '通过长按为消息添加表情回应',
+    '_demo_feature_setting_presence': '订阅状态',
+    '_demo_feature_setting_presence_tip': ' ',
+    '_demo_feature_setting_av': '音视频通话',
+    '_demo_feature_setting_av_tip': ' ',
 
     'save': '保存',
     'en': 'English',

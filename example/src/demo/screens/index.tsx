@@ -12,6 +12,7 @@ export * from './CreateGroupScreen';
 export * from './CreateThreadScreen';
 export * from './DelGroupParticipantScreen';
 export * from './EditInfoScreen';
+export * from './FeatureSettingScreen';
 export * from './FileMessagePreviewScreen';
 export * from './GeneralSettingScreen';
 export * from './GroupInfoScreen';

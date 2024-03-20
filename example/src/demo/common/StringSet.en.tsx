@@ -96,10 +96,8 @@ export function createStringSetEn(): StringSet {
 
     '_demo_about_setting_phone': 'Contact number',
     '_demo_about_setting_phone_number': '400-622-1776',
-
     '_demo_about_setting_partner': 'Business cooperation',
     '_demo_about_setting_partner_email': 'bd@easemob.com',
-
     '_demo_about_setting_advise': 'Complaints and suggestions',
     '_demo_about_setting_advise_email': 'issues@easemob.com',
 
@@ -110,6 +108,20 @@ export function createStringSetEn(): StringSet {
     '_demo_color_setting_error': 'Warning color hue',
     '_demo_color_setting_neutral': 'General neutral color hue',
     '_demo_color_setting_neutralS': 'Special neutral color hue',
+
+    '_demo_feature_setting_navi_title': 'Feature Switch',
+    '_demo_feature_setting_translate': 'Message translation',
+    '_demo_feature_setting_translate_tip':
+      'Translate messages into system language by long press',
+    '_demo_feature_setting_thread': 'Group topic',
+    '_demo_feature_setting_thread_tip': 'Create a topic for the group',
+    '_demo_feature_setting_reaction': 'Reaction',
+    '_demo_feature_setting_reaction_tip':
+      'Add reaction to message by long press',
+    '_demo_feature_setting_presence': '订阅状态',
+    '_demo_feature_setting_presence_tip': ' ',
+    '_demo_feature_setting_av': '音视频通话',
+    '_demo_feature_setting_av_tip': ' ',
 
     'save': 'Save',
     'en': 'English',

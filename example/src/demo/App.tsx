@@ -2,35 +2,23 @@ import {
   NavigationAction,
   NavigationContainer,
   NavigationState,
-  useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useFonts } from 'expo-font';
 import * as React from 'react';
-import { DeviceEventEmitter, View } from 'react-native';
+import { View } from 'react-native';
 import {
   CallUser,
   GlobalContainer as CallkitContainer,
 } from 'react-native-chat-callkit';
 import { ChatPushConfig } from 'react-native-chat-sdk';
 import {
-  ChatOptionsType,
   ChatService,
   ChatServiceListener,
   Container,
   createDefaultStringSet,
-  generateNeutralColor,
-  generateNeutralSpecialColor,
-  generatePrimaryColor,
-  getReleaseArea,
   LanguageCode,
   StringSet,
   useChatListener,
-  useDarkTheme,
-  useForceUpdate,
-  useLightTheme,
-  usePermissions,
-  usePresetPalette,
 } from 'react-native-chat-uikit';
 
 import { createStringSetCn, createStringSetEn, ToastView } from './common';
@@ -39,13 +27,9 @@ import {
   agoraAppId,
   appKey as gAppKey,
   demoType,
-  enableDNSConfig,
   fcmSenderId,
-  imPort,
-  imServer,
   isDevMode,
   restServer,
-  useSendBox,
 } from './common/const';
 import {
   checkFCMPermission,
@@ -57,7 +41,7 @@ import { RestApi } from './common/rest.api';
 import { useApp } from './hooks/useApp';
 import { useGeneralSetting } from './hooks/useGeneralSetting';
 import { useServerConfig } from './hooks/useServerConfig';
-import type { RootParamsList, RootParamsName } from './routes';
+import type { RootParamsList } from './routes';
 import {
   AboutSettingScreen,
   AddGroupParticipantScreen,
@@ -73,6 +57,7 @@ import {
   CreateThreadScreen,
   DelGroupParticipantScreen,
   EditInfoScreen,
+  FeatureSettingScreen,
   FileMessagePreviewScreen,
   GeneralSettingScreen,
   GroupInfoScreen,
@@ -106,7 +91,7 @@ import {
   TopMenuScreen,
   VideoMessagePreviewScreen,
 } from './screens';
-import { defaultAvatars } from './utils/utils';
+import { defaultAvatars, formatNavigationState } from './utils/utils';
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
@@ -114,49 +99,37 @@ const Root = createNativeStackNavigator<RootParamsList>();
 
 export function App() {
   console.log('test:dev:App:', demoType);
-  const initialRouteName = React.useRef(
-    demoType === 2
-      ? ('TopMenu' as RootParamsName)
-      : demoType === 3
-      ? ('Login' as RootParamsName)
-      : ('Splash' as RootParamsName)
-  ).current;
-  const palette = usePresetPalette();
-  const paletteRef = React.useRef(palette);
-  const ra = getReleaseArea();
-  const releaseAreaRef = React.useRef(ra);
-  const dark = useDarkTheme(paletteRef.current, releaseAreaRef.current);
-  const light = useLightTheme(paletteRef.current, releaseAreaRef.current);
-  const isLightRef = React.useRef<boolean>(true);
-  const languageRef = React.useRef<LanguageCode>('zh-Hans');
-  const isNavigationReadyRef = React.useRef(false);
-  const isContainerReadyRef = React.useRef(false);
-  const isFontReadyRef = React.useRef(false);
-  const isReadyRef = React.useRef(false);
-  const fontFamily = 'Twemoji-Mozilla';
-  const [fontsLoaded] = useFonts({
-    [fontFamily]: require('../../assets/Twemoji.Mozilla.ttf'),
-  });
-  const rootRef = useNavigationContainerRef<RootParamsList>();
-  const imServerRef = React.useRef(imServer);
-  const imPortRef = React.useRef(imPort);
-  const enableDNSConfigRef = React.useRef(enableDNSConfig);
-  const [_initParams, setInitParams] = React.useState(false);
+  const {
+    onRequestMultiData,
+    initialRouteName,
+    paletteRef,
+    dark,
+    light,
+    isLightRef,
+    languageRef,
+    isNavigationReadyRef,
+    isContainerReadyRef,
+    isFontReadyRef,
+    isReadyRef,
+    enablePresenceRef,
+    enableReactionRef,
+    enableThreadRef,
+    enableTranslateRef,
+    enableAVMeetingRef,
+    fontsLoaded,
+    rootRef,
+    imServerRef,
+    imPortRef,
+    enableDNSConfigRef,
+    _initParams,
+    setInitParams,
+    releaseAreaRef,
+    getOptions,
+  } = useApp();
 
-  const permissionsRef = React.useRef(false);
-  const { getPermission } = usePermissions();
-
-  const { onRequestMultiData } = useApp();
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
   const { initParams } = useGeneralSetting();
   const imRef = React.useRef<ChatService>();
-
-  const { updater } = useForceUpdate();
-  try {
-    console.log('test:zuoyu:try:', releaseAreaRef.current);
-    console.log('test:zuoyu:try:2', JSON.stringify(light));
-    console.log('test:zuoyu:try:3', JSON.stringify(isLightRef.current));
-  } catch (error) {}
 
   const initParamsCallback = React.useCallback(async () => {
     if (_initParams === true) {
@@ -170,73 +143,45 @@ export function App() {
       isLightRef.current = !ret.appTheme;
       releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
       languageRef.current = ret.appLanguage === 'en' ? 'en' : 'zh-Hans';
+      enablePresenceRef.current = ret.appPresence;
+      enableReactionRef.current = ret.appReaction;
+      enableThreadRef.current = ret.appThread;
+      enableTranslateRef.current = ret.appTranslate;
+      enableAVMeetingRef.current = ret.appAv;
       console.log(
         'dev:init:params:',
         isLightRef.current,
         releaseAreaRef.current,
-        languageRef.current
+        languageRef.current,
+        enablePresenceRef.current,
+        enableReactionRef.current,
+        enableThreadRef.current,
+        enableTranslateRef.current,
+        enableAVMeetingRef.current
       );
       setInitParams(true);
     } catch (error) {
       setInitParams(true);
     }
-  }, [_initParams, getEnableDNSConfig, getImPort, getImServer, initParams]);
-
-  // const options = React.useMemo(() => {
-  //   return {
-  //     appKey: env.appKey,
-  //     debugModel: env.isDevMode,
-  //     autoLogin: false,
-  //     autoAcceptGroupInvitation: true,
-  //     requireAck: true,
-  //     requireDeliveryAck: true,
-  //     restServer: restServer,
-  //     imServer: imServerRef.current,
-  //     imPort: imPortRef.current,
-  //     enableDNSConfig: enableDNSConfigRef.current,
-  //   } as ChatOptionsType;
-  // }, []);
-
-  const getOptions = React.useCallback(() => {
-    return {
-      appKey: gAppKey,
-      debugModel: isDevMode,
-      autoLogin: false,
-      autoAcceptGroupInvitation: true,
-      requireAck: true,
-      requireDeliveryAck: true,
-      restServer: useSendBox ? restServer : undefined,
-      imServer: useSendBox ? imServerRef.current : undefined,
-      imPort: useSendBox ? imPortRef.current : undefined,
-      enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
-      pushConfig:
-        fcmSenderId && fcmSenderId.length > 0
-          ? new ChatPushConfig({
-              deviceId: fcmSenderId,
-              deviceToken: '',
-            })
-          : undefined,
-    } as ChatOptionsType;
-  }, []);
-
-  const formatNavigationState = (
-    state: NavigationState | undefined,
-    result: string[] & string[][]
-  ) => {
-    if (state) {
-      const ret: string[] & string[][] = [];
-      for (const route of state.routes) {
-        ret.push(route.name);
-        if (route.state) {
-          formatNavigationState(
-            route.state as NavigationState | undefined,
-            ret
-          );
-        }
-      }
-      result.push(ret);
-    }
-  };
+  }, [
+    _initParams,
+    enableAVMeetingRef,
+    enableDNSConfigRef,
+    enablePresenceRef,
+    enableReactionRef,
+    enableThreadRef,
+    enableTranslateRef,
+    getEnableDNSConfig,
+    getImPort,
+    getImServer,
+    imPortRef,
+    imServerRef,
+    initParams,
+    isLightRef,
+    languageRef,
+    releaseAreaRef,
+    setInitParams,
+  ]);
 
   const onReady = React.useCallback(
     async (_ready: boolean) => {
@@ -296,7 +241,7 @@ export function App() {
         }, 1000);
       }
     },
-    [rootRef]
+    [isReadyRef, rootRef]
   );
 
   const onContainerInitialized = React.useCallback(
@@ -311,7 +256,7 @@ export function App() {
         onReady(true);
       }
     },
-    [onReady]
+    [isContainerReadyRef, isFontReadyRef, isNavigationReadyRef, onReady]
   );
 
   const onNavigationInitialized = React.useCallback(() => {
@@ -323,88 +268,7 @@ export function App() {
     ) {
       onReady(true);
     }
-  }, [onReady]);
-
-  React.useEffect(() => {
-    getPermission({
-      onResult: (isSuccess: boolean) => {
-        console.log('dev:permissions:', isSuccess);
-        permissionsRef.current = isSuccess;
-      },
-    });
-  }, [getPermission]);
-
-  React.useEffect(() => {
-    const ret = DeviceEventEmitter.addListener('_demo_emit_app_theme', (e) => {
-      if (e === 'dark') {
-        isLightRef.current = false;
-      } else {
-        isLightRef.current = true;
-      }
-      updater();
-    });
-    const ret2 = DeviceEventEmitter.addListener(
-      '_demo_emit_app_language',
-      (e) => {
-        if (e === 'en') {
-          languageRef.current = 'en';
-        } else if (e === 'zh-Hans') {
-          languageRef.current = 'zh-Hans';
-        }
-        updater();
-      }
-    );
-    const ret3 = DeviceEventEmitter.addListener(
-      '_demo_emit_app_primary_color',
-      (e) => {
-        paletteRef.current.colors.primary = generatePrimaryColor(e);
-        updater();
-      }
-    );
-    const ret4 = DeviceEventEmitter.addListener(
-      '_demo_emit_app_neutral_s_color',
-      (e) => {
-        paletteRef.current.colors.neutralSpecial =
-          generateNeutralSpecialColor(e);
-        updater();
-      }
-    );
-    const ret5 = DeviceEventEmitter.addListener(
-      '_demo_emit_app_neutral_color',
-      (e) => {
-        paletteRef.current.colors.neutral = generateNeutralColor(e);
-        updater();
-      }
-    );
-    const ret6 = DeviceEventEmitter.addListener(
-      '_demo_emit_app_error_color',
-      (e) => {
-        paletteRef.current.colors.error = generatePrimaryColor(e);
-        updater();
-      }
-    );
-    const ret7 = DeviceEventEmitter.addListener(
-      '_demo_emit_app_second_color',
-      (e) => {
-        paletteRef.current.colors.secondary = generatePrimaryColor(e);
-        updater();
-      }
-    );
-    const ret8 = DeviceEventEmitter.addListener('_demo_emit_app_style', (e) => {
-      releaseAreaRef.current = e === 'classic' ? 'china' : 'global';
-      updater();
-    });
-    return () => {
-      ret.remove();
-      ret2.remove();
-      ret3.remove();
-      ret4.remove();
-      ret5.remove();
-      ret6.remove();
-      ret7.remove();
-      ret8.remove();
-    };
-  }, [dark, light, updater]);
+  }, [isContainerReadyRef, isFontReadyRef, isNavigationReadyRef, onReady]);
 
   React.useEffect(() => {
     initParamsCallback().then().catch();
@@ -422,7 +286,13 @@ export function App() {
         onReady(true);
       }
     }
-  }, [fontsLoaded, onReady]);
+  }, [
+    fontsLoaded,
+    isContainerReadyRef,
+    isFontReadyRef,
+    isNavigationReadyRef,
+    onReady,
+  ]);
 
   if (_initParams === false) {
     // !!! This is a workaround for the issue that the app will not start if the
@@ -438,12 +308,11 @@ export function App() {
         theme={isLightRef.current ? light : dark}
         language={languageRef.current}
         releaseArea={releaseAreaRef.current}
-        enablePresence={true}
-        enableReaction={true}
-        enableThread={true}
-        enableTranslate={true}
-        enableAVMeeting={true}
-        // enableTranslate={false}
+        enablePresence={enablePresenceRef.current}
+        enableReaction={enableReactionRef.current}
+        enableThread={enableThreadRef.current}
+        enableTranslate={enableTranslateRef.current}
+        enableAVMeeting={enableAVMeetingRef.current}
         avatar={{
           personAvatar: defaultAvatars[2],
           groupAvatar: defaultAvatars[0],
@@ -914,6 +783,13 @@ export function App() {
                   headerShown: false,
                 }}
                 component={AboutSettingScreen}
+              />
+              <Root.Screen
+                name={'FeatureSetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={FeatureSettingScreen}
               />
             </Root.Navigator>
           </NavigationContainer>
