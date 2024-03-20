@@ -12,9 +12,10 @@ import {
   CallUser,
   GlobalContainer as CallkitContainer,
 } from 'react-native-chat-callkit';
-import { ChatClient } from 'react-native-chat-sdk';
+import { ChatPushConfig } from 'react-native-chat-sdk';
 import {
   ChatOptionsType,
+  ChatService,
   ChatServiceListener,
   Container,
   createDefaultStringSet,
@@ -39,12 +40,19 @@ import {
   appKey as gAppKey,
   demoType,
   enableDNSConfig,
+  fcmSenderId,
   imPort,
   imServer,
   isDevMode,
   restServer,
   useSendBox,
 } from './common/const';
+import {
+  checkFCMPermission,
+  requestFCMPermission,
+  requestFcmToken,
+  setBackgroundMessageHandler,
+} from './common/fcm';
 import { RestApi } from './common/rest.api';
 import { useApp } from './hooks/useApp';
 import { useGeneralSetting } from './hooks/useGeneralSetting';
@@ -141,6 +149,7 @@ export function App() {
   const { onRequestMultiData } = useApp();
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
   const { initParams } = useGeneralSetting();
+  const imRef = React.useRef<ChatService>();
 
   const { updater } = useForceUpdate();
   try {
@@ -200,6 +209,13 @@ export function App() {
       imServer: useSendBox ? imServerRef.current : undefined,
       imPort: useSendBox ? imPortRef.current : undefined,
       enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
+      pushConfig:
+        fcmSenderId && fcmSenderId.length > 0
+          ? new ChatPushConfig({
+              deviceId: fcmSenderId,
+              deviceToken: '',
+            })
+          : undefined,
     } as ChatOptionsType;
   }, []);
 
@@ -236,7 +252,43 @@ export function App() {
         return;
       }
       isReadyRef.current = true;
-      RestApi.setServer(restServer);
+
+      try {
+        RestApi.setServer(restServer);
+
+        do {
+          if ((await checkFCMPermission()) === false) {
+            const ret = await requestFCMPermission();
+            if (ret === false) {
+              console.warn('Firebase Cloud Message Permission request failed.');
+              break;
+            }
+          }
+
+          requestFcmToken()
+            .then((fcmToken) => {
+              imRef.current?.client
+                .updatePushConfig(
+                  new ChatPushConfig({
+                    deviceId: fcmSenderId,
+                    deviceToken: fcmToken,
+                  })
+                )
+                .then()
+                .catch((e) => {
+                  console.warn('dev:updatePushConfig:error:', e);
+                });
+            })
+            .catch((e) => {
+              console.warn('dev:requestFcmToken:error:', e);
+            });
+
+          setBackgroundMessageHandler();
+        } while (false);
+      } catch (error) {
+        console.warn('dev:app:onReady:error:', error);
+      }
+
       // await SplashScreen?.hideAsync?.();
       if (demoType === 4) {
         setTimeout(() => {
@@ -247,16 +299,20 @@ export function App() {
     [rootRef]
   );
 
-  const onContainerInitialized = React.useCallback(() => {
-    isContainerReadyRef.current = true;
-    if (
-      isFontReadyRef.current === true &&
-      isNavigationReadyRef.current === true &&
-      isContainerReadyRef.current === true
-    ) {
-      onReady(true);
-    }
-  }, [onReady]);
+  const onContainerInitialized = React.useCallback(
+    (im: ChatService) => {
+      imRef.current = im;
+      isContainerReadyRef.current = true;
+      if (
+        isFontReadyRef.current === true &&
+        isNavigationReadyRef.current === true &&
+        isContainerReadyRef.current === true
+      ) {
+        onReady(true);
+      }
+    },
+    [onReady]
+  );
 
   const onNavigationInitialized = React.useCallback(() => {
     isNavigationReadyRef.current = true;
@@ -483,7 +539,7 @@ export function App() {
             onResult: (params: { user: CallUser; error?: any }) => void;
           }) => {
             console.log('requestCurrentUser:', params);
-            ChatClient.getInstance()
+            imRef.current?.client
               .getCurrentUsername()
               .then((result) => {
                 params.onResult({

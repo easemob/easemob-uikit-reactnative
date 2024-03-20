@@ -17,6 +17,7 @@ export const isDevMode = true;
 export const appKey = '';
 export const accountType = ''; // agora or easemob
 export const agoraAppId = '';
+export const fcmSenderId = '';
 export const demoType = 1; // 1. ui-dev 2. dev 3. prod
 export const account = [{ id: '', token: '' }];
 `;

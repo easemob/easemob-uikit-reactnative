@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.hyphenate.rn.ChatUikitExample",
+  "applicationId": "com.hyphenate.rn.ChatUikitFullExample",
   "variantName": "release",
   "elements": [
     {

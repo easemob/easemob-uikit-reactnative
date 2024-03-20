@@ -1,5 +1,10 @@
 import type { StatusType } from '../biz/types';
-import type { ChatOptionsType, DataModel, DataModelType } from '../chat';
+import type {
+  ChatOptionsType,
+  ChatService,
+  DataModel,
+  DataModelType,
+} from '../chat';
 import type { ConversationDetailType } from '../config';
 import type { UIKitError } from '../error';
 import type { CreateStringSet, LanguageCode, StringSet } from '../i18n';
@@ -129,7 +134,7 @@ export type ContainerProps = React.PropsWithChildren<{
   /**
    * IM initialization is completed.
    */
-  onInitialized?: () => void;
+  onInitialized?: (im: ChatService) => void;
 
   /**
    * @description Registered user information callback. The avatar and nickname of the contact, group member and group are obtained through the callback of this registration. If not provided, the default value will be used.

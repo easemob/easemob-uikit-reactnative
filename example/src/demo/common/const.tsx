@@ -27,3 +27,4 @@ export const demoType = env.demoType as number;
 export const agoraAppId = env.agoraAppId as string;
 export const isDevMode = env.isDevMode as boolean;
 export const accountType = env.accountType as string;
+export const fcmSenderId = env.fcmSenderId as string;

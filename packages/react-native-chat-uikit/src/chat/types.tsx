@@ -1283,5 +1283,5 @@ export type ChatServiceInit = {
   /**
    * IM initialization is completed callback notification.
    */
-  onInitialized?: () => void;
+  onInitialized?: (im: ChatService) => void;
 };

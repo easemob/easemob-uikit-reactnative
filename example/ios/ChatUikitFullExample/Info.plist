@@ -31,6 +31,8 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -46,14 +48,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Use the media library.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Use camera.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Use a microphone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Use picture gallery.</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Use the media library.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

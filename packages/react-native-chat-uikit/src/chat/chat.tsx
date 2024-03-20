@@ -38,7 +38,7 @@ export function ChatContextProvider({ value, children }: ChatContextProps) {
         if (isOk === false) {
           if (error) _im.sendError({ error: error });
         } else {
-          onInitialized?.();
+          onInitialized?.(_im);
           _im.sendFinished({ event: 'init' });
         }
       },
