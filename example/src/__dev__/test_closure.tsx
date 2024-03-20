@@ -5,7 +5,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 let count = 0;
 export function Test1() {
-  console.log('test:zuoyu:test1:');
   const [, update] = React.useState(0);
   let dep1 = React.useMemo<{
     name: string;
@@ -50,7 +49,6 @@ export function Test1() {
         style={{ width: '100%', height: 60, backgroundColor: 'yellow' }}
         onPress={() => {
           // todo: tell me why?
-          console.log('test:zuoyu:pressable:');
           testFunction();
           dep1.age = count;
           dep2.age = count;
@@ -69,7 +67,6 @@ export function Test1() {
       <Pressable
         style={{ width: '100%', height: 60, backgroundColor: 'yellow' }}
         onPress={() => {
-          console.log('test:zuoyu:onPress:');
           testFunction2();
           dep1.age = count;
           dep2.age = count;

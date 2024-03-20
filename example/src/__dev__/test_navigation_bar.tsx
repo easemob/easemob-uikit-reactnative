@@ -79,9 +79,7 @@ export default function TestNavigationBar() {
           );
         }}
         RightProps={{
-          onClicked: () => {
-            console.log('test:zuoyu:RightProps:onClick');
-          },
+          onClicked: () => {},
         }}
       />
     </View>

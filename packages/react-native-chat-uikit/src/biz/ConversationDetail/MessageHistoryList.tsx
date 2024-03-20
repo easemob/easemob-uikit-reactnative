@@ -24,6 +24,7 @@ import { MessageHistoryListItemMemo } from './MessageHistoryListItem';
 import type {
   MessageHistoryListItemProps,
   MessageHistoryListProps,
+  MessageHistoryModel,
 } from './types';
 
 export function MessageHistoryList(props: MessageHistoryListProps) {
@@ -42,7 +43,7 @@ export function MessageHistoryList(props: MessageHistoryListProps) {
     },
   });
 
-  const { data, listState } = useMessageHistoryList(props);
+  const { data, listState, onClickedItem } = useMessageHistoryList(props);
 
   return (
     <View
@@ -94,7 +95,9 @@ export function MessageHistoryList(props: MessageHistoryListProps) {
             info: ListRenderItemInfo<MessageHistoryListItemProps>
           ) => {
             const { item } = info;
-            return <MessageHistoryListItemMemo {...item} />;
+            return (
+              <MessageHistoryListItemMemo {...item} onClicked={onClickedItem} />
+            );
           }}
           keyExtractor={(item: MessageHistoryListItemProps) => {
             return item.model.msg.msgId;
@@ -115,12 +118,19 @@ export function MessageHistoryList(props: MessageHistoryListProps) {
 }
 
 function useMessageHistoryList(props: MessageHistoryListProps) {
-  const { testMode, message } = props;
+  const { testMode, message, onClickedItem: propsOnClickedItem } = props;
   const im = useChatContext();
   const flatListProps = useFlatList<MessageHistoryListItemProps>({
     listState: testMode === 'only-ui' ? 'normal' : 'normal',
   });
   const { dataRef, setData } = flatListProps;
+
+  const onClickedItem = React.useCallback(
+    (model: MessageHistoryModel) => {
+      propsOnClickedItem?.(model);
+    },
+    [propsOnClickedItem]
+  );
 
   const init = React.useCallback(async () => {
     const list = await im.fetchCombineMessageDetail({ msg: message });
@@ -140,5 +150,6 @@ function useMessageHistoryList(props: MessageHistoryListProps) {
 
   return {
     ...flatListProps,
+    onClickedItem,
   };
 }

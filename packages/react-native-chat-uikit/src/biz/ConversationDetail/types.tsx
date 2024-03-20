@@ -997,6 +997,12 @@ export type MessageListProps = PropsWithError &
      * this parameter is options in thread mode.
      */
     onClickedLeaveThread?: (threadId: string) => void;
+    /**
+     * Callback notification when click destroy thread.
+     *
+     * this parameter is options in thread mode.
+     */
+    onClickedDestroyThread?: (threadId: string) => void;
 
     /**
      * Callback notification when change to multi select mode.
@@ -1075,6 +1081,7 @@ export type MessageThreadMemberListItemProps = Omit<
 
 export type MessageHistoryListItemProps = {
   model: MessageHistoryModel;
+  onClicked?: (model: MessageHistoryModel) => void | boolean | undefined;
 };
 
 export type MessageHistoryListProps = PropsWithTest &
@@ -1090,6 +1097,11 @@ export type MessageHistoryListProps = PropsWithTest &
      * This message is combine type message.
      */
     message: ChatMessage;
+
+    /**
+     * The Callback notification when a list item is clicked.
+     */
+    onClickedItem?: (model: MessageHistoryModel) => void | boolean | undefined;
   };
 
 export type MessageSearchItemProps = {

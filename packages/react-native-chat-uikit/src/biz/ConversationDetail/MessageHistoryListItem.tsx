@@ -30,7 +30,7 @@ import {
 import type { MessageHistoryListItemProps } from './types';
 
 export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
-  const { model } = props;
+  const { model, onClicked } = props;
   const { msg } = model;
   const { userId, userName, avatarURL } = userInfoFromMessage(msg) ?? {};
   const { formatTime } = useConfigContext();
@@ -56,6 +56,7 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
   const { tr } = useI18nContext();
   const msgType = msg.body.type;
   const maxWidth = Dimensions.get('window').width * 0.6;
+  const maxTextWidth = Dimensions.get('window').width - 32 - 16 * 2 - 12;
 
   const getMessageFormatTime = React.useCallback(
     (msg?: ChatMessage, timestamp?: number): string => {
@@ -77,7 +78,7 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
       style={{
         backgroundColor: getColor('bg'),
       }}
-      onPress={() => {}}
+      onPress={() => onClicked?.(model)}
       onLongPress={() => {}}
     >
       <View
@@ -100,6 +101,7 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
             flexDirection: 'column',
             flexGrow: 1,
             paddingLeft: 12,
+            // maxWidth: '80%',
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -119,7 +121,7 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
               {getMessageFormatTime(msg)}
             </SingleLineText>
           </View>
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: 'row', maxWidth: maxTextWidth }}>
             {msgType === ChatMessageType.IMAGE ? (
               <MessageHistoryImage msg={msg} maxWidth={maxWidth} />
             ) : msgType === ChatMessageType.VIDEO ? (

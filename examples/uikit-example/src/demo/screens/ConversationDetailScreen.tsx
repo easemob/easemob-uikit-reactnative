@@ -274,10 +274,6 @@ export function ConversationDetailScreen(props: Props) {
               });
             },
             onClickedOpenThreadMemberList: () => {},
-            onClickedLeaveThread: (threadId) => {
-              im.leaveThread({ threadId });
-              navigation.goBack();
-            },
             onClickedHistoryDetail: (item) => {
               navigation.push('MessageHistoryList', {
                 params: { message: item.msg },

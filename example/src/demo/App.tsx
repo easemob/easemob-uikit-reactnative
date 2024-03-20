@@ -46,9 +46,9 @@ import {
   useSendBox,
 } from './common/const';
 import { RestApi } from './common/rest.api';
-import { useGeneralSetting } from './common/useGeneralSetting';
-import { useServerConfig } from './common/useServerConfig';
 import { useApp } from './hooks/useApp';
+import { useGeneralSetting } from './hooks/useGeneralSetting';
+import { useServerConfig } from './hooks/useServerConfig';
 import type { RootParamsList, RootParamsName } from './routes';
 import {
   AboutSettingScreen,
@@ -290,7 +290,6 @@ export function App() {
     const ret2 = DeviceEventEmitter.addListener(
       '_demo_emit_app_language',
       (e) => {
-        console.log('test:zuoyu:e:', e);
         if (e === 'en') {
           languageRef.current = 'en';
         } else if (e === 'zh-Hans') {
@@ -302,7 +301,6 @@ export function App() {
     const ret3 = DeviceEventEmitter.addListener(
       '_demo_emit_app_primary_color',
       (e) => {
-        console.log('test:zuoyu:e:', e);
         paletteRef.current.colors.primary = generatePrimaryColor(e);
         updater();
       }
@@ -310,7 +308,6 @@ export function App() {
     const ret4 = DeviceEventEmitter.addListener(
       '_demo_emit_app_neutral_s_color',
       (e) => {
-        console.log('test:zuoyu:e:', e);
         paletteRef.current.colors.neutralSpecial =
           generateNeutralSpecialColor(e);
         updater();
@@ -319,7 +316,6 @@ export function App() {
     const ret5 = DeviceEventEmitter.addListener(
       '_demo_emit_app_neutral_color',
       (e) => {
-        console.log('test:zuoyu:e:', e);
         paletteRef.current.colors.neutral = generateNeutralColor(e);
         updater();
       }
@@ -327,7 +323,6 @@ export function App() {
     const ret6 = DeviceEventEmitter.addListener(
       '_demo_emit_app_error_color',
       (e) => {
-        console.log('test:zuoyu:e:', e);
         paletteRef.current.colors.error = generatePrimaryColor(e);
         updater();
       }
@@ -335,13 +330,11 @@ export function App() {
     const ret7 = DeviceEventEmitter.addListener(
       '_demo_emit_app_second_color',
       (e) => {
-        console.log('test:zuoyu:e:', e);
         paletteRef.current.colors.secondary = generatePrimaryColor(e);
         updater();
       }
     );
     const ret8 = DeviceEventEmitter.addListener('_demo_emit_app_style', (e) => {
-      console.log('test:zuoyu:e:ret8', e);
       releaseAreaRef.current = e === 'classic' ? 'china' : 'global';
       updater();
     });

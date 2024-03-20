@@ -40,8 +40,7 @@ export function Alert1() {
               {
                 text: 'confirm2',
                 isPreferred: true,
-                onPress: (value) => {
-                  console.log('test:zuoyu:', value);
+                onPress: () => {
                   ref.current.close();
                 },
               },

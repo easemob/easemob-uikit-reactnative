@@ -112,6 +112,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_thread_menu_edit_thread_name': '编辑话题',
     '_uikit_thread_menu_open_thread_member_list': '话题成员',
     '_uikit_thread_menu_leave_thread': '离开话题',
+    '_uikit_thread_menu_destroy_thread': '删除话题',
     '_uikit_thread_member': '话题成员',
     '_uikit_thread_owner': '群主',
     '_uikit_thread_kick_member': '从话题中移除',

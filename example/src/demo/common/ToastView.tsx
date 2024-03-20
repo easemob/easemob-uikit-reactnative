@@ -7,7 +7,7 @@ import {
   useSimpleToastContext,
 } from 'react-native-chat-uikit';
 
-import { useOnErrorParser, useOnFinishedParser } from './useToastParser';
+import { useOnErrorParser, useOnFinishedParser } from '../hooks/useToastParser';
 
 export type ToastViewProps = {};
 export function ToastView(props: ToastViewProps) {

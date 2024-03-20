@@ -40,7 +40,6 @@ export function CL() {
         //       error?: UIKitError
         //     ) => void;
         //   }) => {
-        //     console.log('test:zuoyu:onRequestMultiData', params);
         //     params?.result(
         //       new Map([
         //         [
@@ -78,9 +77,7 @@ export function CL3() {
     <SafeAreaView>
       <SearchGroupParticipant
         groupId="sdf"
-        onCancel={() => {
-          console.log('test:zuoyu:cancel');
-        }}
+        onCancel={() => {}}
         containerStyle={{
           height: '100%',
           backgroundColor: 'red',
@@ -185,9 +182,7 @@ export function CL2() {
         // width={300}
         headerPosition="down"
         initIndex={2}
-        onCurrentIndex={(index) => {
-          console.log('test:zuoyu:index', index);
-        }}
+        onCurrentIndex={() => {}}
       />
     </SafeAreaView>
   );

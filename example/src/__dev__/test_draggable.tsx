@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
 });
 
 export function Scalable() {
-  console.log('test:zuoyu:Scalable');
   const baseScale = React.useRef(new Animated.Value(1)).current;
   const pinchScale = React.useRef(new Animated.Value(1)).current;
   const scale = React.useRef(Animated.multiply(baseScale, pinchScale)).current;

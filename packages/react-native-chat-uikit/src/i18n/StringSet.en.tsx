@@ -113,6 +113,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_thread_menu_edit_thread_name': 'Edit Thread Name',
     '_uikit_thread_menu_open_thread_member_list': 'Thread Members',
     '_uikit_thread_menu_leave_thread': 'Leave Thread',
+    '_uikit_thread_menu_destroy_thread': 'Destroy Thread',
     '_uikit_thread_member': 'Thread Members',
     '_uikit_thread_owner': 'Owner',
     '_uikit_thread_kick_member': 'Remove from Thread',

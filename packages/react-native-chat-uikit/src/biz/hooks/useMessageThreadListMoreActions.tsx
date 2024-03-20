@@ -30,15 +30,19 @@ export function useMessageThreadListMoreActions(
        * Callback notification when click leave thread.
        */
       onClickedLeaveThread?: (threadId: string) => void;
+      /**
+       * Callback notification when click destroy thread.
+       */
+      onClickedDestroyThread?: (threadId: string) => void;
     }) => {
       const {
         thread,
         onClickedEditThreadName,
         onClickedOpenThreadMemberList,
         onClickedLeaveThread,
+        onClickedDestroyThread,
       } = params;
       let items = [] as InitMenuItemsType[];
-      console.log('test:zuoyu:thread:', thread, im.userId);
       if (thread.owner === im.userId) {
         items.push({
           name: tr('_uikit_thread_menu_edit_thread_name'),
@@ -61,34 +65,48 @@ export function useMessageThreadListMoreActions(
           });
         },
       });
-      items.push({
-        name: tr('_uikit_thread_menu_leave_thread'),
-        isHigh: false,
-        icon: 'arrow_right_square_fill',
-        onClicked: () => {
-          closeMenu(() => {
-            alertRef?.current?.alertWithInit({
-              message: tr('_uikit_thread_leave_confirm'),
-              buttons: [
-                {
-                  text: 'cancel',
-                  onPress: () => {
-                    alertRef.current?.close?.();
+      if (thread.owner === im.userId) {
+        items.push({
+          name: tr('_uikit_thread_menu_destroy_thread'),
+          isHigh: true,
+          icon: 'trash',
+          onClicked: () => {
+            closeMenu(() => {
+              alertRef?.current?.alertWithInit({
+                message: tr('_uikit_thread_leave_confirm', true),
+                buttons: [
+                  {
+                    text: 'cancel',
+                    onPress: () => {
+                      alertRef.current?.close?.();
+                    },
                   },
-                },
-                {
-                  text: 'confirm',
-                  isPreferred: true,
-                  onPress: () => {
-                    alertRef?.current?.close?.();
-                    onClickedLeaveThread?.(thread.threadId);
+                  {
+                    text: 'confirm',
+                    isPreferred: true,
+                    onPress: () => {
+                      alertRef?.current?.close?.();
+                      onClickedDestroyThread?.(thread.threadId);
+                    },
                   },
-                },
-              ],
+                ],
+              });
             });
-          });
-        },
-      });
+          },
+        });
+      } else {
+        items.push({
+          name: tr('_uikit_thread_menu_leave_thread'),
+          isHigh: false,
+          icon: 'arrow_right_square_fill',
+          onClicked: () => {
+            closeMenu(() => {
+              onClickedLeaveThread?.(thread.threadId);
+            });
+          },
+        });
+      }
+
       items = onInit ? onInit(items) : items;
       if (items.length > 0) {
         menuRef.current?.startShowWithProps?.({

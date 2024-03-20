@@ -7,7 +7,7 @@ import {
   imPort,
   imServer,
   useSendBox,
-} from './const';
+} from '../common/const';
 
 export function useServerConfig() {
   const getImServer = React.useCallback(async () => {

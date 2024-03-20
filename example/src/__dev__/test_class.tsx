@@ -7,14 +7,11 @@ interface TestBindListener {
 export class TestBind {
   listener: TestBindListener;
   constructor() {
-    console.log('test:zuoyu:TestBind:constructor');
     this.listener = {
       print: () => {},
     };
   }
-  test() {
-    console.log('test:zuoyu:TestBind:test');
-  }
+  test() {}
 }
 
 export function Test1() {

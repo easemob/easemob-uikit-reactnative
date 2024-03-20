@@ -13,10 +13,8 @@ export function CL() {
   useLifecycle(
     React.useCallback((state: any) => {
       if (state === 'load') {
-        console.log('test:zuoyu:load');
         test();
       } else if (state === 'unload') {
-        console.log('test:zuoyu:unload');
       }
     }, [])
   );
@@ -50,10 +48,8 @@ export function CL2() {
           }
         };
         if (state === 'load') {
-          console.log('test:zuoyu:load');
           addListener('test', listener);
         } else if (state === 'unload') {
-          console.log('test:zuoyu:unload');
           removeListener('test', listener);
         }
       },
@@ -64,10 +60,8 @@ export function CL2() {
     React.useCallback(
       (state: any) => {
         if (state === 'load') {
-          console.log('test:zuoyu:load');
           emit('test', 'load');
         } else if (state === 'unload') {
-          console.log('test:zuoyu:unload');
           emit('test', 'unload');
         }
       },

@@ -689,6 +689,12 @@ export class ChatServiceImpl
           });
         } else {
           // !!! Values that do not exist will not be updated.
+          this._dataList.set(value.id, {
+            id: value.id,
+            type: 'group',
+            name: value.name,
+            avatar: value.avatar,
+          });
         }
       });
     });

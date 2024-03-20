@@ -44,7 +44,6 @@ export function CL() {
             error?: UIKitError
           ) => void;
         }) => {
-          console.log('test:zuoyu:onRequestMultiData', params);
           params?.result(
             new Map([
               [
@@ -73,7 +72,6 @@ export function CL() {
           );
         }}
         // onClicked={(data) => {
-        //   console.log('test:zuoyu:onClicked', data);
         // }}
       />
     </SafeAreaView>
@@ -85,9 +83,7 @@ export function CL3() {
     <SafeAreaView>
       <SearchContact
         searchType={'contact-list'}
-        onCancel={() => {
-          console.log('test:zuoyu:cancel');
-        }}
+        onCancel={() => {}}
         containerStyle={{
           height: '100%',
           backgroundColor: 'yellow',
@@ -192,9 +188,7 @@ export function CL2() {
         // width={300}
         headerPosition="down"
         initIndex={2}
-        onCurrentIndex={(index) => {
-          console.log('test:zuoyu:index', index);
-        }}
+        onCurrentIndex={() => {}}
       />
     </SafeAreaView>
   );

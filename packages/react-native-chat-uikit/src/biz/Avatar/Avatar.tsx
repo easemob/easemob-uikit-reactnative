@@ -133,7 +133,6 @@ export function StatusAvatar(props: StatusAvatarProps) {
 
   React.useEffect(() => {
     if (userId) {
-      console.log('test:zuoyu:avatar:', userId);
       if (im.userId !== userId) {
         im.subPresence({ userIds: [userId] });
       }

@@ -1,8 +1,16 @@
 import * as React from 'react';
 import { ListRenderItemInfo, Pressable, View } from 'react-native';
-import type { ChatMessage } from 'react-native-chat-sdk';
+import type {
+  ChatMessage,
+  ChatMessageThread,
+  ChatMessageThreadEvent,
+} from 'react-native-chat-sdk';
 
-import { getMessageSnapshot, useChatContext } from '../../chat';
+import {
+  getMessageSnapshot,
+  MessageServiceListener,
+  useChatContext,
+} from '../../chat';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
@@ -184,6 +192,65 @@ function useMessageThreadList(
   const im = useChatContext();
   const [threadCount, setThreadCount] = React.useState(0);
 
+  const removeDuplicateData = React.useCallback(
+    (list: MessageThreadListItemProps[]) => {
+      const uniqueList = list.filter(
+        (item, index, self) =>
+          index === self.findIndex((t) => t.model.id === item.model.id)
+      );
+      return uniqueList;
+    },
+    []
+  );
+
+  const refreshToUI = React.useCallback(
+    (list: MessageThreadListItemProps[]) => {
+      dataRef.current = removeDuplicateData(list);
+      setData([...dataRef.current]);
+    },
+    [dataRef, removeDuplicateData, setData]
+  );
+
+  const onAddDataToUI = React.useCallback(
+    (thread: ChatMessageThread) => {
+      dataRef.current.push({
+        model: {
+          id: thread.threadId,
+          count: thread.msgCount,
+          thread: thread,
+          title: thread.threadName,
+        },
+      });
+    },
+    [dataRef]
+  );
+
+  const onUpdateDataToUI = React.useCallback(
+    (thread: ChatMessageThread) => {
+      for (const item of dataRef.current) {
+        if (thread.threadId === item.model.id) {
+          item.model.thread = { ...thread };
+          item.model.title = thread.threadName;
+          item.model = { ...item.model };
+          break;
+        }
+      }
+    },
+    [dataRef]
+  );
+
+  const onRemoveDataToUI = React.useCallback(
+    (thread: ChatMessageThread) => {
+      const index = dataRef.current.findIndex((item) => {
+        return thread.threadId === item.model.id;
+      });
+      if (index >= 0) {
+        dataRef.current.splice(index, 1);
+      }
+    },
+    [dataRef]
+  );
+
   const requestMore = React.useCallback(() => {
     im.fetchThreadsFromGroup({
       parentId,
@@ -199,16 +266,9 @@ function useMessageThreadList(
           const ids = [] as string[];
           res.value.list.forEach((item) => {
             ids.push(item.threadId);
-            dataRef.current.push({
-              model: {
-                id: item.threadId,
-                count: item.msgCount,
-                thread: item,
-                title: item.threadName,
-              },
-            });
+            onAddDataToUI(item);
           });
-          setData([...dataRef.current]);
+          refreshToUI(dataRef.current);
           setThreadCount(dataRef.current.length);
 
           im.fetchThreadsLastMessage({
@@ -217,22 +277,21 @@ function useMessageThreadList(
               if (res.isOk && res.value) {
                 const list = res.value;
                 dataRef.current.forEach((item) => {
-                  const threadId = item.model.id;
-                  const lastMessage = list.get(threadId);
+                  const lastMessage = list.get(item.model.id);
                   if (lastMessage) {
                     item.model.thread.lastMessage = {
                       ...lastMessage,
                     } as ChatMessage;
                   }
                 });
-                setData([...dataRef.current]);
+                refreshToUI(dataRef.current);
               }
             },
           });
         }
       },
     });
-  }, [dataRef, im, parentId, setData]);
+  }, [dataRef, im, onAddDataToUI, parentId, refreshToUI]);
 
   const _onMore = React.useCallback(() => {
     if (hasNoMoreRef.current === true) {
@@ -249,6 +308,35 @@ function useMessageThreadList(
     requestMore();
   }, [requestMore]);
 
+  React.useEffect(() => {
+    const listener = {
+      onChatMessageThreadCreated: (event: ChatMessageThreadEvent) => {
+        onAddDataToUI(event.thread);
+        refreshToUI(dataRef.current);
+      },
+      onChatMessageThreadUpdated: (event: ChatMessageThreadEvent) => {
+        onUpdateDataToUI(event.thread);
+        refreshToUI(dataRef.current);
+      },
+      onChatMessageThreadDestroyed: (event: ChatMessageThreadEvent) => {
+        onRemoveDataToUI(event.thread);
+        refreshToUI(dataRef.current);
+      },
+      onChatMessageThreadUserRemoved: (_event: ChatMessageThreadEvent) => {},
+    } as MessageServiceListener;
+    im.addListener(listener);
+    return () => {
+      im.removeListener(listener);
+    };
+  }, [
+    dataRef,
+    im,
+    onAddDataToUI,
+    onRemoveDataToUI,
+    onUpdateDataToUI,
+    refreshToUI,
+  ]);
+
   React.useImperativeHandle(ref, () => ({}));
   return {
     ...flatListProps,
@@ -261,7 +349,7 @@ function useMessageThreadList(
 
 function ListItemRender(props: MessageThreadListItemProps) {
   const { model, onClicked } = props;
-  const { title, count, thread } = model;
+  const { title, thread } = model;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -317,13 +405,13 @@ function ListItemRender(props: MessageThreadListItemProps) {
               {title}
             </SingleLineText>
             <View style={{ flexGrow: 1 }} />
-            <SingleLineText
+            {/* <SingleLineText
               paletteType={'title'}
               textType={'small'}
               style={{ color: getColor('count') }}
             >
               {count > 99 ? '99+' : count}
-            </SingleLineText>
+            </SingleLineText> */}
             <Icon
               name={'chevron_right'}
               style={{ width: 15, height: 15, tintColor: getColor('count') }}

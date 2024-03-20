@@ -291,9 +291,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
     im.messageManager.setCurrentConv({ convId, convType });
     setConversation();
     return () => {
-      if (comType === 'thread' && thread) {
-        im.leaveThread({ threadId: thread.threadId });
-      }
       im.messageManager.setCurrentConv(undefined);
     };
   }, [

@@ -55,7 +55,6 @@ export function Test1() {
               marginBottom: 10,
             }}
             onPress={() => {
-              console.log('test:zuoyu:play:', true);
               ref.current?.startPlay();
             }}
           >
@@ -64,7 +63,6 @@ export function Test1() {
           <Pressable
             style={{ width: '60%', height: 60, backgroundColor: 'yellow' }}
             onPress={() => {
-              console.log('test:zuoyu:play:', false);
               ref.current?.stopPlay();
             }}
           >

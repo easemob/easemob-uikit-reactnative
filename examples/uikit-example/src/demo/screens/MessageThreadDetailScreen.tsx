@@ -280,9 +280,11 @@ export function MessageThreadDetailScreen(props: Props) {
               });
             },
             onClickedLeaveThread: (threadId) => {
-              im.leaveThread({
-                threadId,
-              });
+              im.leaveThread({ threadId });
+              navigation.goBack();
+            },
+            onClickedDestroyThread: (threadId) => {
+              im.destroyThread({ threadId });
               navigation.goBack();
             },
           },

@@ -96,32 +96,26 @@ export const IndexList2 = ({
           top: 100,
         }}
         onLayout={(e) => {
-          console.log('test:zuoyu:onLayout', e.nativeEvent.layout);
           offsetRef.current = e.nativeEvent.layout.y;
         }}
         onTouchMove={(e) => {
-          console.log(
-            'test:zuoyu:onTouchMove',
-            e.nativeEvent.touches[0]?.pageY
-          );
           const y = e.nativeEvent.pageY;
           const index = Math.floor((y - offsetRef.current) / 20); // assuming each child view is 20px tall
           _onIndexSelect(index);
         }}
         onMoveShouldSetResponder={() => {
-          console.log('test:zuoyu:onMoveShouldSetResponder');
           return true;
         }}
         onTouchEnd={(e) => {
           const y = e.nativeEvent.pageY;
           const index = Math.floor((y - offsetRef.current) / 20); // assuming each child view is 20px tall
-          console.log(
-            'test:zuoyu:onTouchEnd',
-            e.nativeEvent.touches[0]?.pageY,
-            y,
-            offsetRef.current,
-            index
-          );
+          // console.log(
+          //   'test:zuoyu:onTouchEnd',
+          //   e.nativeEvent.touches[0]?.pageY,
+          //   y,
+          //   offsetRef.current,
+          //   index
+          // );
           _onIndexSelect(index);
           delayExecTask();
         }}

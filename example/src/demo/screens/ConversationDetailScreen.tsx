@@ -78,7 +78,6 @@ export function ConversationDetailScreen(props: Props) {
 
   const showCall = React.useCallback(
     (params: { convType: number; avType: 'video' | 'voice' }) => {
-      console.log('test:zuoyu:showCall', params);
       const { avType, convType } = params;
       let members: GroupParticipantModel[] = [];
       try {
@@ -104,7 +103,6 @@ export function ConversationDetailScreen(props: Props) {
             : CallType.AudioMulti
           : undefined;
 
-      console.log('test:zuoyu:showCall:', callType, im.userId, members.length);
       if (callType === undefined) {
         return;
       }
@@ -169,7 +167,6 @@ export function ConversationDetailScreen(props: Props) {
     }
   }, [comType, convId, convType, navigation, showCall]);
   const onClickedVoice = React.useCallback(() => {
-    console.log('test:zuoyu:ConversationDetailScreen:onClickedVoice', convId);
     if (comType !== 'chat') {
       return;
     }
@@ -217,7 +214,6 @@ export function ConversationDetailScreen(props: Props) {
   }, [selectedContacts, operateType]);
 
   React.useEffect(() => {
-    console.log('test:zuoyu:from', from, selectType, hash);
     if (from === 'MessageForwardSelector') {
       if (hash) {
         convRef.current?.changeSelectType(selectType);
@@ -399,10 +395,6 @@ export function ConversationDetailScreen(props: Props) {
               });
             },
             onClickedOpenThreadMemberList: () => {},
-            onClickedLeaveThread: (threadId) => {
-              im.leaveThread({ threadId });
-              navigation.goBack();
-            },
             onClickedHistoryDetail: (item) => {
               navigation.push('MessageHistoryList', {
                 params: { message: item.msg },

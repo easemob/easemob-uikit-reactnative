@@ -30,7 +30,6 @@ export function CL() {
         //   ids: string[];
         //   result: (data?: DataModel[], error?: UIKitError) => void;
         // }) => {
-        //   console.log('test:zuoyu:onRequestData', params);
         //   const users = params.ids?.map<DataModel>((id) => {
         //     return {
         //       id,
@@ -50,7 +49,6 @@ export function CL() {
             error?: UIKitError
           ) => void;
         }) => {
-          console.log('test:zuoyu:onRequestMultiData', params);
           const userIds = params.ids.get('user');
           const users = userIds?.map<DataModel>((id) => {
             return {
@@ -94,12 +92,8 @@ export function CL3() {
     >
       <SearchConversation
         testMode={'only-ui'}
-        onCancel={() => {
-          console.log('test:zuoyu:cancel');
-        }}
-        onClicked={(data) => {
-          console.log('test:zuoyu:clicked:', data);
-        }}
+        onCancel={() => {}}
+        onClicked={() => {}}
         containerStyle={{
           backgroundColor: 'red',
         }}
@@ -191,9 +185,7 @@ export function CL2() {
         }}
         headerPosition="down"
         initIndex={2}
-        onCurrentIndex={(index) => {
-          console.log('test:zuoyu:index', index);
-        }}
+        onCurrentIndex={() => {}}
       />
     </SafeAreaView>
   );

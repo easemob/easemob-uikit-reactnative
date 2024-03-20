@@ -14,6 +14,7 @@ import { Services } from '../../services';
 import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList';
 import { BottomSheetMenuHeader, InitMenuItemsType } from '../BottomSheetMenu';
 import type {
+  ConversationDetailModelType,
   MessageModel,
   SystemMessageModel,
   TimeMessageModel,
@@ -115,8 +116,9 @@ export function useMessageLongPressActions(
     onFace?: (face: string) => void;
     convId: string;
     convType: number;
+    comType: ConversationDetailModelType;
   }) => {
-    const { model, emojiList, onFace, convType } = params;
+    const { model, emojiList, onFace, convType, comType } = params;
     if (model.modelType !== 'message') {
       return;
     }
@@ -231,7 +233,10 @@ export function useMessageLongPressActions(
           });
         },
       });
-      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+      if (
+        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
+        comType !== 'thread'
+      ) {
         initItems.push({
           name: tr('_uikit_chat_list_long_press_menu_report'),
           isHigh: false,
@@ -254,11 +259,12 @@ export function useMessageLongPressActions(
         },
       });
       if (
-        msgModel.msg.body.type === ChatMessageType.TXT ||
-        msgModel.msg.body.type === ChatMessageType.VOICE ||
-        msgModel.msg.body.type === ChatMessageType.IMAGE ||
-        msgModel.msg.body.type === ChatMessageType.VIDEO ||
-        msgModel.msg.body.type === ChatMessageType.FILE
+        (msgModel.msg.body.type === ChatMessageType.TXT ||
+          msgModel.msg.body.type === ChatMessageType.VOICE ||
+          msgModel.msg.body.type === ChatMessageType.IMAGE ||
+          msgModel.msg.body.type === ChatMessageType.VIDEO ||
+          msgModel.msg.body.type === ChatMessageType.FILE) &&
+        comType !== 'thread'
       ) {
         if (
           msgModel.msg.status === ChatMessageStatus.SUCCESS &&

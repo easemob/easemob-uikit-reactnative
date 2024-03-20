@@ -16,7 +16,6 @@ export function Split() {
   console.log('test:zuoyu:Utils', list);
   const List = () => {
     return list.map((item, index) => {
-      console.log('test:zuoyu:', item, index, list.length);
       if (item.length === 0) {
         if (index !== list.length - 1) {
           return (

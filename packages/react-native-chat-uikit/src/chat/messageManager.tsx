@@ -364,7 +364,10 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
           this.emitAttachmentProgressChanged(msg);
         }
       },
-      onError: (localMsgId, _error) => {
+      onError: (localMsgId, error) => {
+        if (error) {
+          console.warn('dev:downloadAttachment:error', error);
+        }
         const isExisted = this._downloadList.get(localMsgId);
         if (isExisted) {
           const msg = { ...isExisted.msg } as ChatMessage;

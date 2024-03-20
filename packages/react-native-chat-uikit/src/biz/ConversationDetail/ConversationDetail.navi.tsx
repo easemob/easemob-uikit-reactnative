@@ -129,7 +129,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
         }
       } else if (comType === 'thread') {
         if (selectMode === 'common') {
-          ret.iconNameList.push('ellipsis');
+          ret.iconNameList.push('ellipsis_vertical');
           ret.onClickedList.push(() => {
             onClickedThreadMore?.();
           });

@@ -116,6 +116,7 @@ export function useMessageList(
     firstMessage,
     onClickedEditThreadName,
     onClickedLeaveThread,
+    onClickedDestroyThread,
     onClickedOpenThreadMemberList,
     onClickedMultiSelected,
     selectType,
@@ -127,7 +128,7 @@ export function useMessageList(
   const inverted = React.useRef(
     comType === 'chat' || comType === 'search' ? true : false
   ).current;
-  console.log('test:zuoyu:useMessageList', props);
+  // console.log('test:zuoyu:useMessageList', props);
 
   const enableRefresh =
     comType === 'chat' ||
@@ -874,6 +875,7 @@ export function useMessageList(
 
   const onUpdateMessageToUI = React.useCallback(
     (msg: ChatMessage, fromType: 'send' | 'recv') => {
+      console.log('test:zuoyu:onUpdateMessageToUI:', msg);
       const isExisted = dataRef.current.find((d) => {
         if (d.model.modelType === 'message') {
           const msgModel = d.model as MessageModel;
@@ -986,15 +988,27 @@ export function useMessageList(
         onClickedLeaveThread(threadId);
       } else {
         if (thread) {
-          if (thread?.owner === im.userId) {
-            im.destroyThread({ threadId: thread.threadId });
-          } else {
-            im.leaveThread({ threadId: thread.threadId });
-          }
+          im.leaveThread({ threadId: thread.threadId });
         }
       }
     },
     [im, onClickedLeaveThread, thread]
+  );
+
+  const _onClickedDestroyThread = React.useCallback(
+    (threadId: string) => {
+      console.log('test:zuoyu:_onClickedDestroyThread', threadId);
+      if (onClickedDestroyThread) {
+        onClickedDestroyThread(threadId);
+      } else {
+        if (thread) {
+          if (thread?.owner === im.userId) {
+            im.destroyThread({ threadId: thread.threadId });
+          }
+        }
+      }
+    },
+    [im, onClickedDestroyThread, thread]
   );
 
   const _onClickedEditThreadName = React.useCallback(
@@ -1274,15 +1288,23 @@ export function useMessageList(
                 onFace,
                 convId,
                 convType,
+                comType,
               });
             } else {
-              onShowMessageLongPressActions({ id, model, convId, convType });
+              onShowMessageLongPressActions({
+                id,
+                model,
+                convId,
+                convType,
+                comType,
+              });
             }
           });
         }
       }
     },
     [
+      comType,
       convId,
       convType,
       getEmojiState,
@@ -1497,6 +1519,26 @@ export function useMessageList(
                 modelType: 'history',
                 msg: msg,
                 checked: selectType === 'multi' ? false : undefined,
+              },
+              containerStyle: getStyle(),
+            },
+            inverted === true ? 'bottom' : 'bottom'
+          );
+        } else {
+          onAddDataToUI(
+            {
+              id: msg.msgId.toString(),
+              model: {
+                userId: msg.from,
+                userAvatar: im.getRequestData(msg.from)?.avatar,
+                userName: im.getRequestData(msg.from)?.name,
+                modelType: 'message',
+                layoutType: msg.from === im.userId ? 'right' : 'left',
+                msg: msg,
+                quoteMsg: quoteMsg,
+                thread: threadMsg,
+                checked: selectType === 'multi' ? false : undefined,
+                isHightBackground: isHigh !== undefined ? isHigh : undefined,
               },
               containerStyle: getStyle(),
             },
@@ -1733,7 +1775,7 @@ export function useMessageList(
             //   afterMsgIdRef.current
             // );
             // msgs.forEach((item) => {
-            //   console.log('test:zuoyu:msgs:', item.msgId, item.serverTime);
+            //   console.log('test:zuoyu:msgs:', item.msgId, item.serverTime, item);
             // });
 
             if (includeStartId && startId.length > 0) {
@@ -2784,6 +2826,7 @@ export function useMessageList(
               thread,
               onClickedEditThreadName: _onClickedEditThreadName,
               onClickedLeaveThread: _onClickedLeaveThread,
+              onClickedDestroyThread: _onClickedDestroyThread,
               onClickedOpenThreadMemberList,
             });
           }
@@ -2820,6 +2863,7 @@ export function useMessageList(
       };
     },
     [
+      _onClickedDestroyThread,
       _onClickedEditThreadName,
       _onClickedLeaveThread,
       addSendMessageToUI,
@@ -2978,8 +3022,17 @@ export function useMessageList(
       },
       onChatMessageThreadUpdated: (event: ChatMessageThreadEvent) => {
         const msgId = event.thread.msgId;
-        if (msgId && (comType === 'chat' || comType === 'search')) {
-          onUpdateMessageThreadToUI(msgId, event.thread);
+        if (msgId) {
+          if (comType === 'chat' || comType === 'search') {
+            onUpdateMessageThreadToUI(msgId, event.thread);
+          } else if (comType === 'thread') {
+            if (canAddNewMessageToUI()) {
+              if (event.thread.lastMessage) {
+                onAddMessageToUI(event.thread.lastMessage);
+                scrollToBottom();
+              }
+            }
+          }
         }
       },
       onChatMessageThreadDestroyed: (event: ChatMessageThreadEvent) => {
@@ -3001,6 +3054,9 @@ export function useMessageList(
     onRemoveMessageThreadToUI,
     updateMessageEmojiToUI,
     comType,
+    canAddNewMessageToUI,
+    onAddMessageToUI,
+    scrollToBottom,
   ]);
 
   React.useEffect(() => {

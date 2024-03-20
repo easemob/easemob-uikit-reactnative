@@ -3,7 +3,6 @@ import { StyleSheet, View } from 'react-native';
 import {
   CmnButton,
   Container,
-  getPropValueFromStyleT,
   useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-uikit';
@@ -18,19 +17,7 @@ export function Test1() {
         radiusType={'small'}
         contentType={'only-text'}
         text={'test'}
-        onPress={() => {
-          console.log(
-            'test:zuoyu:',
-            getPropValueFromStyleT(styles.test1, 'display')
-          );
-          console.log(
-            'test:zuoyu:',
-            getPropValueFromStyleT(
-              [styles.test1, styles.test2],
-              'backgroundColor'
-            )
-          );
-        }}
+        onPress={() => {}}
       />
       <View style={styles.test1} />
       <View style={[styles.test1, styles.test2]} />

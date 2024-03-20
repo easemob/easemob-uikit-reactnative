@@ -37,7 +37,6 @@ export function AVSelectGroupParticipantScreen(props: Props) {
           navigation.goBack();
         }}
         onSelectResult={(data) => {
-          console.log('test:zuoyu:onSelectResult', data);
           navigation.navigate({
             name: 'ConversationDetail',
             params: {

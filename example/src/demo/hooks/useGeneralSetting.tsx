@@ -7,7 +7,7 @@ import {
   SingletonObjects,
 } from 'react-native-chat-uikit';
 
-import { appKey as gAppKey } from './const';
+import { appKey as gAppKey } from '../common/const';
 
 export function useGeneralSetting() {
   const [appTheme, setAppTheme] = React.useState<boolean | undefined>(
@@ -117,7 +117,7 @@ export function useGeneralSetting() {
     const res9 = await s.getData({ key: 'neutralSColor' });
     const releaseArea = getReleaseArea();
     return {
-      appTheme: res.value !== 'light',
+      appTheme: res.value ? res.value !== 'light' : false,
       appStyle: res2.value ?? (releaseArea === 'china' ? 'classic' : 'modern'),
       appLanguage: res4.value ?? 'zh-Hans',
       appPrimaryColor: res5.value ? +res5.value : presetPaletteColors.primary,
@@ -143,7 +143,7 @@ export function useGeneralSetting() {
         setAppNeutralSColor(res.appNeutralSColor);
       })
       .catch((e) => {
-        console.warn('test:zuoyu:useGeneralSetting:initParams:', e);
+        console.warn('dev:initParams:', e);
       });
   }, [initParams]);
 

@@ -119,7 +119,7 @@ export function Draggable2(props: DraggableProps) {
           containerStyle,
         ]}
         onLayout={(e) => {
-          console.log('test:zuoyu:e:', e.nativeEvent.layout);
+          console.log('dev:Draggable:e:', e.nativeEvent.layout);
         }}
       >
         {children}

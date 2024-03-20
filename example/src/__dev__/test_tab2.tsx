@@ -133,9 +133,7 @@ export function TestTab() {
             // width={300}
             headerPosition="down"
             initIndex={2}
-            onCurrentIndex={(index) => {
-              console.log('test:zuoyu:index', index);
-            }}
+            onCurrentIndex={() => {}}
           />
         </View>
       </PaletteContextProvider>
