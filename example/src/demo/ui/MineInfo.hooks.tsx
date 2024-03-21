@@ -7,6 +7,7 @@ import {
   type SimpleToastRef,
   useChatContext,
   useChatListener,
+  useConfigContext,
   useI18nContext,
   useLifecycle,
   useMineInfoActions,
@@ -38,6 +39,7 @@ export function useMineInfo(props: MineInfoProps) {
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
+  const { enablePresence } = useConfigContext();
   const { style } = useThemeContext();
   const { currentLanguage } = useI18nContext();
   const [value, onValueChange] = React.useState(
@@ -157,6 +159,7 @@ export function useMineInfo(props: MineInfoProps) {
     setLanguage,
     onClickedPersonInfo,
     onClickedAbout,
+    enablePresence,
   };
 }
 

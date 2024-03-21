@@ -147,6 +147,8 @@ export type UserData = {
      */
     groupId?: string;
   };
+
+  timestamp?: number;
 };
 
 /**
@@ -478,6 +480,11 @@ export interface UserServices {
   getUsersInfo(params: {
     userIds: string[];
     onResult: ResultCallback<UserData[]>;
+  }): void;
+
+  updateSelfInfo(params: {
+    self: UserData;
+    onResult: ResultCallback<void>;
   }): void;
 }
 

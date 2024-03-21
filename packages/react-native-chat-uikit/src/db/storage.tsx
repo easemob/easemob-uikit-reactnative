@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import type { ConversationModel } from '../chat';
+import type { ConversationModel, UserData } from '../chat';
 
 export class AsyncStorageBasic {
   prefix: string;
@@ -97,11 +97,43 @@ export class ConversationStorage extends AsyncStorageBasic {
     return [];
   }
 }
-export class ContactStorage extends AsyncStorageBasic {
+export class UserStorage extends AsyncStorageBasic {
   constructor(params: { appKey: string }) {
     super(params);
   }
   destructor() {
     super.destructor();
+  }
+  async setAllUser(list: UserData[]): Promise<boolean> {
+    const data = list.map((item) => {
+      return {
+        id: item.userId,
+        name: item.userName,
+        avatar: item.avatarURL,
+        timestamp: item.timestamp ?? Date.now(),
+      };
+    });
+    const ret = await this.setData({
+      key: `${this.prefix}/${this.useId}/user/allUser`,
+      value: JSON.stringify(data),
+    });
+    return ret.isOk;
+  }
+  async getAllUser(): Promise<UserData[]> {
+    const ret = await this.getData({
+      key: `${this.prefix}/${this.useId}/user/allUser`,
+    });
+    if (ret.value) {
+      const data = JSON.parse(ret.value);
+      return data.map((item: any) => {
+        return {
+          userId: item.id,
+          userName: item.name,
+          avatarURL: item.avatar,
+          timestamp: item.timestamp,
+        } as UserData;
+      });
+    }
+    return [];
   }
 }

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { ChatPushConfig } from 'react-native-chat-sdk';
 import {
+  AsyncStorageBasic,
+  SingletonObjects,
   UIKitError,
   useAlertContext,
   useChatContext,
@@ -8,7 +10,7 @@ import {
   useToastViewContext,
 } from 'react-native-chat-uikit';
 
-import { fcmSenderId } from '../common/const';
+import { appKey as gAppKey, fcmSenderId } from '../common/const';
 import { requestFcmToken } from '../common/fcm';
 import { RequestLoginResult, RequestResult, RestApi } from '../common/rest.api';
 
@@ -50,6 +52,40 @@ export function useLogin() {
       });
   }, [im.client]);
 
+  const saveSelfInfo = React.useCallback((data: RequestLoginResult) => {
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    s.setData({
+      key: 'self',
+      value: JSON.stringify({
+        id: data.phoneNumber,
+        name: data.chatUserName,
+        avatar: data.avatarUrl,
+      }),
+    });
+  }, []);
+
+  const getSelfInfo = React.useCallback(async () => {
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    const res = await s.getData({ key: 'self' });
+    if (res.value) {
+      console.log('test:zuoyu:res:', res.value);
+      try {
+        return JSON.parse(res.value) as {
+          id: string;
+          name: string;
+          avatar: string;
+        };
+      } catch (error) {
+        return undefined;
+      }
+    }
+    return undefined;
+  }, []);
+
   const loginAction = React.useCallback(
     async (params: {
       id: string;
@@ -62,12 +98,15 @@ export function useLogin() {
         do {
           const res = await RestApi.reqLogin({ phone: id, code: pass });
           if (res.isOk && res.value && res.value.code === 200) {
+            saveSelfInfo(res.value);
             const p = new Promise<{ isOk: boolean; error?: UIKitError }>(
               (resolve, reject) => {
                 im.login({
                   userId: res.value!.chatUserName,
                   userToken: res.value!.token,
                   usePassword: false,
+                  userAvatarURL: res.value?.avatarUrl,
+                  userName: res.value?.chatUserName,
                   result: (rres) => {
                     if (rres.isOk) {
                       resolve(rres);
@@ -92,7 +131,7 @@ export function useLogin() {
         onResult?.({ isOk: false });
       }
     },
-    [im, requestUpdatePushToken]
+    [im, requestUpdatePushToken, saveSelfInfo]
   );
 
   const autoLoginAction = React.useCallback(
@@ -101,8 +140,11 @@ export function useLogin() {
       try {
         do {
           const p = new Promise<{ isOk: boolean; error?: UIKitError }>(
-            (resolve, reject) => {
+            async (resolve, reject) => {
+              const ret = await getSelfInfo();
               im.autoLogin({
+                userAvatarURL: ret?.avatar,
+                userName: ret?.name,
                 result: (res) => {
                   if (res.isOk) {
                     resolve(res);
@@ -125,7 +167,7 @@ export function useLogin() {
         onResult?.({ isOk: false });
       }
     },
-    [im, requestUpdatePushToken]
+    [getSelfInfo, im, requestUpdatePushToken]
   );
 
   return {
@@ -136,5 +178,7 @@ export function useLogin() {
     requestUpdatePushToken,
     loginAction,
     autoLoginAction,
+    saveSelfInfo,
+    getSelfInfo,
   };
 }

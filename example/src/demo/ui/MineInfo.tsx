@@ -40,6 +40,7 @@ export function MineInfo(props: MineInfoProps) {
     userState,
     onClickedPersonInfo,
     onClickedAbout,
+    enablePresence,
   } = useMineInfo(props);
   const { cornerRadius } = useThemeContext();
   const { input } = cornerRadius;
@@ -125,55 +126,60 @@ export function MineInfo(props: MineInfoProps) {
       {/* <View style={{ flexGrow: 1 }} /> */}
 
       <ScrollView style={{ flex: 1 }}>
-        <ListItem
-          header={
-            <View
-              style={{
-                paddingHorizontal: 16,
-                height: 26,
-                justifyContent: 'center',
-              }}
-            >
-              <Text
-                textType={'small'}
-                paletteType={'title'}
-                style={{ color: getColor('t3') }}
+        {enablePresence === true ? (
+          <ListItem
+            header={
+              <View
+                style={{
+                  paddingHorizontal: 16,
+                  height: 26,
+                  justifyContent: 'center',
+                }}
               >
-                {tr('_demo_info_state_set')}
-              </Text>
-            </View>
-          }
-          onClicked={onClickedState}
-          containerStyle={{ paddingHorizontal: 16 }}
-          LeftName={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon
-                name={mineInfo[5]!}
-                style={{ height: 28, width: 28, borderRadius: 4 }}
-              />
-              <View style={{ width: 8 }} />
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('_demo_info_online_state')}
-              </Text>
-            </View>
-          }
-          RightIcon={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                textType={'medium'}
-                paletteType={'label'}
-                style={{ color: getColor('t3') }}
-              >
-                {tr(userState)}
-              </Text>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
-            </View>
-          }
-        />
+                <Text
+                  textType={'small'}
+                  paletteType={'title'}
+                  style={{ color: getColor('t3') }}
+                >
+                  {tr('_demo_info_state_set')}
+                </Text>
+              </View>
+            }
+            onClicked={onClickedState}
+            containerStyle={{ paddingHorizontal: 16 }}
+            LeftName={
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Icon
+                  name={mineInfo[5]!}
+                  style={{ height: 28, width: 28, borderRadius: 4 }}
+                />
+                <View style={{ width: 8 }} />
+                <Text
+                  textType={'medium'}
+                  paletteType={'title'}
+                  style={{ color: getColor('fg') }}
+                >
+                  {tr('_demo_info_online_state')}
+                </Text>
+              </View>
+            }
+            RightIcon={
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text
+                  textType={'medium'}
+                  paletteType={'label'}
+                  style={{ color: getColor('t3') }}
+                >
+                  {tr(userState)}
+                </Text>
+                <Icon
+                  name={'chevron_right'}
+                  style={{ height: 20, width: 20 }}
+                />
+              </View>
+            }
+          />
+        ) : null}
 
         <ListItem
           onClicked={onClickedPersonInfo}

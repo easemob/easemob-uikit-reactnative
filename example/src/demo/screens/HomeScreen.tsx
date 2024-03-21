@@ -500,8 +500,10 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
         userId={userId}
         onClickedLogout={() => {
           if (demoType === 3) {
+            im.logout({});
             navigation.replace('Login', {});
           } else if (demoType === 4) {
+            im.logout({});
             navigation.replace('LoginV2', {});
           }
         }}

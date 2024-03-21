@@ -3,21 +3,23 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 import {
-  Avatar,
   getFileDirectory,
   Icon,
   ListItem,
   Services,
   SingleLineText,
+  StatusAvatar,
   Text,
   timeoutTask,
   TopNavigationBar,
+  useChatContext,
   useColors,
   useI18nContext,
   usePaletteContext,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { RestApi } from '../common/rest.api';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
@@ -41,11 +43,21 @@ export function PersonInfoScreen(props: Props) {
     },
   });
   const [_remark, setRemark] = React.useState('');
-  const [_avatar] = React.useState('');
+  const [_avatar, setAvatar] = React.useState<string | undefined>(undefined);
+  const im = useChatContext();
 
   const goBack = (data: any) => {
     // !!! warning: react navigation
     setRemark(data);
+    const ret = im.user(im.userId);
+    if (ret) {
+      im.updateSelfInfo({
+        self: { ...ret, userName: data },
+        onResult: (res) => {
+          console.log('test:zuoyu:res:', res);
+        },
+      });
+    }
   };
   const testRef = React.useRef<(data: any) => void>(goBack);
 
@@ -75,12 +87,35 @@ export function PersonInfoScreen(props: Props) {
             size: { width: w, height: h },
             resizeMode: 'cover',
           })
-            .then((res) => {
+            .then(async (res) => {
               console.log(
                 'test:zuoyu:cropImage:res',
                 res,
                 getFileDirectory(res.path)
               );
+
+              // todo: upload to server
+              // todo: update user info
+              const user = im.user(im.userId);
+              if (user) {
+                const ret = await RestApi.reqUploadAvatar({
+                  userId: user.userId,
+                  localAvatarFile: res.path,
+                });
+                if (ret.isOk && ret.value?.avatarUrl) {
+                  im.updateSelfInfo({
+                    self: {
+                      userId: user.userId,
+                      userName: user.userName,
+                      avatarURL: ret.value?.avatarUrl,
+                    },
+                    onResult: (res) => {
+                      console.warn('test:zuoyu:cropImage:res', res);
+                    },
+                  });
+                }
+              }
+
               //   Services.ms.deleteCustomDir(getFileDirectory(res.path));
             })
             .catch((e) => {
@@ -106,7 +141,14 @@ export function PersonInfoScreen(props: Props) {
     });
   };
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    const self = im.user(im.userId);
+    console.log('test:zuoyu:self:', self);
+    if (self) {
+      if (self.userName) setRemark(self.userName);
+      if (self.avatarURL) setAvatar(self.avatarURL);
+    }
+  }, [im]);
 
   return (
     <View
@@ -168,7 +210,7 @@ export function PersonInfoScreen(props: Props) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Avatar size={40} />
+              <StatusAvatar size={40} disableStatus={true} url={_avatar} />
               <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
             </View>
           }

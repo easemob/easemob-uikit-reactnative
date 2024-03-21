@@ -8,7 +8,7 @@ import {
   useChatListener,
 } from '../../chat';
 import { useConfigContext } from '../../config';
-import { useColors, useGetStyleProps } from '../../hook';
+import { useColors, useForceUpdate, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { DefaultIconImage, DefaultIconImageProps } from '../../ui/Image';
 import type { StatusType } from '../types';
@@ -71,12 +71,22 @@ export type StatusAvatarProps = AvatarProps & {
   onClicked?: () => void;
   statusContainerStyle?: StyleProp<ViewStyle>;
   statusStyle?: StyleProp<ViewStyle>;
+  disableStatus?: boolean;
 };
 export function StatusAvatar(props: StatusAvatarProps) {
-  const { userId, onClicked, statusContainerStyle, statusStyle, ...others } =
-    props;
+  const {
+    userId,
+    onClicked,
+    statusContainerStyle,
+    statusStyle,
+    url,
+    disableStatus = false,
+    ...others
+  } = props;
+  const urlRef = React.useRef<string | undefined>(url);
   const [status, setStatus] = React.useState<string>();
   const { onChangeStatus, enablePresence } = useConfigContext();
+  const { updater } = useForceUpdate();
   const im = useChatContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -127,8 +137,18 @@ export function StatusAvatar(props: StatusAvatarProps) {
           }
         }
       },
+      onFinished: (params) => {
+        if (params.event === 'updateSelfInfo') {
+          const ret = im.user(im.userId);
+          console.log('test:zuoyu:updateSelfInfo', params, ret);
+          if (ret && ret.avatarURL && ret.avatarURL.length > 0) {
+            urlRef.current = ret.avatarURL;
+            updater();
+          }
+        }
+      },
     } as ChatServiceListener;
-  }, [onChangeStatus, userId]);
+  }, [im, onChangeStatus, updater, userId]);
   useChatListener(listener);
 
   React.useEffect(() => {
@@ -158,16 +178,23 @@ export function StatusAvatar(props: StatusAvatarProps) {
     };
   }, [im, onChangeStatus, userId]);
 
+  React.useEffect(() => {
+    if (url !== urlRef.current) {
+      urlRef.current = url;
+      updater();
+    }
+  }, [updater, url]);
+
   if (enablePresence !== true) {
     return <Avatar {...others} />;
   }
 
   return (
     <Pressable style={{ overflow: 'hidden' }} onPress={onClicked}>
-      <Avatar {...others} />
+      <Avatar url={urlRef.current} {...others} />
       {onChangeStatus ? (
         onChangeStatus?.(status as StatusType)
-      ) : (
+      ) : disableStatus === false ? (
         <View
           style={[
             {
@@ -196,7 +223,7 @@ export function StatusAvatar(props: StatusAvatarProps) {
             ]}
           />
         </View>
-      )}
+      ) : null}
     </Pressable>
   );
 }

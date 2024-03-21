@@ -291,6 +291,8 @@ export class ChatServiceImpl
       console.log('dev:login:finish:1', params);
 
       result?.({ isOk: true });
+
+      this.sendFinished({ event: 'login', extra: { isOk: true } });
     } catch (error: any) {
       if (error?.code === 200) {
         this._convStorage?.setCurrentId(userId);
@@ -319,6 +321,8 @@ export class ChatServiceImpl
           desc: this._fromChatError(error),
         }),
       });
+
+      this.sendFinished({ event: 'login', extra: { isOk: false } });
     }
   }
   async logout(params: {
@@ -331,6 +335,7 @@ export class ChatServiceImpl
       params.result?.({ isOk: true });
       this._user = undefined;
       this.reset();
+      this.sendFinished({ event: 'logout', extra: { isOk: true } });
     } catch (error) {
       params.result?.({
         isOk: false,
@@ -339,6 +344,7 @@ export class ChatServiceImpl
           desc: this._fromChatError(error),
         }),
       });
+      this.sendFinished({ event: 'logout', extra: { isOk: false } });
     }
   }
   async autoLogin(params: {
@@ -348,6 +354,7 @@ export class ChatServiceImpl
   }): Promise<void> {
     if (this.client.options?.autoLogin !== true) {
       params.result?.({ isOk: false });
+      this.sendFinished({ event: 'autoLogin', extra: { isOk: false } });
       return;
     }
     this.tryCatch({
@@ -373,8 +380,10 @@ export class ChatServiceImpl
           this.client.getCurrentUsername();
 
           params.result?.({ isOk: true });
+          this.sendFinished({ event: 'autoLogin', extra: { isOk: true } });
         } else {
           params.result?.({ isOk: false });
+          this.sendFinished({ event: 'autoLogin', extra: { isOk: false } });
         }
       },
     });
@@ -780,7 +789,7 @@ export class ChatServiceImpl
                 .map((v) => v.id),
             ],
           ]),
-          result: (data, error) => {
+          result: async (data, error) => {
             if (data) {
               data.forEach((values: DataModel[]) => {
                 values.map((value) => {
@@ -791,6 +800,17 @@ export class ChatServiceImpl
                   }
                 });
               });
+
+              const group = data.get('group');
+              if (group === undefined || group.length === 0) {
+                const ret = await this.client.groupManager.getJoinedGroups();
+                ret.forEach((v) => {
+                  const conv = this._dataList.get(v.groupId);
+                  if (conv) {
+                    conv.name = conv.name ?? v.groupName;
+                  }
+                });
+              }
               resolve();
             } else {
               reject(error);
@@ -2289,6 +2309,9 @@ export class ChatServiceImpl
     this.tryCatch({
       promise: this.client.userManager.updateOwnUserInfo(p),
       event: 'updateSelfInfo',
+      onFinished: () => {
+        this.setUser({ users: [{ ...this.user, ...self }] });
+      },
     });
   }
 
