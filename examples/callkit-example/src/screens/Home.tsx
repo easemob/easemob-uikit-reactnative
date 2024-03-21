@@ -200,7 +200,6 @@ const ContactListMemo = React.memo((props: ContactListProps) => {
               userId: i.userId,
               userName: i.userName,
               onChecked: (checked: boolean) => {
-                console.log('test:zuoyu:onChecked:', checked);
                 user.isSelected = checked;
                 setData([...data]);
                 return true;

@@ -236,8 +236,14 @@ export function App() {
 
       // await SplashScreen?.hideAsync?.();
       if (demoType === 4) {
-        setTimeout(() => {
-          rootRef.navigate('LoginV2', {});
+        setTimeout(async () => {
+          const ret = await imRef.current?.loginState();
+          console.log('dev:loginState:', ret);
+          if (ret === 'logged') {
+            rootRef.navigate('Home', {});
+          } else {
+            rootRef.navigate('LoginV2', {});
+          }
         }, 1000);
       }
     },

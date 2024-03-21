@@ -7,6 +7,7 @@ import {
   useChatListener,
 } from 'react-native-chat-uikit';
 
+import { useLogin } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 const account = require('../../env').account as {
@@ -43,6 +44,7 @@ export function LoginScreen(props: Props) {
   const [id, setId] = React.useState(gId);
   const [isPass, setIsPass] = React.useState(gIsPass);
   const [token, setToken] = React.useState(gToken);
+  const { requestUpdatePushToken } = useLogin();
 
   const onToken = (t: string) => {
     gToken = t;
@@ -124,6 +126,7 @@ export function LoginScreen(props: Props) {
                 }
                 if (demoType === 3) {
                   if (isOk === true) {
+                    requestUpdatePushToken();
                     navigation.replace('Home', {});
                   }
                 }

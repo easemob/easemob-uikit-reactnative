@@ -58,7 +58,7 @@ export function createStringSetEn(): StringSet {
     '_demo_info_logout': 'Logout',
 
     '_demo_alert_server_setting_save_title':
-      'Need to restart the app after saving',
+      'Restart the application after saving',
 
     'edit_group_name': 'Edit group name',
     'edit_group_description': 'Edit group description',

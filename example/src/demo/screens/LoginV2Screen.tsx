@@ -19,18 +19,14 @@ import {
   SingleLineText,
   Text,
   TextInput,
-  useAlertContext,
-  useChatContext,
   useColors,
   useI18nContext,
   usePaletteContext,
-  useSimpleToastContext,
   useThemeContext,
-  useToastViewContext,
 } from 'react-native-chat-uikit';
 
 import { main_bg } from '../common/assets';
-import { RequestLoginResult, RequestResult, RestApi } from '../common/rest.api';
+import { useLogin } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type CaptchaState = 'init' | 'sending' | 'sent' | 'resend' | 'error';
@@ -76,8 +72,7 @@ export function LoginV2Screen(props: Props) {
       dark: colors.neutral[8],
     },
   });
-  const { onLogin, getToastRef } = useLoginV2Screen();
-  const im = useChatContext();
+  const { getToastRef, loginAction } = useLogin();
   const timerRef = React.useRef<NodeJS.Timeout | null>(null);
   const countRef = React.useRef(0);
 
@@ -160,6 +155,35 @@ export function LoginV2Screen(props: Props) {
       countRef.current = 0;
     }, 1000);
   }, [clearTimer]);
+
+  const onClickedLogin = React.useCallback(() => {
+    if (check === false) {
+      getToastRef().show({ message: tr('_demo_login_tip_reason_2') });
+      return;
+    }
+    if (validPhone(id) === false) {
+      getToastRef().show({ message: tr('_demo_login_tip_reason_1') });
+      return;
+    }
+    if (password.length === 0) {
+      getToastRef().show({ message: tr('_demo_login_tip_reason_3') });
+      return;
+    }
+    setIsLoading(true);
+    loginAction({
+      id,
+      pass: password,
+      onResult: (res) => {
+        setIsLoading(false);
+        if (res.isOk) {
+          console.log('login success 2');
+          navigation.replace('Home', {});
+        } else {
+          console.log('login failed 2:');
+        }
+      },
+    });
+  }, [check, getToastRef, id, loginAction, navigation, password, tr]);
 
   return (
     <ImageBackground
@@ -329,44 +353,7 @@ export function LoginV2Screen(props: Props) {
           contentType={'only-text'}
           text={tr('_demo_login_button')}
           style={{ flex: 1, height: 46 }}
-          onPress={() => {
-            if (check === false) {
-              getToastRef().show({ message: tr('_demo_login_tip_reason_2') });
-              return;
-            }
-            if (validPhone(id) === false) {
-              getToastRef().show({ message: tr('_demo_login_tip_reason_1') });
-              return;
-            }
-            if (password.length === 0) {
-              getToastRef().show({ message: tr('_demo_login_tip_reason_3') });
-              return;
-            }
-            setIsLoading(true);
-            onLogin(id, password, (res) => {
-              if (res.isOk && res.value && res.value.code === 200) {
-                console.log('login success');
-                im.login({
-                  userId: res.value.chatUserName,
-                  userToken: res.value.token,
-                  usePassword: false,
-                  result: (rres) => {
-                    if (rres.isOk) {
-                      setIsLoading(false);
-                      console.log('login success 2');
-                      navigation.replace('Home', {});
-                    } else {
-                      setIsLoading(false);
-                      console.log('login failed 2:', rres.error);
-                    }
-                  },
-                });
-              } else {
-                setIsLoading(false);
-                console.log('login failed:', res.error);
-              }
-            });
-          }}
+          onPress={onClickedLogin}
         />
       </View>
 
@@ -487,28 +474,4 @@ export function LoginV2Screen(props: Props) {
       ) : null}
     </ImageBackground>
   );
-}
-
-function useLoginV2Screen() {
-  const { getSimpleToastRef } = useSimpleToastContext();
-  const { getToastViewRef } = useToastViewContext();
-  const { getAlertRef } = useAlertContext();
-  const onLogin = React.useCallback(
-    (
-      id: string,
-      pass: string,
-      onResult: (result: RequestResult<RequestLoginResult, any>) => void
-    ) => {
-      RestApi.reqLogin({ phone: id, code: pass }).then((res) => {
-        onResult(res);
-      });
-    },
-    []
-  );
-  return {
-    onLogin,
-    getToastRef: getSimpleToastRef,
-    getToastViewRef,
-    getAlertRef,
-  };
 }

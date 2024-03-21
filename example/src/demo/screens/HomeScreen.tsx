@@ -8,17 +8,14 @@ import { View } from 'react-native';
 import {
   Badges,
   BottomTabBar,
-  ChatServiceListener,
   ContactList,
   ConversationList,
   DataModel,
-  DisconnectReasonType,
   EventServiceListener,
   TabPage,
   TabPageRef,
   timeoutTask,
   useChatContext,
-  useChatListener,
   useColors,
   useDispatchContext,
   useI18nContext,
@@ -26,6 +23,7 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useLogin } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 import { MineInfo } from '../ui/MineInfo';
 
@@ -477,28 +475,24 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
     useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
   const im = useChatContext();
   const [userId, setUserId] = React.useState<string>();
+  const { autoLoginAction } = useLogin();
 
-  useChatListener(
-    React.useMemo(() => {
-      return {
-        onConnected: (): void => {
+  const s = React.useCallback(async () => {
+    const autoLogin = im.client.options?.autoLogin ?? false;
+    if (autoLogin === true) {
+      autoLoginAction({
+        onResult: () => {
           setUserId(im.userId);
         },
-        onDisconnected: (reason: DisconnectReasonType): void => {
-          if (reason === DisconnectReasonType.others) {
-            return;
-          }
-          setUserId(undefined);
-        },
-      } as ChatServiceListener;
-    }, [im.userId])
-  );
-
-  React.useEffect(() => {
-    if (im.userId) {
+      });
+    } else {
       setUserId(im.userId);
     }
-  }, [im.userId]);
+  }, [autoLoginAction, im]);
+
+  React.useEffect(() => {
+    s().catch();
+  }, [s]);
 
   if (userId) {
     return (
@@ -507,6 +501,8 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
         onClickedLogout={() => {
           if (demoType === 3) {
             navigation.replace('Login', {});
+          } else if (demoType === 4) {
+            navigation.replace('LoginV2', {});
           }
         }}
         onClickedCommon={() => {

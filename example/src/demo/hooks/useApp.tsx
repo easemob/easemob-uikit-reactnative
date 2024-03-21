@@ -49,6 +49,7 @@ export function useApp() {
       ? ('Login' as RootParamsName)
       : ('Splash' as RootParamsName)
   ).current;
+  const autoLogin = React.useRef(demoType === 4).current;
   const palette = usePresetPalette();
   const paletteRef = React.useRef(palette);
   const ra = getReleaseArea();
@@ -82,7 +83,7 @@ export function useApp() {
     return {
       appKey: gAppKey,
       debugModel: isDevMode,
-      autoLogin: false,
+      autoLogin: autoLogin,
       autoAcceptGroupInvitation: true,
       requireAck: true,
       requireDeliveryAck: true,
@@ -98,7 +99,7 @@ export function useApp() {
             })
           : undefined,
     } as ChatOptionsType;
-  }, [enableDNSConfigRef, imPortRef, imServerRef]);
+  }, [autoLogin]);
 
   const onRequestMultiData = React.useCallback(
     (params: {
@@ -214,6 +215,10 @@ export function useApp() {
       _target?: string,
       _usernames?: Array<string>
     ): void => {},
+    onConnected: () => {
+      console.log('dev:onConnected:');
+    },
+    onDisconnected: () => {},
   });
 
   React.useEffect(() => {

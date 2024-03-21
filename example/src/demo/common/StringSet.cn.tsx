@@ -53,7 +53,7 @@ export function createStringSetCn(): StringSet {
     '_demo_server_setting_input_port_tip': '输入端口号',
     '_demo_server_setting_input_rest_server_tip': '输入Rest服务器地址',
 
-    '_demo_alert_server_setting_save_title': '保存后需要重启应用',
+    '_demo_alert_server_setting_save_title': '保存设置后重启应用生效',
 
     '_demo_info_logout': '退出登录',
 
