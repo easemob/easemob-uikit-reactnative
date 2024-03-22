@@ -7,6 +7,7 @@ import {
   getPinyinFirsLetter,
   HighText,
   SingletonObjects,
+  UIKitError,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -146,6 +147,16 @@ export function TestSingleton() {
   return <></>;
 }
 
+export function TestErrorType() {
+  const e = new UIKitError({ code: 10000, desc: 'test', tag: 'hh' });
+  const isError = e instanceof UIKitError;
+  console.log('test:zuoyu:isError:', isError);
+  const e2 = { code: 1, desc: 'test', tag: 'hh' };
+  const isError2 = e2 instanceof UIKitError;
+  console.log('test:zuoyu:isError2:', isError2);
+  return <></>;
+}
+
 export default function TestUtils() {
   return (
     <Container
@@ -155,7 +166,7 @@ export default function TestUtils() {
         autoLogin: false,
       }}
     >
-      <TestSingleton />
+      <TestErrorType />
     </Container>
   );
 }

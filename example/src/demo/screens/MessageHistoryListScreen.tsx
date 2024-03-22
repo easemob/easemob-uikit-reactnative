@@ -52,7 +52,6 @@ export function MessageHistoryListScreen(props: Props) {
       //   } as ChatMessageStatusCallback)
       //   .then()
       //   .catch((e) => {
-      //     console.log('test:zuoyu:e:', e);
       //   });
     }
   }, []);

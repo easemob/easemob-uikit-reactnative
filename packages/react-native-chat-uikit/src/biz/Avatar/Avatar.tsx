@@ -178,14 +178,14 @@ export function StatusAvatar(props: StatusAvatarProps) {
   }, [im, onChangeStatus, userId]);
 
   React.useEffect(() => {
-    if (url !== urlRef.current) {
+    if (url !== urlRef.current && url && url.length > 0) {
       urlRef.current = url;
       updater();
     }
   }, [updater, url]);
 
   if (enablePresence !== true) {
-    return <Avatar {...others} />;
+    return <Avatar url={urlRef.current} {...others} />;
   }
 
   return (

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import {
   Alert,
   BottomSheetNameMenu,
@@ -31,7 +31,6 @@ export function MineInfo(props: MineInfoProps) {
     menuRef,
     toastRef,
     onRequestCloseMenu,
-    userSign,
     onClickedState,
     onClickedLogout,
     onClickedCommon,
@@ -41,6 +40,7 @@ export function MineInfo(props: MineInfoProps) {
     onClickedPersonInfo,
     onClickedAbout,
     enablePresence,
+    onCopyId,
   } = useMineInfo(props);
   const { cornerRadius } = useThemeContext();
   const { input } = cornerRadius;
@@ -104,21 +104,26 @@ export function MineInfo(props: MineInfoProps) {
           {userName ?? userId}
         </Text>
         <View style={{ height: 4 }} />
-        <Text
-          textType={'medium'}
-          paletteType={'label'}
-          style={{ color: getColor('t3') }}
+        <Pressable
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingTop: 4,
+          }}
+          onPress={onCopyId}
         >
-          {userSign}
-        </Text>
-        <View style={{ height: 4 }} />
-        <Text
-          textType={'small'}
-          paletteType={'label'}
-          style={{ color: getColor('t3') }}
-        >
-          {userId}
-        </Text>
+          <Text
+            textType={'small'}
+            paletteType={'label'}
+            style={{ color: getColor('t3') }}
+          >
+            {userId}
+          </Text>
+          <Icon
+            name={'doc_on_doc'}
+            style={{ width: 16, height: 16, tintColor: getColor('t3') }}
+          />
+        </Pressable>
       </View>
 
       <View style={{ height: 10 }} />

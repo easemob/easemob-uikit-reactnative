@@ -191,6 +191,10 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  NotificationSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
 };
 export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
@@ -391,6 +395,10 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   FeatureSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  NotificationSetting: {
     option: undefined,
     params: undefined,
   },

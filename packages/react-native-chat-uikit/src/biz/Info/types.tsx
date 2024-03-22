@@ -1,5 +1,6 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
+import type { ContactModel } from '../../chat';
 import type { BlockButtonProps } from '../../ui/Button';
 import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type { PropsWithBack, PropsWithNavigationBar } from '../types';
@@ -97,6 +98,13 @@ export type UserInfoProps = InfoProps & {
    * Add contact callback notification.
    */
   onAddContact?: (id: string) => void;
+
+  /**
+   * During the initialization phase, data is requested, and if not implemented, default data is used internally.
+   */
+  onRequestData?: (
+    id: string
+  ) => ContactModel | Promise<ContactModel> | undefined;
 };
 
 export type ContactInfoRef = {

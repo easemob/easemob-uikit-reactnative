@@ -120,7 +120,8 @@ export function FeatureSettingScreen(props: Props) {
                 <Switch
                   value={appTranslate}
                   onValueChange={onSetAppTranslate}
-                  style={{ height: 31, width: 51 }}
+                  height={31}
+                  width={51}
                 />
               ) : null}
             </View>
@@ -164,7 +165,8 @@ export function FeatureSettingScreen(props: Props) {
                 <Switch
                   value={appThread}
                   onValueChange={onSetAppThread}
-                  style={{ height: 31, width: 51 }}
+                  height={31}
+                  width={51}
                 />
               ) : null}
             </View>
@@ -208,7 +210,8 @@ export function FeatureSettingScreen(props: Props) {
                 <Switch
                   value={appReaction}
                   onValueChange={onSetAppReaction}
-                  style={{ height: 31, width: 51 }}
+                  height={31}
+                  width={51}
                 />
               ) : null}
             </View>
@@ -252,7 +255,8 @@ export function FeatureSettingScreen(props: Props) {
                 <Switch
                   value={appPresence}
                   onValueChange={onSetAppPresence}
-                  style={{ height: 31, width: 51 }}
+                  height={31}
+                  width={51}
                 />
               ) : null}
             </View>
@@ -296,7 +300,8 @@ export function FeatureSettingScreen(props: Props) {
                 <Switch
                   value={appAv}
                   onValueChange={onSetAppAv}
-                  style={{ height: 31, width: 51 }}
+                  height={31}
+                  width={51}
                 />
               ) : null}
             </View>

@@ -4,6 +4,7 @@ import {
   type AlertRef,
   type BottomSheetNameMenuRef,
   type ChatServiceListener,
+  Services,
   type SimpleToastRef,
   useChatContext,
   useChatListener,
@@ -31,9 +32,10 @@ export function useMineInfo(props: MineInfoProps) {
     onClickedAbout: propsOnClickedAbout,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
-  const [userName, setUserName] = React.useState(propsUserName);
+  const [userName, setUserName] = React.useState(
+    propsUserName && propsUserName.length > 0 ? propsUserName : undefined
+  );
   const [userAvatar, setUserAvatar] = React.useState(propsUserAvatar);
-  const [userSign, setUserSign] = React.useState<string>();
   const [userState, setUserState] = React.useState<UserState>('offline');
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
@@ -49,20 +51,31 @@ export function useMineInfo(props: MineInfoProps) {
     currentLanguage() === 'en' ? true : false
   );
   const im = useChatContext();
+  const { tr } = useI18nContext();
 
   useLifecycle(
     React.useCallback(
       (state: any) => {
         if (state === 'load') {
-          const self = im.user(userId);
-          if (self) {
-            setUserName(self.userName);
-            setUserSign('self.sign');
-            setUserAvatar(self.avatarURL);
+          if (im.userId) {
+            im.getUserInfo({
+              userId: im.userId,
+              onResult: (res) => {
+                if (res.isOk && res.value) {
+                  im.setUser({ users: [res.value] });
+                  setUserName(
+                    res.value.userName && res.value.userName.length > 0
+                      ? res.value.userName
+                      : undefined
+                  );
+                  setUserAvatar(res.value.avatarURL);
+                }
+              },
+            });
           }
         }
       },
-      [im, userId]
+      [im]
     )
   );
   const onDoNotDisturb = (value: boolean) => {
@@ -120,6 +133,13 @@ export function useMineInfo(props: MineInfoProps) {
     propsOnClickedAbout?.();
   }, [propsOnClickedAbout]);
 
+  const onCopyId = React.useCallback(() => {
+    Services.cbs.setString(userId);
+    toastRef.current.show({
+      message: tr('copy_success'),
+    });
+  }, [tr, userId]);
+
   const listener = React.useMemo(() => {
     return {
       onPresenceStatusChanged: (list: ChatPresence[]) => {
@@ -130,8 +150,19 @@ export function useMineInfo(props: MineInfoProps) {
           }
         }
       },
+      onFinished: (params) => {
+        if (params.event === 'updateSelfInfo') {
+          const ret = im.user(im.userId);
+          if (ret && ret.avatarURL && ret.avatarURL.length > 0) {
+            setUserAvatar(ret.avatarURL);
+          }
+          if (ret && ret.userName && ret.userName.length > 0) {
+            setUserName(ret.userName);
+          }
+        }
+      },
     } as ChatServiceListener;
-  }, [userId]);
+  }, [im, userId]);
   useChatListener(listener);
 
   return {
@@ -146,7 +177,6 @@ export function useMineInfo(props: MineInfoProps) {
     onRequestCloseMenu,
     alertRef,
     toastRef,
-    userSign,
     onClickedState,
     onClickedLogout,
     onClickedCommon,
@@ -160,6 +190,7 @@ export function useMineInfo(props: MineInfoProps) {
     onClickedPersonInfo,
     onClickedAbout,
     enablePresence,
+    onCopyId,
   };
 }
 

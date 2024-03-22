@@ -140,7 +140,8 @@ export function GeneralSettingScreen(props: Props) {
                 <Switch
                   value={appTheme}
                   onValueChange={onSetAppTheme}
-                  style={{ height: 31, width: 51 }}
+                  height={31}
+                  width={51}
                 />
               ) : null}
             </View>

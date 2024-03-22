@@ -43,6 +43,9 @@ export function useGeneralSetting() {
     undefined
   );
   const [appAv, setAppAv] = React.useState<boolean | undefined>(undefined);
+  const [appNotification, setAppNotification] = React.useState<
+    boolean | undefined
+  >(undefined);
 
   const onSetAppTheme = React.useCallback((value: boolean) => {
     setAppTheme(value);
@@ -108,6 +111,21 @@ export function useGeneralSetting() {
     });
     s.setData({ key: 'av', value: value ? 'enable' : 'disable' });
     DeviceEventEmitter.emit('_demo_emit_app_av', value ? 'enable' : 'disable');
+  }, []);
+
+  const onSetAppNotification = React.useCallback((value: boolean) => {
+    setAppNotification(value);
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    s.setData({
+      key: 'notification',
+      value: value ? 'enable' : 'disable',
+    });
+    DeviceEventEmitter.emit(
+      '_demo_emit_app_notification',
+      value ? 'enable' : 'disable'
+    );
   }, []);
 
   const onSetAppStyle = React.useCallback((value: string) => {
@@ -190,6 +208,7 @@ export function useGeneralSetting() {
     const res12 = await s.getData({ key: 'reaction' });
     const res13 = await s.getData({ key: 'presence' });
     const res14 = await s.getData({ key: 'av' });
+    const res15 = await s.getData({ key: 'notification' });
     const releaseArea = getReleaseArea();
     return {
       appTheme: res.value ? res.value !== 'light' : false,
@@ -198,6 +217,7 @@ export function useGeneralSetting() {
       appReaction: res12.value ? res12.value === 'enable' : false,
       appPresence: res13.value ? res13.value === 'enable' : false,
       appAv: res14.value ? res14.value === 'enable' : false,
+      appNotification: res15.value ? res15.value === 'enable' : false,
       appStyle: res2.value ?? (releaseArea === 'china' ? 'classic' : 'modern'),
       appLanguage: res4.value ?? 'zh-Hans',
       appPrimaryColor: res5.value ? +res5.value : presetPaletteColors.primary,
@@ -226,6 +246,7 @@ export function useGeneralSetting() {
         setAppReaction(res.appReaction);
         setAppPresence(res.appPresence);
         setAppAv(res.appAv);
+        setAppNotification(res.appNotification);
       })
       .catch((e) => {
         console.warn('dev:initParams:', e);
@@ -265,5 +286,7 @@ export function useGeneralSetting() {
     onSetAppPresence,
     appAv,
     onSetAppAv,
+    appNotification,
+    onSetAppNotification,
   };
 }

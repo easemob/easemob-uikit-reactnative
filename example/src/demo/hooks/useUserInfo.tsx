@@ -10,7 +10,7 @@ import { appKey as gAppKey } from '../common/const';
 export function useUserInfo() {
   const list = React.useRef<Map<string, UserData>>(new Map());
   const storage = SingletonObjects.getInstanceWithParams(UserStorage, {
-    appKey: `${gAppKey}/uikit/demo/user`,
+    appKey: gAppKey,
   });
   const arrayToList = React.useCallback((users: UserData[]) => {
     const list = new Map<string, UserData>();
@@ -25,13 +25,17 @@ export function useUserInfo() {
   const resetData = React.useCallback(() => {
     list.current.clear();
   }, []);
-  const getDataFromStorage = React.useCallback(async () => {
-    resetData();
-    const ret = await storage.getAllUser();
-    arrayToList(ret).forEach((value, key) => {
-      list.current.set(key, value);
-    });
-  }, [arrayToList, resetData, storage]);
+  const getDataFromStorage = React.useCallback(
+    async (userId: string) => {
+      resetData();
+      storage.setCurrentId(userId);
+      const ret = await storage.getAllUser();
+      arrayToList(ret).forEach((value, key) => {
+        list.current.set(key, value);
+      });
+    },
+    [arrayToList, resetData, storage]
+  );
   const updateDataToStorage = React.useCallback(() => {
     storage.setAllUser(listToArray(list.current));
   }, [listToArray, storage]);

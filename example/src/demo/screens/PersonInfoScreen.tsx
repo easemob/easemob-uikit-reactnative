@@ -80,22 +80,26 @@ export function PersonInfoScreen(props: Props) {
           let width = result[0]!.width ?? 100;
           let height = result[0]!.height ?? 100;
 
-          const w = Math.min(width, height);
-          const h = Math.min(width, height);
+          const w = Math.min(512, Math.min(width, height));
+          const h = Math.min(512, Math.min(width, height));
+
+          const x = width >= height ? -(height - width) / 2 : 0;
+          const y = height >= width ? -(width - height) / 2 : 0;
+          console.log('test:zuoyu:x:y:', x, y);
 
           ImageEditor.cropImage(result[0]!.uri, {
+            offset: { x: x, y: y },
             size: { width: w, height: h },
             resizeMode: 'cover',
           })
             .then(async (res) => {
               console.log(
                 'test:zuoyu:cropImage:res',
+                result[0]!.uri,
                 res,
                 getFileDirectory(res.path)
               );
 
-              // todo: upload to server
-              // todo: update user info
               const user = im.user(im.userId);
               if (user) {
                 const ret = await RestApi.reqUploadAvatar({
@@ -103,11 +107,12 @@ export function PersonInfoScreen(props: Props) {
                   localAvatarFile: res.path,
                 });
                 if (ret.isOk && ret.value?.avatarUrl) {
+                  const old = im.user(im.userId);
                   im.updateSelfInfo({
                     self: {
+                      ...old,
                       userId: user.userId,
-                      userName: user.userName,
-                      avatarURL: ret.value?.avatarUrl,
+                      avatarURL: ret.value.avatarUrl,
                     },
                     onResult: (res) => {
                       console.warn('test:zuoyu:cropImage:res', res);
@@ -143,7 +148,6 @@ export function PersonInfoScreen(props: Props) {
 
   React.useEffect(() => {
     const self = im.user(im.userId);
-    console.log('test:zuoyu:self:', self);
     if (self) {
       if (self.userName) setRemark(self.userName);
       if (self.avatarURL) setAvatar(self.avatarURL);
@@ -210,7 +214,12 @@ export function PersonInfoScreen(props: Props) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <StatusAvatar size={40} disableStatus={true} url={_avatar} />
+              <StatusAvatar
+                size={40}
+                disableStatus={true}
+                userId={im.userId}
+                url={_avatar}
+              />
               <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
             </View>
           }

@@ -34,6 +34,7 @@ export * from './MessageThreadListScreen';
 export * from './MessageThreadMemberListScreen';
 export * from './NewConversationScreen';
 export * from './NewRequestScreen';
+export * from './NotificationSettingScreen';
 export * from './PersonInfoScreen';
 export * from './SearchContactScreen';
 export * from './SearchConversationScreen';

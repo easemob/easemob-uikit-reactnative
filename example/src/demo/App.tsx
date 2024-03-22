@@ -10,7 +10,6 @@ import {
   CallUser,
   GlobalContainer as CallkitContainer,
 } from 'react-native-chat-callkit';
-import { ChatPushConfig } from 'react-native-chat-sdk';
 import {
   ChatService,
   ChatServiceListener,
@@ -27,16 +26,9 @@ import {
   agoraAppId,
   appKey as gAppKey,
   demoType,
-  fcmSenderId,
   isDevMode,
   restServer,
 } from './common/const';
-import {
-  checkFCMPermission,
-  requestFCMPermission,
-  requestFcmToken,
-  setBackgroundMessageHandler,
-} from './common/fcm';
 import { RestApi } from './common/rest.api';
 import { useApp } from './hooks/useApp';
 import { useGeneralSetting } from './hooks/useGeneralSetting';
@@ -79,6 +71,7 @@ import {
   MessageThreadMemberListScreen,
   NewConversationScreen,
   NewRequestScreen,
+  NotificationSettingScreen,
   PersonInfoScreen,
   SearchContactScreen,
   SearchConversationScreen,
@@ -125,6 +118,8 @@ export function App() {
     setInitParams,
     releaseAreaRef,
     getOptions,
+    enableOfflinePushRef,
+    initPush,
   } = useApp();
 
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
@@ -148,6 +143,7 @@ export function App() {
       enableThreadRef.current = ret.appThread;
       enableTranslateRef.current = ret.appTranslate;
       enableAVMeetingRef.current = ret.appAv;
+      enableOfflinePushRef.current = ret.appNotification;
       console.log(
         'dev:init:params:',
         isLightRef.current,
@@ -157,7 +153,8 @@ export function App() {
         enableReactionRef.current,
         enableThreadRef.current,
         enableTranslateRef.current,
-        enableAVMeetingRef.current
+        enableAVMeetingRef.current,
+        enableOfflinePushRef.current
       );
       setInitParams(true);
     } catch (error) {
@@ -167,6 +164,7 @@ export function App() {
     _initParams,
     enableAVMeetingRef,
     enableDNSConfigRef,
+    enableOfflinePushRef,
     enablePresenceRef,
     enableReactionRef,
     enableThreadRef,
@@ -198,41 +196,9 @@ export function App() {
       }
       isReadyRef.current = true;
 
-      try {
-        RestApi.setServer(restServer);
+      RestApi.setServer(restServer);
 
-        do {
-          if ((await checkFCMPermission()) === false) {
-            const ret = await requestFCMPermission();
-            if (ret === false) {
-              console.warn('Firebase Cloud Message Permission request failed.');
-              break;
-            }
-          }
-
-          requestFcmToken()
-            .then((fcmToken) => {
-              imRef.current?.client
-                .updatePushConfig(
-                  new ChatPushConfig({
-                    deviceId: fcmSenderId,
-                    deviceToken: fcmToken,
-                  })
-                )
-                .then()
-                .catch((e) => {
-                  console.warn('dev:updatePushConfig:error:', e);
-                });
-            })
-            .catch((e) => {
-              console.warn('dev:requestFcmToken:error:', e);
-            });
-
-          setBackgroundMessageHandler();
-        } while (false);
-      } catch (error) {
-        console.warn('dev:app:onReady:error:', error);
-      }
+      await initPush();
 
       // await SplashScreen?.hideAsync?.();
       if (demoType === 4) {
@@ -247,7 +213,7 @@ export function App() {
         }, 1000);
       }
     },
-    [isReadyRef, rootRef]
+    [isReadyRef, rootRef, initPush]
   );
 
   const onContainerInitialized = React.useCallback(
@@ -796,6 +762,13 @@ export function App() {
                   headerShown: false,
                 }}
                 component={FeatureSettingScreen}
+              />
+              <Root.Screen
+                name={'NotificationSetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={NotificationSettingScreen}
               />
             </Root.Navigator>
           </NavigationContainer>

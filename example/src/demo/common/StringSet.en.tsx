@@ -123,6 +123,11 @@ export function createStringSetEn(): StringSet {
     '_demo_feature_setting_av': '音视频通话',
     '_demo_feature_setting_av_tip': ' ',
 
+    '_demo_notification_setting_navi_title': 'Message Notification',
+    '_demo_notification_setting_offline_push': 'Offline push',
+    '_demo_notification_setting_offline_push_tip':
+      'Receive offline push messages',
+
     'save': 'Save',
     'en': 'English',
     'zh-Hans': '简体中文',

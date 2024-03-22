@@ -115,25 +115,22 @@ export function useConversationDetail(props: ConversationDetailProps) {
     if (conv) {
       setDoNotDisturb(conv.doNotDisturb ?? false);
       if (conv.convType === ChatConversationType.PeerChat) {
-        // todo: get user info
-        // im.getUserInfo({
-        //   userId: conv.convId,
-        //   onResult: (result) => {
-        //     if (result.isOk === true && result.value) {
-        //       conv.convName =
-        //         result.value?.userName && result.value?.userName.length > 0
-        //           ? result.value?.userName
-        //           : result.value?.userId;
-        //       setConvName(conv.convName);
-        //       if (result.value?.avatarURL) {
-        //         conv.convAvatar = result.value.avatarURL;
-        //         setConvAvatar(result.value.avatarURL);
-        //       }
-        //     }
-        //   },
-        // });
-        setConvName(conv.convName);
-        setConvAvatar(conv.convAvatar);
+        im.getUserInfo({
+          userId: conv.convId,
+          onResult: (result) => {
+            if (result.isOk === true && result.value) {
+              conv.convName =
+                result.value?.userName && result.value?.userName.length > 0
+                  ? result.value?.userName
+                  : result.value?.userId;
+              setConvName(conv.convName);
+              if (result.value?.avatarURL) {
+                conv.convAvatar = result.value.avatarURL;
+                setConvAvatar(result.value.avatarURL);
+              }
+            }
+          },
+        });
       } else if (conv.convType === ChatConversationType.GroupChat) {
         if (comType === 'chat') {
           im.getGroupInfo({
@@ -146,7 +143,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
                     : result.value.groupId;
                 ownerIdRef.current = result.value.owner;
                 setConvName(conv.convName);
-                console.log('dev:ConversationDetail:', result.value);
                 if (result.value.groupAvatar) {
                   conv.convAvatar = result.value.groupAvatar;
                   setConvAvatar(result.value.groupAvatar);

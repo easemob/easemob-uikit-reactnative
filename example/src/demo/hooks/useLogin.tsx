@@ -59,8 +59,8 @@ export function useLogin() {
     s.setData({
       key: 'self',
       value: JSON.stringify({
-        id: data.phoneNumber,
-        name: data.chatUserName,
+        phone: data.phoneNumber,
+        id: data.chatUserName,
         avatar: data.avatarUrl,
       }),
     });
@@ -74,8 +74,8 @@ export function useLogin() {
     if (res.value) {
       try {
         return JSON.parse(res.value) as {
+          phone: string;
           id: string;
-          name: string;
           avatar: string;
         };
       } catch (error) {
@@ -105,7 +105,6 @@ export function useLogin() {
                   userToken: res.value!.token,
                   usePassword: false,
                   userAvatarURL: res.value?.avatarUrl,
-                  userName: res.value?.chatUserName,
                   result: (r) => {
                     if (r.isOk) {
                       resolve(r);
@@ -143,7 +142,6 @@ export function useLogin() {
               const ret = await getSelfInfo();
               im.autoLogin({
                 userAvatarURL: ret?.avatar,
-                userName: ret?.name,
                 result: (res) => {
                   if (res.isOk) {
                     resolve(res);

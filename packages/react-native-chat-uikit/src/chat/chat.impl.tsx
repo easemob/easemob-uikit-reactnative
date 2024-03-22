@@ -39,6 +39,7 @@ import type {
   DataModel,
   DataModelType,
   ResultCallback,
+  ResultValue,
   UserData,
   UserFrom,
 } from './types';
@@ -479,11 +480,15 @@ export class ChatServiceImpl
         }
       })
       .catch((e) => {
-        const _e = new UIKitError({
-          code: ErrorCode.chat_uikit,
-          tag: event,
-          desc: this._fromChatError(e),
-        });
+        const isErrorObject = e instanceof UIKitError;
+        let _e = e;
+        if (isErrorObject === false) {
+          _e = new UIKitError({
+            code: ErrorCode.chat_uikit,
+            tag: event,
+            desc: this._fromChatError(e),
+          });
+        }
         const ret = onError?.(_e);
         if (ret !== false) {
           this.sendError({
@@ -1464,57 +1469,39 @@ export class ChatServiceImpl
     });
   }
 
+  async getContactSync(params: {
+    userId: string;
+  }): Promise<ResultValue<ContactModel | undefined>> {
+    const ret = await this.tryCatchSync({
+      promise: this.client.contactManager.getContact(params.userId),
+      event: 'getContactSync',
+    });
+    if (ret) {
+      await this._requestData([params.userId]);
+      const contact = this.toUIContact(ret);
+      return {
+        isOk: true,
+        value: contact,
+      };
+    }
+    return {
+      isOk: true,
+      value: undefined,
+    };
+  }
+
   getContact(params: {
     userId: string;
-    useUserData?: boolean;
     onResult: ResultCallback<ContactModel | undefined>;
   }): void {
     this.tryCatch({
-      promise: this.client.contactManager.getContact(params.userId),
+      promise: this.getContactSync(params),
       event: 'getContact',
       onFinished: async (value) => {
-        if (value) {
-          await this._requestData([params.userId]);
-          const contact = await this.toUIContact(value);
-          // if (this._contactDataRequestCallback && params.useUserData) {
-          //   this._contactDataRequestCallback({
-          //     ids: [params.userId],
-          //     result: async (data?: DataModel[], error?: UIKitError) => {
-          //       if (data) {
-          //         data.forEach((value) => {
-          //           const contact = this._contactList.get(value.id);
-          //           if (contact) {
-          //             contact.nickName = value.name;
-          //             contact.avatar = value.avatar;
-          //           }
-          //         });
-          //       }
-
-          //       params.onResult({
-          //         isOk: true,
-          //         value: contact,
-          //         error,
-          //       });
-          //     },
-          //   });
-          // } else {
-          //   params.onResult({
-          //     isOk: true,
-          //     value: contact,
-          //   });
-          // }
-
-          params.onResult({
-            isOk: true,
-            value: contact,
-          });
-        } else {
-          params.onResult({
-            isOk: true,
-            value: undefined,
-          });
-        }
-        return false;
+        params.onResult(value);
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -2220,49 +2207,42 @@ export class ChatServiceImpl
     });
   }
 
+  async getUserInfoSync(params: {
+    userId: string;
+  }): Promise<ResultValue<UserData | undefined>> {
+    const ret = await this.tryCatchSync({
+      promise: this.client.userManager.fetchUserInfoById([params.userId]),
+      event: 'getUserInfoSync',
+    });
+    const list = Array.from(ret.values()).map((v) => this.toUserData(v));
+    if (list.length > 0) {
+      this.setUser({ users: [list[0]!] });
+      return {
+        isOk: true,
+        value: list[0],
+      };
+    }
+    return {
+      isOk: true,
+    };
+  }
+
   getUserInfo(params: {
     userId: string;
-    onResult: ResultCallback<UserData | undefined>;
+    onResult?: ResultCallback<UserData | undefined>;
   }): void {
-    if (this._userList.has(params.userId)) {
-      params.onResult({
-        isOk: true,
-        value: this._userList.get(params.userId),
-      });
-      return;
-    }
     this.tryCatch({
-      promise: this.client.userManager.fetchUserInfoById([params.userId]),
+      promise: this.getUserInfoSync(params),
       event: 'getUserInfo',
-      onFinished: async (value) => {
-        if (value) {
-          Array.from(value.values()).forEach(async (v) => {
-            const user = this.toUserData(v);
-            const localUser = this._userList.get(v.userId);
-            if (localUser) {
-              this._userList.set(user.userId, mergeObjects(user, localUser));
-            } else {
-              this._userList.set(user.userId, user);
-            }
-          });
-          if (this._userList.has(params.userId)) {
-            params.onResult({
-              isOk: true,
-              value: this._userList.get(params.userId),
-            });
-          } else {
-            params.onResult({
-              isOk: true,
-            });
-          }
-        } else {
-          params.onResult({
-            isOk: true,
-          });
-        }
+      onFinished: (value) => {
+        params.onResult?.(value);
+      },
+      onError: (error) => {
+        params.onResult?.({ isOk: false, error });
       },
     });
   }
+
   getUsersInfo(params: {
     userIds: string[];
     onResult: ResultCallback<UserData[]>;
@@ -2272,19 +2252,13 @@ export class ChatServiceImpl
       event: 'getUsersInfo',
       onFinished: async (value) => {
         if (value) {
-          Array.from(value.values()).forEach(async (v) => {
-            const user = this.toUserData(v);
-            const localUser = this._userList.get(v.userId);
-            this._userList.set(
-              user.userId,
-              mergeObjects<UserData>(user, localUser ?? ({} as any))
-            );
+          const list = Array.from(value.values()).map((v) => {
+            return this.toUserData(v);
           });
+          this.setUser({ users: list });
           params.onResult({
             isOk: true,
-            value: params.userIds
-              .map((v) => this._userList.get(v))
-              .filter((v) => v !== undefined) as UserData[],
+            value: list,
           });
         } else {
           params.onResult({

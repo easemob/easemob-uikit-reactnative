@@ -3,6 +3,8 @@ import * as React from 'react';
 import {
   ChatServiceListener,
   ContactInfo,
+  ContactModel,
+  useChatContext,
   useChatListener,
   useColors,
   useI18nContext,
@@ -25,6 +27,7 @@ export function ContactInfoScreen(props: Props) {
     },
   });
   const contactRef = React.useRef<any>({} as any);
+  const im = useChatContext();
 
   const listener = React.useMemo<ChatServiceListener>(() => {
     return {
@@ -42,6 +45,25 @@ export function ContactInfoScreen(props: Props) {
     }
   };
   const testRef = React.useRef<(data: any) => void>(goback);
+
+  const onRequestData = React.useCallback(
+    async (_id: string) => {
+      const r: ContactModel = { userId: userId };
+      try {
+        const user = await im.getUserInfoSync({ userId: userId });
+        if (user.value) {
+          r.userName = user.value?.userName;
+          r.userAvatar = user.value?.avatarURL;
+        }
+        const contact = await im.getContactSync({ userId: userId });
+        if (contact.value) {
+          r.remark = contact.value?.remark;
+        }
+      } catch (error) {}
+      return r;
+    },
+    [im, userId]
+  );
 
   return (
     <SafeAreaView
@@ -90,6 +112,7 @@ export function ContactInfoScreen(props: Props) {
             params: { convId: id, convType: 0 },
           });
         }}
+        onRequestData={onRequestData}
       />
     </SafeAreaView>
   );

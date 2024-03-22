@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { getFileExtension } from 'react-native-chat-uikit';
 
 export type RequestResult<Value, Error = any> = {
@@ -141,12 +142,21 @@ export class RestApi {
   }): Promise<RequestResult<RequestUploadAvatarResult>> {
     const { userId, localAvatarFile } = params;
     const url = this.getBasicUrl() + `/user/${userId}/avatar/upload`;
+    console.log('RestApi:reqUploadAvatar:', userId, localAvatarFile, url);
     try {
       const formData = new FormData();
+      // !!! question: upload file on android is need to add 'file://' prefix and type.
+      // !!! https://github.com/facebook/react-native/issues/28551
       formData.append('file', {
-        uri: localAvatarFile,
+        uri:
+          Platform.OS === 'android'
+            ? 'file://' + localAvatarFile
+            : localAvatarFile,
         name: userId,
-        type: getFileExtension(localAvatarFile),
+        type:
+          Platform.OS === 'android'
+            ? `image/${getFileExtension(localAvatarFile)}`
+            : `image/${getFileExtension(localAvatarFile)}`,
       });
       const response = await fetch(url, {
         method: 'POST',
@@ -156,6 +166,13 @@ export class RestApi {
         },
         body: formData,
       });
+      console.log(
+        'RestApi:reqUploadAvatar:',
+        response.ok,
+        response.status,
+        response.statusText,
+        response.url
+      );
       const value = await response.json();
       console.log('RestApi:reqUploadAvatar:', value, url);
       return { isOk: true, value };

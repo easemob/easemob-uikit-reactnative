@@ -516,6 +516,9 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
         onClickedAbout={() => {
           navigation.push('AboutSetting', {});
         }}
+        onClickedMessageNotification={() => {
+          navigation.push('NotificationSetting', {});
+        }}
       />
     );
   } else {

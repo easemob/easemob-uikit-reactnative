@@ -2,7 +2,12 @@ import { useNavigationContainerRef } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as React from 'react';
 import { DeviceEventEmitter } from 'react-native';
-import { ChatMultiDeviceEvent, ChatPushConfig } from 'react-native-chat-sdk';
+import {
+  ChatMultiDeviceEvent,
+  ChatPushConfig,
+  ChatPushRemindType,
+  ChatSilentModeParamType,
+} from 'react-native-chat-sdk';
 import {
   ChatOptionsType,
   ChatServiceListener,
@@ -35,6 +40,12 @@ import {
   restServer,
   useSendBox,
 } from '../common/const';
+import {
+  checkFCMPermission,
+  requestFCMPermission,
+  requestFcmToken,
+  setBackgroundMessageHandler,
+} from '../common/fcm';
 import type { RootParamsList, RootParamsName } from '../routes';
 import { useUserInfo } from './useUserInfo';
 
@@ -68,6 +79,7 @@ export function useApp() {
   const enableThreadRef = React.useRef(false);
   const enableTranslateRef = React.useRef(false);
   const enableAVMeetingRef = React.useRef(false);
+  const enableOfflinePushRef = React.useRef(false);
   const fontFamily = 'Twemoji-Mozilla';
   const [fontsLoaded] = useFonts({
     [fontFamily]: require('../../../assets/Twemoji.Mozilla.ttf'),
@@ -253,6 +265,72 @@ export function useApp() {
     [im, list, updateDataFromServer, updateDataToStorage]
   );
 
+  const initPush = React.useCallback(async () => {
+    try {
+      do {
+        if ((await checkFCMPermission()) === false) {
+          const ret = await requestFCMPermission();
+          if (ret === false) {
+            console.warn('Firebase Cloud Message Permission request failed.');
+            break;
+          }
+        }
+
+        requestFcmToken()
+          .then((fcmToken) => {
+            im.client
+              .updatePushConfig(
+                new ChatPushConfig({
+                  deviceId: fcmSenderId,
+                  deviceToken: fcmToken,
+                })
+              )
+              .then()
+              .catch((e) => {
+                console.warn('dev:updatePushConfig:error:', e);
+              });
+          })
+          .catch((e) => {
+            console.warn('dev:requestFcmToken:error:', e);
+          });
+
+        setBackgroundMessageHandler();
+      } while (false);
+    } catch (error) {
+      console.warn('dev:app:onReady:error:', error);
+    }
+  }, [im.client]);
+
+  const updatePush = React.useCallback(async () => {
+    try {
+      do {
+        if (enableOfflinePushRef.current === true) {
+          im.client.pushManager
+            .setSilentModeForAll({
+              paramType: ChatSilentModeParamType.REMIND_TYPE,
+              remindType: ChatPushRemindType.ALL,
+            })
+            .then()
+            .catch((e) => {
+              console.warn('dev:updatePushConfig:error:', e);
+            });
+        } else {
+          im.client.pushManager
+            .setSilentModeForAll({
+              paramType: ChatSilentModeParamType.SILENT_MODE_DURATION,
+              remindType: ChatPushRemindType.NONE,
+            })
+            .then()
+            .catch((e) => {
+              console.warn('dev:updatePushConfig:error:', e);
+            });
+        }
+      } while (false);
+    } catch (error) {
+      console.warn('dev:app:onReady:error:', error);
+    }
+  }, [im.client]);
+
   React.useEffect(() => {
     const uiListener: UIGroupListListener = {
       onUpdatedEvent: (_data) => {
@@ -299,9 +377,9 @@ export function useApp() {
     onDisconnected: () => {},
     onFinished: (params) => {
       if (params.event === 'login') {
-        getDataFromStorage();
+        if (im.userId) getDataFromStorage(im.userId);
       } else if (params.event === 'autoLogin') {
-        getDataFromStorage();
+        if (im.userId) getDataFromStorage(im.userId);
       }
     },
   });
@@ -429,6 +507,14 @@ export function useApp() {
       enableAVMeetingRef.current = e === 'enable';
       updater();
     });
+    const ret14 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_notification',
+      (e) => {
+        console.log('dev:emit:app:notification:', e);
+        enableOfflinePushRef.current = e === 'enable';
+        updatePush();
+      }
+    );
     return () => {
       ret.remove();
       ret2.remove();
@@ -443,8 +529,9 @@ export function useApp() {
       ret11.remove();
       ret12.remove();
       ret13.remove();
+      ret14.remove();
     };
-  }, [dark, light, updater]);
+  }, [dark, light, updatePush, updater]);
 
   // React.useEffect(() => {
   //   im.getJoinedGroups({
@@ -482,6 +569,7 @@ export function useApp() {
     enableThreadRef,
     enableTranslateRef,
     enableAVMeetingRef,
+    enableOfflinePushRef,
     fontFamily,
     fontsLoaded,
     rootRef,
@@ -492,5 +580,7 @@ export function useApp() {
     setInitParams,
     releaseAreaRef,
     getOptions,
+    updatePush,
+    initPush,
   };
 }

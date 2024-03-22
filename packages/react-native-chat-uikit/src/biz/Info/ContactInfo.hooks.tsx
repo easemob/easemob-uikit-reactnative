@@ -37,6 +37,7 @@ export function useContactInfo(
     onAddContact: propsOnAddContact,
     onCopyId: propsOnCopyId,
     onClickedContactRemark,
+    onRequestData,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(propsUserName);
@@ -90,16 +91,50 @@ export function useContactInfo(
                 im.sendError({ error: e });
               });
 
-            im.getContact({
-              userId: userId,
-              onResult: (value) => {
-                if (value) {
-                  setUserAvatar(value.value?.userAvatar);
-                  setUserName(value.value?.userName);
-                  setUserRemark(value.value?.remark);
+            if (onRequestData) {
+              const ret = onRequestData?.(userId);
+              if (ret) {
+                if (ret instanceof Promise) {
+                  ret
+                    .then((res) => {
+                      if (res.userName) setUserName(res.userName);
+                      if (res.userAvatar) setUserAvatar(res.userAvatar);
+                      if (res.remark) setUserRemark(res.remark);
+                    })
+                    .catch((e) => {
+                      console.warn('dev:onRequestData:e:', e);
+                    });
+                } else {
+                  if (ret.userName) setUserName(ret.userName);
+                  if (ret.userAvatar) setUserAvatar(ret.userAvatar);
+                  if (ret.remark) setUserRemark(ret.remark);
                 }
-              },
-            });
+              }
+            } else {
+              im.getUserInfo({
+                userId: userId,
+                onResult: (res) => {
+                  if (res.isOk === true && res.value) {
+                    if (res.value.avatarURL) setUserAvatar(res.value.avatarURL);
+                    if (res.value.userName) setUserName(res.value.userName);
+                  }
+                  im.getContact({
+                    userId: userId,
+                    onResult: (value) => {
+                      if (value) {
+                        if (res.value?.avatarURL === undefined) {
+                          setUserAvatar(value.value?.userAvatar);
+                        }
+                        if (res.value?.userName === undefined) {
+                          setUserName(value.value?.userName);
+                        }
+                        setUserRemark(value.value?.remark);
+                      }
+                    },
+                  });
+                },
+              });
+            }
           } else {
             const user = im.user(im.userId);
             setUserAvatar(user?.avatarURL);
@@ -107,7 +142,7 @@ export function useContactInfo(
           }
         }
       },
-      [im, userId]
+      [im, onRequestData, userId]
     )
   );
 

@@ -117,6 +117,11 @@ export function createStringSetCn(): StringSet {
     '_demo_feature_setting_av': '音视频通话',
     '_demo_feature_setting_av_tip': ' ',
 
+    '_demo_notification_setting_navi_title': '消息通知',
+    '_demo_notification_setting_offline_push': '消息离线推送',
+    '_demo_notification_setting_offline_push_tip':
+      '关闭后，除非被@，否则将收不到任何消息推送与提示',
+
     'save': '保存',
     'en': 'English',
     'zh-Hans': '简体中文',

@@ -57,9 +57,9 @@ export enum DisconnectReasonType {
 }
 
 /**
- * The callback type of the calling interface. Might return a result if the call completes, or an error object if it fails.
+ * The type of chat service api result.
  */
-export type ResultCallback<T> = (params: {
+export type ResultValue<T> = {
   /**
    * Whether the call is successful.
    */
@@ -72,7 +72,12 @@ export type ResultCallback<T> = (params: {
    * The error object of the call.
    */
   error?: UIKitError;
-}) => void;
+};
+
+/**
+ * The callback type of the calling interface. Might return a result if the call completes, or an error object if it fails.
+ */
+export type ResultCallback<T> = (params: ResultValue<T>) => void;
 
 /**
  * The type of data model.
@@ -418,6 +423,9 @@ export interface ContactServices {
     userId: string;
     onResult: ResultCallback<ContactModel | undefined>;
   }): void;
+  getContactSync(params: {
+    userId: string;
+  }): Promise<ResultValue<ContactModel | undefined>>;
   /**
    * Add a new contact.
    *
@@ -474,6 +482,9 @@ export interface UserServices {
     userId: string;
     onResult: ResultCallback<UserData | undefined>;
   }): void;
+  getUserInfoSync(params: {
+    userId: string;
+  }): Promise<ResultValue<UserData | undefined>>;
   /**
    * Get the user information list.
    */
