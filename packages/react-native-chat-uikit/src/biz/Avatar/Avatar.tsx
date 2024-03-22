@@ -140,7 +140,6 @@ export function StatusAvatar(props: StatusAvatarProps) {
       onFinished: (params) => {
         if (params.event === 'updateSelfInfo') {
           const ret = im.user(im.userId);
-          console.log('test:zuoyu:updateSelfInfo', params, ret);
           if (ret && ret.avatarURL && ret.avatarURL.length > 0) {
             urlRef.current = ret.avatarURL;
             updater();

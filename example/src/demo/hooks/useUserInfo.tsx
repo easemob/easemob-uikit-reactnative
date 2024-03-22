@@ -31,7 +31,6 @@ export function useUserInfo() {
     arrayToList(ret).forEach((value, key) => {
       list.current.set(key, value);
     });
-    console.log('test:zuoyu:list:', list.current);
   }, [arrayToList, resetData, storage]);
   const updateDataToStorage = React.useCallback(() => {
     storage.setAllUser(listToArray(list.current));

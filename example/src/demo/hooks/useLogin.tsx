@@ -72,7 +72,6 @@ export function useLogin() {
     });
     const res = await s.getData({ key: 'self' });
     if (res.value) {
-      console.log('test:zuoyu:res:', res.value);
       try {
         return JSON.parse(res.value) as {
           id: string;

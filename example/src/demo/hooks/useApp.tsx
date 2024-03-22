@@ -130,7 +130,6 @@ export function useApp() {
           return;
         noExistedIds.push(id);
       });
-      console.log('test:zuoyu:ids:', userIds, noExistedIds);
       if (noExistedIds.length === 0) {
         const finalUsers = userIds
           .map<DataModel | undefined>((id) => {
