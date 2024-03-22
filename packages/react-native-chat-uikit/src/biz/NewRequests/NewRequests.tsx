@@ -4,8 +4,8 @@ import { ListRenderItemInfo, Pressable, View } from 'react-native';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
-import { IconButton } from '../../ui/Button';
 import { FlatListFactory } from '../../ui/FlatList';
+import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
@@ -93,8 +93,8 @@ export function NewRequests(props: NewRequestsProps) {
                 }}
                 onPress={onBack}
               >
-                <IconButton
-                  iconName={'chevron_left'}
+                <Icon
+                  name={'chevron_left'}
                   style={{ width: 24, height: 24, tintColor: getColor('icon') }}
                 />
                 <Text

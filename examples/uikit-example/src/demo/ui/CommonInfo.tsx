@@ -4,7 +4,7 @@ import {
   Alert,
   BottomSheetNameMenu,
   CommonSwitch,
-  IconButton,
+  Icon,
   LanguageCode,
   ListItem,
   SimpleToast,
@@ -84,8 +84,8 @@ export function CommonInfo(props: CommonInfoProps) {
             }}
             onPress={onBack}
           >
-            <IconButton
-              iconName={'chevron_left'}
+            <Icon
+              name={'chevron_left'}
               style={{ width: 24, height: 24, tintColor: getColor('icon') }}
             />
             <Text

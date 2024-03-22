@@ -106,11 +106,11 @@ export function useLogin() {
                   usePassword: false,
                   userAvatarURL: res.value?.avatarUrl,
                   userName: res.value?.chatUserName,
-                  result: (rres) => {
-                    if (rres.isOk) {
-                      resolve(rres);
+                  result: (r) => {
+                    if (r.isOk) {
+                      resolve(r);
                     } else {
-                      reject(rres);
+                      reject(r);
                     }
                   },
                 });

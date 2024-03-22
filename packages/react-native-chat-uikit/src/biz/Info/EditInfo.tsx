@@ -10,7 +10,7 @@ import {
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext, useThemeContext } from '../../theme';
-import { IconButton } from '../../ui/Button';
+import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { TextInput } from '../../ui/TextInput';
 import { TopNavigationBar } from '../TopNavigationBar';
@@ -101,17 +101,17 @@ export function EditInfo(props: EditInfoProps) {
         ) : (
           <TopNavigationBar
             Left={
-              <View
+              <Pressable
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                   height: 40,
                 }}
+                onPress={onBack}
               >
-                <IconButton
-                  iconName={'chevron_left'}
+                <Icon
+                  name={'chevron_left'}
                   style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-                  onPress={onBack}
                 />
                 <Text
                   textType={'medium'}
@@ -122,7 +122,7 @@ export function EditInfo(props: EditInfoProps) {
                 >
                   {backName}
                 </Text>
-              </View>
+              </Pressable>
             }
             Right={
               <Pressable

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {
   AsyncStorageBasic,
-  IconButton,
+  Icon,
   SingleLineText,
   SingletonObjects,
   Switch,
@@ -186,17 +186,17 @@ export function ServerSettingScreen(props: Props) {
         <TopNavigationBar
           containerStyle={{ backgroundColor: undefined }}
           Left={
-            <View
+            <Pressable
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 height: 44,
               }}
+              onPress={onBack}
             >
-              <IconButton
-                iconName={'chevron_left'}
+              <Icon
+                name={'chevron_left'}
                 style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-                onPress={onBack}
               />
               <Text
                 textType={'medium'}
@@ -207,7 +207,7 @@ export function ServerSettingScreen(props: Props) {
               >
                 {tr('_demo_server_setting_navi_title')}
               </Text>
-            </View>
+            </Pressable>
           }
           Right={
             <Pressable

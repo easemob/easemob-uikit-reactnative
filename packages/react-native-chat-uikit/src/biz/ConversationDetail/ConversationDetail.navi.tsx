@@ -10,7 +10,6 @@ import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
-import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
 import { Avatar, StatusAvatar } from '../Avatar';
@@ -210,17 +209,17 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   return (
     <TopNavigationBar
       Left={
-        <View
+        <Pressable
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             maxWidth: Platform.select({ ios: '70%', android: '80%' }),
           }}
+          onPress={onBack}
         >
-          <IconButton
-            iconName={'chevron_left'}
+          <Icon
+            name={'chevron_left'}
             style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-            onPress={onBack}
           />
           {comType === 'chat' || comType === 'search' ? (
             <Pressable onPress={onClickedAvatar}>
@@ -274,7 +273,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
                 : tr('#group')}
             </Text>
           </View>
-        </View>
+        </Pressable>
       }
       Right={rightProps.render}
       RightProps={rightProps}
