@@ -180,6 +180,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
               minIndexForVisible: 0,
               // autoscrollToTopThreshold: -(Dimensions.get('window').height * 2),
             }}
+            initialNumToRender={9999} // !!! https://github.com/facebook/react-native/issues/42967
             // renderScrollComponent={null}
             // maxToRenderPerBatch={50}
             // overScrollMode={'always'}
