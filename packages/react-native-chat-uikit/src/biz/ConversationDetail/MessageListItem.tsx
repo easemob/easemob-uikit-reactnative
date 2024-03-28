@@ -1460,41 +1460,69 @@ export function MessageReaction(props: MessageReactionProps) {
               </View>
             </Pressable>
           );
-        } else if (i === 3) {
-          return (
-            <Pressable
-              style={{
-                borderColor: getColor('common'),
-                borderWidth: 1,
-                paddingRight: 8,
-                paddingLeft: 6,
-                marginRight: layoutType === 'left' ? 4 : undefined,
-                marginLeft: layoutType === 'left' ? undefined : 4,
-                borderRadius: getBorderRadius({
-                  height: 36,
-                  crt: corner.bubble[0]!,
-                  cr: cornerRadius,
-                }),
-                maxHeight: 28,
-              }}
-              key={i}
-              onPress={() => onClicked?.('faceplus')}
-            >
-              <Icon
-                name={'ellipsis_horizontally' as IconNameType}
-                style={{
-                  width: 20,
-                  height: 20,
-                  margin: 4,
-                  tintColor: getColor('common'),
-                }}
-              />
-            </Pressable>
-          );
+          // } else if (i === 3) {
+          //   return (
+          //     <Pressable
+          //       style={{
+          //         borderColor: getColor('common'),
+          //         borderWidth: 1,
+          //         paddingRight: 8,
+          //         paddingLeft: 6,
+          //         marginRight: layoutType === 'left' ? 4 : undefined,
+          //         marginLeft: layoutType === 'left' ? undefined : 4,
+          //         borderRadius: getBorderRadius({
+          //           height: 36,
+          //           crt: corner.bubble[0]!,
+          //           cr: cornerRadius,
+          //         }),
+          //         maxHeight: 28,
+          //       }}
+          //       key={i}
+          //       onPress={() => onClicked?.('faceplus')}
+          //     >
+          //       <Icon
+          //         name={'ellipsis_horizontally' as IconNameType}
+          //         style={{
+          //           width: 20,
+          //           height: 20,
+          //           margin: 4,
+          //           tintColor: getColor('common'),
+          //         }}
+          //       />
+          //     </Pressable>
+          //   );
         } else {
           return null;
         }
       })}
+      <Pressable
+        style={{
+          borderColor: getColor('common'),
+          borderWidth: 1,
+          paddingRight: 8,
+          paddingLeft: 6,
+          marginRight: layoutType === 'left' ? 4 : undefined,
+          marginLeft: layoutType === 'left' ? undefined : 4,
+          borderRadius: getBorderRadius({
+            height: 36,
+            crt: corner.bubble[0]!,
+            cr: cornerRadius,
+          }),
+          maxHeight: 28,
+        }}
+        key={reactions?.length ?? 99}
+        onPress={() => onClicked?.('faceplus')}
+      >
+        <Icon
+          name={'ellipsis_horizontally' as IconNameType}
+          style={{
+            width: 20,
+            height: 20,
+            margin: 4,
+            tintColor: getColor('common'),
+          }}
+        />
+      </Pressable>
     </View>
   );
 }

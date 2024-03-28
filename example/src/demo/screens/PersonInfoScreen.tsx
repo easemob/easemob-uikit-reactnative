@@ -3,7 +3,6 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 import {
-  getFileDirectory,
   Icon,
   ListItem,
   Services,
@@ -93,13 +92,6 @@ export function PersonInfoScreen(props: Props) {
             resizeMode: 'cover',
           })
             .then(async (res) => {
-              console.log(
-                'test:zuoyu:cropImage:res',
-                result[0]!.uri,
-                res,
-                getFileDirectory(res.path)
-              );
-
               const user = im.user(im.userId);
               if (user) {
                 const ret = await RestApi.reqUploadAvatar({

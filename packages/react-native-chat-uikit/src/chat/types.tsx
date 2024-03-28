@@ -761,6 +761,9 @@ export interface MessageThreadServices {
     threadId: string[];
     onResult: ResultCallback<Map<string, ChatMessage>>;
   }): void;
+  fetchThreadsLastMessageSync(params: {
+    threadId: string[];
+  }): Promise<ResultValue<Map<string, ChatMessage>>>;
   /**
    * fetch thread.
    */

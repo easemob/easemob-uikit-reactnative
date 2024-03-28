@@ -468,7 +468,7 @@ function UserList(props: UserListProps) {
 }
 
 function UserListItem(props: UserListItemProps) {
-  const { userId, userAvatar, userName, onClickedItem } = props;
+  const { userId, userAvatar, userName, onClickedItem, isMyself } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -526,15 +526,17 @@ function UserListItem(props: UserListItemProps) {
               : userName}
           </SingleLineText>
         </View>
-        <Icon
-          name={'trash'}
-          style={{
-            width: 16,
-            height: 16,
-            padding: 4,
-            tintColor: getColor('trash'),
-          }}
-        />
+        {isMyself === true ? (
+          <Icon
+            name={'trash'}
+            style={{
+              width: 16,
+              height: 16,
+              padding: 4,
+              tintColor: getColor('trash'),
+            }}
+          />
+        ) : null}
       </View>
 
       <View

@@ -318,8 +318,8 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
 
 function ListItemRender(props: MessageThreadMemberListItemProps) {
   const { model } = props;
-  const { id, name, avatar, isOwner } = model;
-  const { tr } = useI18nContext();
+  const { id, name, avatar } = model;
+  const {} = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -380,7 +380,7 @@ function ListItemRender(props: MessageThreadMemberListItemProps) {
           >
             {name === undefined || name.length === 0 ? id : name}
           </SingleLineText>
-          {isOwner === true ? (
+          {/* {isOwner === true ? (
             <SingleLineText
               paletteType={'title'}
               textType={'small'}
@@ -390,7 +390,7 @@ function ListItemRender(props: MessageThreadMemberListItemProps) {
             >
               {tr('_uikit_thread_owner')}
             </SingleLineText>
-          ) : null}
+          ) : null} */}
         </View>
       </View>
 

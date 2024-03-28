@@ -132,6 +132,16 @@ export function useConversationDetail(props: ConversationDetailProps) {
             }
           },
         });
+        im.getContact({
+          userId: convId,
+          onResult: (res) => {
+            if (res.isOk && res.value) {
+              if (res.value.remark && res.value.remark.length > 0) {
+                setConvRemark(res.value.remark);
+              }
+            }
+          },
+        });
       } else if (conv.convType === ChatConversationType.GroupChat) {
         if (comType === 'chat') {
           im.getGroupInfo({

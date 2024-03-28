@@ -21,6 +21,7 @@ import {
   ChatTextMessageBody,
   ChatVoiceMessageBody,
 } from 'react-native-chat-sdk';
+import emoji from 'twemoji';
 
 import { FACE_ASSETS } from '../../assets';
 import {
@@ -563,7 +564,7 @@ export function useMessageList(
   );
 
   const onLayout = React.useCallback((event: LayoutChangeEvent) => {
-    console.log('test:zuoyu:onLayout:', event.nativeEvent.layout.height);
+    // console.log('test:zuoyu:onLayout:', event.nativeEvent.layout.height);
     heightRef.current = event.nativeEvent.layout.height;
   }, []);
 
@@ -876,7 +877,6 @@ export function useMessageList(
 
   const onUpdateMessageToUI = React.useCallback(
     (msg: ChatMessage, fromType: 'send' | 'recv') => {
-      console.log('test:zuoyu:onUpdateMessageToUI:', msg);
       const isExisted = dataRef.current.find((d) => {
         if (d.model.modelType === 'message') {
           const msgModel = d.model as MessageModel;
@@ -998,7 +998,6 @@ export function useMessageList(
 
   const _onClickedDestroyThread = React.useCallback(
     (threadId: string) => {
-      console.log('test:zuoyu:_onClickedDestroyThread', threadId);
       if (onClickedDestroyThread) {
         onClickedDestroyThread(threadId);
       } else {
@@ -1247,7 +1246,8 @@ export function useMessageList(
             const reactions = result.value;
             list.forEach((d) => {
               const isExisted = reactions.find((r) => {
-                if (r.reaction === d.name) {
+                const e = emoji.convert.fromCodePoint(d.name.substring(2));
+                if (r.reaction === e) {
                   return true;
                 }
                 return false;
@@ -1413,7 +1413,10 @@ export function useMessageList(
       if (model.modelType === 'message') {
         const msgModel = model as MessageModel;
         if (msgModel.thread) {
-          if (msgModel.thread.msgId.length === 0) {
+          if (
+            msgModel.thread.msgId.length === 0 ||
+            msgModel.thread.owner.length === 0
+          ) {
             // !!! fix bug.
             im.fetchThread({
               threadId: msgModel.thread.threadId,
@@ -2590,7 +2593,7 @@ export function useMessageList(
   ]);
 
   const onContentSizeChange = React.useCallback((_w: number, _h: number) => {
-    console.log('test:zuoyu:onContentSizeChange:', _w, _h);
+    // console.log('test:zuoyu:onContentSizeChange:', _w, _h);
   }, []);
 
   const requestThreadHeaderMessage = React.useCallback(async () => {
@@ -3077,24 +3080,39 @@ export function useMessageList(
         const msgId = event.thread.msgId;
         if (msgId && (comType === 'chat' || comType === 'search')) {
           if (convId === event.thread.parentId) {
+            // !!! owner is empty. It is a bug.
+            if (event.thread.owner.length === 0 && event.from.length > 0) {
+              event.thread.owner = event.from;
+            }
             onUpdateMessageThreadToUI(msgId, event.thread);
           }
         }
       },
-      onChatMessageThreadUpdated: (event: ChatMessageThreadEvent) => {
+      onChatMessageThreadUpdated: async (event: ChatMessageThreadEvent) => {
         const msgId = event.thread.msgId;
-        console.log(
-          'test:zuoyu:onChatMessageThreadUpdated',
-          msgId,
-          convId,
-          event.thread
-        );
+        // console.log(
+        //   'test:zuoyu:onChatMessageThreadUpdated',
+        //   msgId,
+        //   convId,
+        //   event.thread
+        // );
         if (msgId) {
           if (
             (comType === 'chat' || comType === 'search') &&
             convId === event.thread.parentId
           ) {
-            onUpdateMessageThreadToUI(msgId, event.thread);
+            const thread = { ...event.thread };
+            if (thread && thread?.lastMessage === undefined) {
+              const threadMsg = await im.getMessage({ messageId: msgId });
+              if (threadMsg) {
+                const t = await threadMsg.threadInfo;
+                const msg = t?.lastMessage;
+                if (msg) {
+                  thread.lastMessage = msg;
+                }
+              }
+            }
+            onUpdateMessageThreadToUI(msgId, thread);
           } else if (comType === 'thread' && convId === event.thread.threadId) {
             if (canAddNewMessageToUI()) {
               if (event.thread.lastMessage) {

@@ -1537,6 +1537,10 @@ export class ChatServiceImpl
       onFinished: async () => {
         const contact = this._contactList.get(params.userId);
         this._contactList.delete(params.userId);
+        const item = this._dataList.get(params.userId);
+        if (item) {
+          item.remark = undefined;
+        }
         this.sendUIEvent(UIListenerType.Contact, 'onDeletedEvent', contact);
         params.onResult?.({
           isOk: true,
@@ -2970,6 +2974,20 @@ export class ChatServiceImpl
       },
     });
   }
+  async fetchThreadsLastMessageSync(params: {
+    threadId: string[];
+  }): Promise<ResultValue<Map<string, ChatMessage>>> {
+    const ret = await this.tryCatchSync({
+      promise: this.client.chatManager.fetchLastMessageWithChatThread(
+        params.threadId
+      ),
+      event: 'fetchThreadsLastMessageSync',
+    });
+    return {
+      isOk: true,
+      value: ret,
+    };
+  }
   fetchThread(params: {
     threadId: string;
     onResult: ResultCallback<ChatMessageThread>;
@@ -2985,6 +3003,12 @@ export class ChatServiceImpl
           value: value,
         });
       },
+      onError: (e) => {
+        params.onResult({
+          isOk: false,
+          error: e,
+        });
+      },
     });
   }
   getThread(params: {
@@ -2998,6 +3022,12 @@ export class ChatServiceImpl
         params.onResult({
           isOk: true,
           value: value,
+        });
+      },
+      onError: (e) => {
+        params.onResult({
+          isOk: false,
+          error: e,
         });
       },
     });
