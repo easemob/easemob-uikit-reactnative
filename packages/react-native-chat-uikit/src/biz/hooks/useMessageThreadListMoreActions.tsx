@@ -18,10 +18,11 @@ export function useMessageThreadListMoreActions(
   const onShowMenu = React.useCallback(
     (params: {
       thread: ChatMessageThread;
+      isOwner: boolean;
       /**
        * Callback notification when click edit thread name.
        */
-      onClickedEditThreadName?: (threadId: string, threadName: string) => void;
+      onClickedEditThreadName?: (thread: ChatMessageThread) => void;
       /**
        * Callback notification when click open thread member list.
        */
@@ -37,21 +38,23 @@ export function useMessageThreadListMoreActions(
     }) => {
       const {
         thread,
+        isOwner,
         onClickedEditThreadName,
         onClickedOpenThreadMemberList,
         onClickedLeaveThread,
         onClickedDestroyThread,
       } = params;
       let items = [] as InitMenuItemsType[];
-      if (thread.owner === im.userId) {
+      if (thread.owner === im.userId || isOwner === true) {
         items.push({
           name: tr('_uikit_thread_menu_edit_thread_name'),
           isHigh: false,
           icon: 'slash_in_rectangle',
           onClicked: () => {
             closeMenu(() => {
-              onClickedEditThreadName?.(thread.threadId, thread.threadName);
+              console.log('test:zuoyu:clickedEditThreadName');
             });
+            onClickedEditThreadName?.(thread);
           },
         });
       }
@@ -65,7 +68,7 @@ export function useMessageThreadListMoreActions(
           });
         },
       });
-      if (thread.owner === im.userId) {
+      if (thread.owner === im.userId || isOwner === true) {
         items.push({
           name: tr('_uikit_thread_menu_destroy_thread'),
           isHigh: true,

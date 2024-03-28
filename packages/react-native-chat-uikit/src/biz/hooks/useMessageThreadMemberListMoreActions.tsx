@@ -21,15 +21,16 @@ export function useMessageThreadMemberListMoreActions(
     (params: {
       threadId: string;
       memberId: string;
+      groupOwner: string;
       /**
        * Callback notification when click kick member.
        */
       onClickedKickMember?: (threadId: string, memberId: string) => void;
     }) => {
-      const { threadId, memberId, onClickedKickMember } = params;
+      const { threadId, memberId, onClickedKickMember, groupOwner } = params;
       let items = [] as InitMenuItemsType[];
       if (
-        thread.owner === im.userId &&
+        (thread.owner === im.userId || groupOwner === im.userId) &&
         memberId !== im.userId &&
         thread.threadId === threadId
       ) {

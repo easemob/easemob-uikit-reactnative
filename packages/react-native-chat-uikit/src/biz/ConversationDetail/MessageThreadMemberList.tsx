@@ -178,6 +178,7 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<any>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
+  const groupOwnerRef = React.useRef<string>('');
 
   const onClickedKickMember = React.useCallback(
     (threadId: string, memberId: string) => {
@@ -202,20 +203,30 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
         if (onClickedItem) {
           const ret = onClickedItem(data);
           if (ret === true) {
-            if (thread.owner === im.userId && data.id !== im.userId) {
+            if (
+              (thread.owner === im.userId ||
+                groupOwnerRef.current === im.userId) &&
+              data.id !== im.userId
+            ) {
               onShowMessageThreadMemberListMoreActions({
                 threadId: thread.threadId,
                 memberId: data.id,
                 onClickedKickMember: onClickedKickMember,
+                groupOwner: groupOwnerRef.current,
               });
             }
           }
         } else {
-          if (thread.owner === im.userId && data.id !== im.userId) {
+          if (
+            (thread.owner === im.userId ||
+              groupOwnerRef.current === im.userId) &&
+            data.id !== im.userId
+          ) {
             onShowMessageThreadMemberListMoreActions({
               threadId: thread.threadId,
               memberId: data.id,
               onClickedKickMember: onClickedKickMember,
+              groupOwner: groupOwnerRef.current,
             });
           }
         }
@@ -226,8 +237,7 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
       onClickedItem,
       onClickedKickMember,
       onShowMessageThreadMemberListMoreActions,
-      thread.owner,
-      thread.threadId,
+      thread,
     ]
   );
 
@@ -271,6 +281,25 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
     requestMore();
   }, [dataRef, requestMore]);
 
+  const init = React.useCallback(() => {
+    console.log('test:zuoyu:init:', thread);
+    if (thread && thread.parentId) {
+      im.getGroupInfo({
+        groupId: thread.parentId,
+        onResult: (res) => {
+          console.log('test:zuoyu:init:getGroupInfo:', res);
+          if (res.isOk && res.value) {
+            groupOwnerRef.current = res.value.owner;
+          }
+        },
+      });
+    }
+  }, [im, thread]);
+
+  React.useEffect(() => {
+    init();
+  }, [init]);
+
   React.useEffect(() => {
     currentCursorRef.current = '';
     requestMore();
@@ -288,7 +317,7 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
 }
 
 function ListItemRender(props: MessageThreadMemberListItemProps) {
-  const { model, onClickedItem } = props;
+  const { model } = props;
   const { id, name, avatar, isOwner } = model;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -316,15 +345,15 @@ function ListItemRender(props: MessageThreadMemberListItemProps) {
   });
 
   const _onClicked = React.useCallback(() => {
-    onClickedItem?.(model);
-  }, [model, onClickedItem]);
+    // onClickedItem?.(model);
+  }, []);
 
   return (
     <Pressable
       style={{
         backgroundColor: getColor('bg'),
       }}
-      onLongPress={_onClicked}
+      onPress={_onClicked}
     >
       <View
         style={{

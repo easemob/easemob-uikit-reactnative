@@ -41,6 +41,7 @@ type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
   onClickedVideo?: () => void;
   onClickedThreadMore?: () => void;
   onCancelMultiSelected?: () => void;
+  parentName?: string;
 };
 export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   props: _ConversationDetailNavigationBarProps<LeftProps, RightProps>
@@ -62,6 +63,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     onClickedThreadMore,
     selectMode = 'common',
     onCancelMultiSelected,
+    parentName,
   } = props;
   const [status, setStatus] = React.useState<string>();
   const { enableThread, enableAVMeeting } = useConfigContext();
@@ -270,7 +272,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
             >
               {comType === 'chat' || comType === 'search'
                 ? tr(status ?? '')
-                : tr('#group')}
+                : `#${parentName}`}
             </Text>
           </View>
         </Pressable>

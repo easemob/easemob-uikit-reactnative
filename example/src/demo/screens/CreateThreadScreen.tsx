@@ -58,6 +58,7 @@ export function CreateThreadScreen(props: Props) {
   const parentId = ((route.params as any)?.params as any)?.parentId;
   const messageId = ((route.params as any)?.params as any)?.messageId;
   const operateType = ((route.params as any)?.params as any)?.operateType;
+  const from = ((route.params as any)?.params as any)?.from;
   // const selectedParticipants = ((route.params as any)?.params as any)
   //   ?.selectedParticipants;
   const selectedContacts = ((route.params as any)?.params as any)
@@ -120,7 +121,11 @@ export function CreateThreadScreen(props: Props) {
   // }, [selectedParticipants, operateType]);
 
   React.useEffect(() => {
-    if (selectedContacts && operateType === 'share_card') {
+    if (
+      selectedContacts &&
+      operateType === 'share_card' &&
+      from === 'CreateThread'
+    ) {
       try {
         const p = JSON.parse(selectedContacts);
         listRef.current?.addSendMessage?.({
@@ -131,7 +136,7 @@ export function CreateThreadScreen(props: Props) {
         });
       } catch {}
     }
-  }, [selectedContacts, operateType]);
+  }, [selectedContacts, operateType, from]);
 
   return (
     <SafeAreaView
@@ -164,15 +169,16 @@ export function CreateThreadScreen(props: Props) {
             //     },
             //   });
             // },
-            onClickedCardMenu: () => {
-              navigation.push('ShareContact', {
-                params: {
-                  convId,
-                  convType,
-                  operateType: 'share_card',
-                },
-              });
-            },
+            // onClickedCardMenu: () => {
+            //   navigation.push('ShareContact', {
+            //     params: {
+            //       convId,
+            //       convType,
+            //       operateType: 'share_card',
+            //       from: 'CreateThread',
+            //     },
+            //   });
+            // },
             // onInitMenu: (menu) => {
             //   return [
             //     ...menu,

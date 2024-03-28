@@ -187,7 +187,8 @@ export function useMessageLongPressActions(
       if (
         msgModel.msg.status === ChatMessageStatus.SUCCESS &&
         convType === 1 &&
-        enableThread === true
+        enableThread === true &&
+        (comType === 'chat' || comType === 'search')
       ) {
         initItems.push({
           name: tr('_uikit_chat_list_long_press_menu_thread'),

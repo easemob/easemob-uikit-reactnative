@@ -142,6 +142,7 @@ export function MessageThreadDetailScreen(props: Props) {
                   convId,
                   convType,
                   operateType: 'share_card',
+                  from: 'MessageThreadDetail',
                 },
               });
             },
@@ -258,13 +259,13 @@ export function MessageThreadDetailScreen(props: Props) {
               console.log('onNoMoreMessage');
             }, []),
             firstMessage: firstMessage,
-            onClickedEditThreadName: (_threadId, threadName) => {
+            onClickedEditThreadName: (thread) => {
               editTypeRef.current = 'threadName';
               navigation.push('EditInfo', {
                 params: {
                   backName: tr('edit_thread_name'),
                   saveName: tr('save'),
-                  initialData: threadName,
+                  initialData: thread.threadName,
                   maxLength: 128,
                   testRef,
                   from: 'MessageThreadDetail',

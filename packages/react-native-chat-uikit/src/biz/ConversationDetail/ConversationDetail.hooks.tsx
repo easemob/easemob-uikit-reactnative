@@ -91,6 +91,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const [threadName, setThreadName] = React.useState<string | undefined>(
     newThreadName
   );
+  const [parentName, setParentName] = React.useState<string | undefined>();
   const [convAvatar, setConvAvatar] = React.useState<string>();
   const ownerIdRef = React.useRef<string>();
   const [doNotDisturb, setDoNotDisturb] = React.useState<boolean | undefined>(
@@ -163,10 +164,21 @@ export function useConversationDetail(props: ConversationDetailProps) {
                 }
               },
             });
+            if (thread && thread.parentId) {
+              im.getGroupInfo({
+                groupId: thread.parentId,
+                onResult: (res) => {
+                  if (res.isOk && res.value) {
+                    setParentName(res.value.groupName ?? convId);
+                  } else {
+                    setParentName(convId);
+                  }
+                },
+              });
+            }
           }
         }
       }
-      im.setConversationRead({ convId, convType });
     }
   }, [convId, convType, im, thread, comType]);
 
@@ -261,9 +273,11 @@ export function useConversationDetail(props: ConversationDetailProps) {
   }, []);
 
   const onClickedUnreadCount = React.useCallback(() => {
-    im.setConversationRead({ convId, convType });
+    if (comType === 'chat' || comType === 'search') {
+      im.setConversationRead({ convId, convType });
+    }
     _messageListRef.current?.scrollToBottom?.();
-  }, [_messageListRef, convId, convType, im]);
+  }, [_messageListRef, comType, convId, convType, im]);
 
   React.useEffect(() => {
     getPermission({
@@ -285,9 +299,15 @@ export function useConversationDetail(props: ConversationDetailProps) {
 
   React.useEffect(() => {
     im.messageManager.setCurrentConv({ convId, convType });
+    if (comType === 'chat' || comType === 'search') {
+      im.setConversationRead({ convId, convType });
+    }
     setConversation();
     return () => {
       im.messageManager.setCurrentConv(undefined);
+      if (comType === 'chat' || comType === 'search') {
+        im.setConversationRead({ convId, convType });
+      }
     };
   }, [
     comType,
@@ -440,5 +460,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
     unreadCount,
     onClickedUnreadCount,
     getNickName,
+    parentName,
   };
 }

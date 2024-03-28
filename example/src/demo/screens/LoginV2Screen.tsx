@@ -24,6 +24,7 @@ import {
   usePaletteContext,
   useThemeContext,
 } from 'react-native-chat-uikit';
+import DeviceInfo from 'react-native-device-info';
 
 import { main_bg } from '../common/assets';
 import { useLogin } from '../hooks';
@@ -184,6 +185,11 @@ export function LoginV2Screen(props: Props) {
       },
     });
   }, [check, getToastRef, id, loginAction, navigation, password, tr]);
+
+  React.useEffect(() => {
+    const appVersion = DeviceInfo.getVersion();
+    console.log('dev:appVersion:', appVersion);
+  }, []);
 
   return (
     <ImageBackground

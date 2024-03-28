@@ -573,15 +573,19 @@ export function useConversationList(props: ConversationListProps) {
     const uiListener: UIConversationListListener = {
       onAddedEvent: (data) => {
         onAddDataToUI(data);
+        calculateUnreadCount();
       },
       onUpdatedEvent: (data) => {
         onUpdateDataToUI(data);
+        calculateUnreadCount();
       },
       onDeletedEvent: (data) => {
         onRemoveDataToUI(data);
+        calculateUnreadCount();
       },
       onRequestRefreshEvent: () => {
         refreshToUI(dataRef.current);
+        calculateUnreadCount();
       },
       onRequestReloadEvent: () => {
         init({ onFinished: onInitialized });
@@ -593,6 +597,7 @@ export function useConversationList(props: ConversationListProps) {
       im.removeUIListener(uiListener);
     };
   }, [
+    calculateUnreadCount,
     dataRef,
     im,
     init,

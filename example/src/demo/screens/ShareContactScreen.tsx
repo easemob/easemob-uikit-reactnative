@@ -22,6 +22,7 @@ export function ShareContactScreen(props: Props) {
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
   const convName = ((route.params as any)?.params as any)?.convName;
+  const from = ((route.params as any)?.params as any)?.from;
   return (
     <SafeAreaView
       style={{
@@ -40,17 +41,55 @@ export function ShareContactScreen(props: Props) {
           });
         }}
         onClickedItem={(data) => {
-          navigation.replace('ConversationDetail', {
-            params: {
-              convId,
-              convType,
-              convName: convName ?? convId,
-              selectedContacts: JSON.stringify(data),
-              operateType: 'share_card',
-              from: 'ShareContact',
-              hash: Date.now(),
-            },
-          });
+          if (from === 'ConversationDetail') {
+            navigation.navigate({
+              name: 'ConversationDetail',
+              params: {
+                params: {
+                  convId,
+                  convType,
+                  convName: convName ?? convId,
+                  selectedContacts: JSON.stringify(data),
+                  operateType: 'share_card',
+                  from: 'ShareContact',
+                  hash: Date.now(),
+                },
+              },
+              merge: true,
+            });
+          } else if (from === 'MessageHistory') {
+            navigation.navigate({
+              name: 'MessageHistory',
+              params: {
+                params: {
+                  convId,
+                  convType,
+                  convName: convName ?? convId,
+                  selectedContacts: JSON.stringify(data),
+                  operateType: 'share_card',
+                  from: 'ShareContact',
+                  hash: Date.now(),
+                },
+              },
+              merge: true,
+            });
+          } else if (from === 'MessageThreadDetail') {
+            navigation.navigate({
+              name: 'MessageThreadDetail',
+              params: {
+                params: {
+                  convId,
+                  convType,
+                  convName: convName ?? convId,
+                  selectedContacts: JSON.stringify(data),
+                  operateType: 'share_card',
+                  from: 'ShareContact',
+                  hash: Date.now(),
+                },
+              },
+              merge: true,
+            });
+          }
         }}
         onBack={() => {
           navigation.goBack();

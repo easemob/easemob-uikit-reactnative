@@ -984,7 +984,7 @@ export type MessageListProps = PropsWithError &
      *
      * this parameter is options in thread mode.
      */
-    onClickedEditThreadName?: (threadId: string, threadName: string) => void;
+    onClickedEditThreadName?: (thread: ChatMessageThread) => void;
     /**
      * Callback notification when click open thread member list.
      *

@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+import { CallType } from 'react-native-chat-callkit';
 import {
   ChatConversationType,
   ChatCustomMessageBody,
@@ -11,6 +12,7 @@ import {
   ConversationDetailModelType,
   ConversationDetailRef,
   gCustomMessageCardEventType,
+  GroupParticipantModel,
   MessageInputRef,
   MessageListRef,
   MessageModel,
@@ -26,6 +28,8 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
+import { useCallApi } from '../common/AVView';
+import { agoraAppId, appKey } from '../common/const';
 import type { RootScreenParamsList } from '../routes';
 
 // export function MyMessageContent(props: MessageContentProps) {
@@ -54,6 +58,8 @@ export function MessageHistoryScreen(props: Props) {
   //   ?.selectedParticipants;
   const selectedContacts = ((route.params as any)?.params as any)
     ?.selectedContacts;
+  const selectedMembers = ((route.params as any)?.params as any)
+    ?.selectedMembers as GroupParticipantModel[] | undefined;
   const listRef = React.useRef<MessageListRef>({} as any);
   const inputRef = React.useRef<MessageInputRef>({} as any);
   const { top, bottom } = useSafeAreaInsets();
@@ -67,6 +73,115 @@ export function MessageHistoryScreen(props: Props) {
   });
   const convRef = React.useRef<ConversationDetailRef>({} as any);
   const comType = React.useRef<ConversationDetailModelType>('search').current;
+  const avTypeRef = React.useRef<'video' | 'voice'>('video');
+
+  const { showMultiCall, showSingleCall, hideCall } = useCallApi({});
+
+  const showCall = React.useCallback(
+    (params: { convType: number; avType: 'video' | 'voice' }) => {
+      const { avType, convType } = params;
+      let members: GroupParticipantModel[] = [];
+      try {
+        if (convType === 0) {
+          members.push({
+            memberId: convId,
+          });
+        } else if (convType === 1) {
+          members = selectedMembers ?? [];
+        }
+      } catch (error) {
+        console.warn('test:showCall:parse selectedMembers error', error);
+      }
+
+      const callType =
+        avType === 'video'
+          ? convType === 0
+            ? CallType.Video1v1
+            : CallType.VideoMulti
+          : avType === 'voice'
+          ? convType === 0
+            ? CallType.Audio1v1
+            : CallType.AudioMulti
+          : undefined;
+
+      if (callType === undefined) {
+        return;
+      }
+      if (im.userId === undefined) {
+        return;
+      }
+      if (members.length === 0) {
+        return;
+      }
+      const inviteeIds = members.map((item) => item.memberId);
+      if (callType === CallType.Audio1v1 || callType === CallType.Video1v1) {
+        showSingleCall({
+          appKey: appKey,
+          agoraAppId: agoraAppId,
+          inviterId: im.userId,
+          currentId: im.userId,
+          inviteeIds: inviteeIds,
+          callType: callType,
+          // inviterName: '',
+          // inviterAvatar: '',
+          onRequestClose: hideCall,
+        });
+      } else if (
+        callType === CallType.AudioMulti ||
+        callType === CallType.VideoMulti
+      ) {
+        showMultiCall({
+          appKey: appKey,
+          agoraAppId: agoraAppId,
+          inviterId: im.userId,
+          currentId: im.userId,
+          inviteeIds: inviteeIds,
+          callType: callType,
+          // inviterName: '',
+          // inviterAvatar: '',
+          onRequestClose: hideCall,
+        });
+      }
+    },
+    [
+      convId,
+      hideCall,
+      im.userId,
+      selectedMembers,
+      showMultiCall,
+      showSingleCall,
+    ]
+  );
+  const onClickedVideo = React.useCallback(() => {
+    if (comType !== 'chat') {
+      return;
+    }
+    avTypeRef.current = 'video';
+    if (convType === 0) {
+      showCall({ convType, avType: 'video' });
+    } else if (convType === 1) {
+      navigation.navigate('AVSelectGroupParticipant', {
+        params: {
+          groupId: convId,
+        },
+      });
+    }
+  }, [comType, convId, convType, navigation, showCall]);
+  const onClickedVoice = React.useCallback(() => {
+    if (comType !== 'chat') {
+      return;
+    }
+    avTypeRef.current = 'voice';
+    if (convType === 0) {
+      showCall({ convType, avType: 'voice' });
+    } else if (convType === 1) {
+      navigation.navigate('AVSelectGroupParticipant', {
+        params: {
+          groupId: convId,
+        },
+      });
+    }
+  }, [comType, convId, convType, navigation, showCall]);
 
   // React.useEffect(() => {
   //   if (selectedParticipants && operateType === 'mention') {
@@ -142,6 +257,7 @@ export function MessageHistoryScreen(props: Props) {
                   convId,
                   convType,
                   operateType: 'share_card',
+                  from: 'MessageHistory',
                 },
               });
             },
@@ -324,6 +440,8 @@ export function MessageHistoryScreen(props: Props) {
             },
           });
         }}
+        onClickedVideo={onClickedVideo}
+        onClickedVoice={onClickedVoice}
         // ConversationDetailNavigationBar={
         //   <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />
         // }

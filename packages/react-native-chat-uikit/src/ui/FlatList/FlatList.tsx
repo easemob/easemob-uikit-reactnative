@@ -37,7 +37,13 @@ export const _FlatList = <ItemT,>(
   const { ListErrorComponent, ListLoadingComponent } = props;
 
   return (
-    <View style={{ flexGrow: 1 }}>
+    <View
+      style={{
+        flexGrow: 1,
+        // height: 400,
+        // flex: 1,
+      }}
+    >
       <RNFlatList ref={ref} {...props} />
       {getElement(ListErrorComponent)}
       {getElement(ListLoadingComponent)}

@@ -261,6 +261,7 @@ export function ConversationDetailScreen(props: Props) {
                   convId,
                   convType,
                   operateType: 'share_card',
+                  from: 'ConversationDetail',
                 },
               });
             },

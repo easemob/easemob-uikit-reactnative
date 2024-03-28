@@ -200,7 +200,7 @@ export function useMessageList(
     ...propsListItemRenderProps,
   });
   const {} = useMessageContext();
-  const { recallTimeout, languageCode } = useConfigContext();
+  const { recallTimeout, languageCode, enableThread } = useConfigContext();
   const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
     userScrollGestureRef.current = isUserScroll;
   }, []);
@@ -563,6 +563,7 @@ export function useMessageList(
   );
 
   const onLayout = React.useCallback((event: LayoutChangeEvent) => {
+    console.log('test:zuoyu:onLayout:', event.nativeEvent.layout.height);
     heightRef.current = event.nativeEvent.layout.height;
   }, []);
 
@@ -1011,15 +1012,6 @@ export function useMessageList(
     [im, onClickedDestroyThread, thread]
   );
 
-  const _onClickedEditThreadName = React.useCallback(
-    (threadId: string, threadName: string) => {
-      if (thread?.owner === im.userId && thread?.threadId === threadId) {
-        onClickedEditThreadName?.(threadId, threadName);
-      }
-    },
-    [im.userId, onClickedEditThreadName, thread?.owner, thread?.threadId]
-  );
-
   const _onMultiSelected = React.useCallback(() => {
     onClickedMultiSelected?.();
     dataRef.current.forEach((d) => {
@@ -1074,6 +1066,38 @@ export function useMessageList(
       menuRef,
       alertRef,
     });
+
+  const _onClickedEditThreadName = React.useCallback(
+    (thread: ChatMessageThread) => {
+      im.getGroupInfo({
+        groupId: thread.parentId,
+        onResult: (res) => {
+          if (res.isOk && res.value) {
+            const isOwner = res.value.owner === im.userId;
+            onShowMessageThreadListMoreActions({
+              thread,
+              onClickedEditThreadName: _onClickedEditThreadName,
+              onClickedLeaveThread: _onClickedLeaveThread,
+              onClickedDestroyThread: _onClickedDestroyThread,
+              onClickedOpenThreadMemberList,
+              isOwner: isOwner,
+            });
+          }
+        },
+      });
+      if (thread?.owner === im.userId) {
+        onClickedEditThreadName?.(thread);
+      }
+    },
+    [
+      _onClickedDestroyThread,
+      _onClickedLeaveThread,
+      im,
+      onClickedEditThreadName,
+      onClickedOpenThreadMemberList,
+      onShowMessageThreadListMoreActions,
+    ]
+  );
 
   const onClickedListItem = React.useCallback(
     async (
@@ -1586,6 +1610,9 @@ export function useMessageList(
 
   const onUpdateMessageThreadToUI = React.useCallback(
     (msgId: string, thread: ChatMessageThread) => {
+      if (enableThread !== true) {
+        return;
+      }
       const isExisted = dataRef.current.find((d) => {
         if (d.model.modelType === 'message') {
           const msgModel = d.model as MessageModel;
@@ -1598,15 +1625,19 @@ export function useMessageList(
         return false;
       });
       if (isExisted) {
-        refreshToUI(dataRef.current);
+        if (comType === 'chat' || comType === 'search') {
+          refreshToUI(dataRef.current);
+        }
       } else {
-        const msg = thread.lastMessage;
-        if (msg) {
-          onAddMessageToUI(msg);
+        if (comType === 'create_thread' || comType === 'thread') {
+          const msg = thread.lastMessage;
+          if (msg) {
+            onAddMessageToUI(msg);
+          }
         }
       }
     },
-    [dataRef, onAddMessageToUI, refreshToUI]
+    [comType, dataRef, enableThread, onAddMessageToUI, refreshToUI]
   );
 
   const onRecallMessageToUI = React.useCallback(
@@ -2244,6 +2275,8 @@ export function useMessageList(
         return;
       }
 
+      let msgCount = 0;
+
       try {
         do {
           const _maxCount = maxCount ?? gRequestMaxThreadCount;
@@ -2259,6 +2292,7 @@ export function useMessageList(
             setNoNewMsg(true);
             break;
           }
+          msgCount = msgs.length;
           if (msgs.length < _maxCount) {
             setNoNewMsg(true);
           }
@@ -2302,9 +2336,11 @@ export function useMessageList(
           }
         } while (false);
         setIsGetting(false);
+        return msgCount;
       } catch (error) {
         console.warn('dev:requestAfterMessages:', error);
         setIsGetting(false);
+        return msgCount;
       }
     },
     [
@@ -2553,8 +2589,9 @@ export function useMessageList(
     testMode,
   ]);
 
-  const onContentSizeChange = React.useCallback((_w: number, _h: number) => {},
-  []);
+  const onContentSizeChange = React.useCallback((_w: number, _h: number) => {
+    console.log('test:zuoyu:onContentSizeChange:', _w, _h);
+  }, []);
 
   const requestThreadHeaderMessage = React.useCallback(async () => {
     let messageId;
@@ -2716,7 +2753,14 @@ export function useMessageList(
       await requestThreadHeaderMessage();
     } else if (comType === 'thread') {
       await requestThreadHeaderMessage();
-      await requestThreadAfterMessages(afterMsgIdRef.current);
+      const ret = await requestThreadAfterMessages(afterMsgIdRef.current);
+      if (ret && ret < gRequestMaxThreadCount) {
+        if (inverted === true) {
+          setIsTop(true);
+        } else {
+          setIsBottom(true);
+        }
+      }
     } else if (comType === 'search') {
       if (propsMsgId) {
         await requestBeforeMessages(propsMsgId, true);
@@ -2728,10 +2772,13 @@ export function useMessageList(
     addHightMessage,
     comType,
     init,
+    inverted,
     propsMsgId,
     requestBeforeMessages,
     requestThreadAfterMessages,
     requestThreadHeaderMessage,
+    setIsBottom,
+    setIsTop,
   ]);
 
   React.useImperativeHandle(
@@ -2821,14 +2868,25 @@ export function useMessageList(
           scrollToBottom();
         },
         startShowThreadMoreMenu: () => {
-          if (thread) {
-            onShowMessageThreadListMoreActions({
-              thread,
-              onClickedEditThreadName: _onClickedEditThreadName,
-              onClickedLeaveThread: _onClickedLeaveThread,
-              onClickedDestroyThread: _onClickedDestroyThread,
-              onClickedOpenThreadMemberList,
+          if (thread && thread.parentId) {
+            im.getGroupInfo({
+              groupId: thread.parentId,
+              onResult: (res) => {
+                if (res.isOk && res.value) {
+                  const isOwner = res.value.owner === im.userId;
+                  onShowMessageThreadListMoreActions({
+                    thread,
+                    onClickedEditThreadName: _onClickedEditThreadName,
+                    onClickedLeaveThread: _onClickedLeaveThread,
+                    onClickedDestroyThread: _onClickedDestroyThread,
+                    onClickedOpenThreadMemberList,
+                    isOwner: isOwner,
+                  });
+                }
+              },
             });
+          } else {
+            console.log('dev:startShowThreadMoreMenu');
           }
         },
         cancelMultiSelected: () => {
@@ -2873,6 +2931,7 @@ export function useMessageList(
       deleteMessage,
       deleteMessages,
       editMessage,
+      im,
       inverted,
       loadAllLatestMessage,
       onAddMessageListToUI,
@@ -2935,7 +2994,7 @@ export function useMessageList(
         if (msg.conversationId === convId) {
           if (canAddNewMessageToUI() || recvMessageAutoScroll === true) {
             setUnreadCount(0);
-            onAddMessageToUI(msg);
+            await onAddMessageToUI(msg);
             sendRecvMessageReadAck(msg);
             if (comType === 'chat') {
               scrollToBottom();
@@ -3017,15 +3076,26 @@ export function useMessageList(
       onChatMessageThreadCreated: (event: ChatMessageThreadEvent) => {
         const msgId = event.thread.msgId;
         if (msgId && (comType === 'chat' || comType === 'search')) {
-          onUpdateMessageThreadToUI(msgId, event.thread);
+          if (convId === event.thread.parentId) {
+            onUpdateMessageThreadToUI(msgId, event.thread);
+          }
         }
       },
       onChatMessageThreadUpdated: (event: ChatMessageThreadEvent) => {
         const msgId = event.thread.msgId;
+        console.log(
+          'test:zuoyu:onChatMessageThreadUpdated',
+          msgId,
+          convId,
+          event.thread
+        );
         if (msgId) {
-          if (comType === 'chat' || comType === 'search') {
+          if (
+            (comType === 'chat' || comType === 'search') &&
+            convId === event.thread.parentId
+          ) {
             onUpdateMessageThreadToUI(msgId, event.thread);
-          } else if (comType === 'thread') {
+          } else if (comType === 'thread' && convId === event.thread.threadId) {
             if (canAddNewMessageToUI()) {
               if (event.thread.lastMessage) {
                 onAddMessageToUI(event.thread.lastMessage);

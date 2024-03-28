@@ -53,6 +53,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
     onChangeUnreadCount,
     unreadCount,
     onClickedUnreadCount,
+    parentName,
   } = useConversationDetail(props);
 
   const getContent = () => (
@@ -75,6 +76,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
           onClickedThreadMore={onClickedThreadMore}
           selectMode={selectMode}
           onCancelMultiSelected={onCancelMultiSelected}
+          parentName={parentName}
         />
       ) : null}
       <_MessageList

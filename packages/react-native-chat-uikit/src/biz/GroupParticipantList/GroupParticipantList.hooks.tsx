@@ -347,12 +347,22 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
   React.useEffect(() => {
     const uiListener: UIGroupParticipantListListener = {
       onUpdatedEvent: (_data) => {},
-      onDeletedEvent: (_data) => {},
+      onDeletedEvent: (data) => {
+        dataRef.current = dataRef.current.filter(
+          (item) => item.data.memberId !== data.memberId
+        );
+        refreshToUI();
+      },
       onAddedEvent: (data) => {
         if (data.memberId === im.userId) {
           return;
         }
         setParticipantCount((prev) => prev + 1);
+        dataRef.current.push({
+          id: data.memberId,
+          data: data,
+        });
+        refreshToUI();
       },
       onRequestRefreshEvent: (id) => {
         if (id === groupId) {
@@ -370,7 +380,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     return () => {
       im.removeUIListener(uiListener);
     };
-  }, [groupId, im, init, refreshToUI]);
+  }, [dataRef, groupId, im, init, refreshToUI]);
 
   React.useEffect(() => {
     init();
