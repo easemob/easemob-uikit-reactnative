@@ -58,6 +58,7 @@ export const ListIndex = (props: ListIndexProps) => {
       dark: colors.neutral[6],
     },
   });
+  console.log('test:zuoyu:ListIndex:', indexTitles);
 
   return (
     <>

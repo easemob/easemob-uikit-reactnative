@@ -238,11 +238,12 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
             </Pressable>
           ) : null}
 
-          <View
+          <Pressable
             style={{
               marginLeft: 10,
               maxWidth: Dimensions.get('window').width - 200,
             }}
+            onPress={onClickedAvatar}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <SingleLineText
@@ -274,7 +275,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
                 ? tr(status ?? '')
                 : `#${parentName}`}
             </Text>
-          </View>
+          </Pressable>
         </Pressable>
       }
       Right={rightProps.render}

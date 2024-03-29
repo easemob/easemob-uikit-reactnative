@@ -215,6 +215,16 @@ export function useContactList(props: ContactListProps) {
     });
   }, [im]);
 
+  const getNickName = React.useCallback((section: ContactModel) => {
+    if (section.remark && section.remark.length > 0) {
+      return section.remark;
+    } else if (section.userName && section.userName.length > 0) {
+      return section.userName;
+    } else {
+      return section.userId;
+    }
+  }, []);
+
   const refreshToUI = React.useCallback(
     (list: ContactListItemProps[]) => {
       if (isSort === true) {
@@ -224,12 +234,14 @@ export function useContactList(props: ContactListProps) {
 
       const sortList: (IndexModel & { data: ContactListItemProps[] })[] = [];
       uniqueList.forEach((item) => {
-        const first = getFirst(item.section.userName?.[0]?.toLocaleUpperCase());
+        const name = getNickName(item.section);
+        const first = getFirst(name?.[0]?.toLocaleUpperCase());
         const indexTitle = first
           ? g_index_alphabet_range.includes(first)
             ? first
             : '#'
           : '#';
+        console.log('test:zuoyu:sortList', name, first, indexTitle);
         const index = sortList.findIndex((section) => {
           return section.indexTitle === indexTitle;
         });
@@ -242,6 +254,7 @@ export function useContactList(props: ContactListProps) {
           sortList[index]?.data.push(item);
         }
       });
+      console.log('test:zuoyu:refreshToUI:sortList', JSON.stringify(sortList));
       sectionsRef.current = sortList;
 
       calculateGroupCount();
@@ -254,6 +267,7 @@ export function useContactList(props: ContactListProps) {
       calculateAddedGroupMemberCount,
       calculateGroupCount,
       getFirst,
+      getNickName,
       isSort,
       onSort,
       removeDuplicateData,
@@ -543,6 +557,9 @@ export function useContactList(props: ContactListProps) {
                         contactType: contactType,
                       } as ContactListItemProps;
                     });
+                    for (const item of list) {
+                      console.log('test:zuoyu:item:', item.id, item.section);
+                    }
                     refreshToUI(list);
                     updateState('normal');
                   }
@@ -741,7 +758,7 @@ export function useContactList(props: ContactListProps) {
 
   const setContactRemark = React.useCallback(
     (item: ContactModel) => {
-      if (item.remark) {
+      if (item.remark && item.remark.length > 0) {
         im.setContactRemark({
           userId: item.userId,
           remark: item.remark,

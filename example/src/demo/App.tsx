@@ -445,6 +445,7 @@ export function App() {
                 name={'Home'}
                 options={{
                   headerShown: false,
+                  gestureEnabled: demoType !== 4,
                 }}
                 component={HomeScreen}
               />
@@ -697,6 +698,7 @@ export function App() {
                 name={'LoginV2'}
                 options={{
                   headerShown: false,
+                  gestureEnabled: demoType !== 4,
                 }}
                 component={LoginV2Screen}
               />
