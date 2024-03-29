@@ -144,6 +144,9 @@ export function ContactList(props: ContactListProps) {
           style={[{ flexGrow: 1 }, style]}
           contentContainerStyle={[{ flexGrow: 1 }, contentContainerStyle]}
           sections={sections}
+          // !!! https://github.com/facebook/react-native/issues/42967
+          // !!! https://github.com/facebook/react-native/issues/36766
+          initialNumToRender={9999}
           showsVerticalScrollIndicator={showsVerticalScrollIndicator ?? false}
           refreshing={propsRefreshing ?? refreshing}
           onRefresh={propsOnRefresh ?? onRefresh}
