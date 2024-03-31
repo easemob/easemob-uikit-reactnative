@@ -285,6 +285,11 @@ export function getMessageBubblePadding(msg: ChatMessage) {
       paddingHorizontal: undefined,
       paddingVertical: undefined,
     };
+  } else if (msg.body.type === ChatMessageType.TXT) {
+    return {
+      paddingHorizontal: 12,
+      paddingVertical: undefined,
+    };
   }
   return {
     paddingHorizontal: 12,

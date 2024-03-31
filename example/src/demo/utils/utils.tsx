@@ -83,8 +83,8 @@ export function randomId(): string {
 export const defaultAvatars: number[] = [
   require('../assets/group_avatar_ondark.png'),
   require('../assets/group_avatar_onlight.png'),
-  require('../assets/persion_avatar_ondark.png'),
-  require('../assets/persion_avatar_onlight.png'),
+  require('../assets/person_avatar_ondark.png'),
+  require('../assets/person_avatar_onlight.png'),
 ];
 
 export const mineInfo: number[] = [

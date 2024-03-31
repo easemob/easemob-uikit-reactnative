@@ -9,7 +9,7 @@ import {
 import type { ChatMessageReaction } from 'react-native-chat-sdk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useChatContext } from '../../chat';
+import { DataModel, useChatContext } from '../../chat';
 import { useConfigContext } from '../../config';
 import { useColors, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
@@ -18,6 +18,11 @@ import { Icon } from '../../ui/Image';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { SingleLineText, Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
+import { useDataPriority } from '../hooks';
+
+export type MessageReactionModel = Omit<ChatMessageReaction, 'userList'> & {
+  userList: DataModel[];
+};
 
 /**
  * Referencing Values of the `BottomSheetReactionDetail` component.
@@ -48,7 +53,7 @@ export type BottomSheetReactionDetailProps = {
   /**
    * The reaction list.
    */
-  reactionList: ChatMessageReaction[];
+  reactionList: MessageReactionModel[];
 
   /**
    * The message ID.
@@ -157,12 +162,13 @@ function useGetProps(props: BottomSheetReactionDetailProps) {
     reactionList,
     msgId,
     currentSelected = reactionList[0]!.reaction,
+    onRequestModalClose,
     ...others
   } = props;
   const [_msgId, setMsgId] = React.useState<string>(msgId);
   const [_currentSelected, setCurrentSelected] =
     React.useState<string>(currentSelected);
-  const [data, setData] = React.useState<ChatMessageReaction[]>(
+  const [data, setData] = React.useState<MessageReactionModel[]>(
     reactionList ?? []
   );
   const im = useChatContext();
@@ -201,13 +207,14 @@ function useGetProps(props: BottomSheetReactionDetailProps) {
                 setCurrentSelected(data[0]!.reaction);
               } else {
                 setCurrentSelected('');
+                onRequestModalClose?.();
               }
             }
           }
         },
       });
     },
-    [im, data, setData]
+    [im, data, onRequestModalClose]
   );
   return {
     updateProps: _updateProps,
@@ -216,16 +223,17 @@ function useGetProps(props: BottomSheetReactionDetailProps) {
     currentSelected: _currentSelected,
     onClickedReaction,
     onRemoveReaction,
+    onRequestModalClose,
     ...others,
   };
 }
 
-type TabReactionItemProps = ChatMessageReaction & {
+type TabReactionItemProps = MessageReactionModel & {
   onClicked?: (reaction: string) => void;
   currentSelected?: string;
 };
 type TabReactionProps = {
-  list: ChatMessageReaction[];
+  list: MessageReactionModel[];
   onClicked?: (reaction: string) => void;
   currentSelected?: string;
 };
@@ -363,6 +371,7 @@ function UserList(props: UserListProps) {
   const cursorRef = React.useRef('');
   const im = useChatContext();
   const [refreshing, setRefreshing] = React.useState(false);
+  const { getContactInfo } = useDataPriority({});
 
   const onClickedItem = React.useCallback(
     (userId: string) => {
@@ -398,7 +407,9 @@ function UserList(props: UserListProps) {
                     return {
                       userId: v,
                       isMyself: v === userId,
-                    };
+                      userAvatar: getContactInfo(v).avatar,
+                      userName: getContactInfo(v).name,
+                    } as UserListItemProps;
                   })
                   .sort((a) => {
                     if (a.isMyself) return -1;
@@ -413,6 +424,8 @@ function UserList(props: UserListProps) {
                     return {
                       userId: v,
                       isMyself: v === userId,
+                      userAvatar: getContactInfo(v).avatar,
+                      userName: getContactInfo(v).name,
                     };
                   }),
                 ];
@@ -427,7 +440,7 @@ function UserList(props: UserListProps) {
         }
       },
     });
-  }, [currentSelected, im, msgId]);
+  }, [currentSelected, getContactInfo, im, msgId]);
 
   React.useEffect(() => {
     cursorRef.current = '';

@@ -53,7 +53,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_chat_list_long_press_menu_copy': '复制',
     '_uikit_chat_list_long_press_menu_replay': '回复',
     '_uikit_chat_list_long_press_menu_translate': '翻译',
-    '_uikit_chat_list_long_press_menu_thread': '话题',
+    '_uikit_chat_list_long_press_menu_thread': '创建话题',
     '_uikit_chat_list_long_press_menu_edit': '编辑',
     '_uikit_chat_list_long_press_menu_multi_select': '多选',
     '_uikit_chat_list_long_press_menu_forward_message': '转发',

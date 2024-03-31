@@ -35,6 +35,10 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
       },
       text2: {
         light: colors.neutral[7],
+        dark: colors.neutral[4],
+      },
+      text3: {
+        light: colors.neutral[5],
         dark: colors.neutral[6],
       },
     });
@@ -150,7 +154,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                   textType={'medium'}
                   paletteType={'label'}
                   style={{
-                    color: getColor('text'),
+                    color: getColor('text3'),
                   }}
                 >
                   {message}

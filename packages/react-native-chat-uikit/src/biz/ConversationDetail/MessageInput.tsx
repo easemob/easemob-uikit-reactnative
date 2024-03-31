@@ -105,6 +105,7 @@ export const MessageInput = React.forwardRef<
     onClickedMultiSelectDeleteButton,
     onClickedMultiSelectShareButton,
   } = useMessageInput(props, ref);
+  console.log('test:zuoyu:sendIconName', sendIconName);
 
   return (
     <>
@@ -288,6 +289,7 @@ export const MessageInput = React.forwardRef<
                       value={value}
                       keyboardAppearance={style === 'light' ? 'light' : 'dark'}
                       placeholder={'Aa'}
+                      returnKeyType={'send'}
                     />
                   </View>
                 </View>
@@ -309,7 +311,9 @@ export const MessageInput = React.forwardRef<
                     width: 30,
                     height: 30,
                     tintColor: getColor(
-                      sendIconName === 'plus_in_circle' ? 'icon' : 'text_enable'
+                      sendIconName === 'plus_in_circle'
+                        ? 'icon'
+                        : 'enable_share'
                     ),
                     backgroundColor: undefined,
                     borderRadius: 30,

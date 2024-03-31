@@ -12,7 +12,7 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
-import { Avatar, StatusAvatar } from '../Avatar';
+import { Avatar, GroupAvatar, StatusAvatar } from '../Avatar';
 import {
   TopNavigationBar,
   TopNavigationBarElementType,
@@ -66,7 +66,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     parentName,
   } = props;
   const [status, setStatus] = React.useState<string>();
-  const { enableThread, enableAVMeeting } = useConfigContext();
+  const { enableThread, enableAVMeeting, enablePresence } = useConfigContext();
   // const im = useChatContext();
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -80,8 +80,8 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
       dark: colors.neutral[3],
     },
     text_enable: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
     },
     icon: {
       light: colors.neutral[3],
@@ -225,15 +225,17 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
           />
           {comType === 'chat' || comType === 'search' ? (
             <Pressable onPress={onClickedAvatar}>
-              {convType === 0 ? (
+              {enablePresence === true && convType === 0 ? (
                 <StatusAvatar
                   url={convAvatar}
                   size={32}
                   userId={convId}
                   onClicked={onClickedAvatar}
                 />
-              ) : (
+              ) : convType === 0 ? (
                 <Avatar url={convAvatar} size={32} />
+              ) : (
+                <GroupAvatar url={convAvatar} size={32} />
               )}
             </Pressable>
           ) : null}

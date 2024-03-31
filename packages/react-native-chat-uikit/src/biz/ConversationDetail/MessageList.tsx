@@ -225,7 +225,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
               reaction: 'like',
               count: 1,
               isAddedBySelf: false,
-              userList: ['xx'],
+              userList: [{ id: 'xx', type: 'user' }],
             },
           ]}
           msgId={''}

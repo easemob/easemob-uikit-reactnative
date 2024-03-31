@@ -20,7 +20,9 @@ import {
   TimeMessageModel,
   useChatContext,
   useColors,
+  useI18nContext,
   usePaletteContext,
+  useSimpleToastContext,
   uuid,
 } from 'react-native-chat-uikit';
 import {
@@ -73,6 +75,8 @@ export function ConversationDetailScreen(props: Props) {
   const convRef = React.useRef<ConversationDetailRef>({} as any);
   const comType = React.useRef<ConversationDetailModelType>('chat').current;
   const avTypeRef = React.useRef<'video' | 'voice'>('video');
+  const { getSimpleToastRef } = useSimpleToastContext();
+  const { tr } = useI18nContext();
 
   const { showMultiCall, showSingleCall, hideCall } = useCallApi({});
 
@@ -399,6 +403,12 @@ export function ConversationDetailScreen(props: Props) {
             onClickedHistoryDetail: (item) => {
               navigation.push('MessageHistoryList', {
                 params: { message: item.msg },
+              });
+            },
+            onCopyFinished: () => {
+              console.log('onCopyFinished');
+              getSimpleToastRef().show({
+                message: tr('copy_success'),
               });
             },
           },

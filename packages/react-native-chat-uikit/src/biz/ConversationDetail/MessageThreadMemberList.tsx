@@ -13,7 +13,7 @@ import {
   BottomSheetNameMenu,
   BottomSheetNameMenuRef,
 } from '../BottomSheetMenu';
-import { useCloseMenu } from '../hooks';
+import { useCloseMenu, useDataPriority } from '../hooks';
 import { useMessageThreadMemberListMoreActions } from '../hooks/useMessageThreadMemberListMoreActions';
 import { useFlatList } from '../List';
 import {
@@ -179,6 +179,7 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
   const alertRef = React.useRef<any>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
   const groupOwnerRef = React.useRef<string>('');
+  const { getContactInfo } = useDataPriority({});
 
   const onClickedKickMember = React.useCallback(
     (threadId: string, memberId: string) => {
@@ -258,6 +259,8 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
                 dataRef.current.push({
                   model: {
                     id: item,
+                    name: getContactInfo(item).name,
+                    avatar: getContactInfo(item).avatar,
                     isOwner: thread.owner === item,
                     type: 'user',
                   },
@@ -269,7 +272,7 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
         },
       });
     }
-  }, [dataRef, im, setData, thread]);
+  }, [dataRef, getContactInfo, im, setData, thread]);
 
   const _onMore = React.useCallback(() => {
     if (hasNoMoreRef.current === true) {
@@ -282,12 +285,10 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
   }, [dataRef, requestMore]);
 
   const init = React.useCallback(() => {
-    console.log('test:zuoyu:init:', thread);
     if (thread && thread.parentId) {
       im.getGroupInfo({
         groupId: thread.parentId,
         onResult: (res) => {
-          console.log('test:zuoyu:init:getGroupInfo:', res);
           if (res.isOk && res.value) {
             groupOwnerRef.current = res.value.owner;
           }

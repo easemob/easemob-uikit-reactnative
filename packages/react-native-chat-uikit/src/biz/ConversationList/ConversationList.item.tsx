@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
-import type { ChatMessage } from 'react-native-chat-sdk';
+import { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
 
 import { gMessageAttributeMentions, useChatContext } from '../../chat';
 import { getMessageSnapshot } from '../../chat/utils';
@@ -11,7 +11,7 @@ import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { SingleLineText } from '../../ui/Text';
 import { formatTsForConvList } from '../../utils';
-import { Avatar } from '../Avatar';
+import { Avatar, GroupAvatar } from '../Avatar';
 import { Badges } from '../Badges';
 import type { ConversationListItemProps } from './types';
 
@@ -122,7 +122,11 @@ export function ConversationListItem(props: ConversationListItemProps) {
           paddingHorizontal: 16,
         }}
       >
-        <Avatar url={data.convAvatar} size={50} />
+        {data.convType === ChatConversationType.PeerChat ? (
+          <Avatar url={data.convAvatar} size={50} />
+        ) : (
+          <GroupAvatar url={data.convAvatar} size={50} />
+        )}
         <View
           style={{
             flexDirection: 'column',

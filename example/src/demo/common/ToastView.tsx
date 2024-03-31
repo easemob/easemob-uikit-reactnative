@@ -32,10 +32,10 @@ export function ToastView(props: ToastViewProps) {
   //           if (Platform.OS === 'ios') {
   //             toastRef.current.show({
   //               message: ret,
-  //               timeout: 3000,
+  //               timeout: 1000,
   //             });
   //           } else {
-  //             ToastAndroid.show(ret, 3000);
+  //             ToastAndroid.show(ret, 1000);
   //           }
   //         }
   //       },
@@ -46,10 +46,10 @@ export function ToastView(props: ToastViewProps) {
   //           if (Platform.OS === 'ios') {
   //             toastRef.current.show({
   //               message: ret,
-  //               timeout: 3000,
+  //               timeout: 1000,
   //             });
   //           } else {
-  //             ToastAndroid.show(ret, 3000);
+  //             ToastAndroid.show(ret, 1000);
   //           }
   //         }
   //       },
@@ -78,10 +78,10 @@ function useSimpleToast() {
             if (Platform.OS === 'ios') {
               getSimpleToastRef().show({
                 message: ret,
-                timeout: 3000,
+                timeout: 1000,
               });
             } else {
-              ToastAndroid.show(ret, 3000);
+              ToastAndroid.show(ret, 1000);
             }
           }
         },
@@ -92,10 +92,10 @@ function useSimpleToast() {
             if (Platform.OS === 'ios') {
               getSimpleToastRef().show({
                 message: ret,
-                timeout: 3000,
+                timeout: 1000,
               });
             } else {
-              ToastAndroid.show(ret, 3000);
+              ToastAndroid.show(ret, 1000);
             }
           }
         },

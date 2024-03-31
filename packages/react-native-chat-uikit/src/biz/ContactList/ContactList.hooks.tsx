@@ -241,7 +241,6 @@ export function useContactList(props: ContactListProps) {
             ? first
             : '#'
           : '#';
-        console.log('test:zuoyu:sortList', name, first, indexTitle);
         const index = sortList.findIndex((section) => {
           return section.indexTitle === indexTitle;
         });
@@ -254,7 +253,6 @@ export function useContactList(props: ContactListProps) {
           sortList[index]?.data.push(item);
         }
       });
-      console.log('test:zuoyu:refreshToUI:sortList', JSON.stringify(sortList));
       sectionsRef.current = sortList;
 
       calculateGroupCount();
@@ -557,9 +555,6 @@ export function useContactList(props: ContactListProps) {
                         contactType: contactType,
                       } as ContactListItemProps;
                     });
-                    for (const item of list) {
-                      console.log('test:zuoyu:item:', item.id, item.section);
-                    }
                     refreshToUI(list);
                     updateState('normal');
                   }

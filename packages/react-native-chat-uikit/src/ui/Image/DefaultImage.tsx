@@ -30,10 +30,13 @@ export function DefaultImage(props: DefaultImageProps) {
     defaultSource,
     onLoad,
     source,
+    onError,
     ...others
   } = props;
   const [visible, setVisible] = React.useState(
-    source.uri !== undefined && source.uri !== null ? false : true
+    source?.uri !== undefined && source?.uri !== null && source?.uri.length > 0
+      ? false
+      : true
   );
   return (
     <View style={[containerStyle]}>
@@ -51,14 +54,18 @@ export function DefaultImage(props: DefaultImageProps) {
         />
       </View>
 
-      {source.uri !== undefined &&
-      source.uri !== null &&
-      source.uri.length > 0 ? (
+      {source?.uri !== undefined &&
+      source?.uri !== null &&
+      source?.uri.length > 0 ? (
         <Image
           style={[style, { position: 'absolute' }]}
           onLoad={(e) => {
             onLoad?.(e);
             setVisible(false);
+          }}
+          onError={(e) => {
+            onError?.(e);
+            setVisible(true);
           }}
           source={{ ...source, cache: source.cache ?? 'default' }}
           {...others}

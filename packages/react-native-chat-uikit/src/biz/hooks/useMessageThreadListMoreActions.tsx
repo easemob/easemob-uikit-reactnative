@@ -51,9 +51,7 @@ export function useMessageThreadListMoreActions(
           isHigh: false,
           icon: 'slash_in_rectangle',
           onClicked: () => {
-            closeMenu(() => {
-              console.log('test:zuoyu:clickedEditThreadName');
-            });
+            closeMenu(() => {});
             onClickedEditThreadName?.(thread);
           },
         });

@@ -146,46 +146,54 @@ export function MessageText(props: MessageTextProps) {
 
   return (
     <View>
-      <Text
-        textType={'large'}
-        paletteType={'body'}
+      <View
         style={{
-          color: getColor(layoutType === 'left' ? 'left_text' : 'right_text'),
+          marginVertical: 8,
+          marginBottom: translated === true ? 8 : 8,
         }}
       >
-        {content}
-      </Text>
-      {editable === 'edited' ? (
-        <View
+        <Text
+          textType={'large'}
+          paletteType={'body'}
           style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
+            color: getColor(layoutType === 'left' ? 'left_text' : 'right_text'),
           }}
         >
-          <Icon
-            name={'slash_in_rectangle'}
+          {content}
+        </Text>
+        {editable === 'edited' ? (
+          <View
             style={{
-              height: 16,
-              width: 16,
-              tintColor: getColor(
-                layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
-              ),
-            }}
-          />
-          <SingleLineText
-            textType={'extraSmall'}
-            paletteType={'body'}
-            style={{
-              color: getColor(
-                layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
-              ),
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              marginTop: 4,
             }}
           >
-            {tr('_uikit_msg_edit')}
-          </SingleLineText>
-        </View>
-      ) : null}
+            <Icon
+              name={'slash_in_rectangle'}
+              style={{
+                height: 16,
+                width: 16,
+                tintColor: getColor(
+                  layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
+                ),
+              }}
+            />
+            <SingleLineText
+              textType={'extraSmall'}
+              paletteType={'body'}
+              style={{
+                color: getColor(
+                  layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
+                ),
+              }}
+            >
+              {tr('_uikit_msg_edit')}
+            </SingleLineText>
+          </View>
+        ) : null}
+      </View>
 
       {translated === true ? (
         <View
@@ -199,54 +207,61 @@ export function MessageText(props: MessageTextProps) {
         />
       ) : null}
 
-      {translated === true ? (
-        <Pressable onPress={() => {}}>
-          <Text
-            textType={'large'}
-            paletteType={'body'}
-            selectable={true}
-            style={{
-              color: getColor(
-                layoutType === 'left' ? 'left_text' : 'right_text'
-              ),
-            }}
-          >
-            {translatedContent}
-          </Text>
-        </Pressable>
-      ) : null}
+      <View
+        style={{
+          marginVertical: translated === true ? 8 : 0,
+        }}
+      >
+        {translated === true ? (
+          <Pressable onPress={() => {}}>
+            <Text
+              textType={'large'}
+              paletteType={'body'}
+              selectable={true}
+              style={{
+                color: getColor(
+                  layoutType === 'left' ? 'left_text' : 'right_text'
+                ),
+              }}
+            >
+              {translatedContent}
+            </Text>
+          </Pressable>
+        ) : null}
 
-      {translated === true ? (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-          }}
-        >
-          <Icon
-            name={'a_in_arrows_round'}
+        {translated === true ? (
+          <View
             style={{
-              height: 16,
-              width: 16,
-              tintColor: getColor(
-                layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
-              ),
-            }}
-          />
-          <SingleLineText
-            textType={'extraSmall'}
-            paletteType={'body'}
-            style={{
-              color: getColor(
-                layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
-              ),
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              marginTop: 4,
             }}
           >
-            {tr('_uikit_msg_translate')}
-          </SingleLineText>
-        </View>
-      ) : null}
+            <Icon
+              name={'a_in_arrows_round'}
+              style={{
+                height: 16,
+                width: 16,
+                tintColor: getColor(
+                  layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
+                ),
+              }}
+            />
+            <SingleLineText
+              textType={'extraSmall'}
+              paletteType={'body'}
+              style={{
+                color: getColor(
+                  layoutType === 'left' ? 'left_text_flag' : 'right_text_flag'
+                ),
+              }}
+            >
+              {tr('_uikit_msg_translate')}
+            </SingleLineText>
+          </View>
+        ) : null}
+      </View>
     </View>
   );
 }
@@ -1389,9 +1404,17 @@ export function MessageReaction(props: MessageReactionProps) {
       light: colors.primary[95],
       dark: colors.primary[2],
     },
+    bg2: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
     green: {
       light: colors.secondary[4],
       dark: colors.secondary[5],
+    },
+    plus: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
     },
   });
 
@@ -1423,13 +1446,13 @@ export function MessageReaction(props: MessageReactionProps) {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  borderColor: getColor('common'),
+                  borderColor: getColor(v.isAddedBySelf ? 'common' : 'bg2'),
                   borderWidth: 1,
                   marginRight: layoutType === 'left' ? 4 : undefined,
                   marginLeft: layoutType === 'left' ? undefined : 4,
                   paddingRight: 8,
                   paddingLeft: 6,
-                  backgroundColor: getColor(v.isAddedBySelf ? 'bg' : ''),
+                  backgroundColor: getColor(v.isAddedBySelf ? 'bg' : 'bg2'),
                   borderRadius: getBorderRadius({
                     height: 36,
                     crt: corner.bubble[0]!,
@@ -1442,7 +1465,7 @@ export function MessageReaction(props: MessageReactionProps) {
                   style={{
                     fontSize: Platform.OS === 'ios' ? 15 : 15,
                     fontFamily: fontFamily,
-                    margin: 4,
+                    marginVertical: 2,
                   }}
                 >
                   {r}
@@ -1497,7 +1520,7 @@ export function MessageReaction(props: MessageReactionProps) {
       })}
       <Pressable
         style={{
-          borderColor: getColor('common'),
+          borderColor: getColor('bg2'),
           borderWidth: 1,
           paddingRight: 8,
           paddingLeft: 6,
@@ -1508,7 +1531,7 @@ export function MessageReaction(props: MessageReactionProps) {
             crt: corner.bubble[0]!,
             cr: cornerRadius,
           }),
-          maxHeight: 28,
+          maxHeight: 24,
         }}
         key={reactions?.length ?? 99}
         onPress={() => onClicked?.('faceplus')}
@@ -1518,8 +1541,8 @@ export function MessageReaction(props: MessageReactionProps) {
           style={{
             width: 20,
             height: 20,
-            margin: 4,
-            tintColor: getColor('common'),
+            marginVertical: 2,
+            tintColor: getColor('plus'),
           }}
         />
       </Pressable>
@@ -2075,20 +2098,22 @@ export function MessageView(props: MessageViewProps) {
   const bubblePadding = 12;
   const hasTriangle = true;
   const isQuote = isQuoteMessage(model.msg, model.quoteMsg);
-  const info = userInfoFromMessage(model.msg);
+  // const info = userInfoFromMessage(model.msg);
   // const userName = model.userName ?? model.userId;
-  const [userName] = React.useState<string>(
-    info?.userName ?? model.userName ?? model.userId
-  );
+  // const [userName] = React.useState<string>(
+  //   info?.userName ?? model.userName ?? model.userId
+  // );
   const isSingleChat = React.useRef(
     model.msg.chatType === ChatMessageChatType.PeerChat
   ).current;
-  const userAvatar =
-    avatarIsVisible === true
-      ? info?.avatarURL && info?.avatarURL?.length > 0
-        ? info.avatarURL
-        : model.userAvatar
-      : undefined;
+  // const userAvatar =
+  //   avatarIsVisible === true
+  //     ? info?.avatarURL && info?.avatarURL?.length > 0
+  //       ? info.avatarURL
+  //       : model.userAvatar
+  //     : undefined;
+  const userName = model.userName ?? model.userId;
+  const userAvatar = model.userAvatar;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -2104,9 +2129,9 @@ export function MessageView(props: MessageViewProps) {
   const backgroundColor = animatedValue.interpolate({
     inputRange: [0, 0.5, 1],
     outputRange: [
-      getColor('h') as string,
       getColor('bg') as string,
       getColor('h') as string,
+      getColor('bg') as string,
     ],
   });
   const onClickedAvatar = React.useCallback(() => {
@@ -2134,7 +2159,7 @@ export function MessageView(props: MessageViewProps) {
         Animated.loop(
           Animated.timing(animatedValue, {
             useNativeDriver: false,
-            duration: 1500,
+            duration: 1000,
             toValue: 1,
             easing: Easing.linear,
           })

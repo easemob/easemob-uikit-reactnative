@@ -25,6 +25,7 @@ import emoji from 'twemoji';
 
 import { FACE_ASSETS } from '../../assets';
 import {
+  DataModel,
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
   gMessageAttributeTranslate,
@@ -45,10 +46,13 @@ import type { AlertRef } from '../../ui/Alert';
 import { LocalPath, seqId, timeoutTask } from '../../utils';
 import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList/BottomSheetEmojiList';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
-import type { BottomSheetReactionDetailRef } from '../BottomSheetReactionDetail';
+import type {
+  BottomSheetReactionDetailRef,
+  MessageReactionModel,
+} from '../BottomSheetReactionDetail';
 import { gReportMessageList } from '../const';
 import { useMessageContext } from '../Context';
-import { useMessageThreadListMoreActions } from '../hooks';
+import { useDataPriority, useMessageThreadListMoreActions } from '../hooks';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import {
   useEmojiLongPressActionsProps,
@@ -201,6 +205,7 @@ export function useMessageList(
     ...propsListItemRenderProps,
   });
   const {} = useMessageContext();
+  const { getMsgInfo, getContactInfo } = useDataPriority({});
   const { recallTimeout, languageCode, enableThread } = useConfigContext();
   const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
     userScrollGestureRef.current = isUserScroll;
@@ -239,11 +244,11 @@ export function useMessageList(
   }, []);
 
   const canAddNewMessageToUI = React.useCallback(() => {
-    // console.log(
-    //   'test:zuoyu:canAddNewMessageToUI:',
-    //   hasNoNewMsgRef.current,
-    //   isBottomRef.current
-    // );
+    console.log(
+      'test:zuoyu:canAddNewMessageToUI:',
+      hasNoNewMsgRef.current,
+      isBottomRef.current
+    );
     if (hasNoNewMsgRef.current === true && isBottomRef.current === true) {
       return true;
     }
@@ -653,6 +658,46 @@ export function useMessageList(
     [im, updateMessageVoiceUIState]
   );
 
+  /// When receiving a message, check whether the avatar and nickname of the message in the current message list have been updated.
+  /// Delay updates for a specified time.
+  const msgUserList = React.useRef<Map<string, DataModel>>(new Map()).current;
+  const checkMsgUserToUI = React.useCallback(() => {
+    let isExisted = false;
+    dataRef.current.map((d) => {
+      if (d.model.modelType === 'message') {
+        const msgModel = d.model as MessageModel;
+        const user = msgUserList.get(msgModel.msg.from);
+        if (user) {
+          const name = user.remark ?? user.name;
+          if (name !== msgModel.userName) {
+            msgModel.userName = user.remark ?? user.name;
+            isExisted = true;
+          }
+          if (user.avatar !== msgModel.userAvatar) {
+            msgModel.userAvatar = user.avatar;
+            isExisted = true;
+          }
+          d.model = { ...msgModel };
+        }
+      }
+      return d;
+    });
+    console.log('test:zuoyu:checkMsgUserToUI:', isExisted);
+    if (isExisted) {
+      refreshToUI(dataRef.current);
+    }
+  }, [dataRef, msgUserList, refreshToUI]);
+  const { delayExecTask: delayCheckMsgUserToUI } = useDelayExecTask(
+    1000,
+    checkMsgUserToUI
+  );
+  const updateMsgUserInfo = React.useCallback(
+    (d: DataModel) => {
+      msgUserList.set(d.id, d);
+    },
+    [msgUserList]
+  );
+
   const recallMessage = React.useCallback(
     (msg: ChatMessage) => {
       im.messageManager.recallMessage(msg);
@@ -801,7 +846,9 @@ export function useMessageList(
                 messageId: quote.msgID,
               });
             }
-            const user = im.getRequestData(msg.from);
+            // const user = im.getRequestData(msg.from);
+            const d = getMsgInfo(msg);
+            updateMsgUserInfo(d);
             const threadMsg =
               msg.chatType === ChatMessageChatType.GroupChat &&
               (comType === 'chat' || comType === 'search')
@@ -817,8 +864,8 @@ export function useMessageList(
               quoteMsg: quoteMsg,
               reactions: await msg.reactionList,
               thread: threadMsg,
-              userName: user?.name,
-              userAvatar: user?.avatar,
+              userName: d.remark ?? d.name,
+              userAvatar: d.avatar,
               checked: selectType === 'multi' ? false : undefined,
             } as MessageModel;
           }
@@ -861,17 +908,21 @@ export function useMessageList(
       // });
 
       refreshToUI(dataRef.current);
+      delayCheckMsgUserToUI();
       return l as MessageListItemProps[];
     },
     [
       comType,
       dataRef,
+      delayCheckMsgUserToUI,
+      getMsgInfo,
       getStyle,
       im,
       inverted,
       messageLayoutType,
       refreshToUI,
       selectType,
+      updateMsgUserInfo,
     ]
   );
 
@@ -1392,7 +1443,20 @@ export function useMessageList(
           const msgModel = model as MessageModel;
           if (msgModel.reactions && msgModel.reactions?.length > 0) {
             reactionRef.current?.startShowWithProps?.({
-              reactionList: [...msgModel.reactions],
+              reactionList: [
+                ...msgModel.reactions.map((v) => {
+                  return {
+                    ...v,
+                    userList: v.userList.map((v) => {
+                      return {
+                        id: v,
+                        name: getContactInfo(v).name,
+                        avatar: getContactInfo(v).avatar,
+                      } as DataModel;
+                    }),
+                  } as MessageReactionModel;
+                }),
+              ],
               msgId: msgModel.msg.msgId,
               onRequestModalClose: onRequestCloseReaction,
             });
@@ -1402,7 +1466,7 @@ export function useMessageList(
         }
       }
     },
-    [onEmojiClicked, onRequestCloseReaction]
+    [getContactInfo, onEmojiClicked, onRequestCloseReaction]
   );
 
   const onClickedListItemThread = React.useCallback(
@@ -1534,6 +1598,8 @@ export function useMessageList(
       ) {
         threadMsg = await msg.threadInfo;
       }
+      const d = getMsgInfo(msg);
+      updateMsgUserInfo(d);
       if (comType === 'thread' || comType === 'create_thread') {
         if (msg.isChatThread !== true) {
           onAddDataToUI(
@@ -1541,8 +1607,8 @@ export function useMessageList(
               id: msg.msgId.toString(),
               model: {
                 userId: msg.from,
-                userAvatar: im.getRequestData(msg.from)?.avatar,
-                userName: im.getRequestData(msg.from)?.name,
+                userAvatar: d.avatar,
+                userName: d.remark ?? d.name,
                 modelType: 'history',
                 msg: msg,
                 checked: selectType === 'multi' ? false : undefined,
@@ -1557,8 +1623,8 @@ export function useMessageList(
               id: msg.msgId.toString(),
               model: {
                 userId: msg.from,
-                userAvatar: im.getRequestData(msg.from)?.avatar,
-                userName: im.getRequestData(msg.from)?.name,
+                userAvatar: d.avatar,
+                userName: d.remark ?? d.name,
                 modelType: 'message',
                 layoutType: msg.from === im.userId ? 'right' : 'left',
                 msg: msg,
@@ -1578,8 +1644,8 @@ export function useMessageList(
             id: msg.msgId.toString(),
             model: {
               userId: msg.from,
-              userAvatar: im.getRequestData(msg.from)?.avatar,
-              userName: im.getRequestData(msg.from)?.name,
+              userAvatar: d.avatar,
+              userName: d.remark ?? d.name,
               modelType: 'message',
               layoutType: msg.from === im.userId ? 'right' : 'left',
               msg: msg,
@@ -1597,11 +1663,16 @@ export function useMessageList(
       if (isHigh !== undefined) {
         setTimeout(() => {
           cancelHighLight();
-        }, 3000);
+        }, 1000);
       }
+
+      delayCheckMsgUserToUI();
     },
     [
       comType,
+      getMsgInfo,
+      updateMsgUserInfo,
+      delayCheckMsgUserToUI,
       im,
       onAddDataToUI,
       selectType,
