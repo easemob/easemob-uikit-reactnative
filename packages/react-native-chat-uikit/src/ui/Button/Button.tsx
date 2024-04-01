@@ -34,6 +34,7 @@ export type ButtonProps = Omit<PressableProps, 'style'> & {
   buttonStyle: ButtonStyleType;
   sizesType?: ButtonSizesType;
   radiusType?: CornerRadiusPaletteType;
+  maxRadius?: number;
   contentType:
     | 'only-text'
     | 'only-icon'

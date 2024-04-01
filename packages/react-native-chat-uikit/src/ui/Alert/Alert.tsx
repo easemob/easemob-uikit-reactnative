@@ -73,6 +73,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
         desc: 'Alert buttons count must less than 3',
       });
     }
+    console.log('test:zuoyu:cornerRadius', cornerRadius, corner);
 
     React.useImperativeHandle(
       ref,
@@ -171,6 +172,12 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 paddingBottom: supportInputStatistics === true ? 22 : undefined,
                 backgroundColor: getColor('bg2'),
                 justifyContent: 'center',
+                borderRadius: getBorderRadius({
+                  height: 48,
+                  crt: corner.input,
+                  cr: cornerRadius,
+                  style: containerStyle,
+                }),
               }}
             >
               <TextInput

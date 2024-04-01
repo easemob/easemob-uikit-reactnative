@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { Dimensions, Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
@@ -26,9 +26,9 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
   function (props: ContactInfoProps, ref?: React.ForwardedRef<ContactInfoRef>) {
     const {
       onBack,
-      hasAudioCall = false,
+      // hasAudioCall = false,
       hasSendMessage = true,
-      hasVideoCall = false,
+      // hasVideoCall = false,
       containerStyle,
       navigationBarVisible,
       customNavigationBar,
@@ -56,6 +56,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       onClickedRemark,
       getNickName,
       onSearch,
+      hasAudioCall,
     } = useContactInfo(props, ref);
     const { cornerRadius } = useThemeContext();
     const { input } = cornerRadius;
@@ -209,16 +210,23 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
           {isContact === true ? (
             <>
               <View style={{ height: 20 }} />
-              <BlockButtons
-                hasAudioCall={hasAudioCall}
-                hasSendMessage={hasSendMessage}
-                hasVideoCall={hasVideoCall}
-                onSendMessage={onSendMessage}
-                onAudioCall={onAudioCall}
-                onVideoCall={onVideoCall}
-                onInitButton={onInitButton}
-                onSearch={onSearch}
-              />
+              <View
+                style={{
+                  marginHorizontal: 12,
+                  width: Dimensions.get('window').width - 24,
+                }}
+              >
+                <BlockButtons
+                  hasAudioCall={hasAudioCall}
+                  hasSendMessage={hasSendMessage}
+                  hasVideoCall={hasAudioCall}
+                  onSendMessage={onSendMessage}
+                  onAudioCall={onAudioCall}
+                  onVideoCall={onVideoCall}
+                  onInitButton={onInitButton}
+                  onSearch={onSearch}
+                />
+              </View>
             </>
           ) : null}
         </View>

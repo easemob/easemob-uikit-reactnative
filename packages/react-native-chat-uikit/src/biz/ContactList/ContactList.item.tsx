@@ -57,6 +57,10 @@ export function ContactListItem(props: ContactListItemProps) {
       light: colors.neutral[95],
       dark: colors.neutral[2],
     },
+    right: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
   });
 
   const _onForwardClicked = React.useCallback(() => {
@@ -283,11 +287,7 @@ export function ContactItem(props: ContactItemProps) {
         hasArrow ? (
           <Icon
             name={'chevron_right'}
-            style={{
-              height: 20,
-              width: 20,
-              tintColor: getColor('icon'),
-            }}
+            style={{ height: 20, width: 20, tintColor: getColor('right') }}
           />
         ) : undefined
       }

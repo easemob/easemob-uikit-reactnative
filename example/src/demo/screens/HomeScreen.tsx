@@ -4,7 +4,7 @@ import type {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { View } from 'react-native';
+import { DeviceEventEmitter, View } from 'react-native';
 import {
   Badges,
   BottomTabBar,
@@ -12,18 +12,21 @@ import {
   ConversationList,
   DataModel,
   EventServiceListener,
+  getReleaseArea,
   TabPage,
   TabPageRef,
   timeoutTask,
+  useAlertContext,
   useChatContext,
   useColors,
   useDispatchContext,
+  useForceUpdate,
   useI18nContext,
   usePaletteContext,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useLogin } from '../hooks';
+import { useGeneralSetting, useLogin } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 import { MineInfo } from '../ui/MineInfo';
 
@@ -128,6 +131,42 @@ export function HomeScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
+  const { updater } = useForceUpdate();
+  const ra = getReleaseArea();
+  const releaseAreaRef = React.useRef(ra);
+
+  const { initParams } = useGeneralSetting();
+  const [_initParams, setInitParams] = React.useState(false);
+
+  const initParamsCallback = React.useCallback(async () => {
+    if (_initParams === true) {
+      return;
+    }
+    try {
+      const ret = await initParams();
+      releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
+      setInitParams(true);
+    } catch (error) {
+      setInitParams(true);
+    }
+  }, [_initParams, initParams, releaseAreaRef, setInitParams]);
+
+  React.useEffect(() => {
+    const ret8 = DeviceEventEmitter.addListener('_demo_emit_app_style', (e) => {
+      console.log('dev:emit:app:style:', e);
+      releaseAreaRef.current = e === 'classic' ? 'china' : 'global';
+      updater();
+    });
+
+    return () => {
+      ret8.remove();
+    };
+  }, [updater]);
+
+  React.useEffect(() => {
+    initParamsCallback().catch();
+  }, [initParamsCallback]);
+
   return (
     <SafeAreaView
       style={{
@@ -148,20 +187,33 @@ export function HomeScreen(props: Props) {
         header={{
           Header: BottomTabBar as any,
           HeaderProps: {
-            titles: [
-              {
-                title: tr('_demo_tab_conv_list'),
-                icon: 'bubble_fill',
-              },
-              {
-                title: tr('_demo_tab_contact_list'),
-                icon: 'person_double_fill',
-              },
-              {
-                title: tr('_demo_tab_mine'),
-                icon: 'person_single_fill',
-              },
-            ],
+            titles:
+              releaseAreaRef.current === 'global'
+                ? [
+                    {
+                      icon: 'bubble_fill',
+                    },
+                    {
+                      icon: 'person_double_fill',
+                    },
+                    {
+                      icon: 'person_single_fill',
+                    },
+                  ]
+                : [
+                    {
+                      title: tr('_demo_tab_conv_list'),
+                      icon: 'bubble_fill',
+                    },
+                    {
+                      title: tr('_demo_tab_contact_list'),
+                      icon: 'person_double_fill',
+                    },
+                    {
+                      title: tr('_demo_tab_mine'),
+                      icon: 'person_single_fill',
+                    },
+                  ],
             StateViews: [ConversationBadge, ContactBadge],
           } as any,
         }}
@@ -474,8 +526,10 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
   const im = useChatContext();
+  const { tr } = useI18nContext();
   const [userId, setUserId] = React.useState<string>();
   const { autoLoginAction } = useLogin();
+  const { getAlertRef } = useAlertContext();
 
   const s = React.useCallback(async () => {
     const autoLogin = im.client.options?.autoLogin ?? false;
@@ -499,13 +553,33 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
       <MineInfo
         userId={userId}
         onClickedLogout={() => {
-          if (demoType === 3) {
-            im.logout({});
-            navigation.replace('Login', {});
-          } else if (demoType === 4) {
-            im.logout({});
-            navigation.replace('LoginV2', {});
-          }
+          getAlertRef()?.alertWithInit({
+            title: tr('_demo_logout_title'),
+            buttons: [
+              {
+                text: tr('cancel'),
+                isPreferred: false,
+                onPress: () => {
+                  getAlertRef()?.close();
+                },
+              },
+              {
+                text: tr('confirm'),
+                isPreferred: true,
+                onPress: () => {
+                  getAlertRef()?.close(() => {
+                    if (demoType === 3) {
+                      im.logout({});
+                      navigation.replace('Login', {});
+                    } else if (demoType === 4) {
+                      im.logout({});
+                      navigation.replace('LoginV2', {});
+                    }
+                  });
+                },
+              },
+            ],
+          });
         }}
         onClickedCommon={() => {
           navigation.push('CommonSetting', {});

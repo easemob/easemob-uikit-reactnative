@@ -14,9 +14,11 @@ import type { IconNameType } from '../../assets';
 import {
   gCustomMessageCardEventType,
   gCustomMessageCreateGroupEventType,
+  gCustomMessageCreateThreadTip,
   gCustomMessageRecallEventType,
   gMessageAttributeQuote,
   gMessageAttributeVoiceReadFlag,
+  userInfoFromMessage,
 } from '../../chat';
 import { Services } from '../../services';
 import { LocalPath } from '../../utils';
@@ -347,6 +349,16 @@ export function getSystemTip(
       return tr(content.text, content.self);
     } catch (error) {
       return tr('_uikit_msg_tip_create_group_success');
+    }
+  } else if (body.event === gCustomMessageCreateThreadTip) {
+    try {
+      const ret = userInfoFromMessage(msg);
+      return tr(
+        '_uikit_msg_tip_create_thread_finish',
+        ret?.userName ?? ret?.userId
+      );
+    } catch (error) {
+      return tr('_uikit_msg_tip_create_thread_finish');
     }
   }
   return '';

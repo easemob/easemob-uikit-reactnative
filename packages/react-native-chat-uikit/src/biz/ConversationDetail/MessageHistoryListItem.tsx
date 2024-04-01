@@ -89,6 +89,7 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
           alignItems: 'center',
           paddingHorizontal: 16,
           paddingVertical: 10,
+          // backgroundColor: 'red',
         }}
       >
         <View style={{ alignItems: 'flex-end' }}>

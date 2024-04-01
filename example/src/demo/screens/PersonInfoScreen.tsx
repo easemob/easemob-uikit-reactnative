@@ -36,9 +36,17 @@ export function PersonInfoScreen(props: Props) {
       light: colors.neutral[98],
       dark: colors.neutral[1],
     },
+    fg: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
     t1: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
+    },
+    right: {
+      light: colors.neutral[3],
+      dark: colors.neutral[5],
     },
   });
   const [_remark, setRemark] = React.useState('');
@@ -212,7 +220,10 @@ export function PersonInfoScreen(props: Props) {
                 userId={im.userId}
                 url={_avatar}
               />
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -242,7 +253,10 @@ export function PersonInfoScreen(props: Props) {
               >
                 {_remark}
               </SingleLineText>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />

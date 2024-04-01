@@ -40,15 +40,13 @@ export function GeneralSettingScreen(props: Props) {
       light: colors.neutral[1],
       dark: colors.neutral[98],
     },
+    right: {
+      light: colors.neutral[3],
+      dark: colors.neutral[5],
+    },
   });
-  const {
-    appPrimaryColor,
-    appLanguage,
-    appStyle,
-    appTheme,
-    onSetAppTheme,
-    updater,
-  } = useGeneralSetting();
+  const { appLanguage, appStyle, appTheme, onSetAppTheme, updater } =
+    useGeneralSetting();
 
   const onBack = () => {
     navigation.goBack();
@@ -171,9 +169,12 @@ export function GeneralSettingScreen(props: Props) {
                   color: getColor('t1'),
                 }}
               >
-                {appStyle}
+                {tr(appStyle)}
               </SingleLineText>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -194,7 +195,7 @@ export function GeneralSettingScreen(props: Props) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <SingleLineText
+              {/* <SingleLineText
                 paletteType={'label'}
                 textType={'large'}
                 style={{
@@ -202,8 +203,11 @@ export function GeneralSettingScreen(props: Props) {
                 }}
               >
                 {appPrimaryColor}
-              </SingleLineText>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              </SingleLineText> */}
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -224,7 +228,10 @@ export function GeneralSettingScreen(props: Props) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -254,7 +261,10 @@ export function GeneralSettingScreen(props: Props) {
               >
                 {appLanguage === 'en' ? tr('en') : tr('zh-Hans')}
               </SingleLineText>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />

@@ -162,7 +162,7 @@ export function ServerSettingScreen(props: Props) {
         setImServer(value.imServer ?? '');
         setImPort(value.imPort ?? '0');
         setRestServer(value._restServer);
-        setEnablePrivateServer(value.enablePrivateServer);
+        setEnablePrivateServer(value.enablePrivateServer ?? false);
       }
     });
   }, [getData]);
@@ -213,7 +213,7 @@ export function ServerSettingScreen(props: Props) {
             <Pressable
               disabled={disable}
               style={{
-                paddingHorizontal: 8,
+                paddingHorizontal: 16,
               }}
               onPress={() => {
                 onSave();
@@ -252,6 +252,7 @@ export function ServerSettingScreen(props: Props) {
                 flexDirection: 'row',
                 marginHorizontal: 16,
                 marginBottom: 12,
+                marginTop: 12,
                 backgroundColor: getColor('bg'),
               }}
             >

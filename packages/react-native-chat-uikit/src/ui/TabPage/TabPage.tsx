@@ -72,6 +72,7 @@ export type TabPageProps = {
   headerPosition?: 'up' | 'down';
   initIndex?: number;
   onCurrentIndex?: (currentIndex: number) => void;
+  enableScrollAnimation?: boolean;
 };
 
 interface TabPageComponent
@@ -92,6 +93,7 @@ const _TabPage = React.forwardRef<TabPageRef, TabPageProps>(
       headerPosition = 'up',
       initIndex = 0,
       onCurrentIndex,
+      enableScrollAnimation = false,
     } = props;
     const { Header, HeaderProps } = header;
     const { titles: headerTitles } = HeaderProps;
@@ -143,8 +145,11 @@ const _TabPage = React.forwardRef<TabPageRef, TabPageProps>(
           {...HeaderProps}
           propRef={headerRef}
           onClicked={(index: number) => {
-            bodyRef.current?.scrollTo(index);
+            bodyRef.current?.scrollTo(index, enableScrollAnimation);
             if (Platform.OS === 'android') {
+              headerStartScrolling(width, width * index);
+            }
+            if (enableScrollAnimation === false) {
               headerStartScrolling(width, width * index);
             }
           }}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
 import { useI18nContext } from '../../i18n';
@@ -70,7 +70,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'100'}
         iconName={'bubble_fill'}
         text={tr('_uikit_info_send_msg')}
-        containerStyle={{ height: 62, width: 114 }}
+        containerStyle={styles.c}
         onPress={onSendMessage}
       />
     );
@@ -81,7 +81,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'101'}
         iconName={'phone_pick'}
         text={tr('_uikit_info_send_audio')}
-        containerStyle={{ height: 62, width: 114 }}
+        containerStyle={styles.c}
         onPress={onAudioCall}
       />
     );
@@ -92,7 +92,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'102'}
         iconName={'video_camera'}
         text={tr('_uikit_info_send_video')}
-        containerStyle={{ height: 62, width: 114 }}
+        containerStyle={styles.c}
         onPress={onVideoCall}
       />
     );
@@ -103,7 +103,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'102'}
         iconName={'magnifier'}
         text={tr('_uikit_info_search_message')}
-        containerStyle={{ height: 62, width: 114 }}
+        containerStyle={styles.c}
         onPress={onSearch}
       />
     );
@@ -120,10 +120,20 @@ export const BlockButtons = (props: BlockButtonsProps) => {
       style={{
         width: '100%',
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        justifyContent: _items.length > 2 ? 'space-evenly' : 'center',
       }}
     >
       {_items}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  c: {
+    height: 62,
+    maxWidth: 114,
+    flexGrow: 1,
+    marginHorizontal: 4,
+  },
+});

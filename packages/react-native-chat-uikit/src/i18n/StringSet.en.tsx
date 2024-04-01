@@ -70,6 +70,8 @@ export function createStringSetEn(): StringSet {
     '_uikit_msg_translate': 'Translated',
     '_uikit_msg_record': 'Chat Record',
     '_uikit_msg_tip_create_group_success': 'Create group success.',
+    '_uikit_msg_tip_create_thread_finish': (id) =>
+      id ? `${id} create thread finished.` : 'Create thread finished.',
     '_uikit_msg_tip_create_group_success_with_params': 'Create group success.',
 
     '_uikit_info_send_msg': 'Send Message',

@@ -270,7 +270,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
 
             <Text
               textType={'extraSmall'}
-              paletteType={'label'}
+              paletteType={'body'}
               style={{ color: getColor('text_enable') }}
             >
               {comType === 'chat' || comType === 'search'

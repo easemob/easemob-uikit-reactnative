@@ -101,6 +101,7 @@ export class RestApi {
           'Content-Type': 'application/json',
         },
       });
+      console.log('RestApi:reqSmsCode:', url, params);
     } catch (error) {
       console.warn('RestApi:reqSmsCode:error:', error);
     }

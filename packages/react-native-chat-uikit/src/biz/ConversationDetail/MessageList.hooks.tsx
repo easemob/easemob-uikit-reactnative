@@ -27,11 +27,13 @@ import { FACE_ASSETS } from '../../assets';
 import {
   DataModel,
   gCustomMessageCardEventType,
+  gCustomMessageCreateThreadTip,
   gMessageAttributeQuote,
   gMessageAttributeTranslate,
   gMessageAttributeVoiceReadFlag,
   MessageServiceListener,
   ResultCallback,
+  setUserInfoToMessage,
   UIConversationListListener,
   UIListenerType,
   useChatContext,
@@ -66,7 +68,6 @@ import type {
 import type { EmojiIconItem } from '../types';
 import { gRequestMaxMessageCount, gRequestMaxThreadCount } from './const';
 import { MessageListItemMemo } from './MessageListItem';
-import { getQuoteAttribute } from './MessageListItem.hooks';
 import type {
   MessageAddPosition,
   MessageHistoryModel,
@@ -244,16 +245,39 @@ export function useMessageList(
   }, []);
 
   const canAddNewMessageToUI = React.useCallback(() => {
-    console.log(
-      'test:zuoyu:canAddNewMessageToUI:',
-      hasNoNewMsgRef.current,
-      isBottomRef.current
-    );
+    // console.log(
+    //   'test:zuoyu:canAddNewMessageToUI:',
+    //   hasNoNewMsgRef.current,
+    //   isBottomRef.current
+    // );
     if (hasNoNewMsgRef.current === true && isBottomRef.current === true) {
       return true;
     }
     return false;
   }, []);
+
+  const createMessageTip = React.useCallback(
+    (params: {
+      convId: string;
+      convType: number;
+      event: string;
+    }): ChatMessage => {
+      const { convId, convType, event } = params;
+      const tipMsg = ChatMessage.createCustomMessage(convId, event, convType, {
+        params: {
+          create_group: JSON.stringify({
+            text: '_uikit_msg_tip_create_group_success_with_params',
+            self: im.userId,
+          }),
+        },
+        isChatThread: comType === 'thread',
+      });
+      const s = im.user(im.userId);
+      setUserInfoToMessage({ msg: tipMsg, user: s });
+      return tipMsg;
+    },
+    [comType, im]
+  );
 
   // const needScrollToBottom = React.useCallback(() => {
   //   return true;
@@ -818,61 +842,64 @@ export function useMessageList(
     [dataRef, im, inverted, refreshToUI]
   );
 
+  const getMsgModel = React.useCallback(
+    async (msg: ChatMessage): Promise<MessageModel | SystemMessageModel> => {
+      let modelType = 'message';
+      if (msg.body.type === ChatMessageType.CUSTOM) {
+        const body = msg.body as ChatCustomMessageBody;
+        if (body.event === gCustomMessageCardEventType) {
+          modelType = 'message';
+        } else {
+          modelType = 'system';
+        }
+      }
+      if (modelType === 'system') {
+        return {
+          userId: msg.from,
+          modelType: 'system',
+          msg: msg,
+        } as SystemMessageModel;
+      } else {
+        const quote = msg.attributes?.[gMessageAttributeQuote];
+        let quoteMsg: ChatMessage | undefined;
+        if (quote) {
+          quoteMsg = await im.getMessage({
+            messageId: quote.msgID,
+          });
+        }
+        // const user = im.getRequestData(msg.from);
+        const d = getMsgInfo(msg);
+        updateMsgUserInfo(d);
+        const threadMsg =
+          msg.chatType === ChatMessageChatType.GroupChat &&
+          (comType === 'chat' || comType === 'search')
+            ? await msg.threadInfo
+            : undefined;
+        return {
+          userId: msg.from,
+          modelType: 'message',
+          layoutType:
+            messageLayoutType ?? (msg.from === im.userId ? 'right' : 'left'),
+          msg: msg,
+          quoteMsg: quoteMsg,
+          reactions: await msg.reactionList,
+          thread: threadMsg,
+          userName: d.remark ?? d.name,
+          userAvatar: d.avatar,
+          checked: selectType === 'multi' ? false : undefined,
+        } as MessageModel;
+      }
+    },
+    [comType, getMsgInfo, im, messageLayoutType, selectType, updateMsgUserInfo]
+  );
+
   const onAddMessageListToUI = React.useCallback(
     async (msgs: ChatMessage[], position: MessageAddPosition) => {
       const tmp = inverted === true ? msgs.slice().reverse() : msgs;
       const list = tmp.map(async (msg) => {
-        const getModel = async () => {
-          let modelType = 'message';
-          if (msg.body.type === ChatMessageType.CUSTOM) {
-            const body = msg.body as ChatCustomMessageBody;
-            if (body.event === gCustomMessageCardEventType) {
-              modelType = 'message';
-            } else {
-              modelType = 'system';
-            }
-          }
-          if (modelType === 'system') {
-            return {
-              userId: msg.from,
-              modelType: 'system',
-              msg: msg,
-            } as SystemMessageModel;
-          } else {
-            const quote = msg.attributes?.[gMessageAttributeQuote];
-            let quoteMsg: ChatMessage | undefined;
-            if (quote) {
-              quoteMsg = await im.getMessage({
-                messageId: quote.msgID,
-              });
-            }
-            // const user = im.getRequestData(msg.from);
-            const d = getMsgInfo(msg);
-            updateMsgUserInfo(d);
-            const threadMsg =
-              msg.chatType === ChatMessageChatType.GroupChat &&
-              (comType === 'chat' || comType === 'search')
-                ? await msg.threadInfo
-                : undefined;
-            return {
-              userId: msg.from,
-              modelType: 'message',
-              layoutType:
-                messageLayoutType ??
-                (msg.from === im.userId ? 'right' : 'left'),
-              msg: msg,
-              quoteMsg: quoteMsg,
-              reactions: await msg.reactionList,
-              thread: threadMsg,
-              userName: d.remark ?? d.name,
-              userAvatar: d.avatar,
-              checked: selectType === 'multi' ? false : undefined,
-            } as MessageModel;
-          }
-        };
         return {
           id: msg.msgId.toString(),
-          model: await getModel(),
+          model: await getMsgModel(msg),
           containerStyle: getStyle(),
         } as MessageListItemProps;
       });
@@ -912,17 +939,12 @@ export function useMessageList(
       return l as MessageListItemProps[];
     },
     [
-      comType,
       dataRef,
       delayCheckMsgUserToUI,
-      getMsgInfo,
+      getMsgModel,
       getStyle,
-      im,
       inverted,
-      messageLayoutType,
       refreshToUI,
-      selectType,
-      updateMsgUserInfo,
     ]
   );
 
@@ -1009,13 +1031,15 @@ export function useMessageList(
       im.translateMessage({
         message: model.msg,
         languages: [languageCode],
-        onResult: (result) => {
+        onResult: async (result) => {
           if (result.isOk === true && result.value) {
-            result.value.attributes = {
+            const newMsg = { ...result.value } as ChatMessage;
+            newMsg.attributes = {
+              ...model.msg.attributes,
               [gMessageAttributeTranslate]: true,
             };
-            im.updateMessage({ message: result.value, onResult: () => {} });
-            onUpdateMessageToUI(result.value, 'recv');
+            im.updateMessage({ message: newMsg, onResult: () => {} });
+            onUpdateMessageToUI(newMsg, 'recv');
           }
         },
       });
@@ -1584,20 +1608,6 @@ export function useMessageList(
 
   const onAddMessageToUI = React.useCallback(
     async (msg: ChatMessage, isHigh?: boolean) => {
-      let quoteMsg: ChatMessage | undefined;
-      const quoteAttributes = getQuoteAttribute(msg);
-      if (quoteAttributes) {
-        quoteMsg = await im.getMessage({
-          messageId: quoteAttributes.msgID,
-        });
-      }
-      let threadMsg: ChatMessageThread | undefined;
-      if (
-        msg.chatType === ChatMessageChatType.GroupChat &&
-        (comType === 'chat' || comType === 'search')
-      ) {
-        threadMsg = await msg.threadInfo;
-      }
       const d = getMsgInfo(msg);
       updateMsgUserInfo(d);
       if (comType === 'thread' || comType === 'create_thread') {
@@ -1621,18 +1631,7 @@ export function useMessageList(
           onAddDataToUI(
             {
               id: msg.msgId.toString(),
-              model: {
-                userId: msg.from,
-                userAvatar: d.avatar,
-                userName: d.remark ?? d.name,
-                modelType: 'message',
-                layoutType: msg.from === im.userId ? 'right' : 'left',
-                msg: msg,
-                quoteMsg: quoteMsg,
-                thread: threadMsg,
-                checked: selectType === 'multi' ? false : undefined,
-                isHightBackground: isHigh !== undefined ? isHigh : undefined,
-              },
+              model: await getMsgModel(msg),
               containerStyle: getStyle(),
             },
             inverted === true ? 'bottom' : 'bottom'
@@ -1642,18 +1641,7 @@ export function useMessageList(
         onAddDataToUI(
           {
             id: msg.msgId.toString(),
-            model: {
-              userId: msg.from,
-              userAvatar: d.avatar,
-              userName: d.remark ?? d.name,
-              modelType: 'message',
-              layoutType: msg.from === im.userId ? 'right' : 'left',
-              msg: msg,
-              quoteMsg: quoteMsg,
-              thread: threadMsg,
-              checked: selectType === 'multi' ? false : undefined,
-              isHightBackground: isHigh !== undefined ? isHigh : undefined,
-            },
+            model: await getMsgModel(msg),
             containerStyle: getStyle(),
           },
           inverted === true ? 'bottom' : 'bottom'
@@ -1673,11 +1661,11 @@ export function useMessageList(
       getMsgInfo,
       updateMsgUserInfo,
       delayCheckMsgUserToUI,
-      im,
       onAddDataToUI,
       selectType,
       getStyle,
       inverted,
+      getMsgModel,
       cancelHighLight,
     ]
   );
@@ -2376,6 +2364,24 @@ export function useMessageList(
                 setIsBottom(true);
               }
               addSendMessageToUI({
+                value: {
+                  type: 'system',
+                  msg: createMessageTip({
+                    convId: convId,
+                    convType: convType,
+                    event: gCustomMessageCreateThreadTip,
+                  }),
+                },
+                onFinished: (item) => {
+                  im.insertMessage({
+                    message: (item.model as MessageModel).msg,
+                    onResult: (res) => {
+                      console.log('test:zuoyu:res:', res);
+                    },
+                  });
+                },
+              });
+              addSendMessageToUI({
                 value: firstMessage,
                 onFinished: (item) => {
                   if (item.model.modelType === 'message') {
@@ -2427,6 +2433,7 @@ export function useMessageList(
       firstMessage,
       inverted,
       addSendMessageToUI,
+      createMessageTip,
       setIsBottom,
       sendMessageToServer,
       dataRef,

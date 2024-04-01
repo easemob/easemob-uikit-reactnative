@@ -121,7 +121,7 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
               {v.title ? (
                 <Text
                   textType={'extraSmall'}
-                  paletteType={'title'}
+                  paletteType={'label'}
                   style={[
                     content?.style,
                     {

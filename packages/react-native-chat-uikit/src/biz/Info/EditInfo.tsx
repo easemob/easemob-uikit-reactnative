@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 
-import { useColors } from '../../hook';
+import { useColors, useGetStyleProps } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { Icon } from '../../ui/Image';
@@ -36,8 +36,9 @@ export function EditInfo(props: EditInfoProps) {
   const [value, setValue] = React.useState<string>(initialData);
   const [count, setCount] = React.useState<number>(initialData?.length ?? 0);
   const [disable, setDisable] = React.useState<boolean>(false);
-  const { style } = useThemeContext();
-  const { colors } = usePaletteContext();
+  const { style, cornerRadius: corner } = useThemeContext();
+  const { cornerRadius, colors } = usePaletteContext();
+  const { getBorderRadius } = useGetStyleProps();
   const { getColor } = useColors({
     bg: {
       light: colors.neutral[98],
@@ -127,7 +128,7 @@ export function EditInfo(props: EditInfoProps) {
             Right={
               <Pressable
                 disabled={disable}
-                style={{}}
+                style={{ paddingHorizontal: 16 }}
                 onPress={() => {
                   onSave?.(value);
                 }}
@@ -151,6 +152,12 @@ export function EditInfo(props: EditInfoProps) {
           style={{
             paddingBottom: 22,
             backgroundColor: getColor('bg2'),
+            borderRadius: getBorderRadius({
+              height: 36,
+              crt: corner.avatar,
+              cr: cornerRadius,
+              style: containerStyle,
+            }),
           }}
         >
           <TextInput

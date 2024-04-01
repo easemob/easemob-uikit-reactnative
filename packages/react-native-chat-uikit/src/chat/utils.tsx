@@ -68,13 +68,16 @@ export function setUserInfoToMessage(params: {
   ) {
     return;
   }
-  msg.attributes = {
-    ...msg.attributes,
-    [gMessageAttributeUserInfo]: {
-      nickname: user.userName,
-      avatarURL: user.avatarURL,
-    } as UserServiceDataFromMessage,
-  };
+  const isExisted = msg.attributes?.[gMessageAttributeUserInfo] !== undefined;
+  if (!isExisted) {
+    msg.attributes = {
+      ...msg.attributes,
+      [gMessageAttributeUserInfo]: {
+        nickname: user.userName,
+        avatarURL: user.avatarURL,
+      } as UserServiceDataFromMessage,
+    };
+  }
 }
 
 /**

@@ -84,7 +84,7 @@ export const GroupParticipantListNavigationBar = (
             />
             <Text
               textType={'medium'}
-              paletteType={'label'}
+              paletteType={'title'}
               style={{ color: getColor('text') }}
             >
               {tr('_uikit_group_del_member_title')}
@@ -128,7 +128,7 @@ export const GroupParticipantListNavigationBar = (
               />
               <Text
                 textType={'medium'}
-                paletteType={'label'}
+                paletteType={'title'}
                 style={{ color: getColor('text') }}
               >
                 {tr('_uikit_group_change_owner_title')}
@@ -153,7 +153,7 @@ export const GroupParticipantListNavigationBar = (
             />
             <Text
               textType={'medium'}
-              paletteType={'label'}
+              paletteType={'title'}
               style={{ color: getColor('text') }}
             >{`@ mention`}</Text>
           </Pressable>
@@ -216,9 +216,13 @@ export const GroupParticipantListNavigationBar = (
               name={'chevron_left'}
               style={{ width: 24, height: 24, tintColor: getColor('icon') }}
             />
-            <Text>
+            <SingleLineText
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('text') }}
+            >
               {tr('_uikit_group_member_list_title', participantCount)}
-            </Text>
+            </SingleLineText>
           </Pressable>
         }
         Right={

@@ -63,6 +63,10 @@ export function MineInfo(props: MineInfoProps) {
       light: colors.neutral[7],
       dark: colors.neutral[6],
     },
+    right: {
+      light: colors.neutral[3],
+      dark: colors.neutral[5],
+    },
   });
 
   return (
@@ -167,7 +171,10 @@ export function MineInfo(props: MineInfoProps) {
               >
                 {tr('set')}
               </Text>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -193,7 +200,10 @@ export function MineInfo(props: MineInfoProps) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -219,7 +229,10 @@ export function MineInfo(props: MineInfoProps) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -245,7 +258,10 @@ export function MineInfo(props: MineInfoProps) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -271,7 +287,10 @@ export function MineInfo(props: MineInfoProps) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -304,7 +323,10 @@ export function MineInfo(props: MineInfoProps) {
               >
                 {`Easemob UIKit v${UIKIT_VERSION}`}
               </Text>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />

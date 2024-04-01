@@ -134,6 +134,7 @@ export function StyleSettingScreen(props: Props) {
 
         <ListItem
           containerStyle={{ paddingHorizontal: 16 }}
+          onClicked={() => onChanged(0)}
           LeftName={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text
@@ -170,6 +171,7 @@ export function StyleSettingScreen(props: Props) {
 
         <ListItem
           containerStyle={{ paddingHorizontal: 16 }}
+          onClicked={() => onChanged(1)}
           LeftName={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text

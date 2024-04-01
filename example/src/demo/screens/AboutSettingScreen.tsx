@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { Linking, Pressable, View } from 'react-native';
 import {
   Avatar,
   Icon,
@@ -49,10 +49,33 @@ export function AboutSettingScreen(props: Props) {
       light: colors.neutral[5],
       dark: colors.neutral[6],
     },
+    right: {
+      light: colors.neutral[3],
+      dark: colors.neutral[5],
+    },
   });
 
   const onBack = () => {
     navigation.goBack();
+  };
+
+  const onClickedOfficeSite = () => {
+    Linking.openURL('https://www.huanxin.com');
+  };
+  const onClickedPhone = () => {
+    Linking.openURL('tel:400-622-1776');
+  };
+  const onClickedEmail = (email: string) => {
+    Linking.openURL(`mailto: ${email}`);
+  };
+  const onClickedPartner = () => {
+    onClickedEmail('bd@easemob.com');
+  };
+  const onClickedChannel = () => {
+    onClickedEmail('qudao@easemob.com');
+  };
+  const onClickedAdvise = () => {
+    onClickedEmail('issues@easemob.com');
   };
 
   return (
@@ -99,7 +122,7 @@ export function AboutSettingScreen(props: Props) {
           Right={<View />}
         />
 
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <Pressable style={{ justifyContent: 'center', alignItems: 'center' }}>
           <Avatar
             size={72}
             localIcon={logo}
@@ -126,14 +149,17 @@ export function AboutSettingScreen(props: Props) {
           >
             {tr(`UIKit Version ${UIKIT_VERSION}`)}
           </SingleLineText>
-        </View>
+        </Pressable>
 
         <View style={{ height: 54 }} />
 
         <ListItem
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
-            <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Pressable
+              style={{ flexDirection: 'column', justifyContent: 'center' }}
+              onPress={onClickedOfficeSite}
+            >
               <Text
                 textType={'medium'}
                 paletteType={'title'}
@@ -148,11 +174,14 @@ export function AboutSettingScreen(props: Props) {
               >
                 {tr('_demo_about_setting_site_url')}
               </Text>
-            </View>
+            </Pressable>
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -160,7 +189,10 @@ export function AboutSettingScreen(props: Props) {
         <ListItem
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
-            <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Pressable
+              style={{ flexDirection: 'column', justifyContent: 'center' }}
+              onPress={onClickedPhone}
+            >
               <Text
                 textType={'medium'}
                 paletteType={'title'}
@@ -175,11 +207,14 @@ export function AboutSettingScreen(props: Props) {
               >
                 {tr('_demo_about_setting_phone_number')}
               </Text>
-            </View>
+            </Pressable>
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -187,7 +222,10 @@ export function AboutSettingScreen(props: Props) {
         <ListItem
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
-            <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Pressable
+              style={{ flexDirection: 'column', justifyContent: 'center' }}
+              onPress={onClickedPartner}
+            >
               <Text
                 textType={'medium'}
                 paletteType={'title'}
@@ -202,11 +240,14 @@ export function AboutSettingScreen(props: Props) {
               >
                 {tr('_demo_about_setting_partner_email')}
               </Text>
-            </View>
+            </Pressable>
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -214,7 +255,43 @@ export function AboutSettingScreen(props: Props) {
         <ListItem
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
-            <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Pressable
+              style={{ flexDirection: 'column', justifyContent: 'center' }}
+              onPress={onClickedChannel}
+            >
+              <Text
+                textType={'medium'}
+                paletteType={'title'}
+                style={{ color: getColor('fg') }}
+              >
+                {tr('_demo_about_setting_channel')}
+              </Text>
+              <Text
+                textType={'small'}
+                paletteType={'title'}
+                style={{ color: getColor('disable') }}
+              >
+                {tr('_demo_about_setting_channel_email')}
+              </Text>
+            </Pressable>
+          }
+          RightIcon={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
+            </View>
+          }
+        />
+
+        <ListItem
+          containerStyle={{ paddingHorizontal: 16 }}
+          LeftName={
+            <Pressable
+              style={{ flexDirection: 'column', justifyContent: 'center' }}
+              onPress={onClickedAdvise}
+            >
               <Text
                 textType={'medium'}
                 paletteType={'title'}
@@ -229,11 +306,14 @@ export function AboutSettingScreen(props: Props) {
               >
                 {tr('_demo_about_setting_advise_email')}
               </Text>
-            </View>
+            </Pressable>
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />

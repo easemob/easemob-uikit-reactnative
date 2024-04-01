@@ -70,6 +70,10 @@ export const MessageThreadList = React.forwardRef<
       light: colors.neutral[5],
       dark: colors.neutral[6],
     },
+    right: {
+      light: colors.neutral[3],
+      dark: colors.neutral[5],
+    },
   });
 
   return (
@@ -414,7 +418,7 @@ function ListItemRender(props: MessageThreadListItemProps) {
             </SingleLineText> */}
             <Icon
               name={'chevron_right'}
-              style={{ width: 15, height: 15, tintColor: getColor('count') }}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
             />
           </View>
           <View>

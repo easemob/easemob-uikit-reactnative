@@ -63,6 +63,7 @@ export function BlockButton(props: BlockButtonProps) {
           alignItems: 'center',
           backgroundColor: getColor('bg'),
           borderRadius: 8,
+          marginVertical: 8,
         },
         containerStyle,
       ]}

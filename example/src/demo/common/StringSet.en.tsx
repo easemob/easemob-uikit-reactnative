@@ -41,6 +41,7 @@ export function createStringSetEn(): StringSet {
     '_demo_login_tip_2': '《Easemob Service Agreement》',
     '_demo_login_tip_3': 'and',
     '_demo_login_tip_4': '《Easemob Privacy Agreement》',
+    '_demo_login_server_setting_button': 'Server Setting',
     '_demo_login_tip_reason_1': 'Please enter the correct phone number',
     '_demo_login_tip_reason_2':
       'Please agree to the "Easemob Agreement" and "Easemob Agreement" first',
@@ -58,7 +59,9 @@ export function createStringSetEn(): StringSet {
     '_demo_info_logout': 'Logout',
 
     '_demo_alert_server_setting_save_title':
-      'Restart the application after saving',
+      'Restart the client to make the settings take effect',
+    '_demo_alert_server_setting_save_message':
+      'The current server settings need to restart the client to take effect.',
 
     'edit_group_name': 'Edit group name',
     'edit_group_description': 'Edit group description',
@@ -98,6 +101,8 @@ export function createStringSetEn(): StringSet {
     '_demo_about_setting_phone_number': '400-622-1776',
     '_demo_about_setting_partner': 'Business cooperation',
     '_demo_about_setting_partner_email': 'bd@easemob.com',
+    '_demo_about_setting_channel': 'Channel cooperation',
+    '_demo_about_setting_channel_email': 'qudao@easemob.com',
     '_demo_about_setting_advise': 'Complaints and suggestions',
     '_demo_about_setting_advise_email': 'issues@easemob.com',
 
@@ -128,8 +133,12 @@ export function createStringSetEn(): StringSet {
     '_demo_notification_setting_offline_push_tip':
       'Receive offline push messages',
 
+    '_demo_logout_title': 'Logout',
+
     'save': 'Save',
     'en': 'English',
     'zh-Hans': '简体中文',
+    'classic': 'Classic',
+    'modern': 'Modern',
   };
 }

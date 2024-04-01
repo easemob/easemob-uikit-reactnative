@@ -7,7 +7,7 @@ import { Queue, timeoutTask } from '../../utils';
 import type { SimpleToastProps, SimpleToastTask } from './types';
 
 export function SimpleToast(props: SimpleToastProps) {
-  const { propsRef, timeout = 3000 } = props;
+  const { propsRef, timeout = 3000, showPosition } = props;
   const tasks: Queue<SimpleToastTask> = React.useRef(
     new Queue<SimpleToastTask>()
   ).current;
@@ -27,6 +27,20 @@ export function SimpleToast(props: SimpleToastProps) {
 
   const [text, setText] = React.useState<string | undefined>(undefined);
   const [isShow, setIsShow] = React.useState(false);
+  const showPositionRef = React.useRef(showPosition);
+
+  const getPositionStyle = React.useCallback(() => {
+    switch (showPositionRef.current) {
+      case 'top':
+        return '10%';
+      case 'center':
+        return '50%';
+      case 'bottom':
+        return '90%';
+      default:
+        return '70%';
+    }
+  }, []);
 
   const execTask = () => {
     if (curTask.current === undefined) {
@@ -43,6 +57,13 @@ export function SimpleToast(props: SimpleToastProps) {
   };
 
   const execAnimation = (onFinished?: () => void) => {
+    if (curTask.current?.showPosition) {
+      showPositionRef.current = curTask.current.showPosition;
+    } else {
+      if (showPosition) {
+        showPositionRef.current = showPosition;
+      }
+    }
     setIsShow(true);
     setText(curTask.current?.message ?? '');
     timeoutTask(curTask.current?.timeout ?? timeout, () => {
@@ -63,9 +84,9 @@ export function SimpleToast(props: SimpleToastProps) {
       style={[
         StyleSheet.absoluteFill,
         {
-          justifyContent: 'center',
+          // justifyContent: 'center',
           alignItems: 'center',
-          top: '70%',
+          top: getPositionStyle(),
           display: isShow === true ? 'flex' : 'none',
         },
       ]}

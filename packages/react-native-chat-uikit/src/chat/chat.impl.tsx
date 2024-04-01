@@ -2339,14 +2339,20 @@ export class ChatServiceImpl
 
   insertMessage(params: {
     message: ChatMessage;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.chatManager.insertMessage(params.message),
       event: 'insertMessage',
       onFinished: async () => {
-        params.onResult({
+        params.onResult?.({
           isOk: true,
+        });
+      },
+      onError: (e) => {
+        params.onResult?.({
+          isOk: false,
+          error: e,
         });
       },
     });

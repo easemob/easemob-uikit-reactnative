@@ -105,7 +105,6 @@ export const MessageInput = React.forwardRef<
     onClickedMultiSelectDeleteButton,
     onClickedMultiSelectShareButton,
   } = useMessageInput(props, ref);
-  console.log('test:zuoyu:sendIconName', sendIconName);
 
   return (
     <>

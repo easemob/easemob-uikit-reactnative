@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Dimensions, Pressable, ScrollView, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
@@ -26,9 +26,9 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
     const {
       groupId,
       onBack,
-      hasAudioCall = false,
+      // hasAudioCall = false,
       hasSendMessage = true,
-      hasVideoCall = false,
+      // hasVideoCall = false,
       containerStyle,
       navigationBarVisible,
       customNavigationBar,
@@ -58,6 +58,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
       isOwner,
       tr,
       onSearch,
+      hasAudioCall,
     } = useGroupInfo(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
@@ -173,7 +174,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
             {groupDescription ? (
               <Text
                 textType={'medium'}
-                paletteType={'label'}
+                paletteType={'body'}
                 style={{ color: getColor('t2'), paddingTop: 4 }}
               >
                 {groupDescription ?? 'test description'}
@@ -209,16 +210,23 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
             </Pressable>
 
             <View style={{ height: 20 }} />
-            <BlockButtons
-              hasAudioCall={hasAudioCall}
-              hasSendMessage={hasSendMessage}
-              hasVideoCall={hasVideoCall}
-              onSendMessage={onSendMessage}
-              onAudioCall={onAudioCall}
-              onVideoCall={onVideoCall}
-              onInitButton={onInitButton}
-              onSearch={onSearch}
-            />
+            <View
+              style={{
+                marginHorizontal: 12,
+                width: Dimensions.get('window').width - 24,
+              }}
+            >
+              <BlockButtons
+                hasAudioCall={hasAudioCall}
+                hasSendMessage={hasSendMessage}
+                hasVideoCall={hasAudioCall}
+                onSendMessage={onSendMessage}
+                onAudioCall={onAudioCall}
+                onVideoCall={onVideoCall}
+                onInitButton={onInitButton}
+                onSearch={onSearch}
+              />
+            </View>
           </View>
           <View style={{ height: 20 }} />
           <ListItem

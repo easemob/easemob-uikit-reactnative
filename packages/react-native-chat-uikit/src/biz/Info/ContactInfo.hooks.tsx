@@ -7,6 +7,7 @@ import {
   UIListenerType,
   useChatContext,
 } from '../../chat';
+import { useConfigContext } from '../../config';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
@@ -48,6 +49,8 @@ export function useContactInfo(
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
+  const { enableAVMeeting } = useConfigContext();
+  const hasAudioCall = enableAVMeeting ?? false;
   const { onShowContactInfoActions } = useContactInfoActions({
     menuRef,
     alertRef,
@@ -358,5 +361,6 @@ export function useContactInfo(
     onClickedRemark,
     getNickName,
     onSearch,
+    hasAudioCall: hasAudioCall,
   };
 }

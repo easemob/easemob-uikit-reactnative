@@ -40,6 +40,7 @@ export function createStringSetCn(): StringSet {
     '_demo_login_tip_2': '《环信服务条款》',
     '_demo_login_tip_3': '与',
     '_demo_login_tip_4': '《环信隐私协议》',
+    '_demo_login_server_setting_button': '服务器设置',
     '_demo_login_tip_reason_1': '请输入正确的手机号',
     '_demo_login_tip_reason_2': '请先同意《环信条款》与《环信协议》',
     '_demo_login_tip_reason_3': '请输入验证码',
@@ -53,7 +54,9 @@ export function createStringSetCn(): StringSet {
     '_demo_server_setting_input_port_tip': '输入端口号',
     '_demo_server_setting_input_rest_server_tip': '输入Rest服务器地址',
 
-    '_demo_alert_server_setting_save_title': '保存设置后重启应用生效',
+    '_demo_alert_server_setting_save_title': '重启客户端',
+    '_demo_alert_server_setting_save_message':
+      '当前服务器设置需重启客户端生效。',
 
     '_demo_info_logout': '退出登录',
 
@@ -94,6 +97,8 @@ export function createStringSetCn(): StringSet {
     '_demo_about_setting_phone_number': '400-622-1776',
     '_demo_about_setting_partner': '商务合作',
     '_demo_about_setting_partner_email': 'bd@easemob.com',
+    '_demo_about_setting_channel': '渠道合作',
+    '_demo_about_setting_channel_email': 'qudao@easemob.com',
     '_demo_about_setting_advise': '投诉建议',
     '_demo_about_setting_advise_email': 'issues@easemob.com',
 
@@ -122,8 +127,12 @@ export function createStringSetCn(): StringSet {
     '_demo_notification_setting_offline_push_tip':
       '关闭后，除非被@，否则将收不到任何消息推送与提示',
 
+    '_demo_logout_title': '退出登录',
+
     'save': '保存',
     'en': 'English',
     'zh-Hans': '简体中文',
+    'classic': '经典',
+    'modern': '扬帆',
   };
 }

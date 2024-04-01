@@ -1,6 +1,7 @@
 export type SimpleToastTask = {
   message: string;
   timeout?: number;
+  showPosition?: 'top' | 'center' | 'bottom';
 };
 
 export type SimpleToastRef = {
@@ -9,6 +10,7 @@ export type SimpleToastRef = {
 export type SimpleToastProps = {
   propsRef: React.RefObject<SimpleToastRef>;
   timeout?: number;
+  showPosition?: 'top' | 'center' | 'bottom';
 };
 
 export type SimpleToastType = {
@@ -18,6 +20,7 @@ export type SimpleToastType = {
 export type ToastViewTask = {
   children: React.ComponentType<any> | React.ReactElement | null | undefined;
   timeout?: number;
+  showPosition?: 'top' | 'center' | 'bottom';
 };
 
 export type ToastViewRef = {
@@ -26,6 +29,7 @@ export type ToastViewRef = {
 export type ToastViewProps = {
   propsRef: React.RefObject<ToastViewRef>;
   timeout?: number;
+  showPosition?: 'top' | 'center' | 'bottom';
 };
 
 export type ToastViewType = {

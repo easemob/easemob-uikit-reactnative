@@ -526,7 +526,7 @@ export interface MessageServices {
    */
   insertMessage(params: {
     message: ChatMessage;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   /**
    * Update the message.

@@ -35,7 +35,7 @@ export function MineInfo(props: MineInfoProps) {
     onClickedLogout,
     onClickedCommon,
     onClickedMessageNotification,
-    onClickedPrivacy,
+    // onClickedPrivacy,
     userState,
     onClickedPersonInfo,
     onClickedAbout,
@@ -65,6 +65,14 @@ export function MineInfo(props: MineInfoProps) {
     },
     t3: {
       light: colors.neutral[7],
+      dark: colors.neutral[6],
+    },
+    right: {
+      light: colors.neutral[3],
+      dark: colors.neutral[5],
+    },
+    n: {
+      light: colors.neutral[5],
       dark: colors.neutral[6],
     },
   });
@@ -156,7 +164,7 @@ export function MineInfo(props: MineInfoProps) {
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Icon
                   name={mineInfo[5]!}
-                  style={{ height: 28, width: 28, borderRadius: 4 }}
+                  style={{ height: 28, width: 28, borderRadius: 8 }}
                 />
                 <View style={{ width: 8 }} />
                 <Text
@@ -179,7 +187,11 @@ export function MineInfo(props: MineInfoProps) {
                 </Text>
                 <Icon
                   name={'chevron_right'}
-                  style={{ height: 20, width: 20 }}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    tintColor: getColor('right'),
+                  }}
                 />
               </View>
             }
@@ -193,7 +205,7 @@ export function MineInfo(props: MineInfoProps) {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
                 name={mineInfo[3]!}
-                style={{ height: 28, width: 28, borderRadius: 4 }}
+                style={{ height: 28, width: 28, borderRadius: 8 }}
               />
               <View style={{ width: 8 }} />
               <Text
@@ -207,7 +219,10 @@ export function MineInfo(props: MineInfoProps) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -219,7 +234,7 @@ export function MineInfo(props: MineInfoProps) {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
                 name={mineInfo[2]!}
-                style={{ height: 28, width: 28, borderRadius: 4 }}
+                style={{ height: 28, width: 28, borderRadius: 8 }}
               />
               <View style={{ width: 8 }} />
               <Text
@@ -233,7 +248,10 @@ export function MineInfo(props: MineInfoProps) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -245,7 +263,7 @@ export function MineInfo(props: MineInfoProps) {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
                 name={mineInfo[0]!}
-                style={{ height: 28, width: 28, borderRadius: 4 }}
+                style={{ height: 28, width: 28, borderRadius: 8 }}
               />
               <View style={{ width: 8 }} />
               <Text
@@ -259,19 +277,22 @@ export function MineInfo(props: MineInfoProps) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
 
-        <ListItem
+        {/* <ListItem
           onClicked={onClickedPrivacy}
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
                 name={mineInfo[4]!}
-                style={{ height: 28, width: 28, borderRadius: 4 }}
+                style={{ height: 28, width: 28, borderRadius: 8 }}
               />
               <View style={{ width: 8 }} />
               <Text
@@ -285,10 +306,13 @@ export function MineInfo(props: MineInfoProps) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
-        />
+        /> */}
 
         <ListItem
           onClicked={onClickedAbout}
@@ -297,7 +321,7 @@ export function MineInfo(props: MineInfoProps) {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Icon
                 name={mineInfo[1]!}
-                style={{ height: 28, width: 28, borderRadius: 4 }}
+                style={{ height: 28, width: 28, borderRadius: 8 }}
               />
               <View style={{ width: 8 }} />
               <Text
@@ -314,11 +338,14 @@ export function MineInfo(props: MineInfoProps) {
               <Text
                 textType={'medium'}
                 paletteType={'label'}
-                style={{ color: getColor('t3') }}
+                style={{ color: getColor('n') }}
               >
                 {`Easemob UIKit v${UIKIT_VERSION}`}
               </Text>
-              <Icon name={'chevron_right'} style={{ height: 20, width: 20 }} />
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
             </View>
           }
         />
@@ -341,14 +368,19 @@ export function MineInfo(props: MineInfoProps) {
               </Text>
             </View>
           }
-          onClicked={onClickedState}
-          containerStyle={{ paddingHorizontal: 16 }}
+          onClicked={onClickedLogout}
+          // containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text1Button
                 sizesType={'middle'}
                 radiusType={input}
                 text={tr('_demo_info_logout')}
+                textStyle={{
+                  fontSize: 16,
+                  fontStyle: 'normal',
+                  fontWeight: '500',
+                }}
                 onPress={onClickedLogout}
               />
             </View>

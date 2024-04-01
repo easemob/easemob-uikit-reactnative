@@ -12,6 +12,7 @@ import {
   UIListenerType,
   useChatContext,
 } from '../../chat';
+import { useConfigContext } from '../../config';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
@@ -66,6 +67,8 @@ export function useGroupInfo(
   const [groupMyRemark, setGroupMyRemark] = React.useState(propsGroupMyRemark);
   const [groupMemberCount, setGroupMemberCount] = React.useState(0);
   const [isOwner, setIsOwner] = React.useState(false);
+  const { enableAVMeeting } = useConfigContext();
+  const hasAudioCall = enableAVMeeting ?? false;
 
   const init = React.useCallback(() => {
     im.getGroupInfoFromServer({
@@ -553,5 +556,6 @@ export function useGroupInfo(
     onVideoCall,
     onSendMessage,
     onSearch,
+    hasAudioCall: hasAudioCall,
   };
 }

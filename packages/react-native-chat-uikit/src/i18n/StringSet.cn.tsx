@@ -69,6 +69,8 @@ export function createStringSetCn(): StringSet {
     '_uikit_msg_translate': '已翻译',
     '_uikit_msg_record': '聊天记录',
     '_uikit_msg_tip_create_group_success': '创建群聊成功',
+    '_uikit_msg_tip_create_thread_finish': (id) =>
+      id ? `${id} 创建了话题` : '创建了话题',
     '_uikit_msg_tip_create_group_success_with_params': '创建群聊成功',
 
     '_uikit_info_send_msg': '发消息',

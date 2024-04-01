@@ -8,6 +8,7 @@ import {
   usePaletteContext,
 } from '../../theme';
 import type { ButtonProps } from './Button';
+import { gMaxRadius } from './const';
 
 export const useGetButtonSizeStyle = (
   props: ButtonProps
@@ -97,7 +98,7 @@ export const useGetButtonStateStyle = (props: ButtonProps): ButtonColors => {
   });
 };
 export const useGetButtonRadiusStyle = (props: ButtonProps) => {
-  const { radiusType = 'extraSmall' } = props;
+  const { radiusType = 'extraSmall', maxRadius = gMaxRadius } = props;
   const { button } = useThemeContext();
   const { cornerRadius } = usePaletteContext();
   switch (radiusType) {
@@ -109,6 +110,8 @@ export const useGetButtonRadiusStyle = (props: ButtonProps) => {
       return cornerRadius.medium;
     case 'large':
       return button.size.large.button.height as number;
+    case 'extraLarge':
+      return maxRadius as number;
 
     default:
       break;
