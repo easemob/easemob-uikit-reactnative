@@ -25,6 +25,7 @@ import {
   accountType,
   agoraAppId,
   appKey as gAppKey,
+  boloo_da_ttf_name,
   demoType,
   isDevMode,
   restServer,
@@ -289,7 +290,7 @@ export function App() {
           personAvatar: defaultAvatars[2],
           groupAvatar: defaultAvatars[0],
         }}
-        // fontFamily={fontFamily}
+        headerFontFamily={boloo_da_ttf_name}
         // languageExtensionFactory={languageExtensionFactory}
         onInitialized={onContainerInitialized}
         onInitLanguageSet={() => {

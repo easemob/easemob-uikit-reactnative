@@ -38,6 +38,14 @@ export type Config = {
    * The font family name.
    */
   fontFamily?: string;
+  /**
+   * The emoji font family name.
+   */
+  emojiFontFamily?: string;
+  /**
+   * The header font family name.
+   */
+  headerFontFamily?: string;
 
   /**
    * The conversation detail config.

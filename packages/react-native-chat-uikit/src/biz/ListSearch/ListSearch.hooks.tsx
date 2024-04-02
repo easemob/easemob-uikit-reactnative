@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Keyboard } from 'react-native';
 
 import { useLifecycle } from '../../hook';
 import { useFlatList } from '../List/List.hooks';
@@ -68,6 +69,8 @@ export function useListSearch<
 
   const onClickedCallback = React.useCallback(
     (data?: ComponentModel | undefined) => {
+      console.log('test:zuoyu:onClickedCallback', data);
+      Keyboard.dismiss();
       if (onClicked) {
         onClicked(data);
       }

@@ -57,8 +57,12 @@ export function Search(props: SearchProps) {
       dark: colors.primary[6],
     },
     icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+    h: {
+      light: colors.neutral[6],
+      dark: colors.neutral[4],
     },
   });
   return (
@@ -115,6 +119,7 @@ export function Search(props: SearchProps) {
             cursorColor={getColor('cursor')}
             enableClearButton={true}
             clearButtonContainerStyle={{ padding: 7 }}
+            placeholder={tr('search')}
           />
           <Icon
             name={'magnifier'}
@@ -123,7 +128,7 @@ export function Search(props: SearchProps) {
               left: 8,
               width: 22,
               height: 22,
-              tintColor: getColor('color'),
+              tintColor: getColor('icon'),
             }}
           />
         </View>

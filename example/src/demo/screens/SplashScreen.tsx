@@ -51,6 +51,7 @@ export function SplashScreen(props: Props) {
           fontWeight: '600',
           lineHeight: 28,
           textAlign: 'center',
+          letterSpacing: 10,
           color: getColor('p'),
         }}
       >

@@ -7,7 +7,7 @@ import { Alert } from '../../ui/Alert';
 import { CmnButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
-import { Text } from '../../ui/Text';
+import { SingleLineText, Text } from '../../ui/Text';
 import { SimpleToast } from '../../ui/Toast';
 import { StatusAvatar } from '../Avatar';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
@@ -57,6 +57,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       getNickName,
       onSearch,
       hasAudioCall,
+      userRemark,
     } = useContactInfo(props, ref);
     const { cornerRadius } = useThemeContext();
     const { input } = cornerRadius;
@@ -73,6 +74,10 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       fg: {
         light: colors.neutral[1],
         dark: colors.neutral[98],
+      },
+      t1: {
+        light: colors.neutral[5],
+        dark: colors.neutral[6],
       },
       t2: {
         light: colors.neutral[3],
@@ -246,13 +251,13 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
                 </Text>
               }
               RightText={
-                <Text
+                <SingleLineText
                   textType={'large'}
                   paletteType={'label'}
-                  style={{ color: getColor('t1') }}
+                  style={{ color: getColor('t1'), maxWidth: 100 }}
                 >
-                  {''}
-                </Text>
+                  {userRemark}
+                </SingleLineText>
               }
               RightIcon={
                 <View>

@@ -50,6 +50,14 @@ export type ContainerProps = React.PropsWithChildren<{
    */
   fontFamily?: string;
   /**
+   * The emoji font family name.
+   */
+  emojiFontFamily?: string;
+  /**
+   * The header font family name.
+   */
+  headerFontFamily?: string;
+  /**
    * The release area.
    */
   releaseArea?: ReleaseArea;

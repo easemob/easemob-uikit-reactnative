@@ -47,6 +47,8 @@ export function Container(props: ContainerProps) {
     palette,
     theme,
     fontFamily,
+    emojiFontFamily,
+    headerFontFamily,
     onInitialized,
     conversationDetail,
     group,
@@ -117,6 +119,8 @@ export function Container(props: ContainerProps) {
                   languageCode: getTranslateLanguage(translateLanguage),
                   enableTranslate: enableTranslate,
                   fontFamily: fontFamily,
+                  emojiFontFamily: emojiFontFamily,
+                  headerFontFamily: headerFontFamily,
                   formatTime: formatTime,
                   recallTimeout: recallTimeout,
                   conversationDetail: mergeObjects(

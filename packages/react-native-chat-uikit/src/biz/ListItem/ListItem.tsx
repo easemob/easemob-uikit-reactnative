@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
+import { StyleProp, TouchableHighlight, View, ViewStyle } from 'react-native';
 
 import { getElement, useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
@@ -86,6 +86,10 @@ export function ListItem<
       light: colors.neutral[98],
       dark: colors.neutral[1],
     },
+    bg2: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
     t1: {
       light: colors.neutral[1],
       dark: colors.neutral[98],
@@ -103,22 +107,23 @@ export function ListItem<
   return (
     <View>
       {getElement(header, {})}
-      <Pressable
-        style={[
-          {
-            height: 53.5,
-            flexDirection: 'row',
-            alignItems: 'center',
-          },
-          containerStyle,
-        ]}
-        onPress={onClicked}
-      >
-        {getElement(LeftName, LeftNameProps)}
-        <View style={{ flexGrow: 1 }} />
-        {getElement(RightText, RightTextProps)}
-        {getElement(RightIcon, RightIconProps)}
-      </Pressable>
+      <TouchableHighlight onPress={onClicked} underlayColor={getColor('bg2')}>
+        <View
+          style={[
+            {
+              height: 53.5,
+              flexDirection: 'row',
+              alignItems: 'center',
+            },
+            containerStyle,
+          ]}
+        >
+          {getElement(LeftName, LeftNameProps)}
+          <View style={{ flexGrow: 1 }} />
+          {getElement(RightText, RightTextProps)}
+          {getElement(RightIcon, RightIconProps)}
+        </View>
+      </TouchableHighlight>
       {enableDivider === true ? (
         <View
           style={{

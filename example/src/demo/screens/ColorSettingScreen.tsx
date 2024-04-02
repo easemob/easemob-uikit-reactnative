@@ -309,6 +309,7 @@ export function ColorSettingScreen(props: Props) {
             valueType={'neutral'}
             value={neutralColor}
             onValueChange={onSetNeutralColor}
+            colorFormat={(v) => `hsla(${v}, 8%, 50%, 1)`}
           />
         </View>
 
@@ -340,6 +341,7 @@ export function ColorSettingScreen(props: Props) {
             valueType={'neutralS'}
             value={neutralSColor}
             onValueChange={onSetNeutralSColor}
+            colorFormat={(v) => `hsla(${v}, 36%, 50%, 1)`}
           />
         </View>
       </SafeAreaView>
@@ -351,9 +353,10 @@ type ColorSettingProps = {
   value: number;
   onValueChange: (value: number) => void;
   valueType: 'primary' | 'second' | 'error' | 'neutral' | 'neutralS';
+  colorFormat?: (v: number) => string;
 };
 function ColorSetting(props: ColorSettingProps) {
-  const { value, onValueChange, valueType } = props;
+  const { value, onValueChange, valueType, colorFormat } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -433,7 +436,11 @@ function ColorSetting(props: ColorSettingProps) {
         onValueChange={(value) => {
           onValueChange(value);
           console.log('value', value);
-          setColor(`hsla(${value}, 100%, 50%, 1)`);
+          if (colorFormat) {
+            setColor(colorFormat(value));
+          } else {
+            setColor(`hsla(${value}, 100%, 50%, 1)`);
+          }
         }}
       />
       <View style={{ width: 10 }} />

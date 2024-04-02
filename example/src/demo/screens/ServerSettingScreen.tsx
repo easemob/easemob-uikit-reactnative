@@ -96,6 +96,7 @@ export function ServerSettingScreen(props: Props) {
       });
       getAlertRef().alertWithInit({
         title: tr('_demo_alert_server_setting_save_title'),
+        message: tr('_demo_alert_server_setting_save_message'),
         buttons: [
           {
             text: tr('cancel'),

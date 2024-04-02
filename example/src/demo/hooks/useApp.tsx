@@ -29,8 +29,10 @@ import {
   usePresetPalette,
 } from 'react-native-chat-uikit';
 
+import { boloo_da_ttf, twemoji_ttf } from '../common/assets';
 import {
   appKey as gAppKey,
+  boloo_da_ttf_name,
   demoType,
   enableDNSConfig,
   fcmSenderId,
@@ -38,6 +40,7 @@ import {
   imServer,
   isDevMode,
   restServer,
+  twemoji_ttf_name,
   useSendBox,
 } from '../common/const';
 import {
@@ -80,9 +83,9 @@ export function useApp() {
   const enableTranslateRef = React.useRef(false);
   const enableAVMeetingRef = React.useRef(false);
   const enableOfflinePushRef = React.useRef(false);
-  const fontFamily = 'Twemoji-Mozilla';
   const [fontsLoaded] = useFonts({
-    [fontFamily]: require('../../../assets/Twemoji.Mozilla.ttf'),
+    [twemoji_ttf_name]: twemoji_ttf,
+    [boloo_da_ttf_name]: boloo_da_ttf,
   });
   const rootRef = useNavigationContainerRef<RootParamsList>();
   const imServerRef = React.useRef(imServer);
@@ -570,7 +573,6 @@ export function useApp() {
     enableTranslateRef,
     enableAVMeetingRef,
     enableOfflinePushRef,
-    fontFamily,
     fontsLoaded,
     rootRef,
     imServerRef,

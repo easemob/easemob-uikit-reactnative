@@ -28,3 +28,5 @@ export const agoraAppId = env.agoraAppId as string;
 export const isDevMode = env.isDevMode as boolean;
 export const accountType = env.accountType as string;
 export const fcmSenderId = env.fcmSenderId as string;
+export const twemoji_ttf_name = 'Twemoji-Mozilla';
+export const boloo_da_ttf_name = 'Baloo-Da';

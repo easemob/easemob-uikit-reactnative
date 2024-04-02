@@ -217,20 +217,27 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
             alignItems: 'center',
             maxWidth: Platform.select({ ios: '70%', android: '80%' }),
           }}
-          onPress={onBack}
+          onPress={selectMode === 'multi' ? null : onBack}
         >
-          <Icon
-            name={'chevron_left'}
-            style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-          />
+          {selectMode !== 'multi' ? (
+            <Icon
+              name={'chevron_left'}
+              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+            />
+          ) : null}
+
           {comType === 'chat' || comType === 'search' ? (
-            <Pressable onPress={onClickedAvatar}>
+            <Pressable
+              onPress={selectMode === 'multi' ? null : onClickedAvatar}
+            >
               {enablePresence === true && convType === 0 ? (
                 <StatusAvatar
                   url={convAvatar}
                   size={32}
                   userId={convId}
-                  onClicked={onClickedAvatar}
+                  onClicked={
+                    selectMode === 'multi' ? undefined : onClickedAvatar
+                  }
                 />
               ) : convType === 0 ? (
                 <Avatar url={convAvatar} size={32} />
@@ -245,7 +252,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
               marginLeft: 10,
               maxWidth: Dimensions.get('window').width - 200,
             }}
-            onPress={onClickedAvatar}
+            onPress={selectMode === 'multi' ? undefined : onClickedAvatar}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <SingleLineText
@@ -268,15 +275,23 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
               ) : null}
             </View>
 
-            <Text
-              textType={'extraSmall'}
-              paletteType={'body'}
-              style={{ color: getColor('text_enable') }}
-            >
-              {comType === 'chat' || comType === 'search'
-                ? tr(status ?? '')
-                : `#${parentName}`}
-            </Text>
+            {convType === 0 && enablePresence === true ? (
+              <Text
+                textType={'extraSmall'}
+                paletteType={'body'}
+                style={{ color: getColor('text_enable') }}
+              >
+                {tr(status ?? '')}
+              </Text>
+            ) : convType === 1 && comType === 'thread' ? (
+              <Text
+                textType={'extraSmall'}
+                paletteType={'body'}
+                style={{ color: getColor('text_enable') }}
+              >
+                {`#${parentName}`}
+              </Text>
+            ) : null}
           </Pressable>
         </Pressable>
       }

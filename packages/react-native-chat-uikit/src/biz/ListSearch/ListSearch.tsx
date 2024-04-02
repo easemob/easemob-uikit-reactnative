@@ -69,6 +69,7 @@ export function ListSearch<
             return item.id;
           }}
           ListEmptyComponent={EmptyPlaceholder}
+          keyboardShouldPersistTaps={'handled'} // !!! Resolving a click on a search result requires a two-click operation. ref: https://blog.csdn.net/m0_37192193/article/details/106492095
         />
       </View>
     </View>

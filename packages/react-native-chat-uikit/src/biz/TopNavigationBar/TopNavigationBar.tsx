@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
 import type { IconNameType } from '../../assets';
+import { useConfigContext } from '../../config';
 import { getElement, useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
@@ -156,6 +157,7 @@ export function TopNavigationBarRightList({
  */
 export function TopNavigationBarTitle({ text }: { text: string }) {
   const { tr } = useI18nContext();
+  const { headerFontFamily } = useConfigContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     title: {
@@ -167,11 +169,12 @@ export function TopNavigationBarTitle({ text }: { text: string }) {
     <View style={{ justifyContent: 'center' }}>
       <Text
         style={{
-          fontSize: 22,
+          fontSize: 24,
           fontWeight: '400',
-          lineHeight: 22,
+          // lineHeight: 22,
           fontStyle: 'normal',
           alignSelf: 'center',
+          fontFamily: headerFontFamily,
           color: getColor('title'),
         }}
       >

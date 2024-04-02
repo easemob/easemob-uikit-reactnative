@@ -918,7 +918,9 @@ export function MessageBubble(props: MessageBubbleProps) {
     onLongPress,
     maxWidth,
     MessageContent: propsMessageContent,
+    onClickedChecked,
   } = props;
+  const checked = (model as MessageModel)?.checked;
   const _MessageContent = propsMessageContent ?? MessageContent;
   const { layoutType, msg, isVoicePlaying } = model;
   const { paddingHorizontal, paddingVertical } = React.useMemo(
@@ -959,16 +961,24 @@ export function MessageBubble(props: MessageBubbleProps) {
   }, [isShowTriangle, maxWidth, paddingHorizontal]);
 
   const _onClicked = React.useCallback(() => {
-    if (onClicked) {
-      onClicked(msg.msgId.toString(), model);
+    if (checked !== undefined) {
+      onClickedChecked?.();
+    } else {
+      if (onClicked) {
+        onClicked(msg.msgId.toString(), model);
+      }
     }
-  }, [model, msg.msgId, onClicked]);
+  }, [checked, model, msg.msgId, onClicked, onClickedChecked]);
 
   const _onLongPress = React.useCallback(() => {
-    if (onLongPress) {
-      onLongPress(msg.msgId.toString(), model);
+    if (checked !== undefined) {
+      onClickedChecked?.();
+    } else {
+      if (onLongPress) {
+        onLongPress(msg.msgId.toString(), model);
+      }
     }
-  }, [model, msg.msgId, onLongPress]);
+  }, [checked, model, msg.msgId, onClickedChecked, onLongPress]);
 
   return (
     <View
@@ -1558,7 +1568,9 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
     containerStyle,
     maxWidth,
     onQuoteClicked,
+    onClickedChecked,
   } = props;
+  const checked = (model as MessageModel)?.checked;
   const { layoutType, quoteMsg, msg: originalMsg } = model;
   const { paddingHorizontal, paddingVertical } = React.useMemo(() => {
     return {
@@ -2028,9 +2040,13 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
   };
 
   const _onClicked = (msg: ChatMessage, quoteMsg?: ChatMessage) => {
-    if (onQuoteClicked) {
-      const quote = msg.attributes[gMessageAttributeQuote];
-      onQuoteClicked?.(quoteMsg ? quoteMsg.msgId : quote.msgID, model);
+    if (checked !== undefined) {
+      onClickedChecked?.();
+    } else {
+      if (onQuoteClicked) {
+        const quote = msg.attributes[gMessageAttributeQuote];
+        onQuoteClicked?.(quoteMsg ? quoteMsg.msgId : quote.msgID, model);
+      }
     }
   };
 
@@ -2085,8 +2101,10 @@ export function MessageView(props: MessageViewProps) {
     MessageThread: propsMessageThread,
     onReactionClicked,
     onThreadClicked,
+    onClickedChecked,
     ...others
   } = props;
+  const checked = (model as MessageModel)?.checked;
   const _MessageQuoteBubble = propsMessageQuoteBubble ?? MessageQuoteBubble;
   const _MessageBubble = propsMessageBubble ?? MessageBubble;
   const _MessageThread = propsMessageThread ?? MessageThread;
@@ -2135,22 +2153,38 @@ export function MessageView(props: MessageViewProps) {
     ],
   });
   const onClickedAvatar = React.useCallback(() => {
-    onAvatarClicked?.(model.msg.msgId, model);
-  }, [model, onAvatarClicked]);
+    if (checked !== undefined) {
+      onClickedChecked?.();
+    } else {
+      onAvatarClicked?.(model.msg.msgId, model);
+    }
+  }, [checked, model, onAvatarClicked, onClickedChecked]);
 
   const onClickedState = React.useCallback(() => {
-    onStateClicked?.(model.msg.msgId, model);
-  }, [model, onStateClicked]);
+    if (checked !== undefined) {
+      onClickedChecked?.();
+    } else {
+      onStateClicked?.(model.msg.msgId, model);
+    }
+  }, [checked, model, onClickedChecked, onStateClicked]);
 
   const _onReactionClicked = React.useCallback(
     (face: string) => {
-      onReactionClicked?.(model.msg.msgId, model, face);
+      if (checked !== undefined) {
+        onClickedChecked?.();
+      } else {
+        onReactionClicked?.(model.msg.msgId, model, face);
+      }
     },
-    [model, onReactionClicked]
+    [checked, model, onClickedChecked, onReactionClicked]
   );
   const _onThreadClicked = React.useCallback(() => {
-    onThreadClicked?.(model.msg.msgId, model);
-  }, [model, onThreadClicked]);
+    if (checked !== undefined) {
+      onClickedChecked?.();
+    } else {
+      onThreadClicked?.(model.msg.msgId, model);
+    }
+  }, [checked, model, onClickedChecked, onThreadClicked]);
 
   React.useEffect(() => {
     if (isHightBackground !== undefined) {
@@ -2200,6 +2234,7 @@ export function MessageView(props: MessageViewProps) {
             onQuoteClicked={onQuoteClicked}
             maxWidth={maxWidth}
             model={model}
+            onClickedChecked={onClickedChecked}
           />
         ) : null}
         <View
@@ -2219,6 +2254,7 @@ export function MessageView(props: MessageViewProps) {
             model={model}
             maxWidth={maxWidth}
             hasTriangle={hasTriangle}
+            onClickedChecked={onClickedChecked}
             {...others}
           />
           {state !== 'none' ? (
@@ -2370,6 +2406,7 @@ export function MessageListItem(props: MessageListItemProps) {
             <_MessageView
               isVisible={modelType === 'message' ? true : false}
               model={model as MessageModel}
+              onClickedChecked={_onChecked}
               {...others}
             />
           </CheckView>

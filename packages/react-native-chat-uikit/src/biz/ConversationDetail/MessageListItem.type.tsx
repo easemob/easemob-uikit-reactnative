@@ -134,6 +134,7 @@ export type MessageBubbleProps = MessageListItemRenders &
     model: MessageModel;
     containerStyle?: StyleProp<ViewStyle>;
     maxWidth?: number;
+    onClickedChecked?: () => void;
   };
 /**
  * Message Bubble component render type.
@@ -229,6 +230,7 @@ export type MessageQuoteBubbleProps = MessageListItemActionsProps & {
   model: MessageModel;
   containerStyle?: StyleProp<ViewStyle>;
   maxWidth?: number;
+  onClickedChecked?: () => void;
 };
 /**
  * Message Quote Bubble component render type.
@@ -245,6 +247,7 @@ export type MessageViewProps = MessageListItemRenders &
     avatarIsVisible?: boolean;
     nameIsVisible?: boolean;
     timeIsVisible?: boolean;
+    onClickedChecked?: () => void;
   };
 /**
  * Message Quote Content component render type.

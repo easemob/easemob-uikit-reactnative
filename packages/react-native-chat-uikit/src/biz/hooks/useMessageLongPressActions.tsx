@@ -164,6 +164,26 @@ export function useMessageLongPressActions(
           });
         }
       }
+      initItems.push({
+        name: tr('_uikit_chat_list_long_press_menu_forward_message'),
+        isHigh: false,
+        icon: 'arrowshape_right',
+        onClicked: () => {
+          closeMenu(() => {
+            onForwardMessage?.(model as MessageModel);
+          });
+        },
+      });
+      initItems.push({
+        name: tr('_uikit_chat_list_long_press_menu_multi_select'),
+        isHigh: false,
+        icon: 'check_n_3lines',
+        onClicked: () => {
+          closeMenu(() => {
+            onClickedMultiSelected?.();
+          });
+        },
+      });
       if (
         msgModel.msg.status === ChatMessageStatus.SUCCESS &&
         enableTranslate === true
@@ -221,26 +241,6 @@ export function useMessageLongPressActions(
           }
         }
       }
-      initItems.push({
-        name: tr('_uikit_chat_list_long_press_menu_multi_select'),
-        isHigh: false,
-        icon: 'check_n_3lines',
-        onClicked: () => {
-          closeMenu(() => {
-            onClickedMultiSelected?.();
-          });
-        },
-      });
-      initItems.push({
-        name: tr('_uikit_chat_list_long_press_menu_forward_message'),
-        isHigh: false,
-        icon: 'check_n_3lines',
-        onClicked: () => {
-          closeMenu(() => {
-            onForwardMessage?.(model as MessageModel);
-          });
-        },
-      });
       if (
         msgModel.msg.status === ChatMessageStatus.SUCCESS &&
         comType !== 'thread'
