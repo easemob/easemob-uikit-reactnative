@@ -69,7 +69,6 @@ export function useListSearch<
 
   const onClickedCallback = React.useCallback(
     (data?: ComponentModel | undefined) => {
-      console.log('test:zuoyu:onClickedCallback', data);
       Keyboard.dismiss();
       if (onClicked) {
         onClicked(data);

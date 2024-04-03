@@ -2359,14 +2359,20 @@ export class ChatServiceImpl
   }
   updateMessage(params: {
     message: ChatMessage;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.chatManager.updateMessage(params.message),
       event: 'updateMessage',
       onFinished: async () => {
-        params.onResult({
+        params.onResult?.({
           isOk: true,
+        });
+      },
+      onError: (e) => {
+        params.onResult?.({
+          isOk: false,
+          error: e,
         });
       },
     });
@@ -2374,7 +2380,7 @@ export class ChatServiceImpl
 
   removeMessage(params: {
     message: ChatMessage;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void {
     this.tryCatch({
       promise: this.client.chatManager.deleteMessage(
@@ -2385,8 +2391,14 @@ export class ChatServiceImpl
       ),
       event: 'removeMessage',
       onFinished: async () => {
-        params.onResult({
+        params.onResult?.({
           isOk: true,
+        });
+      },
+      onError: (e) => {
+        params.onResult?.({
+          isOk: false,
+          error: e,
         });
       },
     });

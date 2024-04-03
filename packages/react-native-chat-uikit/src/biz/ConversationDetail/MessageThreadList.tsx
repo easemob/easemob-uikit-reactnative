@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ListRenderItemInfo, Pressable, View } from 'react-native';
 import type {
-  ChatMessage,
   ChatMessageThread,
   ChatMessageThreadEvent,
 } from 'react-native-chat-sdk';
@@ -283,9 +282,8 @@ function useMessageThreadList(
                 dataRef.current.forEach((item) => {
                   const lastMessage = list.get(item.model.id);
                   if (lastMessage) {
-                    item.model.thread.lastMessage = {
-                      ...lastMessage,
-                    } as ChatMessage;
+                    item.model.thread.lastMessage = lastMessage;
+                    item.model = { ...item.model };
                   }
                 });
                 refreshToUI(dataRef.current);

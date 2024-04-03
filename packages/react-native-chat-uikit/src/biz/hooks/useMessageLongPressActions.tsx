@@ -7,7 +7,11 @@ import {
   ChatTextMessageBody,
 } from 'react-native-chat-sdk';
 
-import { gCustomMessageCardEventType, useChatContext } from '../../chat';
+import {
+  gCustomMessageCardEventType,
+  gMessageAttributeTranslate,
+  useChatContext,
+} from '../../chat';
 import { useConfigContext } from '../../config';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
@@ -191,8 +195,13 @@ export function useMessageLongPressActions(
         if (msgModel.msg.body.type === ChatMessageType.TXT) {
           const textBody = msgModel.msg.body as ChatTextMessageBody;
           if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
+            const msg = (model as MessageModel)?.msg;
+            const isTranslated = msg?.attributes?.[gMessageAttributeTranslate];
             initItems.push({
-              name: tr('_uikit_chat_list_long_press_menu_translate'),
+              name: tr(
+                '_uikit_chat_list_long_press_menu_translate',
+                isTranslated
+              ),
               isHigh: false,
               icon: 'a_in_arrows_round',
               onClicked: () => {

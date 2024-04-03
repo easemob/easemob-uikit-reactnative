@@ -73,7 +73,6 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
         desc: 'Alert buttons count must less than 3',
       });
     }
-    console.log('test:zuoyu:cornerRadius', cornerRadius, corner);
 
     React.useImperativeHandle(
       ref,

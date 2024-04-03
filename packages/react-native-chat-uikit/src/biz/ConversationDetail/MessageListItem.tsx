@@ -26,6 +26,7 @@ import { ICON_ASSETS, IconNameType } from '../../assets';
 import {
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
+  gMessageAttributeTranslate,
   // gMessageAttributeTranslate,
 } from '../../chat';
 import { getMessageSnapshot, userInfoFromMessage } from '../../chat/utils';
@@ -131,8 +132,8 @@ export function MessageText(props: MessageTextProps) {
     content = tr('_uikit_msg_tip_not_support');
   }
 
-  const codes = body.targetLanguageCodes;
-  const translated = codes && codes?.length > 0;
+  // const codes = body.targetLanguageCodes;
+  // const translated = codes && codes?.length > 0;
   const translatedContent =
     body.translations &&
     body.targetLanguageCodes &&
@@ -140,9 +141,9 @@ export function MessageText(props: MessageTextProps) {
       ? body.translations[body.targetLanguageCodes[0]!]
       : undefined;
 
-  // const translated = msg.attributes?.[gMessageAttributeTranslate] as
-  //   | boolean
-  //   | undefined;
+  const translated = msg.attributes?.[gMessageAttributeTranslate] as
+    | boolean
+    | undefined;
 
   return (
     <View>
@@ -317,6 +318,7 @@ export function MessageCombine(props: MessageCombineProps) {
           flexDirection: 'row',
           justifyContent: 'flex-end',
           alignItems: 'center',
+          marginTop: 4,
         }}
       >
         <Icon
@@ -1847,7 +1849,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             >
               {user?.userName ?? user?.userId ?? quoteMsg.from}
             </SingleLineText>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
               <Icon
                 name={'doc'}
                 style={{
@@ -1902,7 +1904,7 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             >
               {user?.userName ?? user?.userId ?? quoteMsg.from}
             </SingleLineText>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
               <Icon
                 name={'3pm'}
                 style={{

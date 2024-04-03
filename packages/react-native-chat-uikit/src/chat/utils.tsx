@@ -90,44 +90,54 @@ export function getMessageSnapshot(
   if (msg === undefined) {
     return '';
   }
+  let ret = '';
   switch (msg.body.type) {
     case ChatMessageType.TXT: {
       const content = emoji.toCodePointText(
         (msg.body as ChatTextMessageBody).content
       );
-      if (msg.chatType === ChatMessageChatType.GroupChat) {
-        const user = userInfoFromMessage(msg);
-        if (withName === undefined && withName === true) {
-          return `${user?.userName ?? user?.userId ?? msg.from}: ${content}`;
-        }
-        return `${content}`;
-      } else {
-        return content;
-      }
+      ret = content;
+      break;
     }
 
     case ChatMessageType.IMAGE:
-      return '[image]';
+      ret = '[image]';
+      break;
     case ChatMessageType.VIDEO:
-      return '[video]';
+      ret = '[video]';
+      break;
     case ChatMessageType.FILE:
-      return '[file]';
+      ret = '[file]';
+      break;
     case ChatMessageType.LOCATION:
-      return '[location]';
+      ret = '[location]';
+      break;
     case ChatMessageType.VOICE:
-      return '[voice]';
+      ret = '[voice]';
+      break;
     case ChatMessageType.CUSTOM:
       const body = msg.body as ChatCustomMessageBody;
       if (body.event === gCustomMessageCardEventType) {
-        return '[contact]';
+        ret = '[contact]';
+      } else {
+        ret = '[custom]';
       }
-      return '[custom]';
+      break;
     case ChatMessageType.COMBINE:
-      return '[combine]';
+      ret = '[combine]';
+      break;
 
     default:
-      return '[unknown]';
+      ret = '[unknown]';
   }
+  if (msg.chatType === ChatMessageChatType.GroupChat) {
+    if (withName === undefined || withName === true) {
+      const user = userInfoFromMessage(msg);
+      ret = `${user?.userName ?? user?.userId ?? msg.from}: ${ret}`;
+    }
+  }
+
+  return ret;
 }
 
 export function getMessageSnapshotParams(msg: ChatMessage) {

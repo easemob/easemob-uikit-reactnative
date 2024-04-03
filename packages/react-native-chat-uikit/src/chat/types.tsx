@@ -533,14 +533,14 @@ export interface MessageServices {
    */
   updateMessage(params: {
     message: ChatMessage;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   /**
    * Remove the message.
    */
   removeMessage(params: {
     message: ChatMessage;
-    onResult: ResultCallback<void>;
+    onResult?: ResultCallback<void>;
   }): void;
   /**
    * Remove the message list.

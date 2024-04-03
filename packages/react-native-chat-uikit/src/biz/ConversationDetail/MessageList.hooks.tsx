@@ -706,7 +706,6 @@ export function useMessageList(
       }
       return d;
     });
-    console.log('test:zuoyu:checkMsgUserToUI:', isExisted);
     if (isExisted) {
       refreshToUI(dataRef.current);
     }
@@ -1028,21 +1027,36 @@ export function useMessageList(
 
   const translateMessage = React.useCallback(
     (model: MessageModel) => {
-      im.translateMessage({
-        message: model.msg,
-        languages: [languageCode],
-        onResult: async (result) => {
-          if (result.isOk === true && result.value) {
-            const newMsg = { ...result.value } as ChatMessage;
-            newMsg.attributes = {
-              ...model.msg.attributes,
-              [gMessageAttributeTranslate]: true,
-            };
-            im.updateMessage({ message: newMsg, onResult: () => {} });
-            onUpdateMessageToUI(newMsg, 'recv');
-          }
-        },
-      });
+      const isTranslated = model.msg.attributes?.[gMessageAttributeTranslate];
+      if (isTranslated === true) {
+        const newMsg = { ...model.msg } as ChatMessage;
+        newMsg.attributes = {
+          ...model.msg.attributes,
+          [gMessageAttributeTranslate]: false,
+        };
+        // const body = { ...newMsg.body } as ChatTextMessageBody;
+        // body.translations = undefined;
+        // body.targetLanguageCodes = undefined;
+        // newMsg.body = body;
+        im.updateMessage({ message: newMsg, onResult: () => {} });
+        onUpdateMessageToUI(newMsg, 'recv');
+      } else {
+        im.translateMessage({
+          message: model.msg,
+          languages: [languageCode],
+          onResult: async (result) => {
+            if (result.isOk === true && result.value) {
+              const newMsg = { ...result.value } as ChatMessage;
+              newMsg.attributes = {
+                ...model.msg.attributes,
+                [gMessageAttributeTranslate]: true,
+              };
+              im.updateMessage({ message: newMsg, onResult: () => {} });
+              onUpdateMessageToUI(newMsg, 'recv');
+            }
+          },
+        });
+      }
     },
     [im, languageCode, onUpdateMessageToUI]
   );
@@ -2375,9 +2389,6 @@ export function useMessageList(
                 onFinished: (item) => {
                   im.insertMessage({
                     message: (item.model as MessageModel).msg,
-                    onResult: (res) => {
-                      console.log('test:zuoyu:res:', res);
-                    },
                   });
                 },
               });
@@ -2395,7 +2406,6 @@ export function useMessageList(
           if (msgs.length > 0) {
             const newStartMsgId = msgs[msgs.length - 1]!.msgId;
             if (newStartMsgId === afterMsgIdRef.current) {
-              console.log('/:ba:1', newStartMsgId);
               break;
             }
             beforeMsgIdRef.current =
@@ -3067,8 +3077,10 @@ export function useMessageList(
     const listener = {
       onSendMessageChanged: (msg: ChatMessage) => {
         onUpdateMessageToUI(msg, 'send');
-        if (comType === 'thread' && inverted === false) {
-          scrollToBottom();
+        if (canAddNewMessageToUI()) {
+          if (comType === 'thread' && inverted === false) {
+            scrollToBottom();
+          }
         }
       },
       onRecvMessage: async (msg: ChatMessage) => {

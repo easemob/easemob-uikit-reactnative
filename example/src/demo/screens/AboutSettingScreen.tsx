@@ -170,7 +170,7 @@ export function AboutSettingScreen(props: Props) {
               <Text
                 textType={'small'}
                 paletteType={'title'}
-                style={{ color: getColor('disable') }}
+                style={{ color: getColor('enable') }}
               >
                 {tr('_demo_about_setting_site_url')}
               </Text>
@@ -203,7 +203,7 @@ export function AboutSettingScreen(props: Props) {
               <Text
                 textType={'small'}
                 paletteType={'title'}
-                style={{ color: getColor('disable') }}
+                style={{ color: getColor('enable') }}
               >
                 {tr('_demo_about_setting_phone_number')}
               </Text>
@@ -236,7 +236,7 @@ export function AboutSettingScreen(props: Props) {
               <Text
                 textType={'small'}
                 paletteType={'title'}
-                style={{ color: getColor('disable') }}
+                style={{ color: getColor('enable') }}
               >
                 {tr('_demo_about_setting_partner_email')}
               </Text>
@@ -269,7 +269,7 @@ export function AboutSettingScreen(props: Props) {
               <Text
                 textType={'small'}
                 paletteType={'title'}
-                style={{ color: getColor('disable') }}
+                style={{ color: getColor('enable') }}
               >
                 {tr('_demo_about_setting_channel_email')}
               </Text>
@@ -302,7 +302,7 @@ export function AboutSettingScreen(props: Props) {
               <Text
                 textType={'small'}
                 paletteType={'title'}
-                style={{ color: getColor('disable') }}
+                style={{ color: getColor('enable') }}
               >
                 {tr('_demo_about_setting_advise_email')}
               </Text>
