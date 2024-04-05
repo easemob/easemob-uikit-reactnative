@@ -169,10 +169,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
           if (isOk === true) {
             if (value) {
               dataRef.current = value.map((item) => {
-                if (
-                  participantType === 'delete' ||
-                  participantType === 'av-meeting'
-                ) {
+                if (participantType === 'delete') {
                   const modelState = im.getModelState({
                     tag: groupId,
                     id: item.memberId,
@@ -183,6 +180,23 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
                       ...item,
                       isOwner: item.memberId === owner?.memberId,
                       checked: modelState?.checked ?? false,
+                    },
+                  } as GroupParticipantListItemProps;
+                } else if (participantType === 'av-meeting') {
+                  const modelState = im.getModelState({
+                    tag: groupId,
+                    id: item.memberId,
+                  });
+                  return {
+                    id: item.memberId,
+                    data: {
+                      ...item,
+                      isOwner: item.memberId === owner?.memberId,
+                      checked:
+                        im.userId === item.memberId
+                          ? true
+                          : modelState?.checked ?? false,
+                      disable: im.userId === item.memberId ? true : undefined,
                     },
                   } as GroupParticipantListItemProps;
                 } else {
@@ -203,16 +217,14 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
                     item.data.isOwner !== true
                   );
                 });
-              } else if (
-                participantType === 'delete' ||
-                participantType === 'av-meeting'
-              ) {
+              } else if (participantType === 'delete') {
                 dataRef.current = dataRef.current.filter((item) => {
                   return (
                     item.data.memberId !== im.userId ||
                     item.data.isOwner !== true
                   );
                 });
+              } else if (participantType === 'av-meeting') {
               } else if (participantType === 'mention') {
                 dataRef.current.unshift({
                   id: 'All',

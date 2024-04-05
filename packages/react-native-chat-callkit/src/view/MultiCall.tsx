@@ -137,7 +137,7 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
     super(props);
     this._videoTabRef = React.createRef<VideoTabs>();
     this._cache = new Map();
-    const users = [] as User[];
+    let users = [] as User[];
     users.push({
       userId: props.inviterId,
       userHadJoined: false,
@@ -152,6 +152,7 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
         } as User;
       })
     );
+    users = MultiCall.removeDuplicateData(users);
     if (props.invitees) {
       for (const user of users) {
         for (const invitee of props.invitees) {
@@ -202,6 +203,14 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
       usersCount: users.length,
       showInvite: false,
     };
+  }
+
+  protected static removeDuplicateData(users: User[]): User[] {
+    const uniqueList = users.filter(
+      (item, index, self) =>
+        index === self.findIndex((t) => t.userId === item.userId)
+    );
+    return uniqueList;
   }
 
   protected init(): void {

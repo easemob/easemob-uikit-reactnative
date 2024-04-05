@@ -1,6 +1,5 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { CallType } from 'react-native-chat-callkit';
 import {
   ChatConversationType,
   ChatCustomMessageBody,
@@ -29,7 +28,6 @@ import {
 } from 'react-native-safe-area-context';
 
 import { useCallApi } from '../common/AVView';
-import { agoraAppId, appKey } from '../common/const';
 import type { RootScreenParamsList } from '../routes';
 
 // export function MyMessageContent(props: MessageContentProps) {
@@ -74,114 +72,54 @@ export function MessageHistoryScreen(props: Props) {
   const convRef = React.useRef<ConversationDetailRef>({} as any);
   const comType = React.useRef<ConversationDetailModelType>('search').current;
   const avTypeRef = React.useRef<'video' | 'voice'>('video');
+  const { showCall } = useCallApi({});
 
-  const { showMultiCall, showSingleCall, hideCall } = useCallApi({});
+  const getSelectedMembers = React.useCallback(() => {
+    return selectedMembers;
+  }, [selectedMembers]);
 
-  const showCall = React.useCallback(
-    (params: { convType: number; avType: 'video' | 'voice' }) => {
-      const { avType, convType } = params;
-      let members: GroupParticipantModel[] = [];
-      try {
-        if (convType === 0) {
-          members.push({
-            memberId: convId,
-          });
-        } else if (convType === 1) {
-          members = selectedMembers ?? [];
-        }
-      } catch (error) {
-        console.warn('test:showCall:parse selectedMembers error', error);
-      }
-
-      const callType =
-        avType === 'video'
-          ? convType === 0
-            ? CallType.Video1v1
-            : CallType.VideoMulti
-          : avType === 'voice'
-          ? convType === 0
-            ? CallType.Audio1v1
-            : CallType.AudioMulti
-          : undefined;
-
-      if (callType === undefined) {
-        return;
-      }
-      if (im.userId === undefined) {
-        return;
-      }
-      if (members.length === 0) {
-        return;
-      }
-      const inviteeIds = members.map((item) => item.memberId);
-      if (callType === CallType.Audio1v1 || callType === CallType.Video1v1) {
-        showSingleCall({
-          appKey: appKey,
-          agoraAppId: agoraAppId,
-          inviterId: im.userId,
-          currentId: im.userId,
-          inviteeIds: inviteeIds,
-          callType: callType,
-          // inviterName: '',
-          // inviterAvatar: '',
-          onRequestClose: hideCall,
-        });
-      } else if (
-        callType === CallType.AudioMulti ||
-        callType === CallType.VideoMulti
-      ) {
-        showMultiCall({
-          appKey: appKey,
-          agoraAppId: agoraAppId,
-          inviterId: im.userId,
-          currentId: im.userId,
-          inviteeIds: inviteeIds,
-          callType: callType,
-          // inviterName: '',
-          // inviterAvatar: '',
-          onRequestClose: hideCall,
-        });
-      }
-    },
-    [
-      convId,
-      hideCall,
-      im.userId,
-      selectedMembers,
-      showMultiCall,
-      showSingleCall,
-    ]
-  );
   const onClickedVideo = React.useCallback(() => {
     if (comType !== 'chat') {
       return;
     }
     avTypeRef.current = 'video';
     if (convType === 0) {
-      showCall({ convType, avType: 'video' });
+      showCall({
+        convId,
+        convType,
+        avType: 'video',
+        getSelectedMembers: getSelectedMembers,
+      });
     } else if (convType === 1) {
       navigation.navigate('AVSelectGroupParticipant', {
         params: {
           groupId: convId,
+          from: 'MessageHistory',
         },
       });
     }
-  }, [comType, convId, convType, navigation, showCall]);
+  }, [comType, convId, convType, getSelectedMembers, navigation, showCall]);
   const onClickedVoice = React.useCallback(() => {
     if (comType !== 'chat') {
       return;
     }
     avTypeRef.current = 'voice';
     if (convType === 0) {
-      showCall({ convType, avType: 'voice' });
+      showCall({
+        convId,
+        convType,
+        avType: 'voice',
+        getSelectedMembers: getSelectedMembers,
+      });
     } else if (convType === 1) {
       navigation.navigate('AVSelectGroupParticipant', {
         params: {
           groupId: convId,
+          from: 'MessageHistory',
         },
       });
     }
-  }, [comType, convId, convType, navigation, showCall]);
+  }, [comType, convId, convType, getSelectedMembers, navigation, showCall]);
 
   // React.useEffect(() => {
   //   if (selectedParticipants && operateType === 'mention') {

@@ -539,7 +539,7 @@ export function useConversationList(props: ConversationListProps) {
         }
       },
     } as ChatServiceListener;
-  }, [onMessage, init, onPin, onUnPin, dataRef, onUpdateDataToUI, im.userId]);
+  }, [im.userId, onMessage, init, onPin, onUnPin, dataRef, onUpdateDataToUI]);
 
   useChatListener(listener);
 

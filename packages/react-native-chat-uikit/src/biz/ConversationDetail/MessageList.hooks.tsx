@@ -2913,6 +2913,26 @@ export function useMessageList(
             // },
           });
         },
+        addSendMessageToUI: (params: {
+          value:
+            | SendFileProps
+            | SendImageProps
+            | SendTextProps
+            | SendVideoProps
+            | SendVoiceProps
+            | SendTimeProps
+            | SendSystemProps
+            | SendCardProps
+            | SendCustomProps;
+
+          onFinished?: (item: MessageListItemProps) => void;
+          onBeforeCallback?: () => void | Promise<void>;
+        }): Promise<void> => {
+          return addSendMessageToUI(params);
+        },
+        sendMessageToServer: (msg: ChatMessage) => {
+          return sendMessageToServer(msg);
+        },
         removeMessage: (msg: ChatMessage) => {
           deleteMessage(msg);
         },

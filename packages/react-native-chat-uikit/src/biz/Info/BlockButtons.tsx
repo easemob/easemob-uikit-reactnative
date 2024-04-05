@@ -100,7 +100,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
   if (hasSearch) {
     items.push(
       <BlockButton
-        key={'102'}
+        key={'103'}
         iconName={'magnifier'}
         text={tr('_uikit_info_search_message')}
         containerStyle={styles.c}

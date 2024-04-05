@@ -21,6 +21,7 @@ import {
 } from 'react-native-chat-uikit';
 
 import { createStringSetCn, createStringSetEn, ToastView } from './common';
+import { AVView } from './common/AVView';
 import {
   accountType,
   agoraAppId,
@@ -775,6 +776,8 @@ export function App() {
               />
             </Root.Navigator>
           </NavigationContainer>
+
+          <AVView />
         </CallkitContainer>
 
         <TestListener />

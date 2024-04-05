@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { DeviceEventEmitter } from 'react-native';
 import {
   CallError,
   CallListener,
@@ -11,6 +11,7 @@ import {
   useCallkitSdkContext,
 } from 'react-native-chat-callkit';
 import {
+  GroupParticipantModel,
   useAbsoluteViewContext,
   useChatContext,
   useSimpleToastContext,
@@ -21,13 +22,23 @@ import { agoraAppId, appKey } from './const';
 export type AVViewProps = {};
 export function AVView(props: AVViewProps) {
   const {} = props;
-  return <View />;
+  useCallApiListener();
+  return <></>;
 }
 
 export function useCallApi(props: AVViewProps) {
   const {} = props;
+  const im = useChatContext();
   const { getAbsoluteViewRef } = useAbsoluteViewContext();
   const { getSimpleToastRef } = useSimpleToastContext();
+
+  const sendTip = React.useCallback((type: string, extra?: any) => {
+    DeviceEventEmitter.emit('onSignallingMessage', {
+      type: type,
+      extra: extra,
+    });
+  }, []);
+
   const hideCall = React.useCallback(() => {
     getAbsoluteViewRef().destroy();
   }, [getAbsoluteViewRef]);
@@ -73,18 +84,22 @@ export function useCallApi(props: AVViewProps) {
                   ? `reason: ${JSON.stringify(reason)}`
                   : `Call End: ${formatElapsed(elapsed)}`,
               });
+              sendTip('callEnd', elapsed);
             }}
             onHangUp={() => {
               console.log('test:stateEvent.onHangUp');
               onRequestClose();
+              sendTip('callHangUp');
             }}
             onCancel={() => {
               console.log('test:stateEvent.onCancel');
               onRequestClose();
+              sendTip('callCancel');
             }}
             onRefuse={() => {
               console.log('test:stateEvent.onRefuse');
               onRequestClose();
+              sendTip('callRefuse');
             }}
             onError={(error) => {
               console.log('test:stateEvent.onError', error);
@@ -97,7 +112,7 @@ export function useCallApi(props: AVViewProps) {
         ),
       });
     },
-    [getAbsoluteViewRef, getSimpleToastRef]
+    [getAbsoluteViewRef, getSimpleToastRef, sendTip]
   );
   const showMultiCall = React.useCallback(
     (params: {
@@ -141,18 +156,22 @@ export function useCallApi(props: AVViewProps) {
                   ? `reason: ${JSON.stringify(reason)}`
                   : `Call End: ${formatElapsed(elapsed)}`,
               });
+              sendTip('callEnd', elapsed);
             }}
             onHangUp={() => {
               console.log('test:stateEvent.onHangUp');
               onRequestClose();
+              sendTip('callHangUp');
             }}
             onCancel={() => {
               console.log('test:stateEvent.onCancel');
               onRequestClose();
+              sendTip('callCancel');
             }}
             onRefuse={() => {
               console.log('test:stateEvent.onRefuse');
               onRequestClose();
+              sendTip('callRefuse');
             }}
             onError={(error) => {
               console.log('test:stateEvent.onError', error);
@@ -165,20 +184,83 @@ export function useCallApi(props: AVViewProps) {
         ),
       });
     },
-    [getAbsoluteViewRef, getSimpleToastRef]
+    [getAbsoluteViewRef, getSimpleToastRef, sendTip]
   );
 
-  return {
-    showSingleCall,
-    showMultiCall,
-    hideCall,
-  };
-}
+  const showCall = React.useCallback(
+    (params: {
+      convId: string;
+      convType: number;
+      avType: 'video' | 'voice';
+      getSelectedMembers?: () => GroupParticipantModel[] | undefined;
+    }) => {
+      const { convId, avType, convType, getSelectedMembers } = params;
+      let members: GroupParticipantModel[] = [];
+      try {
+        if (convType === 0) {
+          members.push({
+            memberId: convId,
+          });
+        } else if (convType === 1) {
+          members = getSelectedMembers?.() ?? [];
+        }
+      } catch (error) {
+        console.warn('test:showCall:parse selectedMembers error', error);
+      }
 
-export function useCallApiListener() {
-  const { showMultiCall, showSingleCall, hideCall } = useCallApi({});
-  const { call } = useCallkitSdkContext();
-  const im = useChatContext();
+      const callType =
+        avType === 'video'
+          ? convType === 0
+            ? CallType.Video1v1
+            : CallType.VideoMulti
+          : avType === 'voice'
+          ? convType === 0
+            ? CallType.Audio1v1
+            : CallType.AudioMulti
+          : undefined;
+
+      if (callType === undefined) {
+        return;
+      }
+      if (im.userId === undefined) {
+        return;
+      }
+      if (members.length === 0) {
+        return;
+      }
+      const inviteeIds = members.map((item) => item.memberId);
+      console.log('test:zuoyu:inviteeIds', inviteeIds);
+      if (callType === CallType.Audio1v1 || callType === CallType.Video1v1) {
+        showSingleCall({
+          appKey: appKey,
+          agoraAppId: agoraAppId,
+          inviterId: im.userId,
+          currentId: im.userId,
+          inviteeIds: inviteeIds,
+          callType: callType,
+          // inviterName: '',
+          // inviterAvatar: '',
+          onRequestClose: hideCall,
+        });
+      } else if (
+        callType === CallType.AudioMulti ||
+        callType === CallType.VideoMulti
+      ) {
+        showMultiCall({
+          appKey: appKey,
+          agoraAppId: agoraAppId,
+          inviterId: im.userId,
+          currentId: im.userId,
+          inviteeIds: inviteeIds,
+          callType: callType,
+          // inviterName: '',
+          // inviterAvatar: '',
+          onRequestClose: hideCall,
+        });
+      }
+    },
+    [hideCall, im.userId, showMultiCall, showSingleCall]
+  );
 
   const onShowCall = React.useCallback(
     (params: {
@@ -226,6 +308,21 @@ export function useCallApiListener() {
     [hideCall, im.userId, showMultiCall, showSingleCall]
   );
 
+  React.useEffect(() => {}, []);
+
+  return {
+    showSingleCall,
+    showMultiCall,
+    hideCall,
+    showCall,
+    onShowCall,
+  };
+}
+
+export function useCallApiListener() {
+  const { onShowCall } = useCallApi({});
+  const { call } = useCallkitSdkContext();
+
   const addListener = React.useCallback(() => {
     const listener = {
       onCallReceived: (params: {
@@ -238,6 +335,13 @@ export function useCallApiListener() {
       },
       onCallOccurError: (params: { channelId: string; error: CallError }) => {
         console.warn('onCallOccurError:', params);
+      },
+      onSignallingMessage: (msg) => {
+        console.log('onSignallingMessage:', msg);
+        DeviceEventEmitter.emit('onSignallingMessage', {
+          type: 'callInvite',
+          extra: msg,
+        });
       },
     } as CallListener;
     call.addListener(listener);

@@ -3,12 +3,14 @@ import * as React from 'react';
 import {
   GroupInfo,
   GroupInfoRef,
+  GroupParticipantModel,
   useColors,
   useI18nContext,
   usePaletteContext,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useCallApi } from '../common/AVView';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
@@ -26,6 +28,12 @@ export function GroupInfoScreen(props: Props) {
   const groupInfoRef = React.useRef<GroupInfoRef>({} as any);
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
+  const from = ((route.params as any)?.params as any)?.from;
+  const hash = ((route.params as any)?.params as any)?.hash;
+  const selectedMembers = ((route.params as any)?.params as any)
+    ?.selectedMembers as GroupParticipantModel[] | undefined;
+  const avTypeRef = React.useRef<'video' | 'voice'>('video');
+  const { showCall } = useCallApi({});
 
   const goBack = (data: any) => {
     // !!! warning: react navigation
@@ -38,6 +46,50 @@ export function GroupInfoScreen(props: Props) {
     }
   };
   const testRef = React.useRef<(data: any) => void>(goBack);
+  const getSelectedMembers = React.useCallback(() => {
+    return selectedMembers;
+  }, [selectedMembers]);
+
+  const onClickedVideo = React.useCallback(
+    (id: string) => {
+      avTypeRef.current = 'video';
+      navigation.navigate('AVSelectGroupParticipant', {
+        params: {
+          groupId: id,
+          ownerId: ownerId,
+          from: 'GroupInfo',
+        },
+      });
+    },
+    [navigation, ownerId]
+  );
+  const onClickedVoice = React.useCallback(
+    (id: string) => {
+      avTypeRef.current = 'voice';
+      navigation.navigate('AVSelectGroupParticipant', {
+        params: {
+          groupId: id,
+          ownerId: ownerId,
+          from: 'GroupInfo',
+        },
+      });
+    },
+    [navigation, ownerId]
+  );
+
+  React.useEffect(() => {
+    console.log('test:zuoyu:GroupInfoScreen:', from, hash);
+    if (from === 'AVSelectGroupParticipant') {
+      if (hash) {
+        showCall({
+          convId: groupId,
+          convType: 1,
+          avType: avTypeRef.current,
+          getSelectedMembers: getSelectedMembers,
+        });
+      }
+    }
+  }, [from, hash, showCall, getSelectedMembers, groupId]);
 
   return (
     <SafeAreaView
@@ -137,6 +189,8 @@ export function GroupInfoScreen(props: Props) {
             params: { convId: id, convType: 1 },
           });
         }}
+        onAudioCall={onClickedVoice}
+        onVideoCall={onClickedVideo}
       />
     </SafeAreaView>
   );

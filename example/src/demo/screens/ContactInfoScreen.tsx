@@ -12,6 +12,7 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useCallApi } from '../common/AVView';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
@@ -28,6 +29,8 @@ export function ContactInfoScreen(props: Props) {
   });
   const contactRef = React.useRef<any>({} as any);
   const im = useChatContext();
+  const avTypeRef = React.useRef<'video' | 'voice'>('video');
+  const { showCall } = useCallApi({});
 
   const listener = React.useMemo<ChatServiceListener>(() => {
     return {
@@ -63,6 +66,29 @@ export function ContactInfoScreen(props: Props) {
       return r;
     },
     [im, userId]
+  );
+
+  const onClickedVideo = React.useCallback(
+    (id: string) => {
+      avTypeRef.current = 'video';
+      showCall({
+        convId: id,
+        convType: 0,
+        avType: 'video',
+      });
+    },
+    [showCall]
+  );
+  const onClickedVoice = React.useCallback(
+    (id: string) => {
+      avTypeRef.current = 'voice';
+      showCall({
+        convId: id,
+        convType: 0,
+        avType: 'voice',
+      });
+    },
+    [showCall]
   );
 
   return (
@@ -113,6 +139,8 @@ export function ContactInfoScreen(props: Props) {
           });
         }}
         onRequestData={onRequestData}
+        onAudioCall={onClickedVoice}
+        onVideoCall={onClickedVideo}
       />
     </SafeAreaView>
   );

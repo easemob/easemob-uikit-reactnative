@@ -20,6 +20,8 @@ export function AVSelectGroupParticipantScreen(props: Props) {
     },
   });
   const groupId = ((route.params as any)?.params as any)?.groupId;
+  const ownerId = ((route.params as any)?.params as any)?.ownerId;
+  const from = ((route.params as any)?.params as any)?.from;
   return (
     <SafeAreaView
       style={{
@@ -37,19 +39,52 @@ export function AVSelectGroupParticipantScreen(props: Props) {
           navigation.goBack();
         }}
         onSelectResult={(data) => {
-          navigation.navigate({
-            name: 'ConversationDetail',
-            params: {
+          if (from === 'GroupInfo') {
+            navigation.navigate({
+              name: 'GroupInfo',
               params: {
-                convId: groupId,
-                convType: 1,
-                selectedMembers: data,
-                from: 'AVSelectGroupParticipant',
-                hash: Date.now(),
+                params: {
+                  convId: groupId,
+                  ownerId: ownerId,
+                  convType: 1,
+                  selectedMembers: data,
+                  from: 'AVSelectGroupParticipant',
+                  hash: Date.now(),
+                },
               },
-            },
-            merge: true,
-          });
+              merge: true,
+            });
+          } else if (from === 'ConversationDetail') {
+            navigation.navigate({
+              name: 'ConversationDetail',
+              params: {
+                params: {
+                  convId: groupId,
+                  ownerId: ownerId,
+                  convType: 1,
+                  selectedMembers: data,
+                  from: 'AVSelectGroupParticipant',
+                  hash: Date.now(),
+                },
+              },
+              merge: true,
+            });
+          } else if (from === 'MessageHistory') {
+            navigation.navigate({
+              name: 'MessageHistory',
+              params: {
+                params: {
+                  convId: groupId,
+                  ownerId: ownerId,
+                  convType: 1,
+                  selectedMembers: data,
+                  from: 'AVSelectGroupParticipant',
+                  hash: Date.now(),
+                },
+              },
+              merge: true,
+            });
+          }
         }}
       />
     </SafeAreaView>

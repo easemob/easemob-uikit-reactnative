@@ -746,6 +746,25 @@ export type MessageListRef = {
       | SendCardProps
       | SendCustomProps
   ) => void;
+
+  addSendMessageToUI: (params: {
+    value:
+      | SendFileProps
+      | SendImageProps
+      | SendTextProps
+      | SendVideoProps
+      | SendVoiceProps
+      | SendTimeProps
+      | SendSystemProps
+      | SendCardProps
+      | SendCustomProps;
+
+    onFinished?: (item: MessageListItemProps) => void;
+    onBeforeCallback?: () => void | Promise<void>;
+  }) => Promise<void>;
+
+  sendMessageToServer: (msg: ChatMessage) => void;
+
   /**
    * Remove a message from the message list.
    */

@@ -171,7 +171,11 @@ export class CallSignallingHandler implements ChatMessageEventListener {
   protected send(
     callId: string,
     msg: ChatMessage,
-    onResult: (params: { callId: string; error?: any }) => void
+    onResult: (params: {
+      callId: string;
+      error?: any;
+      msg?: ChatMessage;
+    }) => void
   ): void {
     ChatClient.getInstance()
       .chatManager.sendMessage(msg, {
@@ -183,10 +187,11 @@ export class CallSignallingHandler implements ChatMessageEventListener {
               code: CallErrorCode.ExceptionState,
               description: 'Failed to send signaling.',
             }),
+            msg: msg,
           });
         },
         onSuccess: (_: ChatMessage): void => {
-          onResult({ callId, error: undefined });
+          onResult({ callId, error: undefined, msg });
         },
       } as ChatMessageStatusCallback)
       .then()
@@ -237,7 +242,11 @@ export class CallSignallingHandler implements ChatMessageEventListener {
     inviterDeviceToken: string;
     callId: string;
     ext?: any;
-    onResult: (params: { callId: string; error?: any }) => void;
+    onResult: (params: {
+      callId: string;
+      error?: any;
+      msg?: ChatMessage;
+    }) => void;
   }): void {
     calllog.log('CallSignallingHandler:sendInvite:', params);
     const msg = ChatMessage.createTextMessage(
@@ -264,7 +273,11 @@ export class CallSignallingHandler implements ChatMessageEventListener {
     inviterId: string;
     inviterDeviceToken: string;
     inviteeDeviceToken: string;
-    onResult: (params: { callId: string; error?: any }) => void;
+    onResult: (params: {
+      callId: string;
+      error?: any;
+      msg?: ChatMessage;
+    }) => void;
   }): void {
     calllog.log('CallSignallingHandler:sendAlert:', params);
     const msg = ChatMessage.createCmdMessage(
@@ -292,7 +305,11 @@ export class CallSignallingHandler implements ChatMessageEventListener {
     inviterDeviceToken: string;
     inviteeDeviceToken: string;
     isValid: boolean;
-    onResult: (params: { callId: string; error?: any }) => void;
+    onResult: (params: {
+      callId: string;
+      error?: any;
+      msg?: ChatMessage;
+    }) => void;
   }): void {
     calllog.log('CallSignallingHandler:sendAlertConfirm:', params);
     const msg = ChatMessage.createCmdMessage(
@@ -319,7 +336,11 @@ export class CallSignallingHandler implements ChatMessageEventListener {
     callId: string;
     inviteeId: string;
     inviterDeviceToken: string;
-    onResult: (params: { callId: string; error?: any }) => void;
+    onResult: (params: {
+      callId: string;
+      error?: any;
+      msg?: ChatMessage;
+    }) => void;
   }): void {
     calllog.log('CallSignallingHandler:sendInviteCancel:', params);
     const msg = ChatMessage.createCmdMessage(
@@ -349,7 +370,11 @@ export class CallSignallingHandler implements ChatMessageEventListener {
       | typeof K.KeyBusyResult
       | typeof K.KeyAcceptResult
       | typeof K.KeyRefuseResult;
-    onResult: (params: { callId: string; error?: any }) => void;
+    onResult: (params: {
+      callId: string;
+      error?: any;
+      msg?: ChatMessage;
+    }) => void;
   }): void {
     calllog.log('CallSignallingHandler:sendInviteReply:', params);
     const msg = ChatMessage.createCmdMessage(
@@ -381,7 +406,11 @@ export class CallSignallingHandler implements ChatMessageEventListener {
       | typeof K.KeyBusyResult
       | typeof K.KeyAcceptResult
       | typeof K.KeyRefuseResult;
-    onResult: (params: { callId: string; error?: any }) => void;
+    onResult: (params: {
+      callId: string;
+      error?: any;
+      msg?: ChatMessage;
+    }) => void;
   }): void {
     calllog.log('CallSignallingHandler:sendInviteReplyConfirm:', params);
     const msg = ChatMessage.createCmdMessage(

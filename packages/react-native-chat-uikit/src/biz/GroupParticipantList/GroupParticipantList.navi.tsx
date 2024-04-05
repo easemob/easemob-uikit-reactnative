@@ -183,24 +183,22 @@ export const GroupParticipantListNavigationBar = (
           </Pressable>
         }
         Right={
-          isOwner === true ? (
-            <Pressable
-              style={{ flexDirection: 'row' }}
-              onPress={onSelectParticipant}
+          <Pressable
+            style={{ flexDirection: 'row' }}
+            onPress={onSelectParticipant}
+          >
+            <SingleLineText
+              textType={'medium'}
+              paletteType={'label'}
+              style={{
+                color: getColor(
+                  selectedCount && selectedCount > 0 ? 'p' : 'text_disable'
+                ),
+              }}
             >
-              <SingleLineText
-                textType={'medium'}
-                paletteType={'label'}
-                style={{
-                  color: getColor(
-                    selectedCount && selectedCount > 0 ? 'p' : 'text_disable'
-                  ),
-                }}
-              >
-                {tr('_uikit_group_av_button', selectedCount ?? 0)}
-              </SingleLineText>
-            </Pressable>
-          ) : null
+              {tr('_uikit_group_av_button', selectedCount ?? 0)}
+            </SingleLineText>
+          </Pressable>
         }
       />
     );
