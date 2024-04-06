@@ -1380,8 +1380,12 @@ export class ChatServiceImpl
     );
   }
 
-  getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void {
-    if (this._contactList.size > 0) {
+  getAllContacts(params: {
+    requestServer?: boolean;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void {
+    const { requestServer = false } = params;
+    if (this._contactList.size > 0 && requestServer === false) {
       this.tryCatch({
         promise: this.client.contactManager.getAllContacts(),
         event: 'getAllContacts',
@@ -1846,6 +1850,18 @@ export class ChatServiceImpl
             this._groupList.set(group.groupId, group);
           }
 
+          // todo: ext is avatar , update avatar to cache
+          const avatar = value.options?.ext;
+          if (typeof avatar === 'string' && avatar.length > 0) {
+            const item = this._dataList.get(params.groupId);
+            if (item) {
+              item.avatar = avatar;
+            }
+            group.groupAvatar = avatar;
+          }
+
+          this.sendUIEvent(UIListenerType.Group, 'onUpdatedEvent', group);
+
           params.onResult({
             isOk: true,
             value: group,
@@ -1889,9 +1905,10 @@ export class ChatServiceImpl
             },
           });
         } else {
+          const group = this.toUIGroup(value);
           params.onResult({
             isOk: true,
-            value: value,
+            value: group,
           });
         }
       },

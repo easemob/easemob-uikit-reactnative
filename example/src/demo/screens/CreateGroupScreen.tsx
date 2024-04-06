@@ -2,16 +2,20 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
   CreateGroup,
+  DataModel,
+  useChatContext,
   useColors,
   usePaletteContext,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { RestApi } from '../common/rest.api';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function CreateGroupScreen(props: Props) {
   const { navigation, route } = props;
+  const im = useChatContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -41,7 +45,7 @@ export function CreateGroupScreen(props: Props) {
         }}
         selectedData={data}
         onCreateGroupResult={(result) => {
-          if (result.isOk === true) {
+          if (result.isOk === true && result.value) {
             navigation.pop();
             navigation.navigate('ConversationDetail', {
               params: {
@@ -52,6 +56,28 @@ export function CreateGroupScreen(props: Props) {
                 hash: Date.now(),
               },
             });
+            const groupId = result.value?.groupId;
+            RestApi.reqGetGroupAvatar({ groupId: groupId })
+              .then(async (res) => {
+                if (res.isOk && res.value) {
+                  im.updateRequestData({
+                    data: new Map([
+                      [
+                        'group',
+                        [
+                          {
+                            id: groupId,
+                            avatar: res.value.avatarUrl,
+                          } as DataModel,
+                        ],
+                      ],
+                    ]),
+                  });
+                }
+              })
+              .catch((e) => {
+                console.warn('reqGetGroupAvatar:', e);
+              });
           } else {
             navigation.goBack();
           }

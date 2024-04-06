@@ -13,6 +13,7 @@ import {
   ChatServiceListener,
   DataModel,
   DataModelType,
+  DisconnectReasonType,
   generateNeutralColor,
   generateNeutralSpecialColor,
   generatePrimaryColor,
@@ -377,7 +378,11 @@ export function useApp() {
     onConnected: () => {
       console.log('dev:onConnected:');
     },
-    onDisconnected: () => {},
+    onDisconnected: (reason) => {
+      if (reason !== DisconnectReasonType.others) {
+        rootRef.navigate('LoginV2', {});
+      }
+    },
     onFinished: (params) => {
       if (params.event === 'login') {
         if (im.userId) getDataFromStorage(im.userId);

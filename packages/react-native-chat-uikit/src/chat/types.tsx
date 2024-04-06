@@ -415,7 +415,10 @@ export interface ContactServices {
   /**
    * Get all contacts.
    */
-  getAllContacts(params: { onResult: ResultCallback<ContactModel[]> }): void;
+  getAllContacts(params: {
+    requestServer?: boolean;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void;
   /**
    * Get the contact.
    */

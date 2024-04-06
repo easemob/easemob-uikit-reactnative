@@ -232,22 +232,13 @@ export function MessageThreadDetailScreen(props: Props) {
                   params: { userId: userId },
                 });
               } else if (userType === ChatMessageChatType.GroupChat) {
-                const groupId = msgModel.msg.conversationId;
-                const selfId = im.userId;
-                if (selfId === im.userId) {
-                  navigation.navigate('ContactInfo', {
-                    params: {
-                      userId: userId,
-                    },
-                  });
-                } else {
-                  navigation.navigate('GroupParticipantInfo', {
-                    params: {
-                      groupId: groupId,
-                      userId: userId,
-                    },
-                  });
-                }
+                // const groupId = msgModel.msg.conversationId;
+                // const selfId = im.userId;
+                navigation.navigate('ContactInfo', {
+                  params: {
+                    userId: userId,
+                  },
+                });
               }
             },
             // reportMessageCustomList: [{ key: '1', value: 'test' }],
@@ -266,7 +257,7 @@ export function MessageThreadDetailScreen(props: Props) {
                   backName: tr('edit_thread_name'),
                   saveName: tr('save'),
                   initialData: thread.threadName,
-                  maxLength: 128,
+                  maxLength: 64,
                   testRef,
                   from: 'MessageThreadDetail',
                   hash: Date.now(),

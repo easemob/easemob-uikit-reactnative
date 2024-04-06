@@ -1,7 +1,9 @@
 import * as React from 'react';
 
 import {
+  ContactModel,
   ContactServiceListener,
+  DataModel,
   UIContactListListener,
   UIConversationListListener,
   UIListenerType,
@@ -38,7 +40,7 @@ export function useContactInfo(
     onAddContact: propsOnAddContact,
     onCopyId: propsOnCopyId,
     onClickedContactRemark,
-    onRequestData,
+    // onRequestData,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(propsUserName);
@@ -94,50 +96,79 @@ export function useContactInfo(
                 im.sendError({ error: e });
               });
 
-            if (onRequestData) {
-              const ret = onRequestData?.(userId);
-              if (ret) {
-                if (ret instanceof Promise) {
-                  ret
-                    .then((res) => {
-                      if (res.userName) setUserName(res.userName);
-                      if (res.userAvatar) setUserAvatar(res.userAvatar);
-                      if (res.remark) setUserRemark(res.remark);
-                    })
-                    .catch((e) => {
-                      console.warn('dev:onRequestData:e:', e);
-                    });
-                } else {
-                  if (ret.userName) setUserName(ret.userName);
-                  if (ret.userAvatar) setUserAvatar(ret.userAvatar);
-                  if (ret.remark) setUserRemark(ret.remark);
+            // if (onRequestData) {
+            //   const ret = onRequestData?.(userId);
+            //   if (ret) {
+            //     if (ret instanceof Promise) {
+            //       ret
+            //         .then((res) => {
+            //           if (res.userName) setUserName(res.userName);
+            //           if (res.userAvatar) setUserAvatar(res.userAvatar);
+            //           if (res.remark) setUserRemark(res.remark);
+            //         })
+            //         .catch((e) => {
+            //           console.warn('dev:onRequestData:e:', e);
+            //         });
+            //     } else {
+            //       if (ret.userName) setUserName(ret.userName);
+            //       if (ret.userAvatar) setUserAvatar(ret.userAvatar);
+            //       if (ret.remark) setUserRemark(ret.remark);
+            //     }
+            //   }
+
+            im.getUserInfo({
+              userId: userId,
+              onResult: (res) => {
+                if (res.isOk === true && res.value) {
+                  if (res.value.avatarURL) setUserAvatar(res.value.avatarURL);
+                  if (res.value.userName) setUserName(res.value.userName);
                 }
-              }
-            } else {
-              im.getUserInfo({
-                userId: userId,
-                onResult: (res) => {
-                  if (res.isOk === true && res.value) {
-                    if (res.value.avatarURL) setUserAvatar(res.value.avatarURL);
-                    if (res.value.userName) setUserName(res.value.userName);
-                  }
-                  im.getContact({
-                    userId: userId,
-                    onResult: (value) => {
-                      if (value) {
-                        if (res.value?.avatarURL === undefined) {
-                          setUserAvatar(value.value?.userAvatar);
-                        }
-                        if (res.value?.userName === undefined) {
-                          setUserName(value.value?.userName);
-                        }
-                        setUserRemark(value.value?.remark);
+                im.getContact({
+                  userId: userId,
+                  onResult: (value) => {
+                    if (value) {
+                      if (res.value?.avatarURL === undefined) {
+                        setUserAvatar(value.value?.userAvatar);
                       }
-                    },
-                  });
-                },
-              });
-            }
+                      if (res.value?.userName === undefined) {
+                        setUserName(value.value?.userName);
+                      }
+                      setUserRemark(value.value?.remark);
+
+                      const contact = {
+                        userId: userId,
+                        userAvatar:
+                          res.value?.avatarURL ?? value.value?.userAvatar,
+                        userName: res.value?.userName ?? value.value?.userName,
+                        remark: value.value?.remark,
+                      } as ContactModel;
+
+                      im.updateRequestData({
+                        data: new Map([
+                          [
+                            'user',
+                            [
+                              {
+                                id: userId,
+                                name: contact.userName,
+                                avatar: contact.userAvatar,
+                                remark: contact.remark,
+                              } as DataModel,
+                            ],
+                          ],
+                        ]),
+                      });
+
+                      im.sendUIEvent(
+                        UIListenerType.Contact,
+                        'onUpdatedEvent',
+                        contact
+                      );
+                    }
+                  },
+                });
+              },
+            });
           } else {
             const user = im.user(im.userId);
             setUserAvatar(user?.avatarURL);
@@ -145,7 +176,7 @@ export function useContactInfo(
           }
         }
       },
-      [im, onRequestData, userId]
+      [im, userId]
     )
   );
 

@@ -58,9 +58,8 @@ export function GroupParticipantListScreen(props: Props) {
         }}
         onClickedItem={(data) => {
           if (data) {
-            navigation.push('GroupParticipantInfo', {
+            navigation.navigate('ContactInfo', {
               params: {
-                groupId: groupId,
                 userId: data.memberId,
               },
             });

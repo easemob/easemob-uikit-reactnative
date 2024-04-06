@@ -229,7 +229,6 @@ export function useCallApi(props: AVViewProps) {
         return;
       }
       const inviteeIds = members.map((item) => item.memberId);
-      console.log('test:zuoyu:inviteeIds', inviteeIds);
       if (callType === CallType.Audio1v1 || callType === CallType.Video1v1) {
         showSingleCall({
           appKey: appKey,

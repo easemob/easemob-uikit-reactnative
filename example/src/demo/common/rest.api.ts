@@ -29,6 +29,10 @@ export type RequestRtcMapResult = {
   channelName: string;
   result: Record<string, string>;
 };
+export type RequestGroupAvatarResult = {
+  code: number;
+  avatarUrl: string;
+};
 
 export class RestApi {
   private static _protocol: string = 'http://';
@@ -224,6 +228,28 @@ export class RestApi {
       return { isOk: true, value };
     } catch (error) {
       console.warn('RestApi:reqGetRtcMap:error:', error);
+      return { isOk: false, error };
+    }
+  }
+
+  public static async reqGetGroupAvatar(params: {
+    groupId: string;
+  }): Promise<RequestResult<RequestGroupAvatarResult>> {
+    const { groupId } = params;
+    const url = this.getBasicUrl() + `/group/${groupId}/avatarurl`;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      const value = await response.json();
+      console.log('RestApi:reqGetGroupAvatar:', value, url);
+      return { isOk: true, value };
+    } catch (error) {
+      console.warn('RestApi:reqGetGroupAvatar:error:', error);
       return { isOk: false, error };
     }
   }

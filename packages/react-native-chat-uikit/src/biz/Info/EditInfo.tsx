@@ -68,6 +68,9 @@ export function EditInfo(props: EditInfoProps) {
 
   const onValue = React.useCallback(
     (t: string) => {
+      // if (t.length > maxLength) {
+      //   return;
+      // }
       if (initialData === t) {
         setDisable(true);
       } else {
@@ -189,7 +192,7 @@ export function EditInfo(props: EditInfoProps) {
             onChangeText={onValue}
             value={value}
             keyboardAppearance={style === 'light' ? 'light' : 'dark'}
-            // maxLength={maxLength}
+            maxLength={maxLength}
             statistics={{
               maxCount: maxLength,
               count: count,

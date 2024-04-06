@@ -78,7 +78,6 @@ export function GroupInfoScreen(props: Props) {
   );
 
   React.useEffect(() => {
-    console.log('test:zuoyu:GroupInfoScreen:', from, hash);
     if (from === 'AVSelectGroupParticipant') {
       if (hash) {
         showCall({

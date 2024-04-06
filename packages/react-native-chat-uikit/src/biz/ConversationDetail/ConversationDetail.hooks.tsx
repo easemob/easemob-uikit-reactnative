@@ -383,10 +383,32 @@ export function useConversationDetail(props: ConversationDetailProps) {
     const listener: UIContactListListener = {
       onUpdatedEvent: (data) => {
         if (data.userId === convId) {
+          setConvAvatar(data.userAvatar);
+          setConvName(data.userName);
           setConvRemark(data.remark);
         }
       },
       type: UIListenerType.Contact,
+    };
+    im.addUIListener(listener);
+    return () => {
+      im.removeUIListener(listener);
+    };
+  }, [convId, im]);
+
+  React.useEffect(() => {
+    const listener: UIGroupListListener = {
+      onUpdatedEvent: (data) => {
+        if (data.groupId === convId) {
+          if (data.groupAvatar && data.groupAvatar.length > 0) {
+            setConvAvatar(data.groupAvatar);
+          }
+          if (data.groupName && data.groupName.length > 0) {
+            setConvName(data.groupName);
+          }
+        }
+      },
+      type: UIListenerType.Group,
     };
     im.addUIListener(listener);
     return () => {

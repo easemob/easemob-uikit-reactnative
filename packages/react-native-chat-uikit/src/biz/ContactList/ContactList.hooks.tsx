@@ -403,8 +403,12 @@ export function useContactList(props: ContactListProps) {
   );
 
   const init = React.useCallback(
-    async (params: { isClearState?: boolean; onFinished?: () => void }) => {
-      const { isClearState, onFinished } = params;
+    async (params: {
+      isClearState?: boolean;
+      requestServer?: boolean;
+      onFinished?: () => void;
+    }) => {
+      const { isClearState, onFinished, requestServer } = params;
       // im.setOnRequestData(onRequestMultiData);
       if (testMode === 'only-ui') {
         const names = [
@@ -525,6 +529,7 @@ export function useContactList(props: ContactListProps) {
             });
           } else {
             im.getAllContacts({
+              requestServer: requestServer,
               onResult: (result) => {
                 const { isOk, value, error } = result;
                 if (isOk === true) {
@@ -647,7 +652,7 @@ export function useContactList(props: ContactListProps) {
       return {
         onContactAdded: async (_userId: string) => {
           // onAddedContact(userId);
-          init({});
+          init({ requestServer: true });
         },
         onContactDeleted: async (userId: string) => {
           removeContactToUI(userId);
@@ -799,7 +804,7 @@ export function useContactList(props: ContactListProps) {
       refreshToUI(flatList(sectionsRef.current));
     };
     propsRef.current.reloadList = () => {
-      init({ onFinished: onInitialized });
+      init({ requestServer: true, onFinished: onInitialized });
     };
     propsRef.current.showMenu = () => {
       onShowContactListMoreActions(addContact);

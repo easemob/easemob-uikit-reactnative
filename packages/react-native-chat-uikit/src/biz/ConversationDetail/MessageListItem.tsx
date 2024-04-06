@@ -1313,7 +1313,7 @@ export function MessageThread(props: MessageThreadProps) {
         marginRight: layoutType === 'left' ? undefined : paddingWidth,
         marginTop: 2,
         backgroundColor: getColor('bg'),
-        maxWidth: maxWidth,
+        width: maxWidth,
         borderRadius: getBorderRadius({
           height: 36,
           crt: corner.bubble[0]!,

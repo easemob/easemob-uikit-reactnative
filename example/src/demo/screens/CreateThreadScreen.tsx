@@ -25,7 +25,6 @@ import {
   SendVoiceProps,
   SystemMessageModel,
   TimeMessageModel,
-  useChatContext,
   useColors,
   usePaletteContext,
   uuid,
@@ -66,7 +65,7 @@ export function CreateThreadScreen(props: Props) {
   const listRef = React.useRef<MessageListRef>({} as any);
   const inputRef = React.useRef<MessageInputRef>({} as any);
   const { top, bottom } = useSafeAreaInsets();
-  const im = useChatContext();
+  // const im = useChatContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -265,22 +264,13 @@ export function CreateThreadScreen(props: Props) {
                   params: { userId: userId },
                 });
               } else if (userType === ChatMessageChatType.GroupChat) {
-                const groupId = msgModel.msg.conversationId;
-                const selfId = im.userId;
-                if (selfId === im.userId) {
-                  navigation.navigate('ContactInfo', {
-                    params: {
-                      userId: userId,
-                    },
-                  });
-                } else {
-                  navigation.navigate('GroupParticipantInfo', {
-                    params: {
-                      groupId: groupId,
-                      userId: userId,
-                    },
-                  });
-                }
+                // const groupId = msgModel.msg.conversationId;
+                // const selfId = im.userId;
+                navigation.navigate('ContactInfo', {
+                  params: {
+                    userId: userId,
+                  },
+                });
               }
             },
             // reportMessageCustomList: [{ key: '1', value: 'test' }],

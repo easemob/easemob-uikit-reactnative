@@ -648,6 +648,9 @@ export function useConversationList(props: ConversationListProps) {
             } else if (data.userName && data.userName.length > 0) {
               item.data.convName = data.userName;
               item.data = { ...item.data };
+            } else if (data.userAvatar && data.userAvatar.length > 0) {
+              item.data.convAvatar = data.userAvatar;
+              item.data = { ...item.data };
             }
             return true;
           }

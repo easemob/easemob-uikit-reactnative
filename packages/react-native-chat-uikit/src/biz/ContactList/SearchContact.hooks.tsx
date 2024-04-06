@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 // import { DeviceEventEmitter } from 'react-native';
-import { useChatContext } from '../../chat';
+import { ContactModel, useChatContext } from '../../chat';
 import { useFlatList } from '../List';
 import type { ContactSearchModel, SearchContactProps } from './types';
 
@@ -91,6 +91,16 @@ export function useSearchContact(props: SearchContactProps) {
     }
   }, [dataRef, onCancel, searchType]);
 
+  const getNickName = React.useCallback((section: ContactModel) => {
+    if (section.remark && section.remark.length > 0) {
+      return section.remark;
+    } else if (section.userName && section.userName.length > 0) {
+      return section.userName;
+    } else {
+      return section.userId;
+    }
+  }, []);
+
   const init = async () => {
     if (testMode === 'only-ui') {
       return;
@@ -153,7 +163,7 @@ export function useSearchContact(props: SearchContactProps) {
                 return {
                   ...item,
                   id: item.userId,
-                  name: item.userName,
+                  name: getNickName(item),
                   checked: getChecked(),
                   disable: getState(),
                   forwarded: getForward(),
