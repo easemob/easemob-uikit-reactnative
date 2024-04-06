@@ -144,8 +144,9 @@ export class RestApi {
   public static async reqUploadAvatar(params: {
     userId: string;
     localAvatarFile: string;
+    fileType?: string;
   }): Promise<RequestResult<RequestUploadAvatarResult>> {
-    const { userId, localAvatarFile } = params;
+    const { userId, localAvatarFile, fileType } = params;
     const url = this.getBasicUrl() + `/user/${userId}/avatar/upload`;
     console.log('RestApi:reqUploadAvatar:', userId, localAvatarFile, url);
     try {
@@ -159,7 +160,7 @@ export class RestApi {
             : localAvatarFile,
         name: userId,
         type:
-          Platform.OS === 'android'
+          fileType ?? Platform.OS === 'android'
             ? `image/${getFileExtension(localAvatarFile)}`
             : `image/${getFileExtension(localAvatarFile)}`,
       });

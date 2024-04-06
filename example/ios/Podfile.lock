@@ -670,6 +670,15 @@ PODS:
     - React-Core
   - RNGestureHandler (2.9.0):
     - React-Core
+  - RNImageCropPicker (0.40.3):
+    - React-Core
+    - React-RCTImage
+    - RNImageCropPicker/QBImagePickerController (= 0.40.3)
+    - TOCropViewController
+  - RNImageCropPicker/QBImagePickerController (0.40.3):
+    - React-Core
+    - React-RCTImage
+    - TOCropViewController
   - RNPermissions (3.8.0):
     - React-Core
   - RNReanimated (2.14.4):
@@ -709,6 +718,7 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.6.1)
+  - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -819,6 +829,7 @@ DEPENDENCIES:
   - "RNFBMessaging (from `../../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../../node_modules/react-native-fs`)
   - RNGestureHandler (from `../../node_modules/react-native-gesture-handler`)
+  - RNImageCropPicker (from `../../node_modules/react-native-image-crop-picker`)
   - RNPermissions (from `../../node_modules/react-native-permissions`)
   - RNReanimated (from `../../node_modules/react-native-reanimated`)
   - RNScreens (from `../../node_modules/react-native-screens`)
@@ -856,6 +867,7 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageWebPCoder
     - SocketRocket
+    - TOCropViewController
     - YogaKit
     - ZIPFoundation
 
@@ -1016,6 +1028,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../../node_modules/react-native-gesture-handler"
+  RNImageCropPicker:
+    :path: "../../node_modules/react-native-image-crop-picker"
   RNPermissions:
     :path: "../../node_modules/react-native-permissions"
   RNReanimated:
@@ -1131,12 +1145,14 @@ SPEC CHECKSUMS:
   RNFBMessaging: fd543fa2aa4688fac4e88b1ce54e39cac4339b32
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNImageCropPicker: e7ab6fb43d2fc3e84651e786ef4a080d63b0ed3d
   RNPermissions: 215c54462104b3925b412b0fb3c9c497b21c358b
   RNReanimated: 72def2afa1d3d7e6e795c1e1d2e714a6a30b0ac1
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
+  TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: f7decafdc5e8c125e6fa0da38a687e35238420fa
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197

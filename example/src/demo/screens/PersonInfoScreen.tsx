@@ -1,21 +1,20 @@
-import { default as ImageEditor } from '@react-native-community/image-editor';
+// import { default as ImageEditor } from '@react-native-community/image-editor';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
 import {
   Icon,
   ListItem,
-  Services,
   SingleLineText,
   StatusAvatar,
   Text,
-  timeoutTask,
   TopNavigationBar,
   useChatContext,
   useColors,
   useI18nContext,
   usePaletteContext,
 } from 'react-native-chat-uikit';
+import ImagePicker from 'react-native-image-crop-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RestApi } from '../common/rest.api';
@@ -71,67 +70,83 @@ export function PersonInfoScreen(props: Props) {
   const onBack = () => {
     navigation.goBack();
   };
-  const onClickedAvatar = () => {
-    timeoutTask(100, async () => {
-      const ret = await Services.ps.requestMediaLibraryPermission();
-      if (ret === false) {
-        return;
-      }
-      Services.ms
-        .openMediaLibrary({ selectionLimit: 1, mediaType: 'photo' })
-        .then((result) => {
-          if (result === undefined || result === null || result.length === 0) {
-            return;
-          }
 
-          let width = result[0]!.width ?? 100;
-          let height = result[0]!.height ?? 100;
-
-          const w = Math.min(512, Math.min(width, height));
-          const h = Math.min(512, Math.min(width, height));
-
-          const x = width >= height ? -(height - width) / 2 : 0;
-          const y = height >= width ? -(width - height) / 2 : 0;
-          console.log('test:zuoyu:x:y:', x, y);
-
-          ImageEditor.cropImage(result[0]!.uri, {
-            offset: { x: x, y: y },
-            size: { width: w, height: h },
-            resizeMode: 'cover',
-          })
-            .then(async (res) => {
-              const user = im.user(im.userId);
-              if (user) {
-                const ret = await RestApi.reqUploadAvatar({
-                  userId: user.userId,
-                  localAvatarFile: res.path,
-                });
-                if (ret.isOk && ret.value?.avatarUrl) {
-                  const old = im.user(im.userId);
-                  im.updateSelfInfo({
-                    self: {
-                      ...old,
-                      userId: user.userId,
-                      avatarURL: ret.value.avatarUrl,
-                    },
-                    onResult: (res) => {
-                      console.warn('test:zuoyu:cropImage:res', res);
-                    },
-                  });
-                }
-              }
-
-              //   Services.ms.deleteCustomDir(getFileDirectory(res.path));
-            })
-            .catch((e) => {
-              console.warn('test:zuoyu:cropImage:error', e);
-            });
-        })
-        .catch((error) => {
-          console.warn('error:', error);
+  const updateAvatar = async (path: string, filetype?: string) => {
+    const user = im.user(im.userId);
+    if (user) {
+      const ret = await RestApi.reqUploadAvatar({
+        userId: user.userId,
+        localAvatarFile: path,
+        fileType: filetype,
+      });
+      if (ret.isOk && ret.value?.avatarUrl) {
+        const old = im.user(im.userId);
+        im.updateSelfInfo({
+          self: {
+            ...old,
+            userId: user.userId,
+            avatarURL: ret.value.avatarUrl,
+          },
+          onResult: (res) => {
+            console.warn('test:zuoyu:cropImage:res', res);
+          },
         });
+      }
+    }
+    //   Services.ms.deleteCustomDir(getFileDirectory(res.path));
+  };
+
+  const onClickedAvatar2 = () => {
+    ImagePicker.openPicker({
+      width: 512,
+      height: 512,
+      cropping: true,
+    }).then((image) => {
+      console.log('test:zuoyu:image', image);
+      updateAvatar(image.path, image.mime);
     });
   };
+  // const onClickedAvatar = () => {
+  //   timeoutTask(100, async () => {
+  //     const ret = await Services.ps.requestMediaLibraryPermission();
+  //     if (ret === false) {
+  //       return;
+  //     }
+  //     Services.ms
+  //       .openMediaLibrary({ selectionLimit: 1, mediaType: 'photo' })
+  //       .then((result) => {
+  //         if (result === undefined || result === null || result.length === 0) {
+  //           return;
+  //         }
+
+  //         let width = result[0]!.width ?? 100;
+  //         let height = result[0]!.height ?? 100;
+
+  //         const w = Math.min(512, Math.min(width, height));
+  //         const h = Math.min(512, Math.min(width, height));
+
+  //         const x = width >= height ? -(height - width) / 2 : 0;
+  //         const y = height >= width ? -(width - height) / 2 : 0;
+  //         console.log('test:zuoyu:x:y:', x, y);
+
+  //         ImageEditor.cropImage(result[0]!.uri, {
+  //           offset: { x: x, y: y },
+  //           size: { width: w, height: h },
+  //           resizeMode: 'cover',
+  //         })
+  //           .then(async (res) => {
+  //             updateAvatar(res.path);
+  //           })
+  //           .catch((e) => {
+  //             console.warn('test:zuoyu:cropImage:error', e);
+  //           });
+  //       })
+  //       .catch((error) => {
+  //         console.warn('error:', error);
+  //       });
+  //   });
+  // };
+
   const onClickedRemark = () => {
     navigation.push('EditInfo', {
       params: {
@@ -199,7 +214,7 @@ export function PersonInfoScreen(props: Props) {
         />
 
         <ListItem
-          onClicked={onClickedAvatar}
+          onClicked={onClickedAvatar2}
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
