@@ -685,24 +685,6 @@ export const ICON_ASSETS = {
       return require('./icons/ChatDetails/xmark_thick.png');
     }
   },
-  'Button_Record active': (size: string) => {
-    if (size === '3x') {
-      return require('./icons/FooterTypeBar/Button_Record active_3x.png');
-    } else if (size === '2x') {
-      return require('./icons/FooterTypeBar/Button_Record active_2x.png');
-    } else {
-      return require('./icons/FooterTypeBar/Button_Record active.png');
-    }
-  },
-  'Button_Record cancel': (size: string) => {
-    if (size === '3x') {
-      return require('./icons/FooterTypeBar/Button_Record cancel_3x.png');
-    } else if (size === '2x') {
-      return require('./icons/FooterTypeBar/Button_Record cancel_2x.png');
-    } else {
-      return require('./icons/FooterTypeBar/Button_Record cancel.png');
-    }
-  },
   'Button_Record': (size: string) => {
     if (size === '3x') {
       return require('./icons/FooterTypeBar/Button_Record_3x.png');
@@ -710,6 +692,24 @@ export const ICON_ASSETS = {
       return require('./icons/FooterTypeBar/Button_Record_2x.png');
     } else {
       return require('./icons/FooterTypeBar/Button_Record.png');
+    }
+  },
+  'Button_Record_active': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/FooterTypeBar/Button_Record_active_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/FooterTypeBar/Button_Record_active_2x.png');
+    } else {
+      return require('./icons/FooterTypeBar/Button_Record_active.png');
+    }
+  },
+  'Button_Record_cancel': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/FooterTypeBar/Button_Record_cancel_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/FooterTypeBar/Button_Record_cancel_2x.png');
+    } else {
+      return require('./icons/FooterTypeBar/Button_Record_cancel.png');
     }
   },
   'Disabled': (size: string) => {
@@ -739,15 +739,6 @@ export const ICON_ASSETS = {
       return require('./icons/FooterTypeBar/Icon_Audio_disable.png');
     }
   },
-  'Icon_Camera active': (size: string) => {
-    if (size === '3x') {
-      return require('./icons/FooterTypeBar/Icon_Camera active_3x.png');
-    } else if (size === '2x') {
-      return require('./icons/FooterTypeBar/Icon_Camera active_2x.png');
-    } else {
-      return require('./icons/FooterTypeBar/Icon_Camera active.png');
-    }
-  },
   'Icon_Camera': (size: string) => {
     if (size === '3x') {
       return require('./icons/FooterTypeBar/Icon_Camera_3x.png');
@@ -755,6 +746,15 @@ export const ICON_ASSETS = {
       return require('./icons/FooterTypeBar/Icon_Camera_2x.png');
     } else {
       return require('./icons/FooterTypeBar/Icon_Camera.png');
+    }
+  },
+  'Icon_Camera_active': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/FooterTypeBar/Icon_Camera_active_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/FooterTypeBar/Icon_Camera_active_2x.png');
+    } else {
+      return require('./icons/FooterTypeBar/Icon_Camera_active.png');
     }
   },
   'Icon_Emoji': (size: string) => {
@@ -784,15 +784,6 @@ export const ICON_ASSETS = {
       return require('./icons/FooterTypeBar/Icon_File_disable.png');
     }
   },
-  'Icon_Image active': (size: string) => {
-    if (size === '3x') {
-      return require('./icons/FooterTypeBar/Icon_Image active_3x.png');
-    } else if (size === '2x') {
-      return require('./icons/FooterTypeBar/Icon_Image active_2x.png');
-    } else {
-      return require('./icons/FooterTypeBar/Icon_Image active.png');
-    }
-  },
   'Icon_Image': (size: string) => {
     if (size === '3x') {
       return require('./icons/FooterTypeBar/Icon_Image_3x.png');
@@ -800,6 +791,15 @@ export const ICON_ASSETS = {
       return require('./icons/FooterTypeBar/Icon_Image_2x.png');
     } else {
       return require('./icons/FooterTypeBar/Icon_Image.png');
+    }
+  },
+  'Icon_Image_active': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/FooterTypeBar/Icon_Image_active_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/FooterTypeBar/Icon_Image_active_2x.png');
+    } else {
+      return require('./icons/FooterTypeBar/Icon_Image_active.png');
     }
   },
   'Icon_Location': (size: string) => {
@@ -1243,22 +1243,22 @@ export const ICON_ASSETS = {
       return require('./icons/Global/white_goBack_2x.png');
     }
   },
-  'Error: impossiblenblock': (size: string) => {
+  'Error_impossiblenblock': (size: string) => {
     if (size === '3x') {
-      return require('./icons/Group/Error: impossiblenblock_3x.png');
+      return require('./icons/Group/Error_impossiblenblock_3x.png');
     } else if (size === '2x') {
-      return require('./icons/Group/Error: impossiblenblock_3x.png');
+      return require('./icons/Group/Error_impossiblenblock_3x.png');
     } else {
-      return require('./icons/Group/Error: impossiblenblock_2x.png');
+      return require('./icons/Group/Error_impossiblenblock_2x.png');
     }
   },
-  'Error: impossiblenmute': (size: string) => {
+  'Error_impossiblenmute': (size: string) => {
     if (size === '3x') {
-      return require('./icons/Group/Error: impossiblenmute_3x.png');
+      return require('./icons/Group/Error_impossiblenmute_3x.png');
     } else if (size === '2x') {
-      return require('./icons/Group/Error: impossiblenmute_3x.png');
+      return require('./icons/Group/Error_impossiblenmute_3x.png');
     } else {
-      return require('./icons/Group/Error: impossiblenmute_2x.png');
+      return require('./icons/Group/Error_impossiblenmute_2x.png');
     }
   },
   'add': (size: string) => {
@@ -1747,31 +1747,31 @@ export const ICON_ASSETS = {
       return require('./icons/Presence/Busy_whitestroke_2x.png');
     }
   },
-  'Do not Disturb': (size: string) => {
+  'Do_not_Disturb': (size: string) => {
     if (size === '3x') {
-      return require('./icons/Presence/Do not Disturb_2x.png');
+      return require('./icons/Presence/Do_not_Disturb_2x.png');
     } else if (size === '2x') {
-      return require('./icons/Presence/Do not Disturb_2x.png');
+      return require('./icons/Presence/Do_not_Disturb_2x.png');
     } else {
-      return require('./icons/Presence/Do not Disturb_2x.png');
+      return require('./icons/Presence/Do_not_Disturb_2x.png');
     }
   },
-  'Do not Disturb_graystroke': (size: string) => {
+  'Do_not_Disturb_graystroke': (size: string) => {
     if (size === '3x') {
-      return require('./icons/Presence/Do not Disturb_graystroke_2x.png');
+      return require('./icons/Presence/Do_not_Disturb_graystroke_2x.png');
     } else if (size === '2x') {
-      return require('./icons/Presence/Do not Disturb_graystroke_2x.png');
+      return require('./icons/Presence/Do_not_Disturb_graystroke_2x.png');
     } else {
-      return require('./icons/Presence/Do not Disturb_graystroke_2x.png');
+      return require('./icons/Presence/Do_not_Disturb_graystroke_2x.png');
     }
   },
-  'Do not Disturb_whitestroke': (size: string) => {
+  'Do_not_Disturb_whitestroke': (size: string) => {
     if (size === '3x') {
-      return require('./icons/Presence/Do not Disturb_whitestroke_2x.png');
+      return require('./icons/Presence/Do_not_Disturb_whitestroke_2x.png');
     } else if (size === '2x') {
-      return require('./icons/Presence/Do not Disturb_whitestroke_2x.png');
+      return require('./icons/Presence/Do_not_Disturb_whitestroke_2x.png');
     } else {
-      return require('./icons/Presence/Do not Disturb_whitestroke_2x.png');
+      return require('./icons/Presence/Do_not_Disturb_whitestroke_2x.png');
     }
   },
   'Leave': (size: string) => {
@@ -1900,13 +1900,13 @@ export const ICON_ASSETS = {
       return require('./icons/Presence/set_status_2x.png');
     }
   },
-  'Button_AddError: impossibleser': (size: string) => {
+  'Button_AddError_impossibleser': (size: string) => {
     if (size === '3x') {
-      return require('./icons/Profile/Button_AddError: impossibleser_2x.png');
+      return require('./icons/Profile/Button_AddError_impossibleser_2x.png');
     } else if (size === '2x') {
-      return require('./icons/Profile/Button_AddError: impossibleser_2x.png');
+      return require('./icons/Profile/Button_AddError_impossibleser_2x.png');
     } else {
-      return require('./icons/Profile/Button_AddError: impossibleser_2x.png');
+      return require('./icons/Profile/Button_AddError_impossibleser_2x.png');
     }
   },
   'Button_Chat': (size: string) => {
