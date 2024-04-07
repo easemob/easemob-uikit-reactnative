@@ -222,6 +222,14 @@ export type ContactListProps = Pick<
      * Callback notification when the request count changes.
      */
     onChangeRequestCount?: (count: number) => void;
+
+    /**
+     * Get First letter of the string.
+     *
+     * @param str The string to get the first letter.
+     * @returns The first letter of the string.
+     */
+    getFirstLetter?: (str?: string) => string | undefined;
   };
 
 /**

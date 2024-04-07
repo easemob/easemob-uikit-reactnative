@@ -68,6 +68,7 @@ export function useContactList(props: ContactListProps) {
     onClickedGroupList,
     onForwardMessage,
     onChangeRequestCount,
+    getFirstLetter: propGetFirstLetter,
   } = props;
   const sectionListProps = useSectionList<
     ContactListItemProps,
@@ -143,17 +144,23 @@ export function useContactList(props: ContactListProps) {
     [onLongPressedItem]
   );
 
-  const getFirst = React.useCallback((str?: string) => {
-    let ret: string | undefined;
-    if (str && str.length > 0) {
-      const first = str[0]!.toLocaleUpperCase();
-      ret = first;
-      if (containsChinese(first)) {
-        ret = getPinyinFirsLetter(first).at(0)?.toLocaleUpperCase();
+  const getFirst = React.useCallback(
+    (str?: string) => {
+      if (propGetFirstLetter) {
+        return propGetFirstLetter(str);
       }
-    }
-    return ret;
-  }, []);
+      let ret: string | undefined;
+      if (str && str.length > 0) {
+        const first = str[0]!.toLocaleUpperCase();
+        ret = first;
+        if (containsChinese(first)) {
+          ret = getPinyinFirsLetter(first).at(0)?.toLocaleUpperCase();
+        }
+      }
+      return ret;
+    },
+    [propGetFirstLetter]
+  );
 
   const removeDuplicateData = React.useCallback(
     (list: ContactListItemProps[]) => {
