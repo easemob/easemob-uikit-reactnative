@@ -60,7 +60,7 @@ export function PersonInfoScreen(props: Props) {
       im.updateSelfInfo({
         self: { ...ret, userName: data },
         onResult: (res) => {
-          console.log('test:zuoyu:res:', res);
+          console.log('dev:updateSelfInfo:', res);
         },
       });
     }
@@ -88,7 +88,7 @@ export function PersonInfoScreen(props: Props) {
             avatarURL: ret.value.avatarUrl,
           },
           onResult: (res) => {
-            console.warn('test:zuoyu:cropImage:res', res);
+            console.warn('dev:cropImage:res', res);
           },
         });
       }
@@ -102,7 +102,6 @@ export function PersonInfoScreen(props: Props) {
       height: 512,
       cropping: true,
     }).then((image) => {
-      console.log('test:zuoyu:image', image);
       updateAvatar(image.path, image.mime);
     });
   };

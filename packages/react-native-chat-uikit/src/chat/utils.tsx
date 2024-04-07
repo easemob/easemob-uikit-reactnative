@@ -208,7 +208,7 @@ export function createForwardMessage(params: {
       body: msg.body,
       targetId: targetId,
       chatType: targetType as number,
-      isChatThread: msg.isChatThread,
+      // isChatThread: msg.isChatThread,
       isOnline: msg.isOnline,
       deliverOnlineOnly: msg.deliverOnlineOnly,
       receiverList: msg.receiverList,

@@ -2420,7 +2420,7 @@ export function useMessageList(
             //   afterMsgIdRef.current
             // );
             // msgs.forEach((item) => {
-            //   console.log('test:zuoyu:msgs:', item.msgId, item.serverTime);
+            //   console.log('test:zuoyu:msgs:', item.msgId, item.serverTime, item.body);
             // });
             onAddMessageListToUI(msgs, 'bottom');
           }

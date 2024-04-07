@@ -312,6 +312,17 @@ export function MessageThreadDetailScreen(props: Props) {
         //   <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />
         // }
         // enableNavigationBar={true}
+        onForwardMessage={(msgs) => {
+          // todo: navigation to forward message screen.
+          navigation.push('MessageForwardSelector', {
+            params: {
+              msgs,
+              convId,
+              convType,
+              from: 'MessageThreadDetail',
+            },
+          });
+        }}
       />
     </SafeAreaView>
   );

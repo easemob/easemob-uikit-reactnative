@@ -22,6 +22,7 @@ export function MessageForwardSelectorScreen(props: Props) {
   const msgs = ((route.params as any)?.params as any)?.msgs;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
+  const from = ((route.params as any)?.params as any)?.from;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -51,20 +52,35 @@ export function MessageForwardSelectorScreen(props: Props) {
       <MessageForwardSelector
         propsRef={ref}
         onBack={() => {
-          // navigation.goBack();
-          navigation.navigate({
-            name: 'ConversationDetail',
-            params: {
+          if (from === 'ConversationDetail') {
+            navigation.navigate({
+              name: 'ConversationDetail',
               params: {
-                convId: convId,
-                convType: convType,
-                selectType: 'common',
-                from: 'MessageForwardSelector',
-                hash: seqId('_random'),
+                params: {
+                  convId: convId,
+                  convType: convType,
+                  selectType: 'common',
+                  from: 'MessageForwardSelector',
+                  hash: seqId('_random'),
+                },
               },
-            },
-            merge: true,
-          });
+              merge: true,
+            });
+          } else if (from === 'MessageThreadDetail') {
+            navigation.navigate({
+              name: 'MessageThreadDetail',
+              params: {
+                params: {
+                  convId: convId,
+                  convType: convType,
+                  selectType: 'common',
+                  from: 'MessageForwardSelector',
+                  hash: seqId('_random'),
+                },
+              },
+              merge: true,
+            });
+          }
         }}
         onClickedSearch={(data) => {
           navigation.navigate('SearchContact', {

@@ -413,6 +413,7 @@ export function ConversationDetailScreen(props: Props) {
               msgs,
               convId,
               convType,
+              from: 'ConversationDetail',
             },
           });
         }}
