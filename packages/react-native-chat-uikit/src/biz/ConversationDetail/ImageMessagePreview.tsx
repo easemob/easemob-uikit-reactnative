@@ -42,6 +42,10 @@ export type ImageMessagePreviewProps = PropsWithBack &
      */
     localMsgId: string;
     /**
+     * Chat message.
+     */
+    msg?: ChatMessage;
+    /**
      * Container style for the file preview component.
      */
     containerStyle?: StyleProp<ViewStyle>;
@@ -143,7 +147,7 @@ type ImageSize = {
 };
 
 export function useImageMessagePreview(props: ImageMessagePreviewProps) {
-  const { msgId: propsMsgId, onError } = props;
+  const { msgId: propsMsgId, msg: propsMsg, onError } = props;
   const im = useChatContext();
   const [url, setUrl] = React.useState<string | undefined>(undefined);
   const [size, setSize] = React.useState<ImageSize>({
@@ -168,35 +172,50 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
     [getImageSize, winHeight, winWidth]
   );
 
+  const download = React.useCallback(
+    async (msg: ChatMessage) => {
+      if (msg.body.type !== ChatMessageType.IMAGE) {
+        throw new UIKitError({
+          code: ErrorCode.chat_uikit,
+          desc: 'Message type is not ChatMessageType.IMAGE',
+        });
+      }
+      const body = msg.body as ChatImageMessageBody;
+      const isExisted = await Services.dcs.isExistedFile(body.localPath);
+      if (isExisted !== true) {
+        showImage(body.remotePath);
+        if (msg.isChatThread === true) {
+          im.messageManager.downloadAttachmentForThread(msg);
+        } else {
+          im.messageManager.downloadAttachment(msg);
+        }
+      } else {
+        showImage(body.localPath);
+      }
+    },
+    [im.messageManager, showImage]
+  );
+
   const onGetMessage = React.useCallback(
     (msgId: string) => {
       im.getMessage({ messageId: msgId })
-        .then(async (result) => {
-          if (result) {
-            if (result.body.type !== ChatMessageType.IMAGE) {
-              throw new UIKitError({
-                code: ErrorCode.chat_uikit,
-                desc: 'Message type is not ChatMessageType.IMAGE',
-              });
-            }
-            const body = result.body as ChatImageMessageBody;
-            const isExisted = await Services.dcs.isExistedFile(body.localPath);
-            if (isExisted !== true) {
-              showImage(body.remotePath);
-              im.messageManager.downloadAttachment(result);
-            } else {
-              showImage(body.localPath);
-            }
+        .then(async (msg) => {
+          if (msg) {
+            download(msg);
           }
         })
         .catch();
     },
-    [im, showImage]
+    [download, im]
   );
 
   React.useEffect(() => {
-    onGetMessage(propsMsgId);
-  }, [onGetMessage, propsMsgId]);
+    if (propsMsg) {
+      download(propsMsg);
+    } else {
+      onGetMessage(propsMsgId);
+    }
+  }, [download, onGetMessage, propsMsg, propsMsgId]);
 
   React.useEffect(() => {
     const listener = {

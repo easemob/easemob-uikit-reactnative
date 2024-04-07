@@ -21,6 +21,7 @@ export function ImageMessagePreviewScreen(props: Props) {
   });
   const msgId = ((route.params as any)?.params as any)?.msgId;
   const localMsgId = ((route.params as any)?.params as any)?.localMsgId;
+  const msg = ((route.params as any)?.params as any)?.msg;
   return (
     <SafeAreaView
       style={{
@@ -34,6 +35,7 @@ export function ImageMessagePreviewScreen(props: Props) {
           // backgroundColor: 'red',
         }}
         msgId={msgId}
+        msg={msg}
         localMsgId={localMsgId}
         onBack={() => {
           navigation.goBack();

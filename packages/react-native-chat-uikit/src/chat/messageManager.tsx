@@ -387,6 +387,55 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     });
   }
 
+  async downloadAttachmentForThread(msg: ChatMessage) {
+    if (
+      msg.body.type !== ChatMessageType.IMAGE &&
+      msg.body.type !== ChatMessageType.VIDEO &&
+      msg.body.type !== ChatMessageType.FILE &&
+      msg.body.type !== ChatMessageType.VOICE
+    ) {
+      return;
+    }
+    const callback: ChatMessageStatusCallback = {
+      onSuccess: (message) => {
+        const isExisted = this._downloadList.get(message.localMsgId);
+        if (isExisted) {
+          this.emitAttachmentChanged(message);
+          this._downloadList.delete(message.localMsgId);
+        }
+      },
+      onProgress: (localMsgId, progress) => {
+        const isExisted = this._downloadList.get(localMsgId);
+        if (isExisted) {
+          const msg = { ...isExisted.msg } as ChatMessage;
+          const p = { [gMessageAttributeFileProgress]: progress };
+          msg.attributes = { ...msg.attributes, ...p };
+          this.emitAttachmentProgressChanged(msg);
+        }
+      },
+      onError: (localMsgId, error) => {
+        if (error) {
+          console.warn('dev:downloadAttachment:error', error);
+        }
+        const isExisted = this._downloadList.get(localMsgId);
+        if (isExisted) {
+          const msg = { ...isExisted.msg } as ChatMessage;
+          msg.body = {
+            ...msg.body,
+            fileStatus: ChatDownloadStatus.FAILED,
+          } as ChatFileMessageBody;
+          this.emitAttachmentChanged(msg);
+          this._downloadList.delete(localMsgId);
+        }
+      },
+    };
+    this._downloadList.set(msg.localMsgId, { msg });
+    this._client.downloadMessageAttachmentForThread({
+      message: msg,
+      callback: callback,
+    });
+  }
+
   loadHistoryMessage(params: {
     convId: string;
     convType: ChatConversationType;

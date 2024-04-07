@@ -2538,6 +2538,18 @@ export class ChatServiceImpl
       event: 'downloadMessageAttachment',
     });
   }
+  downloadMessageAttachmentForThread(params: {
+    message: ChatMessage;
+    callback?: ChatMessageStatusCallback;
+  }): void {
+    this.tryCatchSync({
+      promise: this.client.chatManager.downloadAttachmentInCombine(
+        params.message,
+        params.callback
+      ),
+      event: 'downloadMessageAttachmentForThread',
+    });
+  }
   getHistoryMessage(params: {
     convId: string;
     convType: ChatConversationType;

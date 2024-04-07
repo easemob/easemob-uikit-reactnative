@@ -591,6 +591,13 @@ export interface MessageServices {
     callback?: ChatMessageStatusCallback;
   }): void;
   /**
+   * Download the message attachment.
+   */
+  downloadMessageAttachmentForThread(params: {
+    message: ChatMessage;
+    callback?: ChatMessageStatusCallback;
+  }): void;
+  /**
    * Get the history message list.
    */
   getHistoryMessage(params: {

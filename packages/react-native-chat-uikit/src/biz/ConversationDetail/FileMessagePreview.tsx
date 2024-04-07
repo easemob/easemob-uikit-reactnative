@@ -32,6 +32,10 @@ export type FileMessagePreviewProps = PropsWithBack &
      */
     localMsgId: string;
     /**
+     * Chat message.
+     */
+    msg?: ChatMessage;
+    /**
      * Container style for the file preview component.
      */
     containerStyle?: StyleProp<ViewStyle>;
@@ -52,6 +56,7 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
     containerStyle,
     children,
     msgId: propsMsgId,
+    msg: propsMsg,
     localMsgId: propsLocalMsgId,
     onBack,
   } = props;
@@ -66,35 +71,50 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
   });
   const [progress, setProgress] = React.useState(0);
 
+  const download = React.useCallback(
+    async (msg: ChatMessage) => {
+      if (msg.body.type !== ChatMessageType.FILE) {
+        throw new UIKitError({
+          code: ErrorCode.chat_uikit,
+          desc: 'Message type is not ChatMessageType.FILE',
+        });
+      }
+      const body = msg.body as ChatFileMessageBody;
+      const isExisted = await Services.dcs.isExistedFile(body.localPath);
+      if (isExisted !== true) {
+        setProgress(0);
+        if (msg.isChatThread === true) {
+          im.messageManager.downloadAttachmentForThread(msg);
+        } else {
+          im.messageManager.downloadAttachment(msg);
+        }
+      } else {
+        setProgress(100);
+      }
+    },
+    [im.messageManager]
+  );
+
   const onGetMessage = React.useCallback(
     (msgId: string) => {
       im.getMessage({ messageId: msgId })
-        .then(async (result) => {
-          if (result) {
-            if (result.body.type !== ChatMessageType.FILE) {
-              throw new UIKitError({
-                code: ErrorCode.chat_uikit,
-                desc: 'Message type is not ChatMessageType.FILE',
-              });
-            }
-            const body = result.body as ChatFileMessageBody;
-            const isExisted = await Services.dcs.isExistedFile(body.localPath);
-            if (isExisted !== true) {
-              setProgress(0);
-              im.messageManager.downloadAttachment(result);
-            } else {
-              setProgress(100);
-            }
+        .then(async (msg) => {
+          if (msg) {
+            download(msg);
           }
         })
         .catch();
     },
-    [im]
+    [download, im]
   );
 
   React.useEffect(() => {
-    onGetMessage(propsMsgId);
-  }, [onGetMessage, propsMsgId]);
+    if (propsMsg) {
+      download(propsMsg);
+    } else {
+      onGetMessage(propsMsgId);
+    }
+  }, [download, onGetMessage, propsMsg, propsMsgId]);
 
   React.useEffect(() => {
     const listener: MessageManagerListener = {

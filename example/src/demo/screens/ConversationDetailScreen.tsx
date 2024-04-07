@@ -279,6 +279,7 @@ export function ConversationDetailScreen(props: Props) {
                   params: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
+                    msg: msgModel.msg,
                   },
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.VIDEO) {
@@ -286,6 +287,7 @@ export function ConversationDetailScreen(props: Props) {
                   params: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
+                    msg: msgModel.msg,
                   },
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.FILE) {
@@ -293,6 +295,7 @@ export function ConversationDetailScreen(props: Props) {
                   params: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
+                    msg: msgModel.msg,
                   },
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.CUSTOM) {

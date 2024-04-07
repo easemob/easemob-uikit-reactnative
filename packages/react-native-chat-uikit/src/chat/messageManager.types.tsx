@@ -111,6 +111,12 @@ export interface MessageCacheManager
    */
   downloadAttachment(msg: ChatMessage): Promise<void>;
   /**
+   * Download attachment for thread or combine type message.
+   *
+   * This method encapsulates `downloadAttachment` of `ChatService`. Added event notification for message status changes.
+   */
+  downloadAttachmentForThread(msg: ChatMessage): Promise<void>;
+  /**
    * Get history messages.
    */
   loadHistoryMessage(params: {
