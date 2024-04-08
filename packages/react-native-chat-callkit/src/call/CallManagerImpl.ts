@@ -154,6 +154,7 @@ export class CallManagerImpl
       userId: string;
       onResult: (params: { user: CallUser; error?: any }) => void;
     }) => void;
+    requestInviteContent?: (callType: CallType) => string;
     onResult?: (params?: { error?: CallError }) => void;
   }): void {
     if (this._isInit === true) {
@@ -195,7 +196,7 @@ export class CallManagerImpl
         params.onResult?.();
       }
     });
-    this.initListener();
+    this.initListener(params);
     i1 = true;
     if (i1 && i2) {
       params.onResult?.();
@@ -221,14 +222,17 @@ export class CallManagerImpl
     this.unInitListener();
   }
 
-  private initListener(): void {
+  private initListener(params: any): void {
     this._timer.init({
       listener: this,
       timeout: this._option.callTimeout ?? K.KeyTimeout,
     });
     this._client = ChatClient.getInstance();
     this.client?.chatManager.addMessageListener(this._sig);
-    this._sig.init({ listener: this });
+    this._sig.init({
+      listener: this,
+      inviteContentHandler: params.requestInviteContent,
+    });
   }
   private unInitListener(): void {
     this._timer.unInit();

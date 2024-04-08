@@ -288,6 +288,17 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
     }
   }
 
+  private getAvatar(userId: string): string | undefined {
+    const { peerInfo } = this.state;
+    let ret;
+    if (userId === this.props.currentId) {
+      ret = this.props.currentAvatar ?? this.props.currentAvatar;
+    } else {
+      ret = peerInfo?.userAvatarUrl;
+    }
+    return ret;
+  }
+
   private getPeerInfo(): void {
     const userId =
       this.props.currentId === this.props.inviteeId
@@ -606,7 +617,7 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
   }
   protected renderAvatar(): React.ReactNode {
     const { callType, inviteeId, inviterId, currentId } = this.props;
-    const { callState, peerInfo } = this.state;
+    const { callState } = this.state;
     return (
       <View
         style={{
@@ -617,7 +628,9 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
         <View style={{ height: 60 }} />
         <DefaultAvatar
           userId={currentId === inviterId ? inviteeId : inviterId}
-          userAvatar={peerInfo?.userAvatarUrl}
+          userAvatar={this.getAvatar(
+            currentId === inviterId ? inviteeId : inviterId
+          )}
           size={100}
           radius={100}
         />
@@ -631,9 +644,7 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
               color: 'white',
             }}
           >
-            {currentId === inviterId
-              ? this.getName(inviteeId)
-              : this.getName(inviterId)}
+            {this.getName(currentId === inviterId ? inviteeId : inviterId)}
           </Text>
         </View>
         {callState === CallState.Calling ? (
@@ -661,7 +672,7 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
 
   protected renderFloatAudio(): React.ReactNode {
     const { inviterId, inviteeId, currentId } = this.props;
-    const { callState, peerInfo } = this.state;
+    const { callState } = this.state;
     const content = 'Calling...';
     return (
       <View
@@ -684,7 +695,9 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
         >
           <DefaultAvatar
             userId={currentId === inviterId ? inviteeId : inviterId}
-            userAvatar={peerInfo?.userAvatarUrl}
+            userAvatar={this.getAvatar(
+              currentId === inviterId ? inviteeId : inviterId
+            )}
             size={36}
             radius={36}
           />
@@ -761,6 +774,9 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
             >
               <DefaultAvatar
                 userId={currentId === inviterId ? inviteeId : inviterId}
+                userAvatar={this.getAvatar(
+                  currentId === inviterId ? inviteeId : inviterId
+                )}
                 size={36}
                 radius={36}
               />
@@ -809,6 +825,9 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
             >
               <DefaultAvatar
                 userId={currentId === inviterId ? inviteeId : inviterId}
+                userAvatar={this.getAvatar(
+                  currentId === inviterId ? inviteeId : inviterId
+                )}
                 size={36}
                 radius={36}
               />

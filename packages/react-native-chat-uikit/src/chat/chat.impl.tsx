@@ -1875,42 +1875,52 @@ export class ChatServiceImpl
     });
   }
 
+  async getGroupInfoSync(params: {
+    groupId: string;
+  }): Promise<ResultValue<GroupModel | undefined>> {
+    const ret = await this.tryCatchSync({
+      promise: this.client.groupManager.getGroupWithId(params.groupId),
+      event: 'getGroupInfoSync',
+    });
+    if (ret) {
+      const group = this.toUIGroup(ret);
+      return {
+        isOk: true,
+        value: group,
+      };
+    } else {
+      const ret2 = await this.tryCatchSync({
+        promise: this.client.groupManager.fetchGroupInfoFromServer(
+          params.groupId
+        ),
+        event: 'getGroupInfoSync',
+      });
+      if (ret2) {
+        const group = this.toUIGroup(ret2);
+        this._groupList.set(group.groupId, group);
+        return {
+          isOk: true,
+          value: group,
+        };
+      }
+    }
+    return {
+      isOk: false,
+    };
+  }
+
   getGroupInfo(params: {
     groupId: string;
-    onResult: ResultCallback<GroupModel>;
+    onResult: ResultCallback<GroupModel | undefined>;
   }): void {
     this.tryCatch({
-      promise: this.client.groupManager.getGroupWithId(params.groupId),
+      promise: this.getGroupInfoSync(params),
       event: 'getGroupInfo',
-      onFinished: async (value) => {
-        if (value === undefined || value.groupId.length === 0) {
-          this.tryCatch({
-            promise: this.client.groupManager.fetchGroupInfoFromServer(
-              params.groupId
-            ),
-            event: 'getGroupInfo',
-            onFinished: (value) => {
-              if (value) {
-                const group = this.toUIGroup(value);
-                params.onResult({
-                  isOk: true,
-                  value: group,
-                });
-              } else {
-                params.onResult({
-                  isOk: true,
-                  value: undefined,
-                });
-              }
-            },
-          });
-        } else {
-          const group = this.toUIGroup(value);
-          params.onResult({
-            isOk: true,
-            value: group,
-          });
-        }
+      onFinished: (value) => {
+        params.onResult(value);
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -1934,35 +1944,6 @@ export class ChatServiceImpl
       ),
       event: 'createGroup',
       onFinished: async (value) => {
-        // if (value && value.groupId.length > 0) {
-        //   this._groupList.set(value.groupId, { ...value } as GroupModel);
-        //   if (this._groupDataRequestCallback) {
-        //     this._groupDataRequestCallback({
-        //       ids: [value.groupId],
-        //       result: (data) => {
-        //         if (data) {
-        //           data.forEach((item) => {
-        //             const group = this._groupList.get(item.id);
-        //             if (group) {
-        //               group.groupName = item.name;
-        //               group.groupAvatar = item.avatar;
-        //             }
-        //           });
-        //         }
-        //         params.onResult({
-        //           isOk: true,
-        //           value: this.toUIGroup(value),
-        //         });
-        //       },
-        //     });
-        //   } else {
-        //     params.onResult({
-        //       isOk: true,
-        //       value: this.toUIGroup(value),
-        //     });
-        //   }
-        //   return;
-        // }
         const group = this.toUIGroup(value);
         this._groupList.set(group.groupId, group);
         const s = this._dataList.get(group.groupId);

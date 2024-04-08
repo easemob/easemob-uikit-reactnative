@@ -107,10 +107,15 @@ export interface CallSignallingListener {
  */
 export class CallSignallingHandler implements ChatMessageEventListener {
   private _listener?: CallSignallingListener | undefined;
+  private _inviteContentHandler: ((callType: CallType) => string) | undefined;
 
-  public init(params: { listener: CallSignallingListener }): void {
+  public init(params: {
+    listener: CallSignallingListener;
+    inviteContentHandler?: (callType: CallType) => string;
+  }): void {
     calllog.log('CallSignallingHandler:init:');
     this._listener = params.listener;
+    this._inviteContentHandler = params.inviteContentHandler;
   }
 
   public unInit(): void {
@@ -201,6 +206,9 @@ export class CallSignallingHandler implements ChatMessageEventListener {
   }
 
   protected inviteContent(callType: CallType): string {
+    if (this._inviteContentHandler) {
+      return this._inviteContentHandler(callType);
+    }
     let ret = '';
     if (callType === CallType.Audio1v1) {
       ret = 'voice';

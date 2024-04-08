@@ -2,6 +2,7 @@ import { useNavigationContainerRef } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as React from 'react';
 import { DeviceEventEmitter } from 'react-native';
+import { CallType, CallUser } from 'react-native-chat-callkit';
 import {
   ChatMultiDeviceEvent,
   ChatPushConfig,
@@ -50,6 +51,7 @@ import {
   requestFcmToken,
   setBackgroundMessageHandler,
 } from '../common/fcm';
+import { RestApi } from '../common/rest.api';
 import type { RootParamsList, RootParamsName } from '../routes';
 import { useUserInfo } from './useUserInfo';
 
@@ -335,6 +337,151 @@ export function useApp() {
     }
   }, [im.client]);
 
+  const requestInviteContent = React.useCallback((callType: CallType) => {
+    if (languageRef.current === 'zh-Hans') {
+      if (callType === CallType.Audio1v1) {
+        return '邀请您语音通话';
+      } else if (callType === CallType.AudioMulti) {
+        return '邀请您进行多人语音通话';
+      } else if (callType === CallType.Video1v1) {
+        return '邀请您视频通话';
+      } else if (callType === CallType.VideoMulti) {
+        return '邀请您进行多人视频通话';
+      }
+    } else {
+      if (callType === CallType.Audio1v1) {
+        return 'Invite you to voice call';
+      } else if (callType === CallType.AudioMulti) {
+        return 'Invite you to multi-person voice call';
+      } else if (callType === CallType.Video1v1) {
+        return 'Invite you to video call';
+      } else if (callType === CallType.VideoMulti) {
+        return 'Invite you to multi-person video call';
+      }
+    }
+    return '';
+  }, []);
+
+  const requestRTCToken = React.useCallback(
+    (params: {
+      appKey: string;
+      channelId: string;
+      userId: string;
+      userChannelId?: number | undefined;
+      type?: 'easemob' | 'agora' | undefined;
+      onResult: (params: { data?: any; error?: any }) => void;
+    }) => {
+      console.log('dev:requestRTCToken:', params);
+      RestApi.reqGetRtcToken({
+        userId: params.userId,
+        channelId: params.channelId,
+      })
+        .then((res) => {
+          params.onResult({
+            error: res.isOk !== true ? res.error : undefined,
+            data: {
+              uid: res.value?.agoraUid !== undefined ? +res.value.agoraUid : 0,
+              token: res.value?.accessToken,
+            },
+          });
+        })
+        .catch((e) => {
+          console.warn('dev:reqGetRtcToken:error:', e);
+        });
+    },
+    []
+  );
+
+  const requestUserMap = React.useCallback(
+    (params: {
+      appKey: string;
+      channelId: string;
+      userId: string;
+      onResult: (params: { data?: any; error?: any }) => void;
+    }) => {
+      console.log('dev:requestUserMap:', params);
+      RestApi.reqGetRtcMap({
+        channelId: params.channelId,
+      })
+        .then((res) => {
+          params.onResult({
+            error: res.isOk !== true ? res.error : undefined,
+            data: {
+              result: res.value?.result,
+            },
+          });
+        })
+        .catch((e) => {
+          console.warn('dev:reqGetRtcToken:error:', e);
+        });
+    },
+    []
+  );
+
+  const requestCurrentUser = React.useCallback(
+    (params: {
+      onResult: (params: { user: CallUser; error?: any }) => void;
+    }) => {
+      console.log('dev:requestCurrentUser:', params);
+      im.client
+        .getCurrentUsername()
+        .then(async (result) => {
+          let userName = result;
+          let userAvatarUrl;
+          if (im.userId) {
+            const ret = await im.getUserInfoSync({
+              userId: im.userId,
+            });
+            userName = ret.value?.userName ?? ret.value?.userId ?? result;
+            userAvatarUrl = ret.value?.avatarURL;
+          }
+
+          params.onResult({
+            user: {
+              userId: result,
+              userName: userName,
+              userAvatarUrl: userAvatarUrl,
+            },
+          });
+        })
+        .catch((error) => {
+          console.warn('dev:getCurrentUsername:error:', error);
+        });
+    },
+    [im]
+  );
+
+  const requestUserInfo = React.useCallback(
+    async (params: {
+      userId: string;
+      onResult: (params: { user: CallUser; error?: any }) => void;
+    }) => {
+      console.log('dev:requestCurrentUser:', params);
+      let userName = params.userId;
+      let userAvatarUrl;
+      if (im.userId) {
+        const ret = await im.getUserInfoSync({
+          userId: params.userId,
+        });
+        userName =
+          ret.value?.remark ??
+          ret.value?.userName ??
+          ret.value?.userId ??
+          params.userId;
+        userAvatarUrl = ret.value?.avatarURL;
+      }
+
+      params.onResult({
+        user: {
+          userId: params.userId,
+          userName: userName,
+          userAvatarUrl: userAvatarUrl,
+        },
+      });
+    },
+    [im]
+  );
+
   React.useEffect(() => {
     const uiListener: UIGroupListListener = {
       onUpdatedEvent: (_data) => {
@@ -589,5 +736,10 @@ export function useApp() {
     getOptions,
     updatePush,
     initPush,
+    requestInviteContent,
+    requestRTCToken,
+    requestUserMap,
+    requestCurrentUser,
+    requestUserInfo,
   };
 }

@@ -6,10 +6,7 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
-import {
-  CallUser,
-  GlobalContainer as CallkitContainer,
-} from 'react-native-chat-callkit';
+import { GlobalContainer as CallkitContainer } from 'react-native-chat-callkit';
 import {
   ChatService,
   ChatServiceListener,
@@ -122,6 +119,11 @@ export function App() {
     getOptions,
     enableOfflinePushRef,
     initPush,
+    requestInviteContent,
+    requestRTCToken,
+    requestUserMap,
+    requestCurrentUser,
+    requestUserInfo,
   } = useApp();
 
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
@@ -327,92 +329,11 @@ export function App() {
           }}
           type={accountType as any}
           enableLog={isDevMode}
-          requestRTCToken={(params: {
-            appKey: string;
-            channelId: string;
-            userId: string;
-            userChannelId?: number | undefined;
-            type?: 'easemob' | 'agora' | undefined;
-            onResult: (params: { data?: any; error?: any }) => void;
-          }) => {
-            console.log('requestRTCToken:', params);
-            RestApi.reqGetRtcToken({
-              userId: params.userId,
-              channelId: params.channelId,
-            })
-              .then((res) => {
-                params.onResult({
-                  error: res.isOk !== true ? res.error : undefined,
-                  data: {
-                    uid:
-                      res.value?.agoraUid !== undefined
-                        ? +res.value.agoraUid
-                        : 0,
-                    token: res.value?.accessToken,
-                  },
-                });
-              })
-              .catch((e) => {
-                console.warn('dev:reqGetRtcToken:error:', e);
-              });
-          }}
-          requestUserMap={(params: {
-            appKey: string;
-            channelId: string;
-            userId: string;
-            onResult: (params: { data?: any; error?: any }) => void;
-          }) => {
-            console.log('requestUserMap:', params);
-            RestApi.reqGetRtcMap({
-              channelId: params.channelId,
-            })
-              .then((res) => {
-                params.onResult({
-                  error: res.isOk !== true ? res.error : undefined,
-                  data: {
-                    result: res.value?.result,
-                  },
-                });
-              })
-              .catch((e) => {
-                console.warn('dev:reqGetRtcToken:error:', e);
-              });
-          }}
-          requestCurrentUser={(params: {
-            onResult: (params: { user: CallUser; error?: any }) => void;
-          }) => {
-            console.log('requestCurrentUser:', params);
-            imRef.current?.client
-              .getCurrentUsername()
-              .then((result) => {
-                params.onResult({
-                  user: {
-                    userId: result,
-                    userName: `${result}_self_name`,
-                    userAvatarUrl:
-                      'https://cdn3.iconfinder.com/data/icons/vol-2/128/dog-128.png',
-                  },
-                });
-              })
-              .catch((error) => {
-                console.warn('test:getCurrentUsername:error:', error);
-              });
-          }}
-          requestUserInfo={(params: {
-            userId: string;
-            onResult: (params: { user: CallUser; error?: any }) => void;
-          }) => {
-            console.log('requestCurrentUser:', params);
-            // pseudo
-            params.onResult({
-              user: {
-                userId: params.userId,
-                userName: `${params.userId}_name2`,
-                userAvatarUrl:
-                  'https://cdn2.iconfinder.com/data/icons/pet-and-veterinary-1/85/dog_charity_love_adopt_adoption-128.png',
-              },
-            });
-          }}
+          requestRTCToken={requestRTCToken}
+          requestUserMap={requestUserMap}
+          requestCurrentUser={requestCurrentUser}
+          requestUserInfo={requestUserInfo}
+          requestInviteContent={requestInviteContent}
         >
           <NavigationContainer
             ref={rootRef}

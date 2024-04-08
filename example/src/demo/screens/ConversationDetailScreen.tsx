@@ -1,11 +1,13 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { DeviceEventEmitter } from 'react-native';
+import { CallConstKey } from 'react-native-chat-callkit';
 import {
   ChatConversationType,
   ChatCustomMessageBody,
   ChatMessage,
   ChatMessageChatType,
+  ChatMessageStatus,
   ChatMessageType,
 } from 'react-native-chat-sdk';
 import {
@@ -14,9 +16,12 @@ import {
   ConversationDetailRef,
   gCustomMessageCardEventType,
   GroupParticipantModel,
+  MessageContent,
+  MessageContentProps,
   MessageInputRef,
   MessageListRef,
   MessageModel,
+  MessageText,
   SendCustomProps,
   SystemMessageModel,
   TimeMessageModel,
@@ -34,17 +39,24 @@ import {
 import { useCallApi } from '../common/AVView';
 import type { RootScreenParamsList } from '../routes';
 
-// export function MyMessageContent(props: MessageContentProps) {
-//   const { msg } = props;
-//   if (msg.body.type === ChatMessageType.CUSTOM) {
-//     return (
-//       <View>
-//         <Text>{(msg.body as ChatCustomMessageBody).params?.test}</Text>
-//       </View>
-//     );
-//   }
-//   return <MessageContent {...props} />;
-// }
+export function MyMessageContent(props: MessageContentProps) {
+  const { msg, layoutType, isSupport, contentMaxWidth } = props;
+  if (
+    msg.body.type === ChatMessageType.TXT &&
+    msg.attributes?.[CallConstKey.KeyAction] === CallConstKey.KeyInviteAction
+  ) {
+    return (
+      <MessageText
+        msg={msg}
+        layoutType={layoutType}
+        isSupport={isSupport}
+        maxWidth={contentMaxWidth}
+      />
+    );
+  }
+  return <MessageContent {...props} />;
+}
+// const MyMessageContentMemo = React.memo(MyMessageContent);
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ConversationDetailScreen(props: Props) {
@@ -179,15 +191,20 @@ export function ConversationDetailScreen(props: Props) {
       'onSignallingMessage',
       (data) => {
         const d = data as { type: string; extra: any };
-        if (d.type === 'callInvite') {
+        if (d.type === 'callSignal') {
           const msg = d.extra as ChatMessage;
           if (msg.conversationId === convId) {
-            listRef.current?.addSendMessageToUI({
-              value: {
-                type: 'custom',
-                msg: data,
-              } as SendCustomProps,
-            });
+            const action = msg.attributes?.[CallConstKey.KeyAction];
+            const pseudoMsg = { ...msg } as ChatMessage;
+            pseudoMsg.status = ChatMessageStatus.SUCCESS;
+            if (action === CallConstKey.KeyInviteAction) {
+              listRef.current?.addSendMessageToUI({
+                value: {
+                  type: 'custom',
+                  msg: pseudoMsg,
+                } as SendCustomProps,
+              });
+            }
           }
         } else if (d.type === 'callEnd') {
         } else if (d.type === 'callHangUp') {
@@ -340,9 +357,9 @@ export function ConversationDetailScreen(props: Props) {
               }
             },
             // reportMessageCustomList: [{ key: '1', value: 'test' }],
-            // listItemRenderProps: {
-            //   MessageContent: MyMessageContent,
-            // },
+            listItemRenderProps: {
+              MessageContent: MyMessageContent,
+            },
             // messageLayoutType: 'left',
             onNoMoreMessage: React.useCallback(() => {
               console.log('onNoMoreMessage');

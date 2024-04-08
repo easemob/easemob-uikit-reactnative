@@ -126,6 +126,7 @@ export function useCallApi(props: AVViewProps) {
       inviterAvatar?: string;
       invitees?: CallUser[];
       onRequestClose: () => void;
+      groupAvatar?: string;
     }) => {
       const {
         inviteeIds,
@@ -136,6 +137,7 @@ export function useCallApi(props: AVViewProps) {
         currentId,
         callType,
         onRequestClose,
+        groupAvatar,
       } = params;
       getAbsoluteViewRef().showWithProps({
         children: (
@@ -148,6 +150,7 @@ export function useCallApi(props: AVViewProps) {
             inviteeIds={inviteeIds}
             // inviteeList={{ InviteeList: ContactList }}
             invitees={invitees}
+            groupAvatar={groupAvatar}
             onClose={(elapsed, reason) => {
               console.log('test:stateEvent.onClose', elapsed, reason);
               onRequestClose();
@@ -188,7 +191,7 @@ export function useCallApi(props: AVViewProps) {
   );
 
   const showCall = React.useCallback(
-    (params: {
+    async (params: {
       convId: string;
       convType: number;
       avType: 'video' | 'voice';
@@ -196,6 +199,7 @@ export function useCallApi(props: AVViewProps) {
     }) => {
       const { convId, avType, convType, getSelectedMembers } = params;
       let members: GroupParticipantModel[] = [];
+      let groupAvatar: string | undefined;
       try {
         if (convType === 0) {
           members.push({
@@ -203,6 +207,10 @@ export function useCallApi(props: AVViewProps) {
           });
         } else if (convType === 1) {
           members = getSelectedMembers?.() ?? [];
+          const ret = await im.getGroupInfoSync({ groupId: convId });
+          if (ret.isOk && ret.value) {
+            groupAvatar = ret.value.groupAvatar;
+          }
         }
       } catch (error) {
         console.warn('test:showCall:parse selectedMembers error', error);
@@ -255,10 +263,11 @@ export function useCallApi(props: AVViewProps) {
           // inviterName: '',
           // inviterAvatar: '',
           onRequestClose: hideCall,
+          groupAvatar: groupAvatar,
         });
       }
     },
-    [hideCall, im.userId, showMultiCall, showSingleCall]
+    [hideCall, im, showMultiCall, showSingleCall]
   );
 
   const onShowCall = React.useCallback(
@@ -336,9 +345,9 @@ export function useCallApiListener() {
         console.warn('onCallOccurError:', params);
       },
       onSignallingMessage: (msg) => {
-        console.log('onSignallingMessage:', msg);
+        console.log('dev:onSignallingMessage:', msg);
         DeviceEventEmitter.emit('onSignallingMessage', {
-          type: 'callInvite',
+          type: 'callSignal',
           extra: msg,
         });
       },

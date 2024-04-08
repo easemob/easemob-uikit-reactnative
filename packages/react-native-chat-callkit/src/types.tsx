@@ -1,4 +1,5 @@
 import type { CallOption, CallUser } from './call';
+import type { CallType } from './enums';
 
 /**
  * The property object of the global call component.
@@ -61,6 +62,11 @@ export interface CallkitSdkContextType {
     userId: string;
     onResult: (params: { user: CallUser; error?: any }) => void;
   }) => void;
+
+  /**
+   * Get the content of the invitation. If this parameter is not defined, the properties of `SingleCall` ({@link SingleCallProps}) or `MultiCall` ({@link MultiCallProps}), or the default value, will be used.
+   */
+  requestInviteContent?: (callType: CallType) => string;
 }
 
 /**

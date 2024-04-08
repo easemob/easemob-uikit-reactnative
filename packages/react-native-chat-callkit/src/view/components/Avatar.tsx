@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { Image, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import { hashCode } from '../../utils/utils';
-import Image from './Image';
+// import Image from './Image';
 import { IconName, LocalIcon, localLocalIcon } from './LocalIcon';
 
 type SubComponents = {};
@@ -44,7 +44,9 @@ export const Avatar: ((props: AvatarProps) => JSX.Element) & SubComponents = ({
         <LocalIcon name={uriOnError ?? 'default_avatar'} size={size * 1.0} />
       ) : (
         <Image
-          onError={() => setLoadDefault(true)}
+          onError={() => {
+            setLoadDefault(true);
+          }}
           source={uriS}
           resizeMode="cover"
           style={[StyleSheet.absoluteFill, { width: size, height: size }]}

@@ -870,8 +870,14 @@ export interface GroupServices {
    */
   getGroupInfo(params: {
     groupId: string;
-    onResult: ResultCallback<GroupModel>;
+    onResult: ResultCallback<GroupModel | undefined>;
   }): void;
+  /**
+   * Get the group information.
+   */
+  getGroupInfoSync(params: {
+    groupId: string;
+  }): Promise<ResultValue<GroupModel | undefined>>;
   /**
    * Get the group information from the server.
    */

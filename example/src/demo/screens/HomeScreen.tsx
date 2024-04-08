@@ -5,11 +5,14 @@ import type {
 } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
+import { CallConstKey } from 'react-native-chat-callkit';
+import type { ChatMessage } from 'react-native-chat-sdk';
 import {
   Badges,
   BottomTabBar,
   ContactList,
   ConversationList,
+  ConversationListRef,
   DataModel,
   EventServiceListener,
   getReleaseArea,
@@ -297,6 +300,7 @@ function HomeTabConversationListScreen(
   const navigation =
     useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
 
+  const convRef = React.useRef<ConversationListRef>({} as any);
   const im = useChatContext();
   const { emit } = useDispatchContext();
   const updatedRef = React.useRef<boolean>(false);
@@ -347,12 +351,36 @@ function HomeTabConversationListScreen(
     };
   }, [im, updateData]);
 
+  React.useEffect(() => {
+    const sub = DeviceEventEmitter.addListener(
+      'onSignallingMessage',
+      (data) => {
+        const d = data as { type: string; extra: any };
+        if (d.type === 'callSignal') {
+          const msg = d.extra as ChatMessage;
+          const action = msg.attributes?.[CallConstKey.KeyAction];
+          if (action === CallConstKey.KeyInviteAction) {
+            convRef.current.reloadList();
+          }
+        } else if (d.type === 'callEnd') {
+        } else if (d.type === 'callHangUp') {
+        } else if (d.type === 'callCancel') {
+        } else if (d.type === 'callRefuse') {
+        }
+      }
+    );
+    return () => {
+      sub.remove();
+    };
+  }, []);
+
   // React.useEffect(() => {
   //   timeoutTask(3000, updateData);
   // }, [im, updateData]);
 
   return (
     <ConversationList
+      propsRef={convRef}
       containerStyle={{
         flexGrow: 1,
         // backgroundColor: 'red',
