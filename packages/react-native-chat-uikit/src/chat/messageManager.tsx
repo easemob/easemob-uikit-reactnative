@@ -22,6 +22,7 @@ import type {
 } from './messageManager.types';
 import type { ChatService, ChatServiceListener } from './types';
 import type { ConversationModel } from './types.ui';
+import { userInfoFromMessage } from './utils';
 
 let gListener: ChatServiceListener | undefined;
 
@@ -283,6 +284,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   }
 
   createRecallMessageTip(msg: ChatMessage): ChatMessage {
+    const userInfo = userInfoFromMessage(msg);
     const tip = ChatMessage.createCustomMessage(
       msg.conversationId,
       gCustomMessageRecallEventType,
@@ -293,7 +295,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
             text: '_uikit_msg_tip_recall',
             self: this._client.userId,
             from: msg.from,
-            fromName: msg.from,
+            fromName: userInfo?.remark ?? userInfo?.userName ?? msg.from,
           }),
         },
       }

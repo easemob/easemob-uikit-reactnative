@@ -207,6 +207,7 @@ export function useCallApi(props: AVViewProps) {
           });
         } else if (convType === 1) {
           members = getSelectedMembers?.() ?? [];
+          members = members.filter((item) => item.memberId !== im.userId);
           const ret = await im.getGroupInfoSync({ groupId: convId });
           if (ret.isOk && ret.value) {
             groupAvatar = ret.value.groupAvatar;

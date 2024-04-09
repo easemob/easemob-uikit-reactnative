@@ -1,7 +1,6 @@
 import * as React from 'react';
 import type { ChatMessageThread } from 'react-native-chat-sdk';
 
-import { useChatContext } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type { BasicActionsProps } from './types';
@@ -14,7 +13,7 @@ export function useMessageThreadListMoreActions(
   const { menuRef, onInit, alertRef } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
-  const im = useChatContext();
+  // const im = useChatContext();
   const onShowMenu = React.useCallback(
     (params: {
       thread: ChatMessageThread;
@@ -45,7 +44,7 @@ export function useMessageThreadListMoreActions(
         onClickedDestroyThread,
       } = params;
       let items = [] as InitMenuItemsType[];
-      if (thread.owner === im.userId || isOwner === true) {
+      if (isOwner === true) {
         items.push({
           name: tr('_uikit_thread_menu_edit_thread_name'),
           isHigh: false,
@@ -66,7 +65,7 @@ export function useMessageThreadListMoreActions(
           });
         },
       });
-      if (thread.owner === im.userId || isOwner === true) {
+      if (isOwner === true) {
         items.push({
           name: tr('_uikit_thread_menu_destroy_thread'),
           isHigh: true,
@@ -118,7 +117,7 @@ export function useMessageThreadListMoreActions(
         });
       }
     },
-    [alertRef, closeMenu, im.userId, menuRef, onInit, tr]
+    [alertRef, closeMenu, menuRef, onInit, tr]
   );
 
   return {
