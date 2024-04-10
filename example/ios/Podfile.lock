@@ -527,7 +527,7 @@ PODS:
     - React-Core
   - react-native-chat-callkit (1.0.1):
     - React-Core
-  - react-native-chat-sdk (1.3.1-beta.8):
+  - react-native-chat-sdk (1.3.1-beta.12):
     - HyphenateChat (= 4.2.0)
     - React-Core
   - react-native-chat-uikit (2.0.0-beta.0):
@@ -822,7 +822,7 @@ DEPENDENCIES:
   - ReactNativeFileAccess (from `../../node_modules/react-native-file-access`)
   - RNAudioRecorderPlayer (from `../../node_modules/react-native-audio-recorder-player`)
   - "RNCAsyncStorage (from `../../node_modules/@react-native-async-storage/async-storage`)"
-  - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
+  - "RNCClipboard (from `../../node_modules/@react-native-clipboard/clipboard`)"
   - RNDeviceInfo (from `../../node_modules/react-native-device-info`)
   - RNFastImage (from `../../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../../node_modules/@react-native-firebase/app`)"
@@ -1015,7 +1015,7 @@ EXTERNAL SOURCES:
   RNCAsyncStorage:
     :path: "../../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
-    :path: "../node_modules/@react-native-clipboard/clipboard"
+    :path: "../../node_modules/@react-native-clipboard/clipboard"
   RNDeviceInfo:
     :path: "../../node_modules/react-native-device-info"
   RNFastImage:
@@ -1111,7 +1111,7 @@ SPEC CHECKSUMS:
   react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-cameraroll: 755bcc628148a90a7c9cf3f817a252be3a601bc5
   react-native-chat-callkit: f3c26620cbfd756a184eb61cfb9fe5660067ebef
-  react-native-chat-sdk: ae8899f79702c76c477c7cf27a34988ceae7a2d5
+  react-native-chat-sdk: 87f8082ac4f5e307821b7b2f30034bdcdbcc8b2e
   react-native-chat-uikit: 0f8ee416f7416193518e5382cbb3f002566f2678
   react-native-create-thumbnail: e4fc6953a754bcfa3a03d74ec8687850134b1b93
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156

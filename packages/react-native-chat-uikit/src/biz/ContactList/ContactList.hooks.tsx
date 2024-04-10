@@ -788,6 +788,10 @@ export function useContactList(props: ContactListProps) {
     return <View>{ret}</View>;
   }, [contactItems, groupCount, requestCount]);
 
+  const onError = React.useCallback(() => {
+    init({ requestServer: true });
+  }, [init]);
+
   if (propsRef?.current) {
     propsRef.current.addItem = (item) => {
       addContact(item.userId);
@@ -912,6 +916,7 @@ export function useContactList(props: ContactListProps) {
     contactItems,
     ListHeaderComponent,
     onClickedForward,
+    onError,
   };
 }
 
