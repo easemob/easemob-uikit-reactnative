@@ -21,7 +21,7 @@ export function useCompare(
   const ref = React.useRef(object);
   const { getObjectName } = useGetObjectName();
 
-  if (others?.enabled === false) {
+  if (others?.enabled !== true) {
     return;
   }
 

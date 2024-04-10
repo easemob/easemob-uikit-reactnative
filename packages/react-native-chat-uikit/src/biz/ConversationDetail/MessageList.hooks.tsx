@@ -134,7 +134,7 @@ export function useMessageList(
   const inverted = React.useRef(
     comType === 'chat' || comType === 'search' ? true : false
   ).current;
-  // console.log('test:zuoyu:useMessageList', props);
+  // uilog.log('test:zuoyu:useMessageList', props);
 
   const enableRefresh =
     comType === 'chat' ||
@@ -227,25 +227,25 @@ export function useMessageList(
   }, []);
 
   const setIsTop = React.useCallback((isTop: boolean) => {
-    // console.log('test:zuoyu:setIsTop:', isTop, comType);
+    // uilog.log('test:zuoyu:setIsTop:', isTop, comType);
     isTopRef.current = isTop;
   }, []);
   const setIsBottom = React.useCallback((isBottom: boolean) => {
-    // console.log('test:zuoyu:setIsBottom:', isBottom, comType);
+    // uilog.log('test:zuoyu:setIsBottom:', isBottom, comType);
     isBottomRef.current = isBottom;
   }, []);
 
   const setNoNewMsg = React.useCallback((noNewMsg: boolean) => {
-    // console.log('test:zuoyu:setNoNewMsg:', noNewMsg);
+    // uilog.log('test:zuoyu:setNoNewMsg:', noNewMsg);
     hasNoNewMsgRef.current = noNewMsg;
   }, []);
   const setNoOldMsg = React.useCallback((noOldMsg: boolean) => {
-    // console.log('test:zuoyu:setNoOldMsg:', noOldMsg);
+    // uilog.log('test:zuoyu:setNoOldMsg:', noOldMsg);
     hasNoOldMsgRef.current = noOldMsg;
   }, []);
 
   const canAddNewMessageToUI = React.useCallback(() => {
-    // console.log(
+    // uilog.log(
     //   'test:zuoyu:canAddNewMessageToUI:',
     //   hasNoNewMsgRef.current,
     //   isBottomRef.current
@@ -317,7 +317,7 @@ export function useMessageList(
     (info: ListRenderItemInfo<MessageListItemProps>) => {
       for (const d of dataRef.current) {
         if (d.id === info.item.id) {
-          // console.log('test:zuoyu:onRenderItem', d.id, info.item.index);
+          // uilog.log('test:zuoyu:onRenderItem', d.id, info.item.index);
           d.index = info.index;
           break;
         }
@@ -433,7 +433,7 @@ export function useMessageList(
   );
 
   const onLayout = React.useCallback((event: LayoutChangeEvent) => {
-    // console.log('test:zuoyu:onLayout:', event.nativeEvent.layout.height);
+    // uilog.log('test:zuoyu:onLayout:', event.nativeEvent.layout.height);
     heightRef.current = event.nativeEvent.layout.height;
   }, []);
 
@@ -745,7 +745,7 @@ export function useMessageList(
       const l = await Promise.all(list);
       // dataRef.current.forEach((d) => {
       //   const msgModel = d.model as MessageModel;
-      //   console.log(
+      //   uilog.log(
       //     'test:zuoyu:dataref:1',
       //     msgModel.msg.msgId,
       //     msgModel.msg.serverTime
@@ -766,7 +766,7 @@ export function useMessageList(
       }
       // dataRef.current.forEach((d) => {
       //   const msgModel = d.model as MessageModel;
-      //   console.log(
+      //   uilog.log(
       //     'test:zuoyu:dataref:2',
       //     msgModel.msg.msgId,
       //     msgModel.msg.serverTime
@@ -1672,12 +1672,12 @@ export function useMessageList(
 
   const isGettingRef = React.useRef(false);
   const setIsGetting = React.useCallback((value: boolean) => {
-    // console.log('test:zuoyu:setIsGetting:', value);
+    // uilog.log('test:zuoyu:setIsGetting:', value);
     isGettingRef.current = value;
   }, []);
   const requestBeforeMessages = React.useCallback(
     async (startId: string, includeStartId?: boolean) => {
-      // console.log(
+      // uilog.log(
       //   'test:zuoyu:requestBeforeMessages',
       //   hasNoOldMsgRef.current,
       //   isGettingRef.current
@@ -1707,7 +1707,7 @@ export function useMessageList(
           if (msgs.length > 0) {
             const newStartMsgId = msgs[0]!.msgId;
             if (newStartMsgId === beforeMsgIdRef.current) {
-              // console.log('test:zuoyu:ba:3', newStartMsgId);
+              // uilog.log('test:zuoyu:ba:3', newStartMsgId);
               break;
             }
             beforeMsgIdRef.current = msgs[0]!.msgId;
@@ -1715,14 +1715,14 @@ export function useMessageList(
               dataRef.current.length === 0
                 ? msgs[msgs.length - 1]!.msgId
                 : getDataMessage('last')?.msg.msgId ?? '';
-            // console.log(
+            // uilog.log(
             //   'test:zuoyu:ba:',
             //   dataRef.current.length,
             //   beforeMsgIdRef.current,
             //   afterMsgIdRef.current
             // );
             // msgs.forEach((item) => {
-            //   console.log('test:zuoyu:msgs:', item.msgId, item.serverTime, item);
+            //   uilog.log('test:zuoyu:msgs:', item.msgId, item.serverTime, item);
             // });
 
             if (includeStartId && startId.length > 0) {
@@ -1747,7 +1747,7 @@ export function useMessageList(
           setIsGetting(false);
         } while (false);
       } catch (error) {
-        console.warn('dev:requestBeforeMessages:', error);
+        // uilog.warn('dev:requestBeforeMessages:', error);
         setIsGetting(false);
       }
     },
@@ -1766,7 +1766,7 @@ export function useMessageList(
   );
   const requestAfterMessages = React.useCallback(
     async (startId: string, maxCount?: number) => {
-      // console.log(
+      // uilog.log(
       //   'test:zuoyu:requestAfterMessages',
       //   startId,
       //   maxCount,
@@ -1799,7 +1799,7 @@ export function useMessageList(
           if (msgs.length > 0) {
             const newStartMsgId = msgs[msgs.length - 1]!.msgId;
             if (newStartMsgId === afterMsgIdRef.current) {
-              // console.log('test:zuoyu:ba:1', newStartMsgId);
+              // uilog.log('test:zuoyu:ba:1', newStartMsgId);
               break;
             }
             beforeMsgIdRef.current =
@@ -1807,14 +1807,14 @@ export function useMessageList(
                 ? msgs[0]!.msgId
                 : getDataMessage('first')?.msg.msgId ?? '';
             afterMsgIdRef.current = msgs[msgs.length - 1]!.msgId;
-            // console.log(
+            // uilog.log(
             //   'test:zuoyu:ba:2',
             //   dataRef.current.length,
             //   beforeMsgIdRef.current,
             //   afterMsgIdRef.current
             // );
             // msgs.forEach((item) => {
-            //   console.log('test:zuoyu:msgs:', item.msgId, item.serverTime);
+            //   uilog.log('test:zuoyu:msgs:', item.msgId, item.serverTime);
             // });
             const list = await onAddMessageListToUI(msgs, 'bottom');
             list.map((v) => {
@@ -1827,7 +1827,7 @@ export function useMessageList(
         } while (false);
         setIsGetting(false);
       } catch (error) {
-        console.warn('dev:requestAfterMessages:', error);
+        // uilog.warn('dev:requestAfterMessages:', error);
         setIsGetting(false);
       }
     },
@@ -1847,7 +1847,7 @@ export function useMessageList(
 
   const loadAllLatestMessage = React.useCallback(async () => {
     while (true) {
-      // console.log('test:zuoyu:loadAllLatestMessage:', hasNoNewMsgRef.current);
+      // uilog.log('test:zuoyu:loadAllLatestMessage:', hasNoNewMsgRef.current);
       await requestAfterMessages(afterMsgIdRef.current, 400);
       if (hasNoNewMsgRef.current === true) {
         break;
@@ -2173,7 +2173,7 @@ export function useMessageList(
 
   const requestThreadAfterMessages = React.useCallback(
     async (startId: string, maxCount?: number) => {
-      // console.log(
+      // uilog.log(
       //   'test:zuoyu:requestThreadAfterMessages',
       //   startId,
       //   maxCount,
@@ -2253,14 +2253,14 @@ export function useMessageList(
                 ? msgs[0]!.msgId
                 : getDataMessage('first')?.msg.msgId ?? '';
             afterMsgIdRef.current = msgs[msgs.length - 1]!.msgId;
-            // console.log(
+            // uilog.log(
             //   'test:zuoyu:ba:2',
             //   dataRef.current.length,
             //   beforeMsgIdRef.current,
             //   afterMsgIdRef.current
             // );
             // msgs.forEach((item) => {
-            //   console.log('test:zuoyu:msgs:', item.msgId, item.serverTime, item.body);
+            //   uilog.log('test:zuoyu:msgs:', item.msgId, item.serverTime, item.body);
             // });
             onAddMessageListToUI(msgs, 'bottom');
           }
@@ -2268,7 +2268,7 @@ export function useMessageList(
         setIsGetting(false);
         return msgCount;
       } catch (error) {
-        console.warn('dev:requestAfterMessages:', error);
+        // uilog.warn('dev:requestAfterMessages:', error);
         setIsGetting(false);
         return msgCount;
       }
@@ -2343,7 +2343,7 @@ export function useMessageList(
           setIsTop(false);
         }
       }
-      // console.log(
+      // uilog.log(
       //   'test:zuoyu:onScroll:',
       //   comType,
       //   heightOffset,
@@ -2419,7 +2419,7 @@ export function useMessageList(
         }
         const deltY = y - currentY2Ref.current;
         currentY2Ref.current = y;
-        // console.log('test:zuoyu:onTouchMove:', deltY, y);
+        // uilog.log('test:zuoyu:onTouchMove:', deltY, y);
         delayRequestMessages(deltY);
       }
     },
@@ -2427,7 +2427,7 @@ export function useMessageList(
   );
 
   const init = React.useCallback(async () => {
-    console.log('dev:MessageList:', convId, convType);
+    // uilog.log('dev:MessageList:', convId, convType);
     if (testMode === 'only-ui') {
       return;
     }
@@ -2463,8 +2463,6 @@ export function useMessageList(
     }
   }, [
     comType,
-    convId,
-    convType,
     dataRef,
     im.messageManager,
     inverted,
@@ -2480,7 +2478,7 @@ export function useMessageList(
   ]);
 
   const onContentSizeChange = React.useCallback((_w: number, _h: number) => {
-    // console.log('test:zuoyu:onContentSizeChange:', _w, _h);
+    // uilog.log('test:zuoyu:onContentSizeChange:', _w, _h);
   }, []);
 
   const requestThreadHeaderMessage = React.useCallback(async () => {
@@ -2663,7 +2661,7 @@ export function useMessageList(
               },
             });
           } else {
-            console.log('dev:startShowThreadMoreMenu');
+            // uilog.log('dev:startShowThreadMoreMenu');
           }
         },
         cancelMultiSelected: () => {
@@ -2866,7 +2864,7 @@ export function useMessageList(
       },
       onChatMessageThreadUpdated: async (event: ChatMessageThreadEvent) => {
         const msgId = event.thread.msgId;
-        // console.log(
+        // uilog.log(
         //   'test:zuoyu:onChatMessageThreadUpdated',
         //   msgId,
         //   convId,
@@ -2927,7 +2925,7 @@ export function useMessageList(
     onInit();
   }, [onInit]);
 
-  // console.log('test:zuoyu:useMessageList', comType, convId, convType);
+  // uilog.log('test:zuoyu:useMessageList', comType, convId, convType);
 
   return {
     ...flatListProps,

@@ -41,7 +41,7 @@ export function useCheckType(params?: { enabled?: boolean }) {
         expectedType: typeof ExpectedType,
         others?: { callerName?: string; objectName?: string }
       ) => {
-        if (params?.enabled === false) {
+        if (params?.enabled !== true) {
           return;
         }
         const log = `{

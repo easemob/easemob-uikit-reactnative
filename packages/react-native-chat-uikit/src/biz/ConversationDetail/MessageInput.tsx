@@ -209,7 +209,7 @@ export const MessageInput = React.forwardRef<
                 //     _pageX: number,
                 //     pageY: number
                 //   ) => {
-                //     console.log(
+                //     uilog.log(
                 //       'Sub:Sub:measure:',
                 //       _x,
                 //       _y,
@@ -223,7 +223,7 @@ export const MessageInput = React.forwardRef<
                 // );
                 // testRef.current?.measureInWindow(
                 //   (_x: number, _y: number, _width: number, _height: number) => {
-                //     // console.log('Sub:Sub:measureInWindow:', _x, _y, _width, _height);
+                //     // uilog.log('Sub:Sub:measureInWindow:', _x, _y, _width, _height);
                 //   }
                 // );
               }}

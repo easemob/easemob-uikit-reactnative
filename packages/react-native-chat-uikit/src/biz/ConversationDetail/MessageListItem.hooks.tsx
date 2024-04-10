@@ -20,6 +20,7 @@ import {
   gMessageAttributeVoiceReadFlag,
   userInfoFromMessage,
 } from '../../chat';
+import { uilog } from '../../const';
 import { Services } from '../../services';
 import { LocalPath } from '../../utils';
 import type { MessageStateType } from './types';
@@ -238,11 +239,10 @@ export function getImageSizeFromUrl(
   Image.getSize(
     url,
     (width: number, height: number) => {
-      console.log('dev:getImageSizeFromUrl', width, height);
       onFinished({ isOk: true, width, height });
     },
     (error: any) => {
-      console.log('dev:getImageSizeFromUrl', url, error);
+      uilog.log('dev:getImageSizeFromUrl', url, error);
       onFinished({ isOk: false });
     }
   );

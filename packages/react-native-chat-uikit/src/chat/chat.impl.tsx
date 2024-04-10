@@ -20,6 +20,7 @@ import {
   ChatUserInfo,
 } from 'react-native-chat-sdk';
 
+import { uilog } from '../const';
 import { ConversationStorage } from '../db/storage';
 import { ErrorCode, UIKitError } from '../error';
 import { Services } from '../services';
@@ -117,7 +118,7 @@ export class ChatServiceImpl
   }) => string;
 
   constructor() {
-    console.log('dev:chat:constructor:');
+    uilog.log('chat:constructor:');
     super();
     this._dataList = new Map();
     this._userList = new Map();
@@ -136,7 +137,7 @@ export class ChatServiceImpl
   // }
 
   reset(): void {
-    console.log('dev:chat:reset:');
+    uilog.log('chat:reset:');
     // this.clearListener(); // !!! warn: no clear.
     this._dataList.clear();
     this._userList.clear();
@@ -152,13 +153,13 @@ export class ChatServiceImpl
     options: ChatOptionsType;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
-    console.log('dev:chat:init');
+    uilog.log('chat:init');
     const { options } = params;
     const { appKey } = options;
 
     try {
       await this.client.init(new ChatOptions({ ...options }));
-      console.log('dev:chat:opt:', this.client.options);
+      uilog.log('chat:opt:', this.client.options);
 
       this._convStorage = new ConversationStorage({ appKey: appKey });
       // !!! hot-reload no pass, into catch codes
@@ -229,7 +230,7 @@ export class ChatServiceImpl
         await Services.dcs.createUserDir();
       }
     } catch (e) {
-      console.warn('createUserDir:', e);
+      uilog.warn('createUserDir:', e);
       this.sendError({
         error: new UIKitError({
           code: ErrorCode.chat_uikit,
@@ -254,7 +255,7 @@ export class ChatServiceImpl
     const { userId, userToken, userName, userAvatarURL, result, usePassword } =
       params;
     try {
-      console.log('dev:chat:login:', params);
+      uilog.log('chat:login:', params);
       this.reset();
       const version = require('react-native-chat-sdk/src/version');
       const list = version.default.split('.');
@@ -289,7 +290,7 @@ export class ChatServiceImpl
       this.client.getCurrentUsername();
       // this.updateSelfInfo({ self: this._user, onResult: () => {} });
 
-      console.log('dev:login:finish:1', params);
+      uilog.log('login:finish:1', params);
 
       result?.({ isOk: true });
 
@@ -314,7 +315,7 @@ export class ChatServiceImpl
         this.client.getCurrentUsername();
         // this.updateSelfInfo({ self: this._user, onResult: () => {} });
       }
-      console.log('dev:login:finish:2', params, error);
+      uilog.log('login:finish:2', params, error);
       result?.({
         isOk: false,
         error: new UIKitError({
@@ -331,7 +332,7 @@ export class ChatServiceImpl
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     try {
-      console.log('dev:chat:logout:');
+      uilog.log('chat:logout:');
       await this.client.logout(params.unbindDeviceToken);
       params.result?.({ isOk: true });
       this._user = undefined;
@@ -1174,7 +1175,7 @@ export class ChatServiceImpl
       .deleteConversationDir(params.convId)
       .then()
       .catch((e) => {
-        console.warn('dev:remove:', e);
+        uilog.warn('remove:', e);
       });
     return ret;
   }
@@ -1199,7 +1200,7 @@ export class ChatServiceImpl
           .deleteConversationDir(params.convId)
           .then()
           .catch((e) => {
-            console.warn('dev:remove:', e);
+            uilog.warn('remove:', e);
           });
       }
     }

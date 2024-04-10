@@ -13,6 +13,7 @@ import {
   UIListenerType,
   useChatContext,
 } from '../../chat';
+import { uilog } from '../../const';
 import { usePermissions } from '../../hook';
 import { timeoutTask } from '../../utils';
 import { useCreateConversationDirectory } from '../hooks/useCreateConversationDirectory';
@@ -112,7 +113,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
       fromNative: true,
       isChatThread: comType === 'thread' || comType === 'create_thread',
     });
-    console.log('dev:ConversationDetail:', conv);
+    uilog.log('ConversationDetail:', conv);
     if (conv) {
       setDoNotDisturb(conv.doNotDisturb ?? false);
       if (conv.convType === ChatConversationType.PeerChat) {

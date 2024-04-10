@@ -9,6 +9,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import * as Permissions from 'react-native-permissions';
 import VideoComponent from 'react-native-video';
 
+import { uilog } from '../const';
 import {
   CreateStringSet,
   LanguageCode,
@@ -69,7 +70,7 @@ export const getI18nLanguage = (language?: LanguageCode): LanguageCode => {
     ret = getDefaultLanguage();
   }
 
-  console.log('dev:language:i18n:', ret);
+  uilog.log('language:i18n:', ret);
   return ret;
 };
 
@@ -81,7 +82,7 @@ export const getTranslateLanguage = (language?: LanguageCode): LanguageCode => {
     ret = getDefaultLanguage();
   }
 
-  console.log('dev:language:tl:', ret);
+  uilog.log('language:tl:', ret);
   return ret;
 };
 
@@ -93,7 +94,7 @@ export const getReleaseArea = (releaseArea?: ReleaseArea): ReleaseArea => {
   if (ret !== 'global' && ret !== 'china') {
     ret = 'global';
   }
-  console.log('dev:releaseArea:', ret);
+  uilog.log('releaseArea:', ret);
   return ret;
 };
 

@@ -36,7 +36,7 @@ export class UIKitError extends Error {
     // } else {
     //   this.stack = new Error(this.toString()).stack;
     // }
-    // console.log(this.stack);
+    // uilog.log(this.stack);
   }
 
   /**

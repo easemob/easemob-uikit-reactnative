@@ -19,6 +19,7 @@ import {
 } from 'react-native-chat-sdk';
 import type { ChatException } from 'react-native-chat-sdk/lib/typescript/common/ChatError';
 
+import { uilog } from '../const';
 import { ChatServiceListener, DisconnectReasonType } from './types';
 import { UIListener, UIListenerType } from './types.ui';
 
@@ -94,7 +95,7 @@ export class ChatServiceListenerImpl {
 
   _initListener() {
     this._unInitListener();
-    console.log('dev:chat:initListener');
+    uilog.log('chat:initListener');
     this._initConnectListener();
     this._initMessageListener();
     this._initGroupListener();
@@ -106,7 +107,7 @@ export class ChatServiceListenerImpl {
     this._initExceptListener();
   }
   _unInitListener() {
-    console.log('dev:chat:unInitListener');
+    uilog.log('chat:unInitListener');
     this.client.removeConnectionListener(gConnectListener);
     this.client.chatManager.removeMessageListener(gMessageListener);
     this.client.groupManager.removeGroupListener(gGroupListener);
@@ -117,7 +118,7 @@ export class ChatServiceListenerImpl {
     this.client.removeExceptListener(gExceptListener);
   }
   _clearListener() {
-    console.log('dev:chat:clearListener');
+    uilog.log('chat:clearListener');
     this.client.removeAllConnectionListener();
     this.client.chatManager.removeAllMessageListener();
     this.client.groupManager.removeAllGroupListener();
@@ -209,8 +210,8 @@ export class ChatServiceListenerImpl {
   }
 
   onMessagesReceived(messages: Array<ChatMessage>) {
-    console.log(
-      'dev:chat:onMessagesReceived:',
+    uilog.log(
+      'chat:onMessagesReceived:',
       messages.length,
       this._listeners?.size
     );
@@ -643,7 +644,7 @@ export class ChatServiceListenerImpl {
     from?: string | undefined;
     extra?: Record<string, string> | undefined;
   }) {
-    console.error('dev:chat:except', params);
+    uilog.error('chat:except', params);
   }
   _initExceptListener() {
     gExceptListener = {

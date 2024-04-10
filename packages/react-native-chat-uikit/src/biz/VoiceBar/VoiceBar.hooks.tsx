@@ -9,6 +9,7 @@ import {
 } from 'react-native-audio-recorder-player';
 
 import { useChatContext } from '../../chat';
+import { uilog } from '../../const';
 import { Services } from '../../services';
 import type { TimerTextRef } from '../../ui/Text';
 import { getFileExtension, LocalPath, uuid } from '../../utils';
@@ -72,24 +73,24 @@ export function useVoiceBar(props: VoiceBarProps) {
         url: voiceFilePath,
         audio: AudioOptionRef.current,
         onPosition: (pos) => {
-          console.log('dev:startRecordAudio:pos:', pos);
+          uilog.log('startRecordAudio:pos:', pos);
           voiceDurationRef.current = Math.floor(pos);
         },
         onFailed: (error) => {
-          console.warn('dev:startRecordAudio:onFailed:', error);
+          uilog.warn('startRecordAudio:onFailed:', error);
           onFailed?.({ reason: 'record voice is failed.', error: error });
           contentTimerRef.current?.stop?.();
           setPlayRipple(false);
         },
         onFinished: ({ result, path, error }) => {
-          console.log('dev:startRecordAudio:onFinished:', result, path, error);
+          uilog.log('startRecordAudio:onFinished:', result, path, error);
         },
       })
       .then((result) => {
-        console.log('dev:startRecordAudio:result:', result);
+        uilog.log('startRecordAudio:result:', result);
       })
       .catch((error) => {
-        console.warn('dev:startRecordAudio:error:', error);
+        uilog.warn('startRecordAudio:error:', error);
         onFailed?.({ reason: 'record voice is failed.', error: error });
         contentTimerRef.current?.stop?.();
         setPlayRipple(false);

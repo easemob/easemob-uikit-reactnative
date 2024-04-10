@@ -20,6 +20,7 @@ import Video, { LoadError } from 'react-native-video';
 
 import { useChatContext } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
+import { uilog } from '../../const';
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
 import { Services } from '../../services';
@@ -299,7 +300,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
   );
 
   const onVideoError = React.useCallback((error: LoadError) => {
-    console.log('dev:video:error: ', error);
+    uilog.warn('dev:video:error: ', error);
   }, []);
 
   const onClickedVideo = React.useCallback(() => {
@@ -358,7 +359,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
               setThumbnailUrl(undefined);
               onGenerateThumbnail(msg);
             } else if (body.fileStatus === ChatDownloadStatus.FAILED) {
-              console.log('dev:download failed');
+              uilog.warn('dev:download failed');
             }
           }
         }

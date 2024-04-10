@@ -7,6 +7,7 @@ import type {
   RecordBackType,
 } from 'react-native-audio-recorder-player';
 
+import { uilog } from '../const';
 import type { Nullable, PartialNullable } from '../types';
 import { generateFileName, getFileExtension, getFileType } from '../utils/file';
 import type {
@@ -43,7 +44,7 @@ export class MediaServiceImplement implements MediaService {
     });
     const docDir = DocumentDir ?? _rootDir;
     this.rootDir = `${docDir}/${rootDirName}`;
-    console.log('dev:rootDir:', this.rootDir);
+    uilog.log('rootDir:', this.rootDir);
     const create = () => {
       this.option.fsModule.FileSystem.exists(this.rootDir)
         .then((result) => {
@@ -52,13 +53,13 @@ export class MediaServiceImplement implements MediaService {
           }
         })
         .catch((error) => {
-          console.warn(error);
+          uilog.warn(error);
         });
     };
     this.option.permission
       .hasMediaLibraryPermission()
       .then((result) => {
-        console.log(result);
+        uilog.log(result);
         if (result === false) {
           this.option.permission
             .requestMediaLibraryPermission()
@@ -66,14 +67,14 @@ export class MediaServiceImplement implements MediaService {
               create();
             })
             .catch((error) => {
-              console.log(error);
+              uilog.log(error);
             });
         } else {
           create();
         }
       })
       .catch((error) => {
-        console.warn(error);
+        uilog.warn(error);
       });
   }
 
@@ -88,7 +89,7 @@ export class MediaServiceImplement implements MediaService {
     } else {
       dir += '/' + subDir;
     }
-    console.log('dev:createDir', dir);
+    uilog.log('createDir', dir);
     return this.option.fsModule.FileSystem.mkdir(dir);
   }
 
@@ -99,7 +100,7 @@ export class MediaServiceImplement implements MediaService {
     } else {
       dir += '/' + subDir;
     }
-    console.log('dev:deleteDir', dir);
+    uilog.log('deleteDir', dir);
     return this.option.fsModule.FileSystem.unlink(dir);
   }
 
@@ -197,7 +198,7 @@ export class MediaServiceImplement implements MediaService {
       options.onFile?.(r);
       return true;
     } catch (error) {
-      console.warn('playAudio:', error);
+      uilog.warn('playAudio:', error);
       return false;
     }
   }
@@ -452,7 +453,7 @@ export class MediaServiceImplement implements MediaService {
       });
       return path;
     } catch (e) {
-      console.warn(e);
+      uilog.warn(e);
       return undefined;
     }
   }

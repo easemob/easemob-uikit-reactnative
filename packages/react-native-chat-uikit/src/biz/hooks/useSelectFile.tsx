@@ -31,7 +31,6 @@ export function selectOnePicture(params: {
         });
       })
       .catch((error) => {
-        console.warn('error:', error);
         params.onError?.(error);
       });
   });
@@ -87,7 +86,6 @@ export function selectOneShortVideo(params: {
         });
       })
       .catch((error) => {
-        console.warn('error:', error);
         params.onError?.(error);
       });
   });
@@ -117,7 +115,6 @@ export function selectCamera(params: {
         });
       })
       .catch((error) => {
-        console.warn('error:', error);
         params.onError?.(error);
       });
   });
@@ -155,7 +152,6 @@ export function selectFile(params: {
         }
       })
       .catch((error) => {
-        console.warn('error:', error);
         params.onError?.(error);
       });
   });

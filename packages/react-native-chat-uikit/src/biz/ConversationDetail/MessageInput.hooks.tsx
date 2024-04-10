@@ -9,6 +9,7 @@ import type { ChatTextMessageBody } from 'react-native-chat-sdk';
 import emoji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
+import { uilog } from '../../const';
 // import { useDispatchContext } from '../../dispatch';
 import { useDelayExecTask, useKeyboardHeight } from '../../hook';
 import type { AlertRef } from '../../ui/Alert';
@@ -440,7 +441,7 @@ export function useMessageInput(
       try {
         e.error = JSON.stringify(error);
       } catch {}
-      console.warn('dev:voice:failed:', e);
+      uilog.warn('dev:voice:failed:', e);
     },
     []
   );

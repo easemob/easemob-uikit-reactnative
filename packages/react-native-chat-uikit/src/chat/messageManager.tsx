@@ -10,6 +10,7 @@ import {
   ChatSearchDirection,
 } from 'react-native-chat-sdk';
 
+import { uilog } from '../const';
 import { ErrorCode, UIKitError } from '../error';
 import { asyncTask, getCurTs } from '../utils';
 import {
@@ -37,7 +38,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   _downloadList: Map<string, { msg: ChatMessage }>;
   _recallTimeout: number;
   constructor(client: ChatService) {
-    console.log('dev:MessageCacheManager:constructor');
+    uilog.log('MessageCacheManager:constructor');
     this._client = client;
     this._userListener = new Map();
     this._sendList = new Map();
@@ -46,7 +47,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   }
   init() {
     this.unInit();
-    console.log('dev:MessageCacheManager:init');
+    uilog.log('MessageCacheManager:init');
     gListener = {
       onMessagesReceived: this.bindOnMessagesReceived.bind(this),
       onMessagesRead: this.bindOnMessagesRead.bind(this),
@@ -59,25 +60,25 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   }
   unInit() {
     this.reset();
-    console.log('dev:MessageCacheManager:unInit');
+    uilog.log('MessageCacheManager:unInit');
     if (gListener) {
       this._client.removeListener(gListener);
       gListener = undefined;
     }
   }
   reset() {
-    console.log('dev:MessageCacheManager:reset');
+    uilog.log('MessageCacheManager:reset');
     this._userListener.clear();
     this._sendList.clear();
     this._downloadList.clear();
   }
 
   addListener(key: string, listener: MessageManagerListener) {
-    console.log('dev:MessageCacheManager:addListener', key);
+    uilog.log('MessageCacheManager:addListener', key);
     this._userListener.set(key, listener);
   }
   removeListener(key: string) {
-    console.log('dev:MessageCacheManager:removeListener');
+    uilog.log('MessageCacheManager:removeListener');
     this._userListener.delete(key);
   }
   emitSendMessageChanged(msg: ChatMessage) {
@@ -368,7 +369,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       },
       onError: (localMsgId, error) => {
         if (error) {
-          console.warn('dev:downloadAttachment:error', error);
+          uilog.warn('downloadAttachment:error', error);
         }
         const isExisted = this._downloadList.get(localMsgId);
         if (isExisted) {
@@ -417,7 +418,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       },
       onError: (localMsgId, error) => {
         if (error) {
-          console.warn('dev:downloadAttachment:error', error);
+          uilog.warn('downloadAttachment:error', error);
         }
         const isExisted = this._downloadList.get(localMsgId);
         if (isExisted) {

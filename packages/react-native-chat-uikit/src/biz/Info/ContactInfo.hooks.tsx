@@ -107,7 +107,7 @@ export function useContactInfo(
             //           if (res.remark) setUserRemark(res.remark);
             //         })
             //         .catch((e) => {
-            //           console.warn('dev:onRequestData:e:', e);
+            //           uilog.warn('dev:onRequestData:e:', e);
             //         });
             //     } else {
             //       if (ret.userName) setUserName(ret.userName);

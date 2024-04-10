@@ -5,6 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ChatContextProvider } from '../chat';
 import { ConfigContextProvider, ConversationDetailType } from '../config';
+import { uilog } from '../const';
 import { DispatchContextProvider } from '../dispatch';
 import { I18nContextProvider } from '../i18n';
 import {
@@ -87,10 +88,10 @@ export function Container(props: ContainerProps) {
   React.useEffect(() => {
     if (Platform.OS === 'ios') {
       const id = DeviceInfo.getBundleId();
-      console.log('dev:getBundleId', id);
+      uilog.log('getBundleId', id);
     } else if (Platform.OS === 'android') {
       const id = DeviceInfo.getBundleId();
-      console.log('dev:getBundleId', id);
+      uilog.log('getBundleId', id);
     }
   }, []);
 

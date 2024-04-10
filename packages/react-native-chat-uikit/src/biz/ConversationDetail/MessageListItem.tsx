@@ -2191,7 +2191,6 @@ export function MessageView(props: MessageViewProps) {
   React.useEffect(() => {
     if (isHightBackground !== undefined) {
       if (isHightBackground === true) {
-        console.log('isHightBackground', isHightBackground);
         Animated.loop(
           Animated.timing(animatedValue, {
             useNativeDriver: false,
