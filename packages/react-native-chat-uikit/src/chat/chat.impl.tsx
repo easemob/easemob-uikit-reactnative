@@ -996,7 +996,6 @@ export class ChatServiceImpl
     try {
       const map = new Map<string, ChatConversation>();
       const isFinished = await this._convStorage?.isFinishedForFetchList();
-      uilog.log('test:zuoyu:getAllConversations:', isFinished);
       if (isFinished === true) {
         const list = await this.client.chatManager.getAllConversations();
         const list2 = await this._convStorage?.getAllConversation();
@@ -1015,10 +1014,6 @@ export class ChatServiceImpl
           const conv = await this.toUIConversation(v);
           this._convList.set(v.convId, conv);
         });
-        uilog.log(
-          'test:zuoyu:getAllConversations:2',
-          Array.from(this._convList.values())
-        );
         await Promise.all(ret);
       } else {
         let cursor = '';
@@ -1034,7 +1029,6 @@ export class ChatServiceImpl
             ...v,
           } as ChatConversation);
         });
-        uilog.log('test:zuoyu:getAllConversations:3', Array.from(map.values()));
         cursor = '';
         for (;;) {
           const list =
@@ -1056,7 +1050,6 @@ export class ChatServiceImpl
             break;
           }
         }
-        uilog.log('test:zuoyu:getAllConversations:4', Array.from(map.values()));
 
         if (map.size > 0) {
           const silentList =
@@ -1087,10 +1080,6 @@ export class ChatServiceImpl
             );
           }
         }
-        uilog.log(
-          'test:zuoyu:getAllConversations:5',
-          Array.from(this._silentModeList.values())
-        );
 
         await this._convStorage?.setFinishedForFetchList(true);
 

@@ -40,6 +40,7 @@ import {
 } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { useConfigContext } from '../../config';
+// import { uilog } from '../../const';
 import { useDispatchContext } from '../../dispatch';
 import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -264,12 +265,7 @@ export function useMessageList(
     }): ChatMessage => {
       const { convId, convType, event } = params;
       const tipMsg = ChatMessage.createCustomMessage(convId, event, convType, {
-        params: {
-          create_group: JSON.stringify({
-            text: '_uikit_msg_tip_create_group_success_with_params',
-            self: im.userId,
-          }),
-        },
+        params: {},
         isChatThread: comType === 'thread',
       });
       const s = im.user(im.userId);
@@ -2136,9 +2132,11 @@ export function useMessageList(
 
       onFinished?: (item: MessageListItemProps) => void;
       onBeforeCallback?: () => void | Promise<void>;
+      forceVisible?: boolean;
     }) => {
-      const { value, onFinished, onBeforeCallback } = params;
+      const { value, onFinished, onBeforeCallback, forceVisible } = params;
       let isShow = canAddNewMessageToUI();
+      isShow = forceVisible ?? isShow;
       if (comType === 'chat' || comType === 'search') {
         if (isShow === false) {
           isShow = true;
@@ -2217,21 +2215,21 @@ export function useMessageList(
               if (inverted === false) {
                 setIsBottom(true);
               }
-              addSendMessageToUI({
-                value: {
-                  type: 'system',
-                  msg: createMessageTip({
-                    convId: convId,
-                    convType: convType,
-                    event: gCustomMessageCreateThreadTip,
-                  }),
-                },
-                onFinished: (item) => {
-                  im.insertMessage({
-                    message: (item.model as MessageModel).msg,
-                  });
-                },
-              });
+              // addSendMessageToUI({
+              //   value: {
+              //     type: 'system',
+              //     msg: createMessageTip({
+              //       convId: convId,
+              //       convType: convType,
+              //       event: gCustomMessageCreateThreadTip,
+              //     }),
+              //   },
+              //   onFinished: (item) => {
+              //     im.insertMessage({
+              //       message: (item.model as MessageModel).msg,
+              //     });
+              //   },
+              // });
               addSendMessageToUI({
                 value: firstMessage,
                 onFinished: (item) => {
@@ -2242,6 +2240,19 @@ export function useMessageList(
                 },
               });
             }
+          }
+          if (dataRef.current.length === 1) {
+            addSendMessageToUI({
+              value: {
+                type: 'system',
+                msg: createMessageTip({
+                  convId: convId,
+                  convType: convType,
+                  event: gCustomMessageCreateThreadTip,
+                }),
+              },
+              forceVisible: true,
+            });
           }
           if (msgs.length > 0) {
             const newStartMsgId = msgs[msgs.length - 1]!.msgId;
