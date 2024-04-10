@@ -12,6 +12,7 @@ import {
 import {
   ChatOptionsType,
   ChatServiceListener,
+  createDefaultStringSet,
   DataModel,
   DataModelType,
   DisconnectReasonType,
@@ -21,6 +22,7 @@ import {
   getChatService,
   getReleaseArea,
   LanguageCode,
+  StringSet,
   UIGroupListListener,
   UIKitError,
   UIListenerType,
@@ -31,6 +33,7 @@ import {
   usePresetPalette,
 } from 'react-native-chat-uikit';
 
+import { createStringSetCn, createStringSetEn } from '../common';
 import { boloo_da_ttf, twemoji_ttf } from '../common/assets';
 import {
   appKey as gAppKey,
@@ -482,6 +485,25 @@ export function useApp() {
     [im]
   );
 
+  const onInitLanguageSet = React.useCallback(() => {
+    const ret = (language: LanguageCode, _defaultSet: StringSet): StringSet => {
+      const d = createDefaultStringSet(language);
+      if (language === 'zh-Hans') {
+        return {
+          ...d,
+          ...createStringSetCn(),
+        };
+      } else if (language === 'en') {
+        return {
+          ...d,
+          ...createStringSetEn(),
+        };
+      }
+      return d;
+    };
+    return ret;
+  }, []);
+
   React.useEffect(() => {
     const uiListener: UIGroupListListener = {
       onUpdatedEvent: (_data) => {
@@ -741,5 +763,6 @@ export function useApp() {
     requestUserMap,
     requestCurrentUser,
     requestUserInfo,
+    onInitLanguageSet,
   };
 }

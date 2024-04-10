@@ -6,18 +6,15 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
-import { GlobalContainer as CallkitContainer } from 'react-native-chat-callkit';
+import { GlobalContainer as CallKitContainer } from 'react-native-chat-callkit';
 import {
   ChatService,
   ChatServiceListener,
-  Container,
-  createDefaultStringSet,
-  LanguageCode,
-  StringSet,
+  Container as UIKitContainer,
   useChatListener,
 } from 'react-native-chat-uikit';
 
-import { createStringSetCn, createStringSetEn, ToastView } from './common';
+import { ToastView } from './common';
 import { AVView } from './common/AVView';
 import {
   accountType,
@@ -124,6 +121,7 @@ export function App() {
     requestUserMap,
     requestCurrentUser,
     requestUserInfo,
+    onInitLanguageSet,
   } = useApp();
 
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
@@ -278,7 +276,7 @@ export function App() {
 
   return (
     <React.StrictMode>
-      <Container
+      <UIKitContainer
         options={getOptions()}
         palette={paletteRef.current}
         theme={isLightRef.current ? light : dark}
@@ -296,33 +294,13 @@ export function App() {
         headerFontFamily={boloo_da_ttf_name}
         // languageExtensionFactory={languageExtensionFactory}
         onInitialized={onContainerInitialized}
-        onInitLanguageSet={() => {
-          const ret = (
-            language: LanguageCode,
-            _defaultSet: StringSet
-          ): StringSet => {
-            const d = createDefaultStringSet(language);
-            if (language === 'zh-Hans') {
-              return {
-                ...d,
-                ...createStringSetCn(),
-              };
-            } else if (language === 'en') {
-              return {
-                ...d,
-                ...createStringSetEn(),
-              };
-            }
-            return d;
-          };
-          return ret;
-        }}
+        onInitLanguageSet={onInitLanguageSet}
         onRequestMultiData={onRequestMultiData}
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}
       >
-        <CallkitContainer
+        <CallKitContainer
           option={{
             appKey: gAppKey,
             agoraAppId: agoraAppId,
@@ -699,11 +677,11 @@ export function App() {
           </NavigationContainer>
 
           <AVView />
-        </CallkitContainer>
+        </CallKitContainer>
 
         <TestListener />
         <ToastView />
-      </Container>
+      </UIKitContainer>
     </React.StrictMode>
   );
 }

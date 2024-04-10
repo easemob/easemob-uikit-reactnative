@@ -996,6 +996,7 @@ export class ChatServiceImpl
     try {
       const map = new Map<string, ChatConversation>();
       const isFinished = await this._convStorage?.isFinishedForFetchList();
+      uilog.log('test:zuoyu:getAllConversations:', isFinished);
       if (isFinished === true) {
         const list = await this.client.chatManager.getAllConversations();
         const list2 = await this._convStorage?.getAllConversation();
@@ -1014,6 +1015,10 @@ export class ChatServiceImpl
           const conv = await this.toUIConversation(v);
           this._convList.set(v.convId, conv);
         });
+        uilog.log(
+          'test:zuoyu:getAllConversations:2',
+          Array.from(this._convList.values())
+        );
         await Promise.all(ret);
       } else {
         let cursor = '';
@@ -1029,6 +1034,7 @@ export class ChatServiceImpl
             ...v,
           } as ChatConversation);
         });
+        uilog.log('test:zuoyu:getAllConversations:3', Array.from(map.values()));
         cursor = '';
         for (;;) {
           const list =
@@ -1050,6 +1056,7 @@ export class ChatServiceImpl
             break;
           }
         }
+        uilog.log('test:zuoyu:getAllConversations:4', Array.from(map.values()));
 
         if (map.size > 0) {
           const silentList =
@@ -1080,6 +1087,10 @@ export class ChatServiceImpl
             );
           }
         }
+        uilog.log(
+          'test:zuoyu:getAllConversations:5',
+          Array.from(this._silentModeList.values())
+        );
 
         await this._convStorage?.setFinishedForFetchList(true);
 
@@ -1114,7 +1125,7 @@ export class ChatServiceImpl
     fromNative?: boolean;
     isChatThread?: boolean;
   }): Promise<ConversationModel | undefined> {
-    const { fromNative = false } = params;
+    const { fromNative = false, createIfNotExist } = params;
     if (fromNative === true) {
       const ret = await this.tryCatchSync({
         promise: this.client.chatManager.getConversation(
@@ -1147,8 +1158,22 @@ export class ChatServiceImpl
         return c1;
       }
     } else {
-      const conv = this._convList.get(params.convId);
-      return conv;
+      if (createIfNotExist === true) {
+        const isExisted = this._convList.get(params.convId);
+        if (isExisted) {
+          return isExisted;
+        } else {
+          const conv = {
+            convId: params.convId,
+            convType: params.convType,
+          } as ConversationModel;
+          this._convList.set(conv.convId, conv);
+          return conv;
+        }
+      } else {
+        const conv = this._convList.get(params.convId);
+        return conv;
+      }
     }
     return undefined;
   }
