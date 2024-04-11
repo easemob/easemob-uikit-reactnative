@@ -1537,11 +1537,22 @@ export class ChatServiceImpl
       ),
       event: 'addNewContact',
       onFinished: async () => {
-        await this._requestData([params.userId]);
-        const contact = this._contactList.get(params.userId);
-        this.sendUIEvent(UIListenerType.Contact, 'onAddedEvent', contact);
+        // await this._requestData([params.userId]);
+        // const c = {
+        //   userId: params.userId,
+        //   userName: this._getNameFromCache(params.userId),
+        //   userAvatar: this._getAvatarFromCache(params.userId),
+        // } as ContactModel;
+        // this._contactList.set(params.userId, c);
+        // this.sendUIEvent(UIListenerType.Contact, 'onAddedEvent', c);
         params.onResult?.({
           isOk: true,
+        });
+      },
+      onError: (e) => {
+        params.onResult?.({
+          isOk: false,
+          error: e,
         });
       },
     });
