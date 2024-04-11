@@ -91,7 +91,7 @@ export function App() {
   const permissionsRef = React.useRef(false);
   const { getPermission } = usePermissions();
 
-  const { onRequestMultiData } = useApp();
+  const {} = useApp();
 
   const options = React.useMemo(() => {
     return {
@@ -245,7 +245,7 @@ export function App() {
           };
           return ret;
         }}
-        onRequestMultiData={onRequestMultiData}
+        // onRequestMultiData={onRequestMultiData}
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}

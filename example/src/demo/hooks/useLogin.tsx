@@ -25,7 +25,7 @@ export function useLogin() {
       pass: string,
       onResult: (result: RequestResult<RequestLoginResult, any>) => void
     ) => {
-      RestApi.reqLogin({ phone: id, code: pass }).then((res) => {
+      RestApi.requestLogin({ phone: id, code: pass }).then((res) => {
         onResult(res);
       });
     },
@@ -95,7 +95,7 @@ export function useLogin() {
       const { id, pass, onResult } = params;
       try {
         do {
-          const res = await RestApi.reqLogin({ phone: id, code: pass });
+          const res = await RestApi.requestLogin({ phone: id, code: pass });
           if (res.isOk && res.value && res.value.code === 200) {
             saveSelfInfo(res.value);
             const p = new Promise<{ isOk: boolean; error?: UIKitError }>(

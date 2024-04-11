@@ -59,13 +59,14 @@ export function Container(props: ContainerProps) {
     formatTime,
     recallTimeout,
     onInitLanguageSet,
-    onRequestMultiData,
     onChangeStatus,
     enablePresence = false,
     enableReaction = false,
     enableThread = false,
     enableAVMeeting = true,
     releaseArea,
+    onGroupsProvider,
+    onUsersProvider,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -108,8 +109,9 @@ export function Container(props: ContainerProps) {
             <ChatContextProvider
               value={{
                 options: options,
-                onRequestMultiData: onRequestMultiData,
                 onInitialized: onInitialized,
+                onUsersProvider: onUsersProvider,
+                onGroupsProvider: onGroupsProvider,
               }}
             >
               <ConfigContextProvider

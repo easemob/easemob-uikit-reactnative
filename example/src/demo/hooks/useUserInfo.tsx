@@ -68,7 +68,7 @@ export function useUserInfo() {
   }, []);
 
   return {
-    list,
+    users: list,
     getDataFromStorage,
     updateDataToStorage,
     updateDataFromServer,

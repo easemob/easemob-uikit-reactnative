@@ -49,7 +49,6 @@ export function useContactList(props: ContactListProps) {
     onClickedItem,
     onLongPressedItem,
     testMode,
-    // onRequestMultiData,
     onSort: propsOnSort,
     onClickedNewContact: propsOnClickedNewContact,
     onCreateGroupResultValue,
@@ -417,7 +416,6 @@ export function useContactList(props: ContactListProps) {
       onFinished?: () => void;
     }) => {
       const { isClearState, onFinished, requestServer } = params;
-      // im.setOnRequestData(onRequestMultiData);
       if (testMode === 'only-ui') {
         const names = [
           'James',

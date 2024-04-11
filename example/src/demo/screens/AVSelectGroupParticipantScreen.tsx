@@ -39,52 +39,20 @@ export function AVSelectGroupParticipantScreen(props: Props) {
           navigation.goBack();
         }}
         onSelectResult={(data) => {
-          if (from === 'GroupInfo') {
-            navigation.navigate({
-              name: 'GroupInfo',
+          navigation.navigate({
+            name: from,
+            params: {
               params: {
-                params: {
-                  convId: groupId,
-                  ownerId: ownerId,
-                  convType: 1,
-                  selectedMembers: data,
-                  from: 'AVSelectGroupParticipant',
-                  hash: Date.now(),
-                },
+                convId: groupId,
+                ownerId: ownerId,
+                convType: 1,
+                selectedMembers: data,
+                from: 'AVSelectGroupParticipant',
+                hash: Date.now(),
               },
-              merge: true,
-            });
-          } else if (from === 'ConversationDetail') {
-            navigation.navigate({
-              name: 'ConversationDetail',
-              params: {
-                params: {
-                  convId: groupId,
-                  ownerId: ownerId,
-                  convType: 1,
-                  selectedMembers: data,
-                  from: 'AVSelectGroupParticipant',
-                  hash: Date.now(),
-                },
-              },
-              merge: true,
-            });
-          } else if (from === 'MessageHistory') {
-            navigation.navigate({
-              name: 'MessageHistory',
-              params: {
-                params: {
-                  convId: groupId,
-                  ownerId: ownerId,
-                  convType: 1,
-                  selectedMembers: data,
-                  from: 'AVSelectGroupParticipant',
-                  hash: Date.now(),
-                },
-              },
-              merge: true,
-            });
-          }
+            },
+            merge: true,
+          });
         }}
       />
     </SafeAreaView>

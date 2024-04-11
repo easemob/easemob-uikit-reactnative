@@ -57,7 +57,7 @@ export function CreateGroupScreen(props: Props) {
               },
             });
             const groupId = result.value?.groupId;
-            RestApi.reqGetGroupAvatar({ groupId: groupId })
+            RestApi.requestGroupAvatar({ groupId: groupId })
               .then(async (res) => {
                 if (res.isOk && res.value) {
                   im.updateRequestData({
@@ -76,7 +76,7 @@ export function CreateGroupScreen(props: Props) {
                 }
               })
               .catch((e) => {
-                console.warn('reqGetGroupAvatar:', e);
+                console.warn('requestGroupAvatar:', e);
               });
           } else {
             navigation.goBack();

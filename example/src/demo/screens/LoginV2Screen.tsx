@@ -116,7 +116,7 @@ export function LoginV2Screen(props: Props) {
     }
     setCaptchaState('sending');
     setSecond(60);
-    RestApi.reqSmsCode({ phone: id });
+    RestApi.requestSmsCode({ phone: id });
     const interval = setInterval(() => {
       setSecond((prev) => {
         if (prev <= 0) {

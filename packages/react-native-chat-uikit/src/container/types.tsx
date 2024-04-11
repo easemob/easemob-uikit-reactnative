@@ -1,10 +1,5 @@
 import type { StatusType } from '../biz/types';
-import type {
-  ChatOptionsType,
-  ChatService,
-  DataModel,
-  DataModelType,
-} from '../chat';
+import type { ChatOptionsType, ChatService, DataModel } from '../chat';
 import type { ConversationDetailType } from '../config';
 import type { UIKitError } from '../error';
 import type { CreateStringSet, LanguageCode, StringSet } from '../i18n';
@@ -201,12 +196,34 @@ export type ContainerProps = React.PropsWithChildren<{
    * }}
    * ```
    */
-  onRequestMultiData?: (params: {
-    ids: Map<DataModelType, string[]>;
-    result: (
-      data?: Map<DataModelType, DataModel[]>,
-      error?: UIKitError
-    ) => void;
+  // onRequestMultiData?: (params: {
+  //   ids: Map<DataModelType, string[]>;
+  //   result: (
+  //     data?: Map<DataModelType, DataModel[]>,
+  //     error?: UIKitError
+  //   ) => void;
+  // }) => void | Promise<void>;
+
+  /**
+   * @description Registered user information callback. The avatar and nickname of the contact, group member and group are obtained through the callback of this registration. If not provided, the default value will be used.
+   * @params params
+   * - id: The id of the item.
+   * - result: The callback function of the result.
+   */
+  onUsersProvider?: (params: {
+    ids: string[];
+    result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
+  }) => void | Promise<void>;
+
+  /**
+   * @description Registered group information callback. The avatar and nickname of the contact, group member and group are obtained through the callback of this registration. If not provided, the default value will be used.
+   * @params params
+   * - id: The id of the item.
+   * - result: The callback function of the result.
+   */
+  onGroupsProvider?: (params: {
+    ids: string[];
+    result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
   }) => void | Promise<void>;
 
   /**

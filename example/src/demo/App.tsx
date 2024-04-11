@@ -80,7 +80,7 @@ import {
   TopMenuScreen,
   VideoMessagePreviewScreen,
 } from './screens';
-import { defaultAvatars, formatNavigationState } from './utils/utils';
+import { formatNavigationState } from './utils/utils';
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
@@ -89,7 +89,6 @@ const Root = createNativeStackNavigator<RootParamsList>();
 export function App() {
   console.log('test:dev:App:', demoType);
   const {
-    onRequestMultiData,
     initialRouteName,
     paletteRef,
     dark,
@@ -122,6 +121,8 @@ export function App() {
     requestCurrentUser,
     requestUserInfo,
     onInitLanguageSet,
+    onUsersProvider,
+    onGroupsProvider,
   } = useApp();
 
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
@@ -287,15 +288,16 @@ export function App() {
         enableThread={enableThreadRef.current}
         enableTranslate={enableTranslateRef.current}
         enableAVMeeting={enableAVMeetingRef.current}
-        avatar={{
-          personAvatar: defaultAvatars[2],
-          groupAvatar: defaultAvatars[0],
-        }}
+        // avatar={{
+        //   personAvatar: defaultAvatars[2],
+        //   groupAvatar: defaultAvatars[0],
+        // }}
         headerFontFamily={boloo_da_ttf_name}
         // languageExtensionFactory={languageExtensionFactory}
         onInitialized={onContainerInitialized}
         onInitLanguageSet={onInitLanguageSet}
-        onRequestMultiData={onRequestMultiData}
+        onUsersProvider={onUsersProvider}
+        onGroupsProvider={onGroupsProvider}
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}

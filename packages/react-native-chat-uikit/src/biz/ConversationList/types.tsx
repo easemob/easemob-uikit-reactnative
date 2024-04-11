@@ -8,7 +8,6 @@ import type {
   ListItemActions,
   ListItemProps,
   ListItemRequestProps,
-  ListRequestProps,
   ListStateType,
   PropsWithBack,
   PropsWithCancel,
@@ -48,7 +47,7 @@ export type ConversationListRef = Omit<
    */
   addItem: (items: ConversationModel) => void;
   /**
-   * Supported updated content includes: `unreadMessageCount`, `doNotDisturb`, `ext`. `convName` and `convAvatar` are updated via `onRequestMultiData`. Other fields do not support updating. `unreadMessageCount` can be set to 0 and other values are invalid. If you need to customize it, you can save custom data in the ext field and redefine the `ListItemRender` component to achieve a closed loop process.
+   * Supported updated content includes: `unreadMessageCount`, `doNotDisturb`, `ext`. `convName` and `convAvatar` are updated via `onUsersProvider` or `onGroupsProvider`. Other fields do not support updating. `unreadMessageCount` can be set to 0 and other values are invalid. If you need to customize it, you can save custom data in the ext field and redefine the `ListItemRender` component to achieve a closed loop process.
    *
    * If the operation fails, an error is returned through `ErrorServiceListener.onError`.
    */
@@ -77,11 +76,7 @@ export type ConversationListRef = Omit<
 /**
  * Conversation list component properties.
  */
-export type ConversationListProps = Pick<
-  ListRequestProps<DataModel>,
-  'onRequestMultiData'
-> &
-  PropsWithTest &
+export type ConversationListProps = PropsWithTest &
   PropsWithInit &
   PropsWithBack &
   PropsWithSearch &

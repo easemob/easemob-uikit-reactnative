@@ -1258,6 +1258,36 @@ export interface ChatService
   ): void;
 
   /**
+   * Register UIKit to obtain callback notifications for user information. When the session list component, contact component, etc. are loaded, a callback will be initiated to obtain user information. After the user information is completed, if you want to update it, please use `updateRequestData`.
+   */
+  setOnUsersProvider(
+    callback?:
+      | ((params: {
+          ids: string[];
+          result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
+        }) => void)
+      | ((params: {
+          ids: string[];
+          result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
+        }) => Promise<void>)
+  ): void;
+
+  /**
+   * Register UIKit to obtain callback notifications for group information. When the session list component, contact component, etc. are loaded, a callback will be initiated to obtain group information. After the group information is completed, if you want to update it, please use `updateRequestData`.
+   */
+  setOnGroupsProvider(
+    callback?:
+      | ((params: {
+          ids: string[];
+          result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
+        }) => void)
+      | ((params: {
+          ids: string[];
+          result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
+        }) => Promise<void>)
+  ): void;
+
+  /**
    * Actively update user information and take effect in subsequent loaded components.
    */
   updateRequestData(params: { data: Map<DataModelType, DataModel[]> }): void;
@@ -1310,12 +1340,34 @@ export type ChatServiceInit = {
    * - result: The callback function of the result.
    *
    */
-  onRequestMultiData?: (params: {
-    ids: Map<DataModelType, string[]>;
-    result: (
-      data?: Map<DataModelType, DataModel[]>,
-      error?: UIKitError
-    ) => void;
+  // onRequestMultiData?: (params: {
+  //   ids: Map<DataModelType, string[]>;
+  //   result: (
+  //     data?: Map<DataModelType, DataModel[]>,
+  //     error?: UIKitError
+  //   ) => void;
+  // }) => void | Promise<void>;
+
+  /**
+   * @description Registered user information callback. The avatar and nickname of the contact, group member and group are obtained through the callback of this registration. If not provided, the default value will be used.
+   * @params params
+   * - id: The id of the item.
+   * - result: The callback function of the result.
+   */
+  onUsersProvider?: (params: {
+    ids: string[];
+    result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
+  }) => void | Promise<void>;
+
+  /**
+   * @description Registered group information callback. The avatar and nickname of the contact, group member and group are obtained through the callback of this registration. If not provided, the default value will be used.
+   * @params params
+   * - id: The id of the item.
+   * - result: The callback function of the result.
+   */
+  onGroupsProvider?: (params: {
+    ids: string[];
+    result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
   }) => void | Promise<void>;
   /**
    * IM initialization is completed callback notification.

@@ -10,10 +10,7 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { generateRandomChineseNames } from '../common/names';
 import type { RootScreenParamsList } from '../routes';
-
-export const names = generateRandomChineseNames(10);
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ContactListScreen(props: Props) {

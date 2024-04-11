@@ -30,7 +30,9 @@ export function Avatar(props: AvatarProps) {
   return (
     <DefaultIconImage
       localIcon={
-        localIcon ?? personAvatar ?? ICON_ASSETS.person_single_outline('3x')
+        localIcon ??
+        personAvatar ??
+        ICON_ASSETS.singleavatars_fill_onlight('3x')
       }
       size={size}
       style={[
@@ -61,7 +63,9 @@ export function GroupAvatar(props: AvatarProps) {
   return (
     <Avatar
       {...others}
-      localIcon={localIcon ?? groupAvatar ?? ICON_ASSETS.person_double('3x')}
+      localIcon={
+        localIcon ?? groupAvatar ?? ICON_ASSETS.groupavatar_fill_onlight('3x')
+      }
     />
   );
 }

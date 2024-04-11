@@ -41,7 +41,6 @@ export function useConversationList(props: ConversationListProps) {
     onClickedItem,
     onLongPressedItem,
     testMode,
-    // onRequestMultiData,
     onSort: propsOnSort,
     onClickedNewContact,
     onClickedNewConversation,
@@ -245,7 +244,6 @@ export function useConversationList(props: ConversationListProps) {
         refreshToUI(testList);
         return;
       }
-      // im.setOnRequestData(onRequestMultiData);
       if (isAutoLoad === true) {
         if (im.userId) {
           setUserId(im.userId);

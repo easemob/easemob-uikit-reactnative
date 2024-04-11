@@ -856,6 +856,42 @@ export const ICON_ASSETS = {
       return require('./icons/globe_atlantic_2x.png');
     }
   },
+  'groupavatar_fill_ondark': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/groupavatar_fill_ondark_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/groupavatar_fill_ondark_2x.png');
+    } else {
+      return require('./icons/groupavatar_fill_ondark.png');
+    }
+  },
+  'groupavatar_fill_onlight': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/groupavatar_fill_onlight_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/groupavatar_fill_onlight_2x.png');
+    } else {
+      return require('./icons/groupavatar_fill_onlight.png');
+    }
+  },
+  'groupavatar_ondark': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/groupavatar_ondark_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/groupavatar_ondark_2x.png');
+    } else {
+      return require('./icons/groupavatar_ondark.png');
+    }
+  },
+  'groupavatar_onlight': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/groupavatar_onlight_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/groupavatar_onlight_2x.png');
+    } else {
+      return require('./icons/groupavatar_onlight.png');
+    }
+  },
   'hamburger': (size: string) => {
     if (size === '3x') {
       return require('./icons/hamburger_3x.png');
@@ -1511,6 +1547,42 @@ export const ICON_ASSETS = {
       return require('./icons/sight_3x.png');
     } else {
       return require('./icons/sight_2x.png');
+    }
+  },
+  'singleavatars_fill_ondark': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/singleavatars_fill_ondark_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/singleavatars_fill_ondark_2x.png');
+    } else {
+      return require('./icons/singleavatars_fill_ondark.png');
+    }
+  },
+  'singleavatars_fill_onlight': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/singleavatars_fill_onlight_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/singleavatars_fill_onlight_2x.png');
+    } else {
+      return require('./icons/singleavatars_fill_onlight.png');
+    }
+  },
+  'singleavatars_ondark': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/singleavatars_ondark_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/singleavatars_ondark_2x.png');
+    } else {
+      return require('./icons/singleavatars_ondark.png');
+    }
+  },
+  'singleavatars_onlight': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/singleavatars_onlight_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/singleavatars_onlight_2x.png');
+    } else {
+      return require('./icons/singleavatars_onlight.png');
     }
   },
   'slash_in_circle_fill': (size: string) => {

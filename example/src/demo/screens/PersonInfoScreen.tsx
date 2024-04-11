@@ -74,7 +74,7 @@ export function PersonInfoScreen(props: Props) {
   const updateAvatar = async (path: string, filetype?: string) => {
     const user = im.user(im.userId);
     if (user) {
-      const ret = await RestApi.reqUploadAvatar({
+      const ret = await RestApi.requestUploadAvatar({
         userId: user.userId,
         localAvatarFile: path,
         fileType: filetype,
@@ -105,46 +105,6 @@ export function PersonInfoScreen(props: Props) {
       updateAvatar(image.path, image.mime);
     });
   };
-  // const onClickedAvatar = () => {
-  //   timeoutTask(100, async () => {
-  //     const ret = await Services.ps.requestMediaLibraryPermission();
-  //     if (ret === false) {
-  //       return;
-  //     }
-  //     Services.ms
-  //       .openMediaLibrary({ selectionLimit: 1, mediaType: 'photo' })
-  //       .then((result) => {
-  //         if (result === undefined || result === null || result.length === 0) {
-  //           return;
-  //         }
-
-  //         let width = result[0]!.width ?? 100;
-  //         let height = result[0]!.height ?? 100;
-
-  //         const w = Math.min(512, Math.min(width, height));
-  //         const h = Math.min(512, Math.min(width, height));
-
-  //         const x = width >= height ? -(height - width) / 2 : 0;
-  //         const y = height >= width ? -(width - height) / 2 : 0;
-  //         console.log('test:zuoyu:x:y:', x, y);
-
-  //         ImageEditor.cropImage(result[0]!.uri, {
-  //           offset: { x: x, y: y },
-  //           size: { width: w, height: h },
-  //           resizeMode: 'cover',
-  //         })
-  //           .then(async (res) => {
-  //             updateAvatar(res.path);
-  //           })
-  //           .catch((e) => {
-  //             console.warn('test:zuoyu:cropImage:error', e);
-  //           });
-  //       })
-  //       .catch((error) => {
-  //         console.warn('error:', error);
-  //       });
-  //   });
-  // };
 
   const onClickedRemark = () => {
     navigation.push('EditInfo', {

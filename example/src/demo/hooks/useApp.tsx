@@ -102,7 +102,7 @@ export function useApp() {
     getDataFromStorage,
     updateDataFromServer,
     updateDataToStorage,
-    list,
+    users,
   } = useUserInfo();
 
   const { updater } = useForceUpdate();
@@ -140,7 +140,7 @@ export function useApp() {
       const userIds = params.ids.get('user') ?? [];
       const noExistedIds = [] as string[];
       userIds.forEach((id) => {
-        const isExisted = list.current.get(id);
+        const isExisted = users.current.get(id);
         if (
           isExisted &&
           isExisted.avatarURL &&
@@ -154,7 +154,7 @@ export function useApp() {
       if (noExistedIds.length === 0) {
         const finalUsers = userIds
           .map<DataModel | undefined>((id) => {
-            const ret = list.current.get(id);
+            const ret = users.current.get(id);
             if (ret) {
               return {
                 id: ret.userId,
@@ -177,11 +177,11 @@ export function useApp() {
           userIds: userIds,
           onResult: (res) => {
             if (res.isOk && res.value) {
-              const users = res.value;
-              updateDataFromServer(users);
+              const u = res.value;
+              updateDataFromServer(u);
               const finalUsers = userIds
                 .map<DataModel | undefined>((id) => {
-                  const ret = list.current.get(id);
+                  const ret = users.current.get(id);
                   if (ret) {
                     return {
                       id: ret.userId,
@@ -271,7 +271,87 @@ export function useApp() {
       //   ])
       // );
     },
-    [im, list, updateDataFromServer, updateDataToStorage]
+    [im, users, updateDataFromServer, updateDataToStorage]
+  );
+
+  const onUsersProvider = React.useCallback(
+    (params: {
+      ids: string[];
+      result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
+    }) => {
+      console.log('test:zuoyu:getUsersInfo:3', params.ids);
+      const userIds = params.ids;
+      const noExistedIds = [] as string[];
+      userIds.forEach((id) => {
+        const isExisted = users.current.get(id);
+        if (
+          isExisted &&
+          isExisted.avatarURL &&
+          isExisted.avatarURL.length > 0 &&
+          isExisted.userName &&
+          isExisted.userName.length > 0
+        )
+          return;
+        noExistedIds.push(id);
+      });
+      console.log('test:zuoyu:getUsersInfo:2', noExistedIds);
+      if (noExistedIds.length === 0) {
+        const finalUsers = userIds
+          .map<DataModel | undefined>((id) => {
+            const ret = users.current.get(id);
+            if (ret) {
+              return {
+                id: ret.userId,
+                name: ret.userName,
+                avatar: ret.avatarURL,
+                type: 'user',
+              } as DataModel;
+            }
+            return undefined;
+          })
+          .filter((item) => item !== undefined) as DataModel[];
+        params?.result({ data: finalUsers ?? [] });
+      } else {
+        im.getUsersInfo({
+          userIds: userIds,
+          onResult: (res) => {
+            if (res.isOk && res.value) {
+              const u = res.value;
+              updateDataFromServer(u);
+              const finalUsers = userIds
+                .map<DataModel | undefined>((id) => {
+                  const ret = users.current.get(id);
+                  if (ret) {
+                    return {
+                      id: ret.userId,
+                      name: ret.userName,
+                      avatar: ret.avatarURL,
+                      type: 'user',
+                    } as DataModel;
+                  }
+                  return undefined;
+                })
+                .filter((item) => item !== undefined) as DataModel[];
+              console.log('test:zuoyu:getUsersInfo:', finalUsers);
+              params?.result({ data: finalUsers ?? [] });
+              updateDataToStorage();
+            } else {
+              params?.result({ error: res.error });
+            }
+          },
+        });
+      }
+    },
+    [im, users, updateDataFromServer, updateDataToStorage]
+  );
+  const onGroupsProvider = React.useCallback(
+    (params: {
+      ids: string[];
+      result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
+    }) => {
+      params.result({ data: [] });
+    },
+    []
   );
 
   const initPush = React.useCallback(async () => {
@@ -375,7 +455,7 @@ export function useApp() {
       onResult: (params: { data?: any; error?: any }) => void;
     }) => {
       console.log('dev:requestRTCToken:', params);
-      RestApi.reqGetRtcToken({
+      RestApi.requestRtcToken({
         userId: params.userId,
         channelId: params.channelId,
       })
@@ -389,7 +469,7 @@ export function useApp() {
           });
         })
         .catch((e) => {
-          console.warn('dev:reqGetRtcToken:error:', e);
+          console.warn('dev:requestRtcToken:error:', e);
         });
     },
     []
@@ -403,7 +483,7 @@ export function useApp() {
       onResult: (params: { data?: any; error?: any }) => void;
     }) => {
       console.log('dev:requestUserMap:', params);
-      RestApi.reqGetRtcMap({
+      RestApi.requestRtcMap({
         channelId: params.channelId,
       })
         .then((res) => {
@@ -415,7 +495,7 @@ export function useApp() {
           });
         })
         .catch((e) => {
-          console.warn('dev:reqGetRtcToken:error:', e);
+          console.warn('dev:requestRtcToken:error:', e);
         });
     },
     []
@@ -710,23 +790,6 @@ export function useApp() {
     };
   }, [dark, light, updatePush, updater]);
 
-  // React.useEffect(() => {
-  //   im.getJoinedGroups({
-  //     onResult: (result) => {
-  //       if (result.isOk) {
-  //         result.value?.forEach((group) => {
-  //           list.current.set(group.groupId, {
-  //             id: group.groupId,
-  //             name: group.groupName,
-  //             avatar: group.groupAvatar,
-  //             type: 'group',
-  //           });
-  //         });
-  //       }
-  //     },
-  //   });
-  // }, [im]);
-
   return {
     onRequestMultiData,
     im,
@@ -764,5 +827,7 @@ export function useApp() {
     requestCurrentUser,
     requestUserInfo,
     onInitLanguageSet,
+    onUsersProvider,
+    onGroupsProvider,
   };
 }

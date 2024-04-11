@@ -314,10 +314,12 @@ function HomeTabConversationListScreen(
         if (r.value) {
           const groups: DataModel[] = [];
           r.value.forEach((conv) => {
+            const isExisted = conv.options?.ext;
             groups.push({
               id: conv.groupId,
               type: 'group',
               name: conv.groupName,
+              avatar: isExisted,
             });
           });
           im.updateRequestData({

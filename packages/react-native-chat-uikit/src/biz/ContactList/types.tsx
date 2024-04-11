@@ -144,11 +144,7 @@ export type ContactListNavigationBarProps = PropsWithNavigationBar &
 /**
  * Contact list component properties.
  */
-export type ContactListProps = Pick<
-  ListRequestProps<DataModel>,
-  'onRequestMultiData'
-> &
-  PropsWithTest &
+export type ContactListProps = PropsWithTest &
   PropsWithInit &
   PropsWithBack &
   PropsWithSearch &

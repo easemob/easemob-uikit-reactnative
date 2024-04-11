@@ -94,7 +94,7 @@ export class RestApi {
   /**
    * Request a SMS code.
    */
-  public static async reqSmsCode(params: { phone: string }): Promise<any> {
+  public static async requestSmsCode(params: { phone: string }): Promise<any> {
     const { phone } = params;
     const url = this.getBasicUrl() + `/sms/send/${phone}`;
     try {
@@ -105,16 +105,16 @@ export class RestApi {
           'Content-Type': 'application/json',
         },
       });
-      console.log('RestApi:reqSmsCode:', url, params);
+      console.log('RestApi:requestSmsCode:', url, params);
     } catch (error) {
-      console.warn('RestApi:reqSmsCode:error:', error);
+      console.warn('RestApi:requestSmsCode:error:', error);
     }
   }
 
   /**
    * Request login.
    */
-  public static async reqLogin(params: {
+  public static async requestLogin(params: {
     phone: string;
     code: string;
   }): Promise<RequestResult<RequestLoginResult>> {
@@ -130,10 +130,10 @@ export class RestApi {
         body: JSON.stringify({ phoneNumber: phone, smsCode: code }),
       });
       const value = await response.json();
-      console.log('RestApi:reqLogin:', value, url);
+      console.log('RestApi:requestLogin:', value, url);
       return { isOk: true, value };
     } catch (error) {
-      console.warn('RestApi:reqLogin:error:', error);
+      console.warn('RestApi:requestLogin:error:', error);
       return { isOk: false, error };
     }
   }
@@ -141,14 +141,14 @@ export class RestApi {
   /**
    * Request upload avatar.
    */
-  public static async reqUploadAvatar(params: {
+  public static async requestUploadAvatar(params: {
     userId: string;
     localAvatarFile: string;
     fileType?: string;
   }): Promise<RequestResult<RequestUploadAvatarResult>> {
     const { userId, localAvatarFile, fileType } = params;
     const url = this.getBasicUrl() + `/user/${userId}/avatar/upload`;
-    console.log('RestApi:reqUploadAvatar:', userId, localAvatarFile, url);
+    console.log('RestApi:requestUploadAvatar:', userId, localAvatarFile, url);
     try {
       const formData = new FormData();
       // !!! question: upload file on android is need to add 'file://' prefix and type.
@@ -173,22 +173,22 @@ export class RestApi {
         body: formData,
       });
       console.log(
-        'RestApi:reqUploadAvatar:',
+        'RestApi:requestUploadAvatar:',
         response.ok,
         response.status,
         response.statusText,
         response.url
       );
       const value = await response.json();
-      console.log('RestApi:reqUploadAvatar:', value, url);
+      console.log('RestApi:requestUploadAvatar:', value, url);
       return { isOk: true, value };
     } catch (error) {
-      console.warn('RestApi:reqUploadAvatar:error:', error);
+      console.warn('RestApi:requestUploadAvatar:error:', error);
       return { isOk: false, error };
     }
   }
 
-  public static async reqGetRtcToken(params: {
+  public static async requestRtcToken(params: {
     userId: string;
     channelId: string;
   }): Promise<RequestResult<RequestRtcTokenResult>> {
@@ -203,15 +203,15 @@ export class RestApi {
         },
       });
       const value = await response.json();
-      console.log('RestApi:reqGetRtcToken:', value, url);
+      console.log('RestApi:requestRtcToken:', value, url);
       return { isOk: true, value };
     } catch (error) {
-      console.warn('RestApi:reqGetRtcToken:error:', error);
+      console.warn('RestApi:requestRtcToken:error:', error);
       return { isOk: false, error };
     }
   }
 
-  public static async reqGetRtcMap(params: {
+  public static async requestRtcMap(params: {
     channelId: string;
   }): Promise<RequestResult<RequestRtcMapResult>> {
     const { channelId } = params;
@@ -225,15 +225,15 @@ export class RestApi {
         },
       });
       const value = await response.json();
-      console.log('RestApi:reqGetRtcMap:', value, url);
+      console.log('RestApi:requestRtcMap:', value, url);
       return { isOk: true, value };
     } catch (error) {
-      console.warn('RestApi:reqGetRtcMap:error:', error);
+      console.warn('RestApi:requestRtcMap:error:', error);
       return { isOk: false, error };
     }
   }
 
-  public static async reqGetGroupAvatar(params: {
+  public static async requestGroupAvatar(params: {
     groupId: string;
   }): Promise<RequestResult<RequestGroupAvatarResult>> {
     const { groupId } = params;
@@ -247,10 +247,10 @@ export class RestApi {
         },
       });
       const value = await response.json();
-      console.log('RestApi:reqGetGroupAvatar:', value, url);
+      console.log('RestApi:requestGroupAvatar:', value, url);
       return { isOk: true, value };
     } catch (error) {
-      console.warn('RestApi:reqGetGroupAvatar:error:', error);
+      console.warn('RestApi:requestGroupAvatar:error:', error);
       return { isOk: false, error };
     }
   }
