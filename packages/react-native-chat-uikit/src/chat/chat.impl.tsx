@@ -1438,7 +1438,7 @@ export class ChatServiceImpl
 
           params.onResult({
             isOk: true,
-            value: Array.from(this._contactList.values()).map((v) => v),
+            value: Array.from(this._contactList.values()),
           });
         },
         onError: (e) => {
@@ -1479,7 +1479,7 @@ export class ChatServiceImpl
 
         params.onResult({
           isOk: true,
-          value: Array.from(this._contactList.values()).map((v) => v),
+          value: Array.from(this._contactList.values()),
         });
       },
       onError: (e) => {

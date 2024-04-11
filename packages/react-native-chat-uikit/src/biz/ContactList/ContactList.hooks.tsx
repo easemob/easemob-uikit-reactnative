@@ -154,7 +154,8 @@ export function useContactList(props: ContactListProps) {
         const first = str[0]!.toLocaleUpperCase();
         ret = first;
         if (containsChinese(first)) {
-          ret = getPinyinFirsLetter(first).at(0)?.toLocaleUpperCase();
+          // !!! ret = getPinyinFirsLetter(first).at(0)?.toLocaleUpperCase();
+          ret = getPinyinFirsLetter(first)?.[0]?.toLocaleUpperCase();
         }
       }
       return ret;
