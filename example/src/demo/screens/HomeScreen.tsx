@@ -33,9 +33,6 @@ import { useGeneralSetting, useLogin } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 import { MineInfo } from '../ui/MineInfo';
 
-const env = require('../../env');
-const demoType = env.demoType;
-
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 
 function ConversationBadge() {
@@ -598,13 +595,8 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
                 isPreferred: true,
                 onPress: () => {
                   getAlertRef()?.close(() => {
-                    if (demoType === 3) {
-                      im.logout({});
-                      navigation.replace('Login', {});
-                    } else if (demoType === 4) {
-                      im.logout({});
-                      navigation.replace('LoginV2', {});
-                    }
+                    im.logout({});
+                    navigation.replace('LoginV2', {});
                   });
                 },
               },

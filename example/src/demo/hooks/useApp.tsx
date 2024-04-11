@@ -38,7 +38,6 @@ import { boloo_da_ttf, twemoji_ttf } from '../common/assets';
 import {
   appKey as gAppKey,
   boloo_da_ttf_name,
-  demoType,
   enableDNSConfig,
   fcmSenderId,
   imPort,
@@ -63,14 +62,8 @@ export function useApp() {
   // const list = React.useRef<Map<string, DataModel>>(new Map());
   const permissionsRef = React.useRef(false);
   const { getPermission } = usePermissions();
-  const initialRouteName = React.useRef(
-    demoType === 2
-      ? ('TopMenu' as RootParamsName)
-      : demoType === 3
-      ? ('Login' as RootParamsName)
-      : ('Splash' as RootParamsName)
-  ).current;
-  const autoLogin = React.useRef(demoType === 4).current;
+  const initialRouteName = React.useRef('Splash' as RootParamsName).current;
+  const autoLogin = React.useRef(true).current;
   const palette = usePresetPalette();
   const paletteRef = React.useRef(palette);
   const ra = getReleaseArea();

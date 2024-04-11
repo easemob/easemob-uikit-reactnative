@@ -23,7 +23,6 @@ export * from './HomeScreen';
 export * from './ImageMessagePreviewScreen';
 export * from './LanguageSettingScreen';
 export * from './LoginListScreen';
-export * from './LoginScreen';
 export * from './LoginV2Screen';
 export * from './MessageForwardSelectorScreen';
 export * from './MessageHistoryListScreen';

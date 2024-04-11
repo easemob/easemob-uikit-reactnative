@@ -21,7 +21,6 @@ import {
   agoraAppId,
   appKey as gAppKey,
   boloo_da_ttf_name,
-  demoType,
   isDevMode,
   restServer,
 } from './common/const';
@@ -56,7 +55,6 @@ import {
   ImageMessagePreviewScreen,
   LanguageSettingScreen,
   LoginListScreen,
-  LoginScreen,
   LoginV2Screen,
   MessageForwardSelectorScreen,
   MessageHistoryListScreen,
@@ -87,7 +85,6 @@ const Root = createNativeStackNavigator<RootParamsList>();
 // SplashScreen?.preventAutoHideAsync?.();
 
 export function App() {
-  console.log('test:dev:App:', demoType);
   const {
     initialRouteName,
     paletteRef,
@@ -204,17 +201,15 @@ export function App() {
       await initPush();
 
       // await SplashScreen?.hideAsync?.();
-      if (demoType === 4) {
-        setTimeout(async () => {
-          const ret = await imRef.current?.loginState();
-          console.log('dev:loginState:', ret);
-          if (ret === 'logged') {
-            rootRef.navigate('Home', {});
-          } else {
-            rootRef.navigate('LoginV2', {});
-          }
-        }, 1000);
-      }
+      setTimeout(async () => {
+        const ret = await imRef.current?.loginState();
+        console.log('dev:loginState:', ret);
+        if (ret === 'logged') {
+          rootRef.navigate('Home', {});
+        } else {
+          rootRef.navigate('LoginV2', {});
+        }
+      }, 1000);
     },
     [isReadyRef, rootRef, initPush]
   );
@@ -348,7 +343,7 @@ export function App() {
                 name={'Home'}
                 options={{
                   headerShown: false,
-                  gestureEnabled: demoType !== 4,
+                  gestureEnabled: false,
                 }}
                 component={HomeScreen}
               />
@@ -358,13 +353,6 @@ export function App() {
                   headerShown: true,
                 }}
                 component={ConfigScreen}
-              />
-              <Root.Screen
-                name={'Login'}
-                options={{
-                  headerShown: true,
-                }}
-                component={LoginScreen}
               />
               <Root.Screen
                 name={'LoginList'}
@@ -601,7 +589,7 @@ export function App() {
                 name={'LoginV2'}
                 options={{
                   headerShown: false,
-                  gestureEnabled: demoType !== 4,
+                  gestureEnabled: false,
                 }}
                 component={LoginV2Screen}
               />
