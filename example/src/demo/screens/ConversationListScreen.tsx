@@ -3,19 +3,18 @@ import * as React from 'react';
 import {
   ConversationList,
   ConversationListRef,
-  // DataModel,
-  // DataModelType,
-  // UIKitError,
   useColors,
   usePaletteContext,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ConversationListScreen(props: Props) {
-  const { navigation } = props;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -36,7 +35,6 @@ export function ConversationListScreen(props: Props) {
         propsRef={convRef}
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         // filterEmptyConversation={true}
         // onRequestMultiData={async (params: {
@@ -75,7 +73,9 @@ export function ConversationListScreen(props: Props) {
         //   );
         // }}
         onClickedSearch={() => {
-          navigation.push('SearchConversation', {});
+          navi.push({
+            to: 'SearchConversation',
+          });
         }}
         onClickedItem={(data) => {
           if (data === undefined) {
@@ -84,21 +84,24 @@ export function ConversationListScreen(props: Props) {
           const convId = data?.convId;
           const convType = data?.convType;
           const convName = data?.convName;
-          navigation.navigate('ConversationDetail', {
-            params: {
+          navi.navigate({
+            to: 'ConversationDetail',
+            props: {
               convId,
               convType,
               convName: convName ?? convId,
-              from: 'ConversationList',
-              hash: Date.now(),
             },
           });
         }}
         onClickedNewGroup={() => {
-          navigation.navigate('CreateGroup', {});
+          navi.navigate({
+            to: 'CreateGroup',
+          });
         }}
         onClickedNewConversation={() => {
-          navigation.navigate('NewConversation', {});
+          navi.navigate({
+            to: 'NewConversation',
+          });
         }}
         // onInitMenu={(menu: InitMenuItemsType[]) => {
         //   return [

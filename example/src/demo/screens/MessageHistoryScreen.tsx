@@ -27,6 +27,7 @@ import {
 } from 'react-native-safe-area-context';
 
 import { useCallApi } from '../common/AVView';
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 // export function MyMessageContent(props: MessageContentProps) {
@@ -43,13 +44,14 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function MessageHistoryScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
   const messageId = ((route.params as any)?.params as any)?.messageId;
   const selectType = ((route.params as any)?.params as any)?.selectType;
-  const from = ((route.params as any)?.params as any)?.from;
-  const hash = ((route.params as any)?.params as any)?.hash;
+  const from = ((route.params as any)?.params as any)?.__from;
+  const hash = ((route.params as any)?.params as any)?.__hash;
   const operateType = ((route.params as any)?.params as any)?.operateType;
   // const selectedParticipants = ((route.params as any)?.params as any)
   //   ?.selectedParticipants;
@@ -90,14 +92,14 @@ export function MessageHistoryScreen(props: Props) {
         getSelectedMembers: getSelectedMembers,
       });
     } else if (convType === 1) {
-      navigation.navigate('AVSelectGroupParticipant', {
-        params: {
+      navi.navigate({
+        to: 'AVSelectGroupParticipant',
+        props: {
           groupId: convId,
-          from: 'MessageHistory',
         },
       });
     }
-  }, [comType, convId, convType, getSelectedMembers, navigation, showCall]);
+  }, [comType, convId, convType, getSelectedMembers, navi, showCall]);
   const onClickedVoice = React.useCallback(() => {
     if (comType !== 'chat') {
       return;
@@ -111,42 +113,20 @@ export function MessageHistoryScreen(props: Props) {
         getSelectedMembers: getSelectedMembers,
       });
     } else if (convType === 1) {
-      navigation.navigate('AVSelectGroupParticipant', {
-        params: {
+      navi.navigate({
+        to: 'AVSelectGroupParticipant',
+        props: {
           groupId: convId,
-          from: 'MessageHistory',
         },
       });
     }
-  }, [comType, convId, convType, getSelectedMembers, navigation, showCall]);
-
-  // React.useEffect(() => {
-  //   if (selectedParticipants && operateType === 'mention') {
-  //     try {
-  //       const p = JSON.parse(selectedParticipants);
-  //       inputRef.current?.mentionSelected(
-  //         p.map((item: any) => {
-  //           return {
-  //             id: item.id,
-  //             name: item.name ?? item.id,
-  //           };
-  //         })
-  //       );
-  //     } catch {}
-  //   }
-  // }, [selectedParticipants, operateType]);
+  }, [comType, convId, convType, getSelectedMembers, navi, showCall]);
 
   React.useEffect(() => {
     if (selectedContacts && operateType === 'share_card') {
       try {
         const p = JSON.parse(selectedContacts);
         convRef.current?.sendCardMessage({ ...p, type: 'card' });
-        // listRef.current?.addSendMessage?.({
-        //   type: 'card',
-        //   userId: p.userId,
-        //   userName: p.nickName,
-        //   userAvatar: p.avatar,
-        // });
       } catch {}
     }
   }, [selectedContacts, operateType]);
@@ -169,7 +149,6 @@ export function MessageHistoryScreen(props: Props) {
         type={comType}
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         convId={convId}
         convType={convType}
@@ -182,19 +161,19 @@ export function MessageHistoryScreen(props: Props) {
             bottom,
             // onInputMention: (groupId: string) => {
             //   // todo : select group member.
-            //   navigation.push('SelectSingleParticipant', {
+            //   navi.push('SelectSingleParticipant', {
             //     params: {
             //       groupId,
             //     },
             //   });
             // },
             onClickedCardMenu: () => {
-              navigation.push('ShareContact', {
-                params: {
+              navi.push({
+                to: 'ShareContact',
+                props: {
                   convId,
                   convType,
                   operateType: 'share_card',
-                  from: 'MessageHistory',
                 },
               });
             },
@@ -232,24 +211,27 @@ export function MessageHistoryScreen(props: Props) {
               }
               const msgModel = model as MessageModel;
               if (msgModel.msg.body.type === ChatMessageType.IMAGE) {
-                navigation.push('ImageMessagePreview', {
-                  params: {
+                navi.push({
+                  to: 'ImageMessagePreview',
+                  props: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
                     msg: msgModel.msg,
                   },
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.VIDEO) {
-                navigation.push('VideoMessagePreview', {
-                  params: {
+                navi.push({
+                  to: 'VideoMessagePreview',
+                  props: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
                     msg: msgModel.msg,
                   },
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.FILE) {
-                navigation.push('FileMessagePreview', {
-                  params: {
+                navi.push({
+                  to: 'FileMessagePreview',
+                  props: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
                     msg: msgModel.msg,
@@ -265,8 +247,9 @@ export function MessageHistoryScreen(props: Props) {
                     nickname: string;
                     avatar: string;
                   };
-                  navigation.push('ContactInfo', {
-                    params: {
+                  navi.push({
+                    to: 'ContactInfo',
+                    props: {
                       userId: cardParams.userId,
                     },
                   });
@@ -283,14 +266,16 @@ export function MessageHistoryScreen(props: Props) {
 
               const userType = msgModel.msg.chatType as number;
               if (userType === ChatMessageChatType.PeerChat) {
-                navigation.navigate('ContactInfo', {
-                  params: { userId: userId },
+                navi.navigate({
+                  to: 'ContactInfo',
+                  props: {
+                    userId: userId,
+                  },
                 });
               } else if (userType === ChatMessageChatType.GroupChat) {
-                // const groupId = msgModel.msg.conversationId;
-                // const selfId = im.userId;
-                navigation.navigate('ContactInfo', {
-                  params: {
+                navi.navigate({
+                  to: 'ContactInfo',
+                  props: {
                     userId: userId,
                   },
                 });
@@ -305,8 +290,9 @@ export function MessageHistoryScreen(props: Props) {
               console.log('onNoMoreMessage');
             }, []),
             onCreateThread: (params) => {
-              navigation.push('CreateThread', {
-                params: {
+              navi.push({
+                to: 'CreateThread',
+                props: {
                   ...params,
                   convId: uuid(),
                   convType: ChatConversationType.GroupChat,
@@ -314,8 +300,9 @@ export function MessageHistoryScreen(props: Props) {
               });
             },
             onOpenThread: (params) => {
-              navigation.push('MessageThreadDetail', {
-                params: {
+              navi.push({
+                to: 'MessageThreadDetail',
+                props: {
                   thread: params,
                   convId: params.threadId,
                   convType: ChatConversationType.GroupChat,
@@ -325,14 +312,17 @@ export function MessageHistoryScreen(props: Props) {
             onClickedOpenThreadMemberList: () => {},
             onClickedLeaveThread: () => {},
             onClickedHistoryDetail: (item) => {
-              navigation.push('MessageHistoryList', {
-                params: { message: item.msg },
+              navi.push({
+                to: 'MessageHistoryList',
+                props: {
+                  message: item.msg,
+                },
               });
             },
           },
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onClickedAvatar={(params: {
           convId: string;
@@ -340,31 +330,34 @@ export function MessageHistoryScreen(props: Props) {
           ownerId?: string | undefined;
         }) => {
           if (params.convType === ChatConversationType.PeerChat) {
-            navigation.navigate({
-              name: 'ContactInfo',
-              params: { params: { userId: params.convId } },
-              merge: true,
+            navi.navigate({
+              to: 'ContactInfo',
+              props: {
+                userId: params.convId,
+              },
             });
           } else if (params.convType === ChatConversationType.GroupChat) {
-            navigation.navigate({
-              name: 'GroupInfo',
-              params: {
-                params: { groupId: params.convId, ownerId: params.ownerId },
+            navi.navigate({
+              to: 'GroupInfo',
+              props: {
+                groupId: params.convId,
+                ownerId: params.ownerId,
               },
-              merge: true,
             });
           }
         }}
         onClickedThread={() => {
-          navigation.navigate({
-            name: 'MessageThreadList',
-            params: { params: { parentId: convId } },
+          navi.navigate({
+            to: 'MessageThreadList',
+            props: {
+              parentId: convId,
+            },
           });
         }}
         onForwardMessage={(msgs) => {
-          // todo: navigation to forward message screen.
-          navigation.push('MessageForwardSelector', {
-            params: {
+          navi.push({
+            to: 'MessageForwardSelector',
+            props: {
               msgs,
               convId,
               convType,

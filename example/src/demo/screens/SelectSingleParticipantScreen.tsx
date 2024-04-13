@@ -7,11 +7,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function SelectSingleParticipantScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -30,27 +32,21 @@ export function SelectSingleParticipantScreen(props: Props) {
       <SelectSingleParticipant
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         groupId={groupId}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onClickedItem={(data) => {
-          // navigation.goBack();
-          navigation.navigate({
-            name: 'ConversationDetail',
-            params: {
-              params: {
-                convId: groupId,
-                convType: 1,
-                convName: groupId,
-                selectedParticipants: JSON.stringify(data),
-                operateType: 'mention',
-                from: 'SelectSingleParticipant',
-              },
+          navi.navigate({
+            to: 'ConversationDetail',
+            props: {
+              convId: groupId,
+              convType: 1,
+              convName: groupId,
+              selectedParticipants: data,
+              operateType: 'mention',
             },
-            merge: true,
           });
         }}
       />

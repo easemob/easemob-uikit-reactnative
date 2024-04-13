@@ -11,11 +11,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useCallApi } from '../common/AVView';
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function GroupInfoScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -28,8 +30,8 @@ export function GroupInfoScreen(props: Props) {
   const groupInfoRef = React.useRef<GroupInfoRef>({} as any);
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
-  const from = ((route.params as any)?.params as any)?.from;
-  const hash = ((route.params as any)?.params as any)?.hash;
+  const from = ((route.params as any)?.params as any)?.__from;
+  const hash = ((route.params as any)?.params as any)?.__hash;
   const selectedMembers = ((route.params as any)?.params as any)
     ?.selectedMembers as GroupParticipantModel[] | undefined;
   const avTypeRef = React.useRef<'video' | 'voice'>('video');
@@ -53,28 +55,30 @@ export function GroupInfoScreen(props: Props) {
   const onClickedVideo = React.useCallback(
     (id: string) => {
       avTypeRef.current = 'video';
-      navigation.navigate('AVSelectGroupParticipant', {
-        params: {
+      navi.navigate({
+        to: 'AVSelectGroupParticipant',
+        props: {
           groupId: id,
           ownerId: ownerId,
           from: 'GroupInfo',
         },
       });
     },
-    [navigation, ownerId]
+    [navi, ownerId]
   );
   const onClickedVoice = React.useCallback(
     (id: string) => {
       avTypeRef.current = 'voice';
-      navigation.navigate('AVSelectGroupParticipant', {
-        params: {
+      navi.navigate({
+        to: 'AVSelectGroupParticipant',
+        props: {
           groupId: id,
           ownerId: ownerId,
           from: 'GroupInfo',
         },
       });
     },
-    [navigation, ownerId]
+    [navi, ownerId]
   );
 
   React.useEffect(() => {
@@ -101,91 +105,97 @@ export function GroupInfoScreen(props: Props) {
         ref={groupInfoRef}
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         groupId={groupId}
         ownerId={ownerId}
         onParticipant={(groupId) => {
-          navigation.push('GroupParticipantList', { params: { groupId } });
+          navi.push({
+            to: 'GroupParticipantList',
+            props: {
+              groupId,
+            },
+          });
         }}
         onClickedChangeGroupOwner={() => {
-          navigation.push('ChangeGroupOwner', { params: { groupId } });
+          navi.push({
+            to: 'ChangeGroupOwner',
+            props: {
+              groupId,
+            },
+          });
         }}
         onSendMessage={() => {
-          navigation.navigate('ConversationDetail', {
-            params: {
+          navi.navigate({
+            to: 'ConversationDetail',
+            props: {
               convId: groupId,
               convType: 1,
               convName: groupId,
               testRef,
-              from: 'GroupInfo',
-              hash: Date.now(),
             },
           });
         }}
         onGroupName={(_groupId, groupName) => {
           editTypeRef.current = 'groupName';
-          navigation.push('EditInfo', {
-            params: {
+          navi.push({
+            to: 'EditInfo',
+            props: {
               backName: tr('edit_group_name'),
               saveName: tr('save'),
               initialData: groupName,
               maxLength: 128,
-              // goBack: goBack,
               groupInfoRef,
               testRef,
-              from: 'GroupInfo',
-              hash: Date.now(),
             },
           });
         }}
         onGroupDescription={(_groupId, groupDescription) => {
           editTypeRef.current = 'groupDescription';
-          navigation.push('EditInfo', {
-            params: {
+          navi.push({
+            to: 'EditInfo',
+            props: {
               backName: tr('edit_group_description'),
               saveName: tr('save'),
               initialData: groupDescription,
               maxLength: 512,
-              // goBack: goBack,
               groupInfoRef,
               testRef,
-              from: 'GroupInfo',
-              hash: Date.now(),
             },
           });
         }}
         onGroupMyRemark={(_groupId, groupMyRemark) => {
           editTypeRef.current = 'groupMyRemark';
-          navigation.push('EditInfo', {
-            params: {
+          navi.push({
+            to: 'EditInfo',
+            props: {
               backName: tr('edit_group_my_remark'),
               saveName: tr('save'),
               initialData: groupMyRemark,
               maxLength: 128,
-              // goBack: goBack,
               groupInfoRef,
               testRef,
-              from: 'GroupInfo',
-              hash: Date.now(),
             },
           });
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onGroupDestroy={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onGroupKicked={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onGroupQuit={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onSearch={(id) => {
-          navigation.push('MessageSearch', {
-            params: { convId: id, convType: 1 },
+          navi.push({
+            to: 'MessageSearch',
+            props: {
+              convId: id,
+              convType: 1,
+            },
           });
         }}
         onAudioCall={onClickedVoice}

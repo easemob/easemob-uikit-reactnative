@@ -10,11 +10,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ContactListScreen(props: Props) {
-  const { navigation } = props;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -22,25 +24,6 @@ export function ContactListScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
-
-  // const im = useChatContext();
-  // const updateData = React.useCallback(async () => {
-  //   im.getAllContacts({
-  //     onResult: (result) => {
-  //       if (result.isOk && result.value) {
-  //         const users: DataModel[] = [];
-  //         result.value.forEach((conv) => {
-  //           if (conv.userId === ChatConversationType.PeerChat) {
-  //             users.push({ id: conv.userId, type: 'user', name: 'xxx' });
-  //           }
-  //         });
-  //         im.updateRequestData({
-  //           data: new Map([['user', users ?? []]]),
-  //         });
-  //       }
-  //     },
-  //   });
-  // }, [im]);
 
   return (
     <SafeAreaView
@@ -53,7 +36,6 @@ export function ContactListScreen(props: Props) {
         contactType={'contact-list'}
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         // navigationBarVisible={false}
         // onInitialized={updateData}
@@ -93,23 +75,31 @@ export function ContactListScreen(props: Props) {
         //   );
         // }}
         onClickedSearch={() => {
-          navigation.navigate('SearchContact', {
-            params: { searchType: 'contact-list' },
+          navi.navigate({
+            to: 'SearchContact',
+            props: {
+              searchType: 'contact-list',
+            },
           });
         }}
         onClickedItem={(data) => {
           if (data?.userId) {
-            navigation.push('ContactInfo', { params: { userId: data.userId } });
+            navi.push({
+              to: 'ContactInfo',
+              props: { userId: data.userId },
+            });
           }
         }}
         onClickedGroupList={() => {
-          navigation.navigate('GroupList', {
-            params: {},
+          navi.navigate({
+            to: 'GroupList',
+            props: {},
           });
         }}
         onClickedNewRequest={() => {
-          navigation.navigate('NewRequests', {
-            params: {},
+          navi.navigate({
+            to: 'NewRequests',
+            props: {},
           });
         }}
         // NavigationBar={

@@ -35,7 +35,6 @@ import {
   AVSelectGroupParticipantScreen,
   ChangeGroupOwnerScreen,
   ColorSettingScreen,
-  ConfigScreen,
   ContactInfoScreen,
   ContactListScreen,
   ConversationDetailScreen,
@@ -54,7 +53,6 @@ import {
   HomeScreen,
   ImageMessagePreviewScreen,
   LanguageSettingScreen,
-  LoginListScreen,
   LoginV2Screen,
   MessageForwardSelectorScreen,
   MessageHistoryListScreen,
@@ -75,7 +73,6 @@ import {
   ShareContactScreen,
   SplashScreen,
   StyleSettingScreen,
-  TopMenuScreen,
   VideoMessagePreviewScreen,
 } from './screens';
 import { formatNavigationState } from './utils/utils';
@@ -333,33 +330,12 @@ export function App() {
           >
             <Root.Navigator initialRouteName={initialRouteName}>
               <Root.Screen
-                name={'TopMenu'}
-                options={{
-                  headerShown: true,
-                }}
-                component={TopMenuScreen}
-              />
-              <Root.Screen
                 name={'Home'}
                 options={{
                   headerShown: false,
                   gestureEnabled: false,
                 }}
                 component={HomeScreen}
-              />
-              <Root.Screen
-                name={'Config'}
-                options={{
-                  headerShown: true,
-                }}
-                component={ConfigScreen}
-              />
-              <Root.Screen
-                name={'LoginList'}
-                options={{
-                  headerShown: true,
-                }}
-                component={LoginListScreen}
               />
               <Root.Screen
                 name={'ConversationList'}

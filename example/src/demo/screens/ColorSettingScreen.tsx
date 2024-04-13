@@ -13,17 +13,14 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import { useGeneralSetting } from '../hooks/useGeneralSetting';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ColorSettingScreen(props: Props) {
-  const { navigation } = props;
-  // todo: save to user info.
-  //   const remark = ((route.params as any)?.params as any)?.remark;
-  //   const avatar = ((route.params as any)?.params as any)?.avatar;
-  //   const from = ((route.params as any)?.params as any)?.from;
-  //   const hash = ((route.params as any)?.params as any)?.hash;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -72,7 +69,7 @@ export function ColorSettingScreen(props: Props) {
   const [neutralSColor, setNeutralSColor] = React.useState(appNeutralSColor);
 
   const onBack = () => {
-    navigation.goBack();
+    navi.goBack();
   };
   const onConfirm = () => {
     onSetAppPrimaryColor(priColor);
@@ -80,8 +77,9 @@ export function ColorSettingScreen(props: Props) {
     onSetAppSecondColor(secondColor);
     onSetAppNeutralColor(neutralColor);
     onSetAppNeutralSColor(neutralSColor);
-    navigation.navigate('CommonSetting', {
-      params: {
+    navi.navigate({
+      to: 'CommonSetting',
+      props: {
         from: 'ColorSetting',
         hash: Date.now(),
       },
@@ -129,223 +127,214 @@ export function ColorSettingScreen(props: Props) {
   }, [appNeutralSColor]);
 
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: getColor('bg'),
-        // justifyContent: 'center',
-        // alignItems: 'center',
         flex: 1,
       }}
     >
-      <SafeAreaView
+      <TopNavigationBar
+        containerStyle={{ backgroundColor: undefined }}
+        Left={
+          <Pressable
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              height: 44,
+            }}
+            onPress={onBack}
+          >
+            <Icon
+              name={'chevron_left'}
+              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+            />
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{
+                color: getColor('t1'),
+              }}
+            >
+              {tr('_demo_color_setting_navi_title')}
+            </Text>
+          </Pressable>
+        }
+        Right={
+          <Pressable
+            onPress={onConfirm}
+            style={{ paddingHorizontal: 8 }}
+            disabled={changed ? false : true}
+          >
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{
+                color: getColor(changed ? 'enable' : 'disable'),
+              }}
+            >
+              {tr('_demo_color_setting_navi_confirm')}
+            </Text>
+          </Pressable>
+        }
+      />
+
+      <View
         style={{
-          // backgroundColor: getColor('bg'),
-          flex: 1,
+          backgroundColor: getColor('bg2'),
+          justifyContent: 'center',
+          paddingHorizontal: 16,
+          height: 44,
         }}
       >
-        <TopNavigationBar
-          containerStyle={{ backgroundColor: undefined }}
-          Left={
-            <Pressable
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                height: 44,
-              }}
-              onPress={onBack}
-            >
-              <Icon
-                name={'chevron_left'}
-                style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-              />
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{
-                  color: getColor('t1'),
-                }}
-              >
-                {tr('_demo_color_setting_navi_title')}
-              </Text>
-            </Pressable>
-          }
-          Right={
-            <Pressable
-              onPress={onConfirm}
-              style={{ paddingHorizontal: 8 }}
-              disabled={changed ? false : true}
-            >
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{
-                  color: getColor(changed ? 'enable' : 'disable'),
-                }}
-              >
-                {tr('_demo_color_setting_navi_confirm')}
-              </Text>
-            </Pressable>
-          }
+        <SingleLineText
+          style={{
+            color: getColor('disable'),
+          }}
+          paletteType={'title'}
+          textType={'small'}
+        >
+          {tr('_demo_color_setting_primary')}
+        </SingleLineText>
+      </View>
+      <View
+        style={{
+          paddingHorizontal: 16,
+          backgroundColor: getColor('bg'),
+        }}
+      >
+        <ColorSetting
+          valueType={'primary'}
+          value={priColor}
+          onValueChange={onSetPriColor}
         />
+      </View>
 
-        <View
+      <View
+        style={{
+          backgroundColor: getColor('bg2'),
+          justifyContent: 'center',
+          paddingHorizontal: 16,
+          height: 44,
+        }}
+      >
+        <SingleLineText
           style={{
-            backgroundColor: getColor('bg2'),
-            justifyContent: 'center',
-            paddingHorizontal: 16,
-            height: 44,
+            color: getColor('disable'),
           }}
+          paletteType={'title'}
+          textType={'small'}
         >
-          <SingleLineText
-            style={{
-              color: getColor('disable'),
-            }}
-            paletteType={'title'}
-            textType={'small'}
-          >
-            {tr('_demo_color_setting_primary')}
-          </SingleLineText>
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            backgroundColor: getColor('bg'),
-          }}
-        >
-          <ColorSetting
-            valueType={'primary'}
-            value={priColor}
-            onValueChange={onSetPriColor}
-          />
-        </View>
+          {tr('_demo_color_setting_second')}
+        </SingleLineText>
+      </View>
+      <View
+        style={{
+          paddingHorizontal: 16,
+          backgroundColor: getColor('bg'),
+        }}
+      >
+        <ColorSetting
+          valueType={'second'}
+          value={secondColor}
+          onValueChange={onSetSecondColor}
+        />
+      </View>
 
-        <View
+      <View
+        style={{
+          backgroundColor: getColor('bg2'),
+          justifyContent: 'center',
+          paddingHorizontal: 16,
+          height: 44,
+        }}
+      >
+        <SingleLineText
           style={{
-            backgroundColor: getColor('bg2'),
-            justifyContent: 'center',
-            paddingHorizontal: 16,
-            height: 44,
+            color: getColor('disable'),
           }}
+          paletteType={'title'}
+          textType={'small'}
         >
-          <SingleLineText
-            style={{
-              color: getColor('disable'),
-            }}
-            paletteType={'title'}
-            textType={'small'}
-          >
-            {tr('_demo_color_setting_second')}
-          </SingleLineText>
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            backgroundColor: getColor('bg'),
-          }}
-        >
-          <ColorSetting
-            valueType={'second'}
-            value={secondColor}
-            onValueChange={onSetSecondColor}
-          />
-        </View>
+          {tr('_demo_color_setting_error')}
+        </SingleLineText>
+      </View>
+      <View
+        style={{
+          paddingHorizontal: 16,
+          backgroundColor: getColor('bg'),
+        }}
+      >
+        <ColorSetting
+          valueType={'error'}
+          value={errorColor}
+          onValueChange={onSetErrorColor}
+        />
+      </View>
 
-        <View
+      <View
+        style={{
+          backgroundColor: getColor('bg2'),
+          justifyContent: 'center',
+          paddingHorizontal: 16,
+          height: 44,
+        }}
+      >
+        <SingleLineText
           style={{
-            backgroundColor: getColor('bg2'),
-            justifyContent: 'center',
-            paddingHorizontal: 16,
-            height: 44,
+            color: getColor('disable'),
           }}
+          paletteType={'title'}
+          textType={'small'}
         >
-          <SingleLineText
-            style={{
-              color: getColor('disable'),
-            }}
-            paletteType={'title'}
-            textType={'small'}
-          >
-            {tr('_demo_color_setting_error')}
-          </SingleLineText>
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            backgroundColor: getColor('bg'),
-          }}
-        >
-          <ColorSetting
-            valueType={'error'}
-            value={errorColor}
-            onValueChange={onSetErrorColor}
-          />
-        </View>
+          {tr('_demo_color_setting_neutral')}
+        </SingleLineText>
+      </View>
+      <View
+        style={{
+          paddingHorizontal: 16,
+          backgroundColor: getColor('bg'),
+        }}
+      >
+        <ColorSetting
+          valueType={'neutral'}
+          value={neutralColor}
+          onValueChange={onSetNeutralColor}
+          colorFormat={(v) => `hsla(${v}, 8%, 50%, 1)`}
+        />
+      </View>
 
-        <View
+      <View
+        style={{
+          backgroundColor: getColor('bg2'),
+          justifyContent: 'center',
+          paddingHorizontal: 16,
+          height: 44,
+        }}
+      >
+        <SingleLineText
           style={{
-            backgroundColor: getColor('bg2'),
-            justifyContent: 'center',
-            paddingHorizontal: 16,
-            height: 44,
+            color: getColor('disable'),
           }}
+          paletteType={'title'}
+          textType={'small'}
         >
-          <SingleLineText
-            style={{
-              color: getColor('disable'),
-            }}
-            paletteType={'title'}
-            textType={'small'}
-          >
-            {tr('_demo_color_setting_neutral')}
-          </SingleLineText>
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            backgroundColor: getColor('bg'),
-          }}
-        >
-          <ColorSetting
-            valueType={'neutral'}
-            value={neutralColor}
-            onValueChange={onSetNeutralColor}
-            colorFormat={(v) => `hsla(${v}, 8%, 50%, 1)`}
-          />
-        </View>
-
-        <View
-          style={{
-            backgroundColor: getColor('bg2'),
-            justifyContent: 'center',
-            paddingHorizontal: 16,
-            height: 44,
-          }}
-        >
-          <SingleLineText
-            style={{
-              color: getColor('disable'),
-            }}
-            paletteType={'title'}
-            textType={'small'}
-          >
-            {tr('_demo_color_setting_neutralS')}
-          </SingleLineText>
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            backgroundColor: getColor('bg'),
-          }}
-        >
-          <ColorSetting
-            valueType={'neutralS'}
-            value={neutralSColor}
-            onValueChange={onSetNeutralSColor}
-            colorFormat={(v) => `hsla(${v}, 36%, 50%, 1)`}
-          />
-        </View>
-      </SafeAreaView>
-    </View>
+          {tr('_demo_color_setting_neutralS')}
+        </SingleLineText>
+      </View>
+      <View
+        style={{
+          paddingHorizontal: 16,
+          backgroundColor: getColor('bg'),
+        }}
+      >
+        <ColorSetting
+          valueType={'neutralS'}
+          value={neutralSColor}
+          onValueChange={onSetNeutralSColor}
+          colorFormat={(v) => `hsla(${v}, 36%, 50%, 1)`}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 

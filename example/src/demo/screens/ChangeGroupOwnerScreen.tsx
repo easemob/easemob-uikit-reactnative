@@ -7,11 +7,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ChangeGroupOwnerScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -30,18 +32,15 @@ export function ChangeGroupOwnerScreen(props: Props) {
       <ChangeGroupOwner
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         groupId={groupId}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onChangeResult={(data) => {
-          // navigation.goBack();
-          navigation.navigate({
-            name: 'GroupInfo',
-            params: { params: { groupId, ownerId: data.value } },
-            merge: true,
+          navi.navigate({
+            to: 'GroupInfo',
+            props: { groupId, ownerId: data.value },
           });
         }}
       />

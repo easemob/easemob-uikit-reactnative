@@ -7,11 +7,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function SearchConversationScreen(props: Props) {
-  const { navigation } = props;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -29,22 +31,20 @@ export function SearchConversationScreen(props: Props) {
       <SearchConversation
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         onCancel={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onClicked={(data) => {
           if (data) {
-            navigation.pop();
-            navigation.navigate('ConversationDetail', {
-              params: {
+            navi.navigation.pop();
+            navi.navigate({
+              to: 'ConversationDetail',
+              props: {
                 convId: data?.convId,
                 convType: data?.convType,
                 convName: data?.convName,
                 convAvatar: data?.convAvatar,
-                from: 'SearchConversation',
-                hash: Date.now(),
               },
             });
           }

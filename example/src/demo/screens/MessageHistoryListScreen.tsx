@@ -9,11 +9,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function MessageHistoryListScreen(props: Props) {
-  const { route, navigation } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const message = ((route.params as any)?.params as any)?.message;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -25,7 +27,7 @@ export function MessageHistoryListScreen(props: Props) {
 
   const onClickedItem = React.useCallback((model: MessageHistoryModel) => {
     if (model.msg.body.type === ChatMessageType.COMBINE) {
-      // navigation.push('MessageHistoryList', {
+      // navi.push('MessageHistoryList', {
       //   params: { message: model.msg },
       // });
     } else if (model.msg.body.type === ChatMessageType.IMAGE) {
@@ -66,7 +68,7 @@ export function MessageHistoryListScreen(props: Props) {
       <MessageHistoryList
         message={message}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onClickedItem={onClickedItem}
       />

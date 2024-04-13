@@ -18,16 +18,13 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RestApi } from '../common/rest.api';
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function PersonInfoScreen(props: Props) {
-  const { navigation } = props;
-  // todo: save to user info.
-  //   const remark = ((route.params as any)?.params as any)?.remark;
-  //   const avatar = ((route.params as any)?.params as any)?.avatar;
-  //   const from = ((route.params as any)?.params as any)?.from;
-  //   const hash = ((route.params as any)?.params as any)?.hash;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -68,7 +65,7 @@ export function PersonInfoScreen(props: Props) {
   const testRef = React.useRef<(data: any) => void>(goBack);
 
   const onBack = () => {
-    navigation.goBack();
+    navi.goBack();
   };
 
   const updateAvatar = async (path: string, filetype?: string) => {
@@ -107,15 +104,14 @@ export function PersonInfoScreen(props: Props) {
   };
 
   const onClickedRemark = () => {
-    navigation.push('EditInfo', {
-      params: {
+    navi.push({
+      to: 'EditInfo',
+      props: {
         backName: tr('_demo_person_edit_person_remark'),
         saveName: tr('save'),
         initialData: _remark,
         maxLength: 128,
         testRef,
-        from: 'PersonInfo',
-        hash: Date.now(),
       },
     });
   };
@@ -129,112 +125,103 @@ export function PersonInfoScreen(props: Props) {
   }, [im]);
 
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: getColor('bg'),
-        // justifyContent: 'center',
-        // alignItems: 'center',
         flex: 1,
       }}
     >
-      <SafeAreaView
-        style={{
-          // backgroundColor: getColor('bg'),
-          flex: 1,
-        }}
-      >
-        <TopNavigationBar
-          containerStyle={{ backgroundColor: undefined }}
-          Left={
-            <Pressable
+      <TopNavigationBar
+        containerStyle={{ backgroundColor: undefined }}
+        Left={
+          <Pressable
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              height: 44,
+            }}
+            onPress={onBack}
+          >
+            <Icon
+              name={'chevron_left'}
+              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+            />
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                height: 44,
+                color: getColor('t1'),
               }}
-              onPress={onBack}
             >
-              <Icon
-                name={'chevron_left'}
-                style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-              />
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{
-                  color: getColor('t1'),
-                }}
-              >
-                {tr('_demo_person_info_navi_title')}
-              </Text>
-            </Pressable>
-          }
-          Right={<View />}
-        />
+              {tr('_demo_person_info_navi_title')}
+            </Text>
+          </Pressable>
+        }
+        Right={<View />}
+      />
 
-        <ListItem
-          onClicked={onClickedAvatar2}
-          containerStyle={{ paddingHorizontal: 16 }}
-          LeftName={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('_demo_person_info_avatar')}
-              </Text>
-            </View>
-          }
-          RightIcon={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <StatusAvatar
-                size={40}
-                disableStatus={true}
-                userId={im.userId}
-                url={_avatar}
-              />
-              <Icon
-                name={'chevron_right'}
-                style={{ height: 20, width: 20, tintColor: getColor('right') }}
-              />
-            </View>
-          }
-        />
+      <ListItem
+        onClicked={onClickedAvatar2}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_person_info_avatar')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <StatusAvatar
+              size={40}
+              disableStatus={true}
+              userId={im.userId}
+              url={_avatar}
+            />
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
 
-        <ListItem
-          onClicked={onClickedRemark}
-          containerStyle={{ paddingHorizontal: 16 }}
-          LeftName={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('_demo_person_info_remark')}
-              </Text>
-            </View>
-          }
-          RightIcon={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <SingleLineText
-                paletteType={'label'}
-                textType={'large'}
-                style={{
-                  color: getColor('t1'),
-                }}
-              >
-                {_remark}
-              </SingleLineText>
-              <Icon
-                name={'chevron_right'}
-                style={{ height: 20, width: 20, tintColor: getColor('right') }}
-              />
-            </View>
-          }
-        />
-      </SafeAreaView>
-    </View>
+      <ListItem
+        onClicked={onClickedRemark}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_person_info_remark')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              paletteType={'label'}
+              textType={'large'}
+              style={{
+                color: getColor('t1'),
+              }}
+            >
+              {_remark}
+            </SingleLineText>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
+    </SafeAreaView>
   );
 }

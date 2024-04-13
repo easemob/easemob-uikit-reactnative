@@ -7,11 +7,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function SearchGroupParticipantScreen(props: Props) {
-  const { navigation } = props;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -29,10 +31,9 @@ export function SearchGroupParticipantScreen(props: Props) {
       <SearchGroup
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         onCancel={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
       />
     </SafeAreaView>

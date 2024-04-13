@@ -37,6 +37,7 @@ import {
 } from 'react-native-safe-area-context';
 
 import { useCallApi } from '../common/AVView';
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 export function MyMessageContent(props: MessageContentProps) {
@@ -60,12 +61,13 @@ export function MyMessageContent(props: MessageContentProps) {
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ConversationDetailScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
   const selectType = ((route.params as any)?.params as any)?.selectType;
-  const from = ((route.params as any)?.params as any)?.from;
-  const hash = ((route.params as any)?.params as any)?.hash;
+  const from = ((route.params as any)?.params as any)?.__from;
+  const hash = ((route.params as any)?.params as any)?.__hash;
   const onceRef = React.useRef(false);
   const operateType = ((route.params as any)?.params as any)?.operateType;
   // const selectedParticipants = ((route.params as any)?.params as any)
@@ -110,14 +112,14 @@ export function ConversationDetailScreen(props: Props) {
       });
     } else if (convType === 1) {
       onceRef.current = true;
-      navigation.navigate('AVSelectGroupParticipant', {
-        params: {
+      navi.push({
+        to: 'AVSelectGroupParticipant',
+        props: {
           groupId: convId,
-          from: 'ConversationDetail',
         },
       });
     }
-  }, [comType, convId, convType, getSelectedMembers, navigation, showCall]);
+  }, [comType, convId, convType, getSelectedMembers, navi, showCall]);
   const onClickedVoice = React.useCallback(() => {
     if (comType !== 'chat') {
       return;
@@ -132,30 +134,14 @@ export function ConversationDetailScreen(props: Props) {
       });
     } else if (convType === 1) {
       onceRef.current = true;
-      navigation.navigate('AVSelectGroupParticipant', {
-        params: {
+      navi.push({
+        to: 'AVSelectGroupParticipant',
+        props: {
           groupId: convId,
-          from: 'ConversationDetail',
         },
       });
     }
-  }, [comType, convId, convType, getSelectedMembers, navigation, showCall]);
-
-  // React.useEffect(() => {
-  //   if (selectedParticipants && operateType === 'mention') {
-  //     try {
-  //       const p = JSON.parse(selectedParticipants);
-  //       inputRef.current?.mentionSelected(
-  //         p.map((item: any) => {
-  //           return {
-  //             id: item.id,
-  //             name: item.name ?? item.id,
-  //           };
-  //         })
-  //       );
-  //     } catch {}
-  //   }
-  // }, [selectedParticipants, operateType]);
+  }, [comType, convId, convType, getSelectedMembers, navi, showCall]);
 
   React.useEffect(() => {
     if (selectedContacts && operateType === 'share_card') {
@@ -166,12 +152,6 @@ export function ConversationDetailScreen(props: Props) {
       try {
         const p = JSON.parse(selectedContacts);
         convRef.current?.sendCardMessage({ ...p, type: 'card' });
-        // listRef.current?.addSendMessage?.({
-        //   type: 'card',
-        //   userId: p.userId,
-        //   userName: p.nickName,
-        //   userAvatar: p.avatar,
-        // });
       } catch {}
     }
   }, [selectedContacts, operateType]);
@@ -245,7 +225,6 @@ export function ConversationDetailScreen(props: Props) {
         type={comType}
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         convId={convId}
         convType={convType}
@@ -257,7 +236,7 @@ export function ConversationDetailScreen(props: Props) {
             bottom,
             // onInputMention: (groupId: string) => {
             //   // todo : select group member.
-            //   navigation.push('SelectSingleParticipant', {
+            //   navi.push('SelectSingleParticipant', {
             //     params: {
             //       groupId,
             //     },
@@ -265,12 +244,12 @@ export function ConversationDetailScreen(props: Props) {
             // },
             onClickedCardMenu: () => {
               onceRef.current = true;
-              navigation.push('ShareContact', {
-                params: {
+              navi.push({
+                to: 'ShareContact',
+                props: {
                   convId,
                   convType,
                   operateType: 'share_card',
-                  from: 'ConversationDetail',
                 },
               });
             },
@@ -309,8 +288,9 @@ export function ConversationDetailScreen(props: Props) {
               const msgModel = model as MessageModel;
               if (msgModel.msg.body.type === ChatMessageType.IMAGE) {
                 onceRef.current = true;
-                navigation.push('ImageMessagePreview', {
-                  params: {
+                navi.push({
+                  to: 'ImageMessagePreview',
+                  props: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
                     msg: msgModel.msg,
@@ -318,8 +298,9 @@ export function ConversationDetailScreen(props: Props) {
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.VIDEO) {
                 onceRef.current = true;
-                navigation.push('VideoMessagePreview', {
-                  params: {
+                navi.push({
+                  to: 'VideoMessagePreview',
+                  props: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
                     msg: msgModel.msg,
@@ -327,8 +308,9 @@ export function ConversationDetailScreen(props: Props) {
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.FILE) {
                 onceRef.current = true;
-                navigation.push('FileMessagePreview', {
-                  params: {
+                navi.push({
+                  to: 'FileMessagePreview',
+                  props: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
                     msg: msgModel.msg,
@@ -345,8 +327,9 @@ export function ConversationDetailScreen(props: Props) {
                     avatar: string;
                   };
                   onceRef.current = true;
-                  navigation.push('ContactInfo', {
-                    params: {
+                  navi.push({
+                    to: 'ContactInfo',
+                    props: {
                       userId: cardParams.userId,
                     },
                   });
@@ -364,15 +347,17 @@ export function ConversationDetailScreen(props: Props) {
               const userType = msgModel.msg.chatType as number;
               if (userType === ChatMessageChatType.PeerChat) {
                 onceRef.current = true;
-                navigation.navigate('ContactInfo', {
-                  params: { userId: userId },
+                navi.navigate({
+                  to: 'ContactInfo',
+                  props: {
+                    userId: userId,
+                  },
                 });
               } else if (userType === ChatMessageChatType.GroupChat) {
-                // const groupId = msgModel.msg.conversationId;
-                // const selfId = im.userId;
                 onceRef.current = true;
-                navigation.navigate('ContactInfo', {
-                  params: {
+                navi.navigate({
+                  to: 'ContactInfo',
+                  props: {
                     userId: userId,
                   },
                 });
@@ -388,8 +373,9 @@ export function ConversationDetailScreen(props: Props) {
             }, []),
             onCreateThread: (params) => {
               onceRef.current = true;
-              navigation.push('CreateThread', {
-                params: {
+              navi.navigate({
+                to: 'CreateThread',
+                props: {
                   ...params,
                   convId: uuid(),
                   convType: ChatConversationType.GroupChat,
@@ -398,8 +384,9 @@ export function ConversationDetailScreen(props: Props) {
             },
             onOpenThread: (params) => {
               onceRef.current = true;
-              navigation.push('MessageThreadDetail', {
-                params: {
+              navi.navigate({
+                to: 'MessageThreadDetail',
+                props: {
                   thread: params,
                   convId: params.threadId,
                   convType: ChatConversationType.GroupChat,
@@ -409,8 +396,11 @@ export function ConversationDetailScreen(props: Props) {
             onClickedOpenThreadMemberList: () => {},
             onClickedHistoryDetail: (item) => {
               onceRef.current = true;
-              navigation.push('MessageHistoryList', {
-                params: { message: item.msg },
+              navi.navigate({
+                to: 'MessageHistoryList',
+                props: {
+                  message: item.msg,
+                },
               });
             },
             onCopyFinished: () => {
@@ -422,7 +412,7 @@ export function ConversationDetailScreen(props: Props) {
           },
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onClickedAvatar={(params: {
           convId: string;
@@ -431,38 +421,35 @@ export function ConversationDetailScreen(props: Props) {
         }) => {
           if (params.convType === ChatConversationType.PeerChat) {
             onceRef.current = true;
-            navigation.navigate({
-              name: 'ContactInfo',
-              params: { params: { userId: params.convId } },
+            navi.navigate({
+              to: 'ContactInfo',
+              props: { userId: params.convId },
               merge: true,
             });
           } else if (params.convType === ChatConversationType.GroupChat) {
             onceRef.current = true;
-            navigation.navigate({
-              name: 'GroupInfo',
-              params: {
-                params: { groupId: params.convId, ownerId: params.ownerId },
-              },
+            navi.navigate({
+              to: 'GroupInfo',
+              props: { groupId: params.convId, ownerId: params.ownerId },
               merge: true,
             });
           }
         }}
         onClickedThread={() => {
           onceRef.current = true;
-          navigation.navigate({
-            name: 'MessageThreadList',
-            params: { params: { parentId: convId } },
+          navi.navigate({
+            to: 'MessageThreadList',
+            props: { params: { parentId: convId } },
           });
         }}
         onForwardMessage={(msgs) => {
-          // todo: navigation to forward message screen.
           onceRef.current = true;
-          navigation.push('MessageForwardSelector', {
-            params: {
+          navi.push({
+            to: 'MessageForwardSelector',
+            props: {
               msgs,
               convId,
               convType,
-              from: 'ConversationDetail',
             },
           });
         }}

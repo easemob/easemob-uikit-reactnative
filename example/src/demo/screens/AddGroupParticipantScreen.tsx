@@ -7,11 +7,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function AddGroupParticipantScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const data = ((route.params as any)?.params as any)?.data
     ? JSON.parse(((route.params as any)?.params as any)?.data)
     : undefined;
@@ -33,21 +35,24 @@ export function AddGroupParticipantScreen(props: Props) {
       <AddGroupParticipant
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         onClickedSearch={() => {
-          navigation.navigate('SearchContact', {
-            params: { searchType: 'add-group-member', groupId },
+          navi.navigate({
+            to: 'SearchContact',
+            props: {
+              searchType: 'add-group-member',
+              groupId,
+            },
           });
         }}
         selectedData={data}
         groupId={groupId}
         onAddedResult={() => {
           console.log('onAddedResult');
-          navigation.goBack();
+          navi.goBack();
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
       />
     </SafeAreaView>

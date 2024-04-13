@@ -14,17 +14,16 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import { useGeneralSetting } from '../hooks/useGeneralSetting';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function GeneralSettingScreen(props: Props) {
-  const { navigation, route } = props;
-  // todo: save to user info.
-  //   const remark = ((route.params as any)?.params as any)?.remark;
-  //   const avatar = ((route.params as any)?.params as any)?.avatar;
-  const from = ((route.params as any)?.params as any)?.from;
-  const hash = ((route.params as any)?.params as any)?.hash;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
+  const from = ((route.params as any)?.params as any)?.__from;
+  const hash = ((route.params as any)?.params as any)?.__hash;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -49,20 +48,20 @@ export function GeneralSettingScreen(props: Props) {
     useGeneralSetting();
 
   const onBack = () => {
-    navigation.goBack();
+    navi.goBack();
   };
   // const onClickedTheme = () => {};
   const onClickedStyle = () => {
-    navigation.push('StyleSetting', {});
+    navi.push({ to: 'StyleSetting' });
   };
   const onClickedColor = () => {
-    navigation.push('ColorSetting', {});
+    navi.push({ to: 'ColorSetting' });
   };
   const onClickedFeature = () => {
-    navigation.push('FeatureSetting', {});
+    navi.push({ to: 'FeatureSetting' });
   };
   const onClickedLanguage = () => {
-    navigation.push('LanguageSetting', {});
+    navi.push({ to: 'LanguageSetting' });
   };
 
   React.useEffect(() => {
@@ -76,126 +75,118 @@ export function GeneralSettingScreen(props: Props) {
   }, [from, hash, updater]);
 
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: getColor('bg'),
-        // justifyContent: 'center',
-        // alignItems: 'center',
         flex: 1,
       }}
     >
-      <SafeAreaView
-        style={{
-          // backgroundColor: getColor('bg'),
-          flex: 1,
-        }}
-      >
-        <TopNavigationBar
-          containerStyle={{ backgroundColor: undefined }}
-          Left={
-            <Pressable
+      <TopNavigationBar
+        containerStyle={{ backgroundColor: undefined }}
+        Left={
+          <Pressable
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              height: 44,
+            }}
+            onPress={onBack}
+          >
+            <Icon
+              name={'chevron_left'}
+              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+            />
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                height: 44,
+                color: getColor('t1'),
               }}
-              onPress={onBack}
             >
-              <Icon
-                name={'chevron_left'}
-                style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+              {tr('_demo_general_setting_navi_title')}
+            </Text>
+          </Pressable>
+        }
+        Right={<View />}
+      />
+
+      <ListItem
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_general_setting_theme')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {appTheme !== undefined ? (
+              <Switch
+                value={appTheme}
+                onValueChange={onSetAppTheme}
+                height={31}
+                width={51}
               />
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{
-                  color: getColor('t1'),
-                }}
-              >
-                {tr('_demo_general_setting_navi_title')}
-              </Text>
-            </Pressable>
-          }
-          Right={<View />}
-        />
+            ) : null}
+          </View>
+        }
+      />
 
-        <ListItem
-          containerStyle={{ paddingHorizontal: 16 }}
-          LeftName={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('_demo_general_setting_theme')}
-              </Text>
-            </View>
-          }
-          RightIcon={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {appTheme !== undefined ? (
-                <Switch
-                  value={appTheme}
-                  onValueChange={onSetAppTheme}
-                  height={31}
-                  width={51}
-                />
-              ) : null}
-            </View>
-          }
-        />
+      <ListItem
+        onClicked={onClickedStyle}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_general_setting_style')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              paletteType={'label'}
+              textType={'large'}
+              style={{
+                color: getColor('t1'),
+              }}
+            >
+              {tr(appStyle)}
+            </SingleLineText>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
 
-        <ListItem
-          onClicked={onClickedStyle}
-          containerStyle={{ paddingHorizontal: 16 }}
-          LeftName={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('_demo_general_setting_style')}
-              </Text>
-            </View>
-          }
-          RightIcon={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <SingleLineText
-                paletteType={'label'}
-                textType={'large'}
-                style={{
-                  color: getColor('t1'),
-                }}
-              >
-                {tr(appStyle)}
-              </SingleLineText>
-              <Icon
-                name={'chevron_right'}
-                style={{ height: 20, width: 20, tintColor: getColor('right') }}
-              />
-            </View>
-          }
-        />
-
-        <ListItem
-          onClicked={onClickedColor}
-          containerStyle={{ paddingHorizontal: 16 }}
-          LeftName={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('_demo_general_setting_color')}
-              </Text>
-            </View>
-          }
-          RightIcon={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {/* <SingleLineText
+      <ListItem
+        onClicked={onClickedColor}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_general_setting_color')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {/* <SingleLineText
                 paletteType={'label'}
                 textType={'large'}
                 style={{
@@ -204,71 +195,70 @@ export function GeneralSettingScreen(props: Props) {
               >
                 {appPrimaryColor}
               </SingleLineText> */}
-              <Icon
-                name={'chevron_right'}
-                style={{ height: 20, width: 20, tintColor: getColor('right') }}
-              />
-            </View>
-          }
-        />
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
 
-        <ListItem
-          onClicked={onClickedFeature}
-          containerStyle={{ paddingHorizontal: 16 }}
-          LeftName={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('_demo_general_setting_feature')}
-              </Text>
-            </View>
-          }
-          RightIcon={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon
-                name={'chevron_right'}
-                style={{ height: 20, width: 20, tintColor: getColor('right') }}
-              />
-            </View>
-          }
-        />
+      <ListItem
+        onClicked={onClickedFeature}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_general_setting_feature')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
 
-        <ListItem
-          onClicked={onClickedLanguage}
-          containerStyle={{ paddingHorizontal: 16 }}
-          LeftName={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('_demo_general_setting_language')}
-              </Text>
-            </View>
-          }
-          RightIcon={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <SingleLineText
-                paletteType={'label'}
-                textType={'large'}
-                style={{
-                  color: getColor('t1'),
-                }}
-              >
-                {appLanguage === 'en' ? tr('en') : tr('zh-Hans')}
-              </SingleLineText>
-              <Icon
-                name={'chevron_right'}
-                style={{ height: 20, width: 20, tintColor: getColor('right') }}
-              />
-            </View>
-          }
-        />
-      </SafeAreaView>
-    </View>
+      <ListItem
+        onClicked={onClickedLanguage}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_general_setting_language')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              paletteType={'label'}
+              textType={'large'}
+              style={{
+                color: getColor('t1'),
+              }}
+            >
+              {appLanguage === 'en' ? tr('en') : tr('zh-Hans')}
+            </SingleLineText>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
+    </SafeAreaView>
   );
 }

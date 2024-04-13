@@ -949,7 +949,6 @@ export class ChatServiceImpl
 
   _requestData(list: string[], type: DataModelType = 'user'): Promise<void> {
     const ret = new Promise<void>((resolve, reject) => {
-      console.log('test:zuoyu:_requestData', list, type);
       if (type === 'group') {
         if (this._groupCallback) {
           const needRequestGroup = new Set<string>();

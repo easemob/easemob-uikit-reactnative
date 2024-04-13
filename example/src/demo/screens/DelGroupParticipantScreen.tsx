@@ -7,11 +7,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function DelGroupParticipantScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -30,14 +32,13 @@ export function DelGroupParticipantScreen(props: Props) {
       <DelGroupParticipant
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         groupId={groupId}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onDelResult={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
       />
     </SafeAreaView>

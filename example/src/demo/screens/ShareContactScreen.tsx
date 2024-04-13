@@ -7,11 +7,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ShareContactScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -22,7 +24,7 @@ export function ShareContactScreen(props: Props) {
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
   const convName = ((route.params as any)?.params as any)?.convName;
-  const from = ((route.params as any)?.params as any)?.from;
+  const from = ((route.params as any)?.params as any)?.__from;
   return (
     <SafeAreaView
       style={{
@@ -33,66 +35,32 @@ export function ShareContactScreen(props: Props) {
       <ShareContact
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         onClickedSearch={() => {
-          navigation.navigate('SearchContact', {
-            params: { searchType: 'share-contact', convId, convType, convName },
+          navi.navigate({
+            to: 'SearchContact',
+            props: {
+              searchType: 'share-contact',
+              convId,
+              convType,
+              convName,
+            },
           });
         }}
         onClickedItem={(data) => {
-          if (from === 'ConversationDetail') {
-            navigation.navigate({
-              name: 'ConversationDetail',
-              params: {
-                params: {
-                  convId,
-                  convType,
-                  convName: convName ?? convId,
-                  selectedContacts: JSON.stringify(data),
-                  operateType: 'share_card',
-                  from: 'ShareContact',
-                  hash: Date.now(),
-                },
-              },
-              merge: true,
-            });
-          } else if (from === 'MessageHistory') {
-            navigation.navigate({
-              name: 'MessageHistory',
-              params: {
-                params: {
-                  convId,
-                  convType,
-                  convName: convName ?? convId,
-                  selectedContacts: JSON.stringify(data),
-                  operateType: 'share_card',
-                  from: 'ShareContact',
-                  hash: Date.now(),
-                },
-              },
-              merge: true,
-            });
-          } else if (from === 'MessageThreadDetail') {
-            navigation.navigate({
-              name: 'MessageThreadDetail',
-              params: {
-                params: {
-                  convId,
-                  convType,
-                  convName: convName ?? convId,
-                  selectedContacts: JSON.stringify(data),
-                  operateType: 'share_card',
-                  from: 'ShareContact',
-                  hash: Date.now(),
-                },
-              },
-              merge: true,
-            });
-          }
+          navi.navigate({
+            to: from,
+            props: {
+              convId,
+              convType,
+              convName,
+              selectedContacts: data,
+              operateType: 'share_card',
+            },
+          });
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
       />
     </SafeAreaView>

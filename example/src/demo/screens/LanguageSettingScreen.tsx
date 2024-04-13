@@ -12,17 +12,14 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import { useGeneralSetting } from '../hooks/useGeneralSetting';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LanguageSettingScreen(props: Props) {
-  const { navigation } = props;
-  // todo: save to user info.
-  //   const remark = ((route.params as any)?.params as any)?.remark;
-  //   const avatar = ((route.params as any)?.params as any)?.avatar;
-  //   const from = ((route.params as any)?.params as any)?.from;
-  //   const hash = ((route.params as any)?.params as any)?.hash;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -52,17 +49,11 @@ export function LanguageSettingScreen(props: Props) {
   const [currentLanguage, setCurrentLanguage] = React.useState(appLanguage);
 
   const onBack = () => {
-    navigation.goBack();
+    navi.goBack();
   };
   const onSave = () => {
-    // todo: save
     onSetAppLanguage(currentLanguage);
-    navigation.navigate('CommonSetting', {
-      params: {
-        from: 'LanguageSetting',
-        hash: Date.now(),
-      },
-    });
+    navi.navigate({ to: 'CommonSetting' });
   };
   const onChanged = (index: number) => {
     setCurrentLanguage(index === 0 ? 'zh-Hans' : 'en');
@@ -74,139 +65,130 @@ export function LanguageSettingScreen(props: Props) {
   }, [appLanguage]);
 
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: getColor('bg'),
-        // justifyContent: 'center',
-        // alignItems: 'center',
         flex: 1,
       }}
     >
-      <SafeAreaView
-        style={{
-          // backgroundColor: getColor('bg'),
-          flex: 1,
-        }}
-      >
-        <TopNavigationBar
-          containerStyle={{ backgroundColor: undefined }}
-          Left={
-            <Pressable
+      <TopNavigationBar
+        containerStyle={{ backgroundColor: undefined }}
+        Left={
+          <Pressable
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              height: 44,
+            }}
+            onPress={onBack}
+          >
+            <Icon
+              name={'chevron_left'}
+              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
+            />
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                height: 44,
+                color: getColor('t1'),
               }}
-              onPress={onBack}
             >
-              <Icon
-                name={'chevron_left'}
-                style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-              />
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{
-                  color: getColor('t1'),
-                }}
-              >
-                {tr('_demo_language_setting_navi_title')}
-              </Text>
-            </Pressable>
-          }
-          Right={
-            <Pressable
-              onPress={onSave}
-              style={{ paddingHorizontal: 8 }}
-              disabled={changed ? false : true}
+              {tr('_demo_language_setting_navi_title')}
+            </Text>
+          </Pressable>
+        }
+        Right={
+          <Pressable
+            onPress={onSave}
+            style={{ paddingHorizontal: 8 }}
+            disabled={changed ? false : true}
+          >
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{
+                color: getColor(changed ? 'enable' : 'disable'),
+              }}
             >
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{
-                  color: getColor(changed ? 'enable' : 'disable'),
-                }}
-              >
-                {tr('_demo_language_setting_navi_confim')}
-              </Text>
-            </Pressable>
-          }
-        />
+              {tr('_demo_language_setting_navi_confim')}
+            </Text>
+          </Pressable>
+        }
+      />
 
-        <ListItem
-          containerStyle={{ paddingHorizontal: 16 }}
-          onClicked={() => onChanged(0)}
-          LeftName={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('_demo_language_setting_language_cn')}
-              </Text>
-            </View>
-          }
-          RightIcon={
-            <Pressable
-              style={{ flexDirection: 'row', alignItems: 'center' }}
-              onPress={() => onChanged(0)}
+      <ListItem
+        containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={() => onChanged(0)}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
             >
-              <Icon
-                name={
-                  currentLanguage === 'en'
-                    ? 'unchecked_rectangle'
-                    : 'radio_rectangle'
-                }
-                style={{
-                  width: 28,
-                  height: 28,
-                  tintColor: getColor(
-                    currentLanguage === 'en' ? 'disable' : 'enable'
-                  ),
-                }}
-              />
-            </Pressable>
-          }
-        />
+              {tr('_demo_language_setting_language_cn')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <Pressable
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+            onPress={() => onChanged(0)}
+          >
+            <Icon
+              name={
+                currentLanguage === 'en'
+                  ? 'unchecked_rectangle'
+                  : 'radio_rectangle'
+              }
+              style={{
+                width: 28,
+                height: 28,
+                tintColor: getColor(
+                  currentLanguage === 'en' ? 'disable' : 'enable'
+                ),
+              }}
+            />
+          </Pressable>
+        }
+      />
 
-        <ListItem
-          containerStyle={{ paddingHorizontal: 16 }}
-          onClicked={() => onChanged(1)}
-          LeftName={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('_demo_language_setting_language_en')}
-              </Text>
-            </View>
-          }
-          RightIcon={
-            <Pressable
-              style={{ flexDirection: 'row', alignItems: 'center' }}
-              onPress={() => onChanged(1)}
+      <ListItem
+        containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={() => onChanged(1)}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
             >
-              <Icon
-                name={
-                  currentLanguage === 'zh-Hans'
-                    ? 'unchecked_rectangle'
-                    : 'radio_rectangle'
-                }
-                style={{
-                  width: 28,
-                  height: 28,
-                  tintColor: getColor(
-                    currentLanguage === 'zh-Hans' ? 'disable' : 'enable'
-                  ),
-                }}
-              />
-            </Pressable>
-          }
-        />
-      </SafeAreaView>
-    </View>
+              {tr('_demo_language_setting_language_en')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <Pressable
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+            onPress={() => onChanged(1)}
+          >
+            <Icon
+              name={
+                currentLanguage === 'zh-Hans'
+                  ? 'unchecked_rectangle'
+                  : 'radio_rectangle'
+              }
+              style={{
+                width: 28,
+                height: 28,
+                tintColor: getColor(
+                  currentLanguage === 'zh-Hans' ? 'disable' : 'enable'
+                ),
+              }}
+            />
+          </Pressable>
+        }
+      />
+    </SafeAreaView>
   );
 }

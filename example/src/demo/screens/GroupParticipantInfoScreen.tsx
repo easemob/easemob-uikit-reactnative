@@ -8,11 +8,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function GroupParticipantInfoScreen(props: Props) {
-  const { route, navigation } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -32,25 +34,23 @@ export function GroupParticipantInfoScreen(props: Props) {
       <GroupParticipantInfo
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         groupId={groupId}
         userId={userId}
         onSendMessage={(data) => {
           if (data) {
-            navigation.navigate('ConversationDetail', {
-              params: {
+            navi.navigate({
+              to: 'ConversationDetail',
+              props: {
                 convId: data,
                 convType: ChatConversationType.PeerChat,
                 convName: data,
-                from: 'GroupParticipantInfo',
-                hash: Date.now(),
               },
             });
           }
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
       />
     </SafeAreaView>

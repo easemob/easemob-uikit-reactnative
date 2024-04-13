@@ -13,11 +13,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useCallApi } from '../common/AVView';
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ContactInfoScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const { tr } = useI18nContext();
   const userId = ((route.params as any)?.params as any)?.userId;
   const { colors } = usePaletteContext();
@@ -34,12 +36,11 @@ export function ContactInfoScreen(props: Props) {
 
   const listener = React.useMemo<ChatServiceListener>(() => {
     return {
-      onContactDeleted: (userId: string): void => {
-        console.log(`onContactDeleted: ${userId}`);
-        navigation.goBack();
+      onContactDeleted: (_userId: string): void => {
+        navi.goBack();
       },
     } as ChatServiceListener;
-  }, [navigation]);
+  }, [navi]);
   useChatListener(listener);
 
   const goback = (data: string) => {
@@ -102,40 +103,38 @@ export function ContactInfoScreen(props: Props) {
         ref={contactRef}
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         userId={userId}
         onSendMessage={() => {
-          navigation.navigate('ConversationDetail', {
-            params: {
+          navi.navigate({
+            to: 'ConversationDetail',
+            props: {
               convId: userId,
               convType: 0,
               convName: userId,
-              from: 'ContactInfo',
-              hash: Date.now(),
             },
           });
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onClickedContactRemark={(userId, remark) => {
           console.log(`onClickedContactRemark: ${userId}, ${remark}`);
-          navigation.push('EditInfo', {
-            params: {
+          navi.push({
+            to: 'EditInfo',
+            props: {
               backName: tr('edit_contact_remark'),
               saveName: tr('save'),
               initialData: remark,
               maxLength: 128,
-              from: 'ContactInfo',
-              hash: Date.now(),
               testRef,
             },
           });
         }}
         onSearch={(id) => {
-          navigation.push('MessageSearch', {
-            params: { convId: id, convType: 0 },
+          navi.push({
+            to: 'MessageSearch',
+            props: { convId: id, convType: 0 },
           });
         }}
         onRequestData={onRequestData}

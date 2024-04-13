@@ -25,23 +25,13 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
-
-// export function MyMessageContent(props: MessageContentProps) {
-//   const { msg } = props;
-//   if (msg.body.type === ChatMessageType.CUSTOM) {
-//     return (
-//       <View>
-//         <Text>{(msg.body as ChatCustomMessageBody).params?.test}</Text>
-//       </View>
-//     );
-//   }
-//   return <MessageContent {...props} />;
-// }
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function MessageThreadDetailScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
   const thread = ((route.params as any)?.params as any)?.thread;
@@ -77,22 +67,6 @@ export function MessageThreadDetailScreen(props: Props) {
   const testRef = React.useRef<(data: any) => void>(goBack);
   const comType = React.useRef<ConversationDetailModelType>('thread').current;
 
-  // React.useEffect(() => {
-  //   if (selectedParticipants && operateType === 'mention') {
-  //     try {
-  //       const p = JSON.parse(selectedParticipants);
-  //       inputRef.current?.mentionSelected(
-  //         p.map((item: any) => {
-  //           return {
-  //             id: item.id,
-  //             name: item.name ?? item.id,
-  //           };
-  //         })
-  //       );
-  //     } catch {}
-  //   }
-  // }, [selectedParticipants, operateType]);
-
   React.useEffect(() => {
     if (selectedContacts && operateType === 'share_card') {
       try {
@@ -118,7 +92,6 @@ export function MessageThreadDetailScreen(props: Props) {
         type={comType}
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         convId={convId}
         convType={convType}
@@ -130,19 +103,19 @@ export function MessageThreadDetailScreen(props: Props) {
             bottom,
             // onInputMention: (groupId: string) => {
             //   // todo : select group member.
-            //   navigation.push('SelectSingleParticipant', {
+            //   navi.push('SelectSingleParticipant', {
             //     params: {
             //       groupId,
             //     },
             //   });
             // },
             onClickedCardMenu: () => {
-              navigation.push('ShareContact', {
-                params: {
+              navi.push({
+                to: 'ShareContact',
+                props: {
                   convId,
                   convType,
                   operateType: 'share_card',
-                  from: 'MessageThreadDetail',
                 },
               });
             },
@@ -180,24 +153,27 @@ export function MessageThreadDetailScreen(props: Props) {
               }
               const msgModel = model as MessageModel;
               if (msgModel.msg.body.type === ChatMessageType.IMAGE) {
-                navigation.push('ImageMessagePreview', {
-                  params: {
+                navi.push({
+                  to: 'ImageMessagePreview',
+                  props: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
                     msg: msgModel.msg,
                   },
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.VIDEO) {
-                navigation.push('VideoMessagePreview', {
-                  params: {
+                navi.push({
+                  to: 'VideoMessagePreview',
+                  props: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
                     msg: msgModel.msg,
                   },
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.FILE) {
-                navigation.push('FileMessagePreview', {
-                  params: {
+                navi.push({
+                  to: 'FileMessagePreview',
+                  props: {
                     msgId: msgModel.msg.msgId,
                     localMsgId: msgModel.msg.localMsgId,
                     msg: msgModel.msg,
@@ -213,16 +189,16 @@ export function MessageThreadDetailScreen(props: Props) {
                     nickname: string;
                     avatar: string;
                   };
-                  navigation.push('ContactInfo', {
-                    params: {
+                  navi.push({
+                    to: 'ContactInfo',
+                    props: {
                       userId: cardParams.userId,
                     },
                   });
                 }
               }
             },
-            onClickedItemAvatar: (id, model) => {
-              console.log('onClickedItemAvatar', id, model);
+            onClickedItemAvatar: (_id, model) => {
               if (model.modelType !== 'message') {
                 return;
               }
@@ -231,14 +207,16 @@ export function MessageThreadDetailScreen(props: Props) {
 
               const userType = msgModel.msg.chatType as number;
               if (userType === ChatMessageChatType.PeerChat) {
-                navigation.navigate('ContactInfo', {
-                  params: { userId: userId },
+                navi.navigate({
+                  to: 'ContactInfo',
+                  props: {
+                    userId: userId,
+                  },
                 });
               } else if (userType === ChatMessageChatType.GroupChat) {
-                // const groupId = msgModel.msg.conversationId;
-                // const selfId = im.userId;
-                navigation.navigate('ContactInfo', {
-                  params: {
+                navi.navigate({
+                  to: 'ContactInfo',
+                  props: {
                     userId: userId,
                   },
                 });
@@ -255,37 +233,37 @@ export function MessageThreadDetailScreen(props: Props) {
             firstMessage: firstMessage,
             onClickedEditThreadName: (thread) => {
               editTypeRef.current = 'threadName';
-              navigation.push('EditInfo', {
-                params: {
+              navi.push({
+                to: 'EditInfo',
+                props: {
                   backName: tr('edit_thread_name'),
                   saveName: tr('save'),
                   initialData: thread.threadName,
                   maxLength: 64,
                   testRef,
-                  from: 'MessageThreadDetail',
-                  hash: Date.now(),
                 },
               });
             },
             onClickedOpenThreadMemberList: (thread) => {
-              navigation.push('MessageThreadMemberList', {
-                params: {
-                  thread: thread,
+              navi.push({
+                to: 'MessageThreadMemberList',
+                props: {
+                  thread,
                 },
               });
             },
             onClickedLeaveThread: (threadId) => {
               im.leaveThread({ threadId });
-              navigation.goBack();
+              navi.goBack();
             },
             onClickedDestroyThread: (threadId) => {
               im.destroyThread({ threadId });
-              navigation.goBack();
+              navi.goBack();
             },
           },
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onClickedAvatar={(params: {
           convId: string;
@@ -293,21 +271,22 @@ export function MessageThreadDetailScreen(props: Props) {
           ownerId?: string | undefined;
         }) => {
           if (params.convType === ChatConversationType.PeerChat) {
-            navigation.navigate({
-              name: 'ContactInfo',
-              params: { params: { userId: params.convId } },
-              merge: true,
+            navi.navigate({
+              to: 'ContactInfo',
+              props: {
+                userId: params.convId,
+              },
             });
           } else if (params.convType === ChatConversationType.GroupChat) {
             if (comType === 'thread') {
               return;
             }
-            navigation.navigate({
-              name: 'GroupInfo',
-              params: {
-                params: { groupId: params.convId, ownerId: params.ownerId },
+            navi.navigate({
+              to: 'GroupInfo',
+              props: {
+                groupId: params.convId,
+                ownerId: params.ownerId,
               },
-              merge: true,
             });
           }
         }}
@@ -316,13 +295,12 @@ export function MessageThreadDetailScreen(props: Props) {
         // }
         // enableNavigationBar={true}
         onForwardMessage={(msgs) => {
-          // todo: navigation to forward message screen.
-          navigation.push('MessageForwardSelector', {
-            params: {
+          navi.push({
+            to: 'MessageForwardSelector',
+            props: {
               msgs,
               convId,
               convType,
-              from: 'MessageThreadDetail',
             },
           });
         }}

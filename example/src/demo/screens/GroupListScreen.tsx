@@ -1,6 +1,5 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { View } from 'react-native';
 import {
   GroupList,
   useColors,
@@ -8,11 +7,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function GroupListScreen(props: Props) {
-  const { navigation } = props;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -21,39 +22,28 @@ export function GroupListScreen(props: Props) {
     },
   });
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: getColor('bg'),
         flex: 1,
       }}
     >
-      <SafeAreaView
-        style={{
-          // backgroundColor: 'green',
-          flex: 1,
+      <GroupList
+        containerStyle={{
+          flexGrow: 1,
         }}
-      >
-        <GroupList
-          containerStyle={{
-            flexGrow: 1,
-          }}
-          onClickedSearch={() => {
-            navigation.push('SearchGroup', {});
-          }}
-          onClickedItem={(data) => {
-            if (data) {
-              navigation.push('GroupInfo', {
-                params: {
-                  groupId: data.groupId,
-                },
-              });
-            }
-          }}
-          onBack={() => {
-            navigation.goBack();
-          }}
-        />
-      </SafeAreaView>
-    </View>
+        onClickedSearch={() => {
+          navi.push({ to: 'SearchGroup' });
+        }}
+        onClickedItem={(data) => {
+          if (data) {
+            navi.push({ to: 'GroupInfo', props: { groupId: data.groupId } });
+          }
+        }}
+        onBack={() => {
+          navi.goBack();
+        }}
+      />
+    </SafeAreaView>
   );
 }

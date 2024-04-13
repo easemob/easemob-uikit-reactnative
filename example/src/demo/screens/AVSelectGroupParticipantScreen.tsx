@@ -7,11 +7,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function AVSelectGroupParticipantScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -20,8 +22,7 @@ export function AVSelectGroupParticipantScreen(props: Props) {
     },
   });
   const groupId = ((route.params as any)?.params as any)?.groupId;
-  const ownerId = ((route.params as any)?.params as any)?.ownerId;
-  const from = ((route.params as any)?.params as any)?.from;
+
   return (
     <SafeAreaView
       style={{
@@ -32,26 +33,16 @@ export function AVSelectGroupParticipantScreen(props: Props) {
       <AVSelectGroupParticipant
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         groupId={groupId}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onSelectResult={(data) => {
-          navigation.navigate({
-            name: from,
-            params: {
-              params: {
-                convId: groupId,
-                ownerId: ownerId,
-                convType: 1,
-                selectedMembers: data,
-                from: 'AVSelectGroupParticipant',
-                hash: Date.now(),
-              },
+          navi.goBack({
+            props: {
+              selectedMembers: data,
             },
-            merge: true,
           });
         }}
       />

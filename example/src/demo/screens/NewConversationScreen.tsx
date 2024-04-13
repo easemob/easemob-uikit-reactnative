@@ -8,11 +8,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function NewConversationScreen(props: Props) {
-  const { navigation } = props;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -30,24 +32,25 @@ export function NewConversationScreen(props: Props) {
       <NewConversation
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         onClickedSearch={() => {
-          navigation.navigate('SearchContact', {
-            params: { searchType: 'new-conversation' },
+          navi.navigate({
+            to: 'SearchContact',
+            props: {
+              searchType: 'new-conversation',
+            },
           });
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onClickedItem={(data) => {
-          navigation.navigate('ConversationDetail', {
-            params: {
+          navi.navigate({
+            to: 'ConversationDetail',
+            props: {
               convId: data?.userId,
               convType: ChatConversationType.PeerChat,
               convName: data?.userId,
-              from: 'NewConversation',
-              hash: Date.now(),
             },
           });
         }}

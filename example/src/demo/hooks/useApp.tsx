@@ -166,6 +166,10 @@ export function useApp() {
           ])
         );
       } else {
+        if (userIds.length === 0) {
+          params?.result();
+          return;
+        }
         im.getUsersInfo({
           userIds: userIds,
           onResult: (res) => {
@@ -272,7 +276,6 @@ export function useApp() {
       ids: string[];
       result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
     }) => {
-      console.log('test:zuoyu:getUsersInfo:3', params.ids);
       const userIds = params.ids;
       const noExistedIds = [] as string[];
       userIds.forEach((id) => {
@@ -287,7 +290,6 @@ export function useApp() {
           return;
         noExistedIds.push(id);
       });
-      console.log('test:zuoyu:getUsersInfo:2', noExistedIds);
       if (noExistedIds.length === 0) {
         const finalUsers = userIds
           .map<DataModel | undefined>((id) => {
@@ -305,6 +307,10 @@ export function useApp() {
           .filter((item) => item !== undefined) as DataModel[];
         params?.result({ data: finalUsers ?? [] });
       } else {
+        if (userIds.length === 0) {
+          params?.result({ data: [] });
+          return;
+        }
         im.getUsersInfo({
           userIds: userIds,
           onResult: (res) => {
@@ -325,7 +331,6 @@ export function useApp() {
                   return undefined;
                 })
                 .filter((item) => item !== undefined) as DataModel[];
-              console.log('test:zuoyu:getUsersInfo:', finalUsers);
               params?.result({ data: finalUsers ?? [] });
               updateDataToStorage();
             } else {

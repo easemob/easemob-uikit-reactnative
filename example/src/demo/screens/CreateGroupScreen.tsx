@@ -10,11 +10,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RestApi } from '../common/rest.api';
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function CreateGroupScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const im = useChatContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -23,9 +25,7 @@ export function CreateGroupScreen(props: Props) {
       dark: colors.neutral[1],
     },
   });
-  const data = ((route.params as any)?.params as any)?.data
-    ? JSON.parse(((route.params as any)?.params as any)?.data)
-    : undefined;
+  const data = ((route.params as any)?.params as any)?.data;
   return (
     <SafeAreaView
       style={{
@@ -36,24 +36,25 @@ export function CreateGroupScreen(props: Props) {
       <CreateGroup
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         onClickedSearch={() => {
-          navigation.navigate('SearchContact', {
-            params: { searchType: 'create-group' },
+          navi.navigate({
+            to: 'SearchContact',
+            props: {
+              searchType: 'create-group',
+            },
           });
         }}
         selectedData={data}
         onCreateGroupResult={(result) => {
           if (result.isOk === true && result.value) {
-            navigation.pop();
-            navigation.navigate('ConversationDetail', {
-              params: {
+            navi.navigation.pop();
+            navi.navigate({
+              to: 'ConversationDetail',
+              props: {
                 convId: result.value?.groupId,
                 convType: 1,
                 convName: result.value?.groupName ?? result.value?.groupId,
-                from: 'CreateGroup',
-                hash: Date.now(),
               },
             });
             const groupId = result.value?.groupId;
@@ -79,11 +80,11 @@ export function CreateGroupScreen(props: Props) {
                 console.warn('requestGroupAvatar:', e);
               });
           } else {
-            navigation.goBack();
+            navi.goBack();
           }
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         // onGetGroupName={() => 'test create group'}
       />

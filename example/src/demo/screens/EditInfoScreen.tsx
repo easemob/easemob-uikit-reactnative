@@ -7,11 +7,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function EditInfoScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const backName = ((route.params as any)?.params as any)?.backName;
   const saveName = ((route.params as any)?.params as any)?.saveName;
   const initialData = ((route.params as any)?.params as any)?.initialData;
@@ -36,23 +38,17 @@ export function EditInfoScreen(props: Props) {
       <EditInfo
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         backName={backName}
         saveName={saveName}
         initialData={initialData}
         maxLength={maxLength}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onSave={(data) => {
-          // navigation.setParams({});
-          // goBack?.(data);
           testRef.current?.(data);
-          navigation.goBack();
-          // navigation.setParams({ params: { data } });
-          // testRef.current = data;
-          // navigation.goBack();
+          navi.goBack();
         }}
       />
     </SafeAreaView>

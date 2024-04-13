@@ -7,11 +7,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function NewRequestScreen(props: Props) {
-  const { navigation } = props;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -29,17 +31,14 @@ export function NewRequestScreen(props: Props) {
       <NewRequests
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         onClickedItem={(data) => {
           if (data?.requestId) {
-            navigation.push('ContactInfo', {
-              params: { userId: data.requestId },
-            });
+            navi.push({ to: 'ContactInfo', props: { userId: data.requestId } });
           }
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
       />
     </SafeAreaView>

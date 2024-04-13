@@ -34,11 +34,13 @@ import {
   imServer as gImServer,
 } from '../common/const';
 import { RestApi } from '../common/rest.api';
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ServerSettingScreen(props: Props) {
-  const { navigation } = props;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const { style } = useThemeContext();
   const { tr } = useI18nContext();
   const { getAlertRef } = useServerSettingScreen();
@@ -75,8 +77,8 @@ export function ServerSettingScreen(props: Props) {
   >(undefined);
 
   const onBack = React.useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
+    navi.goBack();
+  }, [navi]);
   const onSave = React.useCallback(() => {
     // todo: 将变量保存到本地，之后重启时读取
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {

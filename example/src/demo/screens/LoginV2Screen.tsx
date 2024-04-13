@@ -29,13 +29,14 @@ import DeviceInfo from 'react-native-device-info';
 
 import { main_bg } from '../common/assets';
 import { RestApi } from '../common/rest.api';
-import { useLogin } from '../hooks';
+import { useLogin, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type CaptchaState = 'init' | 'sending' | 'sent' | 'resend' | 'error';
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LoginV2Screen(props: Props) {
-  const { navigation } = props;
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   const [id, setId] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [captchaState, setCaptchaState] = React.useState<CaptchaState>('init');
@@ -151,16 +152,16 @@ export function LoginV2Screen(props: Props) {
       if (countRef.current >= 4) {
         countRef.current = 0;
         SetServerSettingVisible(true);
-        navigation.push('LoginV2Setting', {});
+        navi.push({ to: 'LoginV2Setting' });
         return;
       }
       ++countRef.current;
     }
-  }, [navigation]);
+  }, [navi]);
 
   const onClickedServerSetting = React.useCallback(() => {
-    navigation.push('LoginV2Setting', {});
-  }, [navigation]);
+    navi.push({ to: 'LoginV2Setting' });
+  }, [navi]);
 
   const onClickedEnableDev = React.useCallback(() => {
     clearTimer();
@@ -198,14 +199,11 @@ export function LoginV2Screen(props: Props) {
       onResult: (res) => {
         setIsLoading(false);
         if (res.isOk) {
-          console.log('login success 2');
-          navigation.replace('Home', {});
-        } else {
-          console.log('login failed 2:');
+          navi.replace({ to: 'Home' });
         }
       },
     });
-  }, [check, getToastRef, id, loginAction, navigation, password, tr]);
+  }, [check, getToastRef, id, loginAction, navi, password, tr]);
 
   React.useEffect(() => {
     const appVersion = DeviceInfo.getVersion();

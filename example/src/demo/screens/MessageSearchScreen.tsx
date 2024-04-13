@@ -8,11 +8,13 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function MessageSearchScreen(props: Props) {
-  const { navigation, route } = props;
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -32,18 +34,18 @@ export function MessageSearchScreen(props: Props) {
       <MessageSearch
         containerStyle={{
           flexGrow: 1,
-          // backgroundColor: 'red',
         }}
         onCancel={(_data?: MessageSearchModel) => {
-          navigation.goBack();
+          navi.goBack();
         }}
         convId={convId}
         convType={convType}
         onClickedItem={(item) => {
-          navigation.push('MessageHistory', {
-            params: {
-              convId,
-              convType,
+          navi.push({
+            to: 'MessageHistory',
+            props: {
+              convId: convId,
+              convType: convType,
               messageId: item.msg.msgId,
             },
           });
