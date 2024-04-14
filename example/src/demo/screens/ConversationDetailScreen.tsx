@@ -25,6 +25,7 @@ import {
   SendCustomProps,
   SystemMessageModel,
   TimeMessageModel,
+  useChatContext,
   useColors,
   useI18nContext,
   usePaletteContext,
@@ -37,8 +38,8 @@ import {
 } from 'react-native-safe-area-context';
 
 import { useCallApi } from '../common/AVView';
-import { useStackScreenRoute } from '../hooks';
-import type { RootScreenParamsList } from '../routes';
+import { useOnce, useStackScreenRoute } from '../hooks';
+import type { RootParamsName, RootScreenParamsList } from '../routes';
 
 export function MyMessageContent(props: MessageContentProps) {
   const { msg, layoutType, isSupport, contentMaxWidth } = props;
@@ -63,23 +64,25 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ConversationDetailScreen(props: Props) {
   const { route } = props;
   const navi = useStackScreenRoute(props);
+  const name = route.name as RootParamsName;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
+  const messageId = ((route.params as any)?.params as any)?.messageId;
   const selectType = ((route.params as any)?.params as any)?.selectType;
+  const thread = ((route.params as any)?.params as any)?.thread;
+  const firstMessage = ((route.params as any)?.params as any)?.firstMessage;
+  const editedData = ((route.params as any)?.params as any)?.editedData;
+  const editType = ((route.params as any)?.params as any)?.editType;
   const from = ((route.params as any)?.params as any)?.__from;
-  const hash = ((route.params as any)?.params as any)?.__hash;
-  const onceRef = React.useRef(false);
-  const operateType = ((route.params as any)?.params as any)?.operateType;
-  // const selectedParticipants = ((route.params as any)?.params as any)
-  //   ?.selectedParticipants;
   const selectedContacts = ((route.params as any)?.params as any)
     ?.selectedContacts;
   const selectedMembers = ((route.params as any)?.params as any)
     ?.selectedMembers as GroupParticipantModel[] | undefined;
   const listRef = React.useRef<MessageListRef>({} as any);
   const inputRef = React.useRef<MessageInputRef>({} as any);
+  const im = useChatContext();
+  const { start, stop } = useOnce();
   const { top, bottom } = useSafeAreaInsets();
-  // const im = useChatContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -88,7 +91,15 @@ export function ConversationDetailScreen(props: Props) {
     },
   });
   const convRef = React.useRef<ConversationDetailRef>({} as any);
-  const comType = React.useRef<ConversationDetailModelType>('chat').current;
+  const comType = React.useRef<ConversationDetailModelType>(
+    name === 'ConversationDetail'
+      ? 'chat'
+      : name === 'MessageThreadDetail'
+      ? 'thread'
+      : name === 'MessageHistory'
+      ? 'search'
+      : 'create_thread'
+  ).current;
   const avTypeRef = React.useRef<'video' | 'voice'>('video');
   const { getSimpleToastRef } = useSimpleToastContext();
   const { tr } = useI18nContext();
@@ -99,7 +110,7 @@ export function ConversationDetailScreen(props: Props) {
   }, [selectedMembers]);
 
   const onClickedVideo = React.useCallback(() => {
-    if (comType !== 'chat') {
+    if (comType !== 'chat' && comType !== 'search') {
       return;
     }
     avTypeRef.current = 'video';
@@ -111,17 +122,18 @@ export function ConversationDetailScreen(props: Props) {
         getSelectedMembers: getSelectedMembers,
       });
     } else if (convType === 1) {
-      onceRef.current = true;
-      navi.push({
-        to: 'AVSelectGroupParticipant',
-        props: {
-          groupId: convId,
-        },
+      start(() => {
+        navi.push({
+          to: 'AVSelectGroupParticipant',
+          props: {
+            groupId: convId,
+          },
+        });
       });
     }
-  }, [comType, convId, convType, getSelectedMembers, navi, showCall]);
+  }, [comType, convId, convType, getSelectedMembers, navi, showCall, start]);
   const onClickedVoice = React.useCallback(() => {
-    if (comType !== 'chat') {
+    if (comType !== 'chat' && comType !== 'search') {
       return;
     }
     avTypeRef.current = 'voice';
@@ -133,55 +145,76 @@ export function ConversationDetailScreen(props: Props) {
         getSelectedMembers: getSelectedMembers,
       });
     } else if (convType === 1) {
-      onceRef.current = true;
-      navi.push({
-        to: 'AVSelectGroupParticipant',
-        props: {
-          groupId: convId,
-        },
+      start(() => {
+        navi.push({
+          to: 'AVSelectGroupParticipant',
+          props: {
+            groupId: convId,
+          },
+        });
       });
     }
-  }, [comType, convId, convType, getSelectedMembers, navi, showCall]);
-
-  React.useEffect(() => {
-    if (selectedContacts && operateType === 'share_card') {
-      if (onceRef.current === false) {
-        return;
-      }
-      onceRef.current = false;
-      try {
-        const p = JSON.parse(selectedContacts);
-        convRef.current?.sendCardMessage({ ...p, type: 'card' });
-      } catch {}
-    }
-  }, [selectedContacts, operateType]);
+  }, [comType, convId, convType, getSelectedMembers, navi, showCall, start]);
 
   React.useEffect(() => {
     if (from === 'MessageForwardSelector') {
-      if (hash) {
-        if (onceRef.current === false) {
-          return;
-        }
-        onceRef.current = false;
+      stop(() => {
         convRef.current?.changeSelectType(selectType);
-      }
+      });
     } else if (from === 'AVSelectGroupParticipant') {
-      if (hash) {
-        if (onceRef.current === false) {
-          return;
-        }
-        onceRef.current = false;
+      if (comType !== 'chat' && comType !== 'search') {
+        return;
+      }
+      stop(() => {
         showCall({
           convId,
           convType,
           avType: avTypeRef.current,
           getSelectedMembers: getSelectedMembers,
         });
+      });
+    } else if (from === 'ShareContact') {
+      if (comType !== 'chat' && comType !== 'search') {
+        return;
       }
+      stop(() => {
+        convRef.current?.sendCardMessage({
+          ...selectedContacts,
+          type: 'card',
+        });
+      });
+    } else if (from === 'EditInfo') {
+      if (comType !== 'thread') {
+        return;
+      }
+      stop(() => {
+        if (editType === 'threadName') {
+          im.updateThreadName({
+            threadId: convId,
+            name: editedData,
+          });
+        }
+      });
     }
-  }, [from, selectType, hash, showCall, convType, getSelectedMembers, convId]);
+  }, [
+    from,
+    selectType,
+    stop,
+    comType,
+    showCall,
+    convId,
+    convType,
+    getSelectedMembers,
+    selectedContacts,
+    im,
+    editedData,
+    editType,
+  ]);
 
   React.useEffect(() => {
+    if (comType !== 'chat' && comType !== 'search') {
+      return;
+    }
     const sub = DeviceEventEmitter.addListener(
       'onSignallingMessage',
       (data) => {
@@ -211,7 +244,7 @@ export function ConversationDetailScreen(props: Props) {
     return () => {
       sub.remove();
     };
-  }, [convId]);
+  }, [comType, convId]);
 
   return (
     <SafeAreaView
@@ -228,6 +261,8 @@ export function ConversationDetailScreen(props: Props) {
         }}
         convId={convId}
         convType={convType}
+        thread={thread}
+        msgId={messageId}
         selectType={selectType}
         input={{
           ref: inputRef,
@@ -243,14 +278,17 @@ export function ConversationDetailScreen(props: Props) {
             //   });
             // },
             onClickedCardMenu: () => {
-              onceRef.current = true;
-              navi.push({
-                to: 'ShareContact',
-                props: {
-                  convId,
-                  convType,
-                  operateType: 'share_card',
-                },
+              if (comType === 'create_thread') {
+                return;
+              }
+              start(() => {
+                navi.push({
+                  to: 'ShareContact',
+                  props: {
+                    convId,
+                    convType,
+                  },
+                });
               });
             },
             // onInitMenu: (menu) => {
@@ -278,16 +316,17 @@ export function ConversationDetailScreen(props: Props) {
           ref: listRef,
           props: {
             onClickedItem: (
-              id: string,
+              _id: string,
               model: SystemMessageModel | TimeMessageModel | MessageModel
             ) => {
-              console.log('onClickedItem', id, model);
+              if (comType === 'create_thread') {
+                return;
+              }
               if (model.modelType !== 'message') {
                 return;
               }
               const msgModel = model as MessageModel;
               if (msgModel.msg.body.type === ChatMessageType.IMAGE) {
-                onceRef.current = true;
                 navi.push({
                   to: 'ImageMessagePreview',
                   props: {
@@ -297,7 +336,6 @@ export function ConversationDetailScreen(props: Props) {
                   },
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.VIDEO) {
-                onceRef.current = true;
                 navi.push({
                   to: 'VideoMessagePreview',
                   props: {
@@ -307,7 +345,6 @@ export function ConversationDetailScreen(props: Props) {
                   },
                 });
               } else if (msgModel.msg.body.type === ChatMessageType.FILE) {
-                onceRef.current = true;
                 navi.push({
                   to: 'FileMessagePreview',
                   props: {
@@ -326,7 +363,6 @@ export function ConversationDetailScreen(props: Props) {
                     nickname: string;
                     avatar: string;
                   };
-                  onceRef.current = true;
                   navi.push({
                     to: 'ContactInfo',
                     props: {
@@ -336,8 +372,10 @@ export function ConversationDetailScreen(props: Props) {
                 }
               }
             },
-            onClickedItemAvatar: (id, model) => {
-              console.log('onClickedItemAvatar', id, model);
+            onClickedItemAvatar: (_id, model) => {
+              if (comType === 'create_thread') {
+                return;
+              }
               if (model.modelType !== 'message') {
                 return;
               }
@@ -346,7 +384,6 @@ export function ConversationDetailScreen(props: Props) {
 
               const userType = msgModel.msg.chatType as number;
               if (userType === ChatMessageChatType.PeerChat) {
-                onceRef.current = true;
                 navi.navigate({
                   to: 'ContactInfo',
                   props: {
@@ -354,7 +391,6 @@ export function ConversationDetailScreen(props: Props) {
                   },
                 });
               } else if (userType === ChatMessageChatType.GroupChat) {
-                onceRef.current = true;
                 navi.navigate({
                   to: 'ContactInfo',
                   props: {
@@ -371,8 +407,53 @@ export function ConversationDetailScreen(props: Props) {
             onNoMoreMessage: React.useCallback(() => {
               console.log('onNoMoreMessage');
             }, []),
+            firstMessage: firstMessage,
+            onClickedEditThreadName: (thread) => {
+              if (comType !== 'thread') {
+                return;
+              }
+              start(() => {
+                navi.push({
+                  to: 'EditInfo',
+                  props: {
+                    backName: tr('edit_thread_name'),
+                    saveName: tr('save'),
+                    initialData: thread.threadName,
+                    editType: 'threadName',
+                    maxLength: 64,
+                  },
+                });
+              });
+            },
+            onClickedOpenThreadMemberList: (thread) => {
+              if (comType !== 'thread') {
+                return;
+              }
+              navi.push({
+                to: 'MessageThreadMemberList',
+                props: {
+                  thread,
+                },
+              });
+            },
+            onClickedLeaveThread: (threadId) => {
+              if (comType !== 'thread') {
+                return;
+              }
+              im.leaveThread({ threadId });
+              navi.goBack();
+            },
+            onClickedDestroyThread: (threadId) => {
+              if (comType !== 'thread') {
+                return;
+              }
+              im.destroyThread({ threadId });
+              navi.goBack();
+            },
             onCreateThread: (params) => {
-              onceRef.current = true;
+              if (comType !== 'chat' && comType !== 'search') {
+                return;
+              }
               navi.navigate({
                 to: 'CreateThread',
                 props: {
@@ -383,7 +464,9 @@ export function ConversationDetailScreen(props: Props) {
               });
             },
             onOpenThread: (params) => {
-              onceRef.current = true;
+              if (comType !== 'chat' && comType !== 'search') {
+                return;
+              }
               navi.navigate({
                 to: 'MessageThreadDetail',
                 props: {
@@ -393,9 +476,10 @@ export function ConversationDetailScreen(props: Props) {
                 },
               });
             },
-            onClickedOpenThreadMemberList: () => {},
             onClickedHistoryDetail: (item) => {
-              onceRef.current = true;
+              if (comType !== 'chat' && comType !== 'search') {
+                return;
+              }
               navi.navigate({
                 to: 'MessageHistoryList',
                 props: {
@@ -404,7 +488,6 @@ export function ConversationDetailScreen(props: Props) {
               });
             },
             onCopyFinished: () => {
-              console.log('onCopyFinished');
               getSimpleToastRef().show({
                 message: tr('copy_success'),
               });
@@ -420,37 +503,38 @@ export function ConversationDetailScreen(props: Props) {
           ownerId?: string | undefined;
         }) => {
           if (params.convType === ChatConversationType.PeerChat) {
-            onceRef.current = true;
             navi.navigate({
               to: 'ContactInfo',
               props: { userId: params.convId },
               merge: true,
             });
           } else if (params.convType === ChatConversationType.GroupChat) {
-            onceRef.current = true;
             navi.navigate({
               to: 'GroupInfo',
-              props: { groupId: params.convId, ownerId: params.ownerId },
+              props: {
+                groupId: params.convId,
+                ownerId: params.ownerId,
+              },
               merge: true,
             });
           }
         }}
         onClickedThread={() => {
-          onceRef.current = true;
           navi.navigate({
             to: 'MessageThreadList',
             props: { params: { parentId: convId } },
           });
         }}
         onForwardMessage={(msgs) => {
-          onceRef.current = true;
-          navi.push({
-            to: 'MessageForwardSelector',
-            props: {
-              msgs,
-              convId,
-              convType,
-            },
+          start(() => {
+            navi.push({
+              to: 'MessageForwardSelector',
+              props: {
+                msgs,
+                convId,
+                convType,
+              },
+            });
           });
         }}
         onClickedVideo={onClickedVideo}

@@ -13,15 +13,19 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useCallApi } from '../common/AVView';
-import { useStackScreenRoute } from '../hooks';
+import { useOnce, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ContactInfoScreen(props: Props) {
   const { route } = props;
   const navi = useStackScreenRoute(props);
+  const { start, stop } = useOnce();
   const { tr } = useI18nContext();
   const userId = ((route.params as any)?.params as any)?.userId;
+  const editedData = ((route.params as any)?.params as any)?.editedData;
+  const editType = ((route.params as any)?.params as any)?.editType;
+  const from = ((route.params as any)?.params as any)?.__from;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -42,13 +46,6 @@ export function ContactInfoScreen(props: Props) {
     } as ChatServiceListener;
   }, [navi]);
   useChatListener(listener);
-
-  const goback = (data: string) => {
-    if (data) {
-      contactRef.current?.setContactRemark?.(userId, data);
-    }
-  };
-  const testRef = React.useRef<(data: any) => void>(goback);
 
   const onRequestData = React.useCallback(
     async (_id: string) => {
@@ -92,6 +89,16 @@ export function ContactInfoScreen(props: Props) {
     [showCall]
   );
 
+  React.useEffect(() => {
+    if (from === 'EditInfo') {
+      stop(() => {
+        if (editType === 'contactRemark') {
+          contactRef.current?.setContactRemark?.(userId, editedData);
+        }
+      });
+    }
+  }, [editType, editedData, from, stop, userId]);
+
   return (
     <SafeAreaView
       style={{
@@ -111,24 +118,24 @@ export function ContactInfoScreen(props: Props) {
             props: {
               convId: userId,
               convType: 0,
-              convName: userId,
             },
           });
         }}
         onBack={() => {
           navi.goBack();
         }}
-        onClickedContactRemark={(userId, remark) => {
-          console.log(`onClickedContactRemark: ${userId}, ${remark}`);
-          navi.push({
-            to: 'EditInfo',
-            props: {
-              backName: tr('edit_contact_remark'),
-              saveName: tr('save'),
-              initialData: remark,
-              maxLength: 128,
-              testRef,
-            },
+        onClickedContactRemark={(_userId, remark) => {
+          start(() => {
+            navi.push({
+              to: 'EditInfo',
+              props: {
+                backName: tr('edit_contact_remark'),
+                saveName: tr('save'),
+                initialData: remark,
+                editType: 'contactRemark',
+                maxLength: 128,
+              },
+            });
           });
         }}
         onSearch={(id) => {

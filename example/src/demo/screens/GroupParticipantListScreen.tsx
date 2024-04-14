@@ -1,10 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
-  DataModel,
-  DataModelType,
   GroupParticipantList,
-  UIKitError,
   useColors,
   usePaletteContext,
 } from 'react-native-chat-uikit';
@@ -36,23 +33,6 @@ export function GroupParticipantListScreen(props: Props) {
         groupId={groupId}
         containerStyle={{
           flexGrow: 1,
-        }}
-        onRequestGroupData={(params: {
-          groupId: string;
-          ids: string[];
-          result: (data?: DataModel[], error?: UIKitError) => void;
-        }) => {
-          params?.result(
-            params.ids.map((v) => {
-              return {
-                id: v,
-                name: v + 'name',
-                avatar:
-                  'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-                type: 'user' as DataModelType,
-              };
-            })
-          );
         }}
         onClickedSearch={() => {
           navi.push({ to: 'GroupParticipantList' });

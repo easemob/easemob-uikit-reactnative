@@ -84,7 +84,6 @@ export function SearchContactScreen(props: Props) {
                 convType,
                 convName,
                 selectedContacts: data,
-                operateType: 'share_card',
               },
             });
           } else if (searchType === 'new-conversation') {

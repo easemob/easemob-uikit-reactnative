@@ -101,7 +101,6 @@ export function formatNavigationState(
   result: string[] & string[][]
 ) {
   if (state) {
-    console.log('test:zuoyu:state', JSON.stringify(state));
     const ret: string[] & string[][] = [];
     for (const route of state.routes) {
       ret.push(route.name);

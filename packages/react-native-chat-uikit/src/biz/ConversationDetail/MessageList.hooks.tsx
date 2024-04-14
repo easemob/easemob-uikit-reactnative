@@ -678,7 +678,10 @@ export function useMessageList(
   );
 
   const getMsgModel = React.useCallback(
-    async (msg: ChatMessage): Promise<MessageModel | SystemMessageModel> => {
+    async (
+      msg: ChatMessage,
+      isHigh?: boolean
+    ): Promise<MessageModel | SystemMessageModel> => {
       let modelType = 'message';
       if (msg.body.type === ChatMessageType.CUSTOM) {
         const body = msg.body as ChatCustomMessageBody;
@@ -722,6 +725,7 @@ export function useMessageList(
           userName: d.remark ?? d.name,
           userAvatar: d.avatar,
           checked: selectType === 'multi' ? false : undefined,
+          isHightBackground: comType === 'search' ? isHigh : undefined,
         } as MessageModel;
       }
     },
@@ -1491,7 +1495,7 @@ export function useMessageList(
         onAddDataToUI(
           {
             id: msg.msgId.toString(),
-            model: await getMsgModel(msg),
+            model: await getMsgModel(msg, isHigh),
             containerStyle: getStyle(),
           },
           inverted === true ? 'bottom' : 'bottom'

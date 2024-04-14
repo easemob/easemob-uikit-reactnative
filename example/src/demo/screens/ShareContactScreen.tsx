@@ -23,8 +23,6 @@ export function ShareContactScreen(props: Props) {
   });
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
-  const convName = ((route.params as any)?.params as any)?.convName;
-  const from = ((route.params as any)?.params as any)?.__from;
   return (
     <SafeAreaView
       style={{
@@ -43,19 +41,13 @@ export function ShareContactScreen(props: Props) {
               searchType: 'share-contact',
               convId,
               convType,
-              convName,
             },
           });
         }}
         onClickedItem={(data) => {
-          navi.navigate({
-            to: from,
+          navi.goBack({
             props: {
-              convId,
-              convType,
-              convName,
               selectedContacts: data,
-              operateType: 'share_card',
             },
           });
         }}

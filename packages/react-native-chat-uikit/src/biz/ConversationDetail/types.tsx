@@ -345,6 +345,27 @@ export type ConversationDetailProps = PropsWithError &
      * Callback notification when forward message.
      */
     onForwardMessage?: (msgs: ChatMessage[]) => void;
+
+    /**
+     * Callback notification when create thread is completed.
+     *
+     * If the return thread is not undefined, the thread will be created successfully.
+     *
+     * Normally modify the necessary parameters. For example: type, msgId, threadId, etc.
+     */
+    onCreateThreadResult?: (
+      thread?: ChatMessageThread,
+      firstMessage?:
+        | SendFileProps
+        | SendImageProps
+        | SendTextProps
+        | SendVideoProps
+        | SendVoiceProps
+        | SendTimeProps
+        | SendSystemProps
+        | SendCardProps
+        | SendCustomProps
+    ) => void;
   };
 
 /**

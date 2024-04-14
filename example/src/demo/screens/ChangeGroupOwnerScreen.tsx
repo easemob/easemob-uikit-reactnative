@@ -38,8 +38,7 @@ export function ChangeGroupOwnerScreen(props: Props) {
           navi.goBack();
         }}
         onChangeResult={(data) => {
-          navi.navigate({
-            to: 'GroupInfo',
+          navi.goBack({
             props: { groupId, ownerId: data.value },
           });
         }}

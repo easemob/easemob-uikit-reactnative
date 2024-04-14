@@ -317,8 +317,6 @@ export function useCallApi(props: AVViewProps) {
     [hideCall, im.userId, showMultiCall, showSingleCall]
   );
 
-  React.useEffect(() => {}, []);
-
   return {
     showSingleCall,
     showMultiCall,

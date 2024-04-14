@@ -36,9 +36,7 @@ import {
   ChangeGroupOwnerScreen,
   ColorSettingScreen,
   ContactInfoScreen,
-  ContactListScreen,
   ConversationDetailScreen,
-  ConversationListScreen,
   CreateGroupScreen,
   CreateThreadScreen,
   DelGroupParticipantScreen,
@@ -56,9 +54,7 @@ import {
   LoginV2Screen,
   MessageForwardSelectorScreen,
   MessageHistoryListScreen,
-  MessageHistoryScreen,
   MessageSearchScreen,
-  MessageThreadDetailScreen,
   MessageThreadListScreen,
   MessageThreadMemberListScreen,
   NewConversationScreen,
@@ -338,20 +334,6 @@ export function App() {
                 component={HomeScreen}
               />
               <Root.Screen
-                name={'ConversationList'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ConversationListScreen}
-              />
-              <Root.Screen
-                name={'ContactList'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ContactListScreen}
-              />
-              <Root.Screen
                 name={'SearchConversation'}
                 options={{
                   headerShown: false,
@@ -510,7 +492,7 @@ export function App() {
                 options={{
                   headerShown: false,
                 }}
-                component={MessageThreadDetailScreen}
+                component={ConversationDetailScreen}
               />
               <Root.Screen
                 name={'MessageThreadList'}
@@ -552,7 +534,7 @@ export function App() {
                 options={{
                   headerShown: false,
                 }}
-                component={MessageHistoryScreen}
+                component={ConversationDetailScreen}
               />
               <Root.Screen
                 name={'Splash'}

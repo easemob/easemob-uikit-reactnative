@@ -18,9 +18,7 @@ export function EditInfoScreen(props: Props) {
   const saveName = ((route.params as any)?.params as any)?.saveName;
   const initialData = ((route.params as any)?.params as any)?.initialData;
   const maxLength = ((route.params as any)?.params as any)?.maxLength;
-  // const goBack = ((route.params as any)?.params as any)?.goBack;
-  const testRef = ((route.params as any)?.params as any)
-    ?.testRef as React.MutableRefObject<(data: any) => void>;
+  const editType = ((route.params as any)?.params as any)?.editType;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -47,8 +45,13 @@ export function EditInfoScreen(props: Props) {
           navi.goBack();
         }}
         onSave={(data) => {
-          testRef.current?.(data);
-          navi.goBack();
+          // testRef.current?.(data);
+          navi.goBack({
+            props: {
+              editedData: data,
+              editType,
+            },
+          });
         }}
       />
     </SafeAreaView>
