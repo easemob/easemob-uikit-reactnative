@@ -74,6 +74,7 @@ export function ConversationDetailScreen(props: Props) {
   const editedData = ((route.params as any)?.params as any)?.editedData;
   const editType = ((route.params as any)?.params as any)?.editType;
   const from = ((route.params as any)?.params as any)?.__from;
+  const hash = ((route.params as any)?.params as any)?.__hash;
   const selectedContacts = ((route.params as any)?.params as any)
     ?.selectedContacts;
   const selectedMembers = ((route.params as any)?.params as any)
@@ -157,6 +158,7 @@ export function ConversationDetailScreen(props: Props) {
   }, [comType, convId, convType, getSelectedMembers, navi, showCall, start]);
 
   React.useEffect(() => {
+    hash;
     if (from === 'MessageForwardSelector') {
       stop(() => {
         convRef.current?.changeSelectType(selectType);
@@ -201,14 +203,15 @@ export function ConversationDetailScreen(props: Props) {
     selectType,
     stop,
     comType,
-    showCall,
-    convId,
-    convType,
     getSelectedMembers,
     selectedContacts,
     im,
     editedData,
     editType,
+    hash,
+    showCall,
+    convId,
+    convType,
   ]);
 
   React.useEffect(() => {

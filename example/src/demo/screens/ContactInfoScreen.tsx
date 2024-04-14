@@ -26,6 +26,7 @@ export function ContactInfoScreen(props: Props) {
   const editedData = ((route.params as any)?.params as any)?.editedData;
   const editType = ((route.params as any)?.params as any)?.editType;
   const from = ((route.params as any)?.params as any)?.__from;
+  const hash = ((route.params as any)?.params as any)?.__hash;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -90,6 +91,7 @@ export function ContactInfoScreen(props: Props) {
   );
 
   React.useEffect(() => {
+    hash;
     if (from === 'EditInfo') {
       stop(() => {
         if (editType === 'contactRemark') {
@@ -97,7 +99,7 @@ export function ContactInfoScreen(props: Props) {
         }
       });
     }
-  }, [editType, editedData, from, stop, userId]);
+  }, [editType, editedData, stop, userId, hash, from]);
 
   return (
     <SafeAreaView

@@ -88,7 +88,7 @@ function goBackFC<Props extends NavigationParams<any>>(
     navigateFC(navigation, {
       from: params?.from,
       to: _to,
-      props: { ..._props, ...props },
+      props: { ..._props, ...props, __hash: Date.now() },
       merge: merge,
     });
   } else {

@@ -23,7 +23,6 @@ export function MessageForwardSelectorScreen(props: Props) {
   const msgs = ((route.params as any)?.params as any)?.msgs;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
-  const from = ((route.params as any)?.params as any)?.__from;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -53,11 +52,8 @@ export function MessageForwardSelectorScreen(props: Props) {
       <MessageForwardSelector
         propsRef={ref}
         onBack={() => {
-          navi.navigate({
-            to: from,
+          navi.goBack({
             props: {
-              convId: convId,
-              convType: convType,
               selectType: 'common',
             },
           });

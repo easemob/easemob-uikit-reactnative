@@ -31,6 +31,7 @@ export function GroupInfoScreen(props: Props) {
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
   const from = ((route.params as any)?.params as any)?.__from;
+  const hash = ((route.params as any)?.params as any)?.__hash;
   const editedData = ((route.params as any)?.params as any)?.editedData;
   const editType = ((route.params as any)?.params as any)?.editType;
   const selectedMembers = ((route.params as any)?.params as any)
@@ -73,6 +74,7 @@ export function GroupInfoScreen(props: Props) {
   );
 
   React.useEffect(() => {
+    hash;
     if (from === 'AVSelectGroupParticipant') {
       stop(() => {
         showCall({
@@ -97,11 +99,12 @@ export function GroupInfoScreen(props: Props) {
     from,
     showCall,
     getSelectedMembers,
-    groupId,
-    stop,
     selectedMembers,
     editType,
     editedData,
+    hash,
+    stop,
+    groupId,
   ]);
 
   return (
