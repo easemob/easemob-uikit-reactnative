@@ -1,5 +1,6 @@
 export * from './assets';
 export * from './biz/Avatar';
+export * from './biz/Back';
 export * from './biz/Badges';
 export * from './biz/BottomSheetEmojiList';
 export * from './biz/BottomSheetMenu';

@@ -9,6 +9,7 @@ import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
+import { BackButton } from '../Back';
 import type { TopNavigationBarProps } from './types';
 
 /**
@@ -181,5 +182,41 @@ export function TopNavigationBarTitle({ text }: { text: string }) {
         {tr(text)}
       </Text>
     </View>
+  );
+}
+
+type TopNavigationBarLeftProps = {
+  onBack?: () => void;
+  content: string;
+};
+export function TopNavigationBarLeft(props: TopNavigationBarLeftProps) {
+  const { onBack, content } = props;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    fg: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+  });
+  return (
+    <Pressable
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 44,
+      }}
+      onPress={onBack}
+    >
+      <BackButton />
+      <SingleLineText
+        textType={'medium'}
+        paletteType={'title'}
+        style={{
+          color: getColor('fg'),
+        }}
+      >
+        {content}
+      </SingleLineText>
+    </Pressable>
   );
 }

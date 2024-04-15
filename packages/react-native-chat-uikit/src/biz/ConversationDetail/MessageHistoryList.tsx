@@ -1,25 +1,18 @@
 import * as React from 'react';
-import {
-  ListRenderItemInfo,
-  // Image as RNImage,
-  Pressable,
-  View,
-} from 'react-native';
+import { ListRenderItemInfo, View } from 'react-native';
 
 import { useChatContext } from '../../chat';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
-import { Icon } from '../../ui/Image';
-import { Text } from '../../ui/Text';
 import { useFlatList } from '../List';
 import {
   EmptyPlaceholder,
   ErrorPlaceholder,
   LoadingPlaceholder,
 } from '../Placeholder';
-import { TopNavigationBar } from '../TopNavigationBar';
+import { TopNavigationBar, TopNavigationBarLeft } from '../TopNavigationBar';
 import { MessageHistoryListItemMemo } from './MessageHistoryListItem';
 import type {
   MessageHistoryListItemProps,
@@ -61,22 +54,10 @@ export function MessageHistoryList(props: MessageHistoryListProps) {
         ) : (
           <TopNavigationBar
             Left={
-              <Pressable
-                style={{ flexDirection: 'row', alignItems: 'center' }}
-                onPress={onBack}
-              >
-                <Icon
-                  name={'chevron_left'}
-                  style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-                />
-                <Text
-                  paletteType={'title'}
-                  textType={'medium'}
-                  style={{ color: getColor('text') }}
-                >
-                  {tr('_uikit_history_record')}
-                </Text>
-              </Pressable>
+              <TopNavigationBarLeft
+                onBack={onBack}
+                content={tr('_uikit_history_record')}
+              />
             }
             Right={<View style={{ width: 32, height: 32 }} />}
           />

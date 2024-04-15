@@ -13,6 +13,7 @@ import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
 import { Avatar, GroupAvatar, StatusAvatar } from '../Avatar';
+import { BackButton } from '../Back';
 import {
   TopNavigationBar,
   TopNavigationBarElementType,
@@ -219,12 +220,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
           }}
           onPress={selectMode === 'multi' ? null : onBack}
         >
-          {selectMode !== 'multi' ? (
-            <Icon
-              name={'chevron_left'}
-              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-            />
-          ) : null}
+          {selectMode !== 'multi' ? <BackButton /> : null}
 
           {comType === 'chat' || comType === 'search' ? (
             <Pressable

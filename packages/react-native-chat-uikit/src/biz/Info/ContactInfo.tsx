@@ -10,6 +10,7 @@ import { CommonSwitch } from '../../ui/Switch';
 import { SingleLineText, Text } from '../../ui/Text';
 import { SimpleToast } from '../../ui/Toast';
 import { StatusAvatar } from '../Avatar';
+import { BackButton } from '../Back';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { ListItem } from '../ListItem';
 import { TopNavigationBar } from '../TopNavigationBar';
@@ -118,14 +119,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
                   }}
                   onPress={onBack}
                 >
-                  <Icon
-                    name={'chevron_left'}
-                    style={{
-                      width: 24,
-                      height: 24,
-                      tintColor: getColor('icon'),
-                    }}
-                  />
+                  <BackButton />
                 </Pressable>
               }
               Right={

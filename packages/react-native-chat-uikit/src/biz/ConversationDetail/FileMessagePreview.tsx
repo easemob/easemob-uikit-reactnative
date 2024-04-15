@@ -11,11 +11,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { gMessageAttributeFileProgress, useChatContext } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { ErrorCode, UIKitError } from '../../error';
-import { useColors } from '../../hook';
 import { Services } from '../../services';
-import { usePaletteContext } from '../../theme';
-import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
+import { BackButton } from '../Back';
 import type { PropsWithBack, PropsWithChildren } from '../types';
 
 /**
@@ -62,13 +60,6 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
   } = props;
   const im = useChatContext();
   const { top } = useSafeAreaInsets();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
-    },
-  });
   const [progress, setProgress] = React.useState(0);
 
   const download = React.useCallback(
@@ -198,10 +189,7 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
           onPress={onBack}
           // pointerEvents={'none'}
         >
-          <Icon
-            name={'chevron_left'}
-            style={{ height: 24, width: 24, tintColor: getColor('icon') }}
-          />
+          <BackButton />
         </Pressable>
       </View>
     );

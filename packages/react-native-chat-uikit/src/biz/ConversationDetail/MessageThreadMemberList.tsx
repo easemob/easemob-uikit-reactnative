@@ -6,7 +6,6 @@ import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
-import { Icon } from '../../ui/Image';
 import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import {
@@ -21,7 +20,7 @@ import {
   ErrorPlaceholder,
   LoadingPlaceholder,
 } from '../Placeholder';
-import { TopNavigationBar } from '../TopNavigationBar';
+import { TopNavigationBar, TopNavigationBarLeft } from '../TopNavigationBar';
 import { gRequestMaxThreadCount } from './const';
 import type {
   MessageThreadMemberListItemProps,
@@ -84,22 +83,10 @@ export function MessageThreadMemberList(props: MessageThreadMemberListProps) {
         ) : (
           <TopNavigationBar
             Left={
-              <Pressable
-                style={{ flexDirection: 'row', alignItems: 'center' }}
-                onPress={onBack}
-              >
-                <Icon
-                  name={'chevron_left'}
-                  style={{ width: 24, height: 24, tintColor: getColor('text') }}
-                />
-                <SingleLineText
-                  paletteType={'title'}
-                  textType={'medium'}
-                  style={{ color: getColor('text') }}
-                >
-                  {tr('_uikit_thread_member')}
-                </SingleLineText>
-              </Pressable>
+              <TopNavigationBarLeft
+                onBack={onBack}
+                content={tr('_uikit_thread_member')}
+              />
             }
             Right={<View style={{ width: 32, height: 32 }} />}
           />

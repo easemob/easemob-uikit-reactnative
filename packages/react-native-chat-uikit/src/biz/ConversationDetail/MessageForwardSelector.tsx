@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import type { ChatMessage } from 'react-native-chat-sdk';
 
 import {
@@ -8,16 +8,12 @@ import {
   GroupModel,
   useChatContext,
 } from '../../chat';
-import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
-import { usePaletteContext } from '../../theme';
-import { Icon } from '../../ui/Image';
 import { TabPage, TabPageHeader } from '../../ui/TabPage';
-import { Text } from '../../ui/Text';
 import { ContactList, ContactListProps } from '../ContactList';
 import { GroupList, GroupListProps } from '../GroupList';
 import { useMessageSnapshot } from '../hooks';
-import { TopNavigationBar } from '../TopNavigationBar';
+import { TopNavigationBar, TopNavigationBarLeft } from '../TopNavigationBar';
 import type {
   PropsWithBack,
   PropsWithNavigationBar,
@@ -81,13 +77,6 @@ export function MessageForwardSelector(props: MessageForwardSelectorProps) {
     selectedMsgs,
   } = props;
   const { tr } = useI18nContext();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
   const [height, setHeight] = React.useState<number | undefined>(undefined);
   const im = useChatContext();
   const { getMessageSnapshot } = useMessageSnapshot();
@@ -143,22 +132,10 @@ export function MessageForwardSelector(props: MessageForwardSelectorProps) {
         ) : (
           <TopNavigationBar
             Left={
-              <Pressable
-                style={{ flexDirection: 'row', alignItems: 'center' }}
-                onPress={onBack}
-              >
-                <Icon
-                  name={'chevron_left'}
-                  style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-                />
-                <Text
-                  paletteType={'title'}
-                  textType={'medium'}
-                  style={{ color: getColor('text') }}
-                >
-                  {tr('_uikit_forward_to')}
-                </Text>
-              </Pressable>
+              <TopNavigationBarLeft
+                onBack={onBack}
+                content={tr('_uikit_forward_to')}
+              />
             }
             Right={<View style={{ width: 32, height: 32 }} />}
           />

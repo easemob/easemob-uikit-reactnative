@@ -10,6 +10,7 @@ import { CommonSwitch } from '../../ui/Switch';
 import { Text } from '../../ui/Text';
 import { SimpleToast } from '../../ui/Toast';
 import { Avatar } from '../Avatar';
+import { BackButton } from '../Back';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { ListItem } from '../ListItem';
 import { TopNavigationBar } from '../TopNavigationBar';
@@ -109,10 +110,7 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
                 }}
                 onPress={onBack}
               >
-                <Icon
-                  name={'chevron_left'}
-                  style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-                />
+                <BackButton />
               </Pressable>
             }
             Right={

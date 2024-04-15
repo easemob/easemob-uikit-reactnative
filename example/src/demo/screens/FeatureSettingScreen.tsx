@@ -1,13 +1,13 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import {
-  Icon,
   ListItem,
   SingleLineText,
   Switch,
   Text,
   TopNavigationBar,
+  TopNavigationBarLeft,
   useColors,
   useI18nContext,
   usePaletteContext,
@@ -68,28 +68,10 @@ export function FeatureSettingScreen(props: Props) {
       <TopNavigationBar
         containerStyle={{ backgroundColor: undefined }}
         Left={
-          <Pressable
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              height: 44,
-            }}
-            onPress={onBack}
-          >
-            <Icon
-              name={'chevron_left'}
-              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-            />
-            <Text
-              textType={'medium'}
-              paletteType={'title'}
-              style={{
-                color: getColor('t1'),
-              }}
-            >
-              {tr('_demo_feature_setting_navi_title')}
-            </Text>
-          </Pressable>
+          <TopNavigationBarLeft
+            onBack={onBack}
+            content={tr('_demo_feature_setting_navi_title')}
+          />
         }
         Right={<View />}
       />

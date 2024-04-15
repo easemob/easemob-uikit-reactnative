@@ -8,6 +8,7 @@ import {
   SingleLineText,
   Text,
   TopNavigationBar,
+  TopNavigationBarLeft,
   UIKIT_VERSION,
   useColors,
   useI18nContext,
@@ -85,28 +86,10 @@ export function AboutSettingScreen(props: Props) {
       <TopNavigationBar
         containerStyle={{ backgroundColor: undefined }}
         Left={
-          <Pressable
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              height: 44,
-            }}
-            onPress={onBack}
-          >
-            <Icon
-              name={'chevron_left'}
-              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-            />
-            <Text
-              textType={'medium'}
-              paletteType={'title'}
-              style={{
-                color: getColor('t1'),
-              }}
-            >
-              {tr('_demo_about_setting_navi_title')}
-            </Text>
-          </Pressable>
+          <TopNavigationBarLeft
+            onBack={onBack}
+            content={tr('_demo_about_setting_navi_title')}
+          />
         }
         Right={<View />}
       />

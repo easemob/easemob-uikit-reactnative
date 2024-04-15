@@ -6,9 +6,8 @@ import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
-import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
-import { TopNavigationBar } from '../TopNavigationBar';
+import { TopNavigationBar, TopNavigationBarLeft } from '../TopNavigationBar';
 import type { GroupParticipantListNavigationBarProps } from './types';
 
 type _GroupParticipantListNavigationBarProps =
@@ -74,22 +73,10 @@ export const GroupParticipantListNavigationBar = (
     return (
       <TopNavigationBar
         Left={
-          <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}
-            onPress={onBack}
-          >
-            <Icon
-              name={'chevron_left'}
-              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-            />
-            <Text
-              textType={'medium'}
-              paletteType={'title'}
-              style={{ color: getColor('text') }}
-            >
-              {tr('_uikit_group_del_member_title')}
-            </Text>
-          </Pressable>
+          <TopNavigationBarLeft
+            onBack={onBack}
+            content={tr('_uikit_group_del_member_title')}
+          />
         }
         Right={
           isOwner === true ? (
@@ -118,22 +105,10 @@ export const GroupParticipantListNavigationBar = (
       <TopNavigationBar
         Left={
           isOwner === true ? (
-            <Pressable
-              style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}
-              onPress={onBack}
-            >
-              <Icon
-                name={'chevron_left'}
-                style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-              />
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('text') }}
-              >
-                {tr('_uikit_group_change_owner_title')}
-              </Text>
-            </Pressable>
+            <TopNavigationBarLeft
+              onBack={onBack}
+              content={tr('_uikit_group_change_owner_title')}
+            />
           ) : null
         }
         Right={<View style={{ width: 1, height: 1 }} />}
@@ -142,22 +117,7 @@ export const GroupParticipantListNavigationBar = (
   } else if (participantType === 'mention') {
     return (
       <TopNavigationBar
-        Left={
-          <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}
-            onPress={onBack}
-          >
-            <Icon
-              name={'chevron_left'}
-              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-            />
-            <Text
-              textType={'medium'}
-              paletteType={'title'}
-              style={{ color: getColor('text') }}
-            >{`@ mention`}</Text>
-          </Pressable>
-        }
+        Left={<TopNavigationBarLeft onBack={onBack} content={`@ mention`} />}
         Right={<View style={{ width: 1, height: 1 }} />}
       />
     );
@@ -165,22 +125,10 @@ export const GroupParticipantListNavigationBar = (
     return (
       <TopNavigationBar
         Left={
-          <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}
-            onPress={onBack}
-          >
-            <Icon
-              name={'chevron_left'}
-              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-            />
-            <Text
-              textType={'medium'}
-              paletteType={'label'}
-              style={{ color: getColor('text') }}
-            >
-              {tr('_uikit_group_av_meeting')}
-            </Text>
-          </Pressable>
+          <TopNavigationBarLeft
+            onBack={onBack}
+            content={tr('_uikit_group_av_meeting')}
+          />
         }
         Right={
           <Pressable
@@ -206,22 +154,10 @@ export const GroupParticipantListNavigationBar = (
     return (
       <TopNavigationBar
         Left={
-          <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center', height: 40 }}
-            onPress={onBack}
-          >
-            <Icon
-              name={'chevron_left'}
-              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-            />
-            <SingleLineText
-              textType={'medium'}
-              paletteType={'title'}
-              style={{ color: getColor('text') }}
-            >
-              {tr('_uikit_group_member_list_title', participantCount)}
-            </SingleLineText>
-          </Pressable>
+          <TopNavigationBarLeft
+            onBack={onBack}
+            content={tr('_uikit_group_member_list_title', participantCount)}
+          />
         }
         Right={
           isOwner === true ? (

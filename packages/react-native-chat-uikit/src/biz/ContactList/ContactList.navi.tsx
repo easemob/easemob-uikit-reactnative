@@ -4,11 +4,11 @@ import { Pressable, View } from 'react-native';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
-import { Icon } from '../../ui/Image';
 import { Text } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import {
   TopNavigationBar,
+  TopNavigationBarLeft,
   TopNavigationBarRight,
   TopNavigationBarTitle,
 } from '../TopNavigationBar';
@@ -102,26 +102,10 @@ export const ContactListNavigationBar = (
     return (
       <TopNavigationBar
         Left={
-          <Pressable
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              height: 40,
-            }}
-            onPress={onBack}
-          >
-            <Icon
-              name={'chevron_left'}
-              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-            />
-            <Text
-              paletteType={'title'}
-              textType={'medium'}
-              style={{ color: getColor('text') }}
-            >
-              {tr('_uikit_create_group_title')}
-            </Text>
-          </Pressable>
+          <TopNavigationBarLeft
+            onBack={onBack}
+            content={tr('_uikit_create_group_title')}
+          />
         }
         Right={
           <Pressable
@@ -148,26 +132,10 @@ export const ContactListNavigationBar = (
     return (
       <TopNavigationBar
         Left={
-          <Pressable
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              height: 40,
-            }}
-            onPress={onBack}
-          >
-            <Icon
-              name={'chevron_left'}
-              style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-            />
-            <Text
-              paletteType={'title'}
-              textType={'medium'}
-              style={{ color: getColor('text') }}
-            >
-              {tr('_uikit_add_group_member_title')}
-            </Text>
-          </Pressable>
+          <TopNavigationBarLeft
+            onBack={onBack}
+            content={tr('_uikit_add_group_member_title')}
+          />
         }
         Right={
           <Pressable

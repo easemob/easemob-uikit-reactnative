@@ -57,8 +57,8 @@ export function Search(props: SearchProps) {
       dark: colors.primary[6],
     },
     icon: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
     },
     h: {
       light: colors.neutral[6],

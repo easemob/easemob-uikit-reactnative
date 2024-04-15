@@ -25,13 +25,14 @@ import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
 import { Services } from '../../services';
 import { usePaletteContext } from '../../theme';
-import { Icon, Image, LoadingIcon } from '../../ui/Image';
+import { Image, LoadingIcon } from '../../ui/Image';
 import {
   getFileDirectory,
   getFileExtension,
   LocalPath,
   uuid,
 } from '../../utils';
+import { BackButton } from '../Back';
 import { useImageSize } from '../hooks/useImageSize';
 import type { PropsWithBack } from '../types';
 import { getImageSizeFromUrl } from './MessageListItem.hooks';
@@ -172,10 +173,7 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
         onPress={onBack}
         // pointerEvents={'none'}
       >
-        <Icon
-          name={'chevron_left'}
-          style={{ height: 24, width: 24, tintColor: getColor('icon') }}
-        />
+        <BackButton />
       </Pressable>
     </View>
   );

@@ -12,6 +12,7 @@ import { usePaletteContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
+import { BackButton } from '../Back';
 import { useMessageSnapshot } from '../hooks';
 import { useFlatList } from '../List';
 import {
@@ -94,10 +95,7 @@ export const MessageThreadList = React.forwardRef<
                 style={{ flexDirection: 'row', alignItems: 'center' }}
                 onPress={onBack}
               >
-                <Icon
-                  name={'chevron_left'}
-                  style={{ width: 24, height: 24, tintColor: getColor('text') }}
-                />
+                <BackButton />
                 <View style={{ flexDirection: 'column' }}>
                   <SingleLineText
                     paletteType={'title'}

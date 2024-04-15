@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { ListRenderItemInfo, Pressable, View } from 'react-native';
+import { ListRenderItemInfo, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
-import { Icon } from '../../ui/Image';
-import { Text } from '../../ui/Text';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
 import {
   TopNavigationBar,
+  TopNavigationBarLeft,
   TopNavigationBarRight,
   TopNavigationBarTitle,
 } from '../TopNavigationBar';
@@ -85,26 +84,10 @@ export function NewRequests(props: NewRequestsProps) {
         ) : (
           <TopNavigationBar
             Left={
-              <Pressable
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  height: 40,
-                }}
-                onPress={onBack}
-              >
-                <Icon
-                  name={'chevron_left'}
-                  style={{ width: 24, height: 24, tintColor: getColor('icon') }}
-                />
-                <Text
-                  paletteType={'title'}
-                  textType={'medium'}
-                  style={{ color: getColor('text') }}
-                >
-                  {tr('_uikit_new_quest_title')}
-                </Text>
-              </Pressable>
+              <TopNavigationBarLeft
+                onBack={onBack}
+                content={tr('_uikit_new_quest_title')}
+              />
             }
             Right={TopNavigationBarRight}
             RightProps={{
