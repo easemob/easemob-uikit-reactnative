@@ -57,6 +57,7 @@ export function useMineInfo(props: MineInfoProps) {
     React.useCallback(
       (state: any) => {
         if (state === 'load') {
+          console.log('test:zuoyu:getUserInfo:');
           if (im.userId) {
             im.getUserInfo({
               userId: im.userId,

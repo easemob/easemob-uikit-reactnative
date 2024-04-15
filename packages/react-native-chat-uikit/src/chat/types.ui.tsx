@@ -39,6 +39,13 @@ export type StateModel = {
   forwarded?: boolean;
 };
 
+export type SortModel = {
+  /**
+   * The sort key.
+   */
+  pinyin?: string;
+};
+
 type _ConversationModel = PartialUndefinable<ChatConversation>;
 /**
  * ConversationModel: The data model of the conversation list UI component.
@@ -81,7 +88,8 @@ type _ContactModel = PartialUndefinable<ChatContact>;
  * ContactModel: The data model of the contact list UI component.
  */
 export type ContactModel = _ContactModel &
-  StateModel & {
+  StateModel &
+  SortModel & {
     userId: string;
     userName?: string;
     userAvatar?: string;

@@ -120,6 +120,7 @@ export function Search(props: SearchProps) {
             enableClearButton={true}
             clearButtonContainerStyle={{ padding: 7 }}
             placeholder={tr('search')}
+            placeholderTextColor={getColor('h')}
           />
           <Icon
             name={'magnifier'}

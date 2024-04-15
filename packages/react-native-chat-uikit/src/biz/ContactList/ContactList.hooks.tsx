@@ -20,7 +20,7 @@ import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { SectionListRef } from '../../ui/SectionList';
 import { Text } from '../../ui/Text';
-import { containsChinese, getPinyinFirsLetter } from '../../utils';
+import { getPinyin } from '../../utils';
 import { Badges } from '../Badges';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks/useCloseMenu';
@@ -28,7 +28,7 @@ import { useContactListMoreActions } from '../hooks/useContactListMoreActions';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
 import type { ChoiceType, ListStateType } from '../types';
-import { g_index_alphabet_range } from './const';
+import { g_index_alphabet_range, g_index_alphabet_range_array } from './const';
 import {
   ContactItem,
   ContactListItemHeaderMemo,
@@ -67,7 +67,9 @@ export function useContactList(props: ContactListProps) {
     onClickedGroupList,
     onForwardMessage,
     onChangeRequestCount,
-    getFirstLetter: propGetFirstLetter,
+    getFullLetter: propsGetFullLetter,
+    indexList: propsIndexList = g_index_alphabet_range_array,
+    visibleEmptyIndex: propsVisibleEmptyIndex,
   } = props;
   const sectionListProps = useSectionList<
     ContactListItemProps,
@@ -88,7 +90,7 @@ export function useContactList(props: ContactListProps) {
     React.useState<number>(0);
   const choiceType = React.useRef<ChoiceType>('multiple').current;
   const [requestCount, setRequestCount] = React.useState(0);
-  const [groupCount, setGroupCount] = React.useState(0);
+  const [groupCount] = React.useState(0);
   const [avatarUrl, setAvatarUrl] = React.useState<string>();
   const { tr } = useI18nContext();
   const im = useChatContext();
@@ -123,7 +125,7 @@ export function useContactList(props: ContactListProps) {
       if (propsOnSort) {
         return propsOnSort(prevProps, nextProps);
       } else {
-        return sortContact(prevProps, nextProps);
+        return _sortContact(prevProps, nextProps);
       }
     },
     [propsOnSort]
@@ -141,25 +143,6 @@ export function useContactList(props: ContactListProps) {
       onLongPressedItem?.(data);
     },
     [onLongPressedItem]
-  );
-
-  const getFirst = React.useCallback(
-    (str?: string) => {
-      if (propGetFirstLetter) {
-        return propGetFirstLetter(str);
-      }
-      let ret: string | undefined;
-      if (str && str.length > 0) {
-        const first = str[0]!.toLocaleUpperCase();
-        ret = first;
-        if (containsChinese(first)) {
-          // !!! ret = getPinyinFirsLetter(first).at(0)?.toLocaleUpperCase();
-          ret = getPinyinFirsLetter(first)?.[0]?.toLocaleUpperCase();
-        }
-      }
-      return ret;
-    },
-    [propGetFirstLetter]
   );
 
   const removeDuplicateData = React.useCallback(
@@ -213,36 +196,79 @@ export function useContactList(props: ContactListProps) {
   }, [contactType, groupId, im, sectionsRef]);
 
   const onChangeGroupCount = React.useCallback(() => {
-    im.fetchJoinedGroupCount({
-      onResult: (result) => {
-        if (result.isOk === true && result.value) {
-          setGroupCount(result.value);
-        }
-      },
-    });
-  }, [im]);
+    // im.fetchJoinedGroupCount({
+    //   onResult: (result) => {
+    //     if (result.isOk === true && result.value) {
+    //       setGroupCount(result.value);
+    //     }
+    //   },
+    // });
+  }, []);
 
   const getNickName = React.useCallback((section: ContactModel) => {
-    if (section.remark && section.remark.length > 0) {
-      return section.remark;
-    } else if (section.userName && section.userName.length > 0) {
-      return section.userName;
-    } else {
-      return section.userId;
-    }
+    return _getNickName(section);
   }, []);
+
+  const updatePinyin = React.useCallback(
+    (list: ContactListItemProps[]) => {
+      list.forEach((item) => {
+        const name = getNickName(item.section);
+        if (propsGetFullLetter) {
+          item.section.pinyin = propsGetFullLetter(name);
+        } else {
+          item.section.pinyin = getPinyin(name);
+        }
+      });
+    },
+    [getNickName, propsGetFullLetter]
+  );
+
+  const initIndexList = React.useCallback(
+    (
+      sortList: (IndexModel & {
+        data: ContactListItemProps[];
+      })[]
+    ) => {
+      propsIndexList.forEach((i) => {
+        sortList.push({
+          indexTitle: i,
+          data: [],
+        });
+      });
+    },
+    [propsIndexList]
+  );
+  const filterEmptyIndex = React.useCallback(
+    (
+      sortList: (IndexModel & {
+        data: ContactListItemProps[];
+      })[]
+    ) => {
+      return sortList.filter((item) => {
+        return item.data.length > 0;
+      });
+    },
+    []
+  );
 
   const refreshToUI = React.useCallback(
     (list: ContactListItemProps[]) => {
+      console.log('test:zuoyu:refreshToUI', list);
+      updatePinyin(list);
+
       if (isSort === true) {
         list.sort(onSort);
       }
+
       const uniqueList = removeDuplicateData(list);
 
       const sortList: (IndexModel & { data: ContactListItemProps[] })[] = [];
+      initIndexList(sortList);
+
       uniqueList.forEach((item) => {
-        const name = getNickName(item.section);
-        const first = getFirst(name?.[0]?.toLocaleUpperCase());
+        const first = item.section.pinyin?.[0]?.toLocaleUpperCase();
+        // const name = getNickName(item.section);
+        // const first = getFirst(name?.[0]?.toLocaleUpperCase());
         const indexTitle = first
           ? g_index_alphabet_range.includes(first)
             ? first
@@ -260,7 +286,11 @@ export function useContactList(props: ContactListProps) {
           sortList[index]?.data.push(item);
         }
       });
-      sectionsRef.current = sortList;
+      if (propsVisibleEmptyIndex !== true) {
+        sectionsRef.current = filterEmptyIndex(sortList);
+      } else {
+        sectionsRef.current = sortList;
+      }
 
       calculateGroupCount();
       calculateAddedGroupMemberCount();
@@ -271,14 +301,16 @@ export function useContactList(props: ContactListProps) {
     [
       calculateAddedGroupMemberCount,
       calculateGroupCount,
-      getFirst,
-      getNickName,
+      filterEmptyIndex,
+      initIndexList,
       isSort,
       onSort,
+      propsVisibleEmptyIndex,
       removeDuplicateData,
       sectionsRef,
       setIndexTitles,
       setSection,
+      updatePinyin,
     ]
   );
 
@@ -919,18 +951,30 @@ export function useContactList(props: ContactListProps) {
   };
 }
 
-const sortContact = (
+const _getNickName = (section: ContactModel) => {
+  if (section.remark && section.remark.length > 0) {
+    return section.remark;
+  } else if (section.userName && section.userName.length > 0) {
+    return section.userName;
+  } else {
+    return section.userId;
+  }
+};
+
+const _sortContact = (
   prevProps: ContactListItemProps,
   nextProps: ContactListItemProps
 ): number => {
+  // todo: 按照拼音排序，非拼音的排在最后
+
   if (
-    prevProps.section.userName &&
-    prevProps.section.userName.length > 0 &&
-    nextProps.section.userName &&
-    nextProps.section.userName.length > 0
+    prevProps.section.pinyin &&
+    prevProps.section.pinyin.length > 0 &&
+    nextProps.section.pinyin &&
+    nextProps.section.pinyin.length > 0
   ) {
-    const prevFirstLetter = prevProps.section.userName.toLowerCase();
-    const nextFirstLetter = nextProps.section.userName.toLowerCase();
+    const prevFirstLetter = prevProps.section.pinyin;
+    const nextFirstLetter = nextProps.section.pinyin;
 
     if (prevFirstLetter < nextFirstLetter) {
       return -1;

@@ -123,11 +123,9 @@ export function AboutSettingScreen(props: Props) {
 
       <ListItem
         containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={onClickedOfficeSite}
         LeftName={
-          <Pressable
-            style={{ flexDirection: 'column', justifyContent: 'center' }}
-            onPress={onClickedOfficeSite}
-          >
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
             <Text
               textType={'medium'}
               paletteType={'title'}
@@ -142,7 +140,7 @@ export function AboutSettingScreen(props: Props) {
             >
               {tr('_demo_about_setting_site_url')}
             </Text>
-          </Pressable>
+          </View>
         }
         RightIcon={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -156,11 +154,9 @@ export function AboutSettingScreen(props: Props) {
 
       <ListItem
         containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={onClickedPhone}
         LeftName={
-          <Pressable
-            style={{ flexDirection: 'column', justifyContent: 'center' }}
-            onPress={onClickedPhone}
-          >
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
             <Text
               textType={'medium'}
               paletteType={'title'}
@@ -175,7 +171,7 @@ export function AboutSettingScreen(props: Props) {
             >
               {tr('_demo_about_setting_phone_number')}
             </Text>
-          </Pressable>
+          </View>
         }
         RightIcon={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -189,11 +185,9 @@ export function AboutSettingScreen(props: Props) {
 
       <ListItem
         containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={onClickedPartner}
         LeftName={
-          <Pressable
-            style={{ flexDirection: 'column', justifyContent: 'center' }}
-            onPress={onClickedPartner}
-          >
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
             <Text
               textType={'medium'}
               paletteType={'title'}
@@ -208,7 +202,7 @@ export function AboutSettingScreen(props: Props) {
             >
               {tr('_demo_about_setting_partner_email')}
             </Text>
-          </Pressable>
+          </View>
         }
         RightIcon={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -222,11 +216,9 @@ export function AboutSettingScreen(props: Props) {
 
       <ListItem
         containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={onClickedChannel}
         LeftName={
-          <Pressable
-            style={{ flexDirection: 'column', justifyContent: 'center' }}
-            onPress={onClickedChannel}
-          >
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
             <Text
               textType={'medium'}
               paletteType={'title'}
@@ -241,7 +233,7 @@ export function AboutSettingScreen(props: Props) {
             >
               {tr('_demo_about_setting_channel_email')}
             </Text>
-          </Pressable>
+          </View>
         }
         RightIcon={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -255,11 +247,9 @@ export function AboutSettingScreen(props: Props) {
 
       <ListItem
         containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={onClickedAdvise}
         LeftName={
-          <Pressable
-            style={{ flexDirection: 'column', justifyContent: 'center' }}
-            onPress={onClickedAdvise}
-          >
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
             <Text
               textType={'medium'}
               paletteType={'title'}
@@ -274,7 +264,7 @@ export function AboutSettingScreen(props: Props) {
             >
               {tr('_demo_about_setting_advise_email')}
             </Text>
-          </Pressable>
+          </View>
         }
         RightIcon={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>

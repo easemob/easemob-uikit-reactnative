@@ -220,12 +220,42 @@ export type ContactListProps = PropsWithTest &
     onChangeRequestCount?: (count: number) => void;
 
     /**
-     * Get First letter of the string.
+     * Get full letter of the string.
      *
-     * @param str The string to get the first letter.
-     * @returns The first letter of the string.
+     * @param str The string of get full letter.
+     * @returns The full letter of the string.
+     *
+     * @example
+     *
+     * ```tsx
+     * const str = 'Json';
+     * const full = getFullLetter(str); // full = 'Json'
+     * const str = '金喜善';
+     * const full = getFullLetter(str); // full = 'jinxishan'
+     * const str = '9527';
+     * const full = getFullLetter(str); // full = '9527'
+     * ```
      */
-    getFirstLetter?: (str?: string) => string | undefined;
+    getFullLetter?: (str?: string) => string | undefined;
+
+    /**
+     * Index list.
+     *
+     * default is `ABCDEFGHIJKLMNOPQRSTUVWXYZ#`
+     *
+     * @example
+     *
+     * ```tsx
+     * const str = '9527';
+     * const index = getIndex(str); // index = '#'
+     * ```
+     */
+    indexList?: string[];
+
+    /**
+     * Whether to display the empty index.
+     */
+    visibleEmptyIndex?: boolean;
   };
 
 /**

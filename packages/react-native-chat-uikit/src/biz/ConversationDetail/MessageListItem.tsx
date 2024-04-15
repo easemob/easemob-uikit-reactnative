@@ -1236,8 +1236,8 @@ export function CheckView(props: CheckViewProps) {
       <Icon
         name={checked === true ? 'checked_rectangle' : 'unchecked_rectangle'}
         style={{
-          width: 20,
-          height: 20,
+          width: 28,
+          height: 28,
           tintColor: getColor(checked === true ? 'checked' : 'uncheck'),
         }}
       />

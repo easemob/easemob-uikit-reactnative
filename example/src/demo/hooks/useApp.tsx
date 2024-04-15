@@ -311,6 +311,7 @@ export function useApp() {
           params?.result({ data: [] });
           return;
         }
+        console.log('test:zuoyu:getUsersInfo', userIds);
         im.getUsersInfo({
           userIds: userIds,
           onResult: (res) => {
