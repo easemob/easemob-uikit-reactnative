@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
+import { PressableHighlight } from '../../ui/Pressable';
 import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { GroupParticipantListItemProps } from './types';
@@ -83,7 +84,7 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
         backgroundColor: getColor('bg'),
       }}
     >
-      <Pressable
+      <PressableHighlight
         style={{
           width: '100%',
           height: 59.5,
@@ -116,7 +117,7 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
             {data.memberName ?? data.memberId}
           </SingleLineText>
         </View>
-      </Pressable>
+      </PressableHighlight>
       <View
         style={{
           width: '100%',

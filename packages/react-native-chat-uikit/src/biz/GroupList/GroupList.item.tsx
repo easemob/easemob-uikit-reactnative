@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Text2Button } from '../../ui/Button';
+import { PressableHighlight } from '../../ui/Pressable';
 import { SingleLineText } from '../../ui/Text';
 import { GroupAvatar } from '../Avatar';
 import type { GroupListItemProps } from './types';
@@ -44,7 +45,7 @@ export function GroupListItem(props: GroupListItemProps) {
     },
   });
   return (
-    <Pressable
+    <PressableHighlight
       style={{
         backgroundColor: getColor('bg'),
       }}
@@ -109,7 +110,7 @@ export function GroupListItem(props: GroupListItemProps) {
           marginLeft: 78,
         }}
       />
-    </Pressable>
+    </PressableHighlight>
   );
 }
 export const GroupListItemMemo = React.memo(GroupListItem);

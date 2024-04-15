@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 import type { DataModel } from '../../chat';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton, Text2Button } from '../../ui/Button';
+import { PressableHighlight } from '../../ui/Pressable';
 import { HighText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { ContactSearchModel } from '../ContactList';
@@ -48,7 +49,7 @@ export function DefaultListSearchItem<
     },
   });
   return (
-    <Pressable
+    <PressableHighlight
       style={{
         backgroundColor: getColor('bg'),
       }}
@@ -88,7 +89,7 @@ export function DefaultListSearchItem<
           marginLeft: 78,
         }}
       />
-    </Pressable>
+    </PressableHighlight>
   );
 }
 export function StateListSearchItem(
@@ -124,7 +125,7 @@ export function StateListSearchItem(
     },
   });
   return (
-    <Pressable
+    <PressableHighlight
       style={{
         backgroundColor: getColor('bg'),
       }}
@@ -190,7 +191,7 @@ export function StateListSearchItem(
           marginLeft: 78,
         }}
       />
-    </Pressable>
+    </PressableHighlight>
   );
 }
 export function ForwardListSearchItem(
@@ -238,7 +239,7 @@ export function ForwardListSearchItem(
   }, [data, forwarded, onClickedForward, searchType]);
 
   return (
-    <Pressable
+    <PressableHighlight
       style={{
         backgroundColor: getColor('bg'),
       }}
@@ -295,6 +296,6 @@ export function ForwardListSearchItem(
           marginLeft: 78,
         }}
       />
-    </Pressable>
+    </PressableHighlight>
   );
 }

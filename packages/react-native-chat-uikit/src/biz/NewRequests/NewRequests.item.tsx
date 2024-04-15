@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
 import { getNewRequest } from '../../chat/utils';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { CmnButton } from '../../ui/Button';
+import { PressableHighlight } from '../../ui/Pressable';
 import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { NewRequestsItemProps } from './types';
@@ -42,7 +43,7 @@ export function NewRequestsItem(props: NewRequestsItemProps) {
     },
   });
   return (
-    <Pressable
+    <PressableHighlight
       style={{
         backgroundColor: getColor('bg'),
       }}
@@ -113,7 +114,7 @@ export function NewRequestsItem(props: NewRequestsItemProps) {
           marginLeft: 68,
         }}
       />
-    </Pressable>
+    </PressableHighlight>
   );
 }
 export const NewRequestsItemMemo = React.memo(NewRequestsItem);

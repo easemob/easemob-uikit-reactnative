@@ -88,7 +88,7 @@ export function ListItem<
     },
     bg2: {
       light: colors.neutral[95],
-      dark: colors.neutral[2],
+      dark: colors.neutral[3],
     },
     t1: {
       light: colors.neutral[1],

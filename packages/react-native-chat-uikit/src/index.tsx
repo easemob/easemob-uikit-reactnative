@@ -46,6 +46,7 @@ export * from './ui/Image';
 export * from './ui/ImagePreview';
 export * from './ui/Keyboard';
 export * from './ui/Modal';
+export * from './ui/Pressable';
 export * from './ui/Ripple';
 export * from './ui/SectionList';
 export * from './ui/Switch';

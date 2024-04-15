@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
 
 import { gMessageAttributeMentions, useChatContext } from '../../chat';
@@ -8,6 +8,7 @@ import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
+import { PressableHighlight } from '../../ui/Pressable';
 import { SingleLineText } from '../../ui/Text';
 import { formatTsForConvList } from '../../utils';
 import { Avatar, GroupAvatar } from '../Avatar';
@@ -102,7 +103,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
       : data.unreadMessageCount;
 
   return (
-    <Pressable
+    <PressableHighlight
       style={{
         backgroundColor:
           data.isPinned === true ? getColor('pin_bg') : getColor('bg'),
@@ -208,7 +209,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
           marginLeft: 78,
         }}
       />
-    </Pressable>
+    </PressableHighlight>
   );
 }
 export const ConversationListItemMemo = React.memo(ConversationListItem);

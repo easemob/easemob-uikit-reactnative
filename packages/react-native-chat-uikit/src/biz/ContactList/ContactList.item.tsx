@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, SectionListData, View } from 'react-native';
+import { SectionListData, View } from 'react-native';
 
 import type { ContactModel } from '../../chat';
 import { useColors } from '../../hook';
@@ -7,6 +7,7 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton, Text2Button } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
+import { PressableHighlight } from '../../ui/Pressable';
 import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import type { IndexModel } from '../ListIndex';
@@ -85,7 +86,7 @@ export function ContactListItem(props: ContactListItemProps) {
         backgroundColor: getColor('bg'),
       }}
     >
-      <Pressable
+      <PressableHighlight
         style={{
           width: '100%',
           height: 59.5,
@@ -167,7 +168,7 @@ export function ContactListItem(props: ContactListItemProps) {
             />
           </>
         ) : null}
-      </Pressable>
+      </PressableHighlight>
       <View
         style={{
           width: '100%',
