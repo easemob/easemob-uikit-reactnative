@@ -5,49 +5,68 @@ import {
   getReleaseArea,
   presetPaletteColors,
   SingletonObjects,
+  useForceUpdate,
 } from 'react-native-chat-uikit';
 
 import { appKey as gAppKey } from '../common/const';
 
 export function useGeneralSetting() {
+  const {} = useForceUpdate();
   const [appTheme, setAppTheme] = React.useState<boolean | undefined>(
     undefined
   );
+  const appThemeRef = React.useRef<boolean | undefined>(undefined);
   const [appStyle, setAppStyle] = React.useState<string>('classic');
+  const appStyleRef = React.useRef('classic');
   const [appPrimaryColor, setAppPrimaryColor] = React.useState<number>(
     presetPaletteColors.primary
   );
+  const appPrimaryColorRef = React.useRef<number>(presetPaletteColors.primary);
   const [appSecondColor, setAppSecondColor] = React.useState<number>(
     presetPaletteColors.secondary
   );
+  const appSecondColorRef = React.useRef<number>(presetPaletteColors.secondary);
   const [appErrorColor, setAppErrorColor] = React.useState<number>(
     presetPaletteColors.error
   );
+  const appErrorColorRef = React.useRef<number>(presetPaletteColors.error);
   const [appNeutralColor, setAppNeutralColor] = React.useState<number>(
     presetPaletteColors.neutral
   );
+  const appNeutralColorRef = React.useRef<number>(presetPaletteColors.neutral);
   const [appNeutralSColor, setAppNeutralSColor] = React.useState<number>(
     presetPaletteColors.neutralSpecial
   );
+  const appNeutralSColorRef = React.useRef<number>(
+    presetPaletteColors.neutralSpecial
+  );
   const [appLanguage, setAppLanguage] = React.useState<string>('zh-Hans');
+  const appLanguageRef = React.useRef<string>('zh-Hans');
   const [appTranslate, setAppTranslate] = React.useState<boolean | undefined>(
     undefined
   );
+  const appTranslateRef = React.useRef<boolean | undefined>(undefined);
   const [appThread, setAppThread] = React.useState<boolean | undefined>(
     undefined
   );
+  const appThreadRef = React.useRef<boolean | undefined>(undefined);
   const [appReaction, setAppReaction] = React.useState<boolean | undefined>(
     undefined
   );
+  const appReactionRef = React.useRef<boolean | undefined>(undefined);
   const [appPresence, setAppPresence] = React.useState<boolean | undefined>(
     undefined
   );
+  const appPresenceRef = React.useRef<boolean | undefined>(undefined);
   const [appAv, setAppAv] = React.useState<boolean | undefined>(undefined);
+  const appAvRef = React.useRef<boolean | undefined>(undefined);
   const [appNotification, setAppNotification] = React.useState<
     boolean | undefined
   >(undefined);
+  const appNotificationRef = React.useRef<boolean | undefined>(undefined);
 
   const onSetAppTheme = React.useCallback((value: boolean) => {
+    appThemeRef.current = value;
     setAppTheme(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -57,6 +76,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppTranslate = React.useCallback((value: boolean) => {
+    appTranslateRef.current = value;
     setAppTranslate(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -69,6 +89,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppThread = React.useCallback((value: boolean) => {
+    appThreadRef.current = value;
     setAppThread(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -81,6 +102,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppReaction = React.useCallback((value: boolean) => {
+    appReactionRef.current = value;
     setAppReaction(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -93,6 +115,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppPresence = React.useCallback((value: boolean) => {
+    appPresenceRef.current = value;
     setAppPresence(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -105,6 +128,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppAv = React.useCallback((value: boolean) => {
+    appAvRef.current = value;
     setAppAv(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -114,6 +138,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppNotification = React.useCallback((value: boolean) => {
+    appNotificationRef.current = value;
     setAppNotification(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -129,6 +154,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppStyle = React.useCallback((value: string) => {
+    appStyleRef.current = value;
     setAppStyle(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -138,6 +164,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppPrimaryColor = React.useCallback((value: number) => {
+    appPrimaryColorRef.current = value;
     setAppPrimaryColor(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -147,6 +174,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppSecondColor = React.useCallback((value: number) => {
+    appSecondColorRef.current = value;
     setAppSecondColor(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -156,6 +184,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppErrorColor = React.useCallback((value: number) => {
+    appErrorColorRef.current = value;
     setAppErrorColor(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -165,6 +194,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppNeutralColor = React.useCallback((value: number) => {
+    appNeutralColorRef.current = value;
     setAppNeutralColor(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -174,6 +204,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppNeutralSColor = React.useCallback((value: number) => {
+    appNeutralSColorRef.current = value;
     setAppNeutralSColor(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -183,6 +214,7 @@ export function useGeneralSetting() {
   }, []);
 
   const onSetAppLanguage = React.useCallback((value: string) => {
+    appLanguageRef.current = value;
     setAppLanguage(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -230,23 +262,38 @@ export function useGeneralSetting() {
     };
   }, []);
 
-  const updater = React.useCallback(() => {
+  const init = React.useCallback(() => {
     initParams()
       .then((res) => {
         setAppTheme(res.appTheme);
+        appThemeRef.current = res.appTheme;
         setAppStyle(res.appStyle);
+        appStyleRef.current = res.appStyle;
         setAppLanguage(res.appLanguage);
+        appLanguageRef.current = res.appLanguage;
         setAppPrimaryColor(res.appPrimaryColor);
+        appPrimaryColorRef.current = res.appPrimaryColor;
         setAppSecondColor(res.appSecondColor);
+        appSecondColorRef.current = res.appSecondColor;
         setAppErrorColor(res.appErrorColor);
+        appErrorColorRef.current = res.appErrorColor;
         setAppNeutralColor(res.appNeutralColor);
+        appNeutralColorRef.current = res.appNeutralColor;
         setAppNeutralSColor(res.appNeutralSColor);
+        appNeutralSColorRef.current = res.appNeutralSColor;
         setAppTranslate(res.appTranslate);
+        appTranslateRef.current = res.appTranslate;
         setAppThread(res.appThread);
+        appThreadRef.current = res.appThread;
         setAppReaction(res.appReaction);
+        appReactionRef.current = res.appReaction;
         setAppPresence(res.appPresence);
+        appPresenceRef.current = res.appPresence;
         setAppAv(res.appAv);
+        appAvRef.current = res.appAv;
         setAppNotification(res.appNotification);
+        appNotificationRef.current = res.appNotification;
+        // updater();
       })
       .catch((e) => {
         console.warn('dev:initParams:', e);
@@ -254,8 +301,8 @@ export function useGeneralSetting() {
   }, [initParams]);
 
   React.useEffect(() => {
-    updater();
-  }, [updater]);
+    init();
+  }, [init]);
 
   return {
     appTheme,
@@ -265,7 +312,7 @@ export function useGeneralSetting() {
     appLanguage,
     onSetAppLanguage,
     initParams,
-    updater,
+    updater: init,
     appPrimaryColor,
     onSetAppPrimaryColor,
     appSecondColor,

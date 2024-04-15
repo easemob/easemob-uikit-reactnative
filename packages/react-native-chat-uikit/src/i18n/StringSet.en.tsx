@@ -89,6 +89,7 @@ export function createStringSetEn(): StringSet {
       `Confirm deletion of ${name} and all chat history with this contact`,
     '_uikit_info_item_member': 'Group Members',
     '_uikit_info_item_contact_remark': 'Friend Nickname',
+    '_uikit_info_item_contact_id': 'Easemob ID: ',
     '_uikit_info_item_my_remark': 'My Nickname in this Group',
     '_uikit_info_item_group_id': 'GroupID:',
     '_uikit_info_item_group_name': 'Group Name',

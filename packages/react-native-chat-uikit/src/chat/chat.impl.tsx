@@ -608,7 +608,7 @@ export class ChatServiceImpl
       userId: contact.userId,
       remark: contact.remark,
       userAvatar: this._getAvatarFromCache(contact.userId),
-      userName: this._getNameFromCache(contact.userId),
+      // userName: this._getNameFromCache(contact.userId),
     };
   }
 

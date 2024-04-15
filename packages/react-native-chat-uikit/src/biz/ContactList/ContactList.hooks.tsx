@@ -253,7 +253,6 @@ export function useContactList(props: ContactListProps) {
 
   const refreshToUI = React.useCallback(
     (list: ContactListItemProps[]) => {
-      console.log('test:zuoyu:refreshToUI', list);
       updatePinyin(list);
 
       if (isSort === true) {

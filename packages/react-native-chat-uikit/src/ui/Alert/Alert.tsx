@@ -155,6 +155,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                   paletteType={'label'}
                   style={{
                     color: getColor('text3'),
+                    textAlign: 'center',
                   }}
                 >
                   {message}

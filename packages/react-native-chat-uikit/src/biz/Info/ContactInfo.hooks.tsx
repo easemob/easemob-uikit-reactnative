@@ -285,14 +285,12 @@ export function useContactInfo(
   };
 
   const getNickName = React.useCallback(() => {
-    if (userRemark && userRemark.length > 0) {
-      return userRemark;
-    } else if (userName && userName.length > 0) {
+    if (userName && userName.length > 0) {
       return userName;
     } else {
       return userId;
     }
-  }, [userId, userName, userRemark]);
+  }, [userId, userName]);
 
   React.useEffect(() => {
     const listener: UIConversationListListener = {

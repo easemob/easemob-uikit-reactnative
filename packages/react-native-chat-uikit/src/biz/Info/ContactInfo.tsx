@@ -193,13 +193,20 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
             }}
             onPress={onCopyId}
           >
-            <Text
+            <SingleLineText
               textType={'small'}
               paletteType={'label'}
               style={{ color: getColor('t3') }}
             >
-              {userId}
-            </Text>
+              {tr('_uikit_info_item_contact_id')}
+              <SingleLineText
+                textType={'small'}
+                paletteType={'label'}
+                style={{ color: getColor('t3') }}
+              >
+                {userId}
+              </SingleLineText>
+            </SingleLineText>
             <Icon
               name={'doc_on_doc'}
               style={{ width: 16, height: 16, tintColor: getColor('t3') }}

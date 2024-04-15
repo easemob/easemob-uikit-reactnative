@@ -104,6 +104,7 @@ export const MessageInput = React.forwardRef<
     multiSelectVisible,
     onClickedMultiSelectDeleteButton,
     onClickedMultiSelectShareButton,
+    onKeyPress,
   } = useMessageInput(props, ref);
 
   return (
@@ -288,7 +289,8 @@ export const MessageInput = React.forwardRef<
                       value={value}
                       keyboardAppearance={style === 'light' ? 'light' : 'dark'}
                       placeholder={'Aa'}
-                      returnKeyType={'send'}
+                      returnKeyType={'done'}
+                      onKeyPress={onKeyPress}
                     />
                   </View>
                 </View>

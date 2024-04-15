@@ -1,6 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
+  DeviceEventEmitter,
   Dimensions,
   ImageBackground,
   Keyboard,
@@ -13,6 +14,7 @@ import {
 } from 'react-native';
 import {
   CmnButton,
+  getReleaseArea,
   Icon,
   KeyboardAvoidingView,
   LoadingIcon,
@@ -20,6 +22,7 @@ import {
   Text,
   TextInput,
   useColors,
+  useForceUpdate,
   useGetStyleProps,
   useI18nContext,
   usePaletteContext,
@@ -29,7 +32,7 @@ import DeviceInfo from 'react-native-device-info';
 
 import { main_bg } from '../common/assets';
 import { RestApi } from '../common/rest.api';
-import { useLogin, useStackScreenRoute } from '../hooks';
+import { useGeneralSetting, useLogin, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type CaptchaState = 'init' | 'sending' | 'sent' | 'resend' | 'error';
@@ -83,6 +86,25 @@ export function LoginV2Screen(props: Props) {
   const countRef = React.useRef(0);
   const [version, setVersion] = React.useState('');
   const [serverSettingVisible, SetServerSettingVisible] = React.useState(false);
+  const { updater } = useForceUpdate();
+  const ra = getReleaseArea();
+  const releaseAreaRef = React.useRef(ra);
+
+  const { initParams } = useGeneralSetting();
+  const [_initParams, setInitParams] = React.useState(false);
+
+  const initParamsCallback = React.useCallback(async () => {
+    if (_initParams === true) {
+      return;
+    }
+    try {
+      const ret = await initParams();
+      releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
+      setInitParams(true);
+    } catch (error) {
+      setInitParams(true);
+    }
+  }, [_initParams, initParams, releaseAreaRef, setInitParams]);
 
   const getCaptchaText = () => {
     if (captchaState === 'init') {
@@ -210,6 +232,22 @@ export function LoginV2Screen(props: Props) {
     console.log('dev:appVersion:', appVersion);
     setVersion(appVersion);
   }, []);
+
+  React.useEffect(() => {
+    initParamsCallback().catch();
+  }, [initParamsCallback]);
+
+  React.useEffect(() => {
+    const ret8 = DeviceEventEmitter.addListener('_demo_emit_app_style', (e) => {
+      console.log('dev:emit:app:style:', e);
+      releaseAreaRef.current = e === 'classic' ? 'china' : 'global';
+      updater();
+    });
+
+    return () => {
+      ret8.remove();
+    };
+  }, [updater]);
 
   return (
     <ImageBackground
@@ -429,7 +467,15 @@ export function LoginV2Screen(props: Props) {
               }}
             >
               <Icon
-                name={check ? 'checked_rectangle' : 'unchecked_rectangle'}
+                name={
+                  check
+                    ? releaseAreaRef.current === 'china'
+                      ? 'checked_rectangle'
+                      : 'checked_ellipse'
+                    : releaseAreaRef.current === 'china'
+                    ? 'unchecked_rectangle'
+                    : 'unchecked_ellipse'
+                }
                 style={{
                   width: 20,
                   height: 20,

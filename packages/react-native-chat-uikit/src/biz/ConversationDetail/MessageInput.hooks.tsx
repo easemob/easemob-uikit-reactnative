@@ -1,7 +1,9 @@
 import * as React from 'react';
+import type { TextInputKeyPressEventData } from 'react-native';
 import {
   Keyboard,
   LayoutAnimation,
+  NativeSyntheticEvent,
   Platform,
   TextInput as RNTextInput,
 } from 'react-native';
@@ -479,6 +481,12 @@ export function useMessageInput(
     [propsOnEditMessageFinished]
   );
 
+  const onKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
+    if (e.nativeEvent.key === 'Enter') {
+      // timeoutTask(100, onClickedSend);
+    }
+  };
+
   React.useEffect(() => {
     if (
       (keyboardCurrentHeight > 0 && emojiHeight === 0) ||
@@ -612,5 +620,6 @@ export function useMessageInput(
     multiSelectVisible,
     onClickedMultiSelectDeleteButton: _onClickedMultiSelectDeleteButton,
     onClickedMultiSelectShareButton: _onClickedMultiSelectShareButton,
+    onKeyPress,
   };
 }
