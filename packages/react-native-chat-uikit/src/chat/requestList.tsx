@@ -99,15 +99,38 @@ export class RequestListImpl implements RequestList {
     newMsg.attributes[gNewRequestConversationTip] =
       '_uikit_new_quest_list_item_tip';
 
-    const item = getNewRequest(newMsg);
-    if (item) {
-      this._newRequestList.unshift(item);
-    }
+    this._client.getUserInfo({
+      userId: userId,
+      onResult: (res) => {
+        if (res.isOk && res.value) {
+          newMsg.attributes[gNewRequestConversationUserName] =
+            res.value.userName;
+          newMsg.attributes[gNewRequestConversationUserAvatar] =
+            res.value.avatarURL;
+          const item = getNewRequest(newMsg);
+          if (item) {
+            this._newRequestList.unshift(item);
+          }
 
-    this._client.insertMessage({
-      message: newMsg,
-      onResult: () => {
-        this.emitNewRequestListChanged();
+          this._client.insertMessage({
+            message: newMsg,
+            onResult: () => {
+              this.emitNewRequestListChanged();
+            },
+          });
+        } else {
+          const item = getNewRequest(newMsg);
+          if (item) {
+            this._newRequestList.unshift(item);
+          }
+
+          this._client.insertMessage({
+            message: newMsg,
+            onResult: () => {
+              this.emitNewRequestListChanged();
+            },
+          });
+        }
       },
     });
   }

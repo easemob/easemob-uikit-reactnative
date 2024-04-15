@@ -265,16 +265,19 @@ export function useMessageLongPressActions(
           },
         });
       }
-      initItems.push({
-        name: tr('_uikit_chat_list_long_press_menu_delete'),
-        isHigh: false,
-        icon: 'trash',
-        onClicked: () => {
-          closeMenu(() => {
-            onDeleteMessage?.(msgModel.msg);
-          });
-        },
-      });
+      if (comType !== 'thread' && comType !== 'create_thread') {
+        initItems.push({
+          name: tr('_uikit_chat_list_long_press_menu_delete'),
+          isHigh: false,
+          icon: 'trash',
+          onClicked: () => {
+            closeMenu(() => {
+              onDeleteMessage?.(msgModel.msg);
+            });
+          },
+        });
+      }
+
       if (
         (msgModel.msg.body.type === ChatMessageType.TXT ||
           msgModel.msg.body.type === ChatMessageType.VOICE ||

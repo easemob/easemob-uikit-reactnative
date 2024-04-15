@@ -7,18 +7,14 @@ import {
 } from 'react-native';
 import { ChatMessage, ChatMessageType } from 'react-native-chat-sdk';
 
-import {
-  getMessageSnapshot,
-  getMessageSnapshotParams,
-  userInfoFromMessage,
-} from '../../chat/utils';
+import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
-import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { HighText, SingleLineText } from '../../ui/Text';
 import { formatTsForConvList } from '../../utils';
 import { Avatar } from '../Avatar';
+import { useMessageSnapshot } from '../hooks';
 import type { MessageSearchItemProps } from './types';
 
 export function MessageSearchItem(props: MessageSearchItemProps) {
@@ -49,7 +45,7 @@ export function MessageSearchItem(props: MessageSearchItemProps) {
       dark: colors.neutral[2],
     },
   });
-  const { tr } = useI18nContext();
+  const { getMessageSnapshot } = useMessageSnapshot();
   const msgType = msg.body.type;
 
   const getMessageFormatTime = React.useCallback(
@@ -127,10 +123,7 @@ export function MessageSearchItem(props: MessageSearchItemProps) {
                 highColors={[colors.primary[5], colors.primary[6]]}
                 textColors={[colors.neutral[5], colors.neutral[6]]}
                 keyword={keyword}
-                content={tr(
-                  getMessageSnapshot(msg),
-                  getMessageSnapshotParams(msg)
-                )}
+                content={getMessageSnapshot(msg)}
               />
             ) : null}
           </View>

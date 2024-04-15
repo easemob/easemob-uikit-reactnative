@@ -5,17 +5,14 @@ import type {
   ChatMessageThreadEvent,
 } from 'react-native-chat-sdk';
 
-import {
-  getMessageSnapshot,
-  MessageServiceListener,
-  useChatContext,
-} from '../../chat';
+import { MessageServiceListener, useChatContext } from '../../chat';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
+import { useMessageSnapshot } from '../hooks';
 import { useFlatList } from '../List';
 import {
   EmptyPlaceholder,
@@ -352,6 +349,7 @@ function useMessageThreadList(
 function ListItemRender(props: MessageThreadListItemProps) {
   const { model, onClicked } = props;
   const { title, thread } = model;
+  const { getMessageSnapshot } = useMessageSnapshot();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {

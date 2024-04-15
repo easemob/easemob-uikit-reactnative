@@ -12,6 +12,8 @@ import {
 import { emoji } from '../utils';
 import {
   gCustomMessageCardEventType,
+  gCustomMessageCreateGroupEventType,
+  gCustomMessageRecallEventType,
   gMessageAttributeUserInfo,
   gNewRequestConversationMsgEventType,
   gNewRequestConversationState,
@@ -83,10 +85,7 @@ export function setUserInfoToMessage(params: {
 /**
  * Get message snapshot.
  */
-export function getMessageSnapshot(
-  msg?: ChatMessage,
-  withName?: boolean
-): string {
+export function getMessageSnapshot(msg?: ChatMessage): string {
   if (msg === undefined) {
     return '';
   }
@@ -119,6 +118,10 @@ export function getMessageSnapshot(
       const body = msg.body as ChatCustomMessageBody;
       if (body.event === gCustomMessageCardEventType) {
         ret = '[contact]';
+      } else if (body.event === gCustomMessageRecallEventType) {
+        ret = body.params?.text ?? '';
+      } else if (body.event === gCustomMessageCreateGroupEventType) {
+        ret = body.params?.text ?? '';
       } else {
         ret = '[custom]';
       }
@@ -130,41 +133,37 @@ export function getMessageSnapshot(
     default:
       ret = '[unknown]';
   }
-  if (msg.chatType === ChatMessageChatType.GroupChat) {
-    if (withName === undefined || withName === true) {
-      const user = userInfoFromMessage(msg);
-      ret = `${user?.userName ?? user?.userId ?? msg.from}: ${ret}`;
-    }
-  }
 
   return ret;
 }
 
-export function getMessageSnapshotParams(msg: ChatMessage) {
+export function getMessageSnapshotParams(msg?: ChatMessage): any[] {
   if (msg === undefined) {
-    return '';
+    return [''];
   }
   switch (msg.body.type) {
     case ChatMessageType.VOICE: {
       const body = msg.body as ChatVoiceMessageBody;
-      return body.duration;
+      return [body.duration];
     }
 
     case ChatMessageType.FILE: {
       const body = msg.body as ChatFileMessageBody;
-      return body.displayName;
+      return [body.displayName];
     }
 
     case ChatMessageType.CUSTOM: {
       const body = msg.body as ChatCustomMessageBody;
       if (body.event === gCustomMessageCardEventType) {
-        return body.params?.nickname ?? body.params?.userId;
+        return [body.params?.nickname ?? body.params?.userId];
+      } else if (body.event === gCustomMessageRecallEventType) {
+        return [body.params?.self === body.params?.from, body.params?.fromName];
       }
-      return '';
+      return [''];
     }
 
     default:
-      return '';
+      return [''];
   }
 }
 
@@ -232,7 +231,7 @@ export function createForwardMessage(params: {
       targetType as number,
       {
         summary: getSummary(msgs),
-        isChatThread: msg.isChatThread,
+        // isChatThread: msg.isChatThread,
         isOnline: msg.isOnline,
         deliverOnlineOnly: msg.deliverOnlineOnly,
         receiverList: msg.receiverList,

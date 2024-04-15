@@ -29,7 +29,7 @@ import {
   gMessageAttributeTranslate,
   // gMessageAttributeTranslate,
 } from '../../chat';
-import { getMessageSnapshot, userInfoFromMessage } from '../../chat/utils';
+import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { useColors, useGetStyleProps } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -45,6 +45,7 @@ import { SingleLineText, Text } from '../../ui/Text';
 import { formatTsForConvDetail } from '../../utils';
 import { Avatar } from '../Avatar';
 import { gMaxVoiceDuration } from '../const';
+import { useMessageSnapshot } from '../hooks';
 import { MessageHistoryListItemMemo } from './MessageHistoryListItem';
 import {
   getFileSize,
@@ -1266,6 +1267,7 @@ export function MessageThread(props: MessageThreadProps) {
   const { getBorderRadius } = useGetStyleProps();
   const { fontFamily } = useConfigContext();
   const { tr } = useI18nContext();
+  const { getMessageSnapshot } = useMessageSnapshot();
   const { getColor } = useColors({
     common: {
       light: colors.primary[5],
@@ -1385,7 +1387,7 @@ export function MessageThread(props: MessageThreadProps) {
           maxWidth: '100%',
         }}
       >
-        {tr(getMessageSnapshot(thread.lastMessage))}
+        {getMessageSnapshot(thread.lastMessage)}
       </SingleLineText>
     </Pressable>
   );

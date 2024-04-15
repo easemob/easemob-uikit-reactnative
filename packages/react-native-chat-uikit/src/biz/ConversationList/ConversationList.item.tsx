@@ -3,7 +3,6 @@ import { Pressable, View } from 'react-native';
 import { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
 
 import { gMessageAttributeMentions, useChatContext } from '../../chat';
-import { getMessageSnapshot } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -13,6 +12,7 @@ import { SingleLineText } from '../../ui/Text';
 import { formatTsForConvList } from '../../utils';
 import { Avatar, GroupAvatar } from '../Avatar';
 import { Badges } from '../Badges';
+import { useMessageSnapshot } from '../hooks';
 import type { ConversationListItemProps } from './types';
 
 /**
@@ -55,6 +55,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
   });
   const im = useChatContext();
   const { tr } = useI18nContext();
+  const { getMessageSnapshot } = useMessageSnapshot();
 
   const getMention = React.useCallback(
     (msg?: ChatMessage) => {
@@ -165,7 +166,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
               textType={'medium'}
               style={{ color: getColor('t2') }}
             >
-              {tr(getMessageSnapshot(data.lastMessage))}
+              {getMessageSnapshot(data.lastMessage)}
             </SingleLineText>
           </SingleLineText>
         </View>

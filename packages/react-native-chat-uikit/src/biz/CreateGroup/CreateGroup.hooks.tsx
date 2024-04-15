@@ -37,10 +37,8 @@ export function useCreateGroup(props: CreateGroupProps) {
         ChatMessageChatType.GroupChat,
         {
           params: {
-            create_group: JSON.stringify({
-              text: '_uikit_msg_tip_create_group_success_with_params',
-              self: im.userId,
-            }),
+            text: '_uikit_msg_tip_create_group_success_with_params',
+            self: im.userId ?? '',
           },
         }
       );

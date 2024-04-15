@@ -292,12 +292,10 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       msg.chatType,
       {
         params: {
-          recall: JSON.stringify({
-            text: '_uikit_msg_tip_recall',
-            self: this._client.userId,
-            from: msg.from,
-            fromName: userInfo?.remark ?? userInfo?.userName ?? msg.from,
-          }),
+          text: '_uikit_msg_tip_recall',
+          self: this._client.userId ?? '',
+          from: msg.from,
+          fromName: userInfo?.remark ?? userInfo?.userName ?? msg.from,
         },
       }
     );

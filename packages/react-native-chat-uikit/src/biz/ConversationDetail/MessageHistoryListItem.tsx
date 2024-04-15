@@ -8,19 +8,15 @@ import {
 } from 'react-native';
 import { ChatMessage, ChatMessageType } from 'react-native-chat-sdk';
 
-import {
-  getMessageSnapshot,
-  getMessageSnapshotParams,
-  userInfoFromMessage,
-} from '../../chat/utils';
+import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
-import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
 import { formatTsForConvList } from '../../utils';
 import { Avatar } from '../Avatar';
+import { useMessageSnapshot } from '../hooks';
 import { MessageDefaultImage } from './MessageListItem';
 import {
   getImageShowSize,
@@ -53,10 +49,10 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
       dark: colors.neutral[2],
     },
   });
-  const { tr } = useI18nContext();
   const msgType = msg.body.type;
   const maxWidth = Dimensions.get('window').width * 0.6;
   const maxTextWidth = Dimensions.get('window').width - 32 - 16 * 2 - 12;
+  const { getMessageSnapshot } = useMessageSnapshot();
 
   const getMessageFormatTime = React.useCallback(
     (msg?: ChatMessage, timestamp?: number): string => {
@@ -133,7 +129,7 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
                 textType={'medium'}
                 style={{ color: getColor('t2') }}
               >
-                {tr(getMessageSnapshot(msg), getMessageSnapshotParams(msg))}
+                {getMessageSnapshot(msg)}
               </Text>
             )}
           </View>

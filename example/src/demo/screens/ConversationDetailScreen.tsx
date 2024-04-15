@@ -525,7 +525,7 @@ export function ConversationDetailScreen(props: Props) {
         onClickedThread={() => {
           navi.navigate({
             to: 'MessageThreadList',
-            props: { params: { parentId: convId } },
+            props: { parentId: convId },
           });
         }}
         onForwardMessage={(msgs) => {

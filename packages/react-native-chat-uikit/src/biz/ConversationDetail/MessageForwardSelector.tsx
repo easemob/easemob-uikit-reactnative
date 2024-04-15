@@ -5,8 +5,6 @@ import type { ChatMessage } from 'react-native-chat-sdk';
 import {
   ContactModel,
   createForwardMessage,
-  getMessageSnapshot,
-  getMessageSnapshotParams,
   GroupModel,
   useChatContext,
 } from '../../chat';
@@ -18,6 +16,7 @@ import { TabPage, TabPageHeader } from '../../ui/TabPage';
 import { Text } from '../../ui/Text';
 import { ContactList, ContactListProps } from '../ContactList';
 import { GroupList, GroupListProps } from '../GroupList';
+import { useMessageSnapshot } from '../hooks';
 import { TopNavigationBar } from '../TopNavigationBar';
 import type {
   PropsWithBack,
@@ -91,6 +90,7 @@ export function MessageForwardSelector(props: MessageForwardSelectorProps) {
   });
   const [height, setHeight] = React.useState<number | undefined>(undefined);
   const im = useChatContext();
+  const { getMessageSnapshot } = useMessageSnapshot();
 
   const onForwardMessage = React.useCallback(
     (data: ContactModel | GroupModel) => {
@@ -112,9 +112,7 @@ export function MessageForwardSelector(props: MessageForwardSelectorProps) {
             getSummary: (msgs) => {
               const list = [] as string[];
               for (const msg of msgs) {
-                list.push(
-                  tr(getMessageSnapshot(msg), getMessageSnapshotParams(msg))
-                );
+                list.push(getMessageSnapshot(msg));
               }
               return list.join('\n');
             },
@@ -125,7 +123,7 @@ export function MessageForwardSelector(props: MessageForwardSelectorProps) {
         }
       }
     },
-    [im.messageManager, selectedMsgs, tr]
+    [getMessageSnapshot, im.messageManager, selectedMsgs]
   );
 
   if (propsRef?.current) {

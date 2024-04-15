@@ -326,7 +326,7 @@ export function getSystemTip(
   const body = msg.body as ChatCustomMessageBody;
   if (body.event === gCustomMessageRecallEventType) {
     try {
-      const content = JSON.parse(body.params?.recall as any) as {
+      const content = body.params as {
         text: string;
         self: string;
         from: string;
@@ -342,7 +342,7 @@ export function getSystemTip(
     }
   } else if (body.event === gCustomMessageCreateGroupEventType) {
     try {
-      const content = JSON.parse(body.params?.create_group as any) as {
+      const content = body.params as {
         text: string;
         self: string;
       };
