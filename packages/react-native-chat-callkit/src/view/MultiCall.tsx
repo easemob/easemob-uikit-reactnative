@@ -1089,22 +1089,20 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
           position: 'absolute',
           // backgroundColor: 'red',
           bottom: ContentBottom,
-          width: '100%',
+          width: Dimensions.get('window').width,
           alignItems: 'center',
         }}
       >
-        <View style={{}}>
-          <Text
-            style={{
-              fontWeight: '600',
-              fontSize: 16,
-              lineHeight: 22,
-              color: 'white',
-            }}
-          >
-            Ongoing Calling
-          </Text>
-        </View>
+        <Text
+          style={{
+            fontWeight: '600',
+            fontSize: 16,
+            lineHeight: 22,
+            color: 'white',
+          }}
+        >
+          Ongoing Calling
+        </Text>
         <Elapsed timer={this.manager?.elapsed ?? 0} color="white" />
       </View>
     );
