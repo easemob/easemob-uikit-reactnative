@@ -26,6 +26,9 @@ import type { ConversationModel } from './types.ui';
 import { userInfoFromMessage } from './utils';
 
 let gListener: ChatServiceListener | undefined;
+const gUserListener: Map<string, MessageManagerListener> = new Map();
+const gSendList: Map<string, { msg: ChatMessage }> = new Map();
+const gDownloadList: Map<string, { msg: ChatMessage }> = new Map();
 
 /**
  * Message Cache Manager Implementation.
@@ -40,9 +43,9 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   constructor(client: ChatService) {
     uilog.log('MessageCacheManager:constructor');
     this._client = client;
-    this._userListener = new Map();
-    this._sendList = new Map();
-    this._downloadList = new Map();
+    this._userListener = gUserListener;
+    this._sendList = gSendList;
+    this._downloadList = gDownloadList;
     this._recallTimeout = 120000;
   }
   init() {

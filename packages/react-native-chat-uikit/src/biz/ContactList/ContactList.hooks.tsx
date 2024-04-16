@@ -902,6 +902,7 @@ export function useContactList(props: ContactListProps) {
   React.useEffect(() => {
     const listener: RequestListListener = {
       onNewRequestListChanged: (list: NewRequestModel[]) => {
+        console.log('test:zuoyu:onNewRequestListChanged', list.length);
         setRequestCount(list.length);
         onChangeRequestCount?.(list.length);
       },
@@ -915,6 +916,7 @@ export function useContactList(props: ContactListProps) {
   React.useEffect(() => {
     im.requestList.getRequestList({
       onResult: (result) => {
+        console.log('test:zuoyu:getRequestList', result);
         setRequestCount(result.value?.length ?? 0);
         onChangeRequestCount?.(result.value?.length ?? 0);
       },

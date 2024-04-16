@@ -574,6 +574,7 @@ export function useConversationList(props: ConversationListProps) {
         calculateUnreadCount();
       },
       onUpdatedEvent: (data) => {
+        console.log('test:zuoyu:onUpdatedEvent:', data);
         onUpdateDataToUI(data);
         calculateUnreadCount();
       },

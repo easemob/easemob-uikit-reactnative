@@ -39,6 +39,9 @@ export function FileMessagePreviewScreen(props: Props) {
         onBack={() => {
           navi.goBack();
         }}
+        onOpenFile={(_localPath) => {
+          // todo: open file with other app
+        }}
       />
     </SafeAreaView>
   );

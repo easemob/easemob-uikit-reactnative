@@ -11,7 +11,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { gMessageAttributeFileProgress, useChatContext } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { ErrorCode, UIKitError } from '../../error';
+import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
+import { CmnButton } from '../../ui/Button';
 import { Text } from '../../ui/Text';
 import { BackButton } from '../Back';
 import type { PropsWithBack, PropsWithChildren } from '../types';
@@ -44,6 +46,11 @@ export type FileMessagePreviewProps = PropsWithBack &
      * @returns void
      */
     onProgress?: (progress: number) => void;
+
+    /**
+     * Open file callback.
+     */
+    onOpenFile?: (localPath: string) => void;
   };
 
 /**
@@ -57,10 +64,13 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
     msg: propsMsg,
     localMsgId: propsLocalMsgId,
     onBack,
+    onOpenFile: propsOnOpenFile,
   } = props;
   const im = useChatContext();
   const { top } = useSafeAreaInsets();
   const [progress, setProgress] = React.useState(0);
+  const { tr } = useI18nContext();
+  const localPath = React.useRef<string | undefined>(undefined);
 
   const download = React.useCallback(
     async (msg: ChatMessage) => {
@@ -71,6 +81,7 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
         });
       }
       const body = msg.body as ChatFileMessageBody;
+      localPath.current = body.localPath;
       const isExisted = await Services.dcs.isExistedFile(body.localPath);
       if (isExisted !== true) {
         setProgress(0);
@@ -98,6 +109,10 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
     },
     [download, im]
   );
+
+  const onOpenFile = React.useCallback(async () => {
+    propsOnOpenFile?.(localPath.current ?? '');
+  }, [propsOnOpenFile]);
 
   React.useEffect(() => {
     if (propsMsg) {
@@ -175,6 +190,11 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
         ]}
       >
         <Text>{progress}</Text>
+        <CmnButton
+          text={tr('open')}
+          contentType={'only-text'}
+          onPress={onOpenFile}
+        />
         <Pressable
           style={{
             position: 'absolute',

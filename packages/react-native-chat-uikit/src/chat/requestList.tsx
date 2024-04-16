@@ -23,6 +23,7 @@ import type { NewRequestModel, NewRequestStateType } from './types.ui';
 import { getNewRequest } from './utils';
 
 let gListener: ChatServiceListener | undefined;
+const gUserList: Map<string, RequestListListener> = new Map();
 
 /**
  * Request List Implementation.
@@ -34,7 +35,7 @@ export class RequestListImpl implements RequestList {
   _userList: Map<string, RequestListListener>;
   constructor(client: ChatService) {
     this._client = client;
-    this._userList = new Map();
+    this._userList = gUserList;
   }
 
   init() {
@@ -67,6 +68,7 @@ export class RequestListImpl implements RequestList {
     this._userList.delete(key);
   }
   emitNewRequestListChanged() {
+    console.log('test:zuoyu:userList:', this._userList.size);
     for (const listener of this._userList.values()) {
       timeoutTask(0, () =>
         listener.onNewRequestListChanged([...this._newRequestList])

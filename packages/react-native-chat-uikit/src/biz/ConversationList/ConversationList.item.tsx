@@ -102,6 +102,8 @@ export function ConversationListItem(props: ConversationListItemProps) {
         : undefined
       : data.unreadMessageCount;
 
+  console.log('test:zuoyu:pin:2:', data.isPinned, data.convId);
+
   return (
     <PressableHighlight
       style={{

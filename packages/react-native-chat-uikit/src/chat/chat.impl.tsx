@@ -1457,6 +1457,7 @@ export class ChatServiceImpl
     });
     if (conv) {
       conv.isPinned = params.isPin;
+      console.log('test:zuoyu:pin:', conv);
       this.sendUIEvent(UIListenerType.Conversation, 'onUpdatedEvent', conv);
     }
     return ret;

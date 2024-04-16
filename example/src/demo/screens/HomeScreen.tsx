@@ -90,6 +90,7 @@ function ContactBadge() {
 
   React.useEffect(() => {
     const listener = (params: { count: number }) => {
+      console.log('test:zuoyu:listener:', params);
       const { count } = params;
       setCount(count);
     };
@@ -397,6 +398,7 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
 
   const onChangeRequestCount = React.useCallback(
     (count: number) => {
+      console.log('test:zuoyu:emit:', count);
       emit('_demo_contact_list_total_request_count', { count });
     },
     [emit]

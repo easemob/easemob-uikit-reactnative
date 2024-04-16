@@ -62,9 +62,11 @@ export function PressableHighlight(props: PressableHighlightProps) {
       style={
         [
           style,
-          {
-            backgroundColor: _underlayColor,
-          },
+          _underlayColor
+            ? {
+                backgroundColor: _underlayColor,
+              }
+            : undefined,
         ] as StyleProp<ViewStyle>
       }
       onPressIn={_onPressIn}

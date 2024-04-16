@@ -262,6 +262,7 @@ export function App() {
     // !!! `initParams` is not called in the `useEffect` hook.
     return null;
   }
+  console.log('test:zuoyu:app:');
 
   return (
     <React.StrictMode>
