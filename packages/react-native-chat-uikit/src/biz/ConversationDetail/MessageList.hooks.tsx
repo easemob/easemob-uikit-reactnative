@@ -1202,6 +1202,7 @@ export function useMessageList(
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
+      console.log('onLongPressListItem', id, model);
       if (selectType === 'multi') {
         return;
       }
@@ -1319,32 +1320,58 @@ export function useMessageList(
       if (model.modelType === 'message') {
         if (face === 'faceplus') {
           const msgModel = model as MessageModel;
-          if (msgModel.reactions && msgModel.reactions?.length > 0) {
-            reactionRef.current?.startShowWithProps?.({
-              reactionList: [
-                ...msgModel.reactions.map((v) => {
-                  return {
-                    ...v,
-                    userList: v.userList.map((v) => {
-                      return {
-                        id: v,
-                        name: getContactInfo(v).name,
-                        avatar: getContactInfo(v).avatar,
-                      } as DataModel;
-                    }),
-                  } as MessageReactionModel;
-                }),
-              ],
-              msgId: msgModel.msg.msgId,
-              onRequestModalClose: onRequestCloseReaction,
-            });
-          }
+          const list = emojiListRef.current;
+          getEmojiState(list, msgModel.msg.msgId, (updateList) => {
+            if (updateList) {
+              msgModelRef.current = model as MessageModel;
+              const onFace = (face: string) => {
+                emojiRef.current?.startHide?.(() => {
+                  onEmojiClicked(face, model as MessageModel);
+                });
+              };
+              onShowEmojiLongPressActions(updateList, onFace);
+            }
+          });
         } else {
           onEmojiClicked(face, model as MessageModel);
         }
       }
     },
-    [getContactInfo, onEmojiClicked, onRequestCloseReaction]
+    [getEmojiState, onEmojiClicked, onShowEmojiLongPressActions]
+  );
+
+  const onLongPressListItemReaction = React.useCallback(
+    (
+      _id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel,
+      face: string
+    ) => {
+      if (model.modelType === 'message') {
+        const msgModel = model as MessageModel;
+        if (msgModel.reactions && msgModel.reactions?.length > 0) {
+          reactionRef.current?.startShowWithProps?.({
+            reactionList: [
+              ...msgModel.reactions.map((v) => {
+                return {
+                  ...v,
+                  userList: v.userList.map((v) => {
+                    return {
+                      id: v,
+                      name: getContactInfo(v).name,
+                      avatar: getContactInfo(v).avatar,
+                    } as DataModel;
+                  }),
+                } as MessageReactionModel;
+              }),
+            ],
+            msgId: msgModel.msg.msgId,
+            onRequestModalClose: onRequestCloseReaction,
+            currentSelected: face,
+          });
+        }
+      }
+    },
+    [getContactInfo, onRequestCloseReaction]
   );
 
   const onClickedListItemThread = React.useCallback(
@@ -2966,6 +2993,7 @@ export function useMessageList(
     onClickedItemQuote: onClickedListItemQuote,
     onClickedItemState: onClickedListItemState,
     onClickedItemReaction: onClickedListItemReaction,
+    onLongPressItemReaction: onLongPressListItemReaction,
     onClickedItemThread: onClickedListItemThread,
     ListItemRender: MessageListItemRef.current,
     listItemRenderProps: listItemRenderPropsRef.current,

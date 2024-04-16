@@ -289,6 +289,7 @@ export type MessageReactionProps = {
   hasTriangle: boolean;
   reactions?: ChatMessageReaction[];
   onClicked?: (face: string) => void;
+  onLongPress?: (face: string) => void;
 };
 
 /**

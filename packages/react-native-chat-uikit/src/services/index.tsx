@@ -2,8 +2,6 @@ import { ClipboardServiceImplement } from './ClipboardService';
 import { DirCacheServiceImplement } from './DirCacheService';
 import { LocalStorageServiceImplement } from './LocalStorageService';
 import { MediaServiceImplement } from './MediaService';
-import { NotificationServiceImplement } from './NotificationService';
-import { PermissionServiceImplement } from './PermissionService';
 import type {
   ClipboardService,
   ClipboardServiceOption,
@@ -12,10 +10,6 @@ import type {
   LocalStorageService,
   MediaService,
   MediaServiceOptions,
-  NotificationService,
-  NotificationServiceOption,
-  PermissionService,
-  PermissionServiceOption,
 } from './types';
 
 /**
@@ -31,14 +25,6 @@ export class Services {
    */
   static ms: MediaService;
   /**
-   * Notification service.
-   */
-  static ns: NotificationService;
-  /**
-   * Permission service.
-   */
-  static ps: PermissionService;
-  /**
    * Local storage service.
    */
   static ls: LocalStorageService;
@@ -46,20 +32,6 @@ export class Services {
    * Directory cache service.
    */
   static dcs: DirCacheService;
-
-  /**
-   * Create permission service single object.
-   * @param option - The option. see {@link PermissionServiceOption}
-   * @returns The Permission service object.
-   */
-  public static createPermissionService(
-    option: PermissionServiceOption
-  ): PermissionService {
-    if (Services.ps === undefined) {
-      Services.ps = new PermissionServiceImplement(option);
-    }
-    return Services.ps;
-  }
 
   /**
    * Create clipboard service single object.
@@ -85,20 +57,6 @@ export class Services {
       Services.ms = new MediaServiceImplement(option);
     }
     return Services.ms;
-  }
-
-  /**
-   * Create notification service single object.
-   * @param option - The option. see {@link NotificationServiceOption}
-   * @returns The notification service object.
-   */
-  public static createNotificationService(
-    option: NotificationServiceOption
-  ): NotificationService {
-    if (Services.ns === undefined) {
-      Services.ns = new NotificationServiceImplement(option);
-    }
-    return Services.ns;
   }
 
   /**

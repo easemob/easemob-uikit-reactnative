@@ -78,7 +78,34 @@ export function useGetStyleProps() {
       },
     };
   }, []);
-  return ret;
+
+  const getBorderRadiusFour = React.useCallback(
+    (params: {
+      height: number;
+      crt: {
+        left: CornerRadiusPaletteType;
+        right: CornerRadiusPaletteType;
+        top: CornerRadiusPaletteType;
+        bottom: CornerRadiusPaletteType;
+      };
+      cr: {
+        left: CornerRadiusPalette;
+        right: CornerRadiusPalette;
+        top: CornerRadiusPalette;
+        bottom: CornerRadiusPalette;
+      };
+    }) => {
+      const { height, crt, cr } = params;
+      return {
+        left: ret.getBorderRadius({ height, crt: crt.left, cr: cr.left }),
+        right: ret.getBorderRadius({ height, crt: crt.right, cr: cr.right }),
+        top: ret.getBorderRadius({ height, crt: crt.top, cr: cr.top }),
+        bottom: ret.getBorderRadius({ height, crt: crt.bottom, cr: cr.bottom }),
+      };
+    },
+    [ret]
+  );
+  return { ...ret, getBorderRadiusFour };
 }
 
 function _getPropValueFromStyleT<Style = ViewStyle>(

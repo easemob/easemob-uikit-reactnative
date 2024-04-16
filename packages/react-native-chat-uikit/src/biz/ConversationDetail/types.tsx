@@ -653,6 +653,15 @@ export type MessageListItemActionsProps = {
     face: string
   ) => void;
 
+  /**
+   * Callback notification when the message reaction is long pressed.
+   */
+  onReactionLongPress?: (
+    id: string,
+    model: SystemMessageModel | TimeMessageModel | MessageModel,
+    face: string
+  ) => void;
+
   onThreadClicked?: (
     id: string,
     model: SystemMessageModel | TimeMessageModel | MessageModel

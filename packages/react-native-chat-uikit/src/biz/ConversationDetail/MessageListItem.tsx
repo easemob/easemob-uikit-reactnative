@@ -1394,13 +1394,14 @@ export function MessageThread(props: MessageThreadProps) {
 }
 
 export function MessageReaction(props: MessageReactionProps) {
-  const { reactions, hasAvatar, hasTriangle, layoutType, onClicked } = props;
-  // const test = [
-  //   { reaction: 'link', count: 12, isAddedBySelf: true, userList: [] },
-  //   { reaction: 'link', count: 100, isAddedBySelf: false, userList: [] },
-  //   { reaction: 'link', count: 100, isAddedBySelf: false, userList: [] },
-  //   { reaction: 'link', count: 100, isAddedBySelf: false, userList: [] },
-  // ] as ChatMessageReaction[];
+  const {
+    reactions,
+    hasAvatar,
+    hasTriangle,
+    layoutType,
+    onClicked,
+    onLongPress,
+  } = props;
   const { colors, cornerRadius } = usePaletteContext();
   const { cornerRadius: corner } = useThemeContext();
   const { getBorderRadius } = useGetStyleProps();
@@ -1455,7 +1456,11 @@ export function MessageReaction(props: MessageReactionProps) {
         if (i >= 0 && i < 3) {
           const r = v.reaction;
           return (
-            <Pressable key={i} onPress={() => onClicked?.(v.reaction)}>
+            <Pressable
+              key={i}
+              onPress={() => onClicked?.(v.reaction)}
+              onLongPress={() => onLongPress?.(v.reaction)}
+            >
               <View
                 style={{
                   flexDirection: 'row',
@@ -1535,6 +1540,7 @@ export function MessageReaction(props: MessageReactionProps) {
       <Pressable
         style={{
           borderColor: getColor('bg2'),
+          backgroundColor: getColor('bg2'),
           borderWidth: 1,
           paddingRight: 8,
           paddingLeft: 6,
@@ -2106,6 +2112,7 @@ export function MessageView(props: MessageViewProps) {
     onReactionClicked,
     onThreadClicked,
     onClickedChecked,
+    onReactionLongPress,
     ...others
   } = props;
   const checked = (model as MessageModel)?.checked;
@@ -2181,6 +2188,15 @@ export function MessageView(props: MessageViewProps) {
       }
     },
     [checked, model, onClickedChecked, onReactionClicked]
+  );
+  const _onReactionLongPress = React.useCallback(
+    (face: string) => {
+      if (checked !== undefined) {
+      } else {
+        onReactionLongPress?.(model.msg.msgId, model, face);
+      }
+    },
+    [checked, model, onReactionLongPress]
   );
   const _onThreadClicked = React.useCallback(() => {
     if (checked !== undefined) {
@@ -2284,6 +2300,7 @@ export function MessageView(props: MessageViewProps) {
             hasAvatar={avatarIsVisible}
             hasTriangle={hasTriangle}
             onClicked={_onReactionClicked}
+            onLongPress={_onReactionLongPress}
             reactions={reactions}
           />
         ) : null}

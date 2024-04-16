@@ -56,26 +56,7 @@ export class MediaServiceImplement implements MediaService {
           uilog.warn(error);
         });
     };
-    this.option.permission
-      .hasMediaLibraryPermission()
-      .then((result) => {
-        uilog.log(result);
-        if (result === false) {
-          this.option.permission
-            .requestMediaLibraryPermission()
-            .then((_) => {
-              create();
-            })
-            .catch((error) => {
-              uilog.log(error);
-            });
-        } else {
-          create();
-        }
-      })
-      .catch((error) => {
-        uilog.warn(error);
-      });
+    create();
   }
 
   public getRootDir(): string {
@@ -133,16 +114,6 @@ export class MediaServiceImplement implements MediaService {
   }
 
   async startRecordAudio(options: RecordAudioOptions): Promise<boolean> {
-    const hasPermission =
-      await this.option.permission.hasCameraAndMicPermission();
-    if (!hasPermission) {
-      const granted =
-        await this.option.permission.requestCameraAndMicPermission();
-      if (!granted) {
-        options?.onFailed?.(new Error('Failed to obtain permission.'));
-        return false;
-      }
-    }
     try {
       const recorder = this.audioPlayer;
       recorder.addRecordBackListener((e: RecordBackType) => {
@@ -176,16 +147,6 @@ export class MediaServiceImplement implements MediaService {
     return this.record;
   }
   async playAudio(options: PlayAudioOptions): Promise<boolean> {
-    const hasPermission =
-      await this.option.permission.hasMediaLibraryPermission();
-    if (!hasPermission) {
-      const granted =
-        await this.option.permission.requestMediaLibraryPermission();
-      if (!granted) {
-        options?.onFailed?.(new Error('Failed to obtain permission.'));
-        return false;
-      }
-    }
     try {
       const recorder = this.audioPlayer;
       recorder.addPlayBackListener((value: PlayBackType) => {
@@ -233,16 +194,6 @@ export class MediaServiceImplement implements MediaService {
      * NOTE: options.selectionLimit {@link https://github.com/react-native-image-picker/react-native-image-picker#options}
      * We do not support 0 (any number of files)
      **/
-    const hasPermission =
-      await this.option.permission.hasMediaLibraryPermission();
-    if (!hasPermission) {
-      const granted =
-        await this.option.permission.requestMediaLibraryPermission();
-      if (!granted) {
-        options?.onFailed?.(new Error('Failed to obtain permission.'));
-        return [];
-      }
-    }
 
     let selectionLimit = 1;
     if (options !== undefined) {
@@ -281,17 +232,6 @@ export class MediaServiceImplement implements MediaService {
   async openCamera(
     options?: OpenCameraOptions | undefined
   ): Promise<Nullable<FileType>> {
-    const hasPermission =
-      await this.option.permission.hasCameraAndMicPermission();
-    if (!hasPermission) {
-      const granted =
-        await this.option.permission.requestCameraAndMicPermission();
-      if (!granted) {
-        options?.onFailed?.(new Error('Failed to obtain permission.'));
-        return null;
-      }
-    }
-
     const imagePicker = this.option.imagePickerModule;
     const response = await imagePicker.launchCamera({
       presentationStyle: 'fullScreen',
@@ -326,13 +266,6 @@ export class MediaServiceImplement implements MediaService {
   async openDocument(
     options?: OpenResult | undefined
   ): Promise<Nullable<FileType>> {
-    const hasPermission =
-      await this.option.permission.hasMediaLibraryPermission();
-    if (!hasPermission) {
-      const granted =
-        await this.option.permission.requestMediaLibraryPermission();
-      if (!granted) throw new Error('Permission not granted');
-    }
     try {
       // !!! mode: 'open' Failed to send file in open mode. Native problem.
       const { uri, size, name, type } =

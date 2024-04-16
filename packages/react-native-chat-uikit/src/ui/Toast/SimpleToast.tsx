@@ -102,11 +102,12 @@ export function SimpleToast(props: SimpleToastProps) {
       >
         <Text
           style={{
-            maxWidth: '50%',
+            maxWidth: '80%',
             color: getColor('text'),
             fontSize: 14,
             fontWeight: '500',
             lineHeight: 18,
+            textAlign: 'center',
           }}
         >
           {text}

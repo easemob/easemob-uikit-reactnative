@@ -100,7 +100,6 @@ export type MediaServiceOptions = {
   mediaLibraryModule: typeof MediaLibrary;
   fsModule: typeof FileAccess;
   audioModule: typeof Audio;
-  permission: PermissionService;
   rootDirName?: string;
 };
 
@@ -160,37 +159,6 @@ export type PermissionServiceOption = {
   permissions: typeof Permissions;
   firebaseMessage: typeof FirebaseMessage;
 };
-
-/**
- * Permission service interface.
- *
- * Users can implement the interface by themselves.
- */
-export interface PermissionService {
-  hasCameraAndMicPermission(): Promise<boolean>;
-  requestCameraAndMicPermission(): Promise<boolean>;
-  hasLocationPermission(): Promise<boolean>;
-  requestLocationPermission(): Promise<boolean>;
-  hasMediaLibraryPermission(): Promise<boolean>;
-  requestMediaLibraryPermission(): Promise<boolean>;
-  hasNotificationPermission(): Promise<boolean>;
-  requestNotificationPermission(): Promise<boolean>;
-}
-export type NotificationServiceOption = {
-  firebaseMessage: typeof FirebaseMessage;
-  permission: PermissionService;
-};
-
-/**
- * Notification service interface.
- *
- * Users can implement the interface by themselves.
- */
-export interface NotificationService {
-  getAPNSToken(): Promise<Nullable<string>>;
-  getFCMToken(): Promise<Nullable<string>>;
-  onTokenRefresh(handler: (token: string) => void): Unsubscribe;
-}
 
 /**
  * Local storage service interface.
