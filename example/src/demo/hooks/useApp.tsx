@@ -1,7 +1,11 @@
-import { useNavigationContainerRef } from '@react-navigation/native';
+import {
+  NavigationAction,
+  NavigationState,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as React from 'react';
-import { DeviceEventEmitter } from 'react-native';
+import { BackHandler, DeviceEventEmitter, Platform } from 'react-native';
 import { CallType, CallUser } from 'react-native-chat-callkit';
 import {
   ChatMultiDeviceEvent,
@@ -55,6 +59,7 @@ import {
 } from '../common/fcm';
 import { RestApi } from '../common/rest.api';
 import type { RootParamsList, RootParamsName } from '../routes';
+import { formatNavigationState } from '../utils/utils';
 import { useUserInfo } from './useUserInfo';
 
 export function useApp() {
@@ -82,6 +87,7 @@ export function useApp() {
   const enableTranslateRef = React.useRef(false);
   const enableAVMeetingRef = React.useRef(false);
   const enableOfflinePushRef = React.useRef(false);
+  const pageDeepRef = React.useRef(0);
   const [fontsLoaded] = useFonts({
     [twemoji_ttf_name]: twemoji_ttf,
     [boloo_da_ttf_name]: boloo_da_ttf,
@@ -203,70 +209,6 @@ export function useApp() {
           },
         });
       }
-
-      return;
-      // const userIds = params.ids.get('user');
-      // const noExistedIds = [] as string[];
-      // userIds?.forEach((id) => {
-      //   const isExisted = list.current.get(id);
-      //   if (isExisted && isExisted.avatar && isExisted.name) return;
-      //   noExistedIds.push(id);
-      // });
-      // const users = noExistedIds?.map<DataModel>((id) => {
-      //   return {
-      //     id,
-      //     name: id + 'name',
-      //     // avatar: 'https://i.pravatar.cc/300',
-      //     avatar:
-      //       'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-      //     type: 'user' as DataModelType,
-      //   };
-      // });
-      // const groupIds = params.ids.get('group');
-      // const noExistedGroupIds = [] as string[];
-      // groupIds?.forEach((id) => {
-      //   const isExisted = list.current.get(id);
-      //   if (isExisted && isExisted.avatar && isExisted.name) return;
-      //   noExistedGroupIds.push(id);
-      // });
-      // const groups = noExistedGroupIds?.map<DataModel>((id) => {
-      //   return {
-      //     id,
-      //     name: id + 'name',
-      //     avatar:
-      //       'https://cdn0.iconfinder.com/data/icons/user-pictures/100/maturewoman-2-512.png',
-      //     type: 'group' as DataModelType,
-      //   };
-      // });
-      // for (const user of users ?? []) {
-      //   const isExisted = list.current.get(user.id);
-      //   list.current.set(user.id, isExisted ? { ...user, ...isExisted } : user);
-      // }
-      // for (const group of groups ?? []) {
-      //   const isExisted = list.current.get(group.id);
-      //   list.current.set(
-      //     group.id,
-      //     isExisted
-      //       ? {
-      //           ...group,
-      //           ...isExisted,
-      //           avatar: isExisted.avatar ?? group.avatar,
-      //         }
-      //       : group
-      //   );
-      // }
-      // const finalUsers = userIds?.map<DataModel>((id) => {
-      //   return list.current.get(id) as DataModel;
-      // });
-      // const finalGroups = groupIds?.map<DataModel>((id) => {
-      //   return list.current.get(id) as DataModel;
-      // });
-      // params?.result(
-      //   new Map([
-      //     ['user', finalUsers ?? []],
-      //     ['group', finalGroups ?? []],
-      //   ])
-      // );
     },
     [im, users, updateDataFromServer, updateDataToStorage]
   );
@@ -582,6 +524,20 @@ export function useApp() {
     return ret;
   }, []);
 
+  const onStateChange = React.useCallback(
+    (state: NavigationState | undefined) => {
+      pageDeepRef.current = state?.routes.length ?? 0;
+      const rr: string[] & string[][] = [];
+      formatNavigationState(state, rr);
+      console.log('dev:onStateChange:', JSON.stringify(rr, undefined, '  '));
+    },
+    []
+  );
+
+  const onUnhandledAction = React.useCallback((action: NavigationAction) => {
+    console.log('dev:onUnhandledAction:', action);
+  }, []);
+
   React.useEffect(() => {
     const uiListener: UIGroupListListener = {
       onUpdatedEvent: (_data) => {
@@ -788,6 +744,28 @@ export function useApp() {
     };
   }, [dark, light, updatePush, updater]);
 
+  // !!! Customize the android platform return button operation.
+  React.useEffect(() => {
+    if (Platform.OS !== 'android') {
+      return;
+    }
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (pageDeepRef.current <= 1) {
+          return false;
+        }
+        return true;
+      }
+    );
+    return () => {
+      if (Platform.OS !== 'android') {
+        return;
+      }
+      backHandler.remove();
+    };
+  }, []);
+
   return {
     onRequestMultiData,
     im,
@@ -827,5 +805,7 @@ export function useApp() {
     onInitLanguageSet,
     onUsersProvider,
     onGroupsProvider,
+    onStateChange,
+    onUnhandledAction,
   };
 }

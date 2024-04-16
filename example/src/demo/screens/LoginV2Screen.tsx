@@ -32,7 +32,12 @@ import DeviceInfo from 'react-native-device-info';
 
 import { main_bg } from '../common/assets';
 import { RestApi } from '../common/rest.api';
-import { useGeneralSetting, useLogin, useStackScreenRoute } from '../hooks';
+import {
+  useGeneralSetting,
+  useLogin,
+  useNavigationState,
+  useStackScreenRoute,
+} from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type CaptchaState = 'init' | 'sending' | 'sent' | 'resend' | 'error';
@@ -89,6 +94,7 @@ export function LoginV2Screen(props: Props) {
   const { updater } = useForceUpdate();
   const ra = getReleaseArea();
   const releaseAreaRef = React.useRef(ra);
+  useNavigationState(props);
 
   const { initParams } = useGeneralSetting();
   const [_initParams, setInitParams] = React.useState(false);

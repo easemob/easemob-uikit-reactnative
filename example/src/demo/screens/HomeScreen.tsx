@@ -25,7 +25,12 @@ import {
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useGeneralSetting, useLogin, useNativeStackRoute } from '../hooks';
+import {
+  useGeneralSetting,
+  useLogin,
+  useNativeStackRoute,
+  useNavigationState,
+} from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 import { MineInfo } from '../ui/MineInfo';
 
@@ -90,7 +95,6 @@ function ContactBadge() {
 
   React.useEffect(() => {
     const listener = (params: { count: number }) => {
-      console.log('test:zuoyu:listener:', params);
       const { count } = params;
       setCount(count);
     };
@@ -131,6 +135,7 @@ export function HomeScreen(props: Props) {
   const { updater } = useForceUpdate();
   const ra = getReleaseArea();
   const releaseAreaRef = React.useRef(ra);
+  useNavigationState(props);
 
   const { initParams } = useGeneralSetting();
   const [_initParams, setInitParams] = React.useState(false);
@@ -398,7 +403,6 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
 
   const onChangeRequestCount = React.useCallback(
     (count: number) => {
-      console.log('test:zuoyu:emit:', count);
       emit('_demo_contact_list_total_request_count', { count });
     },
     [emit]

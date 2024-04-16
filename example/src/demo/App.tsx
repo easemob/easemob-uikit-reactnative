@@ -1,8 +1,4 @@
-import {
-  NavigationAction,
-  NavigationContainer,
-  NavigationState,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
@@ -71,7 +67,6 @@ import {
   StyleSettingScreen,
   VideoMessagePreviewScreen,
 } from './screens';
-import { formatNavigationState } from './utils/utils';
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
@@ -113,6 +108,8 @@ export function App() {
     onInitLanguageSet,
     onUsersProvider,
     onGroupsProvider,
+    onStateChange,
+    onUnhandledAction,
   } = useApp();
 
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
@@ -262,7 +259,7 @@ export function App() {
     // !!! `initParams` is not called in the `useEffect` hook.
     return null;
   }
-  console.log('test:zuoyu:app:');
+  console.log('dev:app:');
 
   return (
     <React.StrictMode>
@@ -306,18 +303,8 @@ export function App() {
         >
           <NavigationContainer
             ref={rootRef}
-            onStateChange={(state: NavigationState | undefined) => {
-              const rr: string[] & string[][] = [];
-              formatNavigationState(state, rr);
-              console.log(
-                'dev:onStateChange:',
-                JSON.stringify(rr, undefined, '  ')
-              );
-              // console.log('onStateChange:o:', JSON.stringify(state));
-            }}
-            onUnhandledAction={(action: NavigationAction) => {
-              console.log('dev:onUnhandledAction:', action);
-            }}
+            onStateChange={onStateChange}
+            onUnhandledAction={onUnhandledAction}
             onReady={onNavigationInitialized}
             fallback={
               <View

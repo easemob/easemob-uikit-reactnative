@@ -8,38 +8,6 @@ import * as React from 'react';
 import type { RootParamsName, RootScreenParamsList } from '../routes';
 import type { NavigationParams } from './types';
 
-// export class LastScreenParams {
-//   static _props: any;
-//   static _from: string | null;
-//   static _hash: number | null;
-//   static setParams<Props = any>(props: Props, from: string, hash?: number) {
-//     this._props = props;
-//     this._from = from;
-//     this._hash = hash ?? Date.now();
-//   }
-//   static getParams<Props = any>(): NavigationParams<Props> {
-//     const ret = {
-//       ...this._props,
-//       from: this._from,
-//       hash: this._hash,
-//     } as NavigationParams<Props>;
-//     return ret;
-//   }
-//   static clearParams() {
-//     this._props = null;
-//     this._from = null;
-//     this._hash = null;
-//   }
-// }
-
-// export function createParams<Props>(props: Props, from: string) {
-//   return {
-//     ...props,
-//     __from: from,
-//     __hash: Date.now(),
-//   } as NavigationParams<Props>;
-// }
-
 function navigateFC<Props extends NavigationParams<any>>(
   navigation: NavigationProp<RootScreenParamsList>,
   params: {
@@ -150,20 +118,7 @@ function pushFC<Props extends NavigationParams<any>>(
   );
 }
 
-// export function useCreateParams<Props>() {
-//   const createParams = React.useCallback((props: Props, from: string) => {
-//     return {
-//       ...props,
-//       from: from,
-//       hash: Date.now(),
-//     } as NavigationParams<Props>;
-//   }, []);
-//   return {
-//     createParams,
-//   };
-// }
-
-export function useRoute() {
+export function useNavigationRoute() {
   const _navigation = useNavigation<NavigationProp<RootScreenParamsList>>();
   const _navigate = React.useCallback(
     <Props extends NavigationParams<any>>(params: {
@@ -195,7 +150,7 @@ export function useRoute() {
 export function useNativeStackRoute() {
   const _navigation =
     useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
-  const basic = useRoute();
+  const basic = useNavigationRoute();
   const _replace = React.useCallback(
     <Props extends NavigationParams<any>>(params: {
       from?: RootParamsName;
@@ -226,7 +181,7 @@ export function useNativeStackRoute() {
 type useStackScreenRouteProps = NativeStackScreenProps<RootScreenParamsList>;
 export function useStackScreenRoute(props: useStackScreenRouteProps) {
   const { navigation: _navigation } = props;
-  const basic = useRoute();
+  const basic = useNavigationRoute();
   const _replace = React.useCallback(
     <Props extends NavigationParams<any>>(params: {
       from?: RootParamsName;
