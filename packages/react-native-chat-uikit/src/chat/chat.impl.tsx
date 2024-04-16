@@ -1457,7 +1457,6 @@ export class ChatServiceImpl
     });
     if (conv) {
       conv.isPinned = params.isPin;
-      console.log('test:zuoyu:pin:', conv);
       this.sendUIEvent(UIListenerType.Conversation, 'onUpdatedEvent', conv);
     }
     return ret;
@@ -2115,7 +2114,8 @@ export class ChatServiceImpl
       promise: this.client.groupManager.getGroupWithId(params.groupId),
       event: 'getGroupInfoSync',
     });
-    if (ret) {
+    // !!! fix bug: if group is not exist, return error object.
+    if (ret && ret.groupName.length > 0) {
       const group = this.toUIGroup(ret);
       return {
         isOk: true,

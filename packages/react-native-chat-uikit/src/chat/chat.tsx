@@ -31,9 +31,7 @@ type ChatContextProps = React.PropsWithChildren<{
 export function ChatContextProvider({ value, children }: ChatContextProps) {
   const { options, onInitialized, onUsersProvider, onGroupsProvider } = value;
   const _im = _getChatService();
-  console.log('test:zuoyu:ChatContextProvider');
   React.useEffect(() => {
-    console.log('test:zuoyu:ChatContextProvider:useEffect');
     _im.init({
       options: options,
       result: ({ isOk, error }) => {

@@ -68,7 +68,6 @@ export class RequestListImpl implements RequestList {
     this._userList.delete(key);
   }
   emitNewRequestListChanged() {
-    console.log('test:zuoyu:userList:', this._userList.size);
     for (const listener of this._userList.values()) {
       timeoutTask(0, () =>
         listener.onNewRequestListChanged([...this._newRequestList])
