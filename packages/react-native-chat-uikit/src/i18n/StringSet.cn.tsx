@@ -112,8 +112,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_info_alert_quit_group_title': '离开群聊？',
     '_uikit_info_alert_quit_group_content': '离开群组将清空该群组的聊天记录',
     '_uikit_info_alert_destroy_group_title': '解散群组？',
-    '_uikit_info_alert_destroy_group_content':
-      '确认解散群组，同时删除该群组的聊天记录',
+    '_uikit_info_alert_destroy_group_content': '解散群组将清空该群组的聊天记录',
 
     '_uikit_new_quest_title': '新请求',
     '_uikit_new_quest_list_item_tip': '请求添加您为好友。',

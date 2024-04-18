@@ -117,7 +117,7 @@ export function createStringSetEn(): StringSet {
       'Leaving the group will clear the chat history.',
     '_uikit_info_alert_destroy_group_title': 'Disband this Group?',
     '_uikit_info_alert_destroy_group_content':
-      'Confirm disbanding group and deleting group chat history',
+      'Disbanding the group will clear the chat history.',
 
     '_uikit_new_quest_title': 'New Requests',
     '_uikit_new_quest_list_item_tip': 'requests to add you as a contact.',
@@ -197,7 +197,7 @@ export function createStringSetEn(): StringSet {
     '@all': '[Mentioned] ',
     '@me': '[Mentioned] ',
 
-    'voice_bar_remain': (v) => `${v}s Remaining`,
+    'voice_bar_remain': (v) => `The recording will stop in ${v}s`,
     'voice_bar_tip_click_record': 'Tap to Record',
     'voice_bar_tip_recording': 'Recording',
     'voice_bar_tip_click_play': 'Tap to Play',
