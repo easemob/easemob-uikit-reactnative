@@ -76,13 +76,13 @@ export function useMessageThreadListMoreActions(
                 message: tr('_uikit_thread_leave_confirm', true),
                 buttons: [
                   {
-                    text: 'cancel',
+                    text: tr('cancel'),
                     onPress: () => {
                       alertRef.current?.close?.();
                     },
                   },
                   {
-                    text: 'confirm',
+                    text: tr('confirm'),
                     isPreferred: true,
                     onPress: () => {
                       alertRef?.current?.close?.();

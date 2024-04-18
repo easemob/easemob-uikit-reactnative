@@ -125,7 +125,7 @@ export function MineInfo(props: MineInfoProps) {
             paletteType={'label'}
             style={{ color: getColor('t3') }}
           >
-            {userId}
+            {`ID: ${userId}`}
           </Text>
           <Icon
             name={'doc_on_doc'}

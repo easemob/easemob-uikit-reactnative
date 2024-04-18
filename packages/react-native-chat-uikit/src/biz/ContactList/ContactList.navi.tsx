@@ -77,7 +77,7 @@ export const ContactListNavigationBar = (
           onClicked: onClickedNewContact,
           iconName: 'person_add',
         }}
-        Title={TopNavigationBarTitle({ text: 'Contacts' })}
+        Title={TopNavigationBarTitle({ text: tr('_uikit_navi_title_contact') })}
       />
     );
   } else if (contactType === 'new-conversation') {

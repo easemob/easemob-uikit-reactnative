@@ -6,7 +6,7 @@ import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
-import { Text } from '../../ui/Text';
+import { SingleLineText, Text } from '../../ui/Text';
 import { SimpleToast } from '../../ui/Toast';
 import { GroupAvatar } from '../Avatar';
 import { BackButton } from '../Back';
@@ -183,20 +183,20 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               }}
               onPress={onCopyId}
             >
-              <Text
+              <SingleLineText
                 textType={'small'}
                 paletteType={'label'}
                 style={{ color: getColor('t3') }}
               >
                 {tr('_uikit_info_item_group_id')}
-                <Text
+                <SingleLineText
                   textType={'small'}
                   paletteType={'label'}
                   style={{ color: getColor('t3') }}
                 >
                   {`${groupId}`}
-                </Text>
-              </Text>
+                </SingleLineText>
+              </SingleLineText>
               <Icon
                 name={'doc_on_doc'}
                 style={{ width: 16, height: 16, tintColor: getColor('t3') }}

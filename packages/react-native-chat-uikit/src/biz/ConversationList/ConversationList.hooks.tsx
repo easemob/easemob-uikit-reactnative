@@ -482,6 +482,10 @@ export function useConversationList(props: ConversationListProps) {
     [calculateUnreadCount, dataRef, im, onAddDataToUI, refreshToUI]
   );
 
+  const onReload = React.useCallback(() => {
+    init({ onFinished: onInitialized });
+  }, [init, onInitialized]);
+
   const listener = React.useMemo(() => {
     return {
       onConnected: () => {
@@ -729,6 +733,7 @@ export function useConversationList(props: ConversationListProps) {
     ListItemRender: ListItemRenderRef.current,
     onClickedAvatar,
     userId,
+    onReload,
   };
 }
 

@@ -76,8 +76,8 @@ export function GroupInfoScreen(props: Props) {
           editTypeRef.current = 'groupName';
           navigation.push('EditInfo', {
             params: {
-              backName: tr('edit_group_name'),
-              saveName: tr('save'),
+              backName: tr('_demo_edit_group_name'),
+              saveName: tr('done'),
               initialData: groupName,
               maxLength: 128,
               // goBack: goBack,
@@ -92,8 +92,8 @@ export function GroupInfoScreen(props: Props) {
           editTypeRef.current = 'groupDescription';
           navigation.push('EditInfo', {
             params: {
-              backName: tr('edit_group_description'),
-              saveName: tr('save'),
+              backName: tr('_demo_edit_group_description'),
+              saveName: tr('done'),
               initialData: groupDescription,
               maxLength: 512,
               // goBack: goBack,
@@ -108,8 +108,8 @@ export function GroupInfoScreen(props: Props) {
           editTypeRef.current = 'groupMyRemark';
           navigation.push('EditInfo', {
             params: {
-              backName: tr('edit_group_my_remark'),
-              saveName: tr('save'),
+              backName: tr('_demo_edit_group_my_remark'),
+              saveName: tr('done'),
               initialData: groupMyRemark,
               maxLength: 128,
               // goBack: goBack,

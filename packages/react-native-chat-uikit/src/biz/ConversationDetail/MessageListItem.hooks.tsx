@@ -344,11 +344,11 @@ export function getSystemTip(
     try {
       const content = body.params as {
         text: string;
-        self: string;
+        name: string;
       };
-      return tr(content.text, content.self);
+      return tr(content.text, content.name);
     } catch (error) {
-      return tr('_uikit_msg_tip_create_group_success');
+      return tr('_uikit_msg_tip_create_group_success_with_params');
     }
   } else if (body.event === gCustomMessageCreateThreadTip) {
     try {

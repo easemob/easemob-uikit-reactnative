@@ -109,7 +109,7 @@ export function PersonInfoScreen(props: Props) {
       to: 'EditInfo',
       props: {
         backName: tr('_demo_person_edit_person_remark'),
-        saveName: tr('save'),
+        saveName: tr('done'),
         initialData: _remark,
         maxLength: 128,
         testRef,

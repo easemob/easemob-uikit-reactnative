@@ -2714,14 +2714,14 @@ export function useMessageList(
             message: tr('_uikit_alert_remove_message'),
             buttons: [
               {
-                text: 'cancel',
+                text: tr('cancel'),
                 onPress: () => {
                   alertRef.current?.close?.();
                   onResult(false);
                 },
               },
               {
-                text: 'confirm',
+                text: tr('confirm'),
                 isPreferred: true,
                 onPress: () => {
                   alertRef.current?.close?.();

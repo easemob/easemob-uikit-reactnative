@@ -26,12 +26,12 @@ export function createStringSetEn(): StringSet {
     '_demo_info_theme': 'theme',
     '_demo_info_language': 'language setting',
 
-    'edit_group_name': 'Edit group name',
-    'edit_group_description': 'Edit group description',
-    'edit_group_my_remark': 'Edit group my remark',
+    '_demo_edit_group_name': 'Edit group name',
+    '_demo_edit_group_description': 'Edit group description',
+    '_demo_edit_group_my_remark': 'Edit group my remark',
 
-    'edit_thread_name': 'Edit thread name',
-    'edit_contact_remark': 'Edit contact remark',
+    '_demo_edit_thread_name': 'Edit thread name',
+    '_demo_edit_contact_remark': 'Edit contact remark',
 
     'save': 'Save',
   };

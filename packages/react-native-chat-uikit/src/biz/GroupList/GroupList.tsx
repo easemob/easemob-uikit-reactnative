@@ -106,7 +106,7 @@ export function GroupList(props: GroupListProps) {
           <>{customSearch}</>
         ) : (
           <SearchStyle
-            title={tr('search')}
+            title={tr('_uikit_group_search_placeholder')}
             onPress={() => {
               onClickedSearch?.();
             }}

@@ -54,6 +54,7 @@ export function ConversationList(props: ConversationListProps) {
     propsFlatListProps,
     onClickedAvatar,
     userId,
+    onReload,
   } = useConversationList(props);
   const {
     style,
@@ -100,7 +101,9 @@ export function ConversationList(props: ConversationListProps) {
               onClicked: onShowConversationListMoreActions,
               iconName: 'plus_in_circle',
             }}
-            Title={TopNavigationBarTitle({ text: 'Chat' })}
+            Title={TopNavigationBarTitle({
+              text: tr('_uikit_navi_title_chat'),
+            })}
           />
         )
       ) : null}
@@ -147,7 +150,7 @@ export function ConversationList(props: ConversationListProps) {
             listState === 'error' ? (
               <ErrorPlaceholder
                 onClicked={() => {
-                  onRefresh?.();
+                  onReload?.();
                 }}
               />
             ) : null

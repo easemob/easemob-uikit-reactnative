@@ -262,8 +262,8 @@ export function MessageThreadDetailScreen(props: Props) {
               editTypeRef.current = 'threadName';
               navigation.push('EditInfo', {
                 params: {
-                  backName: tr('edit_thread_name'),
-                  saveName: tr('save'),
+                  backName: tr('_demo_edit_thread_name'),
+                  saveName: tr('done'),
                   initialData: thread.threadName,
                   maxLength: 128,
                   testRef,

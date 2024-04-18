@@ -419,8 +419,8 @@ export function ConversationDetailScreen(props: Props) {
                 navi.push({
                   to: 'EditInfo',
                   props: {
-                    backName: tr('edit_thread_name'),
-                    saveName: tr('save'),
+                    backName: tr('_demo_edit_thread_name'),
+                    saveName: tr('done'),
                     initialData: thread.threadName,
                     editType: 'threadName',
                     maxLength: 64,

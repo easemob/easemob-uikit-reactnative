@@ -363,23 +363,23 @@ export function useApp() {
   const requestInviteContent = React.useCallback((callType: CallType) => {
     if (languageRef.current === 'zh-Hans') {
       if (callType === CallType.Audio1v1) {
-        return '邀请您语音通话';
+        return '邀请您进入语音通话';
       } else if (callType === CallType.AudioMulti) {
         return '邀请您进行多人语音通话';
       } else if (callType === CallType.Video1v1) {
-        return '邀请您视频通话';
+        return '邀请您进入视频通话';
       } else if (callType === CallType.VideoMulti) {
         return '邀请您进行多人视频通话';
       }
     } else {
       if (callType === CallType.Audio1v1) {
-        return 'Invite you to voice call';
+        return 'You are invited to a voice call';
       } else if (callType === CallType.AudioMulti) {
-        return 'Invite you to multi-person voice call';
+        return 'You are invited to a multi-party voice call';
       } else if (callType === CallType.Video1v1) {
-        return 'Invite you to video call';
+        return 'You are invited to a video call';
       } else if (callType === CallType.VideoMulti) {
-        return 'Invite you to multi-person video call';
+        return 'You are invited to a multi-party video call';
       }
     }
     return '';

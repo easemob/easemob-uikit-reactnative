@@ -75,8 +75,8 @@ export function ContactInfoScreen(props: Props) {
           console.log(`onClickedContactRemark: ${userId}, ${remark}`);
           navigation.push('EditInfo', {
             params: {
-              backName: tr('edit_contact_remark'),
-              saveName: tr('save'),
+              backName: tr('_demo_edit_contact_remark'),
+              saveName: tr('done'),
               initialData: remark,
               maxLength: 128,
               from: 'ContactInfo',

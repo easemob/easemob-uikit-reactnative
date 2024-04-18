@@ -369,29 +369,6 @@ function HomeTabConversationListScreen(
       onClickedNewConversation={() => {
         navi.navigate({ to: 'NewConversation' });
       }}
-      // onInitMenu={(menu: InitMenuItemsType[]) => {
-      //   return [
-      //     ...menu,
-      //     {
-      //       name: 'test',
-      //       isHigh: false,
-      //       icon: 'bell',
-      //       onClickedItem: () => {
-      //         console.log('test');
-      //         const list = convRef.current.getList();
-      //         const first = list[0];
-      //         if (first) {
-      //           convRef.current.updateItem({
-      //             ...first,
-      //             doNotDisturb: !first.doNotDisturb,
-      //           });
-      //         }
-      //       },
-      //     },
-      //   ];
-      // }}
-      // onClickedNewContact={() => {
-      // }}
     />
   );
 }

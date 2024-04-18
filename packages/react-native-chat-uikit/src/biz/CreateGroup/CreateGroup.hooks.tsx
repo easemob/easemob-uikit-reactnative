@@ -29,6 +29,7 @@ export function useCreateGroup(props: CreateGroupProps) {
   const createMessageTip = React.useCallback(
     (_data: ContactModel[], group: GroupModel): ChatMessage => {
       const groupId = group.groupId;
+      const groupName = group.groupName;
       // const groupName = group.groupName;
       // const groupAvatar = group.groupAvatar;
       const tipMsg = ChatMessage.createCustomMessage(
@@ -38,7 +39,7 @@ export function useCreateGroup(props: CreateGroupProps) {
         {
           params: {
             text: '_uikit_msg_tip_create_group_success_with_params',
-            self: im.userId ?? '',
+            name: groupName ?? groupId,
           },
         }
       );

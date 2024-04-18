@@ -33,6 +33,11 @@ import {
   uuid,
 } from '../../utils';
 import { BackButton } from '../Back';
+import {
+  BottomSheetNameMenu,
+  BottomSheetNameMenuRef,
+} from '../BottomSheetMenu';
+import { useCloseMenu } from '../hooks';
 import { useImageSize } from '../hooks/useImageSize';
 import type { PropsWithBack } from '../types';
 import { getImageSizeFromUrl } from './MessageListItem.hooks';
@@ -74,6 +79,9 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
     pause,
     thumbnailUrl,
     showLoading,
+    menuRef,
+    onRequestCloseMenu,
+    showBottomSheet,
   } = useVideoMessagePreview(props);
   // const u =
   //   '/var/mobile/Containers/Data/Application/F4EF9F0C-7EAB-44BE-8109-B98E5C8FFD9A/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/4c847d40-b526-11ee-94cd-1b34468849ce?em-redirect=true&share-secret=TITLYLUmEe6-5M0HikC84neFGaGOFglbHbtYyO6mFDW8pnhN.mov'; // error
@@ -113,6 +121,7 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
     >
       <Pressable
         onPress={onClickedVideo}
+        onLongPress={showBottomSheet}
         style={{
           justifyContent: 'center',
           alignItems: 'center',
@@ -175,6 +184,11 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
       >
         <BackButton />
       </Pressable>
+
+      <BottomSheetNameMenu
+        ref={menuRef}
+        onRequestModalClose={onRequestCloseMenu}
+      />
     </View>
   );
 }
@@ -200,6 +214,8 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
   );
   const [pause, setPause] = React.useState(false);
   const { getImageSize } = useImageSize({});
+  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const { closeMenu } = useCloseMenu({ menuRef });
 
   const genThumb = React.useCallback(
     async (videoPath: string, onFinished: (thumbLocalPath: string) => void) => {
@@ -337,6 +353,32 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
     }
   }, []);
 
+  const saveVideo = React.useCallback(() => {
+    // let msg = propsMsg;
+    // if (propsMsg === undefined) {
+    //   const m = im.getMessage({ messageId: propsMsgId });
+    //   if (m) {
+    //     msg = m;
+    //   }
+    // }
+    // if (msg) {
+    //   const body = msg.body as ChatVideoMessageBody;
+    //   Services.ms
+    //     .saveFromLocal({
+    //       targetPath: localPath,
+    //       localPath: tmpFilePath,
+    //     })
+    //     .then(() => {
+    //       onFinished(localPath);
+    //     })
+    //     .catch();
+    // }
+  }, []);
+
+  const showBottomSheet = React.useCallback(() => {
+    console.log('test:zuoyu:showBottomSheet');
+  }, []);
+
   React.useEffect(() => {
     if (propsMsg) {
       download(propsMsg);
@@ -379,5 +421,9 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
     thumbnailUrl,
     onEnd,
     pause,
+    menuRef,
+    onRequestCloseMenu: closeMenu,
+    showBottomSheet,
+    saveVideo,
   };
 }

@@ -131,8 +131,8 @@ export function ContactInfoScreen(props: Props) {
             navi.push({
               to: 'EditInfo',
               props: {
-                backName: tr('edit_contact_remark'),
-                saveName: tr('save'),
+                backName: tr('_demo_edit_contact_remark'),
+                saveName: tr('done'),
                 initialData: remark,
                 editType: 'contactRemark',
                 maxLength: 128,

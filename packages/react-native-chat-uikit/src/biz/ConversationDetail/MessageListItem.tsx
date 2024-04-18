@@ -807,7 +807,7 @@ export function MessageCustomCard(props: MessageCustomCardProps) {
             maxWidth: '100%',
           }}
         >
-          {tr('contact')}
+          {tr('_uikit_msg_custom_card')}
         </SingleLineText>
       </View>
     </View>

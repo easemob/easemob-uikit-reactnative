@@ -41,7 +41,7 @@ export function ErrorPlaceholder({ onClicked }: { onClicked: () => void }) {
           textType={'medium'}
           style={{ color: getColor('fg') }}
         >
-          {tr('Failed to load')}
+          {tr('_uikit_error_placeholder_tip')}
         </Text>
       </View>
       <View>
@@ -49,7 +49,7 @@ export function ErrorPlaceholder({ onClicked }: { onClicked: () => void }) {
           sizesType={'middle'}
           radiusType={input}
           contentType={'only-text'}
-          text={tr('Refresh')}
+          text={tr('Reload')}
           onPress={onClicked}
         />
       </View>

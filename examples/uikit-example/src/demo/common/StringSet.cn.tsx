@@ -25,12 +25,12 @@ export function createStringSetCn(): StringSet {
     '_demo_info_theme': '明暗模式',
     '_demo_info_language': '语言设置',
 
-    'edit_group_name': '编辑群名称',
-    'edit_group_description': '编辑群描述',
-    'edit_group_my_remark': '编辑群我的备注',
+    '_demo_edit_group_name': '编辑群名称',
+    '_demo_edit_group_description': '编辑群描述',
+    '_demo_edit_group_my_remark': '编辑群我的备注',
 
-    'edit_thread_name': '编辑话题名称',
-    'edit_contact_remark': '编辑联系人备注',
+    '_demo_edit_thread_name': '编辑话题名称',
+    '_demo_edit_contact_remark': '编辑联系人备注',
 
     'save': '保存',
   };

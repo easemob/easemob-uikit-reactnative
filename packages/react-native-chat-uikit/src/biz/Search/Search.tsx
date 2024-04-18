@@ -119,7 +119,7 @@ export function Search(props: SearchProps) {
             cursorColor={getColor('cursor')}
             enableClearButton={true}
             clearButtonContainerStyle={{ padding: 7 }}
-            placeholder={tr('search')}
+            placeholder={tr('_uikit_search_placeholder')}
             placeholderTextColor={getColor('h')}
           />
           <Icon

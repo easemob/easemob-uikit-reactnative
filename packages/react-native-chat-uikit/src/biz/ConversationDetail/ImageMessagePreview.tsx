@@ -22,6 +22,11 @@ import { Services } from '../../services';
 import { ImagePreview2 } from '../../ui/ImagePreview';
 import { LocalPath } from '../../utils';
 import { BackButton } from '../Back';
+import {
+  BottomSheetNameMenu,
+  BottomSheetNameMenuRef,
+} from '../BottomSheetMenu';
+import { useCloseMenu } from '../hooks';
 import { useImageSize } from '../hooks/useImageSize';
 import type { PropsWithBack, PropsWithError } from '../types';
 import { getImageSizeFromUrl } from './MessageListItem.hooks';
@@ -54,7 +59,8 @@ export type ImageMessagePreviewProps = PropsWithBack &
  */
 export function ImageMessagePreview(props: ImageMessagePreviewProps) {
   const { containerStyle, onBack } = props;
-  const { url, size } = useImageMessagePreview(props);
+  const { url, size, menuRef, onRequestCloseMenu, showBottomSheet } =
+    useImageMessagePreview(props);
   const { top } = useSafeAreaInsets();
   // const u =
   //   '/Users/asterisk/Library/Developer/CoreSimulator/Devices/604D801A-1119-460B-8FA8-EB305EC1D5E8/data/Containers/Data/Application/DED71CD7-7399-4DFB-8AF7-EB8C0B5A2EB6/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/cacd5c10-b519-11ee-b1d8-ffc4c34a583c?em-redirect=true&share-secret=ys2DILUZEe6avXPiRjoO3lBSOCOD5wHJ-C5ef9jE3HVmJhes.jpg'; // ok
@@ -86,6 +92,7 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
       ]}
     >
       <ImagePreview2
+        onLongPress={showBottomSheet}
         source={{
           // uri: localUrlEscape(
           //   ImageUrl(
@@ -125,6 +132,11 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
       >
         <BackButton />
       </Pressable>
+
+      <BottomSheetNameMenu
+        ref={menuRef}
+        onRequestModalClose={onRequestCloseMenu}
+      />
     </View>
   );
 }
@@ -144,6 +156,8 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
   });
   const { width: winWidth, height: winHeight } = useWindowDimensions();
   const { getImageSize } = useImageSize({});
+  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const { closeMenu } = useCloseMenu({ menuRef });
 
   const showImage = React.useCallback(
     (url: string) => {
@@ -197,6 +211,10 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
     [download, im]
   );
 
+  const showBottomSheet = React.useCallback(() => {
+    console.log('test:zuoyu:showBottomSheet');
+  }, []);
+
   React.useEffect(() => {
     if (propsMsg) {
       download(propsMsg);
@@ -234,5 +252,8 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
   return {
     url,
     size,
+    menuRef,
+    onRequestCloseMenu: closeMenu,
+    showBottomSheet,
   };
 }

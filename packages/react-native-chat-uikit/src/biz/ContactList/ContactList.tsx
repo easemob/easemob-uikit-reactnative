@@ -127,7 +127,7 @@ export function ContactList(props: ContactListProps) {
           <>{customSearch}</>
         ) : (
           <SearchStyle
-            title={tr('search')}
+            title={tr('_uikit_contact_search_placeholder')}
             onPress={() => {
               onClickedSearch?.(contactType);
             }}

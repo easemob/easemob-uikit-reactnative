@@ -273,13 +273,13 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
         message: tr('_uikit_group_alert_del_member_title', names.join(',')),
         buttons: [
           {
-            text: 'cancel',
+            text: tr('cancel'),
             onPress: () => {
               alertRef.current?.close?.();
             },
           },
           {
-            text: 'confirm',
+            text: tr('confirm'),
             isPreferred: true,
             onPress: () => {
               alertRef.current.close?.();

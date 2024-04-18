@@ -75,6 +75,7 @@ export function useMessageLongPressActions(
 ) {
   const {
     menuRef,
+    alertRef,
     onQuoteMessageForInput,
     onEditMessageForInput,
     showReportMessage,
@@ -273,7 +274,31 @@ export function useMessageLongPressActions(
           icon: 'trash',
           onClicked: () => {
             closeMenu(() => {
-              onDeleteMessage?.(msgModel.msg);
+              alertRef.current?.alertWithInit?.({
+                title: tr(
+                  '_uikit_chat_list_long_press_menu_delete_alert_title'
+                ),
+                message: tr(
+                  '_uikit_chat_list_long_press_menu_delete_alert_content'
+                ),
+                buttons: [
+                  {
+                    text: tr('cancel'),
+                    onPress: () => {
+                      alertRef.current?.close?.();
+                    },
+                  },
+                  {
+                    text: tr('confirm'),
+                    isPreferred: true,
+                    onPress: () => {
+                      alertRef.current?.close?.();
+                      const msgModel = model as MessageModel;
+                      onDeleteMessage?.(msgModel.msg);
+                    },
+                  },
+                ],
+              });
             });
           },
         });
@@ -297,8 +322,28 @@ export function useMessageLongPressActions(
             icon: 'arrow_Uturn_anti_clockwise',
             onClicked: () => {
               closeMenu(() => {
-                const msgModel = model as MessageModel;
-                onRecallMessage?.(msgModel.msg, 'send');
+                alertRef.current?.alertWithInit?.({
+                  title: tr(
+                    '_uikit_chat_list_long_press_menu_recall_alert_title'
+                  ),
+                  buttons: [
+                    {
+                      text: tr('cancel'),
+                      onPress: () => {
+                        alertRef.current?.close?.();
+                      },
+                    },
+                    {
+                      text: tr('confirm'),
+                      isPreferred: true,
+                      onPress: () => {
+                        alertRef.current?.close?.();
+                        const msgModel = model as MessageModel;
+                        onRecallMessage?.(msgModel.msg, 'send');
+                      },
+                    },
+                  ],
+                });
               });
             },
           });
