@@ -92,6 +92,7 @@ export function useMessageLongPressActions(
   const { tr } = useI18nContext();
   const im = useChatContext();
   const { enableTranslate, enableReaction, enableThread } = useConfigContext();
+  console.log('test:zuoyu:enableTranslate', enableTranslate);
 
   const isCardMessage = (msg: ChatMessage) => {
     if (msg.body.type === ChatMessageType.CUSTOM) {
@@ -169,16 +170,20 @@ export function useMessageLongPressActions(
           });
         }
       }
-      initItems.push({
-        name: tr('_uikit_chat_list_long_press_menu_forward_message'),
-        isHigh: false,
-        icon: 'arrowshape_right',
-        onClicked: () => {
-          closeMenu(() => {
-            onForwardMessage?.(model as MessageModel);
-          });
-        },
-      });
+
+      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+        initItems.push({
+          name: tr('_uikit_chat_list_long_press_menu_forward_message'),
+          isHigh: false,
+          icon: 'arrowshape_right',
+          onClicked: () => {
+            closeMenu(() => {
+              onForwardMessage?.(model as MessageModel);
+            });
+          },
+        });
+      }
+
       initItems.push({
         name: tr('_uikit_chat_list_long_press_menu_multi_select'),
         isHigh: false,
@@ -189,6 +194,7 @@ export function useMessageLongPressActions(
           });
         },
       });
+
       if (
         msgModel.msg.status === ChatMessageStatus.SUCCESS &&
         enableTranslate === true
