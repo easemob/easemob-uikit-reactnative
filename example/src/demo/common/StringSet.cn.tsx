@@ -12,6 +12,7 @@ export function createStringSetCn(): StringSet {
     '_demo_navigation_common_setting_back': '通用',
 
     '_demo_info_state_set': '设置',
+    '_demo_info_state_account': '账号',
     '_demo_info_online_state': '用户状态',
     '_demo_info_person_info': '个人信息',
     '_demo_info_common_setting': '通用',
@@ -60,9 +61,9 @@ export function createStringSetCn(): StringSet {
 
     '_demo_info_logout': '退出登录',
 
-    '_demo_edit_group_name': '编辑群名称',
-    '_demo_edit_group_description': '编辑群描述',
-    '_demo_edit_group_my_remark': '编辑群我的备注',
+    '_demo_edit_group_name': '群名称',
+    '_demo_edit_group_description': '群描述',
+    '_demo_edit_group_my_remark': '我在本群的昵称',
 
     '_demo_edit_thread_name': '编辑话题名称',
     '_demo_edit_contact_remark': '备注',
@@ -70,10 +71,10 @@ export function createStringSetCn(): StringSet {
     '_demo_person_info_navi_title': '个人信息',
     '_demo_person_info_avatar': '头像',
     '_demo_person_info_remark': '昵称',
-    '_demo_person_edit_person_remark': '修改昵称',
+    '_demo_person_edit_person_remark': '昵称',
 
     '_demo_general_setting_navi_title': '通用',
-    '_demo_general_setting_theme': '黑暗模式',
+    '_demo_general_setting_theme': '暗黑模式',
     '_demo_general_setting_style': '主题',
     '_demo_general_setting_color': '主题色',
     '_demo_general_setting_feature': '特性开关',
@@ -88,10 +89,10 @@ export function createStringSetCn(): StringSet {
     '_demo_about_title': '环信 IM',
     '_demo_style_setting_navi_confim': '完成',
     '_demo_style_setting_language_classic': '经典',
-    '_demo_style_setting_language_modern': '扬帆',
+    '_demo_style_setting_language_modern': '现代',
 
     '_demo_about_setting_navi_title': '关于',
-    '_demo_about_setting_site': '官网网站',
+    '_demo_about_setting_site': '官方网站',
     '_demo_about_setting_site_url': 'www.huanxin.com',
     '_demo_about_setting_phone': '服务热线',
     '_demo_about_setting_phone_number': '400-622-1776',
@@ -112,10 +113,10 @@ export function createStringSetCn(): StringSet {
 
     '_demo_feature_setting_navi_title': '特性开关',
     '_demo_feature_setting_translate': '消息翻译',
-    '_demo_feature_setting_translate_tip': '长按将消息翻译为系统语言',
+    '_demo_feature_setting_translate_tip': '长按消息将其翻译为手机系统语言',
     '_demo_feature_setting_thread': '群组话题',
     '_demo_feature_setting_thread_tip': '长按消息创建话题',
-    '_demo_feature_setting_reaction': '表情回应',
+    '_demo_feature_setting_reaction': '表情回复',
     '_demo_feature_setting_reaction_tip': '长按消息添加表情回应',
     '_demo_feature_setting_presence': '订阅状态',
     '_demo_feature_setting_presence_tip': ' ',
@@ -136,6 +137,6 @@ export function createStringSetCn(): StringSet {
     'en': 'English',
     'zh-Hans': '中文',
     'classic': '经典',
-    'modern': '扬帆',
+    'modern': '现代',
   };
 }

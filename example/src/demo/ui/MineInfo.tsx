@@ -364,7 +364,7 @@ export function MineInfo(props: MineInfoProps) {
                 paletteType={'title'}
                 style={{ color: getColor('t3') }}
               >
-                {tr('login')}
+                {tr('_demo_info_state_account')}
               </Text>
             </View>
           }

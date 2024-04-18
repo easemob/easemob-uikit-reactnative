@@ -12,6 +12,7 @@ export function createStringSetEn(): StringSet {
     '_demo_navigation_common_setting_back': 'common',
 
     '_demo_info_state_set': 'Settings',
+    '_demo_info_state_account': 'Account',
     '_demo_info_online_state': 'User Status',
     '_demo_info_person_info': 'Profile',
     '_demo_info_common_setting': 'General',
@@ -63,9 +64,9 @@ export function createStringSetEn(): StringSet {
     '_demo_alert_server_setting_save_message':
       'The current server settings need to restart the client to take effect.',
 
-    '_demo_edit_group_name': 'Edit group name',
-    '_demo_edit_group_description': 'Edit group description',
-    '_demo_edit_group_my_remark': 'Edit group my remark',
+    '_demo_edit_group_name': 'Group Name',
+    '_demo_edit_group_description': 'Group Description',
+    '_demo_edit_group_my_remark': 'My Alias in the Group',
 
     '_demo_edit_thread_name': 'Edit thread name',
     '_demo_edit_contact_remark': 'Remarks',
