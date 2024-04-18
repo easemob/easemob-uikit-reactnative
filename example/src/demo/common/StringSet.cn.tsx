@@ -79,6 +79,7 @@ export function createStringSetCn(): StringSet {
     '_demo_general_setting_color': '主题色',
     '_demo_general_setting_feature': '特性开关',
     '_demo_general_setting_language': '系统语言',
+    '_demo_general_setting_translation_language': '翻译目标语言',
 
     '_demo_language_setting_navi_title': '系统语言',
     '_demo_language_setting_navi_confim': '完成',

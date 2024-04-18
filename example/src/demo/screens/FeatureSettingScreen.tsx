@@ -46,12 +46,10 @@ export function FeatureSettingScreen(props: Props) {
     appThread,
     appReaction,
     appPresence,
-    appAv,
     onSetAppTranslate,
     onSetAppReaction,
     onSetAppThread,
     onSetAppPresence,
-    onSetAppAv,
   } = useGeneralSetting();
 
   const onBack = () => {
@@ -256,7 +254,7 @@ export function FeatureSettingScreen(props: Props) {
         }
       />
 
-      <ListItem
+      {/* <ListItem
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -299,7 +297,7 @@ export function FeatureSettingScreen(props: Props) {
             </SingleLineText>
           </View>
         }
-      />
+      /> */}
     </SafeAreaView>
   );
 }

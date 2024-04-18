@@ -15,11 +15,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useStackScreenRoute } from '../hooks';
 import { useGeneralSetting } from '../hooks/useGeneralSetting';
-import type { RootScreenParamsList } from '../routes';
+import type { RootParamsName, RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LanguageSettingScreen(props: Props) {
-  const {} = props;
+  const { route } = props;
+  const name = route.name as RootParamsName;
   const navi = useStackScreenRoute(props);
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -45,7 +46,12 @@ export function LanguageSettingScreen(props: Props) {
       dark: colors.neutral[6],
     },
   });
-  const { appLanguage, onSetAppLanguage } = useGeneralSetting();
+  const {
+    appLanguage,
+    onSetAppLanguage,
+    appTranslateLanguage,
+    onSetAppTranslateLanguage,
+  } = useGeneralSetting();
   const [changed, setChanged] = React.useState(false);
   const [currentLanguage, setCurrentLanguage] = React.useState(appLanguage);
 
@@ -53,8 +59,13 @@ export function LanguageSettingScreen(props: Props) {
     navi.goBack();
   };
   const onSave = () => {
-    onSetAppLanguage(currentLanguage);
-    navi.navigate({ to: 'CommonSetting' });
+    if (name === 'LanguageSetting') {
+      onSetAppLanguage(currentLanguage);
+      navi.navigate({ to: 'CommonSetting' });
+    } else if (name === 'TranslationLanguageSetting') {
+      onSetAppTranslateLanguage(currentLanguage);
+      navi.navigate({ to: 'CommonSetting' });
+    }
   };
   const onChanged = (index: number) => {
     setCurrentLanguage(index === 0 ? 'zh-Hans' : 'en');
@@ -62,8 +73,12 @@ export function LanguageSettingScreen(props: Props) {
   };
 
   React.useEffect(() => {
-    setCurrentLanguage(appLanguage);
-  }, [appLanguage]);
+    if (name === 'LanguageSetting') {
+      setCurrentLanguage(appLanguage);
+    } else if (name === 'TranslationLanguageSetting') {
+      setCurrentLanguage(appTranslateLanguage);
+    }
+  }, [appLanguage, appTranslateLanguage, name]);
 
   return (
     <SafeAreaView

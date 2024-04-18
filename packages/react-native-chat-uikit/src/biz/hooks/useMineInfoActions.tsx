@@ -28,15 +28,15 @@ export function useMineInfoActions(props: UseMineInfoActionsProps) {
             });
           },
         },
-        {
-          name: tr('offline'),
-          isHigh: false,
-          onClicked: () => {
-            closeMenu(() => {
-              im.publishPresence({ status: 'offline', onResult: () => {} });
-            });
-          },
-        },
+        // {
+        //   name: tr('offline'),
+        //   isHigh: false,
+        //   onClicked: () => {
+        //     closeMenu(() => {
+        //       im.publishPresence({ status: 'offline', onResult: () => {} });
+        //     });
+        //   },
+        // },
         {
           name: tr('busy'),
           isHigh: false,

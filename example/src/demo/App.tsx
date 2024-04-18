@@ -80,6 +80,7 @@ export function App() {
     light,
     isLightRef,
     languageRef,
+    translateLanguageRef,
     isNavigationReadyRef,
     isContainerReadyRef,
     isFontReadyRef,
@@ -128,6 +129,8 @@ export function App() {
       isLightRef.current = !ret.appTheme;
       releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
       languageRef.current = ret.appLanguage === 'en' ? 'en' : 'zh-Hans';
+      translateLanguageRef.current =
+        ret.appTranslateLanguage === 'en' ? 'en' : 'zh-Hans';
       enablePresenceRef.current = ret.appPresence;
       enableReactionRef.current = ret.appReaction;
       enableThreadRef.current = ret.appThread;
@@ -139,6 +142,7 @@ export function App() {
         isLightRef.current,
         releaseAreaRef.current,
         languageRef.current,
+        translateLanguageRef.current,
         enablePresenceRef.current,
         enableReactionRef.current,
         enableThreadRef.current,
@@ -169,6 +173,7 @@ export function App() {
     languageRef,
     releaseAreaRef,
     setInitParams,
+    translateLanguageRef,
   ]);
 
   const onReady = React.useCallback(
@@ -268,6 +273,7 @@ export function App() {
         palette={paletteRef.current}
         theme={isLightRef.current ? light : dark}
         language={languageRef.current}
+        translateLanguage={translateLanguageRef.current}
         releaseArea={releaseAreaRef.current}
         enablePresence={enablePresenceRef.current}
         enableReaction={enableReactionRef.current}
@@ -569,6 +575,13 @@ export function App() {
               />
               <Root.Screen
                 name={'LanguageSetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={LanguageSettingScreen}
+              />
+              <Root.Screen
+                name={'TranslationLanguageSetting'}
                 options={{
                   headerShown: false,
                 }}

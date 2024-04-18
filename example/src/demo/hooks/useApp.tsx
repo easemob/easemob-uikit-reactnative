@@ -77,6 +77,7 @@ export function useApp() {
   const light = useLightTheme(paletteRef.current, releaseAreaRef.current);
   const isLightRef = React.useRef<boolean>(true);
   const languageRef = React.useRef<LanguageCode>('zh-Hans');
+  const translateLanguageRef = React.useRef<LanguageCode>('zh-Hans');
   const isNavigationReadyRef = React.useRef(false);
   const isContainerReadyRef = React.useRef(false);
   const isFontReadyRef = React.useRef(false);
@@ -726,6 +727,18 @@ export function useApp() {
         updatePush();
       }
     );
+    const ret15 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_translate_language',
+      (e) => {
+        console.log('dev:emit:app:tl:', e);
+        if (e === 'en') {
+          translateLanguageRef.current = 'en';
+        } else if (e === 'zh-Hans') {
+          translateLanguageRef.current = 'zh-Hans';
+        }
+        updater();
+      }
+    );
     return () => {
       ret.remove();
       ret2.remove();
@@ -741,6 +754,7 @@ export function useApp() {
       ret12.remove();
       ret13.remove();
       ret14.remove();
+      ret15.remove();
     };
   }, [dark, light, updatePush, updater]);
 
@@ -776,6 +790,7 @@ export function useApp() {
     light,
     isLightRef,
     languageRef,
+    translateLanguageRef,
     isNavigationReadyRef,
     isContainerReadyRef,
     isFontReadyRef,

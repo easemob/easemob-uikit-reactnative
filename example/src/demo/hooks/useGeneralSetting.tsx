@@ -46,6 +46,9 @@ export function useGeneralSetting() {
     undefined
   );
   const appTranslateRef = React.useRef<boolean | undefined>(undefined);
+  const [appTranslateLanguage, setAppTranslateLanguage] =
+    React.useState<string>('zh-Hans');
+  const appTranslateLanguageRef = React.useRef<string>('zh-Hans');
   const [appThread, setAppThread] = React.useState<boolean | undefined>(
     undefined
   );
@@ -86,6 +89,16 @@ export function useGeneralSetting() {
       '_demo_emit_app_translate',
       value ? 'enable' : 'disable'
     );
+  }, []);
+
+  const onSetAppTranslateLanguage = React.useCallback((value: string) => {
+    appTranslateLanguageRef.current = value;
+    setAppTranslateLanguage(value);
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    s.setData({ key: 'translateLanguage', value });
+    DeviceEventEmitter.emit('_demo_emit_app_translate_language', value);
   }, []);
 
   const onSetAppThread = React.useCallback((value: boolean) => {
@@ -241,6 +254,7 @@ export function useGeneralSetting() {
     const res13 = await s.getData({ key: 'presence' });
     const res14 = await s.getData({ key: 'av' });
     const res15 = await s.getData({ key: 'notification' });
+    const res16 = await s.getData({ key: 'translateLanguage' });
     const releaseArea = getReleaseArea();
     return {
       appTheme: res.value ? res.value !== 'light' : false,
@@ -248,10 +262,11 @@ export function useGeneralSetting() {
       appThread: res11.value ? res11.value === 'enable' : false,
       appReaction: res12.value ? res12.value === 'enable' : false,
       appPresence: res13.value ? res13.value === 'enable' : false,
-      appAv: res14.value ? res14.value === 'enable' : false,
+      appAv: res14.value ? res14.value === 'enable' : true,
       appNotification: res15.value ? res15.value === 'enable' : false,
       appStyle: res2.value ?? (releaseArea === 'china' ? 'classic' : 'modern'),
       appLanguage: res4.value ?? 'zh-Hans',
+      appTranslateLanguage: res16.value ?? 'zh-Hans',
       appPrimaryColor: res5.value ? +res5.value : presetPaletteColors.primary,
       appSecondColor: res6.value ? +res6.value : presetPaletteColors.secondary,
       appErrorColor: res7.value ? +res7.value : presetPaletteColors.error,
@@ -283,6 +298,8 @@ export function useGeneralSetting() {
         appNeutralSColorRef.current = res.appNeutralSColor;
         setAppTranslate(res.appTranslate);
         appTranslateRef.current = res.appTranslate;
+        setAppTranslateLanguage(res.appTranslateLanguage);
+        appTranslateLanguageRef.current = res.appTranslateLanguage;
         setAppThread(res.appThread);
         appThreadRef.current = res.appThread;
         setAppReaction(res.appReaction);
@@ -335,5 +352,7 @@ export function useGeneralSetting() {
     onSetAppAv,
     appNotification,
     onSetAppNotification,
+    appTranslateLanguage,
+    onSetAppTranslateLanguage,
   };
 }

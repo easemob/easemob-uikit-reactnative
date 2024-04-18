@@ -175,6 +175,10 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  TranslationLanguageSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
   ColorSetting: {
     option?: {} | undefined;
     params?: {} | undefined;
@@ -379,6 +383,10 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   LanguageSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  TranslationLanguageSetting: {
     option: undefined,
     params: undefined,
   },

@@ -5,7 +5,7 @@ import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
-import { Avatar } from '../Avatar';
+import { StatusAvatar } from '../Avatar';
 import {
   TopNavigationBar,
   TopNavigationBarLeft,
@@ -69,7 +69,7 @@ export const ContactListNavigationBar = (
       <TopNavigationBar
         Left={
           <View style={{ flexDirection: 'row' }}>
-            <Avatar url={avatarUrl} size={32} />
+            <StatusAvatar url={avatarUrl} size={32} />
           </View>
         }
         Right={TopNavigationBarRight}

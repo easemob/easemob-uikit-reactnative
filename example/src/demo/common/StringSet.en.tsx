@@ -57,7 +57,7 @@ export function createStringSetEn(): StringSet {
     '_demo_server_setting_input_port_tip': 'Input port number',
     '_demo_server_setting_input_rest_server_tip': 'Input Rest server address',
 
-    '_demo_info_logout': 'Logout',
+    '_demo_info_logout': 'Log Out',
 
     '_demo_alert_server_setting_save_title':
       'Restart the client to make the settings take effect',
@@ -82,6 +82,7 @@ export function createStringSetEn(): StringSet {
     '_demo_general_setting_color': 'Theme Color',
     '_demo_general_setting_feature': 'Advanced Features',
     '_demo_general_setting_language': 'System Language',
+    '_demo_general_setting_translation_language': 'Translation Target Language',
 
     '_demo_language_setting_navi_title': 'System Language',
     '_demo_language_setting_navi_confim': 'Done',
@@ -125,7 +126,7 @@ export function createStringSetEn(): StringSet {
     '_demo_feature_setting_reaction': 'Emoji Reaction',
     '_demo_feature_setting_reaction_tip':
       'Long press a message to add emoji reactions',
-    '_demo_feature_setting_presence': '订阅状态',
+    '_demo_feature_setting_presence': 'Presence',
     '_demo_feature_setting_presence_tip': ' ',
     '_demo_feature_setting_av': '音视频通话',
     '_demo_feature_setting_av_tip': ' ',

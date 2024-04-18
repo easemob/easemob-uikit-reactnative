@@ -45,8 +45,14 @@ export function GeneralSettingScreen(props: Props) {
       dark: colors.neutral[5],
     },
   });
-  const { appLanguage, appStyle, appTheme, onSetAppTheme, updater } =
-    useGeneralSetting();
+  const {
+    appLanguage,
+    appTranslateLanguage,
+    appStyle,
+    appTheme,
+    onSetAppTheme,
+    updater,
+  } = useGeneralSetting();
 
   const onBack = () => {
     navi.goBack();
@@ -64,9 +70,14 @@ export function GeneralSettingScreen(props: Props) {
   const onClickedLanguage = () => {
     navi.push({ to: 'LanguageSetting' });
   };
+  const onClickedTranslationLanguage = () => {
+    navi.push({ to: 'TranslationLanguageSetting' });
+  };
 
   React.useEffect(() => {
     if (from === 'LanguageSetting' && hash) {
+      updater();
+    } else if (from === 'TranslationLanguageSetting' && hash) {
       updater();
     } else if (from === 'ColorSetting' && hash) {
       updater();
@@ -234,6 +245,39 @@ export function GeneralSettingScreen(props: Props) {
               }}
             >
               {appLanguage === 'en' ? tr('en') : tr('zh-Hans')}
+            </SingleLineText>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
+
+      <ListItem
+        onClicked={onClickedTranslationLanguage}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_general_setting_translation_language')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              paletteType={'label'}
+              textType={'large'}
+              style={{
+                color: getColor('t1'),
+              }}
+            >
+              {appTranslateLanguage === 'en' ? tr('en') : tr('zh-Hans')}
             </SingleLineText>
             <Icon
               name={'chevron_right'}

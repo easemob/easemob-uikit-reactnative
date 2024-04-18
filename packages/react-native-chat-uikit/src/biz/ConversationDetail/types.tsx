@@ -204,7 +204,9 @@ export type ConversationDetailProps = PropsWithError &
     /**
      * The type of the conversation details component.
      *
-     * This component can be reused on chat pages, thread pages, and thread creation pages.
+     * This component can be reused on chat pages, chat search page, thread pages, and thread creation pages.
+     *
+     *
      */
     type: ConversationDetailModelType;
 
