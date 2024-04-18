@@ -138,8 +138,9 @@ export function ContactList(props: ContactListProps) {
       {/* {contactItems({ groupCount, requestCount })} */}
 
       <View style={{ flex: 1 }}>
+        {ListHeaderComponent()}
         <SectionList
-          ListHeaderComponent={ListHeaderComponent}
+          // ListHeaderComponent={ListHeaderComponent}
           ref={ref}
           style={[{ flexGrow: 1 }, style]}
           contentContainerStyle={[{ flexGrow: 1 }, contentContainerStyle]}
