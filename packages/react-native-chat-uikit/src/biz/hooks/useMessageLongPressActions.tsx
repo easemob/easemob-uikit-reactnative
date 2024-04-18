@@ -217,6 +217,7 @@ export function useMessageLongPressActions(
         msgModel.msg.status === ChatMessageStatus.SUCCESS &&
         convType === 1 &&
         enableThread === true &&
+        msgModel.thread === undefined &&
         (comType === 'chat' || comType === 'search')
       ) {
         initItems.push({

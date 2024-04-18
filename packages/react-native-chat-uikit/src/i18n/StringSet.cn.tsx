@@ -171,7 +171,7 @@ export function createStringSetCn(): StringSet {
 
     'contact': '联系人',
 
-    'copy_success': '拷贝成功',
+    'copy_success': '复制成功',
     'online_state': '在线状态',
 
     '@all': '[有人@你] ',
