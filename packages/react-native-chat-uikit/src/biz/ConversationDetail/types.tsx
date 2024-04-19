@@ -206,7 +206,7 @@ export type ConversationDetailProps = PropsWithError &
      *
      * This component can be reused on chat pages, chat search page, thread pages, and thread creation pages.
      *
-     *
+     * Load historical messages, send and receive messages in `chat` mode. In `search` mode, search message result positioning is added based on `chat` mode. Load historical messages, send and receive thread messages in `thread` mode. The `create thread` mode mainly creates threads. See detail {@link ConversationDetailModelType}.
      */
     type: ConversationDetailModelType;
 
