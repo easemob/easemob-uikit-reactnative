@@ -753,7 +753,7 @@ export class ChatServiceImpl
           // !!! Values that do not exist will not be updated.
           this._dataList.set(value.id, {
             id: value.id,
-            type: 'group',
+            type: value.type,
             name: value.name,
             avatar: value.avatar,
           });
