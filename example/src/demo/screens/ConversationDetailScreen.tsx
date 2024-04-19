@@ -26,18 +26,14 @@ import {
   SystemMessageModel,
   TimeMessageModel,
   useChatContext,
-  useColors,
   useI18nContext,
-  usePaletteContext,
   useSimpleToastContext,
   uuid,
 } from 'react-native-chat-uikit';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useCallApi } from '../common/AVView';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useOnce, useStackScreenRoute } from '../hooks';
 import type { RootParamsName, RootScreenParamsList } from '../routes';
 
@@ -84,13 +80,6 @@ export function ConversationDetailScreen(props: Props) {
   const im = useChatContext();
   const { start, stop } = useOnce();
   const { top, bottom } = useSafeAreaInsets();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
   const convRef = React.useRef<ConversationDetailRef>({} as any);
   const comType = React.useRef<ConversationDetailModelType>(
     name === 'ConversationDetail'
@@ -250,18 +239,10 @@ export function ConversationDetailScreen(props: Props) {
   }, [comType, convId]);
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <ConversationDetail
         propsRef={convRef}
         type={comType}
-        containerStyle={{
-          flexGrow: 1,
-        }}
         convId={convId}
         convType={convType}
         thread={thread}
@@ -547,6 +528,6 @@ export function ConversationDetailScreen(props: Props) {
         // }
         // enableNavigationBar={true}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

@@ -1,12 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import {
-  ImageMessagePreview,
-  useColors,
-  usePaletteContext,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ImageMessagePreview } from 'react-native-chat-uikit';
 
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -14,27 +10,12 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ImageMessagePreviewScreen(props: Props) {
   const { route } = props;
   const navi = useStackScreenRoute(props);
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
   const msgId = ((route.params as any)?.params as any)?.msgId;
   const localMsgId = ((route.params as any)?.params as any)?.localMsgId;
   const msg = ((route.params as any)?.params as any)?.msg;
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <ImageMessagePreview
-        containerStyle={{
-          flexGrow: 1,
-        }}
         msgId={msgId}
         msg={msg}
         localMsgId={localMsgId}
@@ -42,6 +23,6 @@ export function ImageMessagePreviewScreen(props: Props) {
           navi.goBack();
         }}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

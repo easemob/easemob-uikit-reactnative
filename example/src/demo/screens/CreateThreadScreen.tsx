@@ -13,12 +13,10 @@ import {
   SendTimeProps,
   SendVideoProps,
   SendVoiceProps,
-  useColors,
-  usePaletteContext,
   uuid,
 } from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -31,13 +29,6 @@ export function CreateThreadScreen(props: Props) {
   const newName = ((route.params as any)?.params as any)?.newName;
   const parentId = ((route.params as any)?.params as any)?.parentId;
   const messageId = ((route.params as any)?.params as any)?.messageId;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
   const comType =
     React.useRef<ConversationDetailModelType>('create_thread').current;
 
@@ -70,17 +61,9 @@ export function CreateThreadScreen(props: Props) {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <ConversationDetail
         type={comType}
-        containerStyle={{
-          flexGrow: 1,
-        }}
         convId={convId}
         convType={convType}
         newThreadName={newName}
@@ -91,6 +74,6 @@ export function CreateThreadScreen(props: Props) {
           navi.goBack();
         }}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

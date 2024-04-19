@@ -79,6 +79,7 @@ export function ConversationList(props: ConversationListProps) {
       style={[
         {
           backgroundColor: getColor('bg'),
+          flexGrow: 1,
         },
         containerStyle,
       ]}

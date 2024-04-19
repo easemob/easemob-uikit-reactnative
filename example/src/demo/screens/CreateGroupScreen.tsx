@@ -4,12 +4,10 @@ import {
   CreateGroup,
   DataModel,
   useChatContext,
-  useColors,
-  usePaletteContext,
 } from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RestApi } from '../common/rest.api';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -18,25 +16,10 @@ export function CreateGroupScreen(props: Props) {
   const { route } = props;
   const navi = useStackScreenRoute(props);
   const im = useChatContext();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
   const data = ((route.params as any)?.params as any)?.data;
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <CreateGroup
-        containerStyle={{
-          flexGrow: 1,
-        }}
         onClickedSearch={() => {
           navi.navigate({
             to: 'SearchContact',
@@ -88,6 +71,6 @@ export function CreateGroupScreen(props: Props) {
         }}
         // onGetGroupName={() => 'test create group'}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

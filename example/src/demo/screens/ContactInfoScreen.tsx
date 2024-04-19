@@ -6,13 +6,11 @@ import {
   ContactModel,
   useChatContext,
   useChatListener,
-  useColors,
   useI18nContext,
-  usePaletteContext,
 } from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useCallApi } from '../common/AVView';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useOnce, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -27,13 +25,6 @@ export function ContactInfoScreen(props: Props) {
   const editType = ((route.params as any)?.params as any)?.editType;
   const from = ((route.params as any)?.params as any)?.__from;
   const hash = ((route.params as any)?.params as any)?.__hash;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
   const contactRef = React.useRef<any>({} as any);
   const im = useChatContext();
   const avTypeRef = React.useRef<'video' | 'voice'>('video');
@@ -102,17 +93,9 @@ export function ContactInfoScreen(props: Props) {
   }, [editType, editedData, stop, userId, hash, from]);
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <ContactInfo
         ref={contactRef}
-        containerStyle={{
-          flexGrow: 1,
-        }}
         userId={userId}
         onSendMessage={() => {
           navi.navigate({
@@ -150,6 +133,6 @@ export function ContactInfoScreen(props: Props) {
         onAudioCall={onClickedVoice}
         onVideoCall={onClickedVideo}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

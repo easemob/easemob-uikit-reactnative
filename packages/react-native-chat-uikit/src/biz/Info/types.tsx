@@ -260,5 +260,5 @@ export type EditInfoProps = PropsWithBack &
     /**
      * Container style for the edit info component.
      */
-    containerStyle: StyleProp<ViewStyle>;
+    containerStyle?: StyleProp<ViewStyle>;
   };

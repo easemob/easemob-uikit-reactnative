@@ -6,11 +6,9 @@ import {
   ContactSearchModel,
   SearchContact,
   SearchType,
-  useColors,
-  usePaletteContext,
 } from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -18,13 +16,6 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function SearchContactScreen(props: Props) {
   const { route } = props;
   const navi = useStackScreenRoute(props);
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
   const searchType = ((route.params as any)?.params as any)
     ?.searchType as SearchType;
   const groupId = ((route.params as any)?.params as any)?.groupId;
@@ -32,16 +23,8 @@ export function SearchContactScreen(props: Props) {
   const convType = ((route.params as any)?.params as any)?.convType;
   const convName = ((route.params as any)?.params as any)?.convName;
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <SearchContact
-        containerStyle={{
-          flexGrow: 1,
-        }}
         onCancel={(data: ContactSearchModel[]) => {
           if (searchType === 'create-group') {
             navi.navigate({
@@ -116,6 +99,6 @@ export function SearchContactScreen(props: Props) {
         searchType={searchType}
         groupId={groupId}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

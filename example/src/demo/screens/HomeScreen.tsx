@@ -339,9 +339,6 @@ function HomeTabConversationListScreen(
   return (
     <ConversationList
       propsRef={convRef}
-      containerStyle={{
-        flexGrow: 1,
-      }}
       onChangeUnreadCount={onChangeUnreadCount}
       filterEmptyConversation={true}
       onClickedSearch={() => {
@@ -388,9 +385,6 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
   return (
     <ContactList
       contactType={'contact-list'}
-      containerStyle={{
-        flexGrow: 1,
-      }}
       onChangeRequestCount={onChangeRequestCount}
       onClickedSearch={() => {
         navi.navigate({

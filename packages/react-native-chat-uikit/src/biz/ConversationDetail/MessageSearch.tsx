@@ -42,7 +42,7 @@ export function MessageSearch(props: MessageSearchProps) {
       style={[
         {
           backgroundColor: getColor('bg'),
-          flex: 1,
+          flexGrow: 1,
         },
         containerStyle,
       ]}

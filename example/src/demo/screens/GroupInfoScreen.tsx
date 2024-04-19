@@ -4,13 +4,11 @@ import {
   GroupInfo,
   GroupInfoRef,
   GroupParticipantModel,
-  useColors,
   useI18nContext,
-  usePaletteContext,
 } from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useCallApi } from '../common/AVView';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useOnce, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -20,13 +18,6 @@ export function GroupInfoScreen(props: Props) {
   const navi = useStackScreenRoute(props);
   const { start, stop } = useOnce();
   const { tr } = useI18nContext();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
   const groupInfoRef = React.useRef<GroupInfoRef>({} as any);
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
@@ -108,17 +99,9 @@ export function GroupInfoScreen(props: Props) {
   ]);
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <GroupInfo
         ref={groupInfoRef}
-        containerStyle={{
-          flexGrow: 1,
-        }}
         groupId={groupId}
         ownerId={ownerId}
         onParticipant={(groupId) => {
@@ -215,6 +198,6 @@ export function GroupInfoScreen(props: Props) {
         onAudioCall={onClickedVoice}
         onVideoCall={onClickedVideo}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

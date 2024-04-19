@@ -3,13 +3,11 @@ import * as React from 'react';
 import {
   ShareContact,
   useAlertContext,
-  useColors,
   useDataPriority,
   useI18nContext,
-  usePaletteContext,
 } from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -20,26 +18,11 @@ export function ShareContactScreen(props: Props) {
   const { tr } = useI18nContext();
   const { getConvInfo } = useDataPriority({});
   const { getAlertRef } = useAlertContext();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <ShareContact
-        containerStyle={{
-          flexGrow: 1,
-        }}
         onClickedSearch={() => {
           navi.navigate({
             to: 'SearchContact',
@@ -85,6 +68,6 @@ export function ShareContactScreen(props: Props) {
           navi.goBack();
         }}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

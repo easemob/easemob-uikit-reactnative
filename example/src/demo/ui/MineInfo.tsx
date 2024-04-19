@@ -81,8 +81,8 @@ export function MineInfo(props: MineInfoProps) {
     <View
       style={[
         {
-          flex: 1,
-          // flexGrow: 1,
+          // flex: 1,
+          flexGrow: 1,
           backgroundColor: getColor('bg'),
           // backgroundColor: 'red',
         },

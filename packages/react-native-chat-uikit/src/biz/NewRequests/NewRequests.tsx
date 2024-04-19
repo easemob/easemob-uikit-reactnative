@@ -74,6 +74,7 @@ export function NewRequests(props: NewRequestsProps) {
       style={[
         {
           backgroundColor: getColor('bg'),
+          flexGrow: 1,
         },
         containerStyle,
       ]}

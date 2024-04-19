@@ -4,11 +4,9 @@ import { ChatMessageType } from 'react-native-chat-sdk';
 import {
   MessageHistoryList,
   MessageHistoryModel,
-  useColors,
-  usePaletteContext,
 } from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -17,13 +15,6 @@ export function MessageHistoryListScreen(props: Props) {
   const { route } = props;
   const navi = useStackScreenRoute(props);
   const message = ((route.params as any)?.params as any)?.message;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
 
   const onClickedItem = React.useCallback((model: MessageHistoryModel) => {
     if (model.msg.body.type === ChatMessageType.COMBINE) {
@@ -59,12 +50,7 @@ export function MessageHistoryListScreen(props: Props) {
   }, []);
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <MessageHistoryList
         message={message}
         onBack={() => {
@@ -72,6 +58,6 @@ export function MessageHistoryListScreen(props: Props) {
         }}
         onClickedItem={onClickedItem}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }
