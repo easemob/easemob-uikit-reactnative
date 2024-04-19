@@ -1895,6 +1895,20 @@ export class ChatServiceImpl
         );
         value.forEach(async (v) => {
           this._groupList.set(v.groupId, this.toUIGroup(v));
+          const conv = this._dataList.get(v.groupId);
+          if (conv) {
+            conv.name = v.groupName;
+            if (v.options?.ext) {
+              conv.avatar = v.options.ext.includes('http')
+                ? v.options.ext
+                : conv.avatar;
+            }
+            this.sendUIEvent(UIListenerType.Group, 'onUpdatedEvent', {
+              groupId: conv.id,
+              groupName: conv.name,
+              groupAvatar: conv.avatar,
+            } as GroupModel);
+          }
         });
         params.onResult({
           isOk: true,
