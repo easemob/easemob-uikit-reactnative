@@ -2,10 +2,17 @@
 
 # 集成到现有项目介绍
 
-添加依赖主要包括以下内容：
+添加依赖主要包括以下主要内容：
 
+- 环境需求
 - 添加依赖
+- 添加 native 配置
 - 添加代码
+
+### 环境需求
+
+- react-native: 0.63.5 以上
+- nodejs: 16.18.0 以上
 
 ### 添加依赖
 
@@ -58,6 +65,38 @@ yarn expo install react-native-chat-uikit
     "twemoji": "^14.0.2"
   }
 }
+```
+
+### 添加 native 配置
+
+对于 `ios` 平台:
+
+在文件`ios/example/Info.plist`中添加权限，如下:
+
+```xml
+<dict>
+  <key>NSCameraUsageDescription</key>
+  <string></string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string></string>
+  <key>NSPhotoLibraryUsageDescription</key>
+</dict>
+```
+
+对于 `android` 平台:
+
+在文件 `android/app/src/main/AndroidManifest.xml` 中添加权限。如下:
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.hyphenate.rn.example">
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.CAMERA" />
+  <uses-permission android:name="android.permission.RECORD_AUDIO" />
+</manifest>
 ```
 
 ### 添加代码
