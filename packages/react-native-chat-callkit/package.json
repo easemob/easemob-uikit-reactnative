@@ -1,10 +1,10 @@
 {
   "name": "react-native-chat-callkit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "test",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
-  "types": "lib/typescript/index.d.ts",
+  "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
   "files": [
