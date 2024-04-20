@@ -233,6 +233,20 @@ export type ConversationDetailProps = PropsWithError &
     thread?: ChatMessageThread;
 
     /**
+     * The first message to be sent. This parameter is required in thread mode.
+     */
+    firstMessage?:
+      | SendFileProps
+      | SendImageProps
+      | SendTextProps
+      | SendVideoProps
+      | SendVoiceProps
+      | SendTimeProps
+      | SendSystemProps
+      | SendCardProps
+      | SendCustomProps;
+
+    /**
      * The message ID.
      *
      * this parameter is required in create thread mode or search mode.

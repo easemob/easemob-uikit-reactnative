@@ -254,6 +254,8 @@ export type ContactListProps = PropsWithTest &
 
     /**
      * Whether to display the empty index.
+     *
+     * default is `false`
      */
     visibleEmptyIndex?: boolean;
   };

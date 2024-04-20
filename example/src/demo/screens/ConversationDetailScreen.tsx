@@ -246,6 +246,7 @@ export function ConversationDetailScreen(props: Props) {
         convId={convId}
         convType={convType}
         thread={thread}
+        firstMessage={firstMessage}
         msgId={messageId}
         selectType={selectType}
         input={{
@@ -391,7 +392,6 @@ export function ConversationDetailScreen(props: Props) {
             onNoMoreMessage: React.useCallback(() => {
               console.log('onNoMoreMessage');
             }, []),
-            firstMessage: firstMessage,
             onClickedEditThreadName: (thread) => {
               if (comType !== 'thread') {
                 return;

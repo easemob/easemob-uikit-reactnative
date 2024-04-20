@@ -53,6 +53,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     onThreadKicked,
     onForwardMessage,
     onCreateThreadResult,
+    firstMessage,
   } = props;
   const permissionsRef = React.useRef(false);
   const messageInputRef = React.useRef<MessageInputRef>({} as any);
@@ -77,6 +78,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
         msgId,
         parentId,
         testMode,
+        firstMessage,
         onCreateThreadResult,
       }
     : {
@@ -88,6 +90,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
         msgId,
         parentId,
         testMode,
+        firstMessage,
         onCreateThreadResult,
       };
   const [convName, setConvName] = React.useState<string | undefined>();
