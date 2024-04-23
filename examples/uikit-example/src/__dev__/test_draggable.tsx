@@ -13,11 +13,11 @@ import {
   usePresetPalette,
 } from 'react-native-chat-uikit';
 import {
-  HandlerStateChangeEvent,
+  type HandlerStateChangeEvent,
   // PanGestureHandler,
   // PanGestureHandler,
   PinchGestureHandler,
-  PinchGestureHandlerEventPayload,
+  type PinchGestureHandlerEventPayload,
   State,
 } from 'react-native-gesture-handler';
 // import AnimatedThird from 'react-native-reanimated';

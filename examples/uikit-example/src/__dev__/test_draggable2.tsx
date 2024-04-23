@@ -7,14 +7,14 @@ import {
 } from 'react-native-chat-uikit';
 import {
   PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-  PanGestureHandlerStateChangeEvent,
+  type PanGestureHandlerGestureEvent,
+  type PanGestureHandlerStateChangeEvent,
   PinchGestureHandler,
-  PinchGestureHandlerGestureEvent,
-  PinchGestureHandlerStateChangeEvent,
+  type PinchGestureHandlerGestureEvent,
+  type PinchGestureHandlerStateChangeEvent,
   RotationGestureHandler,
-  RotationGestureHandlerGestureEvent,
-  RotationGestureHandlerStateChangeEvent,
+  type RotationGestureHandlerGestureEvent,
+  type RotationGestureHandlerStateChangeEvent,
   State,
 } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';

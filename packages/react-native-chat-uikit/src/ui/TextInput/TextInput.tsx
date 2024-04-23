@@ -198,7 +198,7 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
           ]}
           onContentSizeChange={(e) => {
             onContentSizeChange?.(e);
-            // console.log(
+            // uilog.log(
             //   'dev:onContentSizeChange',
             //   minHeight,
             //   maxHeight,

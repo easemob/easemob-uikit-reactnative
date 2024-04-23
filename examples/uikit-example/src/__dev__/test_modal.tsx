@@ -6,7 +6,7 @@ import {
   createLightTheme,
   createPresetPalette,
   SlideModal,
-  SlideModalRef,
+  type SlideModalRef,
 } from 'react-native-chat-uikit';
 
 type MySlideModalRef = SlideModalRef;

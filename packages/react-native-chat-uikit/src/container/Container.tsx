@@ -67,6 +67,8 @@ export function Container(props: ContainerProps) {
     releaseArea,
     onGroupsProvider,
     onUsersProvider,
+    onGroupsHandler,
+    onUsersHandler,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -112,6 +114,8 @@ export function Container(props: ContainerProps) {
                 onInitialized: onInitialized,
                 onUsersProvider: onUsersProvider,
                 onGroupsProvider: onGroupsProvider,
+                onGroupsHandler: onGroupsHandler,
+                onUsersHandler: onUsersHandler,
               }}
             >
               <ConfigContextProvider

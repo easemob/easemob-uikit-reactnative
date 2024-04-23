@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { ErrorCode, UIKitError } from '../error';
 import { asyncTask } from '../utils';
 import type { DispatchApi, DispatchInit, Listener } from './types';
 
@@ -27,11 +26,8 @@ export function DispatchContextProvider({ children }: DispatchContextProps) {
   const v = {
     addListener: (key, listener) => {
       if (map.has(key)) {
-        const s = map.get(key);
-        if (s?.has(listener)) {
-          throw new UIKitError({ code: ErrorCode.existed });
-        }
-        s?.add(listener);
+        const s = map.get(key)!;
+        s.add(listener);
       } else {
         const s = new Set<Listener>();
         s.add(listener);

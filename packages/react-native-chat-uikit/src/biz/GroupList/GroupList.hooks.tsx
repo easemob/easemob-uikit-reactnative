@@ -115,6 +115,21 @@ export function useGroupList(props: GroupListProps) {
     [dataRef, refreshToUI]
   );
 
+  const updateGroupListToUI = React.useCallback(
+    (list: GroupModel[]) => {
+      for (const data of list) {
+        dataRef.current = dataRef.current.map((item) => {
+          if (item.data.groupId === data.groupId) {
+            item.data = { ...item.data, ...data };
+          }
+          return item;
+        });
+      }
+      refreshToUI(dataRef.current);
+    },
+    [dataRef, refreshToUI]
+  );
+
   const removeGroupToUI = React.useCallback(
     (groupId: string) => {
       dataRef.current = dataRef.current.filter((item) => item.id !== groupId);
@@ -308,6 +323,9 @@ export function useGroupList(props: GroupListProps) {
       onUpdatedEvent: (data) => {
         updateGroupToUI(data);
       },
+      onUpdatedListEvent: (list) => {
+        updateGroupListToUI(list);
+      },
       onDeletedEvent: (data) => {
         removeGroupToUI(data.groupId);
       },
@@ -330,6 +348,7 @@ export function useGroupList(props: GroupListProps) {
     init,
     refreshToUI,
     removeGroupToUI,
+    updateGroupListToUI,
     updateGroupToUI,
   ]);
 

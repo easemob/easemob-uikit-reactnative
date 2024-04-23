@@ -92,7 +92,6 @@ export function useMessageLongPressActions(
   const { tr } = useI18nContext();
   const im = useChatContext();
   const { enableTranslate, enableReaction, enableThread } = useConfigContext();
-  console.log('test:zuoyu:enableTranslate', enableTranslate);
 
   const isCardMessage = (msg: ChatMessage) => {
     if (msg.body.type === ChatMessageType.CUSTOM) {

@@ -3,6 +3,9 @@ import * as React from 'react';
 import {
   CreateGroup,
   DataModel,
+  DataProfileProvider,
+  GroupModel,
+  UIListenerType,
   useChatContext,
 } from 'react-native-chat-uikit';
 
@@ -44,19 +47,38 @@ export function CreateGroupScreen(props: Props) {
             RestApi.requestGroupAvatar({ groupId: groupId })
               .then(async (res) => {
                 if (res.isOk && res.value) {
-                  im.updateRequestData({
-                    data: new Map([
-                      [
-                        'group',
-                        [
-                          {
-                            id: groupId,
-                            avatar: res.value.avatarUrl,
-                          } as DataModel,
-                        ],
-                      ],
+                  im.updateDataList({
+                    dataList: DataProfileProvider.toMap([
+                      {
+                        id: groupId,
+                        avatar: res.value.avatarUrl,
+                        type: 'group',
+                      } as DataModel,
                     ]),
+                    dispatchHandler: (data) => {
+                      const d = {
+                        groupId: groupId,
+                        groupName: data.get(groupId)?.name,
+                        groupAvatar: data.get(groupId)?.avatar,
+                      } as GroupModel;
+                      im.sendUIEvent(UIListenerType.Group, 'onUpdatedEvent', d);
+                      return false;
+                    },
                   });
+                  // im.updateRequestData({
+                  //   data: new Map([
+                  //     [
+                  //       'group',
+                  //       [
+                  //         {
+                  //           id: groupId,
+                  //           avatar: res.value.avatarUrl,
+                  // type: 'group',
+                  //         } as DataModel,
+                  //       ],
+                  //     ],
+                  //   ]),
+                  // });
                 }
               })
               .catch((e) => {

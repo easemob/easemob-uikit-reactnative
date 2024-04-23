@@ -4,7 +4,7 @@ import {
   CmnButton,
   Container,
   MessageInputEditMessage,
-  MessageInputEditMessageRef,
+  type MessageInputEditMessageRef,
   useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-uikit';

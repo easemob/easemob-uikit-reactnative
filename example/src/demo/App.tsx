@@ -4,8 +4,8 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { GlobalContainer as CallKitContainer } from 'react-native-chat-callkit';
 import {
-  ChatService,
-  ChatServiceListener,
+  type ChatService,
+  type ChatServiceListener,
   Container as UIKitContainer,
   useChatListener,
 } from 'react-native-chat-uikit';
@@ -111,6 +111,8 @@ export function App() {
     onGroupsProvider,
     onStateChange,
     onUnhandledAction,
+    onGroupsHandler,
+    onUsersHandler,
   } = useApp();
 
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
@@ -290,6 +292,8 @@ export function App() {
         onInitLanguageSet={onInitLanguageSet}
         onUsersProvider={onUsersProvider}
         onGroupsProvider={onGroupsProvider}
+        onGroupsHandler={onGroupsHandler}
+        onUsersHandler={onUsersHandler}
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}

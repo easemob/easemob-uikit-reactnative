@@ -8,7 +8,7 @@ import {
 import {
   Container,
   DynamicIcon,
-  DynamicIconRef,
+  type DynamicIconRef,
   useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-uikit';

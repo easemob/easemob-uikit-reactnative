@@ -3,4 +3,5 @@
  */
 export * from './dispatch';
 export * from './dispatch.hooks';
+export * from './EventEmitter';
 export * from './types';

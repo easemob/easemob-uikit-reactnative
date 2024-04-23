@@ -44,8 +44,8 @@ export function useDataPriority(props: useDataPriorityProps) {
       const r2 = im.getRequestData(id);
       return {
         id: id,
-        name: r2?.name,
-        avatar: r2?.avatar,
+        name: r2?.name && r2.name.length > 0 ? r2.name : undefined,
+        avatar: r2?.avatar && r2.avatar.length > 0 ? r2.avatar : undefined,
         type: 'group',
       } as DataModel;
     },
@@ -99,6 +99,7 @@ export function useDataPriority(props: useDataPriorityProps) {
         name: name,
         remark: remark,
         avatar: avatar,
+        type: 'user',
       } as DataModel;
     },
     [getContactInfo]

@@ -167,6 +167,10 @@ export type UIListener<DataModel> = {
    */
   onUpdatedEvent?: (data: DataModel) => void;
   /**
+   * Callback notification when the list data changes.
+   */
+  onUpdatedListEvent?: (data: DataModel[]) => void;
+  /**
    * Callback notification when data is deleted.
    *
    * For example: deleting conversations, exiting groups, being kicked out of groups, deleting contacts, etc.

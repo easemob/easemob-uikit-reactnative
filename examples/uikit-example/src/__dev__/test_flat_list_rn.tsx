@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { FlatList, ListRenderItemInfo, View } from 'react-native';
+import { FlatList, type ListRenderItemInfo, View } from 'react-native';
 import {
   BottomTabBar,
   Container,
-  ConversationListItemProps,
+  type ConversationListItemProps,
   TabPage,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';

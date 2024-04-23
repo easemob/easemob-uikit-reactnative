@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   Dimensions,
   FlatList,
-  ListRenderItemInfo,
+  type ListRenderItemInfo,
   ScrollView,
   useWindowDimensions,
   View,

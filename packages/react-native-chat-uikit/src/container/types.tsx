@@ -227,6 +227,26 @@ export type ContainerProps = React.PropsWithChildren<{
   }) => void | Promise<void>;
 
   /**
+   * @description Registered user information callback. The avatar and nickname of the contact, group member and group are obtained through the callback of this registration. If not provided, the default value will be used.
+   *
+   * @param data The user information list. The default value is provided by UIKit. Their values can be customized.
+   * @returns Returns the modified value.
+   */
+  onUsersHandler?:
+    | ((data: Map<string, DataModel>) => Map<string, DataModel>)
+    | ((data: Map<string, DataModel>) => Promise<Map<string, DataModel>>);
+
+  /**
+   * @description Registered group information callback. The avatar and nickname of the contact, group member and group are obtained through the callback of this registration. If not provided, the default value will be used.
+   *
+   * @param data The group information list. The default value is provided by UIKit. Their values can be customized.
+   * @returns Returns the modified value.
+   */
+  onGroupsHandler?:
+    | ((data: Map<string, DataModel>) => Map<string, DataModel>)
+    | ((data: Map<string, DataModel>) => Promise<Map<string, DataModel>>);
+
+  /**
    * Returns the custom state component.
    * @param status current status.
    * @returns component.
@@ -260,4 +280,6 @@ export type ContainerProps = React.PropsWithChildren<{
    * Default is `true`.
    */
   enableAVMeeting?: boolean;
+
+  enableForward?: boolean;
 }>;

@@ -19,6 +19,7 @@ import type {
 
 import type { UIKitError } from '../error';
 import type { PartialUndefinable } from '../types';
+import type { DataProfileProvider } from './DataProfileProvider';
 import type { MessageCacheManager } from './messageManager.types';
 import type { RequestList } from './requestList.types';
 import type {
@@ -813,20 +814,20 @@ export interface GroupServices {
   /**
    * Registrar. When loading the group member list, the avatars and nicknames of the group members will be obtained.
    */
-  setGroupParticipantOnRequestData<DataT extends DataModel = DataModel>(
-    callback?: (params: {
-      groupId: string;
-      ids: string[];
-      result: (data?: DataT[], error?: UIKitError) => void;
-    }) => void | Promise<void>
-  ): void;
+  // setGroupParticipantOnRequestData<DataT extends DataModel = DataModel>(
+  //   callback?: (params: {
+  //     groupId: string;
+  //     ids: string[];
+  //     result: (data?: DataT[], error?: UIKitError) => void;
+  //   }) => void | Promise<void>
+  // ): void;
   /**
    * Actively update group members' avatars and nicknames. The component will take effect next time.
    */
-  updateGroupParticipantOnRequestData(params: {
-    groupId: string;
-    data: Map<DataModelType, DataModel[]>;
-  }): void;
+  // updateGroupParticipantOnRequestData(params: {
+  //   groupId: string;
+  //   data: Map<DataModelType, DataModel[]>;
+  // }): void;
   /**
    * Get joined groups.
    */
@@ -1239,23 +1240,23 @@ export interface ChatService
   /**
    * Register UIKit to obtain callback notifications for user or group information. When the session list component, contact component, etc. are loaded, a callback will be initiated to obtain user information. After the user information is completed, if you want to update it, please use `updateRequestData`.
    */
-  setOnRequestData(
-    callback?:
-      | ((params: {
-          ids: Map<DataModelType, string[]>;
-          result: (
-            data?: Map<DataModelType, DataModel[]>,
-            error?: UIKitError
-          ) => void;
-        }) => void)
-      | ((params: {
-          ids: Map<DataModelType, string[]>;
-          result: (
-            data?: Map<DataModelType, DataModel[]>,
-            error?: UIKitError
-          ) => void;
-        }) => Promise<void>)
-  ): void;
+  // setOnRequestData(
+  //   callback?:
+  //     | ((params: {
+  //         ids: Map<DataModelType, string[]>;
+  //         result: (
+  //           data?: Map<DataModelType, DataModel[]>,
+  //           error?: UIKitError
+  //         ) => void;
+  //       }) => void)
+  //     | ((params: {
+  //         ids: Map<DataModelType, string[]>;
+  //         result: (
+  //           data?: Map<DataModelType, DataModel[]>,
+  //           error?: UIKitError
+  //         ) => void;
+  //       }) => Promise<void>)
+  // ): void;
 
   /**
    * Register UIKit to obtain callback notifications for user information. When the session list component, contact component, etc. are loaded, a callback will be initiated to obtain user information. After the user information is completed, if you want to update it, please use `updateRequestData`.
@@ -1288,6 +1289,23 @@ export interface ChatService
   ): void;
 
   /**
+   * Update the cache and notify interested components.
+   *
+   * Data that has been requested and received will no longer trigger notifications.
+   *
+   * @param dataList The default value can be obtained through the `getDataList` method.
+   * @param isUpdateNotExisted Whether the non-existing data also needs to be updated. Default is false.
+   * @param disableDispatch Whether to disable notification. Default is false.
+   * @param dispatchHandler Callback for dispatching notifications. If false is returned, it is not distributed internally.
+   */
+  updateDataList(params: {
+    dataList: Map<string, DataModel>;
+    isUpdateNotExisted?: boolean;
+    disableDispatch?: boolean;
+    dispatchHandler?: (data: Map<string, DataModel>) => boolean;
+  }): void;
+
+  /**
    * Actively update user information and take effect in subsequent loaded components.
    */
   updateRequestData(params: { data: Map<DataModelType, DataModel[]> }): void;
@@ -1296,6 +1314,11 @@ export interface ChatService
    * Get the request data information.
    */
   getRequestData(id: string): DataModel | undefined;
+
+  /**
+   * Get the request data information.
+   */
+  getDataFileProvider(): DataProfileProvider;
 }
 
 type _ChatOptionsType = PartialUndefinable<ChatOptions>;
@@ -1369,6 +1392,26 @@ export type ChatServiceInit = {
     ids: string[];
     result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
   }) => void | Promise<void>;
+
+  /**
+   * @description Registered user information callback. The avatar and nickname of the contact, group member and group are obtained through the callback of this registration. If not provided, the default value will be used.
+   *
+   * @param data The user information list. The default value is provided by UIKit. Their values can be customized.
+   * @returns Returns the modified value.
+   */
+  onUsersHandler?:
+    | ((data: Map<string, DataModel>) => Map<string, DataModel>)
+    | ((data: Map<string, DataModel>) => Promise<Map<string, DataModel>>);
+
+  /**
+   * @description Registered group information callback. The avatar and nickname of the contact, group member and group are obtained through the callback of this registration. If not provided, the default value will be used.
+   *
+   * @param data The group information list. The default value is provided by UIKit. Their values can be customized.
+   * @returns Returns the modified value.
+   */
+  onGroupsHandler?:
+    | ((data: Map<string, DataModel>) => Map<string, DataModel>)
+    | ((data: Map<string, DataModel>) => Promise<Map<string, DataModel>>);
   /**
    * IM initialization is completed callback notification.
    */

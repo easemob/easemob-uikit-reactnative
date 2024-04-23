@@ -2,8 +2,8 @@ import * as React from 'react';
 import {
   BottomSheetMenuHeader,
   Container,
-  EmojiIconItem,
-  IconNameType,
+  type EmojiIconItem,
+  type IconNameType,
   useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-uikit';

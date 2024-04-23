@@ -1202,7 +1202,6 @@ export function useMessageList(
       id: string,
       model: SystemMessageModel | TimeMessageModel | MessageModel
     ) => {
-      console.log('onLongPressListItem', id, model);
       if (selectType === 'multi') {
         return;
       }
@@ -1359,6 +1358,7 @@ export function useMessageList(
                       id: v,
                       name: getContactInfo(v).name,
                       avatar: getContactInfo(v).avatar,
+                      type: 'user',
                     } as DataModel;
                   }),
                 } as MessageReactionModel;

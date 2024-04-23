@@ -8,6 +8,7 @@ import * as React from 'react';
 import { BackHandler, DeviceEventEmitter, Platform } from 'react-native';
 import { CallType, CallUser } from 'react-native-chat-callkit';
 import {
+  ChatGroup,
   ChatMultiDeviceEvent,
   ChatPushConfig,
   ChatPushRemindType,
@@ -19,6 +20,7 @@ import {
   createDefaultStringSet,
   DataModel,
   DataModelType,
+  DataProfileProvider,
   DisconnectReasonType,
   generateNeutralColor,
   generateNeutralSpecialColor,
@@ -293,6 +295,68 @@ export function useApp() {
       params.result({ data: [] });
     },
     []
+  );
+
+  const onUsersHandler = React.useCallback(
+    async (data: Map<string, DataModel>) => {
+      if (data.size === 0) return data;
+      const userIds = Array.from(data.keys());
+      const ret = new Promise<Map<string, DataModel>>((resolve, reject) => {
+        im.getUsersInfo({
+          userIds: userIds,
+          onResult: (res) => {
+            if (res.isOk && res.value) {
+              const finalUsers = [] as DataModel[];
+              for (const user of res.value) {
+                finalUsers.push({
+                  id: user.userId,
+                  type: 'user',
+                  name: user.userName,
+                  avatar: user.avatarURL,
+                  remark: user.remark,
+                } as DataModel);
+              }
+              resolve(DataProfileProvider.toMap(finalUsers));
+            } else {
+              reject(data);
+            }
+          },
+        });
+      });
+      return ret;
+    },
+    [im]
+  );
+  const onGroupsHandler = React.useCallback(
+    async (data: Map<string, DataModel>) => {
+      if (data.size === 0) return data;
+      const ret = new Promise<Map<string, DataModel>>((resolve, reject) => {
+        im.getJoinedGroups({
+          onResult: (res) => {
+            if (res.isOk && res.value) {
+              const finalGroups = res.value.map<DataModel>((v) => {
+                // !!! Not recommended: only for demo
+                const g = v as ChatGroup;
+                const avatar = g.options?.ext?.includes('http')
+                  ? g.options.ext
+                  : undefined;
+                return {
+                  id: v.groupId,
+                  name: v.groupName,
+                  avatar: v.groupAvatar ?? avatar,
+                  type: 'group',
+                } as DataModel;
+              });
+              resolve(DataProfileProvider.toMap(finalGroups));
+            } else {
+              reject(data);
+            }
+          },
+        });
+      });
+      return ret;
+    },
+    [im]
   );
 
   const initPush = React.useCallback(async () => {
@@ -614,6 +678,26 @@ export function useApp() {
     });
   }, [getPermission, updater]);
 
+  // for test
+  // React.useEffect(() => {
+  //   im.getDataFileProvider().registerUserProfile((list) => {
+  //     console.log('test:zuoyu:registerUserProfile:', list);
+  //     list.forEach((v, k) => {
+  //       console.log('test:zuoyu:registerUserProfile:v', k, v);
+  //       v.name = v.id + 'name';
+  //     });
+  //     return list;
+  //   });
+  //   im.getDataFileProvider().registerGroupProfile((list) => {
+  //     console.log('test:zuoyu:registerGroupProfile:', list);
+  //     list.forEach((v, k) => {
+  //       console.log('test:zuoyu:registerGroupProfile:v', k, v);
+  //       v.name = v.id + 'group';
+  //     });
+  //     return list;
+  //   });
+  // }, [im]);
+
   React.useEffect(() => {
     const ret = DeviceEventEmitter.addListener('_demo_emit_app_theme', (e) => {
       console.log('dev:emit:app:theme:', e);
@@ -822,5 +906,7 @@ export function useApp() {
     onGroupsProvider,
     onStateChange,
     onUnhandledAction,
+    onGroupsHandler,
+    onUsersHandler,
   };
 }

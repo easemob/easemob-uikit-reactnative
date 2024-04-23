@@ -4,6 +4,7 @@ export * from './chat.impl';
 export * from './chat.listener';
 export * from './commonManager.types';
 export * from './const';
+export * from './DataProfileProvider';
 export * from './messageManager';
 export * from './messageManager.types';
 export * from './requestList';

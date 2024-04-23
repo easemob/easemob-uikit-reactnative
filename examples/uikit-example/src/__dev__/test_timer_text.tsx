@@ -3,7 +3,7 @@ import {
   CmnButton,
   Container,
   TimerText,
-  TimerTextRef,
+  type TimerTextRef,
   useLightTheme,
   usePresetPalette,
 } from 'react-native-chat-uikit';

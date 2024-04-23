@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   Alert,
-  AlertRef,
+  type AlertRef,
   CmnButton,
   Container,
   useLightTheme,

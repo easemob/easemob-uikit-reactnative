@@ -4,6 +4,7 @@ import {
   ContactModel,
   ContactServiceListener,
   DataModel,
+  DataProfileProvider,
   UIContactListListener,
   UIConversationListListener,
   UIListenerType,
@@ -96,26 +97,6 @@ export function useContactInfo(
                 im.sendError({ error: e });
               });
 
-            // if (onRequestData) {
-            //   const ret = onRequestData?.(userId);
-            //   if (ret) {
-            //     if (ret instanceof Promise) {
-            //       ret
-            //         .then((res) => {
-            //           if (res.userName) setUserName(res.userName);
-            //           if (res.userAvatar) setUserAvatar(res.userAvatar);
-            //           if (res.remark) setUserRemark(res.remark);
-            //         })
-            //         .catch((e) => {
-            //           uilog.warn('dev:onRequestData:e:', e);
-            //         });
-            //     } else {
-            //       if (ret.userName) setUserName(ret.userName);
-            //       if (ret.userAvatar) setUserAvatar(ret.userAvatar);
-            //       if (ret.remark) setUserRemark(ret.remark);
-            //     }
-            //   }
-
             im.getUserInfo({
               userId: userId,
               onResult: (res) => {
@@ -143,27 +124,62 @@ export function useContactInfo(
                         remark: value.value?.remark,
                       } as ContactModel;
 
-                      im.updateRequestData({
-                        data: new Map([
-                          [
-                            'user',
-                            [
-                              {
-                                id: userId,
-                                name: contact.userName,
-                                avatar: contact.userAvatar,
-                                remark: contact.remark,
-                              } as DataModel,
-                            ],
-                          ],
+                      im.updateDataList({
+                        dataList: DataProfileProvider.toMap([
+                          {
+                            id: userId,
+                            name:
+                              contact.userName && contact.userName.length > 0
+                                ? contact.userName
+                                : undefined,
+                            avatar:
+                              contact.userAvatar &&
+                              contact.userAvatar.length > 0
+                                ? contact.userAvatar
+                                : undefined,
+                            remark:
+                              contact.remark && contact.remark.length > 0
+                                ? contact.remark
+                                : undefined,
+                            type: 'user',
+                          } as DataModel,
                         ]),
+                        dispatchHandler: () => {
+                          im.sendUIEvent(
+                            UIListenerType.Contact,
+                            'onUpdatedEvent',
+                            contact
+                          );
+                          return false;
+                        },
                       });
 
-                      im.sendUIEvent(
-                        UIListenerType.Contact,
-                        'onUpdatedEvent',
-                        contact
-                      );
+                      // im.updateRequestData({
+                      //   data: new Map([
+                      //     [
+                      //       'user',
+                      //       [
+                      //         {
+                      //           id: userId,
+                      //           name:
+                      //             contact.userName &&
+                      //             contact.userName.length > 0
+                      //               ? contact.userName
+                      //               : undefined,
+                      //           avatar:
+                      //             contact.userAvatar &&
+                      //             contact.userAvatar.length > 0
+                      //               ? contact.userAvatar
+                      //               : undefined,
+                      //           remark:
+                      //             contact.remark && contact.remark.length > 0
+                      //               ? contact.remark
+                      //               : undefined,
+                      //         } as DataModel,
+                      //       ],
+                      //     ],
+                      //   ]),
+                      // });
                     }
                   },
                 });

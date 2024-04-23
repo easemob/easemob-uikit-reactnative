@@ -9,6 +9,7 @@ import {
 import {
   ChatServiceListener,
   ConversationModel,
+  DataModel,
   gNewRequestConversationId,
   UIContactListListener,
   UIConversationListListener,
@@ -17,6 +18,7 @@ import {
   useChatContext,
   useChatListener,
 } from '../../chat';
+import { useDataProfileProvider } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import type { UIKitError } from '../../error';
 import { useI18nContext } from '../../i18n';
@@ -81,6 +83,8 @@ export function useConversationList(props: ConversationListProps) {
   );
   const im = useChatContext();
   const [userId, setUserId] = React.useState<string>();
+  const { addDataProfileListener, removeDataProfileListener } =
+    useDataProfileProvider();
 
   const onAddContact = (userId: string) => {
     im.addNewContact({ userId });
@@ -184,6 +188,27 @@ export function useConversationList(props: ConversationListProps) {
           break;
         }
       }
+      refreshToUI(dataRef.current);
+    },
+    [dataRef, refreshToUI]
+  );
+
+  const onUpdateProfileToUI = React.useCallback(
+    (updateList: Map<string, DataModel>) => {
+      dataRef.current.forEach((item) => {
+        if (updateList.has(item.data.convId)) {
+          const data = updateList.get(item.data.convId);
+          if (data) {
+            if (data.name) {
+              item.data.convName = data.name;
+            }
+            if (data.avatar) {
+              item.data.convAvatar = data.avatar;
+            }
+            item.data = { ...item.data };
+          }
+        }
+      });
       refreshToUI(dataRef.current);
     },
     [dataRef, refreshToUI]
@@ -623,6 +648,20 @@ export function useConversationList(props: ConversationListProps) {
           }
         }
       },
+      onUpdatedListEvent: (data) => {
+        for (const item of data) {
+          const isExisted = dataRef.current.find((i) => {
+            return i.data.convId === item.groupId;
+          });
+          if (isExisted) {
+            if (item.groupName) {
+              isExisted.data.convName = item.groupName;
+              isExisted.data = { ...isExisted.data };
+            }
+          }
+        }
+        refreshToUI(dataRef.current);
+      },
       onAddedEvent: (data) => {
         onAddDataToUI({
           convId: data.groupId,
@@ -637,7 +676,7 @@ export function useConversationList(props: ConversationListProps) {
     return () => {
       im.removeUIListener(uiListener);
     };
-  }, [dataRef, im, onAddDataToUI, onUpdateDataToUI]);
+  }, [dataRef, im, onAddDataToUI, onUpdateDataToUI, refreshToUI]);
 
   React.useEffect(() => {
     const listener: UIContactListListener = {
@@ -671,6 +710,20 @@ export function useConversationList(props: ConversationListProps) {
   React.useEffect(() => {
     init({ onFinished: onInitialized });
   }, [init, onInitialized]);
+
+  const onUpdateProfile = React.useCallback(
+    (updateList: Map<string, DataModel>) => {
+      onUpdateProfileToUI(new Map(updateList));
+    },
+    [onUpdateProfileToUI]
+  );
+
+  React.useEffect(() => {
+    const sub = addDataProfileListener(onUpdateProfile);
+    return () => {
+      removeDataProfileListener(sub);
+    };
+  }, [addDataProfileListener, removeDataProfileListener, onUpdateProfile]);
 
   if (propsRef && propsRef.current) {
     propsRef.current.addItem = (conv) => addConv(conv);

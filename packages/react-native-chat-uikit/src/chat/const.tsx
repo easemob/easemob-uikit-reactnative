@@ -21,3 +21,5 @@ export const gMessageAttributeVoiceReadFlag = '_$uikit_voice_read_flag';
 export const gMessageAttributeFileProgress = '_$uikit_file_progress';
 export const gMessageAttributeMentions = 'em_at_list';
 export const gMessageAttributeTranslate = '_$uikit_text_translate';
+
+export const gEventDataProfileProvider = '_uikit_data_profile_provider';
