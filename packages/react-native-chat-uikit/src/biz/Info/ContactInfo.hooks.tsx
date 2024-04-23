@@ -257,8 +257,9 @@ export function useContactInfo(
       return;
     }
     Services.cbs.setString(userId);
-    toastRef.current.show({
-      message: tr('copy_success'),
+    im.sendFinished({
+      event: 'copyUserId',
+      extra: { userId },
     });
   };
 

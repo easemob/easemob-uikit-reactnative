@@ -133,6 +133,9 @@ export function createStringSetCn(): StringSet {
     '_demo_alert_title_share_contact_title': '分享联系人？',
     '_demo_alert_title_share_contact_message': (a, b) => `分享联系人${a}给${b}`,
 
+    '_demo_copyGroupId': '复制成功',
+    '_demo_copyUserId': '复制成功',
+
     'save': '保存',
     'done': '完成',
     'en': 'English',

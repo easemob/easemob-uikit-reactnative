@@ -61,7 +61,7 @@ export function ToastView(props: ToastViewProps) {
 }
 
 function useSimpleToast() {
-  const { parseError } = useOnErrorParser();
+  const {} = useOnErrorParser();
   const { parseFinished } = useOnFinishedParser();
   const { getSimpleToastRef } = useSimpleToastContext();
   useChatListener(
@@ -73,17 +73,17 @@ function useSimpleToast() {
           extra?: any;
         }) => {
           console.log('ToastViewProps:onError:', JSON.stringify(params));
-          const ret = parseError(params.error);
-          if (ret) {
-            if (Platform.OS === 'ios') {
-              getSimpleToastRef().show({
-                message: ret,
-                timeout: 1000,
-              });
-            } else {
-              ToastAndroid.show(ret, 1000);
-            }
-          }
+          // const ret = parseError(params.error);
+          // if (ret) {
+          //   if (Platform.OS === 'ios') {
+          //     getSimpleToastRef().show({
+          //       message: ret,
+          //       timeout: 1000,
+          //     });
+          //   } else {
+          //     ToastAndroid.show(ret, 1000);
+          //   }
+          // }
         },
         onFinished: (params: { event: ChatEventType; extra?: any }) => {
           console.log('ToastViewProps:onFinished:', params);
@@ -100,6 +100,6 @@ function useSimpleToast() {
           }
         },
       };
-    }, [getSimpleToastRef, parseError, parseFinished])
+    }, [getSimpleToastRef, parseFinished])
   );
 }

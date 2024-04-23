@@ -303,8 +303,9 @@ export function useGroupInfo(
       return;
     }
     Services.cbs.setString(groupId);
-    toastRef.current.show({
-      message: tr('copy_success'),
+    im.sendFinished({
+      event: 'copyGroupId',
+      extra: { groupId },
     });
   };
 

@@ -141,6 +141,9 @@ export function createStringSetEn(): StringSet {
     '_demo_alert_title_share_contact_message': (a, b) =>
       `Share Contact ${a} to  ${b}.`,
 
+    '_demo_copyGroupId': 'Copy Successful',
+    '_demo_copyUserId': 'Copy Successful',
+
     'save': 'Save',
     'done': 'Done',
     'en': 'English',

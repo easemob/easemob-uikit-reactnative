@@ -282,7 +282,7 @@ export function useConversationList(props: ConversationListProps) {
         if (s === 'logged') {
           im.getAllConversations({
             onResult: (result) => {
-              const { isOk, value: list, error } = result;
+              const { isOk, value: list } = result;
               if (isOk && list) {
                 dataRef.current = [];
                 if (list) {
@@ -311,12 +311,8 @@ export function useConversationList(props: ConversationListProps) {
                   }
                 }
                 onSetState('normal');
-                im.sendFinished({ event: 'getAllConversations' });
               } else {
                 onSetState('error');
-                if (error) {
-                  im.sendError({ error, from: 'getAllConversations' });
-                }
               }
               params.onFinished?.();
             },

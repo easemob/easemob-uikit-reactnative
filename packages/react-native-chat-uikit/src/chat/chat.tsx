@@ -67,19 +67,3 @@ export function useChatContext(): ChatService {
 export function getChatService(): ChatService {
   return _getChatService();
 }
-
-// const initChat = once2(
-//   (im: ChatService, options: ChatOptionsType, onInitialized?: () => void) => {
-//     im.init({
-//       options: options,
-//       result: ({ isOk, error }) => {
-//         if (isOk === false) {
-//           if (error) im.sendError({ error: error });
-//         } else {
-//           onInitialized?.();
-//           im.sendFinished({ event: 'undefined' });
-//         }
-//       },
-//     });
-//   }
-// );
