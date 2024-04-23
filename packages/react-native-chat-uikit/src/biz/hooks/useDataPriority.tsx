@@ -10,7 +10,7 @@ export function useDataPriority(props: useDataPriorityProps) {
   const getContactInfo = React.useCallback(
     (id: string): DataModel => {
       const r1 = im.user(id);
-      const r2 = im.getRequestData(id);
+      const r2 = im.getDataModel(id);
       const name =
         r1?.userName && r1.userName.length > 0
           ? r1.userName
@@ -41,7 +41,7 @@ export function useDataPriority(props: useDataPriorityProps) {
   );
   const getGroupInfo = React.useCallback(
     (id: string): DataModel => {
-      const r2 = im.getRequestData(id);
+      const r2 = im.getDataModel(id);
       return {
         id: id,
         name: r2?.name && r2.name.length > 0 ? r2.name : undefined,

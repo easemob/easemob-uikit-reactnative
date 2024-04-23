@@ -644,7 +644,7 @@ export function useMessageList(
     (d: MessageListItemProps, pos: MessageAddPosition) => {
       if (d.model.modelType === 'message') {
         const msgModel = d.model as MessageModel;
-        const user = im.getRequestData(msgModel.msg.from);
+        const user = im.getDataModel(msgModel.msg.from);
         if (user) {
           msgModel.userName = user.name;
           msgModel.userAvatar = user.avatar;
@@ -652,7 +652,7 @@ export function useMessageList(
       }
       if (d.model.modelType === 'history') {
         const msgModel = d.model as MessageHistoryModel;
-        const user = im.getRequestData(msgModel.msg.from);
+        const user = im.getDataModel(msgModel.msg.from);
         if (user) {
           msgModel.userName = user.name;
           msgModel.userAvatar = user.avatar;
@@ -705,7 +705,6 @@ export function useMessageList(
             messageId: quote.msgID,
           });
         }
-        // const user = im.getRequestData(msg.from);
         const d = getMsgInfo(msg);
         updateMsgUserInfo(d);
         const threadMsg =
@@ -2065,8 +2064,8 @@ export function useMessageList(
             isChatThread: comType === 'thread',
             params: {
               userId: card.userId,
-              nickname: im.getRequestData(card.userId)?.name ?? card.userId,
-              avatar: im.getRequestData(card.userId)?.avatar!,
+              nickname: im.getDataModel(card.userId)?.name ?? card.userId,
+              avatar: im.getDataModel(card.userId)?.avatar!,
             },
           }
         );

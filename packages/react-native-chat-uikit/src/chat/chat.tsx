@@ -29,14 +29,7 @@ type ChatContextProps = React.PropsWithChildren<{
  * It can only be initialized once. Even if it is initialized multiple times, parameters modified in time will not take effect again. The reason is that `CHAT SDK` uses the native platform.
  */
 export function ChatContextProvider({ value, children }: ChatContextProps) {
-  const {
-    options,
-    onInitialized,
-    onUsersProvider,
-    onGroupsProvider,
-    onUsersHandler,
-    onGroupsHandler,
-  } = value;
+  const { options, onInitialized, onUsersHandler, onGroupsHandler } = value;
   const _im = _getChatService();
   React.useEffect(() => {
     _im.init({
@@ -50,8 +43,6 @@ export function ChatContextProvider({ value, children }: ChatContextProps) {
         }
       },
     });
-    _im.setOnUsersProvider(onUsersProvider);
-    _im.setOnGroupsProvider(onGroupsProvider);
     _im.getDataFileProvider().registerUserProfile(onUsersHandler);
     _im.getDataFileProvider().registerGroupProfile(onGroupsHandler);
     // eslint-disable-next-line react-hooks/exhaustive-deps

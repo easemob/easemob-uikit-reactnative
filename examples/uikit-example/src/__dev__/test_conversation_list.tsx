@@ -40,42 +40,6 @@ export function CL() {
         //   });
         //   params?.result(users ?? []);
         // }}
-        // onRequestMultiData={(params: {
-        //   ids: Map<DataModelType, string[]>;
-        //   result: (
-        //     data?: Map<DataModelType, DataModel[]>,
-        //     error?: UIKitError
-        //   ) => void;
-        // }) => {
-        //   console.log('test:zuoyu:onRequestMultiData', params);
-        //   const userIds = params.ids.get('user');
-        //   const users = userIds?.map<DataModel>((id) => {
-        //     return {
-        //       id,
-        //       name: id + 'name',
-        //       // avatar: 'https://i.pravatar.cc/300',
-        //       avatar:
-        //         'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-        //       type: 'user' as DataModelType,
-        //     };
-        //   });
-        //   const groupIds = params.ids.get('group');
-        //   const groups = groupIds?.map<DataModel>((id) => {
-        //     return {
-        //       id,
-        //       name: id + 'name',
-        //       avatar:
-        //         'https://cdn0.iconfinder.com/data/icons/user-pictures/100/maturewoman-2-512.png',
-        //       type: 'group' as DataModelType,
-        //     };
-        //   });
-        //   params?.result(
-        //     new Map([
-        //       ['user', users ?? []],
-        //       ['group', groups ?? []],
-        //     ])
-        //   );
-        // }}
       />
     </SafeAreaView>
   );

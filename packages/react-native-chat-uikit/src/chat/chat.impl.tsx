@@ -74,66 +74,6 @@ export class ChatServiceImpl
   _modelState: Map<string, Map<string, StateModel>>;
   _currentConversation?: ConversationModel;
   _silentModeList: Map<string, { convId: string; doNotDisturb?: boolean }>;
-  // _convDataRequestCallback?: (params: {
-  //   ids: Map<DataModelType, string[]>;
-  //   result: (
-  //     data?: Map<DataModelType, DataModel[]> | undefined,
-  //     error?: UIKitError
-  //   ) => void | Promise<void>;
-  // }) => void;
-  // _contactDataRequestCallback:
-  //   | ((params: {
-  //       ids: string[];
-  //       result: (data?: DataModel[], error?: UIKitError) => void;
-  //     }) => void | Promise<void>)
-  //   | undefined;
-  // _groupDataRequestCallback:
-  //   | ((params: {
-  //       ids: string[];
-  //       result: (data?: DataModel[], error?: UIKitError) => void;
-  //     }) => void | Promise<void>)
-  //   | undefined;
-  // _groupParticipantDataRequestCallback:
-  //   | ((params: {
-  //       groupId: string;
-  //       ids: string[];
-  //       result: (data?: DataModel[], error?: UIKitError) => void;
-  //     }) => void | Promise<void>)
-  //   | undefined;
-  // _basicDataRequestCallback?:
-  //   | ((params: {
-  //       ids: Map<DataModelType, string[]>;
-  //       result: (
-  //         data?: Map<DataModelType, DataModel[]>,
-  //         error?: UIKitError
-  //       ) => void;
-  //     }) => void)
-  //   | ((params: {
-  //       ids: Map<DataModelType, string[]>;
-  //       result: (
-  //         data?: Map<DataModelType, DataModel[]>,
-  //         error?: UIKitError
-  //       ) => void;
-  //     }) => Promise<void>);
-  _userCallback?:
-    | ((params: {
-        ids: string[];
-        result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-      }) => void)
-    | ((params: {
-        ids: string[];
-        result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-      }) => Promise<void>);
-
-  _groupCallback?:
-    | ((params: {
-        ids: string[];
-        result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-      }) => void)
-    | ((params: {
-        ids: string[];
-        result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-      }) => Promise<void>);
   _groupNameOnCreateGroupCallback?: (params: {
     selected: ContactModel[];
   }) => string;
@@ -629,63 +569,6 @@ export class ChatServiceImpl
     };
   }
 
-  // setContactOnRequestData<DataT extends DataModel = DataModel>(
-  //   callback?: (params: {
-  //     ids: string[];
-  //     result: (data?: DataT[], error?: UIKitError) => void;
-  //   }) => void
-  // ): void {
-  //   this._contactDataRequestCallback = callback;
-  // }
-
-  // setGroupOnRequestData<DataT extends DataModel = DataModel>(
-  //   callback?: (params: {
-  //     ids: string[];
-  //     result: (data?: DataT[], error?: UIKitError) => void;
-  //   }) => void
-  // ): void {
-  //   this._groupDataRequestCallback = callback;
-  // }
-
-  // setGroupParticipantOnRequestData<DataT extends DataModel = DataModel>(
-  //   callback?: (params: {
-  //     groupId: string;
-  //     ids: string[];
-  //     result: (data?: DataT[], error?: UIKitError) => void;
-  //   }) => void | Promise<void>
-  // ): void {
-  //   this._groupParticipantDataRequestCallback = callback;
-  // }
-
-  // updateGroupParticipantOnRequestData(params: {
-  //   groupId: string;
-  //   data: Map<DataModelType, DataModel[]>;
-  // }): void {
-  //   const { groupId, data } = params;
-  //   const list = this._groupMemberList.get(groupId);
-  //   if (list) {
-  //     data.forEach((values: DataModel[]) => {
-  //       values.map((value) => {
-  //         const conv = list.get(value.id);
-  //         if (conv) {
-  //           conv.memberName = value.name;
-  //           conv.memberAvatar = value.avatar;
-  //         }
-  //       });
-  //     });
-  //     this.sendUIEvent(UIListenerType.Group, 'onRequestReloadEvent', groupId);
-  //   }
-  // }
-
-  // setOnRequestMultiData<DataT extends DataModel = DataModel>(
-  //   callback?: (params: {
-  //     ids: Map<DataModelType, string[]>;
-  //     result: (data?: Map<DataModelType, DataT[]>, error?: UIKitError) => void;
-  //   }) => void
-  // ): void {
-  //   this._convDataRequestCallback = callback;
-  // }
-
   setGroupNameOnCreateGroup(
     callback: (params: { selected: ContactModel[] }) => string
   ): void {
@@ -698,54 +581,6 @@ export class ChatServiceImpl
     return this._groupNameOnCreateGroupCallback;
   }
 
-  // setOnRequestData(
-  //   callback?:
-  //     | ((params: {
-  //         ids: Map<DataModelType, string[]>;
-  //         result: (
-  //           data?: Map<DataModelType, DataModel[]>,
-  //           error?: UIKitError
-  //         ) => void;
-  //       }) => void)
-  //     | ((params: {
-  //         ids: Map<DataModelType, string[]>;
-  //         result: (
-  //           data?: Map<DataModelType, DataModel[]>,
-  //           error?: UIKitError
-  //         ) => void;
-  //       }) => Promise<void>)
-  // ): void {
-  //   this._basicDataRequestCallback = callback;
-  // }
-
-  setOnUsersProvider(
-    callback?:
-      | ((params: {
-          ids: string[];
-          result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-        }) => void)
-      | ((params: {
-          ids: string[];
-          result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-        }) => Promise<void>)
-  ): void {
-    this._userCallback = callback;
-  }
-
-  setOnGroupsProvider(
-    callback?:
-      | ((params: {
-          ids: string[];
-          result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-        }) => void)
-      | ((params: {
-          ids: string[];
-          result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-        }) => Promise<void>)
-  ): void {
-    this._groupCallback = callback;
-  }
-
   updateDataList(params: {
     dataList: Map<string, DataModel>;
     isUpdateNotExisted?: boolean;
@@ -755,72 +590,13 @@ export class ChatServiceImpl
     this._updateDataList(params);
   }
 
-  updateRequestData(params: { data: Map<DataModelType, DataModel[]> }): void {
-    const { data } = params;
-    const list = new Map<string, DataModel>();
-    data.forEach((values) => {
-      values.forEach((value) => {
-        list.set(value.id, value);
-      });
-    });
-    this._updateDataList({ dataList: list });
-    // data.forEach((values) => {
-    //   values.forEach((value) => {
-    //     const old = this._dataList.get(value.id);
-    //     if (old) {
-    //       this._dataList.set(value.id, {
-    //         ...old,
-    //         name: value.name ?? old.name,
-    //         avatar: value.avatar ?? old.avatar,
-    //       });
-    //     } else {
-    //       // !!! Values that do not exist will not be updated.
-    //       this._dataList.set(value.id, {
-    //         id: value.id,
-    //         type: value.type,
-    //         name: value.name,
-    //         avatar: value.avatar,
-    //       });
-    //     }
-    //   });
-    // });
-    this.sendUIEvent(UIListenerType.Contact, 'onRequestReloadEvent');
-    this.sendUIEvent(UIListenerType.Conversation, 'onRequestReloadEvent');
-  }
-
   getDataModel(id: string): DataModel | undefined {
     return this._dataFileProvider.getDataById(id);
-  }
-
-  getRequestData(id: string): DataModel | undefined {
-    return this._dataFileProvider.getDataById(id);
-    // return this._dataList.get(id);
   }
 
   getDataFileProvider(): DataProfileProvider {
     return this._dataFileProvider;
   }
-
-  // _updateContactRemark(list: ContactModel[]): void {
-  //   const tmp = new Map<string, DataModel>();
-  //   list.forEach((v) => {
-  //     const data = this._dataFileProvider.getDataById(v.userId);
-  //     if (data && v.remark && v.remark.length > 0 && data.remark !== v.remark) {
-  //       tmp.set(data.id, { ...data, remark: v.remark });
-  //     }
-  //   });
-  //   this._dataFileProvider.updateDataList({
-  //     dataList: tmp,
-  //     disableDispatch: true,
-  //   });
-  //   // list.forEach((v) => {
-  //   //   const isExisted = this._dataFileProvider.getDataById(v.userId);
-  //   //   // const isExisted = this._dataList.get(v.userId);
-  //   //   if (isExisted && v.remark && v.remark.length > 0) {
-  //   //     isExisted.remark = v.remark;
-  //   //   }
-  //   // });
-  // }
 
   async _requestConvData(list: ChatConversation[]): Promise<void> {
     const tmp = new Map<string, DataModelType>();
@@ -836,176 +612,6 @@ export class ChatServiceImpl
       requestHasData: false,
     });
   }
-
-  // async _requestConvData(list: ChatConversation[]): Promise<void> {
-  //   const ret = new Promise<void>((resolve, reject) => {
-  //     if (this._userCallback || this._groupCallback) {
-  //       const needRequestUser = new Set<string>();
-  //       const needRequestGroup = new Set<string>();
-  //       list.forEach((v) => {
-  //         const old = this._dataList.get(v.convId);
-  //         if (
-  //           old === undefined ||
-  //           old.name === undefined ||
-  //           old.name.length === 0 ||
-  //           old.avatar === undefined ||
-  //           old.avatar.length === 0
-  //         ) {
-  //           if (v.convType === ChatConversationType.GroupChat) {
-  //             needRequestGroup.add(v.convId);
-  //           } else {
-  //             needRequestUser.add(v.convId);
-  //           }
-  //           this._dataList.set(v.convId, {
-  //             ...old,
-  //             id: v.convId,
-  //             type:
-  //               v.convType === ChatConversationType.GroupChat
-  //                 ? 'group'
-  //                 : 'user',
-  //           } as DataModel);
-  //         }
-  //       });
-  //       if (needRequestUser.size === 0 && needRequestGroup.size === 0) {
-  //         resolve();
-  //         return;
-  //       }
-  //       this._userCallback?.({
-  //         ids: Array.from(needRequestUser.values()),
-  //         result: ({ data, error }) => {
-  //           if (data) {
-  //             data.forEach((value) => {
-  //               const conv = this._dataList.get(value.id);
-  //               if (conv) {
-  //                 conv.name = conv.name ?? value.name;
-  //                 conv.avatar = conv.avatar ?? value.avatar;
-  //               }
-  //             });
-  //             resolve();
-  //           } else {
-  //             reject(error);
-  //           }
-  //         },
-  //       });
-  //       this._groupCallback?.({
-  //         ids: Array.from(needRequestGroup.values()),
-  //         result: ({ data, error }) => {
-  //           if (data) {
-  //             data.forEach((value) => {
-  //               const conv = this._dataList.get(value.id);
-  //               if (conv) {
-  //                 conv.name = conv.name ?? value.name;
-  //                 conv.avatar = conv.avatar ?? value.avatar;
-  //               }
-  //             });
-  //             resolve();
-  //           } else {
-  //             reject(error);
-  //           }
-  //         },
-  //       });
-  //     } else {
-  //       resolve();
-  //     }
-
-  //     // if (this._basicDataRequestCallback) {
-  //     //   const needRequest = new Set<DataModel>();
-  //     //   Array.from(list.values()).forEach((v) => {
-  //     //     const old = this._dataList.get(v.convId);
-  //     //     if (
-  //     //       old === undefined ||
-  //     //       old.name === undefined ||
-  //     //       old.avatar === undefined
-  //     //     ) {
-  //     //       needRequest.add({
-  //     //         id: v.convId,
-  //     //         type:
-  //     //           v.convType === ChatConversationType.GroupChat
-  //     //             ? 'group'
-  //     //             : 'user',
-  //     //         name: undefined,
-  //     //         avatar: undefined,
-  //     //       });
-  //     //       this._dataList.set(v.convId, {
-  //     //         ...old,
-  //     //         id: v.convId,
-  //     //         type:
-  //     //           v.convType === ChatConversationType.GroupChat
-  //     //             ? 'group'
-  //     //             : 'user',
-  //     //       } as DataModel);
-  //     //     }
-  //     //   });
-  //     //   if (needRequest.size === 0) {
-  //     //     resolve();
-  //     //     return;
-  //     //   }
-  //     //   this._basicDataRequestCallback({
-  //     //     ids: new Map([
-  //     //       [
-  //     //         'user',
-  //     //         Array.from(needRequest.values())
-  //     //           .filter(
-  //     //             (v) =>
-  //     //               (v?.type === 'user' &&
-  //     //                 (v.id === v?.name ||
-  //     //                   v?.name === undefined ||
-  //     //                   v.name === null ||
-  //     //                   v.name.length === 0)) ||
-  //     //               (v?.type === 'user' && v?.avatar === undefined)
-  //     //           )
-  //     //           .map((v) => v.id),
-  //     //       ],
-  //     //       [
-  //     //         'group',
-  //     //         Array.from(needRequest.values())
-  //     //           .filter(
-  //     //             (v) =>
-  //     //               (v?.type === 'group' &&
-  //     //                 (v.id === v?.name ||
-  //     //                   v?.name === undefined ||
-  //     //                   v.name === null ||
-  //     //                   v.name.length === 0)) ||
-  //     //               (v?.type === 'group' && v?.avatar === undefined)
-  //     //           )
-  //     //           .map((v) => v.id),
-  //     //       ],
-  //     //     ]),
-  //     //     result: async (data, error) => {
-  //     //       if (data) {
-  //     //         data.forEach((values: DataModel[]) => {
-  //     //           values.map((value) => {
-  //     //             const conv = this._dataList.get(value.id);
-  //     //             if (conv) {
-  //     //               conv.name = conv.name ?? value.name;
-  //     //               conv.avatar = conv.avatar ?? value.avatar;
-  //     //             }
-  //     //           });
-  //     //         });
-
-  //     //         const group = data.get('group');
-  //     //         if (group === undefined || group.length === 0) {
-  //     //           const ret = await this.client.groupManager.getJoinedGroups();
-  //     //           ret.forEach((v) => {
-  //     //             const conv = this._dataList.get(v.groupId);
-  //     //             if (conv) {
-  //     //               conv.name = conv.name ?? v.groupName;
-  //     //             }
-  //     //           });
-  //     //         }
-  //     //         resolve();
-  //     //       } else {
-  //     //         reject(error);
-  //     //       }
-  //     //     },
-  //     //   });
-  //     // } else {
-  //     //   resolve();
-  //     // }
-  //   });
-
-  //   return ret;
-  // }
 
   async _requestData(params: {
     list: string[];
@@ -1029,166 +635,6 @@ export class ChatServiceImpl
       requestHasData: requestHasData,
     });
   }
-
-  // _requestData(list: string[], type: DataModelType = 'user'): Promise<void> {
-  //   const ret = new Promise<void>((resolve, reject) => {
-  //     if (type === 'group') {
-  //       if (this._groupCallback) {
-  //         const needRequestGroup = new Set<string>();
-  //         list.forEach((v) => {
-  //           const old = this._dataList.get(v);
-  //           if (
-  //             old === undefined ||
-  //             old.name === undefined ||
-  //             old.name.length === 0 ||
-  //             old.avatar === undefined ||
-  //             old.avatar.length === 0
-  //           ) {
-  //             needRequestGroup.add(v);
-  //             this._dataList.set(v, {
-  //               ...old,
-  //               id: v,
-  //               type: 'group',
-  //             } as DataModel);
-  //           }
-  //         });
-  //         if (needRequestGroup.size === 0) {
-  //           resolve();
-  //           return;
-  //         }
-  //         this._groupCallback?.({
-  //           ids: Array.from(needRequestGroup.values()),
-  //           result: ({ data, error }) => {
-  //             if (data) {
-  //               data.forEach((value) => {
-  //                 const conv = this._dataList.get(value.id);
-  //                 if (conv) {
-  //                   conv.name = conv.name ?? value.name;
-  //                   conv.avatar = conv.avatar ?? value.avatar;
-  //                 }
-  //               });
-  //               resolve();
-  //             } else {
-  //               reject(error);
-  //             }
-  //           },
-  //         });
-  //       } else {
-  //         resolve();
-  //       }
-  //     } else if (type === 'user') {
-  //       if (this._userCallback) {
-  //         const needRequestUser = new Set<string>();
-  //         list.forEach((v) => {
-  //           const old = this._dataList.get(v);
-  //           if (
-  //             old === undefined ||
-  //             old.name === undefined ||
-  //             old.name.length === 0 ||
-  //             old.avatar === undefined ||
-  //             old.avatar.length === 0
-  //           ) {
-  //             needRequestUser.add(v);
-  //             this._dataList.set(v, {
-  //               ...old,
-  //               id: v,
-  //               type: type,
-  //             } as DataModel);
-  //           }
-  //         });
-  //         if (needRequestUser.size === 0) {
-  //           resolve();
-  //           return;
-  //         }
-  //         this._userCallback?.({
-  //           ids: Array.from(needRequestUser.values()),
-  //           result: ({ data, error }) => {
-  //             if (data) {
-  //               data.forEach((value) => {
-  //                 const conv = this._dataList.get(value.id);
-  //                 if (conv) {
-  //                   conv.name = conv.name ?? value.name;
-  //                   conv.avatar = conv.avatar ?? value.avatar;
-  //                 }
-  //               });
-  //               resolve();
-  //             } else {
-  //               reject(error);
-  //             }
-  //           },
-  //         });
-  //       } else {
-  //         resolve();
-  //       }
-  //     }
-
-  //     // if (this._basicDataRequestCallback) {
-  //     //   const needRequest = new Set<DataModel>();
-  //     //   Array.from(list.values()).forEach((v) => {
-  //     //     const old = this._dataList.get(v);
-  //     //     if (
-  //     //       old === undefined ||
-  //     //       old.name === undefined ||
-  //     //       old.avatar === undefined
-  //     //     ) {
-  //     //       needRequest.add({
-  //     //         id: v,
-  //     //         type: type,
-  //     //         name: undefined,
-  //     //         avatar: undefined,
-  //     //       });
-  //     //       this._dataList.set(v, {
-  //     //         ...old,
-  //     //         id: v,
-  //     //         type: type,
-  //     //       } as DataModel);
-  //     //     }
-  //     //   });
-  //     //   if (needRequest.size === 0) {
-  //     //     resolve();
-  //     //     return;
-  //     //   }
-  //     //   this._basicDataRequestCallback({
-  //     //     ids: new Map([
-  //     //       [
-  //     //         type,
-  //     //         Array.from(needRequest.values())
-  //     //           .filter(
-  //     //             (v) =>
-  //     //               (v?.type === type &&
-  //     //                 (v.id === v?.name ||
-  //     //                   v?.name === undefined ||
-  //     //                   v.name === null ||
-  //     //                   v.name.length === 0)) ||
-  //     //               (v?.type === type && v?.avatar === undefined)
-  //     //           )
-  //     //           .map((v) => v.id),
-  //     //       ],
-  //     //     ]),
-  //     //     result: (data, error) => {
-  //     //       if (data) {
-  //     //         data.forEach((values: DataModel[]) => {
-  //     //           values.map((value) => {
-  //     //             const conv = this._dataList.get(value.id);
-  //     //             if (conv) {
-  //     //               conv.name = conv.name ?? value.name;
-  //     //               conv.avatar = conv.avatar ?? value.avatar;
-  //     //             }
-  //     //           });
-  //     //         });
-  //     //         resolve();
-  //     //       } else {
-  //     //         reject(error);
-  //     //       }
-  //     //     },
-  //     //   });
-  //     // } else {
-  //     //   resolve();
-  //     // }
-  //   });
-
-  //   return ret;
-  // }
 
   _updateDataList(params: {
     dataList: Map<string, DataModel>;
@@ -1676,34 +1122,6 @@ export class ChatServiceImpl
             } as ContactModel);
           });
 
-          // value.forEach(async (v) => {
-          //   const conv = this._contactList.get(v.userId);
-          //   if (conv) {
-          //     list.set(v.userId, mergeObjects<ContactModel>(v, conv));
-          //   } else {
-          //     list.set(v.userId, { ...v });
-          //   }
-          // });
-
-          // await this._requestData2(
-          //   Array.from(list.values()).map((v) => v.userId)
-          // );
-
-          // this._updateContactRemark(Array.from(this._contactList.values()));
-
-          // list.forEach((v) => {
-          //   const item = this._dataList.get(v.userId);
-          //   if (item && item.avatar) {
-          //     v.userAvatar = item.avatar;
-          //   }
-          //   if (item && item.name) {
-          //     v.userName = item.name;
-          //   }
-          //   if (item && item.remark) {
-          //     v.remark = item.remark;
-          //   }
-          // });
-
           this._contactList = list;
 
           params.onResult({
@@ -1750,32 +1168,6 @@ export class ChatServiceImpl
           } as ContactModel);
         });
         this._contactList = list;
-
-        // value.forEach(async (v) => {
-        //   this._contactList.set(v.userId, {
-        //     userId: v.userId,
-        //     remark: v.remark,
-        //   } as ContactModel);
-        // });
-
-        // await this._requestData2(
-        //   Array.from(this._contactList.values()).map((v) => v.userId)
-        // );
-
-        // this._updateContactRemark(Array.from(this._contactList.values()));
-
-        // this._contactList.forEach((v) => {
-        //   const item = this._dataList.get(v.userId);
-        //   if (item && item.avatar) {
-        //     v.userAvatar = item.avatar;
-        //   }
-        //   if (item && item.name) {
-        //     v.userName = item.name;
-        //   }
-        //   if (item && item.remark) {
-        //     v.remark = item.remark;
-        //   }
-        // });
 
         params.onResult({
           isOk: true,
@@ -1838,14 +1230,6 @@ export class ChatServiceImpl
       ),
       event: 'addNewContact',
       onFinished: async () => {
-        // await this._requestData([params.userId]);
-        // const c = {
-        //   userId: params.userId,
-        //   userName: this._getNameFromCache(params.userId),
-        //   userAvatar: this._getAvatarFromCache(params.userId),
-        // } as ContactModel;
-        // this._contactList.set(params.userId, c);
-        // this.sendUIEvent(UIListenerType.Contact, 'onAddedEvent', c);
         params.onResult?.({
           isOk: true,
         });
@@ -1868,23 +1252,6 @@ export class ChatServiceImpl
       onFinished: async () => {
         const contact = this._contactList.get(params.userId);
         this._contactList.delete(params.userId);
-        // this._dataFileProvider.updateDataList({
-        //   dataList: new Map([
-        //     [
-        //       params.userId,
-        //       {
-        //         id: params.userId,
-        //         remark: undefined,
-        //       } as DataModel,
-        //     ],
-        //   ]),
-        //   disableDispatch: true,
-        // });
-        // const item = this._dataFileProvider.getDataById(params.userId);
-        // const item = this._dataList.get(params.userId);
-        // if (item) {
-        //   item.remark = undefined;
-        // }
         this.sendUIEvent(UIListenerType.Contact, 'onDeletedEvent', contact);
         params.onResult?.({
           isOk: true,
@@ -1904,10 +1271,6 @@ export class ChatServiceImpl
       }),
       event: 'setContactRemark',
       onFinished: () => {
-        // const item = this._dataList.get(params.userId);
-        // if (item) {
-        //   item.remark = params.remark;
-        // }
         this._updateDataList({
           dataList: DataProfileProvider.toMap([
             {
@@ -2004,7 +1367,6 @@ export class ChatServiceImpl
     pageNum: number;
     onResult: ResultCallback<GroupModel[]>;
   }): void {
-    // this.client.groupManager.getJoinedGroups();
     this.tryCatch({
       promise: this.client.groupManager.fetchJoinedGroupsFromServer(
         params.pageSize,
@@ -2115,16 +1477,8 @@ export class ChatServiceImpl
           requestHasData: true,
         });
         memberList.forEach((v) => {
-          // const item = this._dataFileProvider.getDataById(v.memberId);
           v.memberAvatar = this._getAvatarFromCache(v.memberId);
           v.memberName = this._getNameFromCache(v.memberId);
-          // const item = this._dataList.get(v.memberId);
-          // if (item && item.avatar) {
-          //   v.memberAvatar = item.avatar;
-          // }
-          // if (item && item.name) {
-          //   v.memberName = item.name;
-          // }
         });
 
         this._groupMemberList.set(params.groupId, memberList);
@@ -2368,15 +1722,6 @@ export class ChatServiceImpl
           dispatchHandler: () => {
             const group = this.toUIGroup(value);
             this._groupList.set(group.groupId, group);
-
-            // const s = this._dataList.get(group.groupId);
-            // if (s === undefined) {
-            //   this._dataList.set(group.groupId, {
-            //     id: group.groupId,
-            //     name: params.groupName,
-            //     type: 'group',
-            //   });
-            // }
             this.sendUIEvent(UIListenerType.Group, 'onAddedEvent', group);
             return false;
           },
@@ -2458,10 +1803,6 @@ export class ChatServiceImpl
               } as DataModel,
             ]),
             dispatchHandler: () => {
-              // const g = this._dataList.get(group.groupId);
-              // if (g) {
-              //   g.name = group.groupName;
-              // }
               this.sendUIEvent(UIListenerType.Group, 'onUpdatedEvent', group);
               return false;
             },
@@ -2659,25 +2000,6 @@ export class ChatServiceImpl
     if (list.length > 0) {
       const first = list[0]!;
       this.setUser({ users: [first] });
-      // this._updateDataList({
-      //   dataList: DataProfileProvider.toMap([
-      //     {
-      //       id: first.userId,
-      //       type: 'user',
-      //       name: first.userName,
-      //       remark: first.remark,
-      //       avatar: first.avatarURL,
-      //     } as DataModel,
-      //   ]),
-      //   dispatchHandler: () => {
-      //     const d = this.toUIContact({
-      //       userId: first.userId,
-      //       remark: first.remark,
-      //     } as ChatContact);
-      //     this.sendUIEvent(UIListenerType.Contact, 'onUpdatedEvent', d);
-      //     return false;
-      //   },
-      // });
       return {
         isOk: true,
         value: first,

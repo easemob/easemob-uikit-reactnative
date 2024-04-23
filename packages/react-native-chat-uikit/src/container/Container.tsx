@@ -65,8 +65,6 @@ export function Container(props: ContainerProps) {
     enableThread = false,
     enableAVMeeting = true,
     releaseArea,
-    onGroupsProvider,
-    onUsersProvider,
     onGroupsHandler,
     onUsersHandler,
   } = props;
@@ -112,8 +110,6 @@ export function Container(props: ContainerProps) {
               value={{
                 options: options,
                 onInitialized: onInitialized,
-                onUsersProvider: onUsersProvider,
-                onGroupsProvider: onGroupsProvider,
                 onGroupsHandler: onGroupsHandler,
                 onUsersHandler: onUsersHandler,
               }}

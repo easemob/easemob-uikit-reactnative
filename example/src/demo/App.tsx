@@ -107,8 +107,6 @@ export function App() {
     requestCurrentUser,
     requestUserInfo,
     onInitLanguageSet,
-    onUsersProvider,
-    onGroupsProvider,
     onStateChange,
     onUnhandledAction,
     onGroupsHandler,
@@ -290,8 +288,6 @@ export function App() {
         // languageExtensionFactory={languageExtensionFactory}
         onInitialized={onContainerInitialized}
         onInitLanguageSet={onInitLanguageSet}
-        onUsersProvider={onUsersProvider}
-        onGroupsProvider={onGroupsProvider}
         onGroupsHandler={onGroupsHandler}
         onUsersHandler={onUsersHandler}
         // formatTime={formatTime}

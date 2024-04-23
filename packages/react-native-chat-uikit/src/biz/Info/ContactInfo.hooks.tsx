@@ -153,33 +153,6 @@ export function useContactInfo(
                           return false;
                         },
                       });
-
-                      // im.updateRequestData({
-                      //   data: new Map([
-                      //     [
-                      //       'user',
-                      //       [
-                      //         {
-                      //           id: userId,
-                      //           name:
-                      //             contact.userName &&
-                      //             contact.userName.length > 0
-                      //               ? contact.userName
-                      //               : undefined,
-                      //           avatar:
-                      //             contact.userAvatar &&
-                      //             contact.userAvatar.length > 0
-                      //               ? contact.userAvatar
-                      //               : undefined,
-                      //           remark:
-                      //             contact.remark && contact.remark.length > 0
-                      //               ? contact.remark
-                      //               : undefined,
-                      //         } as DataModel,
-                      //       ],
-                      //     ],
-                      //   ]),
-                      // });
                     }
                   },
                 });

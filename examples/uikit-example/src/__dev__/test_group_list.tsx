@@ -35,41 +35,7 @@ export function CL() {
         //     })
         //   );
         // }}
-        // onRequestMultiData={(params: {
-        //   ids: Map<DataModelType, string[]>;
-        //   result: (
-        //     data?: Map<DataModelType, DataModel[]>,
-        //     error?: UIKitError
-        //   ) => void;
-        // }) => {
-        //   console.log('test:zuoyu:onRequestMultiData', params);
-        //   params?.result(
-        //     new Map([
-        //       [
-        //         'user',
-        //         [
-        //           {
-        //             id: 'xx',
-        //             name: 'xx',
-        //             avatar: '',
-        //             type: 'user' as DataModelType,
-        //           },
-        //         ],
-        //       ],
-        //       [
-        //         'group',
-        //         [
-        //           {
-        //             id: 'yy',
-        //             name: 'yy',
-        //             avatar: '',
-        //             type: 'group' as DataModelType,
-        //           },
-        //         ],
-        //       ],
-        //     ])
-        //   );
-        // }}
+
         onClickedSearch={() => {
           console.log('test:zuoyu:onClickedSearch');
         }}

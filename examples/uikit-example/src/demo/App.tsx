@@ -245,7 +245,6 @@ export function App() {
           };
           return ret;
         }}
-        // onRequestMultiData={onRequestMultiData}
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}

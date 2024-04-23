@@ -26,25 +26,6 @@ export function ContactListScreen(props: Props) {
     },
   });
 
-  // const im = useChatContext();
-  // const updateData = React.useCallback(async () => {
-  //   im.getAllContacts({
-  //     onResult: (result) => {
-  //       if (result.isOk && result.value) {
-  //         const users: DataModel[] = [];
-  //         result.value.forEach((conv) => {
-  //           if (conv.userId === ChatConversationType.PeerChat) {
-  //             users.push({ id: conv.userId, type: 'user', name: 'xxx' });
-  //           }
-  //         });
-  //         im.updateRequestData({
-  //           data: new Map([['user', users ?? []]]),
-  //         });
-  //       }
-  //     },
-  //   });
-  // }, [im]);
-
   return (
     <SafeAreaView
       style={{
@@ -60,41 +41,6 @@ export function ContactListScreen(props: Props) {
         }}
         // navigationBarVisible={false}
         // onInitialized={updateData}
-        // onRequestMultiData={async (params: {
-        //   ids: Map<DataModelType, string[]>;
-        //   result: (
-        //     data?: Map<DataModelType, DataModel[]>,
-        //     error?: UIKitError
-        //   ) => void;
-        // }) => {
-        //   const userIds = params.ids.get('user');
-        //   const users = userIds?.map<DataModel>((id) => {
-        //     return {
-        //       id,
-        //       name: id + 'name',
-        //       // avatar: 'https://i.pravatar.cc/300',
-        //       avatar:
-        //         'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-        //       type: 'user' as DataModelType,
-        //     };
-        //   });
-        //   const groupIds = params.ids.get('group');
-        //   const groups = groupIds?.map<DataModel>((id) => {
-        //     return {
-        //       id,
-        //       name: id + 'name',
-        //       avatar:
-        //         'https://cdn0.iconfinder.com/data/icons/user-pictures/100/maturewoman-2-512.png',
-        //       type: 'group' as DataModelType,
-        //     };
-        //   });
-        //   params?.result(
-        //     new Map([
-        //       ['user', users ?? []],
-        //       ['group', groups ?? []],
-        //     ])
-        //   );
-        // }}
         onClickedSearch={() => {
           navigation.navigate('SearchContact', {
             params: { searchType: 'contact-list' },

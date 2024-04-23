@@ -65,20 +65,6 @@ export function CreateGroupScreen(props: Props) {
                       return false;
                     },
                   });
-                  // im.updateRequestData({
-                  //   data: new Map([
-                  //     [
-                  //       'group',
-                  //       [
-                  //         {
-                  //           id: groupId,
-                  //           avatar: res.value.avatarUrl,
-                  // type: 'group',
-                  //         } as DataModel,
-                  //       ],
-                  //     ],
-                  //   ]),
-                  // });
                 }
               })
               .catch((e) => {

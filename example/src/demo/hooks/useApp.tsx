@@ -19,7 +19,6 @@ import {
   ChatServiceListener,
   createDefaultStringSet,
   DataModel,
-  DataModelType,
   DataProfileProvider,
   DisconnectReasonType,
   generateNeutralColor,
@@ -130,91 +129,6 @@ export function useApp() {
           : undefined,
     } as ChatOptionsType;
   }, [autoLogin]);
-
-  const onRequestMultiData = React.useCallback(
-    (params: {
-      ids: Map<DataModelType, string[]>;
-      result: (
-        data?: Map<DataModelType, DataModel[]>,
-        error?: UIKitError
-      ) => void;
-    }) => {
-      const userIds = params.ids.get('user') ?? [];
-      const noExistedIds = [] as string[];
-      userIds.forEach((id) => {
-        const isExisted = users.current.get(id);
-        if (
-          isExisted &&
-          isExisted.avatarURL &&
-          isExisted.avatarURL.length > 0 &&
-          isExisted.userName &&
-          isExisted.userName.length > 0
-        )
-          return;
-        noExistedIds.push(id);
-      });
-      if (noExistedIds.length === 0) {
-        const finalUsers = userIds
-          .map<DataModel | undefined>((id) => {
-            const ret = users.current.get(id);
-            if (ret) {
-              return {
-                id: ret.userId,
-                name: ret.userName,
-                avatar: ret.avatarURL,
-                type: 'user',
-              } as DataModel;
-            }
-            return undefined;
-          })
-          .filter((item) => item !== undefined) as DataModel[];
-        params?.result(
-          new Map([
-            ['user', finalUsers ?? []],
-            ['group', []],
-          ])
-        );
-      } else {
-        if (userIds.length === 0) {
-          params?.result();
-          return;
-        }
-        im.getUsersInfo({
-          userIds: userIds,
-          onResult: (res) => {
-            if (res.isOk && res.value) {
-              const u = res.value;
-              updateDataFromServer(u);
-              const finalUsers = userIds
-                .map<DataModel | undefined>((id) => {
-                  const ret = users.current.get(id);
-                  if (ret) {
-                    return {
-                      id: ret.userId,
-                      name: ret.userName,
-                      avatar: ret.avatarURL,
-                      type: 'user',
-                    } as DataModel;
-                  }
-                  return undefined;
-                })
-                .filter((item) => item !== undefined) as DataModel[];
-              params?.result(
-                new Map([
-                  ['user', finalUsers ?? []],
-                  ['group', []],
-                ])
-              );
-              updateDataToStorage();
-            } else {
-              params?.result(undefined, res.error);
-            }
-          },
-        });
-      }
-    },
-    [im, users, updateDataFromServer, updateDataToStorage]
-  );
 
   const onUsersProvider = React.useCallback(
     (params: {
@@ -865,7 +779,6 @@ export function useApp() {
   }, []);
 
   return {
-    onRequestMultiData,
     im,
     permissionsRef,
     initialRouteName,

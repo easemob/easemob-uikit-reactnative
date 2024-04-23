@@ -243,33 +243,7 @@ function HomeTabConversationListScreen(
   const {} = props;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
-
-  // const im = useChatContext();
   const { emit } = useDispatchContext();
-  // const updatedRef = React.useRef<boolean>(false);
-  // const updateData = React.useCallback(() => {
-  //   if (updatedRef.current) {
-  //     return;
-  //   }
-  //   updatedRef.current = true;
-  //   im.getJoinedGroups({
-  //     onResult: (r) => {
-  //       if (r.value) {
-  //         const groups: DataModel[] = [];
-  //         r.value.forEach((conv) => {
-  //           groups.push({
-  //             id: conv.groupId,
-  //             type: 'group',
-  //             name: conv.groupName,
-  //           });
-  //         });
-  //         im.updateRequestData({
-  //           data: new Map([['group', groups ?? []]]),
-  //         });
-  //       }
-  //     },
-  //   });
-  // }, [im]);
 
   const onChangeUnreadCount = React.useCallback(
     (count: number) => {
@@ -279,24 +253,6 @@ function HomeTabConversationListScreen(
     },
     [emit]
   );
-
-  // React.useEffect(() => {
-  //   const listener: EventServiceListener = {
-  //     onFinished: (params) => {
-  //       if (params.event === 'getAllConversations') {
-  //         timeoutTask(500, updateData);
-  //       }
-  //     },
-  //   };
-  //   im.addListener(listener);
-  //   return () => {
-  //     im.removeListener(listener);
-  //   };
-  // }, [im, updateData]);
-
-  // React.useEffect(() => {
-  //   timeoutTask(3000, updateData);
-  // }, [im, updateData]);
 
   return (
     <ConversationList
@@ -308,41 +264,6 @@ function HomeTabConversationListScreen(
       onChangeUnreadCount={onChangeUnreadCount}
       filterEmptyConversation={true}
       // onInitialized={updateData}
-      // onRequestMultiData={(params: {
-      //   ids: Map<DataModelType, string[]>;
-      //   result: (
-      //     data?: Map<DataModelType, DataModel[]>,
-      //     error?: UIKitError
-      //   ) => void;
-      // }) => {
-      //   const userIds = params.ids.get('user');
-      //   const users = userIds?.map<DataModel>((id) => {
-      //     return {
-      //       id,
-      //       name: id + 'name',
-      //       // avatar: 'https://i.pravatar.cc/300',
-      //       avatar:
-      //         'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-      //       type: 'user' as DataModelType,
-      //     };
-      //   });
-      //   const groupIds = params.ids.get('group');
-      //   const groups = groupIds?.map<DataModel>((id) => {
-      //     return {
-      //       id,
-      //       name: id + 'name',
-      //       avatar:
-      //         'https://cdn0.iconfinder.com/data/icons/user-pictures/100/maturewoman-2-512.png',
-      //       type: 'group' as DataModelType,
-      //     };
-      //   });
-      //   params?.result(
-      //     new Map([
-      //       ['user', users ?? []],
-      //       ['group', groups ?? []],
-      //     ])
-      //   );
-      // }}
       onClickedSearch={() => {
         navigation.navigate('SearchConversation', {});
       }}
@@ -396,41 +317,6 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
       }}
       onChangeRequestCount={onChangeRequestCount}
       // navigationBarVisible={false}
-      // onRequestMultiData={(params: {
-      //   ids: Map<DataModelType, string[]>;
-      //   result: (
-      //     data?: Map<DataModelType, DataModel[]>,
-      //     error?: UIKitError
-      //   ) => void;
-      // }) => {
-      //   const userIds = params.ids.get('user');
-      //   const users = userIds?.map<DataModel>((id) => {
-      //     return {
-      //       id,
-      //       name: id + 'name',
-      //       // avatar: 'https://i.pravatar.cc/300',
-      //       avatar:
-      //         'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-      //       type: 'user' as DataModelType,
-      //     };
-      //   });
-      //   const groupIds = params.ids.get('group');
-      //   const groups = groupIds?.map<DataModel>((id) => {
-      //     return {
-      //       id,
-      //       name: id + 'name',
-      //       avatar:
-      //         'https://cdn0.iconfinder.com/data/icons/user-pictures/100/maturewoman-2-512.png',
-      //       type: 'group' as DataModelType,
-      //     };
-      //   });
-      //   params?.result(
-      //     new Map([
-      //       ['user', users ?? []],
-      //       ['group', groups ?? []],
-      //     ])
-      //   );
-      // }}
       onClickedSearch={() => {
         navigation.navigate('SearchContact', {
           params: { searchType: 'contact-list' },

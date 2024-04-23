@@ -258,54 +258,7 @@ function HomeTabConversationListScreen(
   const {} = props;
   const navi = useNativeStackRoute();
   const convRef = React.useRef<ConversationListRef>({} as any);
-  // const im = useChatContext();
   const { emit } = useDispatchContext();
-  // const updatedRef = React.useRef<boolean>(false);
-  // const updateData = React.useCallback(() => {
-  //   if (updatedRef.current) {
-  //     return;
-  //   }
-  //   updatedRef.current = true;
-  //   im.getJoinedGroups({
-  //     onResult: (r) => {
-  //       if (r.value) {
-  //         const groups: DataModel[] = [];
-  //         r.value.forEach((conv) => {
-  //           const avatar =
-  //             conv.options?.ext && conv.options?.ext.includes('http')
-  //               ? conv.options.ext
-  //               : undefined;
-  //           groups.push({
-  //             id: conv.groupId,
-  //             type: 'group',
-  //             name: conv.groupName,
-  //             avatar: avatar,
-  //           });
-  //         });
-  //         im.updateDataList({
-  //           dataList: DataProfileProvider.toMap(groups),
-  //           isUpdateNotExisted: true,
-  //           dispatchHandler: (data) => {
-  //             const items = [];
-  //             for (const d of data) {
-  //               const item = {
-  //                 groupId: d[0],
-  //                 groupName: d[1].name,
-  //                 groupAvatar: d[1].avatar,
-  //               } as GroupModel;
-  //               items.push(item);
-  //             }
-  //             im.sendUIEvent(UIListenerType.Group, 'onUpdatedListEvent', items);
-  //             return false;
-  //           },
-  //         });
-  //         // im.updateRequestData({
-  //         //   data: new Map([['group', groups ?? []]]),
-  //         // });
-  //       }
-  //     },
-  //   });
-  // }, [im]);
 
   const onChangeUnreadCount = React.useCallback(
     (count: number) => {
@@ -315,20 +268,6 @@ function HomeTabConversationListScreen(
     },
     [emit]
   );
-
-  // React.useEffect(() => {
-  //   const listener: EventServiceListener = {
-  //     onFinished: (params) => {
-  //       if (params.event === 'getAllConversations') {
-  //         timeoutTask(500, updateData);
-  //       }
-  //     },
-  //   };
-  //   im.addListener(listener);
-  //   return () => {
-  //     im.removeListener(listener);
-  //   };
-  // }, [im, updateData]);
 
   React.useEffect(() => {
     const sub = DeviceEventEmitter.addListener(
