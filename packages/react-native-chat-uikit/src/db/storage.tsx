@@ -23,6 +23,24 @@ export class AsyncStorageBasic {
       return { isOk: false, error };
     }
   }
+  async setDataWithPrefix(params: {
+    key: string;
+    value: string;
+  }): Promise<{ isOk: boolean; error?: any }> {
+    return this.setData({
+      key: `${this.prefix}/${params.key}`,
+      value: params.value,
+    });
+  }
+  async setDataWithUser(params: {
+    key: string;
+    value: string;
+  }): Promise<{ isOk: boolean; error?: any }> {
+    return this.setData({
+      key: `${this.prefix}/${this.useId}/${params.key}`,
+      value: params.value,
+    });
+  }
   async getData(params: {
     key: string;
   }): Promise<{ value?: string; error?: any }> {
@@ -32,6 +50,20 @@ export class AsyncStorageBasic {
     } catch (error) {
       return { error };
     }
+  }
+  async getDataWithPrefix(params: {
+    key: string;
+  }): Promise<{ value?: string; error?: any }> {
+    return this.getData({
+      key: `${this.prefix}/${params.key}`,
+    });
+  }
+  async getDataWithUser(params: {
+    key: string;
+  }): Promise<{ value?: string; error?: any }> {
+    return this.getData({
+      key: `${this.prefix}/${this.useId}/${params.key}`,
+    });
   }
 }
 

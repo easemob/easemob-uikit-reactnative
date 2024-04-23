@@ -16,11 +16,13 @@ import {
   useChatListener,
 } from '../../chat';
 import type { RequestListListener } from '../../chat/requestList.types';
+import { uilog } from '../../const';
+import { AsyncStorageBasic } from '../../db';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import type { SectionListRef } from '../../ui/SectionList';
 import { Text } from '../../ui/Text';
-import { getPinyin } from '../../utils';
+import { getPinyin, SingletonObjects } from '../../utils';
 import { Badges } from '../Badges';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks/useCloseMenu';
@@ -90,6 +92,7 @@ export function useContactList(props: ContactListProps) {
     React.useState<number>(0);
   const choiceType = React.useRef<ChoiceType>('multiple').current;
   const [requestCount, setRequestCount] = React.useState(0);
+  const rememberCountRef = React.useRef<number>(0);
   const [groupCount] = React.useState(0);
   const [avatarUrl, setAvatarUrl] = React.useState<string>();
   const { tr } = useI18nContext();
@@ -108,6 +111,11 @@ export function useContactList(props: ContactListProps) {
     menuRef,
     alertRef,
   });
+  const dbRef = React.useRef(
+    SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${im.client.options?.appKey}`,
+    })
+  );
 
   const updateState = React.useCallback(
     (state: ListStateType) => {
@@ -440,6 +448,26 @@ export function useContactList(props: ContactListProps) {
     [sectionListRef]
   );
 
+  const onRememberRequestCount = React.useCallback(() => {
+    dbRef.current.setCurrentId(im.userId ?? 'unknown');
+    rememberCountRef.current = requestCount;
+    dbRef.current
+      .setDataWithUser({
+        key: 'profile/contact_request_count',
+        value: `${rememberCountRef.current}`,
+      })
+      .catch((error) => {
+        uilog.warn('dev:onRememberRequestCount:error:', error);
+      });
+  }, [im.userId, requestCount]);
+
+  const _onClickedNewRequest = React.useCallback(() => {
+    onRememberRequestCount();
+    setRequestCount(0);
+    onChangeRequestCount?.(0);
+    onClickedNewRequest?.();
+  }, [onChangeRequestCount, onClickedNewRequest, onRememberRequestCount]);
+
   const init = React.useCallback(
     async (params: {
       isClearState?: boolean;
@@ -639,7 +667,7 @@ export function useContactList(props: ContactListProps) {
           name={tr('_uikit_contact_new_request')}
           count={<Badges count={requestCount} />}
           hasArrow={true}
-          onClicked={onClickedNewRequest}
+          onClicked={_onClickedNewRequest}
         />,
         <ContactItem
           key={'_uikit_contact_group_list'}
@@ -659,9 +687,9 @@ export function useContactList(props: ContactListProps) {
       return newContactItems;
     },
     [
+      _onClickedNewRequest,
       contactType,
       onClickedGroupList,
-      onClickedNewRequest,
       propsOnInitListItemActions,
       tr,
     ]
@@ -902,8 +930,13 @@ export function useContactList(props: ContactListProps) {
   React.useEffect(() => {
     const listener: RequestListListener = {
       onNewRequestListChanged: (list: NewRequestModel[]) => {
-        setRequestCount(list.length);
-        onChangeRequestCount?.(list.length);
+        const count = list.length;
+        const c =
+          count - rememberCountRef.current > 0
+            ? count - rememberCountRef.current
+            : 0;
+        setRequestCount(c);
+        onChangeRequestCount?.(c);
       },
     };
     im.requestList.addListener('ContactList', listener);
@@ -914,12 +947,27 @@ export function useContactList(props: ContactListProps) {
 
   React.useEffect(() => {
     im.requestList.getRequestList({
-      onResult: (result) => {
-        setRequestCount(result.value?.length ?? 0);
-        onChangeRequestCount?.(result.value?.length ?? 0);
+      onResult: async (result) => {
+        dbRef.current.setCurrentId(im.userId ?? 'unknown');
+        const ret = await dbRef.current.getDataWithUser({
+          key: 'profile/contact_request_count',
+        });
+        if (ret.value) {
+          rememberCountRef.current = parseInt(ret.value, 10);
+          const count = result.value?.length ?? 0;
+          const c =
+            count - rememberCountRef.current > 0
+              ? count - rememberCountRef.current
+              : 0;
+          setRequestCount(c);
+          onChangeRequestCount?.(c);
+        } else {
+          setRequestCount(result.value?.length ?? 0);
+          onChangeRequestCount?.(result.value?.length ?? 0);
+        }
       },
     });
-  }, [im.requestList, onChangeRequestCount]);
+  }, [im.requestList, im.userId, onChangeRequestCount]);
 
   return {
     ...sectionListProps,

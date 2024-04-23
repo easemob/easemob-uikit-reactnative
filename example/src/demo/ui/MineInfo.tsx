@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { Dimensions, Pressable, View } from 'react-native';
 import {
   Alert,
   BottomSheetNameMenu,
@@ -89,7 +89,13 @@ export function MineInfo(props: MineInfoProps) {
         containerStyle,
       ]}
     >
-      <View style={{ alignItems: 'center', paddingTop: 64 }}>
+      <View
+        style={{
+          alignItems: 'center',
+          paddingTop: 64,
+          width: Dimensions.get('window').width,
+        }}
+      >
         <StatusAvatar
           size={100}
           url={userAvatar}

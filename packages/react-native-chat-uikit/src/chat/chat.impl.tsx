@@ -1188,8 +1188,6 @@ export class ChatServiceImpl
       event: 'getContactSync',
     });
     if (ret) {
-      // this._dataFileProvider.updateDataList()
-      // await this._requestData2([params.userId]);
       const contact = this.toUIContact(ret);
       return {
         isOk: true,

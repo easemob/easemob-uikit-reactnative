@@ -45,6 +45,7 @@ export class RestApi {
     this._protocol = protocol;
   }
   public static setServer(server: string) {
+    console.log('dev:setServer:', server);
     this._server = server;
   }
   public static setBasicUrl(basicUrl: string) {

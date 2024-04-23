@@ -12,25 +12,13 @@ import {
 
 import { appKey as gAppKey, fcmSenderId } from '../common/const';
 import { requestFcmToken } from '../common/fcm';
-import { RequestLoginResult, RequestResult, RestApi } from '../common/rest.api';
+import { RequestLoginResult, RestApi } from '../common/rest.api';
 
 export function useLogin() {
   const { getSimpleToastRef } = useSimpleToastContext();
   const { getToastViewRef } = useToastViewContext();
   const { getAlertRef } = useAlertContext();
   const im = useChatContext();
-  const onLogin = React.useCallback(
-    (
-      id: string,
-      pass: string,
-      onResult: (result: RequestResult<RequestLoginResult, any>) => void
-    ) => {
-      RestApi.requestLogin({ phone: id, code: pass }).then((res) => {
-        onResult(res);
-      });
-    },
-    []
-  );
 
   const requestUpdatePushToken = React.useCallback(() => {
     requestFcmToken()
@@ -119,11 +107,11 @@ export function useLogin() {
             if (s.isOk) {
               requestUpdatePushToken();
               onResult?.({ isOk: true });
-              return;
+              break;
             }
           }
+          onResult?.({ isOk: false });
         } while (false);
-        onResult?.({ isOk: false });
       } catch (error) {
         console.warn('dev:loginAction:error:', error);
         onResult?.({ isOk: false });
@@ -156,8 +144,9 @@ export function useLogin() {
           if (ret.isOk) {
             requestUpdatePushToken();
             onResult?.({ isOk: true });
-            return;
+            break;
           }
+          onResult?.({ isOk: false });
         } while (false);
       } catch (error) {
         console.warn('dev:autoLoginAction:error:', error);
@@ -168,7 +157,6 @@ export function useLogin() {
   );
 
   return {
-    onLogin,
     getToastRef: getSimpleToastRef,
     getToastViewRef,
     getAlertRef,

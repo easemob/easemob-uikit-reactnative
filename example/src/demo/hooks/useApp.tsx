@@ -592,26 +592,6 @@ export function useApp() {
     });
   }, [getPermission, updater]);
 
-  // for test
-  // React.useEffect(() => {
-  //   im.getDataFileProvider().registerUserProfile((list) => {
-  //     console.log('test:zuoyu:registerUserProfile:', list);
-  //     list.forEach((v, k) => {
-  //       console.log('test:zuoyu:registerUserProfile:v', k, v);
-  //       v.name = v.id + 'name';
-  //     });
-  //     return list;
-  //   });
-  //   im.getDataFileProvider().registerGroupProfile((list) => {
-  //     console.log('test:zuoyu:registerGroupProfile:', list);
-  //     list.forEach((v, k) => {
-  //       console.log('test:zuoyu:registerGroupProfile:v', k, v);
-  //       v.name = v.id + 'group';
-  //     });
-  //     return list;
-  //   });
-  // }, [im]);
-
   React.useEffect(() => {
     const ret = DeviceEventEmitter.addListener('_demo_emit_app_theme', (e) => {
       console.log('dev:emit:app:theme:', e);

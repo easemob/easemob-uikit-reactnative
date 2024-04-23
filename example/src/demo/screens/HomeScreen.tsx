@@ -389,14 +389,18 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
     const autoLogin = im.client.options?.autoLogin ?? false;
     if (autoLogin === true) {
       autoLoginAction({
-        onResult: () => {
-          setUserId(im.userId);
+        onResult: (res) => {
+          if (res.isOk) {
+            setUserId(im.userId);
+          } else {
+            navi.replace({ to: 'LoginV2' });
+          }
         },
       });
     } else {
       setUserId(im.userId);
     }
-  }, [autoLoginAction, im]);
+  }, [autoLoginAction, im.client.options?.autoLogin, im.userId, navi]);
 
   React.useEffect(() => {
     s().catch();
@@ -422,8 +426,11 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
                 isPreferred: true,
                 onPress: () => {
                   getAlertRef()?.close(() => {
-                    im.logout({});
-                    navi.replace({ to: 'LoginV2' });
+                    im.logout({
+                      result: () => {
+                        navi.replace({ to: 'LoginV2' });
+                      },
+                    });
                   });
                 },
               },
