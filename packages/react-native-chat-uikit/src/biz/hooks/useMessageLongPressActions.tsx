@@ -91,7 +91,14 @@ export function useMessageLongPressActions(
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
   const im = useChatContext();
-  const { enableTranslate, enableReaction, enableThread } = useConfigContext();
+  const {
+    enableTranslate,
+    enableReaction,
+    enableThread,
+    enableMessageQuote,
+    enableMessageForward,
+    enableMessageMultiSelect,
+  } = useConfigContext();
 
   const isCardMessage = (msg: ChatMessage) => {
     if (msg.body.type === ChatMessageType.CUSTOM) {
@@ -155,7 +162,7 @@ export function useMessageLongPressActions(
       ) {
         if (
           msgModel.msg.status === ChatMessageStatus.SUCCESS &&
-          enableReaction === true
+          enableMessageQuote === true
         ) {
           initItems.push({
             name: tr('_uikit_chat_list_long_press_menu_replay'),
@@ -170,7 +177,10 @@ export function useMessageLongPressActions(
         }
       }
 
-      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+      if (
+        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
+        enableMessageForward === true
+      ) {
         initItems.push({
           name: tr('_uikit_chat_list_long_press_menu_forward_message'),
           isHigh: false,
@@ -183,16 +193,18 @@ export function useMessageLongPressActions(
         });
       }
 
-      initItems.push({
-        name: tr('_uikit_chat_list_long_press_menu_multi_select'),
-        isHigh: false,
-        icon: 'check_n_3lines',
-        onClicked: () => {
-          closeMenu(() => {
-            onClickedMultiSelected?.();
-          });
-        },
-      });
+      if (enableMessageMultiSelect === true) {
+        initItems.push({
+          name: tr('_uikit_chat_list_long_press_menu_multi_select'),
+          isHigh: false,
+          icon: 'check_n_3lines',
+          onClicked: () => {
+            closeMenu(() => {
+              onClickedMultiSelected?.();
+            });
+          },
+        });
+      }
 
       if (
         msgModel.msg.status === ChatMessageStatus.SUCCESS &&

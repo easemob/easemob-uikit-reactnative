@@ -146,4 +146,19 @@ export type Config = {
    * Default is `true`.
    */
   enableAVMeeting?: boolean;
+
+  /**
+   * Whether to enable the message quote function. If you do not enable the message quote-related feature, check whether the settings are enabled in the console.
+   */
+  enableMessageQuote?: boolean;
+
+  /**
+   * Whether to enable the message forward function.
+   */
+  enableMessageForward?: boolean;
+
+  /**
+   * Whether to enable the message multi-select function.
+   */
+  enableMessageMultiSelect?: boolean;
 };

@@ -281,6 +281,9 @@ export function App() {
         enableThread={enableThreadRef.current}
         enableTranslate={enableTranslateRef.current}
         enableAVMeeting={enableAVMeetingRef.current}
+        enableMessageForward={true}
+        enableMessageMultiSelect={true}
+        enableMessageQuote={true}
         fontFamily={fontFamily}
         // avatar={{
         //   personAvatar: defaultAvatars[2],

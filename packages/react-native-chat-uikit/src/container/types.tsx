@@ -193,5 +193,18 @@ export type ContainerProps = React.PropsWithChildren<{
    */
   enableAVMeeting?: boolean;
 
-  enableForward?: boolean;
+  /**
+   * Whether to enable the message quote function.
+   */
+  enableMessageQuote?: boolean;
+
+  /**
+   * Whether to enable the message forward function.
+   */
+  enableMessageForward?: boolean;
+
+  /**
+   * Whether to enable the message multi-select function.
+   */
+  enableMessageMultiSelect?: boolean;
 }>;
