@@ -379,6 +379,7 @@ export type HomeTabMineScreenProps = {};
 function HomeTabMineScreen(props: HomeTabMineScreenProps) {
   const {} = props;
   const navi = useNativeStackRoute();
+  const { replace } = navi;
   const im = useChatContext();
   const { tr } = useI18nContext();
   const [userId, setUserId] = React.useState<string>();
@@ -393,14 +394,14 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
           if (res.isOk) {
             setUserId(im.userId);
           } else {
-            navi.replace({ to: 'LoginV2' });
+            replace({ to: 'LoginV2' });
           }
         },
       });
     } else {
       setUserId(im.userId);
     }
-  }, [autoLoginAction, im.client.options?.autoLogin, im.userId, navi]);
+  }, [autoLoginAction, im.client.options?.autoLogin, im.userId, replace]);
 
   React.useEffect(() => {
     s().catch();
