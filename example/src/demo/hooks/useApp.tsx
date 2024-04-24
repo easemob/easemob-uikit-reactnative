@@ -38,6 +38,12 @@ import {
   usePresetPalette,
 } from 'react-native-chat-uikit';
 
+// import { getDeviceName, getSystemName, getSystemVersion, getModel, getVersion } from 'react-native-device-info';
+// getDeviceName().then((res) => console.log('test:zuoyu:res:', res));
+// console.log('test:zuoyu:res:2', getSystemName());
+// console.log('test:zuoyu:res:3', getSystemVersion());
+// console.log('test:zuoyu:res:4', getModel());
+// console.log('test:zuoyu:res:5', getVersion());
 import { createStringSetCn, createStringSetEn } from '../common';
 import { boloo_da_ttf, twemoji_ttf } from '../common/assets';
 import {
@@ -96,7 +102,11 @@ export function useApp() {
   });
   // !!! https://github.com/facebook/react-native/issues/29259
   // !!! MIUI 12 has a bug, the font will be reset to the default font.
-  const fontFamily = '';
+  const fontFamily = Platform.select({
+    ios: undefined,
+    android: '',
+    default: undefined,
+  });
   const rootRef = useNavigationContainerRef<RootParamsList>();
   const imServerRef = React.useRef(imServer);
   const imPortRef = React.useRef(imPort);

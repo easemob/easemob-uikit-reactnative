@@ -22,13 +22,6 @@ export function Text(props: TextProps) {
   const { textType, paletteType, children, style, ...others } = props;
   const presetTextStyle = useGetTextStyle({ textType, paletteType });
   const { fontFamily } = useConfigContext();
-  console.log(
-    'test:zuoyu:fontFamily',
-    fontFamily?.length,
-    fontFamily,
-    presetTextStyle,
-    style
-  );
 
   return (
     <RNText
