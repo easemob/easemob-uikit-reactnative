@@ -525,6 +525,11 @@ export class ChatServiceImpl
   }
 
   async toUIConversation(conv: ChatConversation): Promise<ConversationModel> {
+    const name =
+      conv.convType === ChatConversationType.PeerChat
+        ? this._getRemarkFromCache(conv.convId) ??
+          this._getNameFromCache(conv.convId)
+        : this._getNameFromCache(conv.convId);
     return {
       convId: conv.convId,
       convType: conv.convType,
@@ -541,9 +546,7 @@ export class ChatServiceImpl
         conv.convType
       ),
       doNotDisturb: this._getDoNotDisturbFromCache(conv.convId),
-      convName:
-        this._getRemarkFromCache(conv.convId) ??
-        this._getNameFromCache(conv.convId),
+      convName: name,
       convAvatar: this._getAvatarFromCache(conv.convId),
     } as ConversationModel;
   }
@@ -608,8 +611,9 @@ export class ChatServiceImpl
     });
     await this._dataFileProvider.requestDataList({
       dataList: tmp,
-      disableDispatch: false,
+      disableDispatch: true,
       requestHasData: false,
+      isUpdateNotExisted: true,
     });
   }
 
@@ -618,12 +622,14 @@ export class ChatServiceImpl
     type: DataModelType;
     disableDispatch?: boolean;
     requestHasData: boolean;
+    isUpdateNotExisted?: boolean;
   }): Promise<void> {
     const {
       list,
       type = 'user',
       requestHasData = false,
       disableDispatch = true,
+      isUpdateNotExisted = false,
     } = params;
     const tmp = new Map<string, DataModelType>();
     list.forEach((v) => {
@@ -633,6 +639,7 @@ export class ChatServiceImpl
       dataList: tmp,
       disableDispatch: disableDispatch,
       requestHasData: requestHasData,
+      isUpdateNotExisted: isUpdateNotExisted,
     });
   }
 
@@ -1109,6 +1116,7 @@ export class ChatServiceImpl
             list: Array.from(tmp.keys()),
             type: 'user',
             requestHasData: true,
+            isUpdateNotExisted: true,
           });
           const tmp2 = this._dataFileProvider.getUserList(
             Array.from(tmp.keys())
@@ -1157,6 +1165,7 @@ export class ChatServiceImpl
           list: Array.from(tmp.keys()),
           type: 'user',
           requestHasData: true,
+          isUpdateNotExisted: true,
         });
         const tmp2 = this._dataFileProvider.getUserList(Array.from(tmp.keys()));
         tmp2.forEach((v) => {
@@ -1389,6 +1398,7 @@ export class ChatServiceImpl
           list: value.map((v) => v.groupId),
           type: 'group',
           requestHasData: true,
+          isUpdateNotExisted: true,
         });
         value.forEach(async (v) => {
           const group = this.toUIGroup(v);
@@ -1473,6 +1483,7 @@ export class ChatServiceImpl
           list: Array.from(memberList.keys()),
           type: 'user',
           requestHasData: true,
+          isUpdateNotExisted: true,
         });
         memberList.forEach((v) => {
           v.memberAvatar = this._getAvatarFromCache(v.memberId);
@@ -1902,6 +1913,7 @@ export class ChatServiceImpl
             list: params.members.map((item) => item.memberId),
             type: 'user',
             requestHasData: true,
+            isUpdateNotExisted: true,
           });
 
           for (const member of params.members) {
