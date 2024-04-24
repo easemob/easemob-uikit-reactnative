@@ -94,6 +94,9 @@ export function useApp() {
     [twemoji_ttf_name]: twemoji_ttf,
     [boloo_da_ttf_name]: boloo_da_ttf,
   });
+  // !!! https://github.com/facebook/react-native/issues/29259
+  // !!! MIUI 12 has a bug, the font will be reset to the default font.
+  const fontFamily = '';
   const rootRef = useNavigationContainerRef<RootParamsList>();
   const imServerRef = React.useRef(imServer);
   const imPortRef = React.useRef(imPort);
@@ -801,5 +804,6 @@ export function useApp() {
     onUnhandledAction,
     onGroupsHandler,
     onUsersHandler,
+    fontFamily,
   };
 }

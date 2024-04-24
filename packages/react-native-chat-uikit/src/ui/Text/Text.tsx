@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text as RNText, TextProps as RNTextProps } from 'react-native';
 
+import { useConfigContext } from '../../config';
 import {
   FontsPaletteType,
   FontStyles,
@@ -20,9 +21,26 @@ export type TextProps = RNTextProps & {
 export function Text(props: TextProps) {
   const { textType, paletteType, children, style, ...others } = props;
   const presetTextStyle = useGetTextStyle({ textType, paletteType });
+  const { fontFamily } = useConfigContext();
+  console.log(
+    'test:zuoyu:fontFamily',
+    fontFamily?.length,
+    fontFamily,
+    presetTextStyle,
+    style
+  );
 
   return (
-    <RNText style={[presetTextStyle, style]} {...others}>
+    <RNText
+      style={[
+        presetTextStyle,
+        {
+          fontFamily: fontFamily,
+        },
+        style,
+      ]}
+      {...others}
+    >
       {children}
     </RNText>
   );

@@ -36,6 +36,10 @@ export type Config = {
 
   /**
    * The font family name.
+   *
+   * Default value is `undefined`.
+   *
+   * **Note** https://github.com/facebook/react-native/issues/29259
    */
   fontFamily?: string;
   /**

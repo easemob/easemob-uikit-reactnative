@@ -111,6 +111,7 @@ export function App() {
     onUnhandledAction,
     onGroupsHandler,
     onUsersHandler,
+    fontFamily,
   } = useApp();
 
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
@@ -280,6 +281,7 @@ export function App() {
         enableThread={enableThreadRef.current}
         enableTranslate={enableTranslateRef.current}
         enableAVMeeting={enableAVMeetingRef.current}
+        fontFamily={fontFamily}
         // avatar={{
         //   personAvatar: defaultAvatars[2],
         //   groupAvatar: defaultAvatars[0],
@@ -628,7 +630,7 @@ export function App() {
           <AVView />
         </CallKitContainer>
 
-        <TestListener />
+        {/* <TestListener /> */}
         <ToastView />
       </UIKitContainer>
     </React.StrictMode>

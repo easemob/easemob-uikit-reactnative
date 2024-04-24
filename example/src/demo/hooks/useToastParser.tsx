@@ -12,7 +12,7 @@ export function useOnFinishedParser() {
       default:
         break;
     }
-    return eventType;
+    return undefined;
   };
   return {
     parseFinished,
