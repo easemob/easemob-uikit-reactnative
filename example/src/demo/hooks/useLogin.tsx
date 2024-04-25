@@ -73,6 +73,55 @@ export function useLogin() {
     return undefined;
   }, []);
 
+  // const loginAction2 = React.useCallback(
+  //   async (params: {
+  //     id: string;
+  //     pass: string;
+  //     onResult: (params: { isOk: boolean }) => void;
+  //   }) => {
+  //     console.log('loginAction', params);
+  //     const { id, pass, onResult } = params;
+  //     try {
+  //       do {
+  //         const result = {
+  //           chatUserName: id,
+  //           phoneNumber: id,
+  //           token: pass,
+  //         } as RequestLoginResult;
+  //         saveSelfInfo(result);
+  //         const p = new Promise<{ isOk: boolean; error?: UIKitError }>(
+  //           (resolve, reject) => {
+  //             im.login({
+  //               userId: result.chatUserName,
+  //               userToken: result.token,
+  //               usePassword: false,
+  //               userAvatarURL: result.avatarUrl,
+  //               result: (r) => {
+  //                 if (r.isOk) {
+  //                   resolve(r);
+  //                 } else {
+  //                   reject(r);
+  //                 }
+  //               },
+  //             });
+  //           }
+  //         );
+  //         const s = await p;
+  //         if (s.isOk) {
+  //           requestUpdatePushToken();
+  //           onResult?.({ isOk: true });
+  //           break;
+  //         }
+  //         onResult?.({ isOk: false });
+  //       } while (false);
+  //     } catch (error) {
+  //       console.warn('dev:loginAction:error:', error);
+  //       onResult?.({ isOk: false });
+  //     }
+  //   },
+  //   [im, requestUpdatePushToken, saveSelfInfo]
+  // );
+
   const loginAction = React.useCallback(
     async (params: {
       id: string;
