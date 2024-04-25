@@ -1,5 +1,6 @@
 import type { StatusType } from '../biz/types';
 import type { LanguageCode } from '../i18n';
+import { ReleaseArea } from '../types';
 
 export type ConversationDetailType = {
   bubble?: {
@@ -15,6 +16,10 @@ export type Config = {
    * Whether to enable the development mode.
    */
   isDevMode: boolean;
+  /**
+   * The release area.
+   */
+  releaseArea?: ReleaseArea;
   /**
    * Whether to enable the debug mode.
    *

@@ -19,6 +19,10 @@ import type {
   PropsWithSearch,
   PropsWithTest,
 } from '../types';
+import {
+  MessageBubbleType as _MessageBubbleType,
+  MessageLayoutType as _MessageLayoutType,
+} from '../types';
 import type {
   MessageBubbleRender,
   MessageContentRender,
@@ -475,13 +479,15 @@ export type SendCustomProps = SendBasicProps & {
 /**
  * Message bubble type.
  */
-export type MessageBubbleType = 'system' | 'time' | 'message' | 'history';
+export type MessageViewType = 'system' | 'time' | 'message' | 'history';
 /**
  * Message layout type.
  *
  * This layout type is only valid for messages of type `mesage`. `time` and `system` messages are displayed in the center.
  */
-export type MessageLayoutType = 'left' | 'right';
+export type MessageLayoutType = _MessageLayoutType;
+
+export type MessageBubbleType = _MessageBubbleType;
 /**
  * Received message state type.
  */
@@ -513,7 +519,7 @@ type BasicModel = {
   /**
    * Model type.
    */
-  modelType: MessageBubbleType;
+  modelType: MessageViewType;
   /**
    * Message sender ID.
    */
@@ -717,7 +723,7 @@ export type MessageListItemRenders = {
    *
    * It is in `MessageView`.
    */
-  MessageThread?: MessageThreadRender;
+  MessageThreadBubble?: MessageThreadRender;
   /**
    * Message content component.
    *

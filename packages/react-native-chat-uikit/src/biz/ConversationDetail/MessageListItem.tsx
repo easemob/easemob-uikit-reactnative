@@ -73,7 +73,7 @@ import type {
   MessageQuoteBubbleProps,
   MessageReactionProps,
   MessageTextProps,
-  MessageThreadProps,
+  MessageThreadBubbleProps,
   MessageVideoProps,
   MessageViewProps,
   MessageVoiceProps,
@@ -925,16 +925,23 @@ export function MessageBubble(props: MessageBubbleProps) {
   } = props;
   const checked = (model as MessageModel)?.checked;
   const _MessageContent = propsMessageContent ?? MessageContent;
-  const { layoutType, msg, isVoicePlaying } = model;
+  const {
+    layoutType,
+    msg,
+    isVoicePlaying,
+    quoteMsg,
+    thread: threadMsg,
+  } = model;
   const { paddingHorizontal, paddingVertical } = React.useMemo(
     () => getMessageBubblePadding(msg),
     [msg]
   );
+  const hasQuote = quoteMsg !== undefined;
+  const hasThread = threadMsg !== undefined;
   const triangleWidth = 5;
   const isSupport = isSupportMessage(msg);
-  const { colors, cornerRadius } = usePaletteContext();
-  const { cornerRadius: corner } = useThemeContext();
-  const { getBorderRadius } = useGetStyleProps();
+  const { colors } = usePaletteContext();
+  const { getMessageBubbleBorderRadius } = useGetStyleProps();
   const { getColor } = useColors({
     left_bg: {
       light: colors.primary[95],
@@ -1018,14 +1025,22 @@ export function MessageBubble(props: MessageBubbleProps) {
             backgroundColor: getColor(
               layoutType === 'left' ? 'left_bg' : 'right_bg'
             ),
-            borderRadius: getBorderRadius({
-              height: 0,
-              crt: corner.bubble[0]!,
-              cr: cornerRadius,
-            }),
+            borderTopEndRadius: 1,
+            // borderRadius: getBorderRadius({
+            //   height: 0,
+            //   crt: corner.bubble[0]!,
+            //   cr: cornerRadius,
+            // }),
             paddingHorizontal: paddingHorizontal,
             paddingVertical: paddingVertical,
           },
+          getMessageBubbleBorderRadius({
+            height: 0,
+            layoutType: layoutType,
+            hasTopNeighbor: hasQuote,
+            hasBottomNeighbor: hasThread,
+            messageBubbleType: 'content',
+          }),
         ]}
         onPress={_onClicked}
         onLongPress={_onLongPress}
@@ -1252,7 +1267,7 @@ export function CheckView(props: CheckViewProps) {
   );
 }
 
-export function MessageThread(props: MessageThreadProps) {
+export function MessageThreadBubble(props: MessageThreadBubbleProps) {
   const { thread, hasAvatar, hasTriangle, layoutType, onClicked, maxWidth } =
     props;
   // const { lastMessage } = thread ?? {};
@@ -1262,9 +1277,8 @@ export function MessageThread(props: MessageThreadProps) {
   //   msgCount: 100,
   //   lastMessage: ChatMessage.createTextMessage('test', 'test', 0),
   // };
-  const { colors, cornerRadius } = usePaletteContext();
-  const { cornerRadius: corner } = useThemeContext();
-  const { getBorderRadius } = useGetStyleProps();
+  const { colors } = usePaletteContext();
+  const { getMessageBubbleBorderRadius } = useGetStyleProps();
   const { fontFamily } = useConfigContext();
   const { tr } = useI18nContext();
   const { getMessageSnapshot } = useMessageSnapshot();
@@ -1308,20 +1322,29 @@ export function MessageThread(props: MessageThreadProps) {
 
   return (
     <Pressable
-      style={{
-        flexDirection: 'column',
-        // alignItems: 'center',
-        marginLeft: layoutType === 'left' ? paddingWidth : undefined,
-        marginRight: layoutType === 'left' ? undefined : paddingWidth,
-        marginTop: 2,
-        backgroundColor: getColor('bg'),
-        width: maxWidth,
-        borderRadius: getBorderRadius({
-          height: 36,
-          crt: corner.bubble[0]!,
-          cr: cornerRadius,
+      style={[
+        {
+          flexDirection: 'column',
+          // alignItems: 'center',
+          marginLeft: layoutType === 'left' ? paddingWidth : undefined,
+          marginRight: layoutType === 'left' ? undefined : paddingWidth,
+          marginTop: 2,
+          backgroundColor: getColor('bg'),
+          width: maxWidth,
+          // borderRadius: getBorderRadius({
+          //   height: 36,
+          //   crt: corner.bubble[0]!,
+          //   cr: cornerRadius,
+          // }),
+        },
+        getMessageBubbleBorderRadius({
+          height: 0,
+          layoutType: layoutType,
+          hasTopNeighbor: true,
+          hasBottomNeighbor: false,
+          messageBubbleType: 'thread',
         }),
-      }}
+      ]}
       onPress={onLongPress}
     >
       <View
@@ -1590,9 +1613,8 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
   }, []);
   // const triangleWidth = 5;
   const { tr } = useI18nContext();
-  const { colors, cornerRadius } = usePaletteContext();
-  const { cornerRadius: corner } = useThemeContext();
-  const { getBorderRadius } = useGetStyleProps();
+  const { colors } = usePaletteContext();
+  const { getMessageBubbleBorderRadius } = useGetStyleProps();
   const { getColor } = useColors({
     left_bg: {
       light: colors.neutral[95],
@@ -2079,14 +2101,21 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
             backgroundColor: getColor(
               layoutType === 'left' ? 'left_bg' : 'right_bg'
             ),
-            borderRadius: getBorderRadius({
-              height: 36,
-              crt: corner.bubble[0]!,
-              cr: cornerRadius,
-            }),
+            // borderRadius: getBorderRadius({
+            //   height: 36,
+            //   crt: corner.bubble[0]!,
+            //   cr: cornerRadius,
+            // }),
             paddingHorizontal: paddingHorizontal,
             paddingVertical: paddingVertical,
           },
+          getMessageBubbleBorderRadius({
+            height: 0,
+            layoutType: layoutType,
+            hasTopNeighbor: false,
+            hasBottomNeighbor: true,
+            messageBubbleType: 'quote',
+          }),
         ]}
         onPress={() => _onClicked(originalMsg, quoteMsg)}
       >
@@ -2108,7 +2137,7 @@ export function MessageView(props: MessageViewProps) {
     onStateClicked,
     MessageQuoteBubble: propsMessageQuoteBubble,
     MessageBubble: propsMessageBubble,
-    MessageThread: propsMessageThread,
+    MessageThreadBubble: propsMessageThreadBubble,
     onReactionClicked,
     onThreadClicked,
     onClickedChecked,
@@ -2118,7 +2147,7 @@ export function MessageView(props: MessageViewProps) {
   const checked = (model as MessageModel)?.checked;
   const _MessageQuoteBubble = propsMessageQuoteBubble ?? MessageQuoteBubble;
   const _MessageBubble = propsMessageBubble ?? MessageBubble;
-  const _MessageThread = propsMessageThread ?? MessageThread;
+  const _MessageThreadBubble = propsMessageThreadBubble ?? MessageThreadBubble;
   const { layoutType, reactions, thread, isHightBackground } = model;
   const { enableThread, enableReaction } = useConfigContext();
   const state = getMessageState(model.msg);
@@ -2285,7 +2314,7 @@ export function MessageView(props: MessageViewProps) {
           ) : null}
         </View>
         {thread && enableThread === true ? (
-          <_MessageThread
+          <_MessageThreadBubble
             layoutType={layoutType}
             hasAvatar={avatarIsVisible}
             hasTriangle={hasTriangle}

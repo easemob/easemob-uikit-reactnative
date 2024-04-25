@@ -17,6 +17,9 @@ import type {
   InitMenuItemsType,
 } from './BottomSheetMenu';
 
+export type MessageLayoutType = 'left' | 'right' | 'middle';
+export type MessageBubbleType = 'content' | 'quote' | 'thread';
+
 export type StatusType =
   | 'online'
   | 'offline'

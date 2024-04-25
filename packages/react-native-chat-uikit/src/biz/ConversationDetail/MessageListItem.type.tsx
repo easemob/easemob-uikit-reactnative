@@ -300,7 +300,7 @@ export type MessageReactionRender = React.FC<MessageReactionProps>;
 /**
  * Message Thread Component properties.
  */
-export type MessageThreadProps = {
+export type MessageThreadBubbleProps = {
   layoutType: MessageLayoutType;
   hasAvatar: boolean;
   hasTriangle: boolean;
@@ -311,4 +311,4 @@ export type MessageThreadProps = {
 /**
  * Message Thread component render type.
  */
-export type MessageThreadRender = React.FC<MessageThreadProps>;
+export type MessageThreadRender = React.FC<MessageThreadBubbleProps>;

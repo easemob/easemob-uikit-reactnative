@@ -65,8 +65,8 @@ export function Container(props: ContainerProps) {
     enableThread = false,
     enableAVMeeting = true,
     enableMessageQuote = true,
-    enableMessageForward = false,
-    enableMessageMultiSelect = false,
+    enableMessageForward = true,
+    enableMessageMultiSelect = true,
     releaseArea,
     onGroupsHandler,
     onUsersHandler,
@@ -153,6 +153,7 @@ export function Container(props: ContainerProps) {
                   enableMessageQuote: enableMessageQuote,
                   enableMessageForward: enableMessageForward,
                   enableMessageMultiSelect: enableMessageMultiSelect,
+                  releaseArea: releaseArea ?? _releaseArea,
                 }}
               >
                 <AbsoluteViewContextProvider>

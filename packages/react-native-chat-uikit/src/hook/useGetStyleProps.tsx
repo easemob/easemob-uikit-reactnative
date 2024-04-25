@@ -6,8 +6,15 @@ import type {
   ViewStyle,
 } from 'react-native';
 
+import { MessageBubbleType, MessageLayoutType } from '../biz/types';
+import { useConfigContext } from '../config';
 import { ErrorCode, UIKitError } from '../error';
-import type { CornerRadiusPalette, CornerRadiusPaletteType } from '../theme';
+import {
+  type CornerRadiusPalette,
+  type CornerRadiusPaletteType,
+  usePaletteContext,
+  useThemeContext,
+} from '../theme';
 
 type SizeType = {
   height?: number | string | undefined;
@@ -33,6 +40,9 @@ type SizeType = {
  * ```
  */
 export function useGetStyleProps() {
+  const { cornerRadius: cornerRadiusValue } = usePaletteContext();
+  const { cornerRadius: cornerRadiusStyle } = useThemeContext();
+  const { releaseArea } = useConfigContext();
   const ret = React.useMemo(() => {
     return {
       getStyleProp: (prop: string, style?: StyleProp<ViewStyle>) => {
@@ -79,33 +89,88 @@ export function useGetStyleProps() {
     };
   }, []);
 
-  const getBorderRadiusFour = React.useCallback(
+  const getMessageBubbleBorderRadius = React.useCallback(
     (params: {
       height: number;
-      crt: {
-        left: CornerRadiusPaletteType;
-        right: CornerRadiusPaletteType;
-        top: CornerRadiusPaletteType;
-        bottom: CornerRadiusPaletteType;
-      };
-      cr: {
-        left: CornerRadiusPalette;
-        right: CornerRadiusPalette;
-        top: CornerRadiusPalette;
-        bottom: CornerRadiusPalette;
-      };
+      layoutType: MessageLayoutType;
+      messageBubbleType: MessageBubbleType;
+      hasTopNeighbor: boolean;
+      hasBottomNeighbor: boolean;
     }) => {
-      const { height, crt, cr } = params;
-      return {
-        left: ret.getBorderRadius({ height, crt: crt.left, cr: cr.left }),
-        right: ret.getBorderRadius({ height, crt: crt.right, cr: cr.right }),
-        top: ret.getBorderRadius({ height, crt: crt.top, cr: cr.top }),
-        bottom: ret.getBorderRadius({ height, crt: crt.bottom, cr: cr.bottom }),
+      const {
+        height,
+        layoutType,
+        hasTopNeighbor,
+        hasBottomNeighbor,
+        messageBubbleType,
+      } = params;
+      const crt: {
+        TopStart: CornerRadiusPaletteType;
+        TopEnd: CornerRadiusPaletteType;
+        BottomStart: CornerRadiusPaletteType;
+        BottomEnd: CornerRadiusPaletteType;
+      } = {
+        TopStart:
+          layoutType === 'left'
+            ? hasTopNeighbor === true
+              ? cornerRadiusStyle.bubble[0]!
+              : cornerRadiusStyle.bubble[1]!
+            : cornerRadiusStyle.bubble[2]!,
+        TopEnd:
+          layoutType === 'left'
+            ? cornerRadiusStyle.bubble[2]!
+            : hasTopNeighbor === true
+            ? cornerRadiusStyle.bubble[0]!
+            : cornerRadiusStyle.bubble[1]!,
+        BottomStart:
+          layoutType === 'left'
+            ? hasBottomNeighbor === false && messageBubbleType !== 'content'
+              ? cornerRadiusStyle.bubble[1]!
+              : cornerRadiusStyle.bubble[0]!
+            : cornerRadiusStyle.bubble[2]!,
+        BottomEnd:
+          layoutType === 'left'
+            ? cornerRadiusStyle.bubble[2]!
+            : hasBottomNeighbor === false && messageBubbleType !== 'content'
+            ? cornerRadiusStyle.bubble[1]!
+            : cornerRadiusStyle.bubble[0]!,
       };
+      if (releaseArea === 'china') {
+        return {
+          borderRadius: ret.getBorderRadius({
+            height,
+            crt: cornerRadiusStyle.bubble[0]!,
+            cr: cornerRadiusValue,
+          }),
+        };
+      } else {
+        return {
+          borderTopStartRadius: ret.getBorderRadius({
+            height,
+            crt: crt.TopStart,
+            cr: cornerRadiusValue,
+          }),
+          borderTopEndRadius: ret.getBorderRadius({
+            height,
+            crt: crt.TopEnd,
+            cr: cornerRadiusValue,
+          }),
+          borderBottomStartRadius: ret.getBorderRadius({
+            height,
+            crt: crt.BottomStart,
+            cr: cornerRadiusValue,
+          }),
+          borderBottomEndRadius: ret.getBorderRadius({
+            height,
+            crt: crt.BottomEnd,
+            cr: cornerRadiusValue,
+          }),
+        };
+      }
     },
-    [ret]
+    [cornerRadiusStyle.bubble, cornerRadiusValue, releaseArea, ret]
   );
-  return { ...ret, getBorderRadiusFour };
+  return { ...ret, getMessageBubbleBorderRadius };
 }
 
 function _getPropValueFromStyleT<Style = ViewStyle>(
