@@ -55,7 +55,7 @@ export function BottomSheetMenuHeader(props: BottomSheetMenuHeaderProps) {
               <View
                 style={{
                   borderRadius: getBorderRadius({
-                    height: Platform.OS === 'ios' ? 36 : 36,
+                    height: Platform.OS === 'ios' ? 50 : 50,
                     crt: corner.avatar,
                     cr: cornerRadius,
                   }),
@@ -78,6 +78,8 @@ export function BottomSheetMenuHeader(props: BottomSheetMenuHeaderProps) {
                 crt: corner.avatar,
                 cr: cornerRadius,
               }),
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
             onPress={() =>
               onClickedEmoji?.(isEmojiCharacter === true ? r : v.name)

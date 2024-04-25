@@ -325,7 +325,7 @@ function TabItem(props: TabReactionItemProps) {
         >
           <Text
             style={{
-              fontSize: Platform.OS === 'ios' ? 15 : 15,
+              fontSize: Platform.OS === 'ios' ? 15 : 12,
               fontFamily: fontFamily,
               margin: 4,
             }}

@@ -162,16 +162,21 @@ export function EmojiList(props: EmojiListProps) {
                         v.state === 'selected' ? 'selected' : ''
                       ),
                       borderRadius: getBorderRadius({
-                        height: Platform.OS === 'ios' ? 32 : 26,
+                        height: Platform.OS === 'ios' ? 50 : 50,
                         crt: corner.avatar,
                         cr: cornerRadius,
                       }),
+                      // width: Platform.OS === 'ios' ? 36 : 36,
+                      // height: Platform.OS === 'ios' ? 36 : 36,
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}
                   >
                     <Text
                       style={{
-                        fontSize: Platform.OS === 'ios' ? 32 : 26,
+                        fontSize: Platform.OS === 'ios' ? 30 : 22,
                         fontFamily: fontFamily,
+                        textAlign: 'center',
                       }}
                     >
                       {r}

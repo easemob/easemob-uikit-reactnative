@@ -27,7 +27,6 @@ import {
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
   gMessageAttributeTranslate,
-  // gMessageAttributeTranslate,
 } from '../../chat';
 import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
@@ -46,6 +45,7 @@ import { formatTsForConvDetail } from '../../utils';
 import { Avatar } from '../Avatar';
 import { gMaxVoiceDuration } from '../const';
 import { useMessageSnapshot } from '../hooks';
+import { gMessageAvatarSize, gTriangleWidth } from './const';
 import { MessageHistoryListItemMemo } from './MessageHistoryListItem';
 import {
   getFileSize,
@@ -53,6 +53,7 @@ import {
   getImageThumbUrl,
   getMessageBubblePadding,
   getMessageState,
+  getPaddingWidth,
   getStateIcon,
   getStateIconColor,
   getSystemTip,
@@ -362,6 +363,7 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
   const { colors, cornerRadius } = usePaletteContext();
   const { cornerRadius: corner } = useThemeContext();
   const { getBorderRadius } = useGetStyleProps();
+  const { releaseArea } = useConfigContext();
   const { getColor } = useColors({
     bg: {
       light: colors.neutral[8],
@@ -385,11 +387,12 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
         {
           width: width,
           height: height,
-          borderRadius: getBorderRadius({
-            height: width + 1,
-            crt: corner.bubble[0]!,
-            cr: cornerRadius,
-          }),
+          // borderRadius: getBorderRadius({
+          //   height: width + 1,
+          //   crt:
+          //     releaseArea === 'china' ? corner.bubble[0]! : corner.bubble[2]!,
+          //   cr: cornerRadius,
+          // }),
         },
       ]}
       defaultSource={ICON_ASSETS[iconName]('3x')}
@@ -397,16 +400,21 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
         width: thumbWidth,
         height: thumbHeight,
         tintColor: getColor('fg'),
+        // borderRadius: getBorderRadius({
+        //   height: width + 1,
+        //   crt: releaseArea === 'china' ? corner.bubble[0]! : corner.bubble[2]!,
+        //   cr: cornerRadius,
+        // }),
       }}
       defaultContainerStyle={{
         width: width,
         height: height,
         backgroundColor: getColor('bg'),
-        borderRadius: getBorderRadius({
-          height: width + 1,
-          crt: corner.bubble[0]!,
-          cr: cornerRadius,
-        }),
+        // borderRadius: getBorderRadius({
+        //   height: width + 1,
+        //   crt: releaseArea === 'china' ? corner.bubble[0]! : corner.bubble[2]!,
+        //   cr: cornerRadius,
+        // }),
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
@@ -418,7 +426,8 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
           borderColor: getColor('border'),
           borderRadius: getBorderRadius({
             height: width + 1,
-            crt: corner.bubble[0]!,
+            crt:
+              releaseArea === 'china' ? corner.bubble[0]! : corner.bubble[2]!,
             cr: cornerRadius,
           }),
           justifyContent: 'center',
@@ -634,6 +643,7 @@ export function MessageFile(props: MessageFileProps) {
   const { colors, cornerRadius } = usePaletteContext();
   const { cornerRadius: corner } = useThemeContext();
   const { getBorderRadius } = useGetStyleProps();
+  const { releaseArea } = useConfigContext();
   const { getColor } = useColors({
     left_file_bg: {
       light: colors.neutral[100],
@@ -715,7 +725,8 @@ export function MessageFile(props: MessageFileProps) {
           ),
           borderRadius: getBorderRadius({
             height: 32,
-            crt: corner.bubble[0]!,
+            crt:
+              releaseArea === 'china' ? corner.bubble[0]! : corner.bubble[2]!,
             cr: cornerRadius,
           }),
           justifyContent: 'center',
@@ -932,16 +943,18 @@ export function MessageBubble(props: MessageBubbleProps) {
     quoteMsg,
     thread: threadMsg,
   } = model;
-  const { paddingHorizontal, paddingVertical } = React.useMemo(
+  const { releaseArea } = useConfigContext();
+  const { paddingHorizontal, paddingVertical, hasBorderRadius } = React.useMemo(
     () => getMessageBubblePadding(msg),
     [msg]
   );
   const hasQuote = quoteMsg !== undefined;
   const hasThread = threadMsg !== undefined;
-  const triangleWidth = 5;
+  const triangleWidth = releaseArea === 'china' ? gTriangleWidth : 0;
   const isSupport = isSupportMessage(msg);
-  const { colors } = usePaletteContext();
-  const { getMessageBubbleBorderRadius } = useGetStyleProps();
+  const { colors, cornerRadius } = usePaletteContext();
+  const { cornerRadius: corner } = useThemeContext();
+  const { getMessageBubbleBorderRadius, getBorderRadius } = useGetStyleProps();
   const { getColor } = useColors({
     left_bg: {
       light: colors.primary[95],
@@ -968,7 +981,7 @@ export function MessageBubble(props: MessageBubbleProps) {
     } else {
       return _maxWidth;
     }
-  }, [isShowTriangle, maxWidth, paddingHorizontal]);
+  }, [isShowTriangle, maxWidth, paddingHorizontal, triangleWidth]);
 
   const _onClicked = React.useCallback(() => {
     if (checked !== undefined) {
@@ -1020,27 +1033,35 @@ export function MessageBubble(props: MessageBubbleProps) {
 
       <Pressable
         style={[
-          styles.text_bubble,
+          styles.bubble,
           {
             backgroundColor: getColor(
               layoutType === 'left' ? 'left_bg' : 'right_bg'
             ),
-            borderTopEndRadius: 1,
-            // borderRadius: getBorderRadius({
-            //   height: 0,
-            //   crt: corner.bubble[0]!,
-            //   cr: cornerRadius,
-            // }),
             paddingHorizontal: paddingHorizontal,
             paddingVertical: paddingVertical,
           },
-          getMessageBubbleBorderRadius({
-            height: 0,
-            layoutType: layoutType,
-            hasTopNeighbor: hasQuote,
-            hasBottomNeighbor: hasThread,
-            messageBubbleType: 'content',
-          }),
+          hasBorderRadius
+            ? undefined
+            : getMessageBubbleBorderRadius({
+                height: 0,
+                layoutType: layoutType,
+                hasTopNeighbor: hasQuote,
+                hasBottomNeighbor: hasThread,
+                messageBubbleType: 'content',
+              }),
+          hasBorderRadius
+            ? {
+                borderRadius: getBorderRadius({
+                  height: 0,
+                  crt:
+                    releaseArea === 'china'
+                      ? corner.bubble[0]!
+                      : corner.bubble[2]!,
+                  cr: cornerRadius,
+                }),
+              }
+            : undefined,
         ]}
         onPress={_onClicked}
         onLongPress={_onLongPress}
@@ -1076,7 +1097,7 @@ export function AvatarView(props: AvatarViewProps) {
       onPress={onAvatarClicked}
     >
       <View style={{ flexGrow: 1 }} />
-      <Avatar size={28} url={avatar} />
+      <Avatar size={gMessageAvatarSize} url={avatar} />
     </Pressable>
   );
 }
@@ -1090,14 +1111,19 @@ export function NameView(props: NameViewProps) {
       dark: colors.neutralSpecial[6],
     },
   });
-  const paddingWidth =
-    hasAvatar === true
-      ? hasTriangle === true
-        ? 53
-        : 48
-      : hasTriangle === true
-      ? 17
-      : 12;
+  // const paddingWidth =
+  //   hasAvatar === true
+  //     ? hasTriangle === true
+  //       ? 53
+  //       : 48
+  //     : hasTriangle === true
+  //     ? 17
+  //     : 12;
+
+  const paddingWidth = getPaddingWidth({
+    avatarWidth: hasAvatar ? gMessageAvatarSize : 0,
+    triangleWidth: hasTriangle ? gTriangleWidth : 0,
+  });
   return (
     <View
       style={{
@@ -1139,14 +1165,18 @@ export function TimeView(props: TimeViewProps) {
   const time = formatTime?.conversationDetailCallback
     ? formatTime.conversationDetailCallback(timestamp)
     : formatTsForConvDetail(timestamp);
-  const paddingWidth =
-    hasAvatar === true
-      ? hasTriangle === true
-        ? 53
-        : 48
-      : hasTriangle === true
-      ? 17
-      : 12;
+  // const paddingWidth =
+  //   hasAvatar === true
+  //     ? hasTriangle === true
+  //       ? 53
+  //       : 48
+  //     : hasTriangle === true
+  //     ? 17
+  //     : 12;
+  const paddingWidth = getPaddingWidth({
+    avatarWidth: hasAvatar ? gMessageAvatarSize : 0,
+    triangleWidth: hasTriangle ? gTriangleWidth : 0,
+  });
   return (
     <View
       style={{
@@ -1270,13 +1300,6 @@ export function CheckView(props: CheckViewProps) {
 export function MessageThreadBubble(props: MessageThreadBubbleProps) {
   const { thread, hasAvatar, hasTriangle, layoutType, onClicked, maxWidth } =
     props;
-  // const { lastMessage } = thread ?? {};
-  // const thread = {
-  //   threadName: 'threadName123123123123123',
-  //   threadId: 'threadId',
-  //   msgCount: 100,
-  //   lastMessage: ChatMessage.createTextMessage('test', 'test', 0),
-  // };
   const { colors } = usePaletteContext();
   const { getMessageBubbleBorderRadius } = useGetStyleProps();
   const { fontFamily } = useConfigContext();
@@ -1301,14 +1324,18 @@ export function MessageThreadBubble(props: MessageThreadBubbleProps) {
     },
   });
 
-  const paddingWidth =
-    hasAvatar === true
-      ? hasTriangle === true
-        ? 53
-        : 48
-      : hasTriangle === true
-      ? 17
-      : 12;
+  // const paddingWidth =
+  //   hasAvatar === true
+  //     ? hasTriangle === true
+  //       ? 53
+  //       : 48
+  //     : hasTriangle === true
+  //     ? 17
+  //     : 12;
+  const paddingWidth = getPaddingWidth({
+    avatarWidth: hasAvatar ? gMessageAvatarSize : 0,
+    triangleWidth: hasTriangle ? gTriangleWidth : 0,
+  });
 
   const onLongPress = React.useCallback(() => {
     if (thread) {
@@ -1331,11 +1358,6 @@ export function MessageThreadBubble(props: MessageThreadBubbleProps) {
           marginTop: 2,
           backgroundColor: getColor('bg'),
           width: maxWidth,
-          // borderRadius: getBorderRadius({
-          //   height: 36,
-          //   crt: corner.bubble[0]!,
-          //   cr: cornerRadius,
-          // }),
         },
         getMessageBubbleBorderRadius({
           height: 0,
@@ -1429,6 +1451,7 @@ export function MessageReaction(props: MessageReactionProps) {
   const { cornerRadius: corner } = useThemeContext();
   const { getBorderRadius } = useGetStyleProps();
   const { fontFamily } = useConfigContext();
+  const { releaseArea } = useConfigContext();
   const { getColor } = useColors({
     common: {
       light: colors.primary[5],
@@ -1456,14 +1479,18 @@ export function MessageReaction(props: MessageReactionProps) {
     },
   });
 
-  const paddingWidth =
-    hasAvatar === true
-      ? hasTriangle === true
-        ? 53
-        : 48
-      : hasTriangle === true
-      ? 17
-      : 12;
+  // const paddingWidth =
+  //   hasAvatar === true
+  //     ? hasTriangle === true
+  //       ? 53
+  //       : 48
+  //     : hasTriangle === true
+  //     ? 17
+  //     : 12;
+  const paddingWidth = getPaddingWidth({
+    avatarWidth: hasAvatar ? gMessageAvatarSize : 0,
+    triangleWidth: hasTriangle ? gTriangleWidth : 0,
+  });
 
   return (
     <View
@@ -1497,7 +1524,10 @@ export function MessageReaction(props: MessageReactionProps) {
                   backgroundColor: getColor(v.isAddedBySelf ? 'bg' : 'bg2'),
                   borderRadius: getBorderRadius({
                     height: 36,
-                    crt: corner.bubble[0]!,
+                    crt:
+                      releaseArea === 'china'
+                        ? corner.bubble[0]!
+                        : corner.bubble[2]!,
                     cr: cornerRadius,
                   }),
                   maxHeight: 28,
@@ -1525,37 +1555,6 @@ export function MessageReaction(props: MessageReactionProps) {
               </View>
             </Pressable>
           );
-          // } else if (i === 3) {
-          //   return (
-          //     <Pressable
-          //       style={{
-          //         borderColor: getColor('common'),
-          //         borderWidth: 1,
-          //         paddingRight: 8,
-          //         paddingLeft: 6,
-          //         marginRight: layoutType === 'left' ? 4 : undefined,
-          //         marginLeft: layoutType === 'left' ? undefined : 4,
-          //         borderRadius: getBorderRadius({
-          //           height: 36,
-          //           crt: corner.bubble[0]!,
-          //           cr: cornerRadius,
-          //         }),
-          //         maxHeight: 28,
-          //       }}
-          //       key={i}
-          //       onPress={() => onClicked?.('faceplus')}
-          //     >
-          //       <Icon
-          //         name={'ellipsis_horizontally' as IconNameType}
-          //         style={{
-          //           width: 20,
-          //           height: 20,
-          //           margin: 4,
-          //           tintColor: getColor('common'),
-          //         }}
-          //       />
-          //     </Pressable>
-          //   );
         } else {
           return null;
         }
@@ -1571,7 +1570,8 @@ export function MessageReaction(props: MessageReactionProps) {
           marginLeft: layoutType === 'left' ? undefined : 4,
           borderRadius: getBorderRadius({
             height: 36,
-            crt: corner.bubble[0]!,
+            crt:
+              releaseArea === 'china' ? corner.bubble[0]! : corner.bubble[2]!,
             cr: cornerRadius,
           }),
           maxHeight: 24,
@@ -1611,7 +1611,6 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
       paddingVertical: 8,
     };
   }, []);
-  // const triangleWidth = 5;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getMessageBubbleBorderRadius } = useGetStyleProps();
@@ -1641,14 +1640,18 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
       dark: colors.neutral[6],
     },
   });
-  const marginWidth =
-    hasAvatar === true
-      ? hasTriangle === true
-        ? 53
-        : 48
-      : hasTriangle === true
-      ? 17
-      : 12;
+  // const marginWidth =
+  //   hasAvatar === true
+  //     ? hasTriangle === true
+  //       ? 53
+  //       : 48
+  //     : hasTriangle === true
+  //     ? 17
+  //     : 12;
+  const marginWidth = getPaddingWidth({
+    avatarWidth: hasAvatar ? gMessageAvatarSize : 0,
+    triangleWidth: hasTriangle ? gTriangleWidth : 0,
+  });
 
   const getContent = (originalMsg: ChatMessage, quoteMsg?: ChatMessage) => {
     const user = userInfoFromMessage(quoteMsg);
@@ -2096,16 +2099,11 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
     >
       <Pressable
         style={[
-          styles.text_bubble,
+          styles.bubble,
           {
             backgroundColor: getColor(
               layoutType === 'left' ? 'left_bg' : 'right_bg'
             ),
-            // borderRadius: getBorderRadius({
-            //   height: 36,
-            //   crt: corner.bubble[0]!,
-            //   cr: cornerRadius,
-            // }),
             paddingHorizontal: paddingHorizontal,
             paddingVertical: paddingVertical,
           },
@@ -2149,27 +2147,16 @@ export function MessageView(props: MessageViewProps) {
   const _MessageBubble = propsMessageBubble ?? MessageBubble;
   const _MessageThreadBubble = propsMessageThreadBubble ?? MessageThreadBubble;
   const { layoutType, reactions, thread, isHightBackground } = model;
-  const { enableThread, enableReaction } = useConfigContext();
+  const { enableThread, enableReaction, releaseArea } = useConfigContext();
   const state = getMessageState(model.msg);
   const maxWidth = Dimensions.get('window').width * 0.6;
   const time = model.msg.localTime ?? model.msg.serverTime;
   const bubblePadding = 12;
-  const hasTriangle = true;
+  const hasTriangle = releaseArea === 'china' ? true : false;
   const isQuote = isQuoteMessage(model.msg, model.quoteMsg);
-  // const info = userInfoFromMessage(model.msg);
-  // const userName = model.userName ?? model.userId;
-  // const [userName] = React.useState<string>(
-  //   info?.userName ?? model.userName ?? model.userId
-  // );
   const isSingleChat = React.useRef(
     model.msg.chatType === ChatMessageChatType.PeerChat
   ).current;
-  // const userAvatar =
-  //   avatarIsVisible === true
-  //     ? info?.avatarURL && info?.avatarURL?.length > 0
-  //       ? info.avatarURL
-  //       : model.userAvatar
-  //     : undefined;
   const userName = model.userName ?? model.userId;
   const userAvatar = model.userAvatar;
   const { colors } = usePaletteContext();
@@ -2435,14 +2422,8 @@ export function MessageListItem(props: MessageListItemProps) {
   return (
     <View
       style={{
-        // height: 100,
-        // width: '100%',
-        // borderBottomColor: 'yellow',
-        // borderBottomWidth: 1,
-        // borderTopWidth: 1,
         paddingVertical: 8,
         flexDirection: 'column',
-        // backgroundColor: 'blue',
       }}
     >
       {modelType === 'message' ? (
@@ -2489,7 +2470,7 @@ export function MessageListItem(props: MessageListItemProps) {
 export const MessageListItemMemo = React.memo(MessageListItem);
 
 const styles = StyleSheet.create({
-  text_bubble: {
+  bubble: {
     overflow: 'hidden',
   },
 });

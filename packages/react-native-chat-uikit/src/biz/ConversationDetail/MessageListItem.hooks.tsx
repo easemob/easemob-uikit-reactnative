@@ -25,6 +25,15 @@ import { Services } from '../../services';
 import { LocalPath } from '../../utils';
 import type { MessageStateType } from './types';
 
+export function getPaddingWidth(params: {
+  avatarWidth: number;
+  triangleWidth: number;
+}) {
+  const { avatarWidth, triangleWidth } = params;
+  const paddingWidth = avatarWidth + triangleWidth + 12 + 8;
+  return paddingWidth;
+}
+
 export function isSupportMessage(msg: ChatMessage) {
   if (msg.body.type === ChatMessageType.CMD) {
     return false;
@@ -268,11 +277,13 @@ export function getMessageBubblePadding(msg: ChatMessage) {
     return {
       paddingHorizontal: undefined,
       paddingVertical: undefined,
+      hasBorderRadius: true,
     };
   } else if (msg.body.type === ChatMessageType.VIDEO) {
     return {
       paddingHorizontal: undefined,
       paddingVertical: undefined,
+      hasBorderRadius: true,
     };
   } else if (msg.body.type === ChatMessageType.CUSTOM) {
     const body = msg.body as ChatCustomMessageBody;
