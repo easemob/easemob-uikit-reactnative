@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ChatMessage, ChatMessageChatType } from 'react-native-chat-sdk';
 
 import {
   ContactModel,
@@ -11,6 +10,7 @@ import { setUserInfoToMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { ErrorCode, UIKitError } from '../../error';
 import { useI18nContext } from '../../i18n';
+import { ChatMessage, ChatMessageChatType } from '../../rename.chat';
 import type { CreateGroupProps } from './types';
 
 export function useCreateGroup(props: CreateGroupProps) {

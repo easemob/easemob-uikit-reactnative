@@ -1,3 +1,5 @@
+import { uilog } from '../const';
+import { ErrorCode, UIKitError } from '../error';
 import {
   ChatConversationType,
   ChatDownloadStatus,
@@ -8,10 +10,7 @@ import {
   ChatMessageStatusCallback,
   ChatMessageType,
   ChatSearchDirection,
-} from 'react-native-chat-sdk';
-
-import { uilog } from '../const';
-import { ErrorCode, UIKitError } from '../error';
+} from '../rename.chat';
 import { asyncTask, getCurTs } from '../utils';
 import {
   gCustomMessageRecallEventType,

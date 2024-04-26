@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { Platform, TextInput as RNTextInput, View } from 'react-native';
 import {
-  ChatMessage,
-  ChatMessageType,
-  ChatTextMessageBody,
-} from 'react-native-chat-sdk';
-import {
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
@@ -13,6 +8,11 @@ import {
 import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import {
+  ChatMessage,
+  ChatMessageType,
+  ChatTextMessageBody,
+} from '../../rename.chat';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';

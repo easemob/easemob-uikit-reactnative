@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import type { ChatMessage } from 'react-native-chat-sdk';
 
 import {
   ContactModel,
@@ -9,6 +8,7 @@ import {
   useChatContext,
 } from '../../chat';
 import { useI18nContext } from '../../i18n';
+import type { ChatMessage } from '../../rename.chat';
 import { TabPage, TabPageHeader } from '../../ui/TabPage';
 import { ContactList, ContactListProps } from '../ContactList';
 import { GroupList, GroupListProps } from '../GroupList';

@@ -4,8 +4,7 @@ import type {
   ChatConversationType,
   ChatGroup,
   ChatMessage,
-} from 'react-native-chat-sdk';
-
+} from '../rename.chat';
 import type { PartialUndefinable } from '../types';
 
 export enum UIListenerType {

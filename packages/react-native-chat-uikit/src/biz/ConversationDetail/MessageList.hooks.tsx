@@ -6,21 +6,6 @@ import type {
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
-import {
-  ChatCustomMessageBody,
-  ChatMessage,
-  ChatMessageChatType,
-  ChatMessageDirection,
-  ChatMessageReaction,
-  ChatMessageReactionEvent,
-  ChatMessageStatus,
-  ChatMessageThread,
-  ChatMessageThreadEvent,
-  ChatMessageType,
-  ChatSearchDirection,
-  ChatTextMessageBody,
-  ChatVoiceMessageBody,
-} from 'react-native-chat-sdk';
 import emoji from 'twemoji';
 
 import { FACE_ASSETS } from '../../assets';
@@ -44,6 +29,21 @@ import { useConfigContext } from '../../config';
 import { useDispatchContext } from '../../dispatch';
 import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import {
+  ChatCustomMessageBody,
+  ChatMessage,
+  ChatMessageChatType,
+  ChatMessageDirection,
+  ChatMessageReaction,
+  ChatMessageReactionEvent,
+  ChatMessageStatus,
+  ChatMessageThread,
+  ChatMessageThreadEvent,
+  ChatMessageType,
+  ChatSearchDirection,
+  ChatTextMessageBody,
+  ChatVoiceMessageBody,
+} from '../../rename.chat';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import { LocalPath, seqId, timeoutTask } from '../../utils';

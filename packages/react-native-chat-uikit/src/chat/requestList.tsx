@@ -5,8 +5,7 @@ import {
   ChatMessageType,
   ChatMultiDeviceEvent,
   ChatSearchDirection,
-} from 'react-native-chat-sdk';
-
+} from '../rename.chat';
 import { timeoutTask } from '../utils';
 import {
   gNewRequestConversationId,

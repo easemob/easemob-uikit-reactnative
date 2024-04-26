@@ -9,18 +9,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  ChatCustomMessageBody,
-  ChatFileMessageBody,
-  ChatImageMessageBody,
-  ChatMessage,
-  ChatMessageChatType,
-  ChatMessageType,
-  ChatTextMessageBody,
-  ChatVideoMessageBody,
-  ChatVoiceMessageBody,
-} from 'react-native-chat-sdk';
-import type { ChatCombineMessageBody } from 'react-native-chat-sdk/lib/typescript/common/ChatMessage';
 
 import { ICON_ASSETS, IconNameType } from '../../assets';
 import {
@@ -32,6 +20,18 @@ import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { useColors, useGetStyleProps } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import {
+  ChatCombineMessageBody,
+  ChatCustomMessageBody,
+  ChatFileMessageBody,
+  ChatImageMessageBody,
+  ChatMessage,
+  ChatMessageChatType,
+  ChatMessageType,
+  ChatTextMessageBody,
+  ChatVideoMessageBody,
+  ChatVoiceMessageBody,
+} from '../../rename.chat';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import {
   DefaultImage,

@@ -18,7 +18,6 @@ import {
   UserOfflineReasonType,
   VideoSourceType,
 } from 'react-native-agora';
-import { ChatClient, ChatMessage } from 'react-native-chat-sdk';
 
 import {
   CallEndReason,
@@ -26,6 +25,7 @@ import {
   CallErrorType,
   CallType,
 } from '../enums';
+import { ChatClient, ChatMessage } from '../rename.chat';
 import { hashCode, timestamp, uuid } from '../utils/utils';
 import { calllog } from './CallConst';
 import * as K from './CallConst';

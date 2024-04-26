@@ -1,11 +1,4 @@
 import * as React from 'react';
-import {
-  ChatCustomMessageBody,
-  ChatMessage,
-  ChatMessageStatus,
-  ChatMessageType,
-  ChatTextMessageBody,
-} from 'react-native-chat-sdk';
 
 import {
   gCustomMessageCardEventType,
@@ -14,6 +7,13 @@ import {
 } from '../../chat';
 import { useConfigContext } from '../../config';
 import { useI18nContext } from '../../i18n';
+import {
+  ChatCustomMessageBody,
+  ChatMessage,
+  ChatMessageStatus,
+  ChatMessageType,
+  ChatTextMessageBody,
+} from '../../rename.chat';
 import { Services } from '../../services';
 import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList';
 import { BottomSheetMenuHeader, InitMenuItemsType } from '../BottomSheetMenu';

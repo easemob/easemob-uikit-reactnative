@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
-import { ChatLog } from 'react-native-chat-sdk';
+
+import { ChatLog } from './rename.chat';
 
 export const uilog = new ChatLog();
 uilog.tag = '[ui]';

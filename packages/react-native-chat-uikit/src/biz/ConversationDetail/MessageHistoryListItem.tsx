@@ -6,11 +6,11 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { ChatMessage, ChatMessageType } from 'react-native-chat-sdk';
 
 import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
+import { ChatMessage, ChatMessageType } from '../../rename.chat';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';

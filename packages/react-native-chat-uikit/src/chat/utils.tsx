@@ -7,8 +7,7 @@ import {
   ChatMessageType,
   ChatTextMessageBody,
   ChatVoiceMessageBody,
-} from 'react-native-chat-sdk';
-
+} from '../rename.chat';
 import { emoji } from '../utils';
 import {
   gCustomMessageCardEventType,

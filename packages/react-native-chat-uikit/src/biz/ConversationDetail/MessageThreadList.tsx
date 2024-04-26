@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { ListRenderItemInfo, Pressable, View } from 'react-native';
-import type {
-  ChatMessageThread,
-  ChatMessageThreadEvent,
-} from 'react-native-chat-sdk';
 
 import { MessageServiceListener, useChatContext } from '../../chat';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import type {
+  ChatMessageThread,
+  ChatMessageThreadEvent,
+} from '../../rename.chat';
 import { usePaletteContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Icon } from '../../ui/Image';

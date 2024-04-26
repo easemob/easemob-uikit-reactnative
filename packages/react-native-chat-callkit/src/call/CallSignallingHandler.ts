@@ -1,3 +1,4 @@
+import { CallErrorCode, CallType } from '../enums';
 import {
   ChatClient,
   ChatError,
@@ -5,9 +6,7 @@ import {
   ChatMessageChatType,
   ChatMessageEventListener,
   ChatMessageStatusCallback,
-} from 'react-native-chat-sdk';
-
-import { CallErrorCode, CallType } from '../enums';
+} from '../rename.chat';
 import { timestamp } from '../utils/utils';
 import * as K from './CallConst';
 import { calllog } from './CallConst';

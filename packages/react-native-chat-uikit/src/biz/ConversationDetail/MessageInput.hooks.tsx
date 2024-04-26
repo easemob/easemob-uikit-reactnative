@@ -7,13 +7,13 @@ import {
   Platform,
   TextInput as RNTextInput,
 } from 'react-native';
-import type { ChatTextMessageBody } from 'react-native-chat-sdk';
 import emoji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
 import { uilog } from '../../const';
 // import { useDispatchContext } from '../../dispatch';
 import { useDelayExecTask, useKeyboardHeight } from '../../hook';
+import type { ChatTextMessageBody } from '../../rename.chat';
 import type { AlertRef } from '../../ui/Alert';
 import { timeoutTask } from '../../utils';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';

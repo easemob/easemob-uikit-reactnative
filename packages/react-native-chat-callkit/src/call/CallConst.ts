@@ -1,4 +1,4 @@
-import { ChatLog } from 'react-native-chat-sdk';
+import { ChatLog } from '../rename.chat';
 
 export const calllog = new ChatLog();
 

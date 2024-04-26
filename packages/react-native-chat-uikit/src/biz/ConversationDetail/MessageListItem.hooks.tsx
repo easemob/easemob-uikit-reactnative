@@ -1,14 +1,4 @@
 import { Dimensions, Image } from 'react-native';
-import {
-  ChatCustomMessageBody,
-  ChatImageMessageBody,
-  ChatMessage,
-  ChatMessageChatType,
-  ChatMessageDirection,
-  ChatMessageStatus,
-  ChatMessageType,
-  ChatVideoMessageBody,
-} from 'react-native-chat-sdk';
 
 import type { IconNameType } from '../../assets';
 import {
@@ -21,6 +11,16 @@ import {
   userInfoFromMessage,
 } from '../../chat';
 import { uilog } from '../../const';
+import {
+  ChatCustomMessageBody,
+  ChatImageMessageBody,
+  ChatMessage,
+  ChatMessageChatType,
+  ChatMessageDirection,
+  ChatMessageStatus,
+  ChatMessageType,
+  ChatVideoMessageBody,
+} from '../../rename.chat';
 import { Services } from '../../services';
 import { LocalPath } from '../../utils';
 import type { MessageStateType } from './types';

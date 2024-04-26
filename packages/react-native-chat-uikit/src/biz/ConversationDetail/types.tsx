@@ -1,16 +1,17 @@
 import type { StyleProp, ViewStyle } from 'react-native';
+
+import type { DataModel } from '../../chat';
 import type {
   ChatConversationType,
   ChatMessage,
   ChatMessageReaction,
   ChatMessageThread,
-} from 'react-native-chat-sdk';
-
-import type { DataModel } from '../../chat';
+} from '../../rename.chat';
 import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type { TopNavigationBarElementType } from '../TopNavigationBar';
 import type {
   ListActions,
+  MessageLayoutType,
   PropsWithBack,
   PropsWithCancel,
   PropsWithError,
@@ -18,10 +19,6 @@ import type {
   PropsWithRef,
   PropsWithSearch,
   PropsWithTest,
-} from '../types';
-import {
-  MessageBubbleType as _MessageBubbleType,
-  MessageLayoutType as _MessageLayoutType,
 } from '../types';
 import type {
   MessageBubbleRender,
@@ -480,14 +477,6 @@ export type SendCustomProps = SendBasicProps & {
  * Message bubble type.
  */
 export type MessageViewType = 'system' | 'time' | 'message' | 'history';
-/**
- * Message layout type.
- *
- * This layout type is only valid for messages of type `mesage`. `time` and `system` messages are displayed in the center.
- */
-export type MessageLayoutType = _MessageLayoutType;
-
-export type MessageBubbleType = _MessageBubbleType;
 /**
  * Received message state type.
  */

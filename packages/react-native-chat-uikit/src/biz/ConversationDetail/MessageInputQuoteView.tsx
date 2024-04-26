@@ -1,5 +1,10 @@
 import * as React from 'react';
 import { Dimensions, View } from 'react-native';
+
+import { gCustomMessageCardEventType } from '../../chat';
+import { userInfoFromMessage } from '../../chat/utils';
+import { useColors } from '../../hook';
+import { useI18nContext } from '../../i18n';
 import {
   ChatCustomMessageBody,
   ChatFileMessageBody,
@@ -7,12 +12,7 @@ import {
   ChatMessageType,
   ChatTextMessageBody,
   ChatVoiceMessageBody,
-} from 'react-native-chat-sdk';
-
-import { gCustomMessageCardEventType } from '../../chat';
-import { userInfoFromMessage } from '../../chat/utils';
-import { useColors } from '../../hook';
-import { useI18nContext } from '../../i18n';
+} from '../../rename.chat';
 import { usePaletteContext } from '../../theme';
 import { IconButtonMemo } from '../../ui/Button';
 import { Icon } from '../../ui/Image';

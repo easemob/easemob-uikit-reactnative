@@ -1,9 +1,5 @@
 import * as React from 'react';
 import { SectionListData, View } from 'react-native';
-import {
-  ChatConversationType,
-  ChatMultiDeviceEvent,
-} from 'react-native-chat-sdk';
 
 // import { DeviceEventEmitter } from 'react-native';
 import {
@@ -19,6 +15,7 @@ import type { RequestListListener } from '../../chat/requestList.types';
 import { uilog } from '../../const';
 import { AsyncStorageBasic } from '../../db';
 import { useI18nContext } from '../../i18n';
+import { ChatConversationType, ChatMultiDeviceEvent } from '../../rename.chat';
 import type { AlertRef } from '../../ui/Alert';
 import type { SectionListRef } from '../../ui/SectionList';
 import { Text } from '../../ui/Text';

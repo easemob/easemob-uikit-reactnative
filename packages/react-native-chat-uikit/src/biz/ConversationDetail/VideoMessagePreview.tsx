@@ -8,13 +8,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {
-  ChatDownloadStatus,
-  ChatImageMessageBody,
-  ChatMessage,
-  ChatMessageType,
-  ChatVideoMessageBody,
-} from 'react-native-chat-sdk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video, { LoadError } from 'react-native-video';
 
@@ -23,6 +16,13 @@ import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { uilog } from '../../const';
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
+import {
+  ChatDownloadStatus,
+  ChatImageMessageBody,
+  ChatMessage,
+  ChatMessageType,
+  ChatVideoMessageBody,
+} from '../../rename.chat';
 import { Services } from '../../services';
 import { usePaletteContext } from '../../theme';
 import { Image, LoadingIcon } from '../../ui/Image';

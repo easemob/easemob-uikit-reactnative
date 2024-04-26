@@ -2,8 +2,7 @@ import type {
   ChatConversationType,
   ChatMessage,
   ChatSearchDirection,
-} from 'react-native-chat-sdk';
-
+} from '../rename.chat';
 import type { CommonManager } from './commonManager.types';
 import type { ConversationModel } from './types.ui';
 

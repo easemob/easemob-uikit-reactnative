@@ -1,9 +1,11 @@
+import { uilog } from '../const';
 import {
   ChatClient,
   ChatConnectEventListener,
   ChatContactEventListener,
   ChatConversationType,
   ChatCustomEventListener,
+  ChatException,
   ChatExceptionEventListener,
   ChatGroup,
   ChatGroupEventListener,
@@ -16,10 +18,7 @@ import {
   ChatMultiDeviceEventListener,
   ChatPresence,
   ChatPresenceEventListener,
-} from 'react-native-chat-sdk';
-import type { ChatException } from 'react-native-chat-sdk/lib/typescript/common/ChatError';
-
-import { uilog } from '../const';
+} from '../rename.chat';
 import { ChatServiceListener, DisconnectReasonType } from './types';
 import { UIListener, UIListenerType } from './types.ui';
 

@@ -1,6 +1,5 @@
-import { ChatConversationType } from 'react-native-chat-sdk';
-
 import { gNewRequestConversationId, useChatContext } from '../../chat';
+import { ChatConversationType } from '../../rename.chat';
 import { useFlatList } from '../List';
 import type { ConversationSearchModel, SearchConversationProps } from './types';
 

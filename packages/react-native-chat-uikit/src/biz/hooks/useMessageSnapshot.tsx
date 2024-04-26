@@ -1,10 +1,4 @@
 import * as React from 'react';
-import {
-  ChatCustomMessageBody,
-  ChatMessage,
-  ChatMessageChatType,
-  ChatMessageType,
-} from 'react-native-chat-sdk';
 
 import {
   gCustomMessageCreateGroupEventType,
@@ -14,6 +8,12 @@ import {
   getMessageSnapshotParams,
 } from '../../chat';
 import { useI18nContext } from '../../i18n';
+import {
+  ChatCustomMessageBody,
+  ChatMessage,
+  ChatMessageChatType,
+  ChatMessageType,
+} from '../../rename.chat';
 import { useDataPriority } from './useDataPriority';
 
 export function useMessageSnapshot() {

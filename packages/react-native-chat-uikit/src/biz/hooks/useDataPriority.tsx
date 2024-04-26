@@ -1,7 +1,7 @@
 import * as React from 'react';
-import type { ChatMessage } from 'react-native-chat-sdk';
 
 import { DataModel, useChatContext, userInfoFromMessage } from '../../chat';
+import type { ChatMessage } from '../../rename.chat';
 
 export type useDataPriorityProps = {};
 export function useDataPriority(props: useDataPriorityProps) {

@@ -1,6 +1,5 @@
-import type { ChatMessage } from 'react-native-chat-sdk';
-
 import type { CallType } from '../enums';
+import type { ChatMessage } from '../rename.chat';
 import type { CallError } from './CallError';
 
 /**

@@ -1,9 +1,4 @@
 import * as React from 'react';
-import {
-  ChatConversationType,
-  ChatMessageThreadEvent,
-  ChatMessageThreadOperation,
-} from 'react-native-chat-sdk';
 
 import {
   MessageServiceListener,
@@ -15,6 +10,11 @@ import {
 } from '../../chat';
 import { uilog } from '../../const';
 import { usePermissions } from '../../hook';
+import {
+  ChatConversationType,
+  ChatMessageThreadEvent,
+  ChatMessageThreadOperation,
+} from '../../rename.chat';
 import { timeoutTask } from '../../utils';
 import { useCreateConversationDirectory } from '../hooks/useCreateConversationDirectory';
 import { MessageInput } from './MessageInput';

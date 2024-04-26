@@ -1,13 +1,13 @@
 import type { StyleProp, ViewStyle } from 'react-native';
+
+import type { IconNameType } from '../../assets';
 import type {
   ChatMessage,
   ChatMessageReaction,
   ChatMessageThread,
-} from 'react-native-chat-sdk';
-
-import type { IconNameType } from '../../assets';
+} from '../../rename.chat';
+import { MessageLayoutType } from '../types';
 import type {
-  MessageLayoutType,
   MessageListItemActionsProps,
   MessageListItemRenders,
   MessageModel,

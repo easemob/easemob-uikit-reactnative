@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ChatConversationType } from 'react-native-chat-sdk';
 
 import {
   ContactServiceListener,
@@ -9,6 +8,7 @@ import {
 } from '../../chat';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import { ChatConversationType } from '../../rename.chat';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';

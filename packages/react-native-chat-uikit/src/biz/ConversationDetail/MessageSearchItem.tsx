@@ -5,11 +5,11 @@ import {
   Pressable,
   View,
 } from 'react-native';
-import { ChatMessage, ChatMessageType } from 'react-native-chat-sdk';
 
 import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
+import { ChatMessage, ChatMessageType } from '../../rename.chat';
 import { usePaletteContext } from '../../theme';
 import { HighText, SingleLineText } from '../../ui/Text';
 import { formatTsForConvList } from '../../utils';

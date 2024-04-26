@@ -1,8 +1,4 @@
 import * as React from 'react';
-import {
-  ChatConversationType,
-  ChatMultiDeviceEvent,
-} from 'react-native-chat-sdk';
 
 import {
   ChatServiceListener,
@@ -15,6 +11,7 @@ import {
 import { useConfigContext } from '../../config';
 import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import { ChatConversationType, ChatMultiDeviceEvent } from '../../rename.chat';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';

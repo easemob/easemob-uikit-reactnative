@@ -1,7 +1,7 @@
 import * as React from 'react';
-import type { ChatMessageThread } from 'react-native-chat-sdk';
 
 import { useI18nContext } from '../../i18n';
+import type { ChatMessageThread } from '../../rename.chat';
 import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';

@@ -6,12 +6,12 @@ import {
   SafeAreaView,
   View,
 } from 'react-native';
-import type { ChatMessageReaction } from 'react-native-chat-sdk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DataModel, useChatContext } from '../../chat';
 import { useConfigContext } from '../../config';
 import { useColors, useGetStyleProps } from '../../hook';
+import type { ChatMessageReaction } from '../../rename.chat';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Icon } from '../../ui/Image';

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ChatMultiDeviceEvent } from 'react-native-chat-sdk';
 
 import {
   ChatServiceListener,
@@ -10,6 +9,7 @@ import {
   useChatListener,
 } from '../../chat';
 import { useI18nContext } from '../../i18n';
+import { ChatMultiDeviceEvent } from '../../rename.chat';
 import type { AlertRef } from '../../ui/Alert';
 import type { FlatListRef } from '../../ui/FlatList';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';

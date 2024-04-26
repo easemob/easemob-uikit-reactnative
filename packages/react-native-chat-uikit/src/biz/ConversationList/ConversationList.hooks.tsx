@@ -1,10 +1,4 @@
 import * as React from 'react';
-import {
-  ChatConversationType,
-  ChatMessage,
-  ChatMessageType,
-  ChatMultiDeviceEvent,
-} from 'react-native-chat-sdk';
 
 import {
   ChatServiceListener,
@@ -22,6 +16,12 @@ import { useDataProfileProvider } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import type { UIKitError } from '../../error';
 import { useI18nContext } from '../../i18n';
+import {
+  ChatConversationType,
+  ChatMessage,
+  ChatMessageType,
+  ChatMultiDeviceEvent,
+} from '../../rename.chat';
 import type { AlertRef } from '../../ui/Alert';
 import type { FlatListRef } from '../../ui/FlatList';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';

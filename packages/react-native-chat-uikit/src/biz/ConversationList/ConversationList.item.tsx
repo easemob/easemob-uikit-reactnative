@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { ChatConversationType, ChatMessage } from 'react-native-chat-sdk';
 
 import { gMessageAttributeMentions, useChatContext } from '../../chat';
 import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import { ChatConversationType, ChatMessage } from '../../rename.chat';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { PressableHighlight } from '../../ui/Pressable';

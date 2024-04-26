@@ -1,3 +1,4 @@
+import type { UIKitError } from '../error';
 import type {
   ChatClient,
   ChatContactEventListener,
@@ -15,9 +16,7 @@ import type {
   ChatPresence,
   ChatPresenceEventListener,
   ChatSearchDirection,
-} from 'react-native-chat-sdk';
-
-import type { UIKitError } from '../error';
+} from '../rename.chat';
 import type { PartialUndefinable } from '../types';
 import type { DataProfileProvider } from './DataProfileProvider';
 import type { MessageCacheManager } from './messageManager.types';

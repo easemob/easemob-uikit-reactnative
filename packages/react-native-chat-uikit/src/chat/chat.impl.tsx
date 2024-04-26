@@ -1,4 +1,8 @@
+import { uilog } from '../const';
+import { ConversationStorage } from '../db/storage';
+import { ErrorCode, UIKitError } from '../error';
 import {
+  CHAT_VERSION,
   ChatClient,
   ChatContact,
   ChatConversation,
@@ -18,11 +22,7 @@ import {
   ChatSearchDirection,
   ChatSilentModeParamType,
   ChatUserInfo,
-} from 'react-native-chat-sdk';
-
-import { uilog } from '../const';
-import { ConversationStorage } from '../db/storage';
-import { ErrorCode, UIKitError } from '../error';
+} from '../rename.chat';
 import { Services } from '../services';
 import { asyncTask, getCurTs, mergeObjects } from '../utils';
 import { ChatServiceListenerImpl } from './chat.listener';
@@ -220,8 +220,8 @@ export class ChatServiceImpl
     try {
       uilog.log('chat:login:', params);
       this.reset();
-      const version = require('react-native-chat-sdk/src/version');
-      const list = version.default.split('.');
+      const version = CHAT_VERSION;
+      const list = version.split('.');
       const major = parseInt(list[0]!, 10);
       const minor = parseInt(list[1]!, 10);
       if (major <= 1 && minor < 3) {

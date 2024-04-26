@@ -7,17 +7,17 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {
-  ChatDownloadStatus,
-  ChatImageMessageBody,
-  ChatMessage,
-  ChatMessageType,
-} from 'react-native-chat-sdk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useChatContext } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { ErrorCode, UIKitError } from '../../error';
+import {
+  ChatDownloadStatus,
+  ChatImageMessageBody,
+  ChatMessage,
+  ChatMessageType,
+} from '../../rename.chat';
 import { Services } from '../../services';
 import { ImagePreview2 } from '../../ui/ImagePreview';
 import { LocalPath } from '../../utils';
