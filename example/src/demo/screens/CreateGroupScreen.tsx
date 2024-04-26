@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+
 import {
   CreateGroup,
   DataModel,
@@ -7,8 +8,7 @@ import {
   GroupModel,
   UIListenerType,
   useChatContext,
-} from 'react-native-chat-uikit';
-
+} from '../../rename.uikit';
 import { RestApi } from '../common/rest.api';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';

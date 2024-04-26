@@ -1,4 +1,4 @@
-import { type UIKitError, useI18nContext } from 'react-native-chat-uikit';
+import { type UIKitError, useI18nContext } from '../../rename.uikit';
 
 export function useOnFinishedParser() {
   const { tr } = useI18nContext();

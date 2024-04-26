@@ -1,6 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ImageBackground, View } from 'react-native';
+
 import {
   Icon,
   LoadingIcon,
@@ -8,8 +9,7 @@ import {
   useColors,
   useI18nContext,
   usePaletteContext,
-} from 'react-native-chat-uikit';
-
+} from '../../rename.uikit';
 import { logo, main_bg } from '../common/assets';
 import type { RootScreenParamsList } from '../routes';
 

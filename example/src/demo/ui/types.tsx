@@ -1,4 +1,4 @@
-import type { InfoProps } from 'react-native-chat-uikit';
+import type { InfoProps } from '../../rename.uikit';
 
 /**
  * User State.

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DeviceEventEmitter } from 'react-native';
+
 import {
   CallError,
   CallListener,
@@ -9,14 +10,13 @@ import {
   MultiCall,
   SingleCall,
   useCallkitSdkContext,
-} from 'react-native-chat-callkit';
+} from '../../rename.callkit';
 import {
   GroupParticipantModel,
   useAbsoluteViewContext,
   useChatContext,
   useSimpleToastContext,
-} from 'react-native-chat-uikit';
-
+} from '../../rename.uikit';
 import { agoraAppId, appKey } from './const';
 
 export type AVViewProps = {};

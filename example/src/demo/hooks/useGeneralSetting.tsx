@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { DeviceEventEmitter } from 'react-native';
+
 import {
   AsyncStorageBasic,
   getReleaseArea,
   presetPaletteColors,
   SingletonObjects,
   useForceUpdate,
-} from 'react-native-chat-uikit';
-
+} from '../../rename.uikit';
 import { appKey as gAppKey } from '../common/const';
 
 export function useGeneralSetting() {

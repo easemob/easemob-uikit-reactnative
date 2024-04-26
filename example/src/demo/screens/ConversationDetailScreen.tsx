@@ -1,7 +1,9 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { DeviceEventEmitter } from 'react-native';
-import { CallConstKey } from 'react-native-chat-callkit';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { CallConstKey } from '../../rename.callkit';
 import {
   ChatConversationType,
   ChatCustomMessageBody,
@@ -9,7 +11,7 @@ import {
   ChatMessageChatType,
   ChatMessageStatus,
   ChatMessageType,
-} from 'react-native-chat-sdk';
+} from '../../rename.uikit';
 import {
   ConversationDetail,
   ConversationDetailModelType,
@@ -29,9 +31,7 @@ import {
   useI18nContext,
   useSimpleToastContext,
   uuid,
-} from 'react-native-chat-uikit';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
+} from '../../rename.uikit';
 import { useCallApi } from '../common/AVView';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useOnce, useStackScreenRoute } from '../hooks';

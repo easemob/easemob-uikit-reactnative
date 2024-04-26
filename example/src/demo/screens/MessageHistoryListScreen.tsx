@@ -1,11 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ChatMessageType } from 'react-native-chat-sdk';
-import {
-  MessageHistoryList,
-  MessageHistoryModel,
-} from 'react-native-chat-uikit';
 
+import { ChatMessageType } from '../../rename.uikit';
+import { MessageHistoryList, MessageHistoryModel } from '../../rename.uikit';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';

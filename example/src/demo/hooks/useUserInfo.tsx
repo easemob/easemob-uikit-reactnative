@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-  SingletonObjects,
-  UserData,
-  UserStorage,
-} from 'react-native-chat-uikit';
 
+import { SingletonObjects, UserData, UserStorage } from '../../rename.uikit';
 import { appKey as gAppKey } from '../common/const';
 
 export function useUserInfo() {

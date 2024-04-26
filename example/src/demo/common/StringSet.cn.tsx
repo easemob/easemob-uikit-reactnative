@@ -1,4 +1,4 @@
-import type { StringSet } from 'react-native-chat-uikit';
+import type { StringSet } from '../../rename.uikit';
 
 export function createStringSetCn(): StringSet {
   return {

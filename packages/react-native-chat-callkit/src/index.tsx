@@ -8,6 +8,7 @@ export {
   CallState,
   CallType,
 } from './enums';
+export * from './rename.chat';
 export * from './types';
 export { formatElapsed } from './utils/utils';
 export { InviteeListProps, MultiCall, MultiCallProps } from './view/MultiCall';

@@ -1,13 +1,13 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { DeviceEventEmitter } from 'react-native';
-import { ChatConversationType } from 'react-native-chat-sdk';
+
+import { ChatConversationType } from '../../rename.uikit';
 import {
   ContactSearchModel,
   SearchContact,
   SearchType,
-} from 'react-native-chat-uikit';
-
+} from '../../rename.uikit';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';

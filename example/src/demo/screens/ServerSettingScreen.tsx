@@ -9,6 +9,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
   AsyncStorageBasic,
   SingleLineText,
@@ -23,9 +25,7 @@ import {
   useI18nContext,
   usePaletteContext,
   useThemeContext,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
+} from '../../rename.uikit';
 import { main_bg } from '../common/assets';
 import {
   appKey as gAppKey,

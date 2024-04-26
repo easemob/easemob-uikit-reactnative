@@ -2,14 +2,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
-import { GlobalContainer as CallKitContainer } from 'react-native-chat-callkit';
+
+import { GlobalContainer as CallKitContainer } from '../rename.callkit';
 import {
   type ChatService,
   type ChatServiceListener,
   Container as UIKitContainer,
   useChatListener,
-} from 'react-native-chat-uikit';
-
+} from '../rename.uikit';
 import { ToastView } from './common';
 import { AVView } from './common/AVView';
 import {

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ChatPushConfig } from 'react-native-chat-sdk';
+
+import { ChatPushConfig } from '../../rename.uikit';
 import {
   AsyncStorageBasic,
   SingletonObjects,
@@ -8,8 +9,7 @@ import {
   useChatContext,
   useSimpleToastContext,
   useToastViewContext,
-} from 'react-native-chat-uikit';
-
+} from '../../rename.uikit';
 import { appKey as gAppKey, fcmSenderId } from '../common/const';
 import { requestFcmToken } from '../common/fcm';
 import { RequestLoginResult, RestApi } from '../common/rest.api';

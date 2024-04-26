@@ -2,6 +2,9 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
   Icon,
   ListItem,
@@ -14,10 +17,7 @@ import {
   useColors,
   useI18nContext,
   usePaletteContext,
-} from 'react-native-chat-uikit';
-import ImagePicker from 'react-native-image-crop-picker';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
+} from '../../rename.uikit';
 import { RestApi } from '../common/rest.api';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';

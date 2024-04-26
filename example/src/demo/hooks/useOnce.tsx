@@ -1,5 +1,6 @@
 import * as React from 'react';
-import type { Callback } from 'react-native-chat-uikit';
+
+import type { Callback } from '../../rename.uikit';
 
 export function useOnce() {
   const onceRef = React.useRef(false);

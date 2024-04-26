@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
-import { getFileExtension } from 'react-native-chat-uikit';
+
+import { getFileExtension } from '../../rename.uikit';
 
 export type RequestResult<Value, Error = any> = {
   isOk: boolean;

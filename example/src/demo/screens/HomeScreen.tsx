@@ -1,8 +1,10 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
-import { CallConstKey } from 'react-native-chat-callkit';
-import type { ChatMessage } from 'react-native-chat-sdk';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { CallConstKey } from '../../rename.callkit';
+import type { ChatMessage } from '../../rename.uikit';
 import {
   Badges,
   BottomTabBar,
@@ -19,9 +21,7 @@ import {
   useForceUpdate,
   useI18nContext,
   usePaletteContext,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
+} from '../../rename.uikit';
 import {
   useGeneralSetting,
   useLogin,

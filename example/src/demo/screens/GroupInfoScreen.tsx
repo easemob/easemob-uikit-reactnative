@@ -1,12 +1,12 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+
 import {
   GroupInfo,
   GroupInfoRef,
   GroupParticipantModel,
   useI18nContext,
-} from 'react-native-chat-uikit';
-
+} from '../../rename.uikit';
 import { useCallApi } from '../common/AVView';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useOnce, useStackScreenRoute } from '../hooks';

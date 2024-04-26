@@ -19,6 +19,7 @@
     "clean": "del-cli android/build android/app/build ios/build",
     "clean-module": "del-cli node_modules",
     "gen-env": "node scripts/generate-env.js",
+    "gen-rename": "node scripts/generate-rename.js",
     "doctor": "yarn expo-doctor",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\""
   },

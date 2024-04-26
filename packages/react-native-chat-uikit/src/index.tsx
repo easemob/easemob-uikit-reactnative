@@ -36,6 +36,7 @@ export * from './dispatch';
 export * from './error';
 export * from './hook';
 export * from './i18n';
+export * from './rename.chat';
 export * from './services';
 export * from './theme';
 export * from './types';

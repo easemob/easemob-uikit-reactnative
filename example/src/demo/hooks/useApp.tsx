@@ -6,14 +6,15 @@ import {
 import { useFonts } from 'expo-font';
 import * as React from 'react';
 import { BackHandler, DeviceEventEmitter, Platform } from 'react-native';
-import { CallType, CallUser } from 'react-native-chat-callkit';
+
+import { CallType, CallUser } from '../../rename.callkit';
 import {
   ChatGroup,
   ChatMultiDeviceEvent,
   ChatPushConfig,
   ChatPushRemindType,
   ChatSilentModeParamType,
-} from 'react-native-chat-sdk';
+} from '../../rename.callkit';
 import {
   ChatOptionsType,
   ChatServiceListener,
@@ -36,8 +37,7 @@ import {
   useLightTheme,
   usePermissions,
   usePresetPalette,
-} from 'react-native-chat-uikit';
-
+} from '../../rename.uikit';
 // import { getDeviceName, getSystemName, getSystemVersion, getModel, getVersion } from 'react-native-device-info';
 // getDeviceName().then((res) => console.log('test:zuoyu:res:', res));
 // console.log('test:zuoyu:res:2', getSystemName());

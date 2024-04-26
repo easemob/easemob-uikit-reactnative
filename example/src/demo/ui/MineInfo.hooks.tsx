@@ -1,5 +1,6 @@
 import * as React from 'react';
-import type { ChatPresence } from 'react-native-chat-sdk';
+
+import type { ChatPresence } from '../../rename.uikit';
 import {
   type AlertRef,
   type BottomSheetNameMenuRef,
@@ -13,8 +14,7 @@ import {
   useLifecycle,
   useMineInfoActions,
   useThemeContext,
-} from 'react-native-chat-uikit';
-
+} from '../../rename.uikit';
 import type { CommonInfoProps, MineInfoProps, UserState } from './types';
 
 export function useMineInfo(props: MineInfoProps) {

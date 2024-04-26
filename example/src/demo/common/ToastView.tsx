@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Platform, ToastAndroid } from 'react-native';
+
 import {
   ChatEventType,
   UIKitError,
   useChatListener,
   useSimpleToastContext,
-} from 'react-native-chat-uikit';
-
+} from '../../rename.uikit';
 import { useOnErrorParser, useOnFinishedParser } from '../hooks/useToastParser';
 
 export type ToastViewProps = {};

@@ -1,4 +1,4 @@
-import { useColors, usePaletteContext } from 'react-native-chat-uikit';
+import { useColors, usePaletteContext } from '../../rename.uikit';
 
 export function useBackgroundColor() {
   const { colors } = usePaletteContext();

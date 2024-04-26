@@ -1,6 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ChatConversationType, ChatMessageThread } from 'react-native-chat-sdk';
+
+import { ChatConversationType, ChatMessageThread } from '../../rename.uikit';
 import {
   ConversationDetail,
   ConversationDetailModelType,
@@ -14,8 +15,7 @@ import {
   SendVideoProps,
   SendVoiceProps,
   uuid,
-} from 'react-native-chat-uikit';
-
+} from '../../rename.uikit';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';

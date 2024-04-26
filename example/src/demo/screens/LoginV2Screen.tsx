@@ -12,6 +12,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+
 import {
   CmnButton,
   getReleaseArea,
@@ -27,9 +29,7 @@ import {
   useI18nContext,
   usePaletteContext,
   useThemeContext,
-} from 'react-native-chat-uikit';
-import DeviceInfo from 'react-native-device-info';
-
+} from '../../rename.uikit';
 import { main_bg } from '../common/assets';
 import { RestApi } from '../common/rest.api';
 import {

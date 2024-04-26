@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Dimensions, Pressable, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+
 import {
   Alert,
   BottomSheetNameMenu,
@@ -14,9 +16,7 @@ import {
   useI18nContext,
   usePaletteContext,
   useThemeContext,
-} from 'react-native-chat-uikit';
-import { ScrollView } from 'react-native-gesture-handler';
-
+} from '../../rename.uikit';
 import { mineInfo } from '../utils/utils';
 import { useMineInfo } from './MineInfo.hooks';
 import type { MineInfoProps } from './types';
