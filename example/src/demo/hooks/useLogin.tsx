@@ -20,6 +20,10 @@ export function useLogin() {
   const { getAlertRef } = useAlertContext();
   const im = useChatContext();
 
+  const getFcmToken = React.useCallback(() => {
+    return im.client.options?.pushConfig?.deviceToken;
+  }, [im.client.options?.pushConfig?.deviceToken]);
+
   const requestUpdatePushToken = React.useCallback(() => {
     requestFcmToken()
       .then((fcmToken) => {
@@ -214,5 +218,6 @@ export function useLogin() {
     autoLoginAction,
     saveSelfInfo,
     getSelfInfo,
+    getFcmToken,
   };
 }

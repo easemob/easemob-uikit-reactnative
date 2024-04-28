@@ -383,7 +383,7 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
   const im = useChatContext();
   const { tr } = useI18nContext();
   const [userId, setUserId] = React.useState<string>();
-  const { autoLoginAction } = useLogin();
+  const { autoLoginAction, getFcmToken } = useLogin();
   const { getAlertRef } = useAlertContext();
 
   const s = React.useCallback(async () => {
@@ -428,6 +428,7 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
                 onPress: () => {
                   getAlertRef()?.close(() => {
                     im.logout({
+                      unbindDeviceToken: getFcmToken() !== undefined,
                       result: () => {
                         navi.replace({ to: 'LoginV2' });
                       },
