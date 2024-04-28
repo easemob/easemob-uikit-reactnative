@@ -202,6 +202,9 @@ export function useConversationList(props: ConversationListProps) {
             if (data.name) {
               item.data.convName = data.name;
             }
+            if (data.remark && data.type === 'user') {
+              item.data.convName = data.remark;
+            }
             if (data.avatar) {
               item.data.convAvatar = data.avatar;
             }
