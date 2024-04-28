@@ -49,13 +49,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/AgoraIO-Usecase/AgoraChat-rn",
+  "repository": "https://github.com/easemob/react-native-chat-library",
   "author": "Asterisk <zuoyu@agora.io> (https://github.com/asteriskzuo)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/AgoraIO-Usecase/AgoraChat-rn/issues"
+    "url": "https://github.com/easemob/react-native-chat-library/issues"
   },
-  "homepage": "https://github.com/AgoraIO-Usecase/AgoraChat-rn#readme",
+  "homepage": "https://github.com/easemob/react-native-chat-library#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

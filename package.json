@@ -2,7 +2,7 @@
   "name": "react-native-chat-library",
   "version": "0.1.0",
   "description": "react native multi package workspaces.",
-  "repository": "https://github.com/AgoraIO-Usecase/AgoraChat-rn",
+  "repository": "https://github.com/easemob/react-native-chat-library",
   "author": "asteriskzuo@hotmail.com",
   "license": "MIT",
   "private": true,
