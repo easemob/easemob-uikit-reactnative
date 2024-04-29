@@ -23,3 +23,6 @@
 [react native library create](https://callstack.github.io/react-native-builder-bob/create)
 
 ## 其它示例项目
+
+[version introduce](https://github.com/reactwg/react-native-releases/blob/main/docs/glossary.md)
+[gitignore helper](https://www.toptal.com/developers/gitignore)

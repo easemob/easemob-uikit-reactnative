@@ -30,7 +30,7 @@ pure-uuid@^1.6.3 \
 react@18.2.0 \
 react-native@0.73.2 \
 react-native-agora@^4.2.6 \
-react-native-chat-uikit@/Users/asterisk/Downloads/2024-04-19/react-native-chat-uikit-2.0.0-beta.0 \
+react-native-chat-uikit@2.1.0-beta.4 \
 react-native-chat-sdk@1.3.1 \
 react-native-audio-recorder-player@^3.5.3 \
 @easemob/react-native-create-thumbnail@^1.6.6 \
@@ -47,7 +47,7 @@ react-native-screens@^3.20.0 \
 react-native-video@^5.2.1 \
 react-native-web@~0.19.6 \
 react-native-webview@13.2.2 \
-twemoji@>=14.0.2
+twemoji@14.0.2
 ```
 
 对于 iOS 平台：
