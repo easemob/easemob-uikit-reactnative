@@ -10,6 +10,8 @@
   "files": [
     "assets",
     "src",
+    "src/version.ts",
+    "src/rename.chat.ts",
     "lib",
     "android",
     "ios",

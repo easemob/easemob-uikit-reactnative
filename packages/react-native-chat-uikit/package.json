@@ -12,6 +12,7 @@
     "src",
     "src/version.ts",
     "src/config.local.ts",
+    "src/rename.chat.ts",
     "lib",
     "android",
     "ios",
