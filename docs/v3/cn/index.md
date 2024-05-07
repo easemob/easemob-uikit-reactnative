@@ -108,6 +108,8 @@
 [快速开始说明入口](./quick-start.md)
 [国内外版本区别](./diff-repo.md)
 [fcm推送介绍入口](./fcm-app.md)
+[本地npm包](./npm-package.md)
+[补丁npm包](./patch-package.md)
 
 ## 常见问题
 
