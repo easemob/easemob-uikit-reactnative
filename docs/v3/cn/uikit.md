@@ -19,35 +19,35 @@ UIKit 组件库需要先初始化配置在使用。这里介绍核心内容，�
 
 ## 初始化
 
-初始化分布的参数非常多。核心要点就是 需要填写 `appKey`，需要设置是否自动登录，其它参数可选。详见 `ContainerProps` 类型。
+初始化分布的参数非常多。核心要点就是 需要填写 `appKey`，需要设置是否自动登录，其它参数可选。详见 `ContainerProps` 类型[详见这里](../../../packages/react-native-chat-uikit/src/container/types.tsx)。
 
-详见 `example/src/demo/App.tsx` 示例。
+详见 `example/src/demo/App.tsx` 示例[源码](../../../example/src/demo/App.tsx)。
 
 ## 主题
 
 主题主要提供了调色板和主题两个部分。调色板主要负责基础的样式、颜色、布局等。主题是组合调色板的配置的高级选项，最后提供明暗两种风格。
 
-详见 `example/src/demo/App.tsx` 示例。
+详见 `example/src/demo/App.tsx` 示例[源码](../../../example/src/demo/App.tsx)。
 
 ## 国际化
 
 国际化目前提供了中文和英文两种默认内容。支持自定义其它语言包、扩展现有语言内容。
 
-详见 `example/src/demo/App.tsx` 示例。
+详见 `example/src/demo/App.tsx` 示例[源码](../../../example/src/demo/App.tsx)。
 
 ## 业务组件
 
 业务组件是基础组件组成的，主要包括会话列表组件、联系人列表组件、群组列表组件、群成员列表组件、群成员列表组件、好友申请通知列表组件、聊天页面组件、群详情组件、联系人详情组件等。
 其中联系人列表组件为复用组件，支持创建群组、创建新会话、邀请多人音视频等操作。聊天页面组件也是复用组件，支持普通聊天模式、话题模式、搜索模式。
 
-详见 `example/src/demo/screens/ConversationDetailScreen.tsx` 示例。
+详见 `example/src/demo/screens/ConversationDetailScreen.tsx` 示例[源码](../../../example/src/demo/screens/ConversationDetailScreen.tsx)。
 
 ## 基础组件
 
 基础组件包括 UI 基础组件、和辅助组件，UI 基础组件是业务组件组成的基石，可以快速构建业务组件，也推荐用户使用这些组件创建自定义组件，辅助组件主要完成媒体服务、类型检查、属性获取、持久化处理等。
 
-UI 基础组件在 `packages/react-native-chat-uikit/src/ui` 这里。
-hooks 组件在 `packages/react-native-chat-uikit/src/hook` 这里。
+UI 基础组件在 `packages/react-native-chat-uikit/src/ui` [这里](../../../packages/react-native-chat-uikit/src/ui)。
+hooks 组件在 `packages/react-native-chat-uikit/src/hook` [这里](../../../packages/react-native-chat-uikit/src/hook)。
 
 ## 事件分发
 

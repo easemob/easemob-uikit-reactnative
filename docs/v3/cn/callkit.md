@@ -13,7 +13,7 @@
 
 必须填写参数 `appKey`。其它注册回调参数也非常重要，需要和音视频库有交互。详见 `GlobalContainerProps`属性介绍。
 
-详见 `example/src/demo/App.tsx` 示例。
+详见 `example/src/demo/App.tsx` 示例[源码](../../../example/src/demo/App.tsx)。
 
 ## 信令部分
 
@@ -23,4 +23,4 @@
 
 UI 组件主要提供了单聊和群聊 UI 组件，支持音频和视频的通话。
 
-详见 `example/src/demo/common/AVView.tsx` 示例。
+详见 `example/src/demo/common/AVView.tsx` 示例[源码](../../../example/src/demo/common/AVView.tsx)。
