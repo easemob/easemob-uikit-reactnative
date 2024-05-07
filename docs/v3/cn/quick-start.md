@@ -30,7 +30,7 @@ pure-uuid@^1.6.3 \
 react@18.2.0 \
 react-native@0.73.2 \
 react-native-agora@^4.2.6 \
-react-native-chat-uikit@2.1.0-beta.4 \
+react-native-chat-uikit@2.1.0 \
 react-native-chat-sdk@1.3.1 \
 react-native-audio-recorder-player@^3.5.3 \
 @easemob/react-native-create-thumbnail@^1.6.6 \
@@ -243,3 +243,7 @@ const peerId = 'du005'; // 对方ID。
 **如果修改了 appKey，则需要重启应用才会生效。**
 
 运行之后，点击登录按钮进入聊天页面，输入文本内容，点击发送按钮，发送消息给对方。
+
+## 完整源码地址
+
+[点击这里查看源码](https://github.com/AsteriskZuo/TestRNUIKIT/tree/2.1)

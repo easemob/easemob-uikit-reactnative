@@ -4,17 +4,17 @@
 
 添加依赖主要包括以下主要内容：
 
-- UIKit最小需求
+- UIKit 最小需求
 - 添加依赖
 - 添加 native 配置
 - 添加代码
 
-### UIKit最小需求
+### UIKit 最小需求
 
 - react 17.0.2 或以上。
 - react-native: 0.66.5 或以上。
 - nodejs: 16.18.0 或以上。
-- chat sdk: 1.1.0 或以上，推荐最新版本。
+- chat sdk: 1.3.1 或以上，推荐最新版本。
 
 ### 添加依赖
 
@@ -45,10 +45,10 @@ yarn expo install react-native-chat-uikit
     "react": "18.2.0",
     "react-native": "0.72.7",
     "react-native-agora": "^4.2.6",
-    "react-native-agora-chat-callkit": "1.0.0",
     "react-native-audio-recorder-player": "^3.5.3",
-    "react-native-chat-sdk": "1.3.0-beta.1",
-    "react-native-chat-uikit": "2.0.0-beta.0",
+    "react-native-chat-sdk": "1.3.1",
+    "react-native-chat-callkit": "1.0.4",
+    "react-native-chat-uikit": "2.1.0",
     "react-native-create-thumbnail": "^1.6.4",
     "react-native-device-info": "^10.6.0",
     "react-native-document-picker": "^9.0.1",

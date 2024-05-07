@@ -36,6 +36,10 @@ yarn
 yarn yarn-prepack
 ```
 
+**注意**
+
+`yarn-prepack` 是命令集合，主要生成必要的文件，包括 `env.ts`, `version.ts`, `config.local.ts` 和 `rename.ts` 等。 其中 `env.ts` 还需要填写必要参数 `appKey`。
+
 #### 添加必要文件（可选）
 
 如果项目中使用 `react-native-firebase/messaging`, 那么需要添加文件。 `ios`添加 `GoogleService-Info.plist`文件。 `android` 添加 `google-services.json`文件。 详细内容参考他们的文档，链接在参考引用部分。
