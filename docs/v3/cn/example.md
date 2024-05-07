@@ -53,7 +53,7 @@ cd ios && pod install
 该实例项目运行需要配置 `AppServer`。在服务端部署 `AppServer` 服务，在客户端 实现 `RestApi` 接口。（详见 `RestApi`）
 本示例项目中，配置服务器地址 `RestApi.setServer`, 提供 获取手机号验证码、手机号登录、上传头像、获取 `rtcToken`、获取 `rtcMap`、获取群主头像接口。
 
-详见 `example/src/demo/common/rest.api.ts`
+详见 `example/src/demo/common/rest.api.ts` [源码](../../../example/src/demo/common/rest.api.ts)
 
 ## 初始化介绍
 
@@ -228,10 +228,10 @@ export function AVSelectGroupParticipantScreen(props: Props) {
 
 列表类组件:
 
-- ConversationList: `packages/react-native-chat-uikit/src/biz/ConversationList/ConversationList.tsx`
-- ContactList: `packages/react-native-chat-uikit/src/biz/ContactList/ContactList.tsx`
-- GroupList: `packages/react-native-chat-uikit/src/biz/GroupList/GroupList.tsx`
-- GroupParticipantList: `packages/react-native-chat-uikit/src/biz/GroupParticipantList/GroupParticipantList.tsx`
+- ConversationList: `packages/react-native-chat-uikit/src/biz/ConversationList/ConversationList.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/ConversationList/ConversationList.tsx)
+- ContactList: `packages/react-native-chat-uikit/src/biz/ContactList/ContactList.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/ContactList/ContactList.tsx)
+- GroupList: `packages/react-native-chat-uikit/src/biz/GroupList/GroupList.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/GroupList/GroupList.tsx)
+- GroupParticipantList: `packages/react-native-chat-uikit/src/biz/GroupParticipantList/GroupParticipantList.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/GroupParticipantList/GroupParticipantList.tsx)
 
 其中，联系人列表组件是复用组件，可以根据需要进行使用。例如：正常显示联系人列表、也可以用在创建群组的选人页面。 例如：
 
@@ -344,8 +344,8 @@ export function CreateGroupScreen(props: Props) {
 
 详情类组件包括:
 
-- ContactInfo: `packages/react-native-chat-uikit/src/biz/Info/ContactInfo.tsx`
-- GroupInfo: `packages/react-native-chat-uikit/src/biz/Info/GroupInfo.tsx`
+- ContactInfo: `packages/react-native-chat-uikit/src/biz/Info/ContactInfo.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/Info/ContactInfo.tsx)
+- GroupInfo: `packages/react-native-chat-uikit/src/biz/Info/GroupInfo.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/Info/GroupInfo.tsx)
 
 该类组件由导航栏组件、头像组件、单项列表组件组成。 导航来可以显示、隐藏和自定义。 其它部分可以使用修改和显示。
 
@@ -452,7 +452,7 @@ export function ConversationDetailScreen(props: Props) {
 }
 ```
 
-具体用法详见 `example/src/demo/screens/ConversationDetailScreen.tsx`。
+具体用法详见 `example/src/demo/screens/ConversationDetailScreen.tsx`。[源码](../../../example/src/demo/screens/ConversationDetailScreen.tsx)
 
 ## 数据管理
 

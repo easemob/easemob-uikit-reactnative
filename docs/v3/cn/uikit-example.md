@@ -149,10 +149,10 @@ export function ConversationListScreen(props: Props) {
 
 列表类组件:
 
-- ConversationList: `packages/react-native-chat-uikit/src/biz/ConversationList/ConversationList.tsx`
-- ContactList: `packages/react-native-chat-uikit/src/biz/ContactList/ContactList.tsx`
-- GroupList: `packages/react-native-chat-uikit/src/biz/GroupList/GroupList.tsx`
-- GroupParticipantList: `packages/react-native-chat-uikit/src/biz/GroupParticipantList/GroupParticipantList.tsx`
+- ConversationList: `packages/react-native-chat-uikit/src/biz/ConversationList/ConversationList.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/ConversationList/ConversationList.tsx)
+- ContactList: `packages/react-native-chat-uikit/src/biz/ContactList/ContactList.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/ContactList/ContactList.tsx)
+- GroupList: `packages/react-native-chat-uikit/src/biz/GroupList/GroupList.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/GroupList/GroupList.tsx)
+- GroupParticipantList: `packages/react-native-chat-uikit/src/biz/GroupParticipantList/GroupParticipantList.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/GroupParticipantList/GroupParticipantList.tsx)
 
 其中，联系人列表组件是复用组件，可以根据需要进行使用。例如：正常显示联系人列表、也可以用在创建群组的选人页面。 例如：
 

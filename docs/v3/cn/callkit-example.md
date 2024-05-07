@@ -44,7 +44,7 @@ cd ios && pod install
 该实例项目运行需要配置 `AppServer`。在服务端部署 `AppServer` 服务，在客户端 实现 `RestApi` 接口。（详见 `AppServerClient`）
 本示例项目中，配置服务器地址 `RestApi.setServer`, 提供 获取手机号验证码、手机号登录、上传头像、获取 `rtcToken`、获取 `rtcMap`、获取群主头像接口。
 
-详见 `examples/callkit-example/src/utils/AppServer.ts`
+详见 `examples/callkit-example/src/utils/AppServer.ts` [源码](../../../examples/callkit-example/src/utils/AppServer.ts)
 
 ## 初始化介绍
 
@@ -81,10 +81,10 @@ export function App() {
 
 页面主要分为单聊音视频页面和群聊音视频页面。
 
-- SingleCall: `packages/react-native-chat-callkit/src/view/SingleCall.tsx`
-- MultiCall: `packages/react-native-chat-callkit/src/view/MultiCall.tsx`
+- SingleCall: `packages/react-native-chat-callkit/src/view/SingleCall.tsx` [源码](../../../packages/react-native-chat-callkit/src/view/SingleCall.tsx)
+- MultiCall: `packages/react-native-chat-callkit/src/view/MultiCall.tsx` [源码](../../../packages/react-native-chat-callkit/src/view/MultiCall.tsx)
 
-详见 `examples/callkit-example/src/screens/Home.tsx`。
+详见 `examples/callkit-example/src/screens/Home.tsx`。[源码](../../../examples/callkit-example/src/screens/Home.tsx)
 
 ## 信令介绍
 
@@ -95,7 +95,7 @@ export function App() {
 `CallListener` 监听器对象主要用来接收其它设备发送的音视频通话邀请、以及错误通知。
 需要在初始化阶段进行设置。
 
-详见 `examples/callkit-example/src/screens/Home.tsx`
+详见 `examples/callkit-example/src/screens/Home.tsx` [源码](../../../examples/callkit-example/src/screens/Home.tsx)
 
 ## 常见问题
 
