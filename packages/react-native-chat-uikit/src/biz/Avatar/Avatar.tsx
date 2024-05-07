@@ -16,7 +16,9 @@ import type { StatusType } from '../types';
 export type AvatarProps = DefaultIconImageProps;
 
 /**
- * Avatar component. If the url is incorrect, does not exist, or a network error occurs
+ * Avatar component.
+ *
+ * If the url fails to load, the default avatar is displayed. The default avatar can be customized by setting `Config.personAvatar`.
  *
  * @param props {@link DefaultIconImageProps}
  */
@@ -57,6 +59,11 @@ export function Avatar(props: AvatarProps) {
   );
 }
 
+/**
+ * Group avatar component.
+ *
+ * If the url fails to load, the default avatar is displayed. The default avatar can be customized by setting `Config.groupAvatar`.
+ */
 export function GroupAvatar(props: AvatarProps) {
   const { localIcon, ...others } = props;
   const { groupAvatar } = useConfigContext();
@@ -77,6 +84,12 @@ export type StatusAvatarProps = AvatarProps & {
   statusStyle?: StyleProp<ViewStyle>;
   disableStatus?: boolean;
 };
+
+/**
+ * Status avatar component.
+ *
+ * Compared with ordinary avatar components, it has custom status. The `presence` service needs to be activated.
+ */
 export function StatusAvatar(props: StatusAvatarProps) {
   const {
     userId,

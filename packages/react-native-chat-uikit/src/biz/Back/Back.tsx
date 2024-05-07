@@ -4,6 +4,10 @@ import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 
+/**
+ * Navigation bar back button style.
+ * @returns JSX.Element
+ */
 export function BackButton() {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({

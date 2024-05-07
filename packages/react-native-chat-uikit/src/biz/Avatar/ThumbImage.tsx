@@ -8,7 +8,9 @@ import { DefaultIconImage, DefaultIconImageProps } from '../../ui/Image';
 export type ThumbImageProps = DefaultIconImageProps;
 
 /**
- * ThumbImage component. If the url is incorrect, does not exist, or a network error occurs
+ * ThumbImage component.
+ *
+ * If the url fails to load, the default avatar is displayed.
  *
  * @param props {@link DefaultIconImageProps}
  * @returns JSX.Element

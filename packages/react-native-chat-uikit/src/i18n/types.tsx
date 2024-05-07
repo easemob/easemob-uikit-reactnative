@@ -13,6 +13,8 @@ export interface StringSet {
 
 /**
  * https://learn.microsoft.com/en-us/azure/ai-services/translator/language-support
+ *
+ * Values ​​that are not enumerated are also supported and can be written like `fil as any`.
  */
 export type LanguageCode =
   | 'en'
@@ -24,6 +26,24 @@ export type LanguageCode =
   | 'ja'
   | 'ko';
 
+/**
+ * Create a registration callback for the language pack. After implementation, the language package collection can be returned according to the language code.
+ *
+ * @example
+ *
+ * ```tsx
+ * export function createDefaultStringSet(type: LanguageCode): StringSet {
+ *   switch (type) {
+ *     case 'en':
+ *       return createStringSetEn();
+ *     case 'zh-Hans':
+ *       return createStringSetCn();
+ *     default:
+ *       return createStringSetEn();
+ *   }
+ * }
+ * ```
+ */
 export type CreateStringSet = (type: LanguageCode) => StringSet;
 
 /**

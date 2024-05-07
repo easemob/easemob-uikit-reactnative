@@ -121,6 +121,8 @@ export type ContactListNavigationBarProps = PropsWithNavigationBar &
   PropsWithBack & {
     /**
      * Contact type.
+     *
+     * Contact components can be reused in many situations. For example: create groups, create new conversations, share business cards, etc. This type is used to distinguish them.
      */
     contactType: ContactType;
     /**

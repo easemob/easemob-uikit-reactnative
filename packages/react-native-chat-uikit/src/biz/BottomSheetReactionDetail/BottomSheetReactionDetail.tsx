@@ -60,6 +60,10 @@ export type BottomSheetReactionDetailProps = {
    */
   msgId: string;
 };
+
+/**
+ * The `BottomSheetReactionDetail` component displays the list of reactions and the list of users who have reacted to the message.
+ */
 export const BottomSheetReactionDetail = React.forwardRef<
   BottomSheetReactionDetailRef,
   BottomSheetReactionDetailProps

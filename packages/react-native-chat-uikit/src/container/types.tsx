@@ -11,6 +11,8 @@ import type { ReleaseArea } from '../types';
 export type ContainerProps = React.PropsWithChildren<{
   /**
    * Initialization parameters, the parameters that must be filled in include `appKey`, `debugModel`, `autoLogin`.
+   *
+   * This parameter type is equivalent to the `ChatOptions` type. All parameters can be set.
    */
   options: ChatOptionsType;
   /**
@@ -102,6 +104,8 @@ export type ContainerProps = React.PropsWithChildren<{
   };
   /**
    * Default avatar option.
+   *
+   * This setting takes effect for `Avatar`, `GroupAvatar`, `StatusAvatar` components.
    */
   avatar?: {
     borderRadiusStyle?: CornerRadiusPaletteType;
@@ -110,12 +114,16 @@ export type ContainerProps = React.PropsWithChildren<{
   };
   /**
    * Input component option.
+   *
+   * This setting takes effect for `SearchStyle`, `TextInput` components.
    */
   input?: {
     borderRadiusStyle?: CornerRadiusPaletteType;
   };
   /**
    * Alert component option.
+   *
+   * This setting takes effect for `Alert` components.
    */
   alert?: {
     borderRadiusStyle?: CornerRadiusPaletteType;

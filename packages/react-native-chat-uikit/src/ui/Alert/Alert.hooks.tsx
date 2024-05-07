@@ -53,7 +53,7 @@ export function useAlert(props: AlertProps) {
             width: count === 2 ? '48%' : '100%',
             borderRadius: getBorderRadius({
               height: 48,
-              crt: corner.input,
+              crt: corner.alert,
               cr: cornerRadius,
               style: containerStyle,
             }),

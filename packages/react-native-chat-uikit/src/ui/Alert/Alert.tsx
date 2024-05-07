@@ -174,7 +174,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 justifyContent: 'center',
                 borderRadius: getBorderRadius({
                   height: 48,
-                  crt: corner.input,
+                  crt: corner.alert,
                   cr: cornerRadius,
                   style: containerStyle,
                 }),
@@ -189,7 +189,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                   justifyContent: 'center',
                   // borderRadius: getBorderRadius({
                   //   height: 48,
-                  //   crt: corner.input,
+                  //   crt: corner.alert,
                   //   cr: cornerRadius,
                   //   style: containerStyle,
                   // }),

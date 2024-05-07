@@ -8,7 +8,7 @@ export const gEventEmitter = DeviceEventEmitter;
 export function useEventEmitter() {
   const init = React.useCallback(() => {}, []);
   const unInit = React.useCallback(() => {
-    clearEventListener();
+    // clearEventListener();
   }, []);
 
   React.useEffect(() => {

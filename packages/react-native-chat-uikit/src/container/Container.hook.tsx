@@ -116,7 +116,7 @@ export const getAlertRadiusStyle = (params: { releaseArea?: ReleaseArea }) => {
   if (params.releaseArea === 'china') {
     return 'extraSmall' as CornerRadiusPaletteType;
   } else {
-    return 'large' as CornerRadiusPaletteType;
+    return 'extraLarge' as CornerRadiusPaletteType;
   }
 };
 
