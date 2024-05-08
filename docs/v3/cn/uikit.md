@@ -66,6 +66,8 @@ UIKit 组件提供了修改昵称和头像的机会。主要通过被动注册�
 
 在初始化阶段 通过 `onUsersHandler` 和 `onGroupsHandler` 注册回调，在需要调用时候，传递默认值，返回新值的方式完成自定义。
 
+[示例源码](../../../example/src/demo/hooks/useApp.tsx)
+
 ### 主动调用
 
 在需要的地方，通过 `ChatService.updateDataList` 更新自定义数据，并且通知关注的组件。

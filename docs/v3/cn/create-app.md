@@ -27,7 +27,7 @@ pod install --project-directory=ios
 ## 常见问题
 
 1. 如何创建指定版本的项目
-   1. npx react-native@latest init --version 0.73.2 AwesomeProject
+   1. `npx react-native@latest init --version 0.73.2 AwesomeProject`
 2. 如果创建 expo 指定 `react-native` 版本的项目
    1. 无法直接指定版本。
 3. 如何创建指定版本的库项目

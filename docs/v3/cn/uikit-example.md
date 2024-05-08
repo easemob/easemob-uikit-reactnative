@@ -218,8 +218,8 @@ export function ShareContact(props: ShareContactProps) {
 
 详情类组件包括:
 
-- ContactInfo: `packages/react-native-chat-uikit/src/biz/Info/ContactInfo.tsx`
-- GroupInfo: `packages/react-native-chat-uikit/src/biz/Info/GroupInfo.tsx`
+- ContactInfo: `packages/react-native-chat-uikit/src/biz/Info/ContactInfo.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/Info/ContactInfo.tsx)
+- GroupInfo: `packages/react-native-chat-uikit/src/biz/Info/GroupInfo.tsx` [源码](../../../packages/react-native-chat-uikit/src/biz/Info/GroupInfo.tsx)
 
 该类组件由导航栏组件、头像组件、单项列表组件组成。 导航来可以显示、隐藏和自定义。 其它部分可以使用修改和显示。
 
@@ -399,7 +399,7 @@ export function ConversationDetailScreen(props: Props) {
 }
 ```
 
-具体用法详见 `example/src/demo/screens/ConversationDetailScreen.tsx`。
+具体用法详见 `example/src/demo/screens/ConversationDetailScreen.tsx` [源码](../../../example/src/demo/screens/ConversationDetailScreen.tsx)。
 
 ## 数据管理
 
