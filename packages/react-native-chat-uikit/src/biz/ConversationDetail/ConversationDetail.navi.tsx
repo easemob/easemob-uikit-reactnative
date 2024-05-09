@@ -1,18 +1,13 @@
 import * as React from 'react';
 import { Dimensions, Platform, Pressable, View } from 'react-native';
 
-import {
-  ChatServiceListener,
-  // useChatContext,
-  useChatListener,
-} from '../../chat';
 import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
-import { Avatar, GroupAvatar, StatusAvatar } from '../Avatar';
+import { Avatar, GroupAvatar, StatusAvatar, useAvatarStatus } from '../Avatar';
 import { BackButton } from '../Back';
 import {
   TopNavigationBar,
@@ -20,6 +15,7 @@ import {
   TopNavigationBarRightList,
   TopNavigationBarRightTextList,
 } from '../TopNavigationBar';
+import { StatusType } from '../types';
 import type {
   ConversationDetailModelType,
   ConversationSelectModeType,
@@ -71,8 +67,9 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   const [status, setStatus] = React.useState<string>();
   const { enableThread, enableAVMeeting, enablePresence, enableTyping } =
     useConfigContext();
-  console.log('test:zuoyu:enableTyping:', enableTyping, messageTyping);
   // const im = useChatContext();
+  const { addAvatarStatusListener, removeAvatarStatusListener } =
+    useAvatarStatus();
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -169,45 +166,15 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     };
   }, [getData]);
 
-  const listener = React.useMemo(() => {
-    return {
-      onPresenceStatusChanged: (list) => {
-        if (list.length > 0) {
-          const user = list.find((u) => {
-            return u.publisher === convId;
-          });
-          if (user) {
-            setStatus(user.statusDescription);
-          }
-        }
-      },
-    } as ChatServiceListener;
-  }, [convId]);
-  useChatListener(listener);
-
-  // React.useEffect(() => {
-  //   if (convId && convType === 0) {
-  //     im.subPresence({ userIds: [convId] });
-  //     im.fetchPresence({
-  //       userIds: [convId],
-  //       onResult: (res) => {
-  //         if (res.isOk === true) {
-  //           const user = res.value?.find((u) => {
-  //             return u.publisher === convId;
-  //           });
-  //           if (user) {
-  //             setStatus(user.statusDescription);
-  //           }
-  //         }
-  //       },
-  //     });
-  //   }
-  //   return () => {
-  //     if (convId && convType === 0) {
-  //       im.unSubPresence({ userIds: [convId] });
-  //     }
-  //   };
-  // }, [convId, convType, im]);
+  React.useEffect(() => {
+    const listener = (params: { status: StatusType }) => {
+      setStatus(params.status);
+    };
+    const sub = addAvatarStatusListener(listener);
+    return () => {
+      removeAvatarStatusListener(sub);
+    };
+  }, [addAvatarStatusListener, removeAvatarStatusListener]);
 
   if (NavigationBar) {
     // return { NavigationBar };
@@ -304,34 +271,6 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
                 </Text>
               ) : null
             ) : null}
-
-            {/* {convType === 0 && enablePresence === true ? (
-              <Text
-                textType={'extraSmall'}
-                paletteType={'body'}
-                style={{ color: getColor('text_enable') }}
-              >
-                {tr(status ?? '')}
-              </Text>
-            ) : convType === 0 &&
-              enableTyping === true &&
-              messageTyping === true ? (
-              <Text
-                textType={'extraSmall'}
-                paletteType={'body'}
-                style={{ color: getColor('text_enable') }}
-              >
-                {tr('_uikit_message_typing')}
-              </Text>
-            ) : convType === 1 && comType === 'thread' ? (
-              <Text
-                textType={'extraSmall'}
-                paletteType={'body'}
-                style={{ color: getColor('text_enable') }}
-              >
-                {`#${parentName}`}
-              </Text>
-            ) : null} */}
           </Pressable>
         </Pressable>
       }

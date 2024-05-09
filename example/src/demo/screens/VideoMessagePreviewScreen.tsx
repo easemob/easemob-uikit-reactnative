@@ -66,7 +66,6 @@ export function VideoMessagePreviewScreen(props: Props) {
               onClicked: async () => {
                 const path = await getLocalPath();
                 if (path) {
-                  console.log('test:zuoyu:saveToAlbum', path);
                   await saveToAlbum(path);
                   im.sendFinished({ event: 'videoSaved' });
                 }

@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
+import {
+  EmitterSubscription,
+  Pressable,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import { ICON_ASSETS } from '../../assets';
 import {
@@ -8,10 +14,12 @@ import {
   useChatListener,
 } from '../../chat';
 import { useConfigContext } from '../../config';
+import { useEventEmitter } from '../../dispatch';
 import { useColors, useForceUpdate, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { DefaultIconImage, DefaultIconImageProps } from '../../ui/Image';
 import type { StatusType } from '../types';
+import { gEventAvatarStatus } from './const';
 
 export type AvatarProps = DefaultIconImageProps;
 
@@ -104,6 +112,7 @@ export function StatusAvatar(props: StatusAvatarProps) {
   const [status, setStatus] = React.useState<string>();
   const { onChangeStatus, enablePresence } = useConfigContext();
   const { updater } = useForceUpdate();
+  const { emitAvatarStatusEvent } = useAvatarStatus();
   const im = useChatContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -128,7 +137,7 @@ export function StatusAvatar(props: StatusAvatarProps) {
       dark: '#FFE145',
     },
   });
-  const getStatus = (status: string) => {
+  const getStatusColor = (status: string) => {
     if (status === 'online') {
       return getColor('online');
     } else if (status === 'busy') {
@@ -141,6 +150,16 @@ export function StatusAvatar(props: StatusAvatarProps) {
     return getColor('custom');
   };
 
+  const onStatusChanged = React.useCallback(
+    (description: string) => {
+      setStatus(description);
+      emitAvatarStatusEvent({
+        status: description as StatusType,
+      });
+    },
+    [emitAvatarStatusEvent]
+  );
+
   const listener = React.useMemo(() => {
     return {
       onPresenceStatusChanged: (list) => {
@@ -149,8 +168,7 @@ export function StatusAvatar(props: StatusAvatarProps) {
             return u.publisher === userId;
           });
           if (user) {
-            setStatus(user.statusDescription);
-            onChangeStatus?.(user.statusDescription as StatusType);
+            onStatusChanged(user.statusDescription);
           }
         }
       },
@@ -164,7 +182,7 @@ export function StatusAvatar(props: StatusAvatarProps) {
         }
       },
     } as ChatServiceListener;
-  }, [im, onChangeStatus, updater, userId]);
+  }, [im, onStatusChanged, updater, userId]);
   useChatListener(listener);
 
   React.useEffect(() => {
@@ -180,8 +198,7 @@ export function StatusAvatar(props: StatusAvatarProps) {
               return u.publisher === userId;
             });
             if (user) {
-              setStatus(user.statusDescription);
-              onChangeStatus?.(user.statusDescription as StatusType);
+              onStatusChanged(user.statusDescription);
             }
           }
         },
@@ -192,7 +209,7 @@ export function StatusAvatar(props: StatusAvatarProps) {
         im.unSubPresence({ userIds: [userId] });
       }
     };
-  }, [im, onChangeStatus, userId]);
+  }, [im, onStatusChanged, userId]);
 
   React.useEffect(() => {
     if (url !== urlRef.current && url && url.length > 0) {
@@ -233,7 +250,7 @@ export function StatusAvatar(props: StatusAvatarProps) {
                 width: 7.68,
                 height: 7.68,
                 borderRadius: 9,
-                backgroundColor: getStatus(status ?? ''),
+                backgroundColor: getStatusColor(status ?? ''),
               },
               statusStyle,
             ]}
@@ -242,4 +259,32 @@ export function StatusAvatar(props: StatusAvatarProps) {
       ) : null}
     </Pressable>
   );
+}
+
+export function useAvatarStatus() {
+  const { addEventListener, removeEventListenerBySub, emitEvent } =
+    useEventEmitter();
+  const _addListener = React.useCallback(
+    (listener: (params: { status: StatusType }) => void) => {
+      return addEventListener(gEventAvatarStatus, listener);
+    },
+    [addEventListener]
+  );
+  const _removeListener = React.useCallback(
+    (sub: EmitterSubscription) => {
+      removeEventListenerBySub(gEventAvatarStatus, sub);
+    },
+    [removeEventListenerBySub]
+  );
+  const _emitEvent = React.useCallback(
+    (...params: any[]) => {
+      emitEvent(gEventAvatarStatus, ...params);
+    },
+    [emitEvent]
+  );
+  return {
+    emitAvatarStatusEvent: _emitEvent,
+    addAvatarStatusListener: _addListener,
+    removeAvatarStatusListener: _removeListener,
+  };
 }

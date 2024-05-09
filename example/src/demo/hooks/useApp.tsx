@@ -39,7 +39,6 @@ import {
   usePresetPalette,
 } from '../../rename.uikit';
 // import { getDeviceName, getSystemName, getSystemVersion, getModel, getVersion } from 'react-native-device-info';
-// getDeviceName().then((res) => console.log('test:zuoyu:res:', res));
 // console.log('test:zuoyu:res:2', getSystemName());
 // console.log('test:zuoyu:res:3', getSystemVersion());
 // console.log('test:zuoyu:res:4', getModel());
