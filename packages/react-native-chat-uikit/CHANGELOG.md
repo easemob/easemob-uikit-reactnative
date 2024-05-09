@@ -1,6 +1,6 @@
 # Change Log
 
-## [1.0.2](https://github.com/AgoraIO-Usecase/AgoraChat-rn/compare/uikit@1.0.1...uikit@1.0.2) (2023-07-14)
+## [1.0.2](https://github.com/AgoraIO-Usecase/AgoraChat-rn/compare/uikit@1.0.1...uikit@1.0.2) (2023-09-28)
 
 - 6f3dcd57b2d7025ffed7fb7e7f52fc6bea2ba72c: fix: uikit: keyborad height bug
 - e42c94ce3e46f64465d03484e93d53f8cf47643a: fix: message status
