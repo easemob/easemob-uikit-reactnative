@@ -1,5 +1,16 @@
 # Change Log
 
+## [1.0.2](https://github.com/AgoraIO-Usecase/AgoraChat-rn/compare/uikit@1.0.1...uikit@1.0.2) (2023-07-14)
+
+- 6f3dcd57b2d7025ffed7fb7e7f52fc6bea2ba72c: fix: uikit: keyborad height bug
+- e42c94ce3e46f64465d03484e93d53f8cf47643a: fix: message status
+- d6705a91a4fdc082dc68551052086e01b6da7fcd: fix: add emoji remove button
+- 025de77feac046d0965993cc452d0004e5b977b5: fix: modal render question
+- 0c26f52be3b903c23c7528cf775dfb852ad3bcdd: feat: update chat fragment component
+- d93b286696a0b08692c5999896cbf695bfa97945: chore: uikit: update depends
+- 5782637e5bece42e8481e02e504fa91049c966c7: fix: uikit: fix bug
+- 05f48d7e429d8591e9bca9b315ff6a7d93781812: fix: uikit quick start name
+
 ## [1.0.1](https://github.com/AgoraIO-Usecase/AgoraChat-UIKit-rn/compare/uikit@1.0.0...uikit@1.0.1) (2023-07-14)
 
 ### Bug Fixes
