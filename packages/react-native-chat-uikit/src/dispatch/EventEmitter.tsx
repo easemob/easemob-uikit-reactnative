@@ -72,6 +72,6 @@ export function clearEventListener() {
   });
   list.clear();
 }
-export function emitEvent(keyword: string, ...params: any[]) {
+export function emitEvent(keyword: string, ...params: any) {
   gEventEmitter.emit(keyword, params);
 }
