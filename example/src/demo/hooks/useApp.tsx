@@ -95,6 +95,7 @@ export function useApp() {
   const enableTranslateRef = React.useRef(false);
   const enableAVMeetingRef = React.useRef(false);
   const enableOfflinePushRef = React.useRef(false);
+  const enableTypingRef = React.useRef(false);
   const pageDeepRef = React.useRef(0);
   const [fontsLoaded] = useFonts({
     [twemoji_ttf_name]: twemoji_ttf,
@@ -730,6 +731,14 @@ export function useApp() {
         updater();
       }
     );
+    const ret16 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_typing',
+      (e) => {
+        console.log('dev:emit:app:typing:', e);
+        enableTypingRef.current = e === 'enable';
+        updater();
+      }
+    );
     return () => {
       ret.remove();
       ret2.remove();
@@ -746,6 +755,7 @@ export function useApp() {
       ret13.remove();
       ret14.remove();
       ret15.remove();
+      ret16.remove();
     };
   }, [dark, light, updatePush, updater]);
 
@@ -791,6 +801,7 @@ export function useApp() {
     enableTranslateRef,
     enableAVMeetingRef,
     enableOfflinePushRef,
+    enableTypingRef,
     fontsLoaded,
     rootRef,
     imServerRef,

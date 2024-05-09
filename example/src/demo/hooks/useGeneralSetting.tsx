@@ -68,6 +68,11 @@ export function useGeneralSetting() {
   >(undefined);
   const appNotificationRef = React.useRef<boolean | undefined>(undefined);
 
+  const appTypingRef = React.useRef<boolean | undefined>(undefined);
+  const [appTyping, setAppTyping] = React.useState<boolean | undefined>(
+    undefined
+  );
+
   const onSetAppTheme = React.useCallback((value: boolean) => {
     appThemeRef.current = value;
     setAppTheme(value);
@@ -136,6 +141,19 @@ export function useGeneralSetting() {
     s.setData({ key: 'presence', value: value ? 'enable' : 'disable' });
     DeviceEventEmitter.emit(
       '_demo_emit_app_presence',
+      value ? 'enable' : 'disable'
+    );
+  }, []);
+
+  const onSetAppTyping = React.useCallback((value: boolean) => {
+    appTypingRef.current = value;
+    setAppTyping(value);
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    s.setData({ key: 'typing', value: value ? 'enable' : 'disable' });
+    DeviceEventEmitter.emit(
+      '_demo_emit_app_typing',
       value ? 'enable' : 'disable'
     );
   }, []);
@@ -255,6 +273,7 @@ export function useGeneralSetting() {
     const res14 = await s.getData({ key: 'av' });
     const res15 = await s.getData({ key: 'notification' });
     const res16 = await s.getData({ key: 'translateLanguage' });
+    const res17 = await s.getData({ key: 'typing' });
     const releaseArea = getReleaseArea();
     return {
       appTheme: res.value ? res.value !== 'light' : false,
@@ -264,6 +283,7 @@ export function useGeneralSetting() {
       appPresence: res13.value ? res13.value === 'enable' : false,
       appAv: res14.value ? res14.value === 'enable' : true,
       appNotification: res15.value ? res15.value === 'enable' : false,
+      appTyping: res17.value ? res17.value === 'enable' : true,
       appStyle: res2.value ?? (releaseArea === 'china' ? 'classic' : 'modern'),
       appLanguage: res4.value ?? 'zh-Hans',
       appTranslateLanguage: res16.value ?? 'zh-Hans',
@@ -310,6 +330,8 @@ export function useGeneralSetting() {
         appAvRef.current = res.appAv;
         setAppNotification(res.appNotification);
         appNotificationRef.current = res.appNotification;
+        setAppTyping(res.appTyping);
+        appTypingRef.current = res.appTyping;
         // updater();
       })
       .catch((e) => {
@@ -354,5 +376,7 @@ export function useGeneralSetting() {
     onSetAppNotification,
     appTranslateLanguage,
     onSetAppTranslateLanguage,
+    appTyping,
+    onSetAppTyping,
   };
 }

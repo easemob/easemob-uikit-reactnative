@@ -59,6 +59,7 @@ export function useMessageInput(
     onClickedMultiSelectDeleteButton,
     onClickedMultiSelectShareButton,
     multiSelectCount,
+    onChangeValue: propsOnChangeValue,
   } = props;
   const { keyboardHeight, keyboardCurrentHeight } = useKeyboardHeight();
   const inputRef = React.useRef<RNTextInput>({} as any);
@@ -110,6 +111,7 @@ export function useMessageInput(
       setSendIconName('plus_in_circle');
     }
     _setValue(v);
+    propsOnChangeValue?.(v);
   };
 
   const changeInputBarState = (nextState: MessageInputState) => {

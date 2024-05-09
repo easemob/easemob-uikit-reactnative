@@ -15,6 +15,7 @@ export const gCustomMessageCardEventType = 'userCard';
 export const gCustomMessageRecallEventType = '_$uikit_msg_recall';
 export const gCustomMessageCreateGroupEventType = '_$uikit_create_group';
 export const gCustomMessageCreateThreadTip = '_$uikit_thread_create_tip';
+export const gCmdMessageTyping = 'TypingBegin'; // !!! Multi-end synchronization.
 export const gMessageAttributeQuote = 'msgQuote';
 export const gMessageAttributeUserInfo = 'ease_chat_uikit_user_info';
 export const gMessageAttributeVoiceReadFlag = '_$uikit_voice_read_flag';

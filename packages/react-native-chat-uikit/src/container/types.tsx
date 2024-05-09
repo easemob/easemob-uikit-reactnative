@@ -215,4 +215,9 @@ export type ContainerProps = React.PropsWithChildren<{
    * Whether to enable the message multi-select function.
    */
   enableMessageMultiSelect?: boolean;
+
+  /**
+   * Whether to enable typing status.
+   */
+  enableTyping?: boolean;
 }>;

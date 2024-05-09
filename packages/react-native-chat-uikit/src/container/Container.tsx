@@ -67,6 +67,7 @@ export function Container(props: ContainerProps) {
     enableMessageQuote = true,
     enableMessageForward = true,
     enableMessageMultiSelect = true,
+    enableTyping = true,
     releaseArea,
     onGroupsHandler,
     onUsersHandler,
@@ -153,6 +154,7 @@ export function Container(props: ContainerProps) {
                   enableMessageQuote: enableMessageQuote,
                   enableMessageForward: enableMessageForward,
                   enableMessageMultiSelect: enableMessageMultiSelect,
+                  enableTyping: enableTyping,
                   releaseArea: releaseArea ?? _releaseArea,
                 }}
               >

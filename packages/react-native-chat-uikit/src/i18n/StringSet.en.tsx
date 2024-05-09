@@ -151,6 +151,8 @@ export function createStringSetEn(): StringSet {
     '_uikit_error_placeholder_tip': 'Loading failed.',
     '_uikit_msg_custom_card': 'Contact Card',
 
+    '_uikit_message_typing': 'Typing...',
+
     'Unwelcome commercial content': 'Unwelcome Commercial Content',
     'Pornographic or explicit content': 'Pornographic or Explicit Content',
     'Child abuse': 'Child Abuse',

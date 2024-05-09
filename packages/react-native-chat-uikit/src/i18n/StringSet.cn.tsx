@@ -146,6 +146,8 @@ export function createStringSetCn(): StringSet {
     '_uikit_error_placeholder_tip': '加载失败',
     '_uikit_msg_custom_card': '名片',
 
+    '_uikit_message_typing': '正在输入中...',
+
     'Unwelcome commercial content': '不受欢迎的商业内容',
     'Pornographic or explicit content': '色情或露骨内容',
     'Child abuse': '虐待儿童',

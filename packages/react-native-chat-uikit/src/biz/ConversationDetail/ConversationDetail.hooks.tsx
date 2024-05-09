@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import {
+  gCmdMessageTyping,
   MessageServiceListener,
   UIContactListListener,
   UIConversationListListener,
@@ -9,11 +10,15 @@ import {
   useChatContext,
 } from '../../chat';
 import { uilog } from '../../const';
-import { usePermissions } from '../../hook';
+import { useDelayExecTask, usePermissions } from '../../hook';
 import {
+  ChatCmdMessageBody,
   ChatConversationType,
+  ChatMessage,
+  ChatMessageChatType,
   ChatMessageThreadEvent,
   ChatMessageThreadOperation,
+  ChatMessageType,
 } from '../../rename.chat';
 import { timeoutTask } from '../../utils';
 import { useCreateConversationDirectory } from '../hooks/useCreateConversationDirectory';
@@ -62,7 +67,8 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const [multiSelectCount, setMultiSelectCount] = React.useState(0);
   const _messageInputRef = input?.ref ?? messageInputRef;
   const _MessageInput = input?.render ?? MessageInput;
-  const messageInputProps = input?.props
+  const { onChangeValue: propsOnChangeValue } = input?.props ?? {};
+  let messageInputProps = input?.props
     ? { ...input.props, convId, convType, type: comType, thread, testMode }
     : { convId, convType, type: comType, thread, testMode };
   const _messageListRef = list?.ref ?? messageListRef;
@@ -105,6 +111,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     false
   );
   const [unreadCount, setUnreadCount] = React.useState<number>(0);
+  const [messageTyping, setMessageTyping] = React.useState<boolean>(false);
 
   const { getPermission } = usePermissions();
   const { createDirectoryIfNotExisted } = useCreateConversationDirectory();
@@ -296,6 +303,33 @@ export function useConversationDetail(props: ConversationDetailProps) {
     _messageListRef.current?.scrollToBottom?.();
   }, [_messageListRef, comType, convId, convType, im]);
 
+  const sendCmdTypingMessage = React.useCallback(() => {
+    const msg = ChatMessage.createCmdMessage(
+      convId,
+      gCmdMessageTyping,
+      ChatMessageChatType.PeerChat,
+      {
+        isChatThread: comType === 'thread' || comType === 'create_thread',
+        deliverOnlineOnly: true,
+      }
+    );
+    _messageListRef.current?.sendMessageToServer(msg);
+  }, [_messageListRef, comType, convId]);
+
+  const onInputValueChanged = React.useCallback(
+    (text: string) => {
+      propsOnChangeValue?.(text);
+      if (convType === ChatConversationType.PeerChat) {
+        sendCmdTypingMessage();
+      }
+    },
+    [convType, propsOnChangeValue, sendCmdTypingMessage]
+  );
+  messageInputProps = {
+    ...messageInputProps,
+    onChangeValue: onInputValueChanged,
+  };
+
   React.useEffect(() => {
     getPermission({
       onResult: (isSuccess: boolean) => {
@@ -313,6 +347,35 @@ export function useConversationDetail(props: ConversationDetailProps) {
       return convId;
     }
   }, [convId, convName, convRemark]);
+
+  const startMessageTyping = React.useCallback(() => {
+    setMessageTyping(true);
+  }, []);
+
+  const { delayExecTask: stopMessageTyping } = useDelayExecTask(
+    5000,
+    React.useCallback(() => {
+      setMessageTyping(false);
+    }, [])
+  );
+
+  const onMessageTyping = React.useCallback(
+    (msg: ChatMessage) => {
+      if (
+        convType === ChatConversationType.PeerChat &&
+        convId === msg.conversationId
+      ) {
+        if (msg.body.type === ChatMessageType.CMD) {
+          const body = msg.body as ChatCmdMessageBody;
+          if (body.action === gCmdMessageTyping) {
+            startMessageTyping();
+            stopMessageTyping();
+          }
+        }
+      }
+    },
+    [convId, convType, startMessageTyping, stopMessageTyping]
+  );
 
   React.useEffect(() => {
     im.messageManager.setCurrentConv({ convId, convType });
@@ -446,12 +509,28 @@ export function useConversationDetail(props: ConversationDetailProps) {
           onThreadKicked?.(thread);
         }
       },
+      onCmdMessagesReceived: (messages) => {
+        if (messages.length > 0) {
+          for (const msg of messages) {
+            if (msg.body.type === ChatMessageType.CMD) {
+              onMessageTyping(msg);
+            }
+          }
+        }
+      },
     } as MessageServiceListener;
     im.addListener(listener);
     return () => {
       im.removeListener(listener);
     };
-  }, [im, onThreadDestroyed, onThreadKicked, thread, threadName]);
+  }, [
+    im,
+    onMessageTyping,
+    onThreadDestroyed,
+    onThreadKicked,
+    thread,
+    threadName,
+  ]);
 
   React.useEffect(() => {
     createDirectoryIfNotExisted(convId);
@@ -500,5 +579,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
     onClickedUnreadCount,
     getNickName,
     parentName,
+    messageTyping,
   };
 }

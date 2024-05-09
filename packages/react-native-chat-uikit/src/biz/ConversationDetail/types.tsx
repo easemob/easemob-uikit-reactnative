@@ -164,6 +164,11 @@ export type MessageInputProps = PropsWithError &
      * Callback notification when click unread count button for clear unread message.
      */
     onClickedUnreadCount?: () => void;
+
+    /**
+     * Callback notification when change text.
+     */
+    onChangeValue?: (text: string) => void;
   };
 
 /**

@@ -90,6 +90,7 @@ export function App() {
     enableThreadRef,
     enableTranslateRef,
     enableAVMeetingRef,
+    enableTypingRef,
     fontsLoaded,
     rootRef,
     imServerRef,
@@ -138,6 +139,7 @@ export function App() {
       enableTranslateRef.current = ret.appTranslate;
       enableAVMeetingRef.current = ret.appAv;
       enableOfflinePushRef.current = ret.appNotification;
+      enableTypingRef.current = ret.appTyping;
       console.log(
         'dev:init:params:',
         isLightRef.current,
@@ -149,7 +151,8 @@ export function App() {
         enableThreadRef.current,
         enableTranslateRef.current,
         enableAVMeetingRef.current,
-        enableOfflinePushRef.current
+        enableOfflinePushRef.current,
+        enableTypingRef.current
       );
       setInitParams(true);
     } catch (error) {
@@ -164,6 +167,7 @@ export function App() {
     enableReactionRef,
     enableThreadRef,
     enableTranslateRef,
+    enableTypingRef,
     getEnableDNSConfig,
     getImPort,
     getImServer,

@@ -130,6 +130,8 @@ export function createStringSetEn(): StringSet {
     '_demo_feature_setting_presence_tip': ' ',
     '_demo_feature_setting_av': '音视频通话',
     '_demo_feature_setting_av_tip': ' ',
+    '_demo_feature_setting_typing': 'Typing Indicator',
+    '_demo_feature_setting_typing_tip': ' ',
 
     '_demo_notification_setting_navi_title': 'Message Notifications',
     '_demo_notification_setting_offline_push': 'Offline Message Push',

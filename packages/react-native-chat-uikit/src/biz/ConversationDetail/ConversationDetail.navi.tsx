@@ -43,6 +43,7 @@ type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
   onClickedThreadMore?: () => void;
   onCancelMultiSelected?: () => void;
   parentName?: string;
+  messageTyping?: boolean;
 };
 export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   props: _ConversationDetailNavigationBarProps<LeftProps, RightProps>
@@ -65,9 +66,12 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     selectMode = 'common',
     onCancelMultiSelected,
     parentName,
+    messageTyping,
   } = props;
   const [status, setStatus] = React.useState<string>();
-  const { enableThread, enableAVMeeting, enablePresence } = useConfigContext();
+  const { enableThread, enableAVMeeting, enablePresence, enableTyping } =
+    useConfigContext();
+  console.log('test:zuoyu:enableTyping:', enableTyping, messageTyping);
   // const im = useChatContext();
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -271,13 +275,53 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
               ) : null}
             </View>
 
-            {convType === 0 && enablePresence === true ? (
+            {convType === 0 ? (
+              enableTyping === true && messageTyping === true ? (
+                <Text
+                  textType={'extraSmall'}
+                  paletteType={'body'}
+                  style={{ color: getColor('text_enable') }}
+                >
+                  {tr('_uikit_message_typing')}
+                </Text>
+              ) : enablePresence === true ? (
+                <Text
+                  textType={'extraSmall'}
+                  paletteType={'body'}
+                  style={{ color: getColor('text_enable') }}
+                >
+                  {tr(status ?? '')}
+                </Text>
+              ) : null
+            ) : convType === 1 ? (
+              comType === 'thread' ? (
+                <Text
+                  textType={'extraSmall'}
+                  paletteType={'body'}
+                  style={{ color: getColor('text_enable') }}
+                >
+                  {`#${parentName}`}
+                </Text>
+              ) : null
+            ) : null}
+
+            {/* {convType === 0 && enablePresence === true ? (
               <Text
                 textType={'extraSmall'}
                 paletteType={'body'}
                 style={{ color: getColor('text_enable') }}
               >
                 {tr(status ?? '')}
+              </Text>
+            ) : convType === 0 &&
+              enableTyping === true &&
+              messageTyping === true ? (
+              <Text
+                textType={'extraSmall'}
+                paletteType={'body'}
+                style={{ color: getColor('text_enable') }}
+              >
+                {tr('_uikit_message_typing')}
               </Text>
             ) : convType === 1 && comType === 'thread' ? (
               <Text
@@ -287,7 +331,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
               >
                 {`#${parentName}`}
               </Text>
-            ) : null}
+            ) : null} */}
           </Pressable>
         </Pressable>
       }

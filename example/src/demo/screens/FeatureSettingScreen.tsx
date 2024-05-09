@@ -46,10 +46,12 @@ export function FeatureSettingScreen(props: Props) {
     appThread,
     appReaction,
     appPresence,
+    appTyping,
     onSetAppTranslate,
     onSetAppReaction,
     onSetAppThread,
     onSetAppPresence,
+    onSetAppTyping,
   } = useGeneralSetting();
 
   const onBack = () => {
@@ -298,6 +300,51 @@ export function FeatureSettingScreen(props: Props) {
           </View>
         }
       /> */}
+
+      <ListItem
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_feature_setting_typing')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {appTyping !== undefined ? (
+              <Switch
+                value={appTyping}
+                onValueChange={onSetAppTyping}
+                height={31}
+                width={51}
+              />
+            ) : null}
+          </View>
+        }
+        tail={
+          <View
+            style={{
+              height: 26,
+              paddingHorizontal: 16,
+              backgroundColor: getColor('bg2'),
+              justifyContent: 'center',
+            }}
+          >
+            <SingleLineText
+              textType={'small'}
+              paletteType={'body'}
+              style={{ color: getColor('t1') }}
+            >
+              {tr('_demo_feature_setting_typing_tip')}
+            </SingleLineText>
+          </View>
+        }
+      />
     </SafeAreaView>
   );
 }
