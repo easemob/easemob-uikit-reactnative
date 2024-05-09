@@ -6,5 +6,6 @@ export * from './useLogin';
 export * from './useNavigationRoute';
 export * from './useNavigationState';
 export * from './useOnce';
+export * from './useSaveFileToAlbum';
 export * from './useServerConfig';
 export * from './useToastParser';

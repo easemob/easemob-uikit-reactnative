@@ -185,6 +185,8 @@ export function createStringSetCn(): StringSet {
     'card': '联系人',
     'set': '设置',
     'you': '你',
+    'save': '保存',
+    'saved': '已保存',
 
     'contact': '联系人',
 

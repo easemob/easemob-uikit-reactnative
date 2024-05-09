@@ -8,6 +8,10 @@ export function useOnFinishedParser() {
         return tr('_demo_copyGroupId');
       case 'copyUserId':
         return tr('_demo_copyUserId');
+      case 'imageSaved':
+        return tr('_demo_imageSaved');
+      case 'videoSaved':
+        return tr('_demo_videoSaved');
 
       default:
         break;

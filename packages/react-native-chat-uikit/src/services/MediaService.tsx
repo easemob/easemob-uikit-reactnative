@@ -6,6 +6,7 @@ import type {
   PlayBackType,
   RecordBackType,
 } from 'react-native-audio-recorder-player';
+import { Dirs } from 'react-native-file-access';
 
 import { uilog } from '../const';
 import type { Nullable, PartialNullable } from '../types';
@@ -111,6 +112,10 @@ export class MediaServiceImplement implements MediaService {
 
   public async isExistedFile(file: string): Promise<boolean> {
     return this.option.fsModule.FileSystem.exists(file);
+  }
+
+  public getDirs(): typeof Dirs {
+    return this.option.fsModule.Dirs;
   }
 
   async startRecordAudio(options: RecordAudioOptions): Promise<boolean> {

@@ -52,6 +52,12 @@ export type ImageMessagePreviewProps = PropsWithBack &
      * Container style for the file preview component.
      */
     containerStyle?: StyleProp<ViewStyle>;
+    /**
+     * Callback function for showing the bottom sheet.
+     */
+    onShowBottomSheet?: (
+      menuRef: React.RefObject<BottomSheetNameMenuRef>
+    ) => void;
   };
 
 /**
@@ -147,7 +153,12 @@ type ImageSize = {
 };
 
 export function useImageMessagePreview(props: ImageMessagePreviewProps) {
-  const { msgId: propsMsgId, msg: propsMsg, onError } = props;
+  const {
+    msgId: propsMsgId,
+    msg: propsMsg,
+    onError,
+    onShowBottomSheet,
+  } = props;
   const im = useChatContext();
   const [url, setUrl] = React.useState<string | undefined>(undefined);
   const [size, setSize] = React.useState<ImageSize>({
@@ -212,8 +223,8 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
   );
 
   const showBottomSheet = React.useCallback(() => {
-    console.log('test:zuoyu:showBottomSheet');
-  }, []);
+    onShowBottomSheet?.(menuRef);
+  }, [onShowBottomSheet]);
 
   React.useEffect(() => {
     if (propsMsg) {

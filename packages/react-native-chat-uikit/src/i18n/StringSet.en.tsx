@@ -190,6 +190,8 @@ export function createStringSetEn(): StringSet {
     'card': 'Card',
     'set': 'Set',
     'you': 'You',
+    'save': 'Save',
+    'saved': 'Saved',
 
     'contact': 'Contact',
 

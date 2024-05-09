@@ -62,6 +62,12 @@ export type VideoMessagePreviewProps = PropsWithBack & {
    * Container style for the file preview component.
    */
   containerStyle?: StyleProp<ViewStyle>;
+  /**
+   * Callback function for showing the bottom sheet.
+   */
+  onShowBottomSheet?: (
+    menuRef: React.RefObject<BottomSheetNameMenuRef>
+  ) => void;
 };
 
 /**
@@ -199,7 +205,7 @@ type ImageSize = {
 };
 
 export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
-  const { msgId: propsMsgId, msg: propsMsg } = props;
+  const { msgId: propsMsgId, msg: propsMsg, onShowBottomSheet } = props;
   const im = useChatContext();
   const videoRef = React.useRef<Video>(null);
   const [url, setUrl] = React.useState<string>();
@@ -376,8 +382,8 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
   }, []);
 
   const showBottomSheet = React.useCallback(() => {
-    console.log('test:zuoyu:showBottomSheet');
-  }, []);
+    onShowBottomSheet?.(menuRef);
+  }, [onShowBottomSheet]);
 
   React.useEffect(() => {
     if (propsMsg) {

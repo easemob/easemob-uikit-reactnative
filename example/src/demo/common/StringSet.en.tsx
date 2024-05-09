@@ -145,6 +145,8 @@ export function createStringSetEn(): StringSet {
 
     '_demo_copyGroupId': 'Copy Successful',
     '_demo_copyUserId': 'Copy Successful',
+    '_demo_imageSaved': 'Saved',
+    '_demo_videoSaved': 'Saved',
 
     'save': 'Save',
     'done': 'Done',

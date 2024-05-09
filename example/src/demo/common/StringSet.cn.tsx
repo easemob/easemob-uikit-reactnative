@@ -137,6 +137,8 @@ export function createStringSetCn(): StringSet {
 
     '_demo_copyGroupId': '复制成功',
     '_demo_copyUserId': '复制成功',
+    '_demo_imageSaved': '已保存',
+    '_demo_videoSaved': '已保存',
 
     'save': '保存',
     'done': '完成',
