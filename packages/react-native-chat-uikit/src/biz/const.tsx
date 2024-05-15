@@ -3,6 +3,8 @@ export const gGroupListPageNumber = 20;
 export const gVoiceBarHeight = 200;
 export const gMaxVoiceDuration = 60000;
 export const gMinVoiceDuration = 1000;
+export const g_index_alphabet_range = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#';
+export const g_index_alphabet_range_array = g_index_alphabet_range.split('');
 
 export const gReportMessageList: { key: string; value: string }[] = [
   { key: 'tag1', value: 'Unwelcome commercial content' },

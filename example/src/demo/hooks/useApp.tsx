@@ -39,10 +39,6 @@ import {
   usePresetPalette,
 } from '../../rename.uikit';
 // import { getDeviceName, getSystemName, getSystemVersion, getModel, getVersion } from 'react-native-device-info';
-// console.log('test:zuoyu:res:2', getSystemName());
-// console.log('test:zuoyu:res:3', getSystemVersion());
-// console.log('test:zuoyu:res:4', getModel());
-// console.log('test:zuoyu:res:5', getVersion());
 import { createStringSetCn, createStringSetEn } from '../common';
 import { boloo_da_ttf, twemoji_ttf } from '../common/assets';
 import {

@@ -39,6 +39,14 @@ export type InfoProps = PropsWithBack &
      */
     onDoNotDisturb?: (isDisturb: boolean) => void;
     /**
+     * Block the user
+     */
+    blockUser?: boolean;
+    /**
+     * Block user callback notification.
+     */
+    onBlockUser?: (isBlock: boolean) => void;
+    /**
      * Container style for the info component.
      */
     containerStyle?: StyleProp<ViewStyle>;
@@ -122,6 +130,12 @@ export type ContactInfoProps = UserInfoProps & {
    * Set the contact remark.
    */
   onClickedContactRemark?: (userId: string, remark?: string) => void;
+  /**
+   * Custom component render.
+   * @param def Default component.
+   * @returns New components.
+   */
+  customItemRender: (def: React.ReactNode[]) => React.ReactNode[];
 };
 
 /**

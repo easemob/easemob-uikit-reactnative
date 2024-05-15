@@ -13,6 +13,7 @@ export enum UIListenerType {
   Group = 'GroupModel',
   GroupParticipant = 'GroupParticipantModel',
   NewRequest = 'NewRequestModel',
+  Block = 'BlockModel',
 }
 
 /**
@@ -94,6 +95,13 @@ export type ContactModel = _ContactModel &
     userAvatar?: string;
   };
 
+export type BlockModel = _ContactModel &
+  SortModel & {
+    userId: string;
+    userName?: string;
+    userAvatar?: string;
+  };
+
 type _GroupModel = Omit<
   PartialUndefinable<ChatGroup>,
   'memberList' | 'adminList' | 'blockList' | 'muteList'
@@ -150,7 +158,7 @@ export type NewRequestModel = {
 /**
  * The UI component will pay attention to the listener and refresh the UI when the data changes. For example: conversation list, contact list, group list, group member list, new request notification list, etc.
  *
- * DataModel: The data model of the UI component. For example: ConversationModel, ContactModel, GroupModel, etc. {@link ConversationModel} {@link ContactModel} {@link GroupModel} {@link GroupParticipantModel} {@link NewRequestModel}
+ * DataModel: The data model of the UI component. For example: ConversationModel, ContactModel, GroupModel, etc. {@link ConversationModel} {@link ContactModel} {@link GroupModel} {@link GroupParticipantModel} {@link NewRequestModel} {@link BlockModel}
  */
 export type UIListener<DataModel> = {
   /**
@@ -199,3 +207,4 @@ export type UIContactListListener = UIListener<ContactModel>;
 export type UIGroupListListener = UIListener<GroupModel>;
 export type UIGroupParticipantListListener = UIListener<GroupParticipantModel>;
 export type UINewRequestListListener = UIListener<NewRequestModel>;
+export type UIBlockListListener = UIListener<BlockModel>;

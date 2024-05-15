@@ -22,6 +22,7 @@ import type { DataProfileProvider } from './DataProfileProvider';
 import type { MessageCacheManager } from './messageManager.types';
 import type { RequestList } from './requestList.types';
 import type {
+  BlockModel,
   ContactModel,
   ConversationModel,
   GroupModel,
@@ -790,6 +791,37 @@ export interface MessageThreadServices {
   }): void;
 }
 
+export interface BlockServices {
+  /**
+   * Get the block list.
+   */
+  getAllBlockList(params: {
+    isForce?: boolean;
+    onResult: ResultCallback<BlockModel[]>;
+  }): Promise<void>;
+
+  /**
+   * Whether the user is on the blacklist.
+   *
+   * Prerequisite submission is that a blacklist list has been requested.
+   */
+  isBlockUser(params: { userId: string }): boolean;
+  /**
+   * Add user to block list.
+   */
+  addUserToBlock(params: {
+    userId: string;
+    onResult?: ResultCallback<void>;
+  }): void;
+  /**
+   * Remove user from block list.
+   */
+  removeUserFromBlock(params: {
+    userId: string;
+    onResult?: ResultCallback<void>;
+  }): void;
+}
+
 export interface GroupServices {
   // setGroupOnRequestData<DataT>(
   //   callback?: (params: {
@@ -1029,7 +1061,8 @@ export interface ChatService
     MessageServices,
     MessageReactionServices,
     MessageThreadServices,
-    PresenceServices {
+    PresenceServices,
+    BlockServices {
   /**
    * Add listener.
    * @param listener {@link ChatServiceListener}

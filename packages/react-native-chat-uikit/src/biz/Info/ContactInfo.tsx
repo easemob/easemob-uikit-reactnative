@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Dimensions, Pressable, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import { useColors } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
@@ -34,10 +35,13 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       navigationBarVisible,
       customNavigationBar,
       onInitButton,
+      customItemRender,
     } = props;
     const {
       doNotDisturb,
       onDoNotDisturb,
+      blockUser,
+      onBlockUser,
       onClearChat,
       userId,
       userAvatar,
@@ -93,6 +97,151 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
         dark: colors.neutral[95],
       },
     });
+
+    const customListItem = React.useCallback(() => {
+      const items = [] as React.ReactNode[];
+      items.push(
+        isContact === true ? (
+          <>
+            <View style={{ height: 20 }} />
+            <ListItem
+              onClicked={onClickedRemark}
+              containerStyle={{ paddingHorizontal: 16 }}
+              LeftName={
+                <Text
+                  textType={'medium'}
+                  paletteType={'title'}
+                  style={{ color: getColor('fg') }}
+                >
+                  {tr('_uikit_info_item_contact_remark')}
+                </Text>
+              }
+              RightText={
+                <SingleLineText
+                  textType={'large'}
+                  paletteType={'label'}
+                  style={{ color: getColor('t1'), maxWidth: 100 }}
+                >
+                  {userRemark}
+                </SingleLineText>
+              }
+              RightIcon={
+                <View>
+                  <Icon
+                    name={'chevron_right'}
+                    style={{
+                      height: 20,
+                      width: 20,
+                      tintColor: getColor('icon'),
+                    }}
+                  />
+                </View>
+              }
+            />
+            <View
+              style={{
+                height: 12,
+                width: '100%',
+                backgroundColor: getColor('bg2'),
+              }}
+            />
+            <ListItem
+              containerStyle={{ paddingHorizontal: 16 }}
+              LeftName={
+                <Text
+                  textType={'medium'}
+                  paletteType={'title'}
+                  style={{ color: getColor('fg') }}
+                >
+                  {tr('_uikit_info_not_disturb')}
+                </Text>
+              }
+              RightIcon={
+                <View>
+                  {doNotDisturb !== undefined ? (
+                    <CommonSwitch
+                      height={31}
+                      width={51}
+                      value={doNotDisturb}
+                      onValueChange={onDoNotDisturb}
+                    />
+                  ) : null}
+                </View>
+              }
+            />
+            <ListItem
+              containerStyle={{ paddingHorizontal: 16 }}
+              LeftName={
+                <Text
+                  textType={'medium'}
+                  paletteType={'title'}
+                  style={{ color: getColor('fg') }}
+                >
+                  {tr('_uikit_info_block_list')}
+                </Text>
+              }
+              RightIcon={
+                <View>
+                  {blockUser !== undefined ? (
+                    <CommonSwitch
+                      height={31}
+                      width={51}
+                      value={blockUser}
+                      onValueChange={onBlockUser}
+                    />
+                  ) : null}
+                </View>
+              }
+            />
+            <ListItem
+              onClicked={onClearChat}
+              containerStyle={{ paddingHorizontal: 16 }}
+              LeftName={
+                <Text
+                  textType={'medium'}
+                  paletteType={'title'}
+                  style={{ color: getColor('fg') }}
+                >
+                  {tr('_uikit_info_clear_msg')}
+                </Text>
+              }
+            />
+          </>
+        ) : isSelf !== true ? (
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
+            <CmnButton
+              sizesType={'large'}
+              radiusType={input}
+              contentType={'only-text'}
+              text={tr('_uikit_info_button_add_contact')}
+              style={{ width: 180, height: 50 }}
+              onPress={onAddContact}
+            />
+          </View>
+        ) : null
+      );
+
+      return (
+        <ScrollView style={{ flex: 1 }}>
+          {customItemRender ? customItemRender(items) : items}
+        </ScrollView>
+      );
+    }, [
+      blockUser,
+      customItemRender,
+      doNotDisturb,
+      getColor,
+      input,
+      isContact,
+      isSelf,
+      onAddContact,
+      onBlockUser,
+      onClearChat,
+      onClickedRemark,
+      onDoNotDisturb,
+      tr,
+      userRemark,
+    ]);
 
     return (
       <View
@@ -236,100 +385,8 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
             </>
           ) : null}
         </View>
-        {isContact === true ? (
-          <>
-            <View style={{ height: 20 }} />
-            <ListItem
-              onClicked={onClickedRemark}
-              containerStyle={{ paddingHorizontal: 16 }}
-              LeftName={
-                <Text
-                  textType={'medium'}
-                  paletteType={'title'}
-                  style={{ color: getColor('fg') }}
-                >
-                  {tr('_uikit_info_item_contact_remark')}
-                </Text>
-              }
-              RightText={
-                <SingleLineText
-                  textType={'large'}
-                  paletteType={'label'}
-                  style={{ color: getColor('t1'), maxWidth: 100 }}
-                >
-                  {userRemark}
-                </SingleLineText>
-              }
-              RightIcon={
-                <View>
-                  <Icon
-                    name={'chevron_right'}
-                    style={{
-                      height: 20,
-                      width: 20,
-                      tintColor: getColor('icon'),
-                    }}
-                  />
-                </View>
-              }
-            />
-            <View
-              style={{
-                height: 12,
-                width: '100%',
-                backgroundColor: getColor('bg2'),
-              }}
-            />
-            <ListItem
-              containerStyle={{ paddingHorizontal: 16 }}
-              LeftName={
-                <Text
-                  textType={'medium'}
-                  paletteType={'title'}
-                  style={{ color: getColor('fg') }}
-                >
-                  {tr('_uikit_info_not_disturb')}
-                </Text>
-              }
-              RightIcon={
-                <View>
-                  {doNotDisturb !== undefined ? (
-                    <CommonSwitch
-                      height={31}
-                      width={51}
-                      value={doNotDisturb}
-                      onValueChange={onDoNotDisturb}
-                    />
-                  ) : null}
-                </View>
-              }
-            />
-            <ListItem
-              onClicked={onClearChat}
-              containerStyle={{ paddingHorizontal: 16 }}
-              LeftName={
-                <Text
-                  textType={'medium'}
-                  paletteType={'title'}
-                  style={{ color: getColor('fg') }}
-                >
-                  {tr('_uikit_info_clear_msg')}
-                </Text>
-              }
-            />
-          </>
-        ) : isSelf !== true ? (
-          <View style={{ alignItems: 'center', marginTop: 20 }}>
-            <CmnButton
-              sizesType={'large'}
-              radiusType={input}
-              contentType={'only-text'}
-              text={tr('_uikit_info_button_add_contact')}
-              style={{ width: 180, height: 50 }}
-              onPress={onAddContact}
-            />
-          </View>
-        ) : null}
+
+        {customListItem()}
 
         <Alert ref={alertRef} />
         <BottomSheetNameMenu

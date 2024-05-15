@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { SectionListData, View } from 'react-native';
 
-// import { DeviceEventEmitter } from 'react-native';
 import {
   ChatServiceListener,
   ContactModel,
@@ -22,12 +21,12 @@ import { Text } from '../../ui/Text';
 import { getPinyin, SingletonObjects } from '../../utils';
 import { Badges } from '../Badges';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { g_index_alphabet_range, g_index_alphabet_range_array } from '../const';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useContactListMoreActions } from '../hooks/useContactListMoreActions';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
 import type { ChoiceType, ListStateType } from '../types';
-import { g_index_alphabet_range, g_index_alphabet_range_array } from './const';
 import {
   ContactItem,
   ContactListItemHeaderMemo,
@@ -1009,8 +1008,6 @@ const _sortContact = (
   prevProps: ContactListItemProps,
   nextProps: ContactListItemProps
 ): number => {
-  // todo: 按照拼音排序，非拼音的排在最后
-
   if (
     prevProps.section.pinyin &&
     prevProps.section.pinyin.length > 0 &&

@@ -162,7 +162,8 @@ export type SearchType =
   | 'group-list'
   | 'group-member-list'
   | 'request-list'
-  | 'forward-message';
+  | 'forward-message'
+  | 'block-list';
 
 /**
  * List item type. Mainly include: conversation list, contact list, group list, group member list.

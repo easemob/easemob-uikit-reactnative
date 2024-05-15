@@ -46,6 +46,11 @@ export function createStringSetCn(): StringSet {
     '_uikit_group_alert_del_member_title': (names) => `移除${names}？`,
     '_uikit_group_create_name': (key) => `${key}的群聊`,
 
+    '_uikit_block_title': (count) => `黑名单(${count})`,
+    '_uikit_black_list_title': (count) =>
+      count !== undefined ? `黑名单(${count})` : '黑名单',
+    '_uikit_block_search_placeholder': '搜索',
+
     '_uikit_chat_input_quote_file': '附件 ',
     '_uikit_chat_input_quote_title_1': ' 正在回复 ',
     '_uikit_chat_input_long_press_menu_picture': '相册',
@@ -89,6 +94,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_info_search_message': '搜索消息',
     '_uikit_info_search_msg': '搜索消息',
     '_uikit_info_not_disturb': '消息免打扰',
+    '_uikit_info_block_list': '拉黑',
     '_uikit_info_clear_msg': '清空聊天记录',
     '_uikit_info_button_add_contact': '添加联系人',
     '_uikit_info_menu_del_contact': '删除联系人',

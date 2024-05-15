@@ -8,6 +8,7 @@ import type { ChatMessage } from '../../rename.uikit';
 import {
   Badges,
   BottomTabBar,
+  ContactItem,
   ContactList,
   ConversationList,
   ConversationListRef,
@@ -32,6 +33,29 @@ import type { RootScreenParamsList } from '../routes';
 import { MineInfo } from '../ui/MineInfo';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
+
+function useContactListItemActions() {
+  const { navigate } = useNativeStackRoute();
+  const { tr } = useI18nContext();
+  const _onClickedBlockList = React.useCallback(() => {
+    navigate({ to: 'BlockList' });
+  }, [navigate]);
+  const contactItems = React.useMemo(
+    () => [
+      <ContactItem
+        key={'_uikit_contact_black_list'}
+        name={tr('_uikit_contact_black_list')}
+        count={<Badges count={0} />}
+        hasArrow={true}
+        onClicked={_onClickedBlockList}
+      />,
+    ],
+    [_onClickedBlockList, tr]
+  );
+  return {
+    contactItems,
+  };
+}
 
 function ConversationBadge() {
   const [count, setCount] = React.useState<number>(0);
@@ -330,6 +354,7 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
   const {} = props;
   const navi = useNativeStackRoute();
   const { emit } = useDispatchContext();
+  const { contactItems } = useContactListItemActions();
 
   const onChangeRequestCount = React.useCallback(
     (count: number) => {
@@ -366,11 +391,10 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
       onClickedNewRequest={() => {
         navi.navigate({ to: 'NewRequests' });
       }}
-      // NavigationBar={
-      //   <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />
-      // }
-      // enableNavigationBar={true}
-      // onClickedNewContact={() => {}}
+      onInitListItemActions={(data) => {
+        data.push(...contactItems);
+        return data;
+      }}
     />
   );
 }

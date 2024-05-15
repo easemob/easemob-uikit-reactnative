@@ -29,6 +29,7 @@ import {
   AboutSettingScreen,
   AddGroupParticipantScreen,
   AVSelectGroupParticipantScreen,
+  BlockListScreen,
   ChangeGroupOwnerScreen,
   ColorSettingScreen,
   ContactInfoScreen,
@@ -57,6 +58,7 @@ import {
   NewRequestScreen,
   NotificationSettingScreen,
   PersonInfoScreen,
+  SearchBlockScreen,
   SearchContactScreen,
   SearchConversationScreen,
   SearchGroupScreen,
@@ -630,6 +632,20 @@ export function App() {
                   headerShown: false,
                 }}
                 component={NotificationSettingScreen}
+              />
+              <Root.Screen
+                name={'SearchBlock'}
+                options={{
+                  headerShown: false,
+                }}
+                component={SearchBlockScreen}
+              />
+              <Root.Screen
+                name={'BlockList'}
+                options={{
+                  headerShown: false,
+                }}
+                component={BlockListScreen}
               />
             </Root.Navigator>
           </NavigationContainer>

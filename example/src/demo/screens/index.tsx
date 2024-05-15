@@ -1,6 +1,7 @@
 export * from './AboutSettingScreen';
 export * from './AddGroupParticipantScreen';
 export * from './AVSelectGroupParticipantScreen';
+export * from './BlockListScreen';
 export * from './ChangeGroupOwnerScreen';
 export * from './ColorSettingScreen';
 export * from './ContactInfoScreen';
@@ -29,6 +30,7 @@ export * from './NewConversationScreen';
 export * from './NewRequestScreen';
 export * from './NotificationSettingScreen';
 export * from './PersonInfoScreen';
+export * from './SearchBlockScreen';
 export * from './SearchContactScreen';
 export * from './SearchConversationScreen';
 export * from './SearchGroupParticipantScreen';

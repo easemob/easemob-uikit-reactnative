@@ -199,6 +199,14 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  SearchBlock: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  BlockList: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
 };
 export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
@@ -407,6 +415,14 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   NotificationSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  SearchBlock: {
+    option: undefined,
+    params: undefined,
+  },
+  BlockList: {
     option: undefined,
     params: undefined,
   },

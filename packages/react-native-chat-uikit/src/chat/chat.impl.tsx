@@ -46,6 +46,7 @@ import type {
   UserFrom,
 } from './types';
 import {
+  type BlockModel,
   type ContactModel,
   type ConversationModel,
   type GroupModel,
@@ -67,6 +68,7 @@ export class ChatServiceImpl
   _convStorage?: ConversationStorage;
   _convList: Map<string, ConversationModel>;
   _contactList: Map<string, ContactModel>;
+  _blockList: Map<string, BlockModel>;
   _groupList: Map<string, GroupModel>;
   _groupMemberList: Map<string, Map<string, GroupParticipantModel>>;
   _request: RequestList;
@@ -85,6 +87,7 @@ export class ChatServiceImpl
     this._userList = new Map();
     this._convList = new Map();
     this._contactList = new Map();
+    this._blockList = new Map();
     this._groupList = new Map();
     this._groupMemberList = new Map();
     this._modelState = new Map();
@@ -104,6 +107,7 @@ export class ChatServiceImpl
     this._dataList.clear();
     this._userList.clear();
     this._convList.clear();
+    this._blockList.clear();
     this._contactList.clear();
     this._groupList.clear();
     this._groupMemberList.clear();
@@ -2845,6 +2849,118 @@ export class ChatServiceImpl
       },
       onError: (e) => {
         params.onResult({
+          isOk: false,
+          error: e,
+        });
+      },
+    });
+  }
+
+  async getAllBlockList(params: {
+    isForce?: boolean;
+    onResult: ResultCallback<BlockModel[]>;
+  }): Promise<void> {
+    try {
+      let ret: string[];
+      if (this._blockList.size === 0 || params.isForce === true) {
+        ret = await this.client.contactManager.getBlockListFromServer();
+      } else {
+        ret = await this.client.contactManager.getBlockListFromDB();
+      }
+      if (ret.length > 0) {
+        await this._requestData({
+          list: ret,
+          type: 'user',
+          requestHasData: true,
+          isUpdateNotExisted: true,
+        });
+        this._blockList.clear();
+        for (const item of ret) {
+          this._blockList.set(item, {
+            userId: item,
+            userAvatar: this._getAvatarFromCache(item),
+            userName: this._getNameFromCache(item),
+            remark: this._getRemarkFromCache(item),
+          } as BlockModel);
+        }
+      } else {
+        this._blockList.clear();
+      }
+      params.onResult({
+        isOk: true,
+        value: Array.from(this._blockList.values()),
+      });
+    } catch (e) {
+      params.onResult({
+        isOk: false,
+        error: new UIKitError({
+          code: ErrorCode.ui_error,
+          desc: this._fromChatError(e),
+        }),
+      });
+    }
+  }
+  isBlockUser(params: { userId: string }): boolean {
+    return this._blockList.has(params.userId);
+  }
+  addUserToBlock(params: {
+    userId: string;
+    onResult?: ResultCallback<void>;
+  }): void {
+    const { userId, onResult } = params;
+    this.tryCatch({
+      promise: this.client.contactManager.addUserToBlockList(userId),
+      event: 'addUserToBlock',
+      onFinished: () => {
+        const user = this.getDataModel(userId);
+        if (user) {
+          const item = {
+            userId: userId,
+            userAvatar: user.avatar,
+            userName: user.name,
+            remark: user.remark,
+          } as BlockModel;
+          this._blockList.set(userId, item);
+          this.sendUIEvent(UIListenerType.Block, 'onAddedEvent', item);
+        } else {
+          this._blockList.set(userId, {
+            userId: userId,
+          } as BlockModel);
+          this.sendUIEvent(UIListenerType.Block, 'onAddedEvent', {
+            userId: userId,
+          } as BlockModel);
+        }
+        onResult?.({
+          isOk: true,
+        });
+      },
+      onError: (e) => {
+        onResult?.({
+          isOk: false,
+          error: e,
+        });
+      },
+    });
+  }
+  removeUserFromBlock(params: {
+    userId: string;
+    onResult?: ResultCallback<void>;
+  }): void {
+    const { userId, onResult } = params;
+    this.tryCatch({
+      promise: this.client.contactManager.removeUserFromBlockList(userId),
+      event: 'removeUserFromBlock',
+      onFinished: () => {
+        this._blockList.delete(userId);
+        this.sendUIEvent(UIListenerType.Block, 'onDeletedEvent', {
+          userId: userId,
+        } as BlockModel);
+        onResult?.({
+          isOk: true,
+        });
+      },
+      onError: (e) => {
+        onResult?.({
           isOk: false,
           error: e,
         });

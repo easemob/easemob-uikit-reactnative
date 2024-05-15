@@ -47,6 +47,11 @@ export function createStringSetEn(): StringSet {
     '_uikit_group_alert_del_member_title': (names) => `Remove ${names}?`,
     '_uikit_group_create_name': (key) => `${key}'s Group Chat`,
 
+    '_uikit_block_title': (count) => `Block List (${count})`,
+    '_uikit_black_list_title': (count) =>
+      count !== undefined ? `Blacklist(${count})` : 'Blacklist',
+    '_uikit_block_search_placeholder': 'Search',
+
     '_uikit_chat_input_quote_file': 'attachment ',
     '_uikit_chat_input_quote_title_1': ' replying to ',
     '_uikit_chat_input_long_press_menu_picture': 'Album',
@@ -92,6 +97,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_info_search_message': 'Search Messages',
     '_uikit_info_search_msg': 'Search Messages',
     '_uikit_info_not_disturb': 'Mute Notifications',
+    '_uikit_info_block_list': 'Block',
     '_uikit_info_clear_msg': 'Clear Chat History',
     '_uikit_info_button_add_contact': 'Add Contact',
     '_uikit_info_menu_del_contact': 'Delete Contact',

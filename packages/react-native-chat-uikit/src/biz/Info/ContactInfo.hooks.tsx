@@ -5,6 +5,7 @@ import {
   ContactServiceListener,
   DataModel,
   DataProfileProvider,
+  UIBlockListListener,
   UIContactListListener,
   UIConversationListListener,
   UIListenerType,
@@ -30,6 +31,8 @@ export function useContactInfo(
     userAvatar: propsUserAvatar,
     doNotDisturb: propsDoNotDisturb,
     onDoNotDisturb: propsOnDoNotDisturb,
+    blockUser: propsBlockUser,
+    onBlockUser: propsOnBlockUser,
     onClearChat: propsOnClearChat,
     isContact: propsIsContact,
     onInitMenu,
@@ -44,6 +47,7 @@ export function useContactInfo(
     // onRequestData,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
+  const [blockUser, setBlockUser] = React.useState(propsBlockUser);
   const [userName, setUserName] = React.useState(propsUserName);
   const [userRemark, setUserRemark] = React.useState(propsUserName);
   const [userAvatar, setUserAvatar] = React.useState(propsUserAvatar);
@@ -85,6 +89,8 @@ export function useContactInfo(
           setIsSelf(im.userId === userId);
 
           if (im.userId !== userId) {
+            setBlockUser(im.isBlockUser({ userId }));
+
             im.getConversation({
               convId: userId,
               convType: 0,
@@ -180,6 +186,19 @@ export function useContactInfo(
       doNotDisturb: value,
     });
   };
+
+  const onBlockUser = (value: boolean) => {
+    if (propsOnBlockUser) {
+      propsOnBlockUser(value);
+      return;
+    }
+    if (value === true) {
+      im.addUserToBlock({ userId });
+    } else {
+      im.removeUserFromBlock({ userId });
+    }
+  };
+
   const onClearChat = () => {
     if (propsOnClearChat) {
       propsOnClearChat();
@@ -325,6 +344,26 @@ export function useContactInfo(
   }, [im, userId]);
 
   React.useEffect(() => {
+    const listener: UIBlockListListener = {
+      onAddedEvent: (data) => {
+        if (data.userId === userId) {
+          setBlockUser(true);
+        }
+      },
+      onDeletedEvent: (data) => {
+        if (data.userId === userId) {
+          setBlockUser(false);
+        }
+      },
+      type: UIListenerType.Block,
+    };
+    im.addUIListener(listener);
+    return () => {
+      im.removeUIListener(listener);
+    };
+  }, [im, userId]);
+
+  React.useEffect(() => {
     const listener: ContactServiceListener = {
       onContactAdded: async (_userId: string) => {
         if (userId === _userId) {
@@ -381,5 +420,7 @@ export function useContactInfo(
     getNickName,
     onSearch,
     hasAudioCall: hasAudioCall,
+    blockUser,
+    onBlockUser,
   };
 }

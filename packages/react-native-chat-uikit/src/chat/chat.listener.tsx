@@ -42,6 +42,7 @@ export class ChatServiceListenerImpl {
       [UIListenerType.Group, new Set()],
       [UIListenerType.GroupParticipant, new Set()],
       [UIListenerType.NewRequest, new Set()],
+      [UIListenerType.Block, new Set()],
     ]);
   }
 
