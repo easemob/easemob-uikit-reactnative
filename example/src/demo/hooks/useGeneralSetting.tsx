@@ -73,6 +73,11 @@ export function useGeneralSetting() {
     undefined
   );
 
+  const appBlockRef = React.useRef<boolean | undefined>(undefined);
+  const [appBlock, setAppBlock] = React.useState<boolean | undefined>(
+    undefined
+  );
+
   const onSetAppTheme = React.useCallback((value: boolean) => {
     appThemeRef.current = value;
     setAppTheme(value);
@@ -154,6 +159,19 @@ export function useGeneralSetting() {
     s.setData({ key: 'typing', value: value ? 'enable' : 'disable' });
     DeviceEventEmitter.emit(
       '_demo_emit_app_typing',
+      value ? 'enable' : 'disable'
+    );
+  }, []);
+
+  const onSetAppBlock = React.useCallback((value: boolean) => {
+    appBlockRef.current = value;
+    setAppBlock(value);
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    s.setData({ key: 'block', value: value ? 'enable' : 'disable' });
+    DeviceEventEmitter.emit(
+      '_demo_emit_app_block',
       value ? 'enable' : 'disable'
     );
   }, []);
@@ -274,6 +292,7 @@ export function useGeneralSetting() {
     const res15 = await s.getData({ key: 'notification' });
     const res16 = await s.getData({ key: 'translateLanguage' });
     const res17 = await s.getData({ key: 'typing' });
+    const res18 = await s.getData({ key: 'block' });
     const releaseArea = getReleaseArea();
     return {
       appTheme: res.value ? res.value !== 'light' : false,
@@ -284,6 +303,7 @@ export function useGeneralSetting() {
       appAv: res14.value ? res14.value === 'enable' : true,
       appNotification: res15.value ? res15.value === 'enable' : false,
       appTyping: res17.value ? res17.value === 'enable' : true,
+      appBlock: res18.value ? res18.value === 'enable' : true,
       appStyle: res2.value ?? (releaseArea === 'china' ? 'classic' : 'modern'),
       appLanguage: res4.value ?? 'zh-Hans',
       appTranslateLanguage: res16.value ?? 'zh-Hans',
@@ -332,6 +352,8 @@ export function useGeneralSetting() {
         appNotificationRef.current = res.appNotification;
         setAppTyping(res.appTyping);
         appTypingRef.current = res.appTyping;
+        setAppBlock(res.appBlock);
+        appBlockRef.current = res.appBlock;
         // updater();
       })
       .catch((e) => {
@@ -378,5 +400,7 @@ export function useGeneralSetting() {
     onSetAppTranslateLanguage,
     appTyping,
     onSetAppTyping,
+    appBlock,
+    onSetAppBlock,
   };
 }

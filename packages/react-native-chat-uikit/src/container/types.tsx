@@ -220,4 +220,9 @@ export type ContainerProps = React.PropsWithChildren<{
    * Whether to enable typing status.
    */
   enableTyping?: boolean;
+
+  /**
+   * Whether to enable the block list function.
+   */
+  enableBlock?: boolean;
 }>;

@@ -125,11 +125,16 @@ export function createStringSetCn(): StringSet {
     '_demo_feature_setting_av_tip': ' ',
     '_demo_feature_setting_typing': '输入状态',
     '_demo_feature_setting_typing_tip': ' ',
+    '_demo_feature_setting_block': '黑名单',
+    '_demo_feature_setting_block_tip': ' ',
 
     '_demo_notification_setting_navi_title': '消息通知',
     '_demo_notification_setting_offline_push': '消息离线推送',
     '_demo_notification_setting_offline_push_tip':
       '关闭后，除群组内被@的消息，将不再接收任何消息推送',
+
+    '_demo_privacy_setting_navi_title': '隐私',
+    '_demo_privacy_setting_block_list': '黑名单',
 
     '_demo_logout_title': '退出登录',
     '_demo_alert_title_share_contact_title': '分享联系人？',

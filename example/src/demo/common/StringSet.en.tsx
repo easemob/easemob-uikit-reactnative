@@ -132,11 +132,16 @@ export function createStringSetEn(): StringSet {
     '_demo_feature_setting_av_tip': ' ',
     '_demo_feature_setting_typing': 'Typing Indicator',
     '_demo_feature_setting_typing_tip': ' ',
+    '_demo_feature_setting_block': 'Block List',
+    '_demo_feature_setting_block_tip': ' ',
 
     '_demo_notification_setting_navi_title': 'Message Notifications',
     '_demo_notification_setting_offline_push': 'Offline Message Push',
     '_demo_notification_setting_offline_push_tip':
       'After turning off, you will no longer receive any message notifications except for messages where you are @mentioned in the group.',
+
+    '_demo_privacy_setting_navi_title': 'Privacy',
+    '_demo_privacy_setting_block_list': 'Block List',
 
     '_demo_logout_title': 'Log Out',
     '_demo_alert_title_share_contact_title': 'Share Contacts?',

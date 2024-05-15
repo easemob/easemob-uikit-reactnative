@@ -35,7 +35,7 @@ export function MineInfo(props: MineInfoProps) {
     onClickedLogout,
     onClickedCommon,
     onClickedMessageNotification,
-    // onClickedPrivacy,
+    onClickedPrivacy,
     userState,
     onClickedPersonInfo,
     onClickedAbout,
@@ -291,7 +291,7 @@ export function MineInfo(props: MineInfoProps) {
           }
         />
 
-        {/* <ListItem
+        <ListItem
           onClicked={onClickedPrivacy}
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
@@ -318,7 +318,7 @@ export function MineInfo(props: MineInfoProps) {
               />
             </View>
           }
-        /> */}
+        />
 
         <ListItem
           onClicked={onClickedAbout}

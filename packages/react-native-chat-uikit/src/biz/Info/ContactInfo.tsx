@@ -63,6 +63,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       onSearch,
       hasAudioCall,
       userRemark,
+      enableBlock,
     } = useContactInfo(props, ref);
     const { cornerRadius } = useThemeContext();
     const { input } = cornerRadius;
@@ -102,7 +103,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       const items = [] as React.ReactNode[];
       items.push(
         isContact === true ? (
-          <>
+          <View key={'99'}>
             <View style={{ height: 20 }} />
             <ListItem
               onClicked={onClickedRemark}
@@ -169,30 +170,34 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
                 </View>
               }
             />
-            <ListItem
-              containerStyle={{ paddingHorizontal: 16 }}
-              LeftName={
-                <Text
-                  textType={'medium'}
-                  paletteType={'title'}
-                  style={{ color: getColor('fg') }}
-                >
-                  {tr('_uikit_info_block_list')}
-                </Text>
-              }
-              RightIcon={
-                <View>
-                  {blockUser !== undefined ? (
-                    <CommonSwitch
-                      height={31}
-                      width={51}
-                      value={blockUser}
-                      onValueChange={onBlockUser}
-                    />
-                  ) : null}
-                </View>
-              }
-            />
+
+            {enableBlock === true ? (
+              <ListItem
+                containerStyle={{ paddingHorizontal: 16 }}
+                LeftName={
+                  <Text
+                    textType={'medium'}
+                    paletteType={'title'}
+                    style={{ color: getColor('fg') }}
+                  >
+                    {tr('_uikit_info_block_list')}
+                  </Text>
+                }
+                RightIcon={
+                  <View>
+                    {blockUser !== undefined ? (
+                      <CommonSwitch
+                        height={31}
+                        width={51}
+                        value={blockUser}
+                        onValueChange={onBlockUser}
+                      />
+                    ) : null}
+                  </View>
+                }
+              />
+            ) : null}
+
             <ListItem
               onClicked={onClearChat}
               containerStyle={{ paddingHorizontal: 16 }}
@@ -206,9 +211,9 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
                 </Text>
               }
             />
-          </>
+          </View>
         ) : isSelf !== true ? (
-          <View style={{ alignItems: 'center', marginTop: 20 }}>
+          <View key={'98'} style={{ alignItems: 'center', marginTop: 20 }}>
             <CmnButton
               sizesType={'large'}
               radiusType={input}
@@ -230,6 +235,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       blockUser,
       customItemRender,
       doNotDisturb,
+      enableBlock,
       getColor,
       input,
       isContact,

@@ -30,6 +30,7 @@ export * from './NewConversationScreen';
 export * from './NewRequestScreen';
 export * from './NotificationSettingScreen';
 export * from './PersonInfoScreen';
+export * from './PrivacySettingScreen';
 export * from './SearchBlockScreen';
 export * from './SearchContactScreen';
 export * from './SearchConversationScreen';

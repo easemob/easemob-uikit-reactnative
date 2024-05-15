@@ -58,6 +58,7 @@ import {
   NewRequestScreen,
   NotificationSettingScreen,
   PersonInfoScreen,
+  PrivacySettingScreen,
   SearchBlockScreen,
   SearchContactScreen,
   SearchConversationScreen,
@@ -93,6 +94,7 @@ export function App() {
     enableTranslateRef,
     enableAVMeetingRef,
     enableTypingRef,
+    enableBlockRef,
     fontsLoaded,
     rootRef,
     imServerRef,
@@ -142,6 +144,7 @@ export function App() {
       enableAVMeetingRef.current = ret.appAv;
       enableOfflinePushRef.current = ret.appNotification;
       enableTypingRef.current = ret.appTyping;
+      enableBlockRef.current = ret.appBlock;
       console.log(
         'dev:init:params:',
         isLightRef.current,
@@ -154,7 +157,8 @@ export function App() {
         enableTranslateRef.current,
         enableAVMeetingRef.current,
         enableOfflinePushRef.current,
-        enableTypingRef.current
+        enableTypingRef.current,
+        enableBlockRef.current
       );
       setInitParams(true);
     } catch (error) {
@@ -163,6 +167,7 @@ export function App() {
   }, [
     _initParams,
     enableAVMeetingRef,
+    enableBlockRef,
     enableDNSConfigRef,
     enableOfflinePushRef,
     enablePresenceRef,
@@ -287,6 +292,7 @@ export function App() {
         enableThread={enableThreadRef.current}
         enableTranslate={enableTranslateRef.current}
         enableAVMeeting={enableAVMeetingRef.current}
+        enableBlock={enableBlockRef.current}
         enableMessageForward={true}
         enableMessageMultiSelect={true}
         enableMessageQuote={true}
@@ -646,6 +652,13 @@ export function App() {
                   headerShown: false,
                 }}
                 component={BlockListScreen}
+              />
+              <Root.Screen
+                name={'PrivacySetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={PrivacySettingScreen}
               />
             </Root.Navigator>
           </NavigationContainer>

@@ -354,7 +354,7 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
   const {} = props;
   const navi = useNativeStackRoute();
   const { emit } = useDispatchContext();
-  const { contactItems } = useContactListItemActions();
+  const {} = useContactListItemActions();
 
   const onChangeRequestCount = React.useCallback(
     (count: number) => {
@@ -391,10 +391,10 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
       onClickedNewRequest={() => {
         navi.navigate({ to: 'NewRequests' });
       }}
-      onInitListItemActions={(data) => {
-        data.push(...contactItems);
-        return data;
-      }}
+      // onInitListItemActions={(data) => {
+      //   data.push(...contactItems);
+      //   return data;
+      // }}
     />
   );
 }
@@ -474,6 +474,9 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
         }}
         onClickedMessageNotification={() => {
           navi.push({ to: 'NotificationSetting' });
+        }}
+        onClickedPrivacy={() => {
+          navi.push({ to: 'PrivacySetting' });
         }}
       />
     );

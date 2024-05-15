@@ -56,7 +56,7 @@ export function useContactInfo(
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
-  const { enableAVMeeting } = useConfigContext();
+  const { enableAVMeeting, enableBlock } = useConfigContext();
   const hasAudioCall = enableAVMeeting ?? false;
   const { onShowContactInfoActions } = useContactInfoActions({
     menuRef,
@@ -422,5 +422,6 @@ export function useContactInfo(
     hasAudioCall: hasAudioCall,
     blockUser,
     onBlockUser,
+    enableBlock,
   };
 }

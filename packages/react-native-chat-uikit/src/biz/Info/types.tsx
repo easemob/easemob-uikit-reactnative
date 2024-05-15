@@ -135,7 +135,7 @@ export type ContactInfoProps = UserInfoProps & {
    * @param def Default component.
    * @returns New components.
    */
-  customItemRender: (def: React.ReactNode[]) => React.ReactNode[];
+  customItemRender?: (def: React.ReactNode[]) => React.ReactNode[];
 };
 
 /**

@@ -47,11 +47,13 @@ export function FeatureSettingScreen(props: Props) {
     appReaction,
     appPresence,
     appTyping,
+    appBlock,
     onSetAppTranslate,
     onSetAppReaction,
     onSetAppThread,
     onSetAppPresence,
     onSetAppTyping,
+    onSetAppBlock,
   } = useGeneralSetting();
 
   const onBack = () => {
@@ -341,6 +343,51 @@ export function FeatureSettingScreen(props: Props) {
               style={{ color: getColor('t1') }}
             >
               {tr('_demo_feature_setting_typing_tip')}
+            </SingleLineText>
+          </View>
+        }
+      />
+
+      <ListItem
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_feature_setting_block')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {appBlock !== undefined ? (
+              <Switch
+                value={appBlock}
+                onValueChange={onSetAppBlock}
+                height={31}
+                width={51}
+              />
+            ) : null}
+          </View>
+        }
+        tail={
+          <View
+            style={{
+              height: 26,
+              paddingHorizontal: 16,
+              backgroundColor: getColor('bg2'),
+              justifyContent: 'center',
+            }}
+          >
+            <SingleLineText
+              textType={'small'}
+              paletteType={'body'}
+              style={{ color: getColor('t1') }}
+            >
+              {tr('_demo_feature_setting_block_tip')}
             </SingleLineText>
           </View>
         }
