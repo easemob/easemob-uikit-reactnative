@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { ListRenderItemInfo, View } from 'react-native';
+import {
+  ImageBackground,
+  ListRenderItemInfo,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
@@ -32,7 +37,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       () => FlatListFactory<MessageListItemProps>(),
       []
     );
-    const { containerStyle, onClicked } = props;
+    const { containerStyle, onClicked, backgroundImage } = props;
     const {
       ref: flatListRef,
       data,
@@ -103,6 +108,12 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           setMaxListHeight(e.nativeEvent.layout.height);
         }}
       >
+        {backgroundImage ? (
+          <ImageBackground
+            style={[StyleSheet.absoluteFill, {}]}
+            source={{ uri: backgroundImage }}
+          />
+        ) : null}
         <View
           style={{
             // flexGrow: 1,

@@ -300,6 +300,8 @@ export function ConversationDetailScreen(props: Props) {
         list={{
           ref: listRef,
           props: {
+            // containerStyle: { backgroundColor: 'red' },
+            // backgroundImage: 'https://img.yzcdn.cn/vant/cat.jpeg',
             onClickedItem: (
               _id: string,
               model: SystemMessageModel | TimeMessageModel | MessageModel

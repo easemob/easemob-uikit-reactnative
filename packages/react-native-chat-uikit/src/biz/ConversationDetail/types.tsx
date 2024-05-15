@@ -923,6 +923,11 @@ export type MessageListProps = PropsWithError &
       | SendCustomProps;
 
     /**
+     * Background image.
+     */
+    backgroundImage?: string;
+
+    /**
      * The callback notification for clicking the list is not the callback notification for clicking the list item.
      */
     onClicked?: () => void;
