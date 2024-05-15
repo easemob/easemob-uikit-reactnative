@@ -226,6 +226,13 @@ export type GroupInfoProps = InfoProps & {
    * Often routing is required to return to the previous page.
    */
   onGroupKicked?: (groupId: string) => void;
+
+  /**
+   * Custom component render.
+   * @param def Default component.
+   * @returns New components.
+   */
+  customItemRender?: (def: React.ReactNode[]) => React.ReactNode[];
 };
 
 /**
