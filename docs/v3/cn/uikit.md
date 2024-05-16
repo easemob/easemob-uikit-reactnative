@@ -21,6 +21,89 @@ UIKit 组件库需要先初始化配置在使用。这里介绍核心内容，�
 
 初始化分布的参数非常多。核心要点就是 需要填写 `appKey`，需要设置是否自动登录，其它参数可选。详见 `ContainerProps` 类型[详见这里](../../../packages/react-native-chat-uikit/src/container/types.tsx)。
 
+```tsx
+export function App() {
+  const {
+    initialRouteName,
+    paletteRef,
+    dark, // dark theme
+    light, // light theme
+    isLightRef,
+    languageRef, // i18n
+    translateLanguageRef,
+    isNavigationReadyRef,
+    isContainerReadyRef,
+    isFontReadyRef,
+    isReadyRef,
+    enablePresenceRef,
+    enableReactionRef,
+    enableThreadRef,
+    enableTranslateRef,
+    enableAVMeetingRef,
+    enableTypingRef,
+    enableBlockRef,
+    fontsLoaded,
+    rootRef,
+    imServerRef,
+    imPortRef,
+    enableDNSConfigRef,
+    _initParams,
+    setInitParams,
+    releaseAreaRef,
+    getOptions,
+    enableOfflinePushRef,
+    initPush,
+    requestInviteContent,
+    requestRTCToken,
+    requestUserMap,
+    requestCurrentUser,
+    requestUserInfo,
+    onInitLanguageSet,
+    onStateChange,
+    onUnhandledAction,
+    onGroupsHandler,
+    onUsersHandler,
+    fontFamily,
+  } = useApp();
+
+  return (
+    <UIKitContainer
+      options={getOptions()}
+      palette={paletteRef.current}
+      theme={isLightRef.current ? light : dark}
+      language={languageRef.current}
+      translateLanguage={translateLanguageRef.current}
+      releaseArea={releaseAreaRef.current}
+      enablePresence={enablePresenceRef.current}
+      enableReaction={enableReactionRef.current}
+      enableThread={enableThreadRef.current}
+      enableTranslate={enableTranslateRef.current}
+      enableAVMeeting={enableAVMeetingRef.current}
+      enableBlock={enableBlockRef.current}
+      enableMessageForward={true}
+      enableMessageMultiSelect={true}
+      enableMessageQuote={true}
+      fontFamily={fontFamily}
+      // avatar={{
+      //   personAvatar: defaultAvatars[2],
+      //   groupAvatar: defaultAvatars[0],
+      // }}
+      headerFontFamily={boloo_da_ttf_name}
+      // languageExtensionFactory={languageExtensionFactory}
+      onInitialized={onContainerInitialized}
+      onInitLanguageSet={onInitLanguageSet}
+      onGroupsHandler={onGroupsHandler}
+      onUsersHandler={onUsersHandler}
+      // formatTime={formatTime}
+      // recallTimeout={1200}
+      // group={{ createGroupMemberLimit: 2 }}
+    >
+      {/* others component */}
+    </UIKitContainer>
+  );
+}
+```
+
 详见 `example/src/demo/App.tsx` 示例[源码](../../../example/src/demo/App.tsx)。
 
 ## 主题
