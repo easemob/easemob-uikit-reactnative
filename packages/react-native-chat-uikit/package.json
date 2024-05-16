@@ -50,13 +50,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/easemob/react-native-chat-library",
+  "repository": "https://github.com/easemob/easemob-uikit-reactnative",
   "author": "Asterisk <zuoyu@agora.io> (https://github.com/asteriskzuo)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/easemob/react-native-chat-library/issues"
+    "url": "https://github.com/easemob/easemob-uikit-reactnative/issues"
   },
-  "homepage": "https://github.com/easemob/react-native-chat-library#readme",
+  "homepage": "https://github.com/easemob/easemob-uikit-reactnative#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

@@ -2,7 +2,7 @@
   "name": "react-native-chat-library",
   "version": "1.0.1",
   "description": "react native multi package workspaces.",
-  "repository": "https://github.com/easemob/react-native-chat-library",
+  "repository": "https://github.com/easemob/easemob-uikit-reactnative",
   "author": "asteriskzuo@hotmail.com",
   "license": "MIT",
   "private": true,

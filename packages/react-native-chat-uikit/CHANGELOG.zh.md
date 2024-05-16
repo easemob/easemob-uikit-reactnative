@@ -1,6 +1,6 @@
 # Change Log
 
-## [2.1.0](https://github.com/easemob/react-native-chat-library/compare/uikit@1.0.2-beta.1...uikit@2.1.0-beta.3) (2024-04-28)
+## [2.1.0](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@1.0.2-beta.1...uikit@2.1.0-beta.3) (2024-04-28)
 
 ### Features
 

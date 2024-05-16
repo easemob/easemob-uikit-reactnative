@@ -15,7 +15,7 @@
 
 #### 下载仓库
 
-仓库地址为：`https://github.com/easemob/react-native-chat-library/`
+仓库地址为：`https://github.com/easemob/easemob-uikit-reactnative/`
 
 如果通过 git 命令下载，还需要切换到对应分支。
 

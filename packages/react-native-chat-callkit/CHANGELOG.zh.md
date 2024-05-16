@@ -1,11 +1,11 @@
 # Change Log
 
 
-## [1.0.3](https://github.com/easemob/react-native-chat-library/compare/callkit@1.0.2...callkit@1.0.3) (2024-04-28)
+## [1.0.3](https://github.com/easemob/easemob-uikit-reactnative/compare/callkit@1.0.2...callkit@1.0.3) (2024-04-28)
 
-## [1.0.2](https://github.com/easemob/react-native-chat-library/compare/callkit@1.0.1...callkit@1.0.2) (2024-04-19)
+## [1.0.2](https://github.com/easemob/easemob-uikit-reactnative/compare/callkit@1.0.1...callkit@1.0.2) (2024-04-19)
 
-## [1.0.1](https://github.com/easemob/react-native-chat-library/compare/callkit@1.0.0...callkit@1.0.1) (2023-07-07)
+## [1.0.1](https://github.com/easemob/easemob-uikit-reactnative/compare/callkit@1.0.0...callkit@1.0.1) (2023-07-07)
 
 ### Bug Fixes
 
@@ -27,7 +27,7 @@
 - a2b987b: docs: callkit: update
 - 9a7120a: docs: callkit: update
 
-## [1.0.0](https://github.com/easemob/react-native-chat-library/releases/tag/callkit@1.0.0) (2023-07-04)
+## [1.0.0](https://github.com/easemob/easemob-uikit-reactnative/releases/tag/callkit@1.0.0) (2023-07-04)
 
 ### Features
 
