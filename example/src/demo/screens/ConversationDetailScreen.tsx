@@ -11,6 +11,8 @@ import {
   ChatMessageChatType,
   ChatMessageStatus,
   ChatMessageType,
+  MessageView,
+  MessageViewProps,
 } from '../../rename.uikit';
 import {
   ConversationDetail,
@@ -55,6 +57,14 @@ export function MyMessageContent(props: MessageContentProps) {
   return <MessageContent {...props} />;
 }
 // const MyMessageContentMemo = React.memo(MyMessageContent);
+
+export function MyMessageView(props: MessageViewProps) {
+  if (props.model.layoutType === 'left') {
+    // todo: 如果是左边的消息，则不显示头像
+    return <MessageView {...props} avatarIsVisible={false} />;
+  }
+  return MessageView(props);
+}
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ConversationDetailScreen(props: Props) {
@@ -302,6 +312,25 @@ export function ConversationDetailScreen(props: Props) {
           props: {
             // containerStyle: { backgroundColor: 'red' },
             // backgroundImage: 'https://img.yzcdn.cn/vant/cat.jpeg',
+            // onInitMenu: (menu) => {
+            //   return [
+            //     ...menu,
+            //     {
+            //       name: 'test',
+            //       isHigh: false,
+            //       icon: 'bell',
+            //       onClicked: () => {
+            //         console.log('test');
+            //         listRef.current?.addSendMessage({
+            //           type: 'custom',
+            //           msg: ChatMessage.createCustomMessage(convId, 'test', 1, {
+            //             params: { test: '111' },
+            //           }),
+            //         });
+            //       },
+            //     },
+            //   ];
+            // },
             onClickedItem: (
               _id: string,
               model: SystemMessageModel | TimeMessageModel | MessageModel
@@ -389,6 +418,7 @@ export function ConversationDetailScreen(props: Props) {
             // reportMessageCustomList: [{ key: '1', value: 'test' }],
             listItemRenderProps: {
               MessageContent: MyMessageContent,
+              // MessageView: MyMessageView,
             },
             // messageLayoutType: 'left',
             onNoMoreMessage: React.useCallback(() => {

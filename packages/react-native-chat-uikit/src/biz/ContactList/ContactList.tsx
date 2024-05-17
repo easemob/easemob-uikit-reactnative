@@ -35,6 +35,8 @@ export function ContactList(props: ContactListProps) {
     searchStyleVisible,
     customSearch,
     onClickedSearch,
+    isVisibleItemHeader = true,
+    isVisibleIndex = true,
   } = props;
   const {
     ref,
@@ -171,12 +173,16 @@ export function ContactList(props: ContactListProps) {
           keyExtractor={(item: ContactListItemProps) => {
             return item.id;
           }}
-          renderSectionHeader={(info: {
-            section: SectionListData<ContactListItemProps, IndexModel>;
-          }) => {
-            const { section } = info;
-            return <ListItemHeaderRender {...section} />;
-          }}
+          renderSectionHeader={
+            isVisibleItemHeader === true
+              ? (info: {
+                  section: SectionListData<ContactListItemProps, IndexModel>;
+                }) => {
+                  const { section } = info;
+                  return <ListItemHeaderRender {...section} />;
+                }
+              : undefined
+          }
           onEndReached={propsOnEndReached ?? onMore}
           viewabilityConfig={propsViewabilityConfig ?? viewabilityConfig}
           onViewableItemsChanged={
@@ -194,7 +200,7 @@ export function ContactList(props: ContactListProps) {
           }
           {...others}
         />
-        {AlphabeticIndex ? (
+        {isVisibleIndex === true && AlphabeticIndex ? (
           <View
             pointerEvents={'box-none'}
             style={[

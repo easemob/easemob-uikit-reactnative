@@ -52,6 +52,16 @@ export type ConversationListRef = Omit<
    * If the operation fails, an error is returned through `ErrorServiceListener.onError`.
    */
   updateItem: (items: ConversationModel) => void;
+
+  /**
+   * Displays the personal status menu.
+   */
+  showStatusActions?: () => void;
+
+  /**
+   * Displays the more menu.
+   */
+  showMoreActions?: () => void;
 };
 
 // export type ConversationListInitDataType = {

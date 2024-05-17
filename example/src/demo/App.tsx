@@ -297,6 +297,12 @@ export function App() {
         enableMessageMultiSelect={true}
         enableMessageQuote={true}
         fontFamily={fontFamily}
+        // formatTime={{
+        //   locale: enAU,
+        //   conversationDetailCallback(timestamp, enAU) {
+        //     return format(timestamp, 'yyyy-MM-dd HH:mm:ss', { locale: enAU });
+        //   },
+        // }}
         // avatar={{
         //   personAvatar: defaultAvatars[2],
         //   groupAvatar: defaultAvatars[0],

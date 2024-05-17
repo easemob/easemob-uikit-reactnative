@@ -391,6 +391,11 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
       onClickedNewRequest={() => {
         navi.navigate({ to: 'NewRequests' });
       }}
+      // ListItemRender={() => (
+      //   <View style={{ height: 20, backgroundColor: 'red' }} />
+      // )}
+      // isVisibleIndex={false}
+      // isVisibleItemHeader={false}
       // onInitListItemActions={(data) => {
       //   data.push(...contactItems);
       //   return data;

@@ -106,6 +106,16 @@ export type BlockListProps = PropsWithTest &
      * default is `false`
      */
     visibleEmptyIndex?: boolean;
+
+    /**
+     * Whether to display the list item header.
+     */
+    isVisibleItemHeader?: boolean;
+
+    /**
+     * Whether to display the index.
+     */
+    isVisibleIndex?: boolean;
   };
 
 /**

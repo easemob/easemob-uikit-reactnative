@@ -34,6 +34,8 @@ export function BlockList(props: BlockListProps) {
     searchStyleVisible,
     customSearch,
     onClickedSearch,
+    isVisibleIndex = true,
+    isVisibleItemHeader = true,
   } = props;
   const {
     ref,
@@ -149,12 +151,16 @@ export function BlockList(props: BlockListProps) {
           keyExtractor={(item: BlockListItemProps) => {
             return item.id;
           }}
-          renderSectionHeader={(info: {
-            section: SectionListData<BlockListItemProps, IndexModel>;
-          }) => {
-            const { section } = info;
-            return <ListItemHeaderRender {...section} />;
-          }}
+          renderSectionHeader={
+            isVisibleItemHeader === true
+              ? (info: {
+                  section: SectionListData<BlockListItemProps, IndexModel>;
+                }) => {
+                  const { section } = info;
+                  return <ListItemHeaderRender {...section} />;
+                }
+              : undefined
+          }
           onEndReached={propsOnEndReached ?? onMore}
           viewabilityConfig={propsViewabilityConfig ?? viewabilityConfig}
           onViewableItemsChanged={
@@ -172,7 +178,7 @@ export function BlockList(props: BlockListProps) {
           }
           {...others}
         />
-        {AlphabeticIndex ? (
+        {isVisibleIndex === true && AlphabeticIndex ? (
           <View
             pointerEvents={'box-none'}
             style={[

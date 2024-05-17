@@ -764,6 +764,12 @@ export function useConversationList(props: ConversationListProps) {
         }
       }
     };
+    propsRef.current.showStatusActions = () => {
+      onShowMineInfoActions();
+    };
+    propsRef.current.showMoreActions = () => {
+      onShowConversationListMoreActions();
+    };
   }
 
   return {

@@ -20,8 +20,13 @@ const FlatList = FlatListFactory<GroupParticipantListItemProps>();
  * Group Participant List Component.
  */
 export function GroupParticipantList(props: GroupParticipantListProps) {
-  const { containerStyle, onBack, participantType, navigationBarVisible } =
-    props;
+  const {
+    containerStyle,
+    onBack,
+    participantType,
+    navigationBarVisible,
+    customNavigationBar,
+  } = props;
   const {
     data,
     refreshing,
@@ -89,6 +94,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
           participantCount={participantCount}
           onClickedAddParticipant={onClickedAddParticipant}
           onClickedDelParticipant={onClickedDelParticipant}
+          customNavigationBar={customNavigationBar}
         />
       ) : null}
 

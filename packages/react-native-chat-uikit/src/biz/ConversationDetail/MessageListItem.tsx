@@ -2136,6 +2136,7 @@ export function MessageView(props: MessageViewProps) {
     MessageQuoteBubble: propsMessageQuoteBubble,
     MessageBubble: propsMessageBubble,
     MessageThreadBubble: propsMessageThreadBubble,
+    MessageReaction: propsMessageReaction,
     onReactionClicked,
     onThreadClicked,
     onClickedChecked,
@@ -2146,6 +2147,7 @@ export function MessageView(props: MessageViewProps) {
   const _MessageQuoteBubble = propsMessageQuoteBubble ?? MessageQuoteBubble;
   const _MessageBubble = propsMessageBubble ?? MessageBubble;
   const _MessageThreadBubble = propsMessageThreadBubble ?? MessageThreadBubble;
+  const _MessageReaction = propsMessageReaction ?? MessageReaction;
   const { layoutType, reactions, thread, isHightBackground } = model;
   const { enableThread, enableReaction, releaseArea } = useConfigContext();
   const state = getMessageState(model.msg);
@@ -2311,7 +2313,7 @@ export function MessageView(props: MessageViewProps) {
           />
         ) : null}
         {reactions && reactions?.length > 0 && enableReaction === true ? (
-          <MessageReaction
+          <_MessageReaction
             layoutType={layoutType}
             hasAvatar={avatarIsVisible}
             hasTriangle={hasTriangle}

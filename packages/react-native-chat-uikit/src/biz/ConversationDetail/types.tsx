@@ -24,6 +24,7 @@ import type {
   MessageBubbleRender,
   MessageContentRender,
   MessageQuoteBubbleRender,
+  MessageReactionRender,
   MessageThreadRender,
   MessageViewRender,
   SystemTipViewRender,
@@ -718,6 +719,10 @@ export type MessageListItemRenders = {
    * It is in `MessageView`.
    */
   MessageThreadBubble?: MessageThreadRender;
+  /**
+   * Message reaction component.
+   */
+  MessageReaction?: MessageReactionRender;
   /**
    * Message content component.
    *

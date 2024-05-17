@@ -198,6 +198,11 @@ export type ContactListProps = PropsWithTest &
      * Component for custom list items.
      */
     ListItemRender?: ContactListItemComponentType;
+
+    /**
+     * Whether to display the list item header.
+     */
+    isVisibleItemHeader?: boolean;
     /**
      * Component for custom list item headers.
      */
@@ -260,6 +265,11 @@ export type ContactListProps = PropsWithTest &
      * default is `false`
      */
     visibleEmptyIndex?: boolean;
+
+    /**
+     * Whether to display the index.
+     */
+    isVisibleIndex?: boolean;
   };
 
 /**
