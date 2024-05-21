@@ -289,7 +289,7 @@ export const MessageInput = React.forwardRef<
                       value={value}
                       keyboardAppearance={style === 'light' ? 'light' : 'dark'}
                       placeholder={'Aa'}
-                      returnKeyType={'done'}
+                      // returnKeyType={'next'}
                       onKeyPress={onKeyPress}
                     />
                   </View>

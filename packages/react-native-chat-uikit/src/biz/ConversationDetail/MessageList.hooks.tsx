@@ -31,6 +31,8 @@ import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import {
   ChatCustomMessageBody,
+  ChatFileMessageBody,
+  ChatImageMessageBody,
   ChatMessage,
   ChatMessageChatType,
   ChatMessageDirection,
@@ -42,6 +44,7 @@ import {
   ChatMessageType,
   ChatSearchDirection,
   ChatTextMessageBody,
+  ChatVideoMessageBody,
   ChatVoiceMessageBody,
 } from '../../rename.chat';
 import { Services } from '../../services';
@@ -117,6 +120,7 @@ export function useMessageList(
     onInitMenu,
     onCopyFinished: propsOnCopyFinished,
     onCreateThread: propsOnCreateThread,
+    generateThreadName: propsGenerateThreadName,
     onOpenThread: propsOnOpenThread,
     messageLayoutType,
     onNoMoreMessage,
@@ -901,15 +905,51 @@ export function useMessageList(
     [im, languageCode, onUpdateMessageToUI]
   );
 
+  const generateThreadName = React.useCallback(
+    (model: MessageModel) => {
+      if (propsGenerateThreadName) {
+        return propsGenerateThreadName(model);
+      }
+      if (model.msg.body.type === ChatMessageType.TXT) {
+        // todo: 返回32个字符或者16个汉字
+        // return (model.msg.body as ChatTextMessageBody).content;
+        const text = (model.msg.body as ChatTextMessageBody).content;
+        // todo: 返回32个字符或者16个汉字
+        return text.length > 16 ? text.substring(0, 16) : text;
+      } else if (model.msg.body.type === ChatMessageType.IMAGE) {
+        const fileName = (model.msg.body as ChatImageMessageBody).displayName;
+        const f = fileName.length > 16 ? fileName.substring(0, 16) : fileName;
+        return tr('[image]') + f;
+      } else if (model.msg.body.type === ChatMessageType.VIDEO) {
+        const fileName = (model.msg.body as ChatVideoMessageBody).displayName;
+        const f = fileName.length > 16 ? fileName.substring(0, 16) : fileName;
+        return tr('[video]') + f;
+      } else if (model.msg.body.type === ChatMessageType.FILE) {
+        const fileName = (model.msg.body as ChatFileMessageBody).displayName;
+        const f = fileName.length > 16 ? fileName.substring(0, 16) : fileName;
+        return tr('[file]') + f;
+      } else if (model.msg.body.type === ChatMessageType.VOICE) {
+        return tr('[voice]');
+      } else if (model.msg.body.type === ChatMessageType.COMBINE) {
+        return tr('[combine]');
+      } else if (model.msg.body.type === ChatMessageType.CUSTOM) {
+        return tr('[custom]');
+      } else {
+        return tr('[unknown]');
+      }
+    },
+    [propsGenerateThreadName, tr]
+  );
+
   const onCreateThread = React.useCallback(
     (model: MessageModel) => {
       propsOnCreateThread?.({
-        newName: 'default_name',
+        newName: newThreadName ?? generateThreadName(model),
         parentId: convId,
         messageId: model.msg.msgId,
       });
     },
-    [convId, propsOnCreateThread]
+    [propsOnCreateThread, newThreadName, generateThreadName, convId]
   );
 
   const _onClickedLeaveThread = React.useCallback(

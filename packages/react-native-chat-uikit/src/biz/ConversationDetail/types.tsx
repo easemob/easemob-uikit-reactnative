@@ -1103,6 +1103,11 @@ export type MessageListProps = PropsWithError &
      * Callback notification when change unread count.
      */
     onChangeUnreadCount?: (count: number) => void;
+
+    /**
+     * handler for generate thread name.
+     */
+    generateThreadName?: (msg: MessageModel) => string;
   };
 
 export type MessageThreadListRef = {};

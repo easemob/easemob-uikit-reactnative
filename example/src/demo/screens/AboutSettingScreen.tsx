@@ -4,8 +4,8 @@ import { Linking, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
-  Avatar,
   Icon,
+  Image,
   ListItem,
   SingleLineText,
   Text,
@@ -16,7 +16,7 @@ import {
   useI18nContext,
   usePaletteContext,
 } from '../../rename.uikit';
-import { logo } from '../common/assets';
+import { about_logo } from '../common/assets';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -95,7 +95,7 @@ export function AboutSettingScreen(props: Props) {
       />
 
       <Pressable style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <Avatar size={72} localIcon={logo} style={{ width: 72, height: 72 }} />
+        <Image source={about_logo} style={{ width: 72, height: 72 }} />
         <SingleLineText
           textType={'medium'}
           paletteType={'title'}

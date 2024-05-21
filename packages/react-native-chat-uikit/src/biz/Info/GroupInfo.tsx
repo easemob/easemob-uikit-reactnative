@@ -293,15 +293,24 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               </Text>
             }
             RightIcon={
-              <View>
-                <Icon
-                  name={'chevron_right'}
-                  style={{
-                    height: 20,
-                    width: 20,
-                    tintColor: getColor('icon'),
-                  }}
-                />
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <SingleLineText
+                  textType={'large'}
+                  paletteType={'body'}
+                  style={{ color: getColor('t1'), maxWidth: 150 }}
+                >
+                  {groupName}
+                </SingleLineText>
+                <View>
+                  <Icon
+                    name={'chevron_right'}
+                    style={{
+                      height: 20,
+                      width: 20,
+                      tintColor: getColor('icon'),
+                    }}
+                  />
+                </View>
               </View>
             }
           />
