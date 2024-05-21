@@ -145,8 +145,8 @@ export function createStringSetCn(): StringSet {
     '_uikit_alert_title_custom_status': '自定义在线状态',
 
     '_uikit_report_title': '消息举报',
-    '_uikit_navi_title_chat': '会话',
-    '_uikit_navi_title_contact': '联系人',
+    '_uikit_navi_title_chat': 'Chats',
+    '_uikit_navi_title_contact': 'Contacts',
     '_uikit_navi_title_search': '搜索',
     '_uikit_navi_title_mine': '我的',
     '_uikit_error_placeholder_tip': '加载失败',

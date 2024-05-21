@@ -1155,6 +1155,7 @@ export type MessageThreadMemberListItemProps = Omit<
 };
 
 export type MessageHistoryListItemProps = {
+  containerStyle?: StyleProp<ViewStyle>;
   model: MessageHistoryModel;
   onClicked?: (model: MessageHistoryModel) => void | boolean | undefined;
 };

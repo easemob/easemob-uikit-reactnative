@@ -26,7 +26,7 @@ import {
 import type { MessageHistoryListItemProps } from './types';
 
 export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
-  const { model, onClicked } = props;
+  const { model, onClicked, containerStyle } = props;
   const { msg } = model;
   const { userId, userName, avatarURL } = userInfoFromMessage(msg) ?? {};
   const { formatTime } = useConfigContext();
@@ -78,15 +78,18 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
       onLongPress={() => {}}
     >
       <View
-        style={{
-          width: '100%',
-          // height: 75.5,
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 16,
-          paddingVertical: 10,
-          // backgroundColor: 'red',
-        }}
+        style={[
+          {
+            width: '100%',
+            // height: 75.5,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 16,
+            paddingVertical: 10,
+            // backgroundColor: 'red',
+          },
+          containerStyle,
+        ]}
       >
         <View style={{ alignItems: 'flex-end' }}>
           <Avatar url={avatarURL} size={32} />
