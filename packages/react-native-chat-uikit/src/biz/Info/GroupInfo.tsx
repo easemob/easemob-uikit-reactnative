@@ -175,6 +175,7 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               onVideoCall={onVideoCall}
               onInitButton={onInitButton}
               onSearch={onSearch}
+              itemCount={4}
             />
           </View>
         </View>

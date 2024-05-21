@@ -49,6 +49,11 @@ export type BlockButtonsProps = {
   onInitButton?: (
     initButtons: React.ReactElement<BlockButtonProps>[]
   ) => React.ReactElement<BlockButtonProps>[];
+
+  /**
+   * The number of buttons displayed in the component.
+   */
+  itemCount?: number;
 };
 export const BlockButtons = (props: BlockButtonsProps) => {
   const {
@@ -61,7 +66,9 @@ export const BlockButtons = (props: BlockButtonsProps) => {
     onVideoCall,
     onInitButton,
     onSearch,
+    itemCount = 2,
   } = props;
+  const itemWidth = itemCount <= 3 ? 114 : itemCount <= 4 ? 83.5 : 62.5;
   const { tr } = useI18nContext();
   const items = [] as React.ReactElement<BlockButtonProps>[];
   if (hasSendMessage) {
@@ -70,7 +77,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'100'}
         iconName={'bubble_fill'}
         text={tr('_uikit_info_send_msg')}
-        containerStyle={styles.c}
+        containerStyle={[styles.c, { width: itemWidth }]}
         onPress={onSendMessage}
       />
     );
@@ -81,7 +88,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'101'}
         iconName={'phone_pick'}
         text={tr('_uikit_info_send_audio')}
-        containerStyle={styles.c}
+        containerStyle={[styles.c, { width: itemWidth }]}
         onPress={onAudioCall}
       />
     );
@@ -92,7 +99,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'102'}
         iconName={'video_camera'}
         text={tr('_uikit_info_send_video')}
-        containerStyle={styles.c}
+        containerStyle={[styles.c, { width: itemWidth }]}
         onPress={onVideoCall}
       />
     );
@@ -103,7 +110,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'103'}
         iconName={'magnifier'}
         text={tr('_uikit_info_search_message')}
-        containerStyle={styles.c}
+        containerStyle={[styles.c, { width: itemWidth }]}
         onPress={onSearch}
       />
     );

@@ -396,6 +396,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
                   onVideoCall={onVideoCall}
                   onInitButton={onInitButton}
                   onSearch={onSearch}
+                  itemCount={4}
                 />
               </View>
             </>

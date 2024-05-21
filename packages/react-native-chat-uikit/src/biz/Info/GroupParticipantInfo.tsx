@@ -171,6 +171,7 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
             onAudioCall={onAudioCall}
             onVideoCall={onVideoCall}
             onInitButton={onInitButton}
+            itemCount={4}
           />
         ) : isSelf === true ? null : (
           <CmnButton
