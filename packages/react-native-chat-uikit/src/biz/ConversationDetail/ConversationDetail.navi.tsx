@@ -251,7 +251,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
                 >
                   {tr('_uikit_message_typing')}
                 </Text>
-              ) : enablePresence === true ? (
+              ) : enablePresence === true && status && status?.length > 0 ? (
                 <Text
                   textType={'extraSmall'}
                   paletteType={'body'}
