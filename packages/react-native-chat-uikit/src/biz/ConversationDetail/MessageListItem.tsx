@@ -2409,13 +2409,6 @@ export function MessageListItem(props: MessageListItemProps) {
     onChecked: propsOnChecked,
     ...others
   } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
-    },
-  });
   const { modelType } = model;
   const _MessageView = propsMessageView ?? MessageView;
   const _SystemTipView = propsSystemTipView ?? SystemTipView;
@@ -2472,10 +2465,10 @@ export function MessageListItem(props: MessageListItemProps) {
       {modelType === 'history' ? (
         <MessageHistoryListItemMemo
           model={model as MessageHistoryModel}
-          containerStyle={{
-            borderTopWidth: 0.5,
-            borderTopColor: getColor('divider'),
-          }}
+          // containerStyle={{
+          //   borderTopWidth: 0.5,
+          //   borderTopColor: getColor('divider'),
+          // }}
         />
       ) : null}
     </View>
