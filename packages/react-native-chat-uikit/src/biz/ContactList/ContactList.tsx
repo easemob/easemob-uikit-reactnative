@@ -144,7 +144,7 @@ export function ContactList(props: ContactListProps) {
         <SectionList
           // ListHeaderComponent={ListHeaderComponent}
           ref={ref}
-          style={[{ flexGrow: 1 }, style]}
+          style={[{ flex: 1 }, style]}
           contentContainerStyle={[{ flexGrow: 1 }, contentContainerStyle]}
           sections={sections}
           // !!! https://github.com/facebook/react-native/issues/42967
