@@ -49,13 +49,14 @@ import type { AlertRef } from '../../ui/Alert';
 import { LocalPath, seqId, timeoutTask } from '../../utils';
 import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList/BottomSheetEmojiList';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
-import type {
-  BottomSheetReactionDetailRef,
-  MessageReactionModel,
-} from '../BottomSheetReactionDetail';
+import type { BottomSheetReactionDetailRef } from '../BottomSheetReactionDetail';
 import { gReportMessageList } from '../const';
 import { useMessageContext } from '../Context';
-import { useDataPriority, useMessageThreadListMoreActions } from '../hooks';
+import {
+  useDataPriority,
+  useMessageReactionListDetail,
+  useMessageThreadListMoreActions,
+} from '../hooks';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import {
   useEmojiLongPressActionsProps,
@@ -207,7 +208,7 @@ export function useMessageList(
     ...propsListItemRenderProps,
   });
   const {} = useMessageContext();
-  const { getMsgInfo, getContactInfo } = useDataPriority({});
+  const { getMsgInfo } = useDataPriority({});
   const { recallTimeout, languageCode, enableThread } = useConfigContext();
   const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
     userScrollGestureRef.current = isUserScroll;
@@ -988,6 +989,10 @@ export function useMessageList(
     menuRef: emojiRef,
   });
 
+  const { onShowReactionListDetail } = useMessageReactionListDetail({
+    reactionRef,
+  });
+
   const { onShowMessageThreadListMoreActions } =
     useMessageThreadListMoreActions({
       menuRef,
@@ -1309,6 +1314,20 @@ export function useMessageList(
     [onEmojiClicked]
   );
 
+  const onLongPressListItemReaction = React.useCallback(
+    (
+      _id: string,
+      model: SystemMessageModel | TimeMessageModel | MessageModel,
+      face: string
+    ) => {
+      if (model.modelType === 'message') {
+        const msgModel = model as MessageModel;
+        onShowReactionListDetail({ msgModel, onRequestCloseReaction, face });
+      }
+    },
+    [onRequestCloseReaction, onShowReactionListDetail]
+  );
+
   const onClickedListItemReaction = React.useCallback(
     (
       _id: string,
@@ -1318,59 +1337,13 @@ export function useMessageList(
       if (model.modelType === 'message') {
         if (face === 'faceplus') {
           const msgModel = model as MessageModel;
-          const list = emojiListRef.current;
-          getEmojiState(list, msgModel.msg.msgId, (updateList) => {
-            if (updateList) {
-              msgModelRef.current = model as MessageModel;
-              const onFace = (face: string) => {
-                emojiRef.current?.startHide?.(() => {
-                  onEmojiClicked(face, model as MessageModel);
-                });
-              };
-              onShowEmojiLongPressActions(updateList, onFace);
-            }
-          });
+          onShowReactionListDetail({ msgModel, onRequestCloseReaction });
         } else {
           onEmojiClicked(face, model as MessageModel);
         }
       }
     },
-    [getEmojiState, onEmojiClicked, onShowEmojiLongPressActions]
-  );
-
-  const onLongPressListItemReaction = React.useCallback(
-    (
-      _id: string,
-      model: SystemMessageModel | TimeMessageModel | MessageModel,
-      face: string
-    ) => {
-      if (model.modelType === 'message') {
-        const msgModel = model as MessageModel;
-        if (msgModel.reactions && msgModel.reactions?.length > 0) {
-          reactionRef.current?.startShowWithProps?.({
-            reactionList: [
-              ...msgModel.reactions.map((v) => {
-                return {
-                  ...v,
-                  userList: v.userList.map((v) => {
-                    return {
-                      id: v,
-                      name: getContactInfo(v).name,
-                      avatar: getContactInfo(v).avatar,
-                      type: 'user',
-                    } as DataModel;
-                  }),
-                } as MessageReactionModel;
-              }),
-            ],
-            msgId: msgModel.msg.msgId,
-            onRequestModalClose: onRequestCloseReaction,
-            currentSelected: face,
-          });
-        }
-      }
-    },
-    [getContactInfo, onRequestCloseReaction]
+    [onEmojiClicked, onRequestCloseReaction, onShowReactionListDetail]
   );
 
   const onClickedListItemThread = React.useCallback(
