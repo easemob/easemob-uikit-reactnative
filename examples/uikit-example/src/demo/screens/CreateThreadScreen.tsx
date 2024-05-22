@@ -233,13 +233,13 @@ export function CreateThreadScreen(props: Props) {
                 const params = body.params;
                 if (event === gCustomMessageCardEventType) {
                   const cardParams = params as {
-                    userId: string;
+                    uid: string;
                     nickname: string;
                     avatar: string;
                   };
                   navigation.push('ContactInfo', {
                     params: {
-                      userId: cardParams.userId,
+                      userId: cardParams.uid,
                     },
                   });
                 }

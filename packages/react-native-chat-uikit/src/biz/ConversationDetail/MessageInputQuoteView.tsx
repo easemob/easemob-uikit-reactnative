@@ -222,7 +222,7 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
       const event = body.event;
       if (event === gCustomMessageCardEventType) {
         const cardParams = body.params as {
-          userId: string;
+          uid: string;
           nickname: string;
           avatar: string;
         };
@@ -253,7 +253,7 @@ export const MessageInputQuoteView = (props: MessageInputQuoteViewProps) => {
                   color: getColor('t2'),
                 }}
               >
-                {cardParams.nickname ?? cardParams.userId}
+                {cardParams.nickname ?? cardParams.uid}
               </SingleLineText>
             </SingleLineText>
           </View>
