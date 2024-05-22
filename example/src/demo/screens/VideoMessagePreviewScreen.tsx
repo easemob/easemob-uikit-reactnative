@@ -19,7 +19,7 @@ export function VideoMessagePreviewScreen(props: Props) {
   const { route } = props;
   const navi = useStackScreenRoute(props);
   const { tr } = useI18nContext();
-  const { saveToAlbum } = useSaveFileToAlbum();
+  const { saveToAlbum2 } = useSaveFileToAlbum();
   const im = useChatContext();
   const msgId = ((route.params as any)?.params as any)?.msgId;
   const localMsgId = ((route.params as any)?.params as any)?.localMsgId;
@@ -66,7 +66,7 @@ export function VideoMessagePreviewScreen(props: Props) {
               onClicked: async () => {
                 const path = await getLocalPath();
                 if (path) {
-                  await saveToAlbum(path);
+                  await saveToAlbum2(path);
                   im.sendFinished({ event: 'videoSaved' });
                 }
                 menuRef.current?.startHide();
