@@ -112,6 +112,9 @@ export function createStringSetEn(): StringSet {
     '_uikit_info_item_group_name': 'Group Name',
     '_uikit_info_item_group_desc': 'Group Description',
     '_uikit_info_alert_clear_chat_title': 'Clearing Chat History?',
+    '_uikit_info_alert_block_chat_title': 'Block Contact',
+    '_uikit_info_alert_block_chat_message': (name) =>
+      `Confirm blocking user ${name}`,
     '_uikit_info_alert_modify_group_name': 'Modify Group Name',
     '_uikit_info_alert_modify_group_desc': 'Modify Group Description',
     '_uikit_info_alert_modify_group_remark': 'My Alias in the Group',
@@ -124,6 +127,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_info_alert_destroy_group_title': 'Disband this Group?',
     '_uikit_info_alert_destroy_group_content':
       'Disbanding the group will clear the chat history.',
+    '_uikit_info_toast_block_un_block_tip': 'Unblocked',
 
     '_uikit_new_quest_title': 'New Requests',
     '_uikit_new_quest_list_item_tip': 'requests to add you as a contact.',

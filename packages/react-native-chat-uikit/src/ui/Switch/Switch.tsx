@@ -94,7 +94,15 @@ export interface SwitchProps {
   animationDuration?: number | undefined;
 }
 
-export function Switch(props: SwitchProps) {
+export interface SwitchRef {
+  toRight: () => void;
+  toLeft: () => void;
+}
+
+export const Switch = React.forwardRef<SwitchRef, SwitchProps>(function (
+  props: SwitchProps,
+  ref?: React.ForwardedRef<SwitchRef>
+) {
   const { colors } = usePaletteContext();
   const {
     style,
@@ -172,6 +180,17 @@ export function Switch(props: SwitchProps) {
     throw new Error('trueColor must be number');
   }
 
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        toLeft,
+        toRight,
+      };
+    },
+    [toLeft, toRight]
+  );
+
   return (
     <Animated.View
       style={[
@@ -217,9 +236,7 @@ export function Switch(props: SwitchProps) {
       >
         {propsTrackIcon?.false && propsTrackIcon.true ? (
           <Icon
-            name={
-              propsValue === true ? propsTrackIcon.true : propsTrackIcon.false
-            }
+            name={_value === true ? propsTrackIcon.true : propsTrackIcon.false}
             style={[
               {
                 width: height * 0.9,
@@ -233,4 +250,4 @@ export function Switch(props: SwitchProps) {
       </Animated.View>
     </Animated.View>
   );
-}
+});

@@ -109,6 +109,8 @@ export function createStringSetCn(): StringSet {
     '_uikit_info_item_group_name': '群名称',
     '_uikit_info_item_group_desc': '群描述',
     '_uikit_info_alert_clear_chat_title': '清空聊天记录？',
+    '_uikit_info_alert_block_chat_title': '拉黑联系人',
+    '_uikit_info_alert_block_chat_message': (name) => `确认拉黑联系人${name}`,
     '_uikit_info_alert_modify_group_name': '群名称',
     '_uikit_info_alert_modify_group_desc': '群描述',
     '_uikit_info_alert_modify_group_remark': '我在本群的昵称',
@@ -119,6 +121,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_info_alert_quit_group_content': '离开群组将清空该群组的聊天记录',
     '_uikit_info_alert_destroy_group_title': '解散群组？',
     '_uikit_info_alert_destroy_group_content': '解散群组将清空该群组的聊天记录',
+    '_uikit_info_toast_block_un_block_tip': '已解除拉黑',
 
     '_uikit_new_quest_title': '新请求',
     '_uikit_new_quest_list_item_tip': '请求添加您为好友。',

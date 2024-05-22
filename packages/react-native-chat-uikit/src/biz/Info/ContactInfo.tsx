@@ -64,6 +64,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       hasAudioCall,
       userRemark,
       enableBlock,
+      switchRef,
     } = useContactInfo(props, ref);
     const { cornerRadius } = useThemeContext();
     const { input } = cornerRadius;
@@ -195,6 +196,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
                 <View>
                   {blockUser !== undefined ? (
                     <CommonSwitch
+                      ref={switchRef}
                       height={31}
                       width={51}
                       value={blockUser}
@@ -255,6 +257,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       onClearChat,
       onClickedRemark,
       onDoNotDisturb,
+      switchRef,
       tr,
       userRemark,
     ]);

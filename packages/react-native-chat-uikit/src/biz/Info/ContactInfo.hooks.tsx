@@ -16,6 +16,7 @@ import { useLifecycle } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
+import { SwitchRef } from '../../ui/Switch';
 import type { SimpleToastRef } from '../../ui/Toast';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useContactInfoActions } from '../hooks/useContactInfoActions';
@@ -56,6 +57,7 @@ export function useContactInfo(
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
+  const switchRef = React.useRef<SwitchRef | null>(null);
   const { enableAVMeeting, enableBlock } = useConfigContext();
   const hasAudioCall = enableAVMeeting ?? false;
   const { onShowContactInfoActions } = useContactInfoActions({
@@ -193,8 +195,34 @@ export function useContactInfo(
       return;
     }
     if (value === true) {
-      im.addUserToBlock({ userId });
+      alertRef.current.alertWithInit({
+        title: tr('_uikit_info_alert_block_chat_title'),
+        message: tr('_uikit_info_alert_block_chat_message', userName ?? userId),
+        buttons: [
+          {
+            text: tr('cancel'),
+            onPress: () => {
+              alertRef.current.close();
+              // setBlockUser(false);
+              switchRef.current?.toLeft?.();
+            },
+          },
+          {
+            text: tr('confirm'),
+            isPreferred: true,
+            onPress: () => {
+              alertRef.current.close(() => {
+                im.addUserToBlock({ userId });
+              });
+            },
+          },
+        ],
+      });
     } else {
+      toastRef.current?.show?.({
+        message: tr('_uikit_info_toast_block_un_block_tip'),
+        showPosition: 'center',
+      });
       im.removeUserFromBlock({ userId });
     }
   };
@@ -423,5 +451,6 @@ export function useContactInfo(
     blockUser,
     onBlockUser,
     enableBlock,
+    switchRef,
   };
 }
