@@ -157,6 +157,7 @@ export function HomeScreen(props: Props) {
   const ra = getReleaseArea();
   const releaseAreaRef = React.useRef(ra);
   useNavigationState(props);
+  const im = useChatContext();
 
   const { initParams } = useGeneralSetting();
   const [_initParams, setInitParams] = React.useState(false);
@@ -189,6 +190,13 @@ export function HomeScreen(props: Props) {
   React.useEffect(() => {
     initParamsCallback().catch();
   }, [initParamsCallback]);
+
+  React.useEffect(() => {
+    im.getAllBlockList({
+      isForce: true,
+      onResult: () => {},
+    });
+  }, [im]);
 
   return (
     <SafeAreaView
