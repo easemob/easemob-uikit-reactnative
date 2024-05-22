@@ -26,8 +26,12 @@ export function useSaveFileToAlbum() {
     },
     [getDocumentPath]
   );
-  const save2 = React.useCallback((localPath: string) => {
-    Services.ms.saveToAlbum(LocalPath.saveToAlbum(localPath));
+  const save2 = React.useCallback(async (localPath: string) => {
+    try {
+      await Services.ms.saveToAlbum(LocalPath.saveToAlbum(localPath));
+    } catch (error) {
+      console.warn('saveToAlbum2 error', error);
+    }
   }, []);
   return { saveToAlbum: save, saveToAlbum2: save2 };
 }

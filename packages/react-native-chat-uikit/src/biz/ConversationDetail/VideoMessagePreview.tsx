@@ -208,7 +208,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
   const { msgId: propsMsgId, msg: propsMsg, onShowBottomSheet } = props;
   const im = useChatContext();
   const videoRef = React.useRef<Video>(null);
-  const [url, setUrl] = React.useState<string>();
+  const [url, setUrl] = React.useState<string | undefined>(undefined);
   const [size, setSize] = React.useState<ImageSize>({
     width: 300,
     height: 300,
@@ -359,28 +359,6 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
     }
   }, []);
 
-  const saveVideo = React.useCallback(() => {
-    // let msg = propsMsg;
-    // if (propsMsg === undefined) {
-    //   const m = im.getMessage({ messageId: propsMsgId });
-    //   if (m) {
-    //     msg = m;
-    //   }
-    // }
-    // if (msg) {
-    //   const body = msg.body as ChatVideoMessageBody;
-    //   Services.ms
-    //     .saveFromLocal({
-    //       targetPath: localPath,
-    //       localPath: tmpFilePath,
-    //     })
-    //     .then(() => {
-    //       onFinished(localPath);
-    //     })
-    //     .catch();
-    // }
-  }, []);
-
   const showBottomSheet = React.useCallback(() => {
     onShowBottomSheet?.(menuRef);
   }, [onShowBottomSheet]);
@@ -430,6 +408,5 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
     menuRef,
     onRequestCloseMenu: closeMenu,
     showBottomSheet,
-    saveVideo,
   };
 }

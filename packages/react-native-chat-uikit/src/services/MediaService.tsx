@@ -313,7 +313,7 @@ export class MediaServiceImplement implements MediaService {
   }
   async saveToAlbum(localPath: string): Promise<string> {
     // return this.option.mediaLibraryModule.saveToCameraRoll(localPath);
-    return this.option.mediaLibraryModule.save(localPath, { type: 'photo' });
+    return this.option.mediaLibraryModule.save(localPath, { type: 'auto' });
   }
   async save(options: SaveFileOptions): Promise<Nullable<string>> {
     const basePath =
