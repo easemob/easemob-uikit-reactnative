@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   generateFileName,
   getFileExtension,
+  LocalPath,
   Services,
   useSaveFile,
   uuid,
@@ -25,5 +26,8 @@ export function useSaveFileToAlbum() {
     },
     [getDocumentPath]
   );
-  return { saveToAlbum: save };
+  const save2 = React.useCallback((localPath: string) => {
+    Services.ms.saveToAlbum(LocalPath.saveToAlbum(localPath));
+  }, []);
+  return { saveToAlbum: save, saveToAlbum2: save2 };
 }

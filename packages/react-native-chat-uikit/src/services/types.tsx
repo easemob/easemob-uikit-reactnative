@@ -139,6 +139,7 @@ export interface MediaService {
     targetPath: string;
     localPath: string;
   }): Promise<string>;
+  saveToAlbum(localPath: string): Promise<string>;
 
   startRecordAudio(options: RecordAudioOptions): Promise<boolean>;
   stopRecordAudio(): Promise<{ pos: number; path: string } | undefined>;

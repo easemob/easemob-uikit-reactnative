@@ -65,8 +65,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     messageTyping,
   } = props;
   const [status, setStatus] = React.useState<string>();
-  const { enableThread, enableAVMeeting, enablePresence, enableTyping } =
-    useConfigContext();
+  const { enableThread, enableAVMeeting, enablePresence } = useConfigContext();
   // const im = useChatContext();
   const { addAvatarStatusListener, removeAvatarStatusListener } =
     useAvatarStatus();
@@ -243,7 +242,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
             </View>
 
             {convType === 0 ? (
-              enableTyping === true && messageTyping === true ? (
+              messageTyping === true ? (
                 <Text
                   textType={'extraSmall'}
                   paletteType={'body'}

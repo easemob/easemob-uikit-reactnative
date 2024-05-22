@@ -9,6 +9,7 @@ import {
   UIListenerType,
   useChatContext,
 } from '../../chat';
+import { useConfigContext } from '../../config';
 import { uilog } from '../../const';
 import { useDelayExecTask, usePermissions } from '../../hook';
 import {
@@ -116,6 +117,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const { getPermission } = usePermissions();
   const { createDirectoryIfNotExisted } = useCreateConversationDirectory();
   const im = useChatContext();
+  const { enableTyping } = useConfigContext();
   im.messageManager.setCurrentConv({ convId, convType });
 
   const setConversation = React.useCallback(async () => {
@@ -319,11 +321,11 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const onInputValueChanged = React.useCallback(
     (text: string) => {
       propsOnChangeValue?.(text);
-      if (convType === ChatConversationType.PeerChat) {
+      if (convType === ChatConversationType.PeerChat && enableTyping === true) {
         sendCmdTypingMessage();
       }
     },
-    [convType, propsOnChangeValue, sendCmdTypingMessage]
+    [convType, enableTyping, propsOnChangeValue, sendCmdTypingMessage]
   );
   messageInputProps = {
     ...messageInputProps,

@@ -180,6 +180,14 @@ export class LocalPath {
     return LocalPath.decode(localPath);
   }
 
+  static saveToAlbum(localPath: string): string {
+    if (Platform.OS === 'ios') {
+      return localPath;
+    } else {
+      return LocalPath.encode2(localPath);
+    }
+  }
+
   // static recvFile(localPath: string): string {
   //   return LocalPath.encode(localPath);
   // }

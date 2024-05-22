@@ -311,6 +311,10 @@ export class MediaServiceImplement implements MediaService {
     await this.option.fsModule.FileSystem.cp(localPath, targetPath);
     return targetPath;
   }
+  async saveToAlbum(localPath: string): Promise<string> {
+    // return this.option.mediaLibraryModule.saveToCameraRoll(localPath);
+    return this.option.mediaLibraryModule.save(localPath, { type: 'photo' });
+  }
   async save(options: SaveFileOptions): Promise<Nullable<string>> {
     const basePath =
       options.basePath ??

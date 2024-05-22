@@ -292,6 +292,7 @@ export function App() {
         enableThread={enableThreadRef.current}
         enableTranslate={enableTranslateRef.current}
         enableAVMeeting={enableAVMeetingRef.current}
+        enableTyping={enableTypingRef.current}
         enableBlock={enableBlockRef.current}
         enableMessageForward={true}
         enableMessageMultiSelect={true}
