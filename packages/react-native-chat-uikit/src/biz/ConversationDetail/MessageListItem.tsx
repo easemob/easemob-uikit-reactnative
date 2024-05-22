@@ -1503,7 +1503,7 @@ export function MessageReaction(props: MessageReactionProps) {
       }}
     >
       {reactions?.map((v, i) => {
-        if (i >= 0 && i < 3) {
+        if (i >= 0 && i < 4) {
           const r = v.reaction;
           return (
             <Pressable
