@@ -69,6 +69,15 @@ export function useMineInfo(props: MineInfoProps) {
                       : undefined
                   );
                   setUserAvatar(res.value.avatarURL);
+
+                  im.fetchPresence({
+                    userIds: [res.value.userId],
+                    onResult: (res) => {
+                      if (res.isOk && res.value) {
+                        setUserState(res.value[0]?.statusDescription as any);
+                      }
+                    },
+                  });
                 }
               },
             });
