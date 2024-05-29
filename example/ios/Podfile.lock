@@ -29,11 +29,14 @@ PODS:
   - AgoraRtcEngine_iOS/VideoCodecEnc (4.2.6)
   - AgoraRtcEngine_iOS/VirtualBackground (4.2.6)
   - AgoraRtcEngine_iOS/VQA (4.2.6)
+  - ASN1Decoder (1.10.0)
   - boost (1.76.0)
   - BVLinearGradient (2.8.3):
     - React-Core
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
+  - EASClient (0.5.1):
+    - ExpoModulesCore
   - EXApplication (5.1.1):
     - ExpoModulesCore
   - EXConstants (14.2.1):
@@ -127,6 +130,15 @@ PODS:
     - ReactCommon/turbomodule/core
   - EXSplashScreen (0.18.2):
     - ExpoModulesCore
+    - React-Core
+  - EXStructuredHeaders (3.1.2)
+  - EXUpdates (0.16.4):
+    - ASN1Decoder (~> 1.8)
+    - EASClient
+    - EXManifests
+    - ExpoModulesCore
+    - EXStructuredHeaders
+    - EXUpdatesInterface
     - React-Core
   - EXUpdatesInterface (0.9.3)
   - FBLazyVector (0.71.11)
@@ -530,7 +542,7 @@ PODS:
   - react-native-chat-sdk (1.5.0-beta.0):
     - HyphenateChat (= 4.6.1)
     - React-Core
-  - react-native-chat-uikit (2.2.0-alpha.0):
+  - react-native-chat-uikit (2.2.0):
     - React-Core
   - react-native-create-thumbnail (1.6.6):
     - RCT-Folly (= 2021.07.22.00)
@@ -728,6 +740,7 @@ DEPENDENCIES:
   - boost (from `../../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - EASClient (from `../../node_modules/expo-eas-client/ios`)
   - EXApplication (from `../../node_modules/expo-application/ios`)
   - EXConstants (from `../../node_modules/expo-constants/ios`)
   - EXFileSystem (from `../../node_modules/expo-file-system/ios`)
@@ -742,6 +755,8 @@ DEPENDENCIES:
   - ExpoKeepAwake (from `../../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../../node_modules/expo-modules-core`)
   - EXSplashScreen (from `../../node_modules/expo-splash-screen/ios`)
+  - EXStructuredHeaders (from `../../node_modules/expo-structured-headers/ios`)
+  - EXUpdates (from `../../node_modules/expo-updates/ios`)
   - EXUpdatesInterface (from `../../node_modules/expo-updates-interface/ios`)
   - FBLazyVector (from `../../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../../node_modules/react-native/React/FBReactNativeSpec`)
@@ -839,6 +854,7 @@ SPEC REPOS:
   trunk:
     - AgoraIrisRTC_iOS
     - AgoraRtcEngine_iOS
+    - ASN1Decoder
     - CocoaAsyncSocket
     - Firebase
     - FirebaseCore
@@ -878,6 +894,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/react-native-linear-gradient"
   DoubleConversion:
     :podspec: "../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  EASClient:
+    :path: "../../node_modules/expo-eas-client/ios"
   EXApplication:
     :path: "../../node_modules/expo-application/ios"
   EXConstants:
@@ -906,6 +924,10 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/expo-modules-core"
   EXSplashScreen:
     :path: "../../node_modules/expo-splash-screen/ios"
+  EXStructuredHeaders:
+    :path: "../../node_modules/expo-structured-headers/ios"
+  EXUpdates:
+    :path: "../../node_modules/expo-updates/ios"
   EXUpdatesInterface:
     :path: "../../node_modules/expo-updates-interface/ios"
   FBLazyVector:
@@ -1042,10 +1064,12 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AgoraIrisRTC_iOS: 8346499b82968a4967e3d0bec2cf14bf7c0c3f76
   AgoraRtcEngine_iOS: ac647332ad8f86d79cf810601c9e62b28c3a4de0
+  ASN1Decoder: 91cb1d781b5a178ea7375b2f1519e2bdaaa4c427
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  EASClient: 950674e1098ebc09c4c2cf064a61e42e84d9d4c6
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -1060,6 +1084,8 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
   ExpoModulesCore: 653958063a301098b541ae4dfed1ac0b98db607b
   EXSplashScreen: 0e0a9ba0cf7553094e93213099bd7b42e6e237e9
+  EXStructuredHeaders: f3a6d417d5d12ef369fd1a31320d1c188a1b0f4b
+  EXUpdates: 603c4dfec2ed9ef323dfbd9c59c946593d4d9a5c
   EXUpdatesInterface: e86394c0770f14eb96386cbb32be83fa6a97e8f9
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: af6778c3a3a70283e21ed321c16472ed0e2814f6
@@ -1112,7 +1138,7 @@ SPEC CHECKSUMS:
   react-native-cameraroll: 755bcc628148a90a7c9cf3f817a252be3a601bc5
   react-native-chat-callkit: a1b5e4885d58e4ac5153aade90b6f6fbb32d333b
   react-native-chat-sdk: 2ab93752a02916334208642778a6e908fdf50485
-  react-native-chat-uikit: 2b74b1c2df450e7b826a9181720b7243daff720e
+  react-native-chat-uikit: 100f6ab8f3dfc18c769f59b1a18ede2200fb7c32
   react-native-create-thumbnail: e4fc6953a754bcfa3a03d74ec8687850134b1b93
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a

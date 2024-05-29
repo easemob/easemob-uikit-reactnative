@@ -1,4 +1,5 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import constants from 'expo-constants';
 import * as React from 'react';
 import { Linking, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -108,7 +109,7 @@ export function AboutSettingScreen(props: Props) {
           paletteType={'label'}
           style={{ color: getColor('disable') }}
         >
-          {tr('Version 1.0.0')}
+          {tr(`Version ${constants.manifest?.version}`)}
         </SingleLineText>
         <SingleLineText
           textType={'medium'}
