@@ -15,6 +15,8 @@ import {
   useMineInfoActions,
   useThemeContext,
 } from '../../rename.uikit';
+import { RestApi } from '../common/rest.api';
+import { useLogin } from '../hooks';
 import type { CommonInfoProps, MineInfoProps, UserState } from './types';
 
 export function useMineInfo(props: MineInfoProps) {
@@ -30,6 +32,7 @@ export function useMineInfo(props: MineInfoProps) {
     onClickedPrivacy: propsOnClickedPrivacy,
     onClickedPersonInfo: propsOnClickedPersonInfo,
     onClickedAbout: propsOnClickedAbout,
+    // onDestroyAccount: propsOnDestroyAccount,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [userName, setUserName] = React.useState(
@@ -52,6 +55,7 @@ export function useMineInfo(props: MineInfoProps) {
   );
   const im = useChatContext();
   const { tr } = useI18nContext();
+  const { getSelfInfo } = useLogin();
 
   useLifecycle(
     React.useCallback(
@@ -142,6 +146,20 @@ export function useMineInfo(props: MineInfoProps) {
     propsOnClickedAbout?.();
   }, [propsOnClickedAbout]);
 
+  const onClickedDestroyAccount = React.useCallback(() => {
+    getSelfInfo().then(async (res) => {
+      if (res?.id && res.token) {
+        const ret = await RestApi.requestDestroyAccount({
+          userId: res.phone,
+          userToken: res.token,
+        });
+        if (ret.isOk) {
+          // propsOnDestroyAccount?.();
+        }
+      }
+    });
+  }, [getSelfInfo]);
+
   const onCopyId = React.useCallback(() => {
     Services.cbs.setString(userId);
     toastRef.current.show({
@@ -200,6 +218,7 @@ export function useMineInfo(props: MineInfoProps) {
     onClickedAbout,
     enablePresence,
     onCopyId,
+    onClickedDestroyAccount,
   };
 }
 

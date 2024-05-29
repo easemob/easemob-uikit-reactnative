@@ -491,6 +491,9 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
         onClickedPrivacy={() => {
           navi.push({ to: 'PrivacySetting' });
         }}
+        // onDestroyAccount={() => {
+        //   navi.replace({ to: 'LoginV2' });
+        // }}
       />
     );
   } else {

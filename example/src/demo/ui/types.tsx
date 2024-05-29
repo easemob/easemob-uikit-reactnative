@@ -15,6 +15,7 @@ export type MineInfoProps = InfoProps & {
   onClickedPrivacy?: () => void;
   onClickedPersonInfo?: () => void;
   onClickedAbout?: () => void;
+  // onDestroyAccount?: () => void;
 };
 export type CommonInfoProps = InfoProps & {
   onBack?: () => void;

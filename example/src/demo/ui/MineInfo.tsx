@@ -11,6 +11,7 @@ import {
   StatusAvatar,
   Text,
   Text1Button,
+  Text2Button,
   UIKIT_VERSION,
   useColors,
   useI18nContext,
@@ -41,6 +42,7 @@ export function MineInfo(props: MineInfoProps) {
     onClickedAbout,
     enablePresence,
     onCopyId,
+    onClickedDestroyAccount,
   } = useMineInfo(props);
   const { cornerRadius } = useThemeContext();
   const { input } = cornerRadius;
@@ -388,6 +390,30 @@ export function MineInfo(props: MineInfoProps) {
                   fontWeight: '500',
                 }}
                 onPress={onClickedLogout}
+              />
+            </View>
+          }
+          RightIcon={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }} />
+          }
+        />
+
+        <ListItem
+          // onClicked={onClickedDestroyAccount}
+          // containerStyle={{ paddingHorizontal: 16 }}
+          LeftName={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text2Button
+                sizesType={'middle'}
+                radiusType={input}
+                text={tr('_demo_info_account_destroy')}
+                textStyle={{
+                  fontSize: 16,
+                  fontStyle: 'normal',
+                  fontWeight: '500',
+                  color: getColor('n'),
+                }}
+                onPress={onClickedDestroyAccount}
               />
             </View>
           }

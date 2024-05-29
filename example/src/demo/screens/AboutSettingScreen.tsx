@@ -276,6 +276,28 @@ export function AboutSettingScreen(props: Props) {
           </View>
         }
       />
+
+      <ListItem
+        containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={() => {}}
+        LeftName={
+          <Text
+            textType={'medium'}
+            paletteType={'title'}
+            style={{ color: getColor('fg') }}
+          >
+            {tr('_demo_about_setting_privacy')}
+          </Text>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
     </SafeAreaView>
   );
 }

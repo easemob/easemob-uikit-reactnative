@@ -53,6 +53,7 @@ export function useLogin() {
       value: JSON.stringify({
         phone: data.phoneNumber,
         id: data.chatUserName,
+        token: data.token,
         avatar: data.avatarUrl,
       }),
     });
@@ -68,6 +69,7 @@ export function useLogin() {
         return JSON.parse(res.value) as {
           phone: string;
           id: string;
+          token: string;
           avatar: string;
         };
       } catch (error) {

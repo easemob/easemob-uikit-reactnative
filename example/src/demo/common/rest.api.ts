@@ -34,6 +34,9 @@ export type RequestGroupAvatarResult = {
   code: number;
   avatarUrl: string;
 };
+export type RequestDestroyAccountResult = {
+  code: number;
+};
 
 export class RestApi {
   private static _protocol: string = 'http://';
@@ -253,6 +256,30 @@ export class RestApi {
       return { isOk: true, value };
     } catch (error) {
       console.warn('RestApi:requestGroupAvatar:error:', error);
+      return { isOk: false, error };
+    }
+  }
+
+  public static async requestDestroyAccount(params: {
+    userId: string;
+    userToken: string;
+  }): Promise<RequestResult<RequestDestroyAccountResult>> {
+    const { userId, userToken } = params;
+    const url = this.getBasicUrl() + `/user/${userId}`;
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userToken}`,
+        },
+      });
+      const value = await response.json();
+      console.log('RestApi:requestDestroyAccount:', value, url);
+      return { isOk: true, value };
+    } catch (error) {
+      console.warn('RestApi:requestDestroyAccount:error:', error);
       return { isOk: false, error };
     }
   }

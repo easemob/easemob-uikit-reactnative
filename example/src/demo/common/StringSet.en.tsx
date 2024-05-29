@@ -58,6 +58,7 @@ export function createStringSetEn(): StringSet {
     '_demo_server_setting_input_rest_server_tip': 'Input Rest server address',
 
     '_demo_info_logout': 'Log Out',
+    '_demo_info_account_destroy': 'Delete Account',
 
     '_demo_alert_server_setting_save_title':
       'Restart the client to make the settings take effect',
@@ -107,6 +108,7 @@ export function createStringSetEn(): StringSet {
     '_demo_about_setting_channel_email': 'qudao@easemob.com',
     '_demo_about_setting_advise': 'Feedback',
     '_demo_about_setting_advise_email': 'issues@easemob.com',
+    '_demo_about_setting_privacy': 'Privacy Policy',
 
     '_demo_color_setting_navi_title': 'Theme Color',
     '_demo_color_setting_navi_confirm': 'Done',

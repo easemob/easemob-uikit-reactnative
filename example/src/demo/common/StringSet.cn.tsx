@@ -12,7 +12,7 @@ export function createStringSetCn(): StringSet {
     '_demo_navigation_common_setting_back': '通用',
 
     '_demo_info_state_set': '设置',
-    '_demo_info_state_account': '账号',
+    '_demo_info_state_account': '账户',
     '_demo_info_online_state': '用户状态',
     '_demo_info_person_info': '个人信息',
     '_demo_info_common_setting': '通用',
@@ -60,6 +60,7 @@ export function createStringSetCn(): StringSet {
       '当前服务器设置需重启客户端生效。',
 
     '_demo_info_logout': '退出登录',
+    '_demo_info_account_destroy': '注销账户',
 
     '_demo_edit_group_name': '群名称',
     '_demo_edit_group_description': '群描述',
@@ -103,6 +104,7 @@ export function createStringSetCn(): StringSet {
     '_demo_about_setting_channel_email': 'qudao@easemob.com',
     '_demo_about_setting_advise': '投诉建议',
     '_demo_about_setting_advise_email': 'issues@easemob.com',
+    '_demo_about_setting_privacy': '隐私政策',
 
     '_demo_color_setting_navi_title': '主题色',
     '_demo_color_setting_navi_confirm': '完成',
