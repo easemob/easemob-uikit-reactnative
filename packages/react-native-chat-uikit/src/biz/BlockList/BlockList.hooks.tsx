@@ -375,22 +375,6 @@ export function useBlockList(props: BlockListProps) {
   ]);
 
   React.useEffect(() => {
-    const listener: UIBlockListListener = {
-      onAddedEvent: (data) => {
-        addBlockToUI(data);
-      },
-      onDeletedEvent: (data) => {
-        removeBlockToUI(data.userId);
-      },
-      type: UIListenerType.Block,
-    };
-    im.addUIListener(listener);
-    return () => {
-      im.removeUIListener(listener);
-    };
-  }, [addBlockToUI, im, removeBlockToUI]);
-
-  React.useEffect(() => {
     init({});
   }, [init]);
 
