@@ -5,6 +5,7 @@ import {
   type AlertRef,
   type BottomSheetNameMenuRef,
   type ChatServiceListener,
+  PresenceUtil,
   Services,
   type SimpleToastRef,
   useChatContext,
@@ -78,7 +79,7 @@ export function useMineInfo(props: MineInfoProps) {
                     userIds: [res.value.userId],
                     onResult: (res) => {
                       if (res.isOk && res.value) {
-                        setUserState(res.value[0]?.statusDescription as any);
+                        setUserState(res.value.get(im.userId!) ?? 'offline');
                       }
                     },
                   });
@@ -173,7 +174,7 @@ export function useMineInfo(props: MineInfoProps) {
         if (list && list.length > 0) {
           const presence = list[0];
           if (presence?.publisher === userId) {
-            setUserState(presence.statusDescription as any);
+            setUserState(PresenceUtil.convertFromProtocol(presence));
           }
         }
       },

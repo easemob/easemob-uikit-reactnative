@@ -5,6 +5,7 @@ import {
   ChatMessage,
   ChatMessageChatType,
   ChatMessageType,
+  ChatPresence,
   ChatTextMessageBody,
   ChatVoiceMessageBody,
 } from '../rename.chat';
@@ -239,4 +240,49 @@ export function createForwardMessage(params: {
     return newMsg;
   }
   return undefined;
+}
+
+export class PresenceUtil {
+  public static convertToProtocol = (status: string) => {
+    if (status === 'online') {
+      return '';
+    } else if (status === 'busy') {
+      return 'Busy';
+    } else if (status === 'leave') {
+      return 'Away';
+    } else if (status === 'no-disturb') {
+      return 'Do Not Disturb';
+    } else {
+      return status;
+    }
+  };
+  public static convertFromProtocol = (status?: ChatPresence) => {
+    if (status === undefined || status === null) {
+      return 'offline';
+    }
+    let isOnline = false;
+    let description = '';
+    for (const detail of status.statusDetails) {
+      if (detail[1] === 1) {
+        isOnline = true;
+        description = status.statusDescription;
+        break;
+      }
+    }
+    if (isOnline === true) {
+      if (description === '') {
+        return 'online';
+      } else if (description === 'Busy') {
+        return 'busy';
+      } else if (description === 'Away') {
+        return 'leave';
+      } else if (description === 'Do Not Disturb') {
+        return 'no-disturb';
+      } else {
+        return description;
+      }
+    } else {
+      return 'offline';
+    }
+  };
 }

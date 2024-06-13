@@ -1,9 +1,9 @@
-import type { InfoProps } from '../../rename.uikit';
+import type { InfoProps, StatusType } from '../../rename.uikit';
 
 /**
  * User State.
  */
-export type UserState = 'online' | 'offline' | 'busy' | 'leave' | 'no-disturb';
+export type UserState = StatusType;
 
 export type MineInfoProps = InfoProps & {
   userId: string;

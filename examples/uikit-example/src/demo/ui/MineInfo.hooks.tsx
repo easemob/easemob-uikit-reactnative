@@ -4,6 +4,7 @@ import {
   type AlertRef,
   type BottomSheetNameMenuRef,
   type ChatServiceListener,
+  PresenceUtil,
   type SimpleToastRef,
   useChatContext,
   useChatListener,
@@ -114,7 +115,7 @@ export function useMineInfo(props: MineInfoProps) {
         if (list && list.length > 0) {
           const presence = list[0];
           if (presence?.publisher === userId) {
-            setUserState(presence.statusDescription as any);
+            setUserState(PresenceUtil.convertFromProtocol(presence));
           }
         }
       },

@@ -10,6 +10,7 @@ import {
 import { ICON_ASSETS } from '../../assets';
 import {
   ChatServiceListener,
+  PresenceUtil,
   useChatContext,
   useChatListener,
 } from '../../chat';
@@ -168,7 +169,7 @@ export function StatusAvatar(props: StatusAvatarProps) {
             return u.publisher === userId;
           });
           if (user) {
-            onStatusChanged(user.statusDescription);
+            onStatusChanged(PresenceUtil.convertFromProtocol(user));
           }
         }
       },
@@ -194,12 +195,7 @@ export function StatusAvatar(props: StatusAvatarProps) {
         userIds: [userId],
         onResult: (res) => {
           if (res.isOk === true) {
-            const user = res.value?.find((u) => {
-              return u.publisher === userId;
-            });
-            if (user) {
-              onStatusChanged(user.statusDescription);
-            }
+            onStatusChanged(res.value?.get(userId) ?? 'offline');
           }
         },
       });

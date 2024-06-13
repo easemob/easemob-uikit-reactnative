@@ -1044,7 +1044,7 @@ export interface PresenceServices {
    */
   fetchPresence(params: {
     userIds: string[];
-    onResult: ResultCallback<ChatPresence[]>;
+    onResult: ResultCallback<Map<string, string>>;
   }): void;
 }
 

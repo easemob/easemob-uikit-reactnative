@@ -55,7 +55,11 @@ import {
   type UIListener,
   UIListenerType,
 } from './types.ui';
-import { setUserInfoToMessage, userInfoFromMessage } from './utils';
+import {
+  PresenceUtil,
+  setUserInfoToMessage,
+  userInfoFromMessage,
+} from './utils';
 
 export class ChatServiceImpl
   extends ChatServiceListenerImpl
@@ -2597,7 +2601,9 @@ export class ChatServiceImpl
     onResult: ResultCallback<void>;
   }): void {
     this.tryCatch({
-      promise: this.client.presenceManager.publishPresence(params.status),
+      promise: this.client.presenceManager.publishPresence(
+        PresenceUtil.convertToProtocol(params.status)
+      ),
       event: 'publishPresence',
       onFinished: () => {
         const userId = this.userId;
@@ -2621,15 +2627,19 @@ export class ChatServiceImpl
   }
   fetchPresence(params: {
     userIds: string[];
-    onResult: ResultCallback<ChatPresence[]>;
+    onResult: ResultCallback<Map<string, string>>;
   }): void {
     this.tryCatch({
       promise: this.client.presenceManager.fetchPresenceStatus(params.userIds),
       event: 'fetchPresence',
       onFinished: (result) => {
+        const map = new Map<string, string>();
+        for (const item of result) {
+          map.set(item.publisher, PresenceUtil.convertFromProtocol(item));
+        }
         params.onResult?.({
           isOk: true,
-          value: result,
+          value: map,
         });
       },
       onError: () => {
