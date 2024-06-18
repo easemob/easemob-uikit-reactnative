@@ -12,5 +12,6 @@ export * from './platform';
 export * from './Queue';
 export * from './Sequence';
 export * from './singleton';
+export * from './split';
 export * from './types';
 export * from './uuid';

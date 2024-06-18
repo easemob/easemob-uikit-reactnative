@@ -233,7 +233,7 @@ PODS:
     - GoogleUtilities/MethodSwizzler
   - GoogleUtilities/UserDefaults (7.12.0):
     - GoogleUtilities/Logger
-  - HyphenateChat (4.2.0)
+  - HyphenateChat (4.6.1)
   - libevent (2.1.12)
   - libwebp (1.3.2):
     - libwebp/demux (= 1.3.2)
@@ -488,12 +488,12 @@ PODS:
     - glog
   - react-native-cameraroll (5.6.0):
     - React-Core
-  - react-native-chat-callkit (1.0.1):
+  - react-native-chat-callkit (1.0.4):
     - React-Core
-  - react-native-chat-sdk (1.3.1-beta.8):
-    - HyphenateChat (= 4.2.0)
+  - react-native-chat-sdk (1.5.0-beta.0):
+    - HyphenateChat (= 4.6.1)
     - React-Core
-  - react-native-chat-uikit (2.0.0-beta.0):
+  - react-native-chat-uikit (2.2.1):
     - React-Core
   - react-native-create-thumbnail (1.6.6):
     - RCT-Folly (= 2021.07.22.00)
@@ -764,7 +764,7 @@ DEPENDENCIES:
   - ReactNativeFileAccess (from `../../../node_modules/react-native-file-access`)
   - RNAudioRecorderPlayer (from `../../../node_modules/react-native-audio-recorder-player`)
   - "RNCAsyncStorage (from `../../../node_modules/@react-native-async-storage/async-storage`)"
-  - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
+  - "RNCClipboard (from `../../../node_modules/@react-native-clipboard/clipboard`)"
   - RNDeviceInfo (from `../../../node_modules/react-native-device-info`)
   - RNFastImage (from `../../../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../../../node_modules/@react-native-firebase/app`)"
@@ -945,7 +945,7 @@ EXTERNAL SOURCES:
   RNCAsyncStorage:
     :path: "../../../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
-    :path: "../node_modules/@react-native-clipboard/clipboard"
+    :path: "../../../node_modules/@react-native-clipboard/clipboard"
   RNDeviceInfo:
     :path: "../../../node_modules/react-native-device-info"
   RNFastImage:
@@ -1008,7 +1008,7 @@ SPEC CHECKSUMS:
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
-  HyphenateChat: e43d1ec9ccf404eeb2ee7d3265cd12a4e83f0d3a
+  HyphenateChat: 006902faa37c847b0a6693bd3876873848c06c26
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
@@ -1034,9 +1034,9 @@ SPEC CHECKSUMS:
   React-jsinspector: b6ed4cb3ffa27a041cd440300503dc512b761450
   React-logger: 186dd536128ae5924bc38ed70932c00aa740cd5b
   react-native-cameraroll: 755bcc628148a90a7c9cf3f817a252be3a601bc5
-  react-native-chat-callkit: f3c26620cbfd756a184eb61cfb9fe5660067ebef
-  react-native-chat-sdk: ae8899f79702c76c477c7cf27a34988ceae7a2d5
-  react-native-chat-uikit: 0f8ee416f7416193518e5382cbb3f002566f2678
+  react-native-chat-callkit: a1b5e4885d58e4ac5153aade90b6f6fbb32d333b
+  react-native-chat-sdk: 2ab93752a02916334208642778a6e908fdf50485
+  react-native-chat-uikit: abaebb64f58a6ddd53a3e060f8ac9f43e50df6cf
   react-native-create-thumbnail: e4fc6953a754bcfa3a03d74ec8687850134b1b93
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a

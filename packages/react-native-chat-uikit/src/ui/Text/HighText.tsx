@@ -3,6 +3,7 @@ import type { ColorValue, StyleProp, TextStyle } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
+import { splitStringWithDelimiter } from '../../utils';
 import { Text, TextProps } from './Text';
 
 export type HighTextProps = Omit<TextProps, 'children'> & {
@@ -11,6 +12,7 @@ export type HighTextProps = Omit<TextProps, 'children'> & {
   highColors?: ColorValue[];
   textColors?: ColorValue[];
   containerStyle?: StyleProp<TextStyle>;
+  numberOfLines?: number | undefined;
 };
 
 /**
@@ -19,8 +21,8 @@ export type HighTextProps = Omit<TextProps, 'children'> & {
  * **Note** Exceeding the width is not considered.
  */
 export function HighText(props: HighTextProps) {
-  const { containerStyle } = props;
-  const { getContent } = useHighText(props);
+  const { containerStyle, numberOfLines } = props;
+  const { getContent } = useHighText2(props);
   return (
     <Text
       style={[
@@ -29,7 +31,7 @@ export function HighText(props: HighTextProps) {
         },
         containerStyle,
       ]}
-      numberOfLines={1}
+      numberOfLines={numberOfLines}
     >
       {getContent()}
     </Text>
@@ -97,6 +99,49 @@ export function useHighText(props: HighTextProps) {
             </Text>
           );
         }
+      }
+    });
+  };
+  return {
+    getContent,
+  };
+}
+export function useHighText2(props: HighTextProps) {
+  const { keyword, content, style, highColors, textColors, ...others } = props;
+  const list = splitStringWithDelimiter(content, keyword);
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    high: {
+      light: highColors?.[0] ?? colors.primary[5],
+      dark: highColors?.[1] ?? colors.primary[6],
+    },
+    text: {
+      light: textColors?.[0] ?? colors.neutral[1],
+      dark: textColors?.[1] ?? colors.primary[98],
+    },
+  });
+  const getContent = () => {
+    return list.map((item, index) => {
+      if (item === keyword) {
+        return (
+          <Text
+            key={index}
+            {...others}
+            style={[style, { color: getColor('high') }]}
+          >
+            {keyword}
+          </Text>
+        );
+      } else {
+        return (
+          <Text
+            key={index}
+            {...others}
+            style={[style, { color: getColor('text') }]}
+          >
+            {item}
+          </Text>
+        );
       }
     });
   };

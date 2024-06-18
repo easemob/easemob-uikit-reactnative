@@ -3,6 +3,7 @@ import {
   Animated,
   Dimensions,
   Easing,
+  Linking,
   Platform,
   // Image as RNImage,
   Pressable,
@@ -15,6 +16,7 @@ import {
   gCustomMessageCardEventType,
   gMessageAttributeQuote,
   gMessageAttributeTranslate,
+  gMessageAttributeUrlPreview,
 } from '../../chat';
 import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
@@ -40,11 +42,11 @@ import {
   Icon,
   LoadingIcon,
 } from '../../ui/Image';
-import { SingleLineText, Text } from '../../ui/Text';
+import { HighUrl, SingleLineText, Text } from '../../ui/Text';
 import { formatTsForConvDetail } from '../../utils';
 import { Avatar } from '../Avatar';
 import { gMaxVoiceDuration } from '../const';
-import { useMessageSnapshot } from '../hooks';
+import { useMessageSnapshot, useUrlPreview } from '../hooks';
 import { gMessageAvatarSize, gTriangleWidth } from './const';
 import { MessageHistoryListItemMemo } from './MessageHistoryListItem';
 import {
@@ -97,6 +99,7 @@ export function MessageText(props: MessageTextProps) {
   const { layoutType, msg, isSupport } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
+  const { getUrlListFromText } = useUrlPreview();
   const { getColor } = useColors({
     left_text: {
       light: colors.neutral[1],
@@ -122,6 +125,18 @@ export function MessageText(props: MessageTextProps) {
       light: colors.primary[8],
       dark: colors.primary[6],
     },
+    url_text: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    url_bg: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
+    url_image_bg: {
+      light: 'rgba(0, 0, 0, 0.05)',
+      dark: 'rgba(0, 0, 0, 0.05)',
+    },
   });
   const body = msg.body as ChatTextMessageBody;
   // const content = emoji.toCodePointText(body.content);
@@ -146,6 +161,13 @@ export function MessageText(props: MessageTextProps) {
   const translated = msg.attributes?.[gMessageAttributeTranslate] as
     | boolean
     | undefined;
+  const urlPreview = msg.attributes?.[gMessageAttributeUrlPreview] as {
+    url: string;
+    title: string | undefined;
+    description: string | undefined;
+    imageUrl: string | undefined;
+  };
+  const urls = getUrlListFromText(content);
 
   return (
     <View>
@@ -153,17 +175,43 @@ export function MessageText(props: MessageTextProps) {
         style={{
           marginVertical: 8,
           marginBottom: translated === true ? 8 : 8,
+          paddingHorizontal: 12,
         }}
       >
-        <Text
-          textType={'large'}
-          paletteType={'body'}
-          style={{
-            color: getColor(layoutType === 'left' ? 'left_text' : 'right_text'),
-          }}
-        >
-          {content}
-        </Text>
+        {urls && urls.length >= 1 ? (
+          <HighUrl
+            content={content}
+            urlStyle={{
+              textDecorationLine: 'underline',
+            }}
+            urlColors={[
+              getColor(layoutType === 'left' ? 'left_text' : 'right_text')!,
+              getColor(layoutType === 'left' ? 'left_text' : 'right_text')!,
+            ]}
+            textColors={[
+              getColor(layoutType === 'left' ? 'left_text' : 'right_text')!,
+              getColor(layoutType === 'left' ? 'left_text' : 'right_text')!,
+            ]}
+            textType={'large'}
+            paletteType={'body'}
+            onClicked={(url) => {
+              Linking.openURL(url);
+            }}
+          />
+        ) : (
+          <Text
+            textType={'large'}
+            paletteType={'body'}
+            style={{
+              color: getColor(
+                layoutType === 'left' ? 'left_text' : 'right_text'
+              ),
+            }}
+          >
+            {content}
+          </Text>
+        )}
+
         {editable === 'edited' ? (
           <View
             style={{
@@ -206,6 +254,7 @@ export function MessageText(props: MessageTextProps) {
             ),
             borderBottomWidth: 0.5,
             marginHorizontal: 0,
+            paddingHorizontal: 12,
           }}
         />
       ) : null}
@@ -213,6 +262,7 @@ export function MessageText(props: MessageTextProps) {
       <View
         style={{
           marginVertical: translated === true ? 8 : 0,
+          paddingHorizontal: 12,
         }}
       >
         {translated === true ? (
@@ -265,6 +315,68 @@ export function MessageText(props: MessageTextProps) {
           </View>
         ) : null}
       </View>
+
+      {urlPreview ? (
+        <View style={{ backgroundColor: getColor('url_bg') }}>
+          <DefaultImage
+            source={{
+              uri: urlPreview.imageUrl,
+            }}
+            style={[
+              {
+                width: '100%',
+                height: 118,
+                resizeMode: 'cover',
+              },
+            ]}
+            defaultSource={ICON_ASSETS.url_preview_placeholder('x')}
+            defaultStyle={{
+              width: '100%',
+              height: 118,
+              tintColor: getColor('fg'),
+            }}
+            defaultContainerStyle={{
+              width: '100%',
+              height: 118,
+              backgroundColor: getColor('url_image_bg'),
+              justifyContent: 'center',
+              alignItems: 'center',
+              overflow: 'hidden',
+            }}
+            containerStyle={[
+              {
+                justifyContent: 'center',
+                alignItems: 'center',
+                overflow: 'hidden',
+              },
+            ]}
+          />
+          <SingleLineText
+            paletteType={'headline'}
+            textType={'small'}
+            style={{
+              color: getColor('url_text'),
+              paddingTop: 8,
+              paddingHorizontal: 12,
+            }}
+          >
+            {urlPreview.title}
+          </SingleLineText>
+          <View style={{ height: 4 }} />
+          <Text
+            paletteType={'body'}
+            textType={'medium'}
+            numberOfLines={2}
+            style={{
+              color: getColor('url_text'),
+              paddingBottom: 8,
+              paddingHorizontal: 12,
+            }}
+          >
+            {urlPreview.description}
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -387,12 +499,6 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
         {
           width: width,
           height: height,
-          // borderRadius: getBorderRadius({
-          //   height: width + 1,
-          //   crt:
-          //     releaseArea === 'china' ? corner.bubble[0]! : corner.bubble[2]!,
-          //   cr: cornerRadius,
-          // }),
         },
       ]}
       defaultSource={ICON_ASSETS[iconName]('3x')}
@@ -400,21 +506,11 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
         width: thumbWidth,
         height: thumbHeight,
         tintColor: getColor('fg'),
-        // borderRadius: getBorderRadius({
-        //   height: width + 1,
-        //   crt: releaseArea === 'china' ? corner.bubble[0]! : corner.bubble[2]!,
-        //   cr: cornerRadius,
-        // }),
       }}
       defaultContainerStyle={{
         width: width,
         height: height,
         backgroundColor: getColor('bg'),
-        // borderRadius: getBorderRadius({
-        //   height: width + 1,
-        //   crt: releaseArea === 'china' ? corner.bubble[0]! : corner.bubble[2]!,
-        //   cr: cornerRadius,
-        // }),
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
@@ -964,6 +1060,10 @@ export function MessageBubble(props: MessageBubbleProps) {
       light: colors.primary[5],
       dark: colors.primary[2],
     },
+    url_bg: {
+      light: colors.neutral[95],
+      dark: colors.neutral[2],
+    },
   });
   const isShowTriangle = React.useMemo(() => {
     return (
@@ -972,6 +1072,12 @@ export function MessageBubble(props: MessageBubbleProps) {
       msg.body.type !== ChatMessageType.VIDEO
     );
   }, [hasTriangle, msg.body.type]);
+  const urlPreview = msg.attributes?.[gMessageAttributeUrlPreview] as {
+    url: string;
+    title: string | undefined;
+    description: string | undefined;
+    imageUrl: string | undefined;
+  };
   const contentMaxWidth = React.useMemo(() => {
     const _maxWidth = maxWidth
       ? maxWidth - (paddingHorizontal ?? 0) * 2
@@ -1024,7 +1130,11 @@ export function MessageBubble(props: MessageBubbleProps) {
               width: triangleWidth,
               height: 8,
               tintColor: getColor(
-                layoutType === 'left' ? 'left_bg' : 'right_bg'
+                urlPreview
+                  ? 'url_bg'
+                  : layoutType === 'left'
+                  ? 'left_bg'
+                  : 'right_bg'
               ),
             }}
           />
@@ -1111,14 +1221,6 @@ export function NameView(props: NameViewProps) {
       dark: colors.neutralSpecial[6],
     },
   });
-  // const paddingWidth =
-  //   hasAvatar === true
-  //     ? hasTriangle === true
-  //       ? 53
-  //       : 48
-  //     : hasTriangle === true
-  //     ? 17
-  //     : 12;
 
   const paddingWidth = getPaddingWidth({
     avatarWidth: hasAvatar ? gMessageAvatarSize : 0,
@@ -1165,14 +1267,6 @@ export function TimeView(props: TimeViewProps) {
   const time = formatTime?.conversationDetailCallback
     ? formatTime.conversationDetailCallback(timestamp)
     : formatTsForConvDetail(timestamp);
-  // const paddingWidth =
-  //   hasAvatar === true
-  //     ? hasTriangle === true
-  //       ? 53
-  //       : 48
-  //     : hasTriangle === true
-  //     ? 17
-  //     : 12;
   const paddingWidth = getPaddingWidth({
     avatarWidth: hasAvatar ? gMessageAvatarSize : 0,
     triangleWidth: hasTriangle ? gTriangleWidth : 0,
@@ -1324,14 +1418,6 @@ export function MessageThreadBubble(props: MessageThreadBubbleProps) {
     },
   });
 
-  // const paddingWidth =
-  //   hasAvatar === true
-  //     ? hasTriangle === true
-  //       ? 53
-  //       : 48
-  //     : hasTriangle === true
-  //     ? 17
-  //     : 12;
   const paddingWidth = getPaddingWidth({
     avatarWidth: hasAvatar ? gMessageAvatarSize : 0,
     triangleWidth: hasTriangle ? gTriangleWidth : 0,
@@ -1479,14 +1565,6 @@ export function MessageReaction(props: MessageReactionProps) {
     },
   });
 
-  // const paddingWidth =
-  //   hasAvatar === true
-  //     ? hasTriangle === true
-  //       ? 53
-  //       : 48
-  //     : hasTriangle === true
-  //     ? 17
-  //     : 12;
   const paddingWidth = getPaddingWidth({
     avatarWidth: hasAvatar ? gMessageAvatarSize : 0,
     triangleWidth: hasTriangle ? gTriangleWidth : 0,
@@ -1640,14 +1718,6 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
       dark: colors.neutral[6],
     },
   });
-  // const marginWidth =
-  //   hasAvatar === true
-  //     ? hasTriangle === true
-  //       ? 53
-  //       : 48
-  //     : hasTriangle === true
-  //     ? 17
-  //     : 12;
   const marginWidth = getPaddingWidth({
     avatarWidth: hasAvatar ? gMessageAvatarSize : 0,
     triangleWidth: hasTriangle ? gTriangleWidth : 0,

@@ -1819,6 +1819,15 @@ export const ICON_ASSETS = {
       return require('./icons/unchecked_rectangle_2x.png');
     }
   },
+  'url_preview_placeholder': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/url_preview_placeholder_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/url_preview_placeholder_2x.png');
+    } else {
+      return require('./icons/url_preview_placeholder.png');
+    }
+  },
   'vertical_n_arrows': (size: string) => {
     if (size === '3x') {
       return require('./icons/vertical_n_arrows_3x.png');

@@ -5,6 +5,10 @@ import {
   containsChinese,
   getPinyinFirsLetter,
   HighText,
+  HighUrl,
+  splitStringByUrl,
+  splitStringWithDelimiter,
+  useUrlPreview,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -68,6 +72,14 @@ export function Split() {
       <HighText
         keyword={'张三'}
         content={'张三我知道张三的秘密,张三也知道张三'}
+      />
+      <HighText
+        numberOfLines={10}
+        keyword={'https://github.com/easemob/emclient-android/pull/1446/files'}
+        content={
+          'sdfhttps://github.com/easemob/emclient-android/pull/1446/fileshttps://github.comhttps://github.com/easemob/emclient-android/pull/1446/filesfgh'
+        }
+        containerStyle={{ textDecorationLine: 'underline' }}
       />
     </SafeAreaView>
   );
@@ -134,6 +146,58 @@ export function TestPinyin() {
   return <></>;
 }
 
+export function TestSplit2() {
+  const arr =
+    'sdfhttps://github.com/easemob/emclient-android/pull/1446/fileshttps://github.com/easemob/emclient-android/pull/1446/filesfgh';
+  console.log(
+    'test:zuoyu:TestSplit',
+    splitStringWithDelimiter(
+      arr,
+      'https://github.com/easemob/emclient-android/pull/1446/files'
+    )
+  );
+  return <></>;
+}
+export function TestUrlList() {
+  const { getUrlListFromText } = useUrlPreview();
+  const arr =
+    'sdf https://www.github.com/easemob/emclient-android/pull/1446/files https://github.com/ poi https://www.github.com/easemob/emclient-android/pull/1446/files';
+  console.log('test:zuoyu:TestUrlList', getUrlListFromText(arr));
+  return <></>;
+}
+export function TestSplit3() {
+  const arr =
+    'sdf https://github.com/easemob/emclient-android/pull/1446/files https://github.com https://github.com/easemob/emclient-android/pull/1446/files fgh';
+  console.log('test:zuoyu:TestSplit2', splitStringByUrl(arr));
+  return <></>;
+}
+export function TestSplit4() {
+  const { getUrlFromText } = useUrlPreview();
+  const arr =
+    'sdf https://www.github.com/easemob/emclient-android/pull/1446/files poi https://www.github.com/easemob/emclient-android/pull/1446/files';
+  console.log('test:zuoyu:TestSplit4', getUrlFromText(arr));
+  return <></>;
+}
+export function TestHighUrl() {
+  const arr =
+    'sdf_https://www.github.com/easemob/emclient-android/pull/1446/files https://github.com/ poi https://www.github.com/easemob/emclient-android/pull/1446/files fds';
+  return (
+    <HighUrl
+      content={arr}
+      onClicked={(url) => {
+        console.log('test:zuoyu:click', url);
+      }}
+    />
+  );
+}
+
+export function TestSplit5() {
+  const arr =
+    'sdf https://www.github.com/easemob/emclient-android/pull/1446/files https://github.com/ poi https://www.github.com/easemob/emclient-android/pull/1446/files fds';
+  console.log('test:zuoyu:TestSplit5', splitStringByUrl(arr));
+  return <></>;
+}
+
 export default function TestUtils() {
   return (
     <Container
@@ -143,7 +207,8 @@ export default function TestUtils() {
         autoLogin: false,
       }}
     >
-      <TestPinyin />
+      <View style={{ height: 100 }} />
+      <TestHighUrl />
     </Container>
   );
 }

@@ -15,6 +15,7 @@ import {
   gCustomMessageCreateThreadTip,
   gMessageAttributeQuote,
   gMessageAttributeTranslate,
+  gMessageAttributeUrlPreview,
   gMessageAttributeVoiceReadFlag,
   MessageServiceListener,
   ResultCallback,
@@ -59,6 +60,7 @@ import {
   useDataPriority,
   useMessageReactionListDetail,
   useMessageThreadListMoreActions,
+  useUrlPreview,
 } from '../hooks';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import {
@@ -218,6 +220,7 @@ export function useMessageList(
     userScrollGestureRef.current = isUserScroll;
   }, []);
   const { addListener, removeListener } = useDispatchContext();
+  const { getUrlListFromText, fetchUrlPreview } = useUrlPreview();
   const emojiRef = React.useRef<BottomSheetEmojiListRef>(null);
   const onRequestCloseEmoji = React.useCallback(() => {
     emojiRef.current?.startHide?.();
@@ -867,6 +870,48 @@ export function useMessageList(
         .catch();
     },
     [im, onDelMessageQuoteToUI, onDelMessageToUI]
+  );
+
+  const parseUrlPreview = React.useCallback(
+    (
+      msg: ChatMessage,
+      isForce: boolean,
+      onResult: (msg: ChatMessage) => void
+    ) => {
+      if (msg.body.type !== ChatMessageType.TXT) {
+        onResult(msg);
+        return;
+      }
+      const body = msg.body as ChatTextMessageBody;
+      if (
+        msg.attributes?.[gMessageAttributeUrlPreview] !== undefined &&
+        isForce !== true
+      ) {
+        onResult(msg);
+        return;
+      }
+      const urls = getUrlListFromText(body.content);
+      if (!urls || urls.length === 0 || urls.length > 1) {
+        onResult(msg);
+        return;
+      }
+      fetchUrlPreview(urls[0]!).then((data) => {
+        if (data) {
+          const newMsg = { ...msg } as ChatMessage;
+          newMsg.attributes = {
+            ...msg.attributes,
+            [gMessageAttributeUrlPreview]: data,
+          };
+          onResult(newMsg);
+          im.updateMessage({
+            message: newMsg,
+          });
+        } else {
+          onResult(msg);
+        }
+      });
+    },
+    [fetchUrlPreview, getUrlListFromText, im]
   );
 
   const translateMessage = React.useCallback(
@@ -2814,24 +2859,32 @@ export function useMessageList(
   React.useEffect(() => {
     const listener = {
       onSendMessageChanged: (msg: ChatMessage) => {
-        onUpdateMessageToUI(msg, 'send');
-        if (canAddNewMessageToUI()) {
-          if (comType === 'thread' && inverted === false) {
-            scrollToBottom();
+        parseUrlPreview(msg, false, (newMsg) => {
+          onUpdateMessageToUI(newMsg, 'send');
+          if (canAddNewMessageToUI()) {
+            if (
+              (comType === 'thread' && inverted === false) ||
+              comType === 'chat' ||
+              comType === 'search'
+            ) {
+              scrollToBottom();
+            }
           }
-        }
+        });
       },
       onRecvMessage: async (msg: ChatMessage) => {
         if (msg.conversationId === convId) {
           if (canAddNewMessageToUI() || recvMessageAutoScroll === true) {
             setUnreadCount(0);
-            await onAddMessageToUI(msg);
+            parseUrlPreview(msg, false, async (newMsg) => {
+              await onAddMessageToUI(newMsg, false);
+              if (comType === 'chat') {
+                scrollToBottom();
+              } else if (comType === 'thread') {
+                scrollToBottom();
+              }
+            });
             sendRecvMessageReadAck(msg);
-            if (comType === 'chat') {
-              scrollToBottom();
-            } else if (comType === 'thread') {
-              scrollToBottom();
-            }
           } else {
             setNoNewMsg(false);
             setUnreadCount(++unreadCountRef.current);
@@ -2876,6 +2929,7 @@ export function useMessageList(
     onAddMessageToUI,
     onRecvRecallMessage,
     onUpdateMessageToUI,
+    parseUrlPreview,
     recvMessageAutoScroll,
     scrollToBottom,
     sendRecvMessageReadAck,

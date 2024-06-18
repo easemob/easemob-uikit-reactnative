@@ -10,10 +10,10 @@ import { NativeModules, Platform } from 'react-native';
  */
 export function getSystemLanguage(): string {
   if (Platform.OS === 'ios') {
-    console.log(
-      'dev:getSystemLanguage',
-      NativeModules.SettingsManager.settings
-    );
+    // console.log(
+    //   'dev:getSystemLanguage',
+    //   NativeModules.SettingsManager.settings
+    // );
     // https://github.com/facebook/react-native/issues/26540
     let locale = NativeModules.SettingsManager.settings.AppleLocale;
     if (locale === undefined) {
@@ -25,7 +25,7 @@ export function getSystemLanguage(): string {
     }
     return locale;
   } else if (Platform.OS === 'android') {
-    console.log('dev:getSystemLanguage', NativeModules.I18nManager);
+    // console.log('dev:getSystemLanguage', NativeModules.I18nManager);
     // ["en_US", "zh_CN_#Hans"]
     return NativeModules.I18nManager.localeIdentifier;
   }
