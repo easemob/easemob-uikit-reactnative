@@ -162,6 +162,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_msg_custom_card': 'Contact Card',
 
     '_uikit_message_typing': 'Typing...',
+    '_uikit_message_url_parsing': 'Parsing...',
 
     'Unwelcome commercial content': 'Unwelcome Commercial Content',
     'Pornographic or explicit content': 'Pornographic or Explicit Content',

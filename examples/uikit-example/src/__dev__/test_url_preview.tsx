@@ -9,7 +9,7 @@ export function Test1() {
   const [title, setTitle] = React.useState('' as string);
   const [imageUrl, setImageUrl] = React.useState('' as string);
   React.useEffect(() => {
-    fetchUrlPreview('https://www.hotmail.com')
+    fetchUrlPreview('https://www.163.com/')
       .then((res) => {
         console.log('test:zuoyu:res', res);
         if (res) {

@@ -156,6 +156,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_msg_custom_card': '名片',
 
     '_uikit_message_typing': '正在输入中...',
+    '_uikit_message_url_parsing': '解析中...',
 
     'Unwelcome commercial content': '不受欢迎的商业内容',
     'Pornographic or explicit content': '色情或露骨内容',

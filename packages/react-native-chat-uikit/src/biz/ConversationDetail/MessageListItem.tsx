@@ -137,6 +137,10 @@ export function MessageText(props: MessageTextProps) {
       light: 'rgba(0, 0, 0, 0.05)',
       dark: 'rgba(0, 0, 0, 0.05)',
     },
+    url_parsing: {
+      light: colors.neutral[5],
+      dark: colors.neutral[7],
+    },
   });
   const body = msg.body as ChatTextMessageBody;
   // const content = emoji.toCodePointText(body.content);
@@ -317,64 +321,80 @@ export function MessageText(props: MessageTextProps) {
       </View>
 
       {urlPreview ? (
-        <View style={{ backgroundColor: getColor('url_bg') }}>
-          <DefaultImage
-            source={{
-              uri: urlPreview.imageUrl,
-            }}
-            style={[
-              {
+        urlPreview.title ? (
+          <View style={{ backgroundColor: getColor('url_bg') }}>
+            <DefaultImage
+              source={{
+                uri: urlPreview.imageUrl,
+              }}
+              style={[
+                {
+                  width: '100%',
+                  height: 118,
+                  resizeMode: 'cover',
+                },
+              ]}
+              defaultSource={ICON_ASSETS.url_preview_placeholder('x')}
+              defaultStyle={{
                 width: '100%',
                 height: 118,
-                resizeMode: 'cover',
-              },
-            ]}
-            defaultSource={ICON_ASSETS.url_preview_placeholder('x')}
-            defaultStyle={{
-              width: '100%',
-              height: 118,
-              tintColor: getColor('fg'),
-            }}
-            defaultContainerStyle={{
-              width: '100%',
-              height: 118,
-              backgroundColor: getColor('url_image_bg'),
-              justifyContent: 'center',
-              alignItems: 'center',
-              overflow: 'hidden',
-            }}
-            containerStyle={[
-              {
+                tintColor: getColor('fg'),
+              }}
+              defaultContainerStyle={{
+                width: '100%',
+                height: 118,
+                backgroundColor: getColor('url_image_bg'),
                 justifyContent: 'center',
                 alignItems: 'center',
                 overflow: 'hidden',
-              },
-            ]}
-          />
+              }}
+              containerStyle={[
+                {
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  overflow: 'hidden',
+                },
+              ]}
+            />
+            <SingleLineText
+              paletteType={'headline'}
+              textType={'small'}
+              style={{
+                color: getColor('url_text'),
+                paddingTop: 8,
+                paddingHorizontal: 12,
+              }}
+            >
+              {urlPreview.title}
+            </SingleLineText>
+            <View style={{ height: 4 }} />
+            <Text
+              paletteType={'body'}
+              textType={'medium'}
+              numberOfLines={2}
+              style={{
+                color: getColor('url_text'),
+                paddingBottom: 8,
+                paddingHorizontal: 12,
+              }}
+            >
+              {urlPreview.description}
+            </Text>
+          </View>
+        ) : null
+      ) : urls && urls.length === 1 ? (
+        <View style={{ backgroundColor: getColor('url_bg') }}>
           <SingleLineText
-            paletteType={'headline'}
+            paletteType={'body'}
             textType={'small'}
             style={{
-              color: getColor('url_text'),
-              paddingTop: 8,
+              color: getColor('url_parsing'),
+              paddingVertical: 8,
               paddingHorizontal: 12,
             }}
           >
-            {urlPreview.title}
+            {tr('_uikit_message_url_parsing')}
           </SingleLineText>
-          <View style={{ height: 4 }} />
-          <Text
-            paletteType={'body'}
-            textType={'medium'}
-            numberOfLines={2}
-            style={{
-              color: getColor('url_text'),
-              paddingBottom: 8,
-              paddingHorizontal: 12,
-            }}
-          >
-            {urlPreview.description}
-          </Text>
         </View>
       ) : null}
     </View>
