@@ -15,6 +15,7 @@ import {
 import type { ContactListNavigationBarProps } from './types';
 
 type _ContactListNavigationBarProps = ContactListNavigationBarProps & {
+  userId?: string;
   selectedCount?: number;
   selectedMemberCount?: number;
   avatarUrl?: string;
@@ -25,6 +26,7 @@ export const ContactListNavigationBar = (
   props: _ContactListNavigationBarProps
 ) => {
   const {
+    userId,
     contactType,
     avatarUrl,
     onClickedNewContact,
@@ -69,7 +71,7 @@ export const ContactListNavigationBar = (
       <TopNavigationBar
         Left={
           <View style={{ flexDirection: 'row' }}>
-            <StatusAvatar url={avatarUrl} size={32} />
+            <StatusAvatar url={avatarUrl} size={32} userId={userId} />
           </View>
         }
         Right={TopNavigationBarRight}

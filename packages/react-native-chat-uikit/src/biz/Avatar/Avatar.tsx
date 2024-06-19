@@ -3,7 +3,6 @@ import {
   EmitterSubscription,
   Pressable,
   StyleProp,
-  View,
   ViewStyle,
 } from 'react-native';
 
@@ -20,6 +19,7 @@ import { useColors, useForceUpdate, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { DefaultIconImage, DefaultIconImageProps } from '../../ui/Image';
 import type { StatusType } from '../types';
+import { AvatarStatus } from './AvatarStatus';
 import { gEventAvatarStatus } from './const';
 
 export type AvatarProps = DefaultIconImageProps;
@@ -109,10 +109,23 @@ export function StatusAvatar(props: StatusAvatarProps) {
     disableStatus = false,
     ...others
   } = props;
+  const parentSize = props.size;
+  const childrenPaddingSize =
+    parentSize >= 100 ? 4 : parentSize >= 50 ? 3 : parentSize >= 40 ? 2.5 : 2;
+  const scale =
+    parentSize >= 100
+      ? 100 / 26
+      : parentSize >= 50
+      ? 50 / 16
+      : parentSize >= 40
+      ? 40 / 12
+      : 32 / 11.68;
   const urlRef = React.useRef<string | undefined>(url);
-  const [status, setStatus] = React.useState<string>();
-  const { onChangeStatus, enablePresence } = useConfigContext();
+  const [status, setStatus] = React.useState<string>('');
+  const { AvatarStatusRender, enablePresence } = useConfigContext();
   const { updater } = useForceUpdate();
+  const { cornerRadius } = useThemeContext();
+  const { avatar: avatarCornerRadius } = cornerRadius;
   const { emitAvatarStatusEvent } = useAvatarStatus();
   const im = useChatContext();
   const { colors } = usePaletteContext();
@@ -221,37 +234,21 @@ export function StatusAvatar(props: StatusAvatarProps) {
   return (
     <Pressable style={{ overflow: 'hidden' }} onPress={onClicked}>
       <Avatar url={urlRef.current} {...others} />
-      {onChangeStatus ? (
-        onChangeStatus?.(status as StatusType)
-      ) : disableStatus === false ? (
-        <View
-          style={[
-            {
-              position: 'absolute',
-              right: -1,
-              bottom: -1,
-              width: 10,
-              height: 10,
-              borderRadius: 10,
-              backgroundColor: getColor('bg'),
-              justifyContent: 'center',
-              alignItems: 'center',
-            },
-            statusContainerStyle,
-          ]}
-        >
-          <View
-            style={[
-              {
-                width: 7.68,
-                height: 7.68,
-                borderRadius: 9,
-                backgroundColor: getStatusColor(status ?? ''),
-              },
-              statusStyle,
-            ]}
-          />
-        </View>
+      {disableStatus === false ? (
+        <AvatarStatus
+          parentSize={parentSize}
+          childrenPaddingSize={childrenPaddingSize}
+          scale={scale}
+          containerStyle={statusContainerStyle}
+          style={[{ backgroundColor: getStatusColor(status) }, statusStyle]}
+          positionStyle={
+            avatarCornerRadius === 'extraLarge'
+              ? 'bottomRight1'
+              : 'bottomRight2'
+          }
+          status={status}
+          AvatarStatusRender={AvatarStatusRender}
+        />
       ) : null}
     </Pressable>
   );

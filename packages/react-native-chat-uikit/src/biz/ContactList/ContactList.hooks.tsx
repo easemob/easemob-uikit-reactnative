@@ -83,6 +83,7 @@ export function useContactList(props: ContactListProps) {
     isAutoLoad,
     setListState,
   } = sectionListProps;
+  const [userId, setUserId] = React.useState<string | undefined>(undefined);
   const [selectedCount, setSelectedCount] = React.useState(0);
   const [selectedMemberCount, setSelectedMemberCount] =
     React.useState<number>(0);
@@ -521,6 +522,9 @@ export function useContactList(props: ContactListProps) {
       if (url) {
         setAvatarUrl(url);
       }
+      if (im.userId) {
+        setUserId(im.userId);
+      }
       if (isAutoLoad === true) {
         if (isClearState === undefined || isClearState === true) {
           if (contactType === 'create-group') {
@@ -647,6 +651,7 @@ export function useContactList(props: ContactListProps) {
       isAutoLoad,
       onChangeGroupCount,
       refreshToUI,
+      setUserId,
       testMode,
       updateState,
     ]
@@ -991,6 +996,7 @@ export function useContactList(props: ContactListProps) {
     ListHeaderComponent,
     onClickedForward,
     onError,
+    userId,
   };
 }
 

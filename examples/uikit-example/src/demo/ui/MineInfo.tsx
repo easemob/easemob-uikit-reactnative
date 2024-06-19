@@ -86,14 +86,14 @@ export function MineInfo(props: MineInfoProps) {
           size={100}
           url={userAvatar}
           userId={userId}
-          statusContainerStyle={{
-            height: 22,
-            width: 22,
-            borderRadius: 11,
-            right: -2,
-            bottom: -2,
-          }}
-          statusStyle={{ height: 18, width: 18, borderRadius: 9 }}
+          // statusContainerStyle={{
+          //   height: 22,
+          //   width: 22,
+          //   borderRadius: 11,
+          //   right: -2,
+          //   bottom: -2,
+          // }}
+          // statusStyle={{ height: 18, width: 18, borderRadius: 9 }}
         />
         <View style={{ height: 12 }} />
         <Text

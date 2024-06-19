@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ChatPushConfig } from '../../rename.uikit';
+import { ChatPushConfig, ChatService } from '../../rename.uikit';
 import {
   AsyncStorageBasic,
   SingletonObjects,
@@ -13,6 +13,91 @@ import {
 import { appKey as gAppKey, fcmSenderId } from '../common/const';
 import { requestFcmToken } from '../common/fcm';
 import { RequestLoginResult, RestApi } from '../common/rest.api';
+
+export function useAutoLogin() {
+  const getSelfInfo = React.useCallback(async () => {
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${gAppKey}/uikit/demo`,
+    });
+    const res = await s.getData({ key: 'self' });
+    if (res.value) {
+      try {
+        return JSON.parse(res.value) as {
+          phone: string;
+          id: string;
+          token: string;
+          avatar: string;
+        };
+      } catch (error) {
+        return undefined;
+      }
+    }
+    return undefined;
+  }, []);
+
+  const requestUpdatePushToken = React.useCallback((im: ChatService) => {
+    requestFcmToken()
+      .then((fcmToken) => {
+        im.client
+          .updatePushConfig(
+            new ChatPushConfig({
+              deviceId: fcmSenderId,
+              deviceToken: fcmToken,
+            })
+          )
+          .then()
+          .catch((e) => {
+            console.warn('dev:updatePushConfig:error:', e);
+          });
+      })
+      .catch((e) => {
+        console.warn('dev:requestFcmToken:error:', e);
+      });
+  }, []);
+
+  const autoLoginAction = React.useCallback(
+    async (params: {
+      im: ChatService;
+      onResult: (params: { isOk: boolean }) => void;
+    }) => {
+      const { im, onResult } = params;
+      try {
+        do {
+          const p = new Promise<{ isOk: boolean; error?: UIKitError }>(
+            async (resolve, reject) => {
+              const ret = await getSelfInfo();
+              im.autoLogin({
+                userAvatarURL: ret?.avatar,
+                result: (res) => {
+                  if (res.isOk) {
+                    resolve(res);
+                  } else {
+                    reject(res);
+                  }
+                },
+              });
+            }
+          );
+          const ret = await p;
+          if (ret.isOk) {
+            requestUpdatePushToken(im);
+            onResult?.({ isOk: true });
+            break;
+          }
+          onResult?.({ isOk: false });
+        } while (false);
+      } catch (error) {
+        console.warn('dev:autoLoginAction:error:', error);
+        onResult?.({ isOk: false });
+      }
+    },
+    [getSelfInfo, requestUpdatePushToken]
+  );
+  return {
+    autoLoginAction,
+    getSelfInfo,
+  };
+}
 
 export function useLogin() {
   const { getSimpleToastRef } = useSimpleToastContext();
@@ -59,25 +144,25 @@ export function useLogin() {
     });
   }, []);
 
-  const getSelfInfo = React.useCallback(async () => {
-    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
-    });
-    const res = await s.getData({ key: 'self' });
-    if (res.value) {
-      try {
-        return JSON.parse(res.value) as {
-          phone: string;
-          id: string;
-          token: string;
-          avatar: string;
-        };
-      } catch (error) {
-        return undefined;
-      }
-    }
-    return undefined;
-  }, []);
+  // const getSelfInfo = React.useCallback(async () => {
+  //   const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+  //     appKey: `${gAppKey}/uikit/demo`,
+  //   });
+  //   const res = await s.getData({ key: 'self' });
+  //   if (res.value) {
+  //     try {
+  //       return JSON.parse(res.value) as {
+  //         phone: string;
+  //         id: string;
+  //         token: string;
+  //         avatar: string;
+  //       };
+  //     } catch (error) {
+  //       return undefined;
+  //     }
+  //   }
+  //   return undefined;
+  // }, []);
 
   // const loginAction2 = React.useCallback(
   //   async (params: {
@@ -175,41 +260,41 @@ export function useLogin() {
     [im, requestUpdatePushToken, saveSelfInfo]
   );
 
-  const autoLoginAction = React.useCallback(
-    async (params: { onResult: (params: { isOk: boolean }) => void }) => {
-      const { onResult } = params;
-      try {
-        do {
-          const p = new Promise<{ isOk: boolean; error?: UIKitError }>(
-            async (resolve, reject) => {
-              const ret = await getSelfInfo();
-              im.autoLogin({
-                userAvatarURL: ret?.avatar,
-                result: (res) => {
-                  if (res.isOk) {
-                    resolve(res);
-                  } else {
-                    reject(res);
-                  }
-                },
-              });
-            }
-          );
-          const ret = await p;
-          if (ret.isOk) {
-            requestUpdatePushToken();
-            onResult?.({ isOk: true });
-            break;
-          }
-          onResult?.({ isOk: false });
-        } while (false);
-      } catch (error) {
-        console.warn('dev:autoLoginAction:error:', error);
-        onResult?.({ isOk: false });
-      }
-    },
-    [getSelfInfo, im, requestUpdatePushToken]
-  );
+  // const autoLoginAction = React.useCallback(
+  //   async (params: { onResult: (params: { isOk: boolean }) => void }) => {
+  //     const { onResult } = params;
+  //     try {
+  //       do {
+  //         const p = new Promise<{ isOk: boolean; error?: UIKitError }>(
+  //           async (resolve, reject) => {
+  //             const ret = await getSelfInfo();
+  //             im.autoLogin({
+  //               userAvatarURL: ret?.avatar,
+  //               result: (res) => {
+  //                 if (res.isOk) {
+  //                   resolve(res);
+  //                 } else {
+  //                   reject(res);
+  //                 }
+  //               },
+  //             });
+  //           }
+  //         );
+  //         const ret = await p;
+  //         if (ret.isOk) {
+  //           requestUpdatePushToken();
+  //           onResult?.({ isOk: true });
+  //           break;
+  //         }
+  //         onResult?.({ isOk: false });
+  //       } while (false);
+  //     } catch (error) {
+  //       console.warn('dev:autoLoginAction:error:', error);
+  //       onResult?.({ isOk: false });
+  //     }
+  //   },
+  //   [getSelfInfo, im, requestUpdatePushToken]
+  // );
 
   return {
     getToastRef: getSimpleToastRef,
@@ -217,9 +302,9 @@ export function useLogin() {
     getAlertRef,
     requestUpdatePushToken,
     loginAction,
-    autoLoginAction,
+    // autoLoginAction,
     saveSelfInfo,
-    getSelfInfo,
+    // getSelfInfo,
     getFcmToken,
   };
 }

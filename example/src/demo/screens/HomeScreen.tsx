@@ -416,33 +416,35 @@ export type HomeTabMineScreenProps = {};
 function HomeTabMineScreen(props: HomeTabMineScreenProps) {
   const {} = props;
   const navi = useNativeStackRoute();
-  const { replace } = navi;
+  const {} = navi;
   const im = useChatContext();
   const { tr } = useI18nContext();
   const [userId, setUserId] = React.useState<string>();
-  const { autoLoginAction, getFcmToken } = useLogin();
+  const { getFcmToken } = useLogin();
   const { getAlertRef } = useAlertContext();
 
-  const s = React.useCallback(async () => {
-    const autoLogin = im.client.options?.autoLogin ?? false;
-    if (autoLogin === true) {
-      autoLoginAction({
-        onResult: (res) => {
-          if (res.isOk) {
-            setUserId(im.userId);
-          } else {
-            replace({ to: 'LoginV2' });
-          }
-        },
-      });
-    } else {
-      setUserId(im.userId);
-    }
-  }, [autoLoginAction, im.client.options?.autoLogin, im.userId, replace]);
+  // const s = React.useCallback(async () => {
+  //   const autoLogin = im.client.options?.autoLogin ?? false;
+  //   if (autoLogin === true) {
+  //     autoLoginAction({
+  //       onResult: (res) => {
+  //         if (res.isOk) {
+  //           setUserId(im.userId);
+  //         } else {
+  //           replace({ to: 'LoginV2' });
+  //         }
+  //       },
+  //     });
+  //   } else {
+  //     setUserId(im.userId);
+  //   }
+  // }, [autoLoginAction, im.client.options?.autoLogin, im.userId, replace]);
 
   React.useEffect(() => {
-    s().catch();
-  }, [s]);
+    if (im.userId) {
+      setUserId(im.userId);
+    }
+  }, [im.userId]);
 
   if (userId) {
     return (

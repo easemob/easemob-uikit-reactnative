@@ -1,3 +1,5 @@
+import { StyleProp, ViewStyle } from 'react-native';
+
 import type { StatusType } from '../biz/types';
 import type { LanguageCode } from '../i18n';
 import { ReleaseArea } from '../types';
@@ -118,11 +120,21 @@ export type Config = {
   enableTranslate: boolean;
 
   /**
-   * Returns the custom state component.
+   * Custom avatar state component render.
    * @param status current status.
    * @returns component.
    */
-  onChangeStatus?: (status: StatusType) => React.ReactElement;
+  AvatarStatusRender?:
+    | React.FC<{
+        status: StatusType;
+        style?: StyleProp<ViewStyle>;
+      }>
+    | React.MemoExoticComponent<
+        (props: {
+          status: StatusType;
+          style?: StyleProp<ViewStyle>;
+        }) => JSX.Element
+      >;
 
   /**
    * Whether to activate the thread function. If you do not activate it, you will not be able to actively use thread-related functions, if there are still problems after activation, check whether the relevant settings of the console are enabled.

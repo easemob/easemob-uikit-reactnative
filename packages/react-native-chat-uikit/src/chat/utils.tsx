@@ -277,7 +277,7 @@ export class PresenceUtil {
       } else if (description === 'Away') {
         return 'leave';
       } else if (description === 'Do Not Disturb') {
-        return 'no-disturb';
+        return 'not disturb';
       } else {
         return description;
       }

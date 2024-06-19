@@ -21,7 +21,8 @@ import {
   restServer,
 } from './common/const';
 import { RestApi } from './common/rest.api';
-import { useApp } from './hooks/useApp';
+import { useAutoLogin } from './hooks';
+import { AvatarStatusRenderMemo, useApp } from './hooks/useApp';
 import { useGeneralSetting } from './hooks/useGeneralSetting';
 import { useServerConfig } from './hooks/useServerConfig';
 import type { RootParamsList } from './routes';
@@ -122,6 +123,7 @@ export function App() {
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
   const { initParams } = useGeneralSetting();
   const imRef = React.useRef<ChatService>();
+  const { autoLoginAction } = useAutoLogin();
 
   const initParamsCallback = React.useCallback(async () => {
     if (_initParams === true) {
@@ -212,13 +214,22 @@ export function App() {
         const ret = await imRef.current?.loginState();
         console.log('dev:loginState:', ret);
         if (ret === 'logged') {
-          rootRef.navigate('Home', {});
+          autoLoginAction({
+            im: imRef.current!,
+            onResult: (res) => {
+              if (res.isOk) {
+                rootRef.navigate('Home', {});
+              } else {
+                rootRef.navigate('LoginV2', {});
+              }
+            },
+          });
         } else {
           rootRef.navigate('LoginV2', {});
         }
       }, 1000);
     },
-    [isReadyRef, rootRef, initPush]
+    [isReadyRef, initPush, autoLoginAction, rootRef]
   );
 
   const onContainerInitialized = React.useCallback(
@@ -314,6 +325,7 @@ export function App() {
         onInitLanguageSet={onInitLanguageSet}
         onGroupsHandler={onGroupsHandler}
         onUsersHandler={onUsersHandler}
+        AvatarStatusRender={AvatarStatusRenderMemo}
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}

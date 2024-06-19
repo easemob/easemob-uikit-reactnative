@@ -68,6 +68,7 @@ export function ContactList(props: ContactListProps) {
     sectionListProps,
     ListHeaderComponent,
     onClickedForward,
+    userId,
   } = useContactList(props);
   const {
     style,
@@ -112,6 +113,7 @@ export function ContactList(props: ContactListProps) {
     >
       {navigationBarVisible !== false ? (
         <ContactListNavigationBar
+          userId={userId}
           contactType={contactType}
           selectedCount={selectedCount}
           selectedMemberCount={selectedMemberCount}
