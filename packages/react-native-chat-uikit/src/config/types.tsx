@@ -188,4 +188,9 @@ export type Config = {
    * Whether to enable the block list function.
    */
   enableBlock?: boolean;
+
+  /**
+   * Whether to enable the message pin function.
+   */
+  enableMessagePin?: boolean;
 };

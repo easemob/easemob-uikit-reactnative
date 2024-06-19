@@ -66,6 +66,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_chat_list_long_press_menu_thread': '创建话题',
     '_uikit_chat_list_long_press_menu_edit': '编辑',
     '_uikit_chat_list_long_press_menu_multi_select': '多选',
+    '_uikit_chat_list_long_press_menu_message_pin': '置顶',
     '_uikit_chat_list_long_press_menu_forward_message': '转发',
     '_uikit_chat_list_long_press_menu_report': '举报',
     '_uikit_chat_list_long_press_menu_delete': '删除',

@@ -323,39 +323,42 @@ export function MessageText(props: MessageTextProps) {
       {urlPreview ? (
         urlPreview.title ? (
           <View style={{ backgroundColor: getColor('url_bg') }}>
-            <DefaultImage
-              source={{
-                uri: urlPreview.imageUrl,
-              }}
-              style={[
-                {
+            {urlPreview.imageUrl ? (
+              <DefaultImage
+                source={{
+                  uri: urlPreview.imageUrl,
+                }}
+                style={[
+                  {
+                    width: '100%',
+                    height: 118,
+                    resizeMode: 'cover',
+                  },
+                ]}
+                defaultSource={ICON_ASSETS.url_preview_placeholder('x')}
+                defaultStyle={{
                   width: '100%',
                   height: 118,
-                  resizeMode: 'cover',
-                },
-              ]}
-              defaultSource={ICON_ASSETS.url_preview_placeholder('x')}
-              defaultStyle={{
-                width: '100%',
-                height: 118,
-                tintColor: getColor('fg'),
-              }}
-              defaultContainerStyle={{
-                width: '100%',
-                height: 118,
-                backgroundColor: getColor('url_image_bg'),
-                justifyContent: 'center',
-                alignItems: 'center',
-                overflow: 'hidden',
-              }}
-              containerStyle={[
-                {
+                  tintColor: getColor('fg'),
+                }}
+                defaultContainerStyle={{
+                  width: '100%',
+                  height: 118,
+                  backgroundColor: getColor('url_image_bg'),
                   justifyContent: 'center',
                   alignItems: 'center',
                   overflow: 'hidden',
-                },
-              ]}
-            />
+                }}
+                containerStyle={[
+                  {
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    overflow: 'hidden',
+                  },
+                ]}
+              />
+            ) : null}
+
             <SingleLineText
               paletteType={'headline'}
               textType={'small'}

@@ -17,8 +17,9 @@ const imageOGPattern = /<meta property="og:image" content="(.*?)"\s*\/?>/i;
 const titlePattern = /<title>(.*?)<\/title>/i;
 const descriptionPattern =
   /<meta\s+name="description"\s+content="(.*?)"\s*\/?>/i;
-const imagePattern = /<img\s+[^>]*src="(http[^"]*)"[^>]*>/i;
-const imageSrcPattern = /<link\s+rel="image_src"\s+href="(http[^"]*)"\s*\/?>/i;
+const imagePattern = /<img\s+[^>]*src="(https?:\/\/[^\s]+)"[^>]*>/i;
+const imageSrcPattern =
+  /<link\s+rel="image_src"\s+href="(https?:\/\/[^\s]+)"\s*\/?>/i;
 
 export function useUrlPreview() {
   const getTitle = React.useCallback((html: string) => {

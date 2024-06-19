@@ -237,4 +237,9 @@ export type ContainerProps = React.PropsWithChildren<{
    * Whether to enable the block list function.
    */
   enableBlock?: boolean;
+
+  /**
+   * Whether to enable the message pin function.
+   */
+  enableMessagePin?: boolean;
 }>;

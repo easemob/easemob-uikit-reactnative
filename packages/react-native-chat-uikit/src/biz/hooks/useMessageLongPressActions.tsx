@@ -69,6 +69,11 @@ export type UseMessageLongPressActionsProps = BasicActionsProps & {
    * Callback notification of forward message.
    */
   onForwardMessage?: (model: MessageModel) => void;
+
+  /**
+   * Callback notification of pin message.
+   */
+  onPinMessage?: (model: MessageModel) => void;
 };
 export function useMessageLongPressActions(
   props: UseMessageLongPressActionsProps
@@ -87,6 +92,7 @@ export function useMessageLongPressActions(
     onForwardMessage,
     onThread,
     onInit,
+    onPinMessage,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const { tr } = useI18nContext();
@@ -98,6 +104,7 @@ export function useMessageLongPressActions(
     enableMessageQuote,
     enableMessageForward,
     enableMessageMultiSelect,
+    enableMessagePin,
   } = useConfigContext();
 
   const isCardMessage = (msg: ChatMessage) => {
@@ -136,6 +143,7 @@ export function useMessageLongPressActions(
     }
     let initItems = [] as InitMenuItemsType[];
     const msgModel = model as MessageModel;
+
     if (model.modelType === 'message') {
       if (msgModel.msg.body.type === ChatMessageType.TXT) {
         initItems.push({
@@ -151,6 +159,42 @@ export function useMessageLongPressActions(
           },
         });
       }
+
+      if (
+        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
+        enableMessageForward === true
+      ) {
+        initItems.push({
+          name: tr('_uikit_chat_list_long_press_menu_forward_message'),
+          isHigh: false,
+          icon: 'arrowshape_right',
+          onClicked: () => {
+            closeMenu(() => {
+              onForwardMessage?.(model as MessageModel);
+            });
+          },
+        });
+      }
+
+      if (
+        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
+        convType === 1 &&
+        enableThread === true &&
+        msgModel.thread === undefined &&
+        (comType === 'chat' || comType === 'search')
+      ) {
+        initItems.push({
+          name: tr('_uikit_chat_list_long_press_menu_thread'),
+          isHigh: false,
+          icon: 'hashtag_in_bubble_fill',
+          onClicked: () => {
+            closeMenu(() => {
+              onThread?.(model as MessageModel);
+            });
+          },
+        });
+      }
+
       if (
         msgModel.msg.body.type === ChatMessageType.TXT ||
         msgModel.msg.body.type === ChatMessageType.VOICE ||
@@ -175,150 +219,6 @@ export function useMessageLongPressActions(
             },
           });
         }
-      }
-
-      if (
-        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
-        enableMessageForward === true
-      ) {
-        initItems.push({
-          name: tr('_uikit_chat_list_long_press_menu_forward_message'),
-          isHigh: false,
-          icon: 'arrowshape_right',
-          onClicked: () => {
-            closeMenu(() => {
-              onForwardMessage?.(model as MessageModel);
-            });
-          },
-        });
-      }
-
-      if (enableMessageMultiSelect === true) {
-        initItems.push({
-          name: tr('_uikit_chat_list_long_press_menu_multi_select'),
-          isHigh: false,
-          icon: 'check_n_3lines',
-          onClicked: () => {
-            closeMenu(() => {
-              onClickedMultiSelected?.();
-            });
-          },
-        });
-      }
-
-      if (
-        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
-        enableTranslate === true
-      ) {
-        if (msgModel.msg.body.type === ChatMessageType.TXT) {
-          const textBody = msgModel.msg.body as ChatTextMessageBody;
-          if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
-            const msg = (model as MessageModel)?.msg;
-            const isTranslated = msg?.attributes?.[gMessageAttributeTranslate];
-            initItems.push({
-              name: tr(
-                '_uikit_chat_list_long_press_menu_translate',
-                isTranslated
-              ),
-              isHigh: false,
-              icon: 'a_in_arrows_round',
-              onClicked: () => {
-                closeMenu(() => {
-                  onTranslateMessage?.(model as MessageModel);
-                });
-              },
-            });
-          }
-        }
-      }
-      if (
-        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
-        convType === 1 &&
-        enableThread === true &&
-        msgModel.thread === undefined &&
-        (comType === 'chat' || comType === 'search')
-      ) {
-        initItems.push({
-          name: tr('_uikit_chat_list_long_press_menu_thread'),
-          isHigh: false,
-          icon: 'hashtag_in_bubble_fill',
-          onClicked: () => {
-            closeMenu(() => {
-              onThread?.(model as MessageModel);
-            });
-          },
-        });
-      }
-      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
-        if (
-          msgModel.msg.body.type === ChatMessageType.TXT &&
-          msgModel.msg.from === im.userId
-        ) {
-          const textBody = msgModel.msg.body as ChatTextMessageBody;
-          if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
-            initItems.push({
-              name: tr('_uikit_chat_list_long_press_menu_edit'),
-              isHigh: false,
-              icon: 'slash_in_rectangle',
-              onClicked: () => {
-                closeMenu(() => {
-                  onEditMessageForInput?.(model as MessageModel);
-                });
-              },
-            });
-          }
-        }
-      }
-      if (
-        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
-        comType !== 'thread'
-      ) {
-        initItems.push({
-          name: tr('_uikit_chat_list_long_press_menu_report'),
-          isHigh: false,
-          icon: 'envelope',
-          onClicked: () => {
-            closeMenu(() => {
-              showReportMessage?.(msgModel);
-            });
-          },
-        });
-      }
-      if (comType !== 'thread' && comType !== 'create_thread') {
-        initItems.push({
-          name: tr('_uikit_chat_list_long_press_menu_delete'),
-          isHigh: false,
-          icon: 'trash',
-          onClicked: () => {
-            closeMenu(() => {
-              alertRef.current?.alertWithInit?.({
-                title: tr(
-                  '_uikit_chat_list_long_press_menu_delete_alert_title'
-                ),
-                message: tr(
-                  '_uikit_chat_list_long_press_menu_delete_alert_content'
-                ),
-                buttons: [
-                  {
-                    text: tr('cancel'),
-                    onPress: () => {
-                      alertRef.current?.close?.();
-                    },
-                  },
-                  {
-                    text: tr('confirm'),
-                    isPreferred: true,
-                    onPress: () => {
-                      alertRef.current?.close?.();
-                      const msgModel = model as MessageModel;
-                      onDeleteMessage?.(msgModel.msg);
-                    },
-                  },
-                ],
-              });
-            });
-          },
-        });
       }
 
       if (
@@ -365,6 +265,140 @@ export function useMessageLongPressActions(
             },
           });
         }
+      }
+
+      if (msgModel.msg.status === ChatMessageStatus.SUCCESS) {
+        if (
+          msgModel.msg.body.type === ChatMessageType.TXT &&
+          msgModel.msg.from === im.userId
+        ) {
+          const textBody = msgModel.msg.body as ChatTextMessageBody;
+          if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
+            initItems.push({
+              name: tr('_uikit_chat_list_long_press_menu_edit'),
+              isHigh: false,
+              icon: 'slash_in_rectangle',
+              onClicked: () => {
+                closeMenu(() => {
+                  onEditMessageForInput?.(model as MessageModel);
+                });
+              },
+            });
+          }
+        }
+      }
+
+      if (enableMessageMultiSelect === true) {
+        initItems.push({
+          name: tr('_uikit_chat_list_long_press_menu_multi_select'),
+          isHigh: false,
+          icon: 'check_n_3lines',
+          onClicked: () => {
+            closeMenu(() => {
+              onClickedMultiSelected?.();
+            });
+          },
+        });
+      }
+
+      if (
+        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
+        enableMessagePin === true
+      ) {
+        if (msgModel.msg.body.type === ChatMessageType.TXT) {
+          const textBody = msgModel.msg.body as ChatTextMessageBody;
+          if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
+            initItems.push({
+              name: tr('_uikit_chat_list_long_press_menu_message_pin'),
+              isHigh: false,
+              icon: 'pin_2',
+              onClicked: () => {
+                closeMenu(() => {
+                  onPinMessage?.(model as MessageModel);
+                });
+              },
+            });
+          }
+        }
+      }
+
+      if (
+        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
+        enableTranslate === true
+      ) {
+        if (msgModel.msg.body.type === ChatMessageType.TXT) {
+          const textBody = msgModel.msg.body as ChatTextMessageBody;
+          if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
+            const msg = (model as MessageModel)?.msg;
+            const isTranslated = msg?.attributes?.[gMessageAttributeTranslate];
+            initItems.push({
+              name: tr(
+                '_uikit_chat_list_long_press_menu_translate',
+                isTranslated
+              ),
+              isHigh: false,
+              icon: 'a_in_arrows_round',
+              onClicked: () => {
+                closeMenu(() => {
+                  onTranslateMessage?.(model as MessageModel);
+                });
+              },
+            });
+          }
+        }
+      }
+
+      if (
+        msgModel.msg.status === ChatMessageStatus.SUCCESS &&
+        comType !== 'thread'
+      ) {
+        initItems.push({
+          name: tr('_uikit_chat_list_long_press_menu_report'),
+          isHigh: false,
+          icon: 'envelope',
+          onClicked: () => {
+            closeMenu(() => {
+              showReportMessage?.(msgModel);
+            });
+          },
+        });
+      }
+
+      if (comType !== 'thread' && comType !== 'create_thread') {
+        initItems.push({
+          name: tr('_uikit_chat_list_long_press_menu_delete'),
+          isHigh: false,
+          icon: 'trash',
+          onClicked: () => {
+            closeMenu(() => {
+              alertRef.current?.alertWithInit?.({
+                title: tr(
+                  '_uikit_chat_list_long_press_menu_delete_alert_title'
+                ),
+                message: tr(
+                  '_uikit_chat_list_long_press_menu_delete_alert_content'
+                ),
+                buttons: [
+                  {
+                    text: tr('cancel'),
+                    onPress: () => {
+                      alertRef.current?.close?.();
+                    },
+                  },
+                  {
+                    text: tr('confirm'),
+                    isPreferred: true,
+                    onPress: () => {
+                      alertRef.current?.close?.();
+                      const msgModel = model as MessageModel;
+                      onDeleteMessage?.(msgModel.msg);
+                    },
+                  },
+                ],
+              });
+            });
+          },
+        });
       }
     }
     if (initItems.length === 0) {

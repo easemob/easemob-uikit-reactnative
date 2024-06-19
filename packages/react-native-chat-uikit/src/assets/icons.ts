@@ -1387,6 +1387,15 @@ export const ICON_ASSETS = {
       return require('./icons/picto_san_2x.png');
     }
   },
+  'pin_2': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/pin_2_3x.png');
+    } else if (size === '2x') {
+      return require('./icons/pin_2_3x.png');
+    } else {
+      return require('./icons/pin_2_2x.png');
+    }
+  },
   'pin': (size: string) => {
     if (size === '3x') {
       return require('./icons/pin_3x.png');

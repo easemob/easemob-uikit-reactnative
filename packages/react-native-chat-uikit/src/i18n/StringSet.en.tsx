@@ -67,6 +67,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_chat_list_long_press_menu_thread': 'Create a Thread',
     '_uikit_chat_list_long_press_menu_edit': 'Edit',
     '_uikit_chat_list_long_press_menu_multi_select': 'Select',
+    '_uikit_chat_list_long_press_menu_message_pin': 'Pin',
     '_uikit_chat_list_long_press_menu_forward_message': 'forward',
     '_uikit_chat_list_long_press_menu_report': 'Report',
     '_uikit_chat_list_long_press_menu_delete': 'Delete',
