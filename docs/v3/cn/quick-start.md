@@ -6,13 +6,13 @@
 
 创建应用，配置项目，填写必要 UIKit 代码，实现消息发送。
 
-[截图](todo:待完成)
-
 ## 步骤
 
 ### 1. 创建项目
 
 [参考相关章节](./create-app.md)
+
+**注意** 如果使用`expo`创建项目，需要创建 `native` 相关文件。详见创建项目说明的常见问题。
 
 ### 2. 初始化项目
 
@@ -27,11 +27,9 @@ yarn add @react-native-async-storage/async-storage@^1.17.11 \
 date-fns@^2.30.0 \
 pinyin-pro@^3.18.3 \
 pure-uuid@^1.6.3 \
-react@18.2.0 \
-react-native@0.73.2 \
 react-native-agora@^4.2.6 \
-react-native-chat-uikit@2.1.0 \
-react-native-chat-sdk@1.3.1 \
+react-native-chat-uikit@2.2.1 \
+react-native-chat-sdk@1.5.1 \
 react-native-audio-recorder-player@^3.5.3 \
 @easemob/react-native-create-thumbnail@^1.6.6 \
 react-native-device-info@^10.6.0 \
@@ -68,8 +66,9 @@ twemoji@14.0.2
 安装 iOS 需要的依赖。 执行命令，如下：
 
 ```sh
-# 在项目根目录 切换目录 安装 iOS依赖
-cd example && pod install
+# 在项目目录 `ios` 文件夹下 安装 iOS依赖
+# 注意: expo 创建的项目没有ios文件夹，需要使用命令创建一下。详见 `创建项目说明` 章节。
+pod install
 ```
 
 对于 Android studio 平台：
@@ -108,16 +107,17 @@ import {
   useChatContext,
 } from 'react-native-chat-uikit';
 
-const appKey = 'easemob#easeim';
-const userId = 'du004';
-const userPs = '1';
-const peerId = 'du005';
+const appKey = '<your app key>';
+const userId = '<current login id>';
+const userPassword = '<current login password or token>';
+const usePassword = true; // or false;
+const peerId = '<chat peer id>';
 
 function SendMessage() {
   const [page, setPage] = React.useState(0);
   const [appkey, setAppkey] = React.useState(appKey);
   const [id, setId] = React.useState(userId);
-  const [ps, setPs] = React.useState(userPs);
+  const [ps, setPs] = React.useState(userPassword);
   const [peer, setPeer] = React.useState(peerId);
   const im = useChatContext();
 
@@ -151,7 +151,7 @@ function SendMessage() {
             im.login({
               userId: id,
               userToken: ps,
-              usePassword: true,
+              usePassword: usePassword,
               result: (res) => {
                 console.log('login result', res);
                 console.log('test:zuoyu:error', res);
@@ -234,15 +234,29 @@ export default App;
 在运行之前，编写好预置的必要参数；
 
 ```tsx
-const appKey = 'easemob#easeim';
-const userId = 'du004'; // 当前用户ID。
-const userPs = '1'; // 当前用户密码。
-const peerId = 'du005'; // 对方ID。
+const appKey = '<your app key>';
+const userId = '<current login id>';
+const userPassword = '<current login password or token>';
+const usePassword = true; // or false;
+const peerId = '<chat peer id>';
 ```
 
 **如果修改了 appKey，则需要重启应用才会生效。**
 
-运行之后，点击登录按钮进入聊天页面，输入文本内容，点击发送按钮，发送消息给对方。
+运行之后，点击`登录`按钮进入聊天页面，输入文本内容，点击`发送`按钮，发送消息给对方。
+
+<!-- ![login screen](../res/login_screen.png)
+![chat screen](../res/chat-screen.png) -->
+
+欢迎页面，点击登录按钮可以登录。
+<img src="../res/login_screen.png" alt="description" width="20%">
+
+聊天页面，点击发送按钮可以发送消息。
+<img src="../res/chat-screen.png" alt="description" width="20%">
+
+## 额外说明
+
+如果遇到其它问题，可以参考 [Q&A](./qa.md)
 
 ## 完整源码地址
 
