@@ -2,4 +2,4 @@
 
 ---
 
-[新入口](./docs/v3/en/index.en.md)
+[new entry](./docs/v3/en/index.en.md)

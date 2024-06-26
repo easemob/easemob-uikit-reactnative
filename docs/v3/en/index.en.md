@@ -70,8 +70,8 @@ The `packages` folder include `react-native-chat-callkit` and `react-native-chat
 - `react-native-chat-callkit`: Primarily assists users in integrating audio and video call functionalities.
 - `react-native-chat-uikit`: Primarily assists users in integrating `react-native-chat-sdk` functionalities. If you are interested, you can click the links in the reference section for further details.
 
-[Callkit SDK Documentation Entry](https://github.com/easemob/easemob-uikit-reactnative/wiki/callkit.en)  
-[UIkit SDK Documentation Entry](https://github.com/easemob/easemob-uikit-reactnative/wiki/uikit.en)
+[Callkit SDK Documentation Entry](./callkit.en.md)  
+[UIkit SDK Documentation Entry](./uikit.en.md)
 
 ## Examples
 
@@ -80,41 +80,41 @@ The `examples` directory contains the sample projects for `callkit` and `uikit`.
 - `callkit-example`: Demonstrates the usage of `callkit`.
 - `uikit-example`: Demonstrates the usage of `uikit`.
 
-[callkit-example Documentation Entry](https://github.com/easemob/easemob-uikit-reactnative/wiki/callkit-example.en)  
-[uikit-example Documentation Entry](https://github.com/easemob/easemob-uikit-reactnative/wiki/uikit-example.en)
+[callkit-example Documentation Entry](./callkit-example.en.md)  
+[uikit-example Documentation Entry](./uikit-example.en.md)
 
 `example` contains a complete demonstration project:
 
-[example document entry](https://github.com/easemob/easemob-uikit-reactnative/wiki/example.en)
+[example document entry](./example.en.md)
 
 ## Build a Repository
 
-See [Build a Repository](https://github.com/easemob/easemob-uikit-reactnative/wiki/repo-builder.en).
+See [Build a Repository](./repo-builder.en.md).
 
 ## Create a Repository
 
-See [Create a Repository](https://github.com/easemob/easemob-uikit-reactnative/wiki/create-app.en).
+See [Create a Repository](./create-app.en.md).
 
 ## Integrate Existing Project
 
-See [Integrate Existing Project](https://github.com/easemob/easemob-uikit-reactnative/wiki/existed-app.en).
+See [Integrate Existing Project](./existed-app.en.md).
 
 ## Route
 
-See [Route](https://github.com/easemob/easemob-uikit-reactnative/wiki/route-app.en).
+See [Route](./route-app.en.md).
 
 ## Contents Beyond the Repository
 
-[Quick start](https://github.com/easemob/easemob-uikit-reactnative/wiki/quick-start.en)  
-[Difference between domestic and overseas versions](https://github.com/easemob/easemob-uikit-reactnative/wiki/diff-repo.en)  
-[FCM push](https://github.com/easemob/easemob-uikit-reactnative/wiki/fcm-app.en)  
-[Local npm package](https://github.com/easemob/easemob-uikit-reactnative/wiki/npm-package.en)  
-[Patch npm package](https://github.com/easemob/easemob-uikit-reactnative/wiki/patch-package.en)
+[Quick start](./quick-start.en.md)  
+[Difference between domestic and overseas versions](./diff-repo.en.md)  
+[FCM push](./fcm-app.en.md)  
+[Local npm package](./npm-package.en.md)  
+[Patch npm package](./patch-package.en.md)
 
 ## FAQ
 
-See [FAQ](https://github.com/easemob/easemob-uikit-reactnative/wiki/qa.en).
+See [FAQ](./qa.en.md).
 
 ## Reference
 
-See [Reference](https://github.com/easemob/easemob-uikit-reactnative/wiki/ref.en).
+See [Reference](./ref.en.md).
