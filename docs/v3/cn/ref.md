@@ -20,6 +20,7 @@
 
 [react native create](https://reactnative.dev/docs/environment-setup?guide=native)  
 [react native create expo](https://reactnative.dev/docs/environment-setup?guide=quickstart)  
+[react native expo native folder](https://docs.expo.dev/workflow/customizing/)  
 [react native library create](https://callstack.github.io/react-native-builder-bob/create)
 
 ## 其它示例项目

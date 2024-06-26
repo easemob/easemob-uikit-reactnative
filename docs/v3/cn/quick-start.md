@@ -12,6 +12,8 @@
 
 [参考相关章节](./create-app.md)
 
+**注意** 如果使用`expo`创建项目，需要创建 `native` 相关文件。详见创建项目说明的常见问题。
+
 ### 2. 初始化项目
 
 执行命令 `yarn` 初始化项目。
@@ -64,8 +66,9 @@ twemoji@14.0.2
 安装 iOS 需要的依赖。 执行命令，如下：
 
 ```sh
-# 在项目根目录 切换目录 安装 iOS依赖
-cd example && pod install
+# 在项目目录 `ios` 文件夹下 安装 iOS依赖
+# 注意: expo 创建的项目没有ios文件夹，需要使用命令创建一下。详见 `创建项目说明` 章节。
+pod install
 ```
 
 对于 Android studio 平台：
