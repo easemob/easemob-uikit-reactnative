@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Platform, View } from 'react-native';
+import { Animated, Platform, StyleSheet, View } from 'react-native';
 
 import { useConfigContext } from '../../config';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import { ChatConversationType } from '../../rename.chat';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { CmnButton, IconButton, IconButtonMemo } from '../../ui/Button';
 import { KeyboardAvoidingView } from '../../ui/Keyboard';
@@ -34,6 +35,8 @@ export const MessageInput = React.forwardRef<
     multiSelectCount,
     unreadCount,
     onClickedUnreadCount,
+    convType,
+    type: comType,
   } = props;
 
   const testRef = React.useRef<View>(null);
@@ -105,6 +108,7 @@ export const MessageInput = React.forwardRef<
     onClickedMultiSelectDeleteButton,
     onClickedMultiSelectShareButton,
     onKeyPress,
+    msgPinBackgroundCurrentOpacity,
   } = useMessageInput(props, ref);
 
   return (
@@ -328,6 +332,19 @@ export const MessageInput = React.forwardRef<
                 />
               </View>
             </View>
+
+            {convType === ChatConversationType.GroupChat &&
+            comType === 'chat' ? (
+              <Animated.View
+                style={[
+                  StyleSheet.absoluteFill,
+                  {
+                    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                    opacity: msgPinBackgroundCurrentOpacity,
+                  },
+                ]}
+              />
+            ) : null}
           </KeyboardAvoidingView>
           <View
             style={{

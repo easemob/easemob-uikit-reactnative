@@ -75,6 +75,7 @@ import type {
 import type { EmojiIconItem } from '../types';
 import { gRequestMaxMessageCount, gRequestMaxThreadCount } from './const';
 import { MessageListItemMemo } from './MessageListItem';
+import { MessagePin2 } from './MessagePin';
 import type {
   MessageAddPosition,
   MessageHistoryModel,
@@ -181,13 +182,13 @@ export function useMessageList(
   const startMsgIdRef = React.useRef('');
   const beforeMsgIdRef = React.useRef('');
   const afterMsgIdRef = React.useRef('');
-  const [maxListHeight, setMaxListHeight] = React.useState<number>(0);
   const tmpMessageListRef = React.useRef<MessageModel[]>([]);
   const unreadCountRef = React.useRef(0);
+
   // !!! https://github.com/facebook/react-native/issues/36529
   // !!! https://github.com/facebook/react-native/issues/14312
   // !!! only android, FlatList onEndReached no work android
-  const [reachedThreshold] = React.useState(0.5);
+  const reachedThreshold = React.useRef(0.5).current;
   const reportDataRef = React.useRef<ReportItemModel[]>(
     reportMessageCustomList.map((d, i) => {
       return {
@@ -234,6 +235,7 @@ export function useMessageList(
   const onRequestCloseReaction = React.useCallback(() => {
     reactionRef.current?.startHide?.();
   }, []);
+  const pinMsgListRef = React.useRef<MessagePin2>();
 
   const setIsTop = React.useCallback((isTop: boolean) => {
     // uilog.log('test:zuoyu:setIsTop:', isTop, comType);
@@ -652,7 +654,7 @@ export function useMessageList(
     (d: MessageListItemProps, pos: MessageAddPosition) => {
       if (d.model.modelType === 'message') {
         const msgModel = d.model as MessageModel;
-        const user = im.getDataModel(msgModel.msg.from);
+        const user = getMsgInfo(msgModel.msg);
         if (user) {
           msgModel.userName = user.name;
           msgModel.userAvatar = user.avatar;
@@ -660,7 +662,7 @@ export function useMessageList(
       }
       if (d.model.modelType === 'history') {
         const msgModel = d.model as MessageHistoryModel;
-        const user = im.getDataModel(msgModel.msg.from);
+        const user = getMsgInfo(msgModel.msg);
         if (user) {
           msgModel.userName = user.name;
           msgModel.userAvatar = user.avatar;
@@ -682,7 +684,7 @@ export function useMessageList(
 
       refreshToUI(dataRef.current);
     },
-    [dataRef, im, inverted, refreshToUI]
+    [dataRef, getMsgInfo, inverted, refreshToUI]
   );
 
   const getMsgModel = React.useCallback(
@@ -732,7 +734,7 @@ export function useMessageList(
           userName: d.remark ?? d.name,
           userAvatar: d.avatar,
           checked: selectType === 'multi' ? false : undefined,
-          isHightBackground: comType === 'search' ? isHigh : undefined,
+          isHighBackground: comType === 'search' ? isHigh : undefined,
         } as MessageModel;
       }
     },
@@ -1054,6 +1056,10 @@ export function useMessageList(
     [onClickedSingleSelect]
   );
 
+  const _onPinMessage = React.useCallback((model: MessageModel) => {
+    pinMsgListRef.current?.addPinMessage(model.msg);
+  }, []);
+
   const { onShowMessageLongPressActions } = useMessageLongPressActions({
     menuRef,
     alertRef,
@@ -1068,6 +1074,7 @@ export function useMessageList(
     onThread: onCreateThread,
     onClickedMultiSelected: _onMultiSelected,
     onForwardMessage: _onForwardMessage,
+    onPinMessage: _onPinMessage,
   });
 
   const { onShowEmojiLongPressActions } = useEmojiLongPressActionsProps({
@@ -1527,12 +1534,32 @@ export function useMessageList(
     [im, onUpdateMessageToUI]
   );
 
+  const highlightMessage = React.useCallback(
+    (msgId: string) => {
+      const isExisted = dataRef.current.find((d) => {
+        if (d.model.modelType === 'message') {
+          const msgModel = d.model as MessageModel;
+          if (msgModel.msg.msgId === msgId) {
+            msgModel.isHighBackground = true;
+            d.model = { ...msgModel };
+            return true;
+          }
+        }
+        return false;
+      });
+      if (isExisted) {
+        refreshToUI(dataRef.current);
+      }
+    },
+    [dataRef, refreshToUI]
+  );
+
   const cancelHighLight = React.useCallback(() => {
     const isExisted = dataRef.current.find((d) => {
       if (d.model.modelType === 'message') {
         const msgModel = d.model as MessageModel;
-        if (msgModel.isHightBackground !== undefined) {
-          msgModel.isHightBackground = false;
+        if (msgModel.isHighBackground !== undefined) {
+          msgModel.isHighBackground = undefined;
           d.model = { ...msgModel };
           return true;
         }
@@ -2114,6 +2141,7 @@ export function useMessageList(
         }
       } else if (value.type === 'card') {
         const card = value as SendCardProps;
+        const user = im.getDataModel(card.userId);
         const msg = ChatMessage.createCustomMessage(
           convId,
           gCustomMessageCardEventType,
@@ -2122,8 +2150,8 @@ export function useMessageList(
             isChatThread: comType === 'thread',
             params: {
               userId: card.userId,
-              nickname: im.getDataModel(card.userId)?.name ?? card.userId,
-              avatar: im.getDataModel(card.userId)?.avatar!,
+              nickname: user?.name ?? card.userId,
+              avatar: user?.avatar!,
             },
           }
         );
@@ -2525,6 +2553,25 @@ export function useMessageList(
     [delayRequestMessages]
   );
 
+  const onClickPinMessageItem = React.useCallback(
+    (msg: ChatMessage) => {
+      const item = dataRef.current.find((d) => {
+        if (d.id === msg.msgId) {
+          return true;
+        }
+        return false;
+      });
+      if (item && item.index !== undefined) {
+        scrollTo(item.index, false);
+        highlightMessage(msg.msgId);
+        setTimeout(() => {
+          cancelHighLight();
+        }, 1000);
+      }
+    },
+    [cancelHighLight, dataRef, highlightMessage, scrollTo]
+  );
+
   const init = React.useCallback(async () => {
     // uilog.log('dev:MessageList:', convId, convType);
     if (testMode === 'only-ui') {
@@ -2558,6 +2605,9 @@ export function useMessageList(
         }
       }
       im.messageManager.setRecallMessageTimeout(recallTimeout);
+      if (pinMsgListRef.current) {
+        pinMsgListRef.current.registerCallback(onClickPinMessageItem);
+      }
       refreshToUI(dataRef.current);
     }
   }, [
@@ -2566,6 +2616,7 @@ export function useMessageList(
     im.messageManager,
     inverted,
     isAutoLoad,
+    onClickPinMessageItem,
     recallTimeout,
     refreshToUI,
     setIsBottom,
@@ -3045,8 +3096,6 @@ export function useMessageList(
     onClickedItem: onClickedListItem,
     onLongPressItem: onLongPressListItem,
     inverted,
-    maxListHeight,
-    setMaxListHeight,
     reachedThreshold,
     // refreshing: enableRefresh === true ? refreshing : undefined,
     // onRefresh: enableRefresh === true ? _onRefresh : undefined,
@@ -3081,5 +3130,6 @@ export function useMessageList(
     onCheckedItem,
     onInit,
     onTouchMove,
+    pinMsgListRef,
   };
 }

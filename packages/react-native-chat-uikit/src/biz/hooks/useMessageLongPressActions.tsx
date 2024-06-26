@@ -10,6 +10,7 @@ import { useI18nContext } from '../../i18n';
 import {
   ChatCustomMessageBody,
   ChatMessage,
+  ChatMessageChatType,
   ChatMessageStatus,
   ChatMessageType,
   ChatTextMessageBody,
@@ -305,7 +306,10 @@ export function useMessageLongPressActions(
         msgModel.msg.status === ChatMessageStatus.SUCCESS &&
         enableMessagePin === true
       ) {
-        if (msgModel.msg.body.type === ChatMessageType.TXT) {
+        if (
+          msgModel.msg.body.type === ChatMessageType.TXT &&
+          msgModel.msg.chatType === ChatMessageChatType.GroupChat
+        ) {
           const textBody = msgModel.msg.body as ChatTextMessageBody;
           if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {
             initItems.push({

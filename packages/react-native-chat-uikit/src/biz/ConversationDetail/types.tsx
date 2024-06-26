@@ -61,6 +61,15 @@ export type MessageInputRef = {
    * Hide the multi select component.
    */
   hideMultiSelect: () => void;
+
+  /**
+   * Show the mask component.
+   */
+  showMask: () => void;
+  /**
+   * Hide the mask component.
+   */
+  hideMask: () => void;
 };
 
 /**
@@ -69,9 +78,19 @@ export type MessageInputRef = {
 export type MessageInputProps = PropsWithError &
   PropsWithTest & {
     /**
+     * The type of the conversation details component.
+     *
+     * This component can be reused on chat pages, chat search page, thread pages, and thread creation pages.
+     *
+     * Load historical messages, send and receive messages in `chat` mode. In `search` mode, search message result positioning is added based on `chat` mode. Load historical messages, send and receive thread messages in `thread` mode. The `create thread` mode mainly creates threads. See detail {@link ConversationDetailModelType}.
+     */
+    type: ConversationDetailModelType;
+    /**
      * The type of the conversation selection mode.
      *
      * Supports normal mode and multi-selection mode.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     selectType?: ConversationSelectModeType;
     /**
@@ -100,6 +119,8 @@ export type MessageInputProps = PropsWithError &
     numberOfLines?: number | undefined;
     /**
      * Callback notification when the send button is clicked.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onClickedSend?: (
       value:
@@ -116,10 +137,14 @@ export type MessageInputProps = PropsWithError &
     closeAfterSend?: boolean;
     /**
      * Callback notification for height changes.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onHeightChange?: (height: number) => void;
     /**
      * Callback notification when editing message is completed.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onEditMessageFinished?: (model: MessageModel) => void;
     /**
@@ -143,26 +168,36 @@ export type MessageInputProps = PropsWithError &
 
     /**
      * The multi select message count properties.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     multiSelectCount?: number;
 
     /**
      * Callback notification when click multi select delete message button.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onClickedMultiSelectDeleteButton?: () => void;
 
     /**
      * Callback notification when click multi select share message button.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onClickedMultiSelectShareButton?: () => void;
 
     /**
      * The message unread count.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     unreadCount?: number;
 
     /**
      * Callback notification when click unread count button for clear unread message.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onClickedUnreadCount?: () => void;
 
@@ -530,7 +565,7 @@ type BasicModel = {
   /**
    * Whether the message is high background.
    */
-  isHightBackground?: boolean;
+  isHighBackground?: boolean;
 };
 /**
  * Message list item voice model.
@@ -882,6 +917,8 @@ export type MessageListProps = PropsWithError &
      * The type of the conversation selection mode.
      *
      * Supports normal mode and multi-selection mode.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     selectType?: ConversationSelectModeType;
     /**
@@ -934,6 +971,8 @@ export type MessageListProps = PropsWithError &
 
     /**
      * The callback notification for clicking the list is not the callback notification for clicking the list item.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onClicked?: () => void;
     /**
@@ -974,10 +1013,14 @@ export type MessageListProps = PropsWithError &
     ) => void | boolean | undefined;
     /**
      * Callback notification for replying to the message. By default, the input component pays attention to the callback notification. After receiving the callback notification, the reply message content is displayed in the input component.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onQuoteMessageForInput?: (model: MessageModel) => void;
     /**
      * Callback notification for editing the message. By default, the input component pays attention to the callback notification. After receiving the callback notification, the edit message content is displayed in the input component.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onEditMessageForInput?: (model: MessageModel) => void;
     /**
@@ -1081,16 +1124,22 @@ export type MessageListProps = PropsWithError &
 
     /**
      * Callback notification when change to multi select mode.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onClickedMultiSelected?: () => void;
 
     /**
      * Callback notification when update select multi message.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onChangeMultiItems?: (items: MessageModel[]) => void;
 
     /**
      * Callback notification when forward message.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onClickedSingleSelect?: (item: MessageModel) => void;
 
@@ -1101,6 +1150,8 @@ export type MessageListProps = PropsWithError &
 
     /**
      * Callback notification when change unread count.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onChangeUnreadCount?: (count: number) => void;
 
@@ -1108,6 +1159,15 @@ export type MessageListProps = PropsWithError &
      * handler for generate thread name.
      */
     generateThreadName?: (msg: MessageModel) => string;
+
+    /**
+     * Callback notification when change pin message component height.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
+     *
+     * @param height The pin message component height.
+     */
+    onChangePinMaskHeight?: (height: number) => void;
   };
 
 export type MessageThreadListRef = {};

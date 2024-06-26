@@ -55,6 +55,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
     onClickedUnreadCount,
     parentName,
     messageTyping,
+    onChangePinMaskHeight,
   } = useConversationDetail(props);
 
   const getContent = () => (
@@ -92,6 +93,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
         onClickedSingleSelect={onClickedSingleSelect}
         selectType={selectMode}
         onChangeUnreadCount={onChangeUnreadCount}
+        onChangePinMaskHeight={onChangePinMaskHeight}
         ref={_messageListRef}
         {...messageListProps}
       />

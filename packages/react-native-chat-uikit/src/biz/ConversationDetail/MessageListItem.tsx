@@ -2241,7 +2241,7 @@ export function MessageView(props: MessageViewProps) {
   const _MessageBubble = propsMessageBubble ?? MessageBubble;
   const _MessageThreadBubble = propsMessageThreadBubble ?? MessageThreadBubble;
   const _MessageReaction = propsMessageReaction ?? MessageReaction;
-  const { layoutType, reactions, thread, isHightBackground } = model;
+  const { layoutType, reactions, thread, isHighBackground } = model;
   const { enableThread, enableReaction, releaseArea } = useConfigContext();
   const state = getMessageState(model.msg);
   const maxWidth = Dimensions.get('window').width * 0.6;
@@ -2318,8 +2318,8 @@ export function MessageView(props: MessageViewProps) {
   }, [checked, model, onClickedChecked, onThreadClicked]);
 
   React.useEffect(() => {
-    if (isHightBackground !== undefined) {
-      if (isHightBackground === true) {
+    if (isHighBackground !== undefined) {
+      if (isHighBackground === true) {
         Animated.loop(
           Animated.timing(animatedValue, {
             useNativeDriver: false,
@@ -2332,7 +2332,7 @@ export function MessageView(props: MessageViewProps) {
         animatedValue.stopAnimation();
       }
     }
-  }, [isHightBackground, animatedValue]);
+  }, [isHighBackground, animatedValue]);
 
   return (
     <Animated.View
@@ -2340,7 +2340,7 @@ export function MessageView(props: MessageViewProps) {
         flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
         display: isVisible === true ? 'flex' : 'none',
         backgroundColor:
-          isHightBackground !== undefined ? backgroundColor : undefined,
+          isHighBackground !== undefined ? backgroundColor : undefined,
       }}
     >
       <View

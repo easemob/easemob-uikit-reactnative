@@ -33,37 +33,17 @@ export type StyleColorParams = KV<
  */
 export function useColors(pairs?: StyleColorParams) {
   const { style } = useThemeContext();
-  const list = React.useRef(
-    new Map<string, KV<ThemeType, ColorValue | ColorValue[] | undefined>>()
-  );
+  const uc = React.useRef(new UseColors()).current;
   const func = () => {
     return {
       initColor: (pairs: StyleColorParams) => {
-        list.current.clear();
-        const keys = Object.getOwnPropertyNames(pairs);
-        for (const key of keys) {
-          list.current.set(key, pairs[key]!);
-        }
+        uc.initColor(pairs);
       },
       getColor: (key: string) => {
-        const item = list.current.get(key);
-        if (item?.[style]) {
-          if (Array.isArray(item[style]) === true) {
-            throw new UIKitError({ code: ErrorCode.params });
-          }
-          return item?.[style] as ColorValue | undefined;
-        }
-        return undefined;
+        return uc.getColor(style, key);
       },
       getColors: (key: string) => {
-        const item = list.current.get(key);
-        if (item?.[style]) {
-          if (Array.isArray(item[style]) === false) {
-            throw new UIKitError({ code: ErrorCode.params });
-          }
-          return item?.[style] as ColorValue[] | undefined;
-        }
-        return undefined;
+        return uc.getColors(style, key);
       },
     };
   };
@@ -73,4 +53,41 @@ export function useColors(pairs?: StyleColorParams) {
   }
 
   return func();
+}
+
+export class UseColors {
+  private list: Map<
+    string,
+    KV<ThemeType, ColorValue | ColorValue[] | undefined>
+  >;
+  constructor() {
+    this.list = new Map();
+  }
+  public initColor(pairs: StyleColorParams): void {
+    this.list.clear();
+    const keys = Object.getOwnPropertyNames(pairs);
+    for (const key of keys) {
+      this.list.set(key, pairs[key]!);
+    }
+  }
+  public getColor(style: ThemeType, key: string) {
+    const item = this.list.get(key);
+    if (item?.[style]) {
+      if (Array.isArray(item[style]) === true) {
+        throw new UIKitError({ code: ErrorCode.params });
+      }
+      return item?.[style] as ColorValue | undefined;
+    }
+    return undefined;
+  }
+  public getColors(style: ThemeType, key: string) {
+    const item = this.list.get(key);
+    if (item?.[style]) {
+      if (Array.isArray(item[style]) === false) {
+        throw new UIKitError({ code: ErrorCode.params });
+      }
+      return item?.[style] as ColorValue[] | undefined;
+    }
+    return undefined;
+  }
 }

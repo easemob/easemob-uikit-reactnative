@@ -23,6 +23,7 @@ import {
 } from '../../rename.chat';
 import { timeoutTask } from '../../utils';
 import { useCreateConversationDirectory } from '../hooks/useCreateConversationDirectory';
+import { gMsgPinHeight } from './const';
 import { MessageInput } from './MessageInput';
 import { MessageList } from './MessageList';
 import type {
@@ -327,6 +328,18 @@ export function useConversationDetail(props: ConversationDetailProps) {
     },
     [convType, enableTyping, propsOnChangeValue, sendCmdTypingMessage]
   );
+
+  const onChangePinMaskHeight = React.useCallback(
+    (height: number) => {
+      if (height <= gMsgPinHeight) {
+        _messageInputRef.current?.showMask();
+      } else {
+        _messageInputRef.current?.hideMask();
+      }
+    },
+    [_messageInputRef]
+  );
+
   messageInputProps = {
     ...messageInputProps,
     onChangeValue: onInputValueChanged,
@@ -582,5 +595,6 @@ export function useConversationDetail(props: ConversationDetailProps) {
     getNickName,
     parentName,
     messageTyping,
+    onChangePinMaskHeight,
   };
 }

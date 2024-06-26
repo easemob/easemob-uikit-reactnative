@@ -663,6 +663,22 @@ export interface MessageServices {
     maxCount?: number;
     onResult: ResultCallback<ChatMessage[]>;
   }): void;
+
+  pinMessage(params: { msgId: string; onResult?: ResultCallback<void> }): void;
+  unPinMessage(params: {
+    msgId: string;
+    onResult?: ResultCallback<void>;
+  }): void;
+  fetchPinnedMessages(params: {
+    convId: string;
+    convType: ChatConversationType;
+    onResult: ResultCallback<ChatMessage[]>;
+  }): void;
+  getPinnedMessages(params: {
+    convId: string;
+    convType: ChatConversationType;
+    onResult: ResultCallback<ChatMessage[]>;
+  }): void;
 }
 
 export interface MessageReactionServices {

@@ -159,6 +159,14 @@ export function createStringSetCn(): StringSet {
     '_uikit_message_typing': '正在输入中...',
     '_uikit_message_url_parsing': '解析中...',
 
+    '_uikit_pin_message_title': (count) =>
+      count !== undefined ? `${count}条置顶消息` : '置顶消息',
+    '_uikit_pin_message_button_request_delete': '移除',
+    '_uikit_pin_message_button_confirm_delete': '确认移除',
+    '_uikit_pin_content': (a, b) => `${a}置顶了${b}的消息`,
+    '_uikit_pin_content_1': `置顶了`,
+    '_uikit_pin_content_2': `的消息`,
+
     'Unwelcome commercial content': '不受欢迎的商业内容',
     'Pornographic or explicit content': '色情或露骨内容',
     'Child abuse': '虐待儿童',

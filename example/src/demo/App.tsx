@@ -11,6 +11,7 @@ import {
   useChatListener,
 } from '../rename.uikit';
 import { ToastView } from './common';
+import { AvatarStatusRenderMemo } from './common/AvatarStatusRender';
 import { AVView } from './common/AVView';
 import {
   accountType,
@@ -22,7 +23,7 @@ import {
 } from './common/const';
 import { RestApi } from './common/rest.api';
 import { useAutoLogin } from './hooks';
-import { AvatarStatusRenderMemo, useApp } from './hooks/useApp';
+import { useApp } from './hooks/useApp';
 import { useGeneralSetting } from './hooks/useGeneralSetting';
 import { useServerConfig } from './hooks/useServerConfig';
 import type { RootParamsList } from './routes';

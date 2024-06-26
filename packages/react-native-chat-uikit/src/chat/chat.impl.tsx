@@ -67,7 +67,6 @@ export class ChatServiceImpl
 {
   _user?: UserData;
   _dataFileProvider: DataProfileProvider;
-  _dataList: Map<string, DataModel>;
   _userList: Map<string, UserData>;
   _convStorage?: ConversationStorage;
   _convList: Map<string, ConversationModel>;
@@ -80,6 +79,7 @@ export class ChatServiceImpl
   _modelState: Map<string, Map<string, StateModel>>;
   _currentConversation?: ConversationModel;
   _silentModeList: Map<string, { convId: string; doNotDisturb?: boolean }>;
+  _pinMessageList: Map<string, boolean>;
   _groupNameOnCreateGroupCallback?: (params: {
     selected: ContactModel[];
   }) => string;
@@ -87,7 +87,6 @@ export class ChatServiceImpl
   constructor() {
     uilog.log('chat:constructor:');
     super();
-    this._dataList = new Map();
     this._userList = new Map();
     this._convList = new Map();
     this._contactList = new Map();
@@ -96,6 +95,7 @@ export class ChatServiceImpl
     this._groupMemberList = new Map();
     this._modelState = new Map();
     this._silentModeList = new Map();
+    this._pinMessageList = new Map();
     this._request = new RequestListImpl(this);
     this._messageManager = new MessageCacheManagerImpl(this);
     this._dataFileProvider = new DataProfileProvider();
@@ -108,7 +108,6 @@ export class ChatServiceImpl
   reset(): void {
     uilog.log('chat:reset:');
     // this.clearListener(); // !!! warn: no clear.
-    this._dataList.clear();
     this._userList.clear();
     this._convList.clear();
     this._blockList.clear();
@@ -117,6 +116,7 @@ export class ChatServiceImpl
     this._groupMemberList.clear();
     this._modelState.clear();
     this._silentModeList.clear();
+    this._pinMessageList.clear();
   }
 
   async init(params: {
@@ -517,7 +517,6 @@ export class ChatServiceImpl
 
   _getAvatarFromCache(id: string): string | undefined {
     return this._dataFileProvider.getDataById(id)?.avatar;
-    // return this._dataList.get(id)?.avatar;
   }
 
   _getNameFromCache(id: string): string | undefined {
@@ -2461,6 +2460,73 @@ export class ChatServiceImpl
         params.maxCount ?? 200
       ),
       event: 'getMessagesByKeyword',
+      onFinished: (value) => {
+        params.onResult({ isOk: true, value: value });
+        return false;
+      },
+    });
+  }
+
+  pinMessage(params: { msgId: string; onResult?: ResultCallback<void> }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.pinMessage(params.msgId),
+      event: 'pinMessage',
+      onFinished: () => {
+        params.onResult?.({ isOk: true });
+      },
+      onError: () => {
+        params.onResult?.({ isOk: false });
+      },
+    });
+  }
+  unPinMessage(params: {
+    msgId: string;
+    onResult?: ResultCallback<void>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.unpinMessage(params.msgId),
+      event: 'unPinMessage',
+      onFinished: () => {
+        params.onResult?.({ isOk: true });
+      },
+      onError: () => {
+        params.onResult?.({ isOk: false });
+      },
+    });
+  }
+  fetchPinnedMessages(params: {
+    convId: string;
+    convType: ChatConversationType;
+    onResult: ResultCallback<ChatMessage[]>;
+  }): void {
+    if (this._pinMessageList.has(params.convId)) {
+      this.getPinnedMessages(params);
+      return;
+    }
+    this.tryCatch({
+      promise: this.client.chatManager.fetchPinnedMessages(
+        params.convId,
+        params.convType
+      ),
+      event: 'fetchPinnedMessages',
+      onFinished: (value) => {
+        this._pinMessageList.set(params.convId, true);
+        params.onResult({ isOk: true, value: value });
+        return false;
+      },
+    });
+  }
+  getPinnedMessages(params: {
+    convId: string;
+    convType: ChatConversationType;
+    onResult: ResultCallback<ChatMessage[]>;
+  }): void {
+    this.tryCatch({
+      promise: this.client.chatManager.getPinnedMessages(
+        params.convId,
+        params.convType
+      ),
+      event: 'getPinnedMessages',
       onFinished: (value) => {
         params.onResult({ isOk: true, value: value });
         return false;

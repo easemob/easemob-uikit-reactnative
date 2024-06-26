@@ -165,6 +165,14 @@ export function createStringSetEn(): StringSet {
     '_uikit_message_typing': 'Typing...',
     '_uikit_message_url_parsing': 'Parsing...',
 
+    '_uikit_pin_message_title': (count) =>
+      count !== undefined ? `${count} Pin Messages` : 'Pin Messages',
+    '_uikit_pin_message_button_request_delete': 'Remove',
+    '_uikit_pin_message_button_confirm_delete': 'Confirm',
+    '_uikit_pin_content': (a, b) => `${a} pinned ${b}'s message`,
+    '_uikit_pin_content_1': `pinned `,
+    '_uikit_pin_content_2': `'s message`,
+
     'Unwelcome commercial content': 'Unwelcome Commercial Content',
     'Pornographic or explicit content': 'Pornographic or Explicit Content',
     'Child abuse': 'Child Abuse',

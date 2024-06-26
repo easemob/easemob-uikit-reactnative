@@ -29,6 +29,7 @@ import {
 import type { EmojiIconItem } from '../types';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
 import type { MessageInputEditMessageRef } from './MessageInputEditMessage';
+import { useMessagePin } from './MessagePin.hooks';
 import type {
   MessageInputProps,
   MessageInputRef,
@@ -94,6 +95,8 @@ export function useMessageInput(
     })
   );
   const [multiSelectVisible, setMultiSelectVisible] = React.useState(false);
+  const { msgPinBackgroundCurrentOpacity, msgPinBackgroundOpacityAnimate } =
+    useMessagePin({});
 
   const onSetInputBarState = (state: MessageInputState) => {
     inputBarStateRef.current = state;
@@ -535,6 +538,12 @@ export function useMessageInput(
       hideMultiSelect: () => {
         changeInputBarState('normal');
       },
+      showMask: () => {
+        msgPinBackgroundOpacityAnimate(0);
+      },
+      hideMask: () => {
+        msgPinBackgroundOpacityAnimate(1);
+      },
     };
   });
 
@@ -623,5 +632,6 @@ export function useMessageInput(
     onClickedMultiSelectDeleteButton: _onClickedMultiSelectDeleteButton,
     onClickedMultiSelectShareButton: _onClickedMultiSelectShareButton,
     onKeyPress,
+    msgPinBackgroundCurrentOpacity,
   };
 }

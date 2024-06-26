@@ -5,15 +5,7 @@ import {
 } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as React from 'react';
-import {
-  BackHandler,
-  DeviceEventEmitter,
-  ImageStyle,
-  Platform,
-  StyleProp,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { BackHandler, DeviceEventEmitter, Platform } from 'react-native';
 
 import { CallType, CallUser } from '../../rename.callkit';
 import {
@@ -35,30 +27,20 @@ import {
   generatePrimaryColor,
   getChatService,
   getReleaseArea,
-  Icon,
   LanguageCode,
-  StatusType,
   StringSet,
   UIGroupListListener,
   UIKitError,
   UIListenerType,
-  useColors,
   useDarkTheme,
   useForceUpdate,
   useLightTheme,
-  usePaletteContext,
   usePermissions,
   usePresetPalette,
 } from '../../rename.uikit';
 // import { getDeviceName, getSystemName, getSystemVersion, getModel, getVersion } from 'react-native-device-info';
 import { createStringSetCn, createStringSetEn } from '../common';
-import {
-  avatar_status_custom,
-  avatar_status_leave,
-  avatar_status_no_disturb,
-  boloo_da_ttf,
-  twemoji_ttf,
-} from '../common/assets';
+import { boloo_da_ttf, twemoji_ttf } from '../common/assets';
 import {
   appKey as gAppKey,
   boloo_da_ttf_name,
@@ -852,47 +834,3 @@ export function useApp() {
     fontFamily,
   };
 }
-
-export function AvatarStatusRender(props: {
-  status: StatusType;
-  style?: StyleProp<ViewStyle>;
-}) {
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
-  const { status, style } = props;
-  if (status === 'online') {
-    return <View style={style} />;
-  } else if (status === 'offline') {
-    return <View style={style} />;
-  } else if (status === 'busy') {
-    return <View style={style} />;
-  } else if (status === 'leave') {
-    return (
-      <Icon
-        name={avatar_status_leave}
-        style={[style as ImageStyle, { backgroundColor: getColor('bg') }]}
-      />
-    );
-  } else if (status === 'not disturb') {
-    return (
-      <Icon
-        name={avatar_status_no_disturb}
-        style={[style as ImageStyle, { backgroundColor: getColor('bg') }]}
-      />
-    );
-  } else {
-    return (
-      <Icon
-        name={avatar_status_custom}
-        style={[style as ImageStyle, { backgroundColor: getColor('bg') }]}
-      />
-    );
-  }
-}
-
-export const AvatarStatusRenderMemo = React.memo(AvatarStatusRender);

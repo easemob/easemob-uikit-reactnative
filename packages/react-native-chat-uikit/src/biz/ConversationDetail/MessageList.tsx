@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Animated,
   ImageBackground,
   ListRenderItemInfo,
   StyleSheet,
@@ -7,6 +8,7 @@ import {
 } from 'react-native';
 
 import { useColors } from '../../hook';
+import { ChatConversationType } from '../../rename.chat';
 import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
@@ -20,6 +22,11 @@ import {
   LoadingPlaceholder,
 } from '../Placeholder';
 import { useMessageList } from './MessageList.hooks';
+import {
+  AnimatedMessagePin,
+  AnimatedMessagePinPlaceholder,
+} from './MessagePin';
+import { useMessagePin } from './MessagePin.hooks';
 import type {
   MessageListItemProps,
   MessageListProps,
@@ -37,7 +44,15 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       () => FlatListFactory<MessageListItemProps>(),
       []
     );
-    const { containerStyle, onClicked, backgroundImage } = props;
+    const {
+      containerStyle,
+      onClicked,
+      backgroundImage,
+      convId,
+      convType,
+      onChangePinMaskHeight,
+      type: comType,
+    } = props;
     const {
       ref: flatListRef,
       data,
@@ -51,8 +66,6 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onClickedItem,
       onLongPressItem,
       inverted,
-      maxListHeight,
-      setMaxListHeight,
       reachedThreshold,
       reportRef,
       reportMessage,
@@ -82,7 +95,22 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onClickedItemThread,
       onCheckedItem,
       onLongPressItemReaction,
+      pinMsgListRef,
     } = useMessageList(props, ref);
+    const {
+      msgPinPlaceHolderCurrentHeight,
+      msgListMaxCurrentHeight,
+      msgPinCurrentHeight,
+      msgPinHeightRef,
+      msgPinHeightAnimate,
+      panHandlers,
+      setMaxListHeight,
+      msgPinLabelTranslateYRef,
+      msgPinLabelTranslateYAnimate,
+      msgPinLabelCurrentTranslateY,
+      msgPinBackgroundCurrentOpacity,
+      msgPinBackgroundOpacityAnimate,
+    } = useMessagePin({});
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
       bg: {
@@ -114,13 +142,23 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             source={{ uri: backgroundImage }}
           />
         ) : null}
-        <View
+
+        {convType === ChatConversationType.GroupChat && comType === 'chat' ? (
+          <AnimatedMessagePinPlaceholder
+            style={{
+              height: msgPinPlaceHolderCurrentHeight,
+            }}
+          />
+        ) : null}
+
+        <Animated.View
           style={{
             // flexGrow: 1,
             // flexShrink: 1,
             // flex: 1,
             // maxListHeight: '80%',
-            maxHeight: maxListHeight,
+            // maxHeight: maxListHeight - 56,
+            maxHeight: msgListMaxCurrentHeight,
             // backgroundColor: 'red',
           }}
         >
@@ -218,7 +256,27 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
               listState === 'loading' ? <LoadingPlaceholder /> : null
             }
           />
-        </View>
+        </Animated.View>
+
+        {convType === ChatConversationType.GroupChat && comType === 'chat' ? (
+          <AnimatedMessagePin
+            ref={pinMsgListRef}
+            convId={convId}
+            convType={convType}
+            msgPinHeightRef={msgPinHeightRef}
+            msgPinHeightAnimate={msgPinHeightAnimate}
+            msgPinLabelTranslateYRef={msgPinLabelTranslateYRef}
+            msgPinLabelTranslateYAnimate={msgPinLabelTranslateYAnimate}
+            msgPinLabelCurrentTranslateY={msgPinLabelCurrentTranslateY}
+            msgPinBackgroundCurrentOpacity={msgPinBackgroundCurrentOpacity}
+            msgPinBackgroundOpacityAnimate={msgPinBackgroundOpacityAnimate}
+            onChangePinMaskHeight={onChangePinMaskHeight}
+            panHandlers={panHandlers}
+            style={{
+              height: msgPinCurrentHeight,
+            }}
+          />
+        ) : null}
 
         <BottomSheetNameMenu
           ref={menuRef}
