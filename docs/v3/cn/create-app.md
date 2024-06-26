@@ -32,4 +32,5 @@ pod install --project-directory=ios
    1. 无法直接指定版本。
 3. 如何创建指定版本的库项目
    1. 无法直接指定 `react-native` 版本。
-4.
+4. 在expo的框架中，如何使用 uikit
+   1. 创建的expo项目没有 ios和android文件夹，需要使用命令 `npx expo prebuild --clean` ，按照说明进行添加。 如果是老项目请到expo官网查看相关迁移说明。

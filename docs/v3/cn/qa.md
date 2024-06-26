@@ -9,6 +9,10 @@
       - [不支持 github 远程引用](#不支持-github-远程引用)
   - [专业问题](#专业问题)
       - [MIUI 12 字符串显示不全问题。](#miui-12-字符串显示不全问题)
+  - [三方库问题](#三方库问题)
+      - [@react-native-clipboard/clipboard 依赖问题](#react-native-clipboardclipboard-依赖问题)
+      - [react-native-gesture-handler 依赖问题](#react-native-gesture-handler-依赖问题)
+      - [react-native-safe-area-context 依赖问题](#react-native-safe-area-context-依赖问题)
 
 # 问题列表
 
@@ -46,3 +50,35 @@ ios/Pods/boost/boost/container_hash/hash.hpp:131:33: No template named 'unary_fu
 
 消息描述: 其它 android 设备没有问题，ios 设备都可以正常显示的字符串，MIUI 12 无法正常显示。
 参考 1: https://github.com/facebook/react-native/issues/29259
+
+## 三方库问题
+
+#### @react-native-clipboard/clipboard 依赖问题
+
+消息描述：在 react-native@0.73.2的应用，使用 pod 版本 1.12.1 版本可能遇到错误
+
+```sh
+[!] Invalid `RNCClipboard.podspec` file: undefined method `visionos' for #<Pod::Specification name="RNCClipboard">.
+```
+
+参考：1. 去该三方库官网，参考#241 的解决办法。
+参考：2. 升级 pod 到 1.14.2 版本。
+
+#### react-native-gesture-handler 依赖问题
+
+消息描述：kotlin 的语法问题。
+修改后：
+
+```kotlin
+decorateRuntime(jsContext!!.get())
+```
+
+#### react-native-safe-area-context 依赖问题
+
+消息描述：kotlin 语法问题
+
+```kotlin
+  public override fun getTypedExportedConstants(): MutableMap<String, Any>? {
+    return getInitialWindowMetrics()?.let { MapBuilder.of<String, Any>("initialWindowMetrics", it) }
+  }
+```
