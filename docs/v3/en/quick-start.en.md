@@ -10,7 +10,7 @@ Create an application, configure the project, fill in the necessary UIKit code, 
 
 ### 1. Create a project
 
-[Refer to the relevant chapter](./create-app.md)
+[Refer to the relevant chapter](./create-app.en.md)
 
 **Note:** If you create a project using `expo`, you need to create the `native` related files. See the FAQ in the project creation instructions for more details.
 
