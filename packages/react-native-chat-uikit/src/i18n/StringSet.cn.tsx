@@ -58,6 +58,8 @@ export function createStringSetCn(): StringSet {
     '_uikit_chat_input_long_press_menu_camera': '相机',
     '_uikit_chat_input_long_press_menu_file': '文件',
     '_uikit_chat_input_long_press_menu_card': '名片',
+    '_uikit_chat_input_long_press_av_menu_video': '视频通话',
+    '_uikit_chat_input_long_press_av_menu_audio': '音频通话',
 
     '_uikit_chat_list_long_press_menu_copy': '复制',
     '_uikit_chat_list_long_press_menu_replay': '回复',

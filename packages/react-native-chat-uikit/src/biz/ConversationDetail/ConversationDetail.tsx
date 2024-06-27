@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { MessageContextProvider } from '../Context';
 import { useConversationDetail } from './ConversationDetail.hooks';
 import { ConversationDetailNavigationBar } from './ConversationDetail.navi';
@@ -56,6 +57,9 @@ export function ConversationDetail(props: ConversationDetailProps) {
     parentName,
     messageTyping,
     onChangePinMaskHeight,
+    menuRef,
+    onRequestCloseMenu,
+    onClickedAV,
   } = useConversationDetail(props);
 
   const getContent = () => (
@@ -75,6 +79,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
           onClickedThread={onClickedThread}
           onClickedVideo={onClickedVideo}
           onClickedVoice={onClickedVoice}
+          onClickedAV={onClickedAV}
           onClickedThreadMore={onClickedThreadMore}
           selectMode={selectMode}
           onCancelMultiSelected={onCancelMultiSelected}
@@ -111,6 +116,11 @@ export function ConversationDetail(props: ConversationDetailProps) {
         }}
         unreadCount={unreadCount}
         {...messageInputProps}
+      />
+
+      <BottomSheetNameMenu
+        ref={menuRef}
+        onRequestModalClose={onRequestCloseMenu}
       />
     </View>
   );

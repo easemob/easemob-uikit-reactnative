@@ -70,6 +70,8 @@ export function Container(props: ContainerProps) {
     enableMessagePin = true,
     enableTyping = true,
     enableBlock = true,
+    enablePinMessage = true,
+    enableUrlPreview = true,
     releaseArea,
     onGroupsHandler,
     onUsersHandler,
@@ -159,6 +161,8 @@ export function Container(props: ContainerProps) {
                   enableMessagePin: enableMessagePin,
                   enableTyping: enableTyping,
                   enableBlock: enableBlock,
+                  enablePinMessage: enablePinMessage,
+                  enableUrlPreview: enableUrlPreview,
                   releaseArea: releaseArea ?? _releaseArea,
                 }}
               >

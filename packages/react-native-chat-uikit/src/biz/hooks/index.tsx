@@ -3,6 +3,7 @@ export * from './useCloseAlert';
 export * from './useCloseMenu';
 export * from './useContactInfoActions';
 export * from './useContactListMoreActions';
+export * from './useConversationDetailActions';
 export * from './useConversationListMoreActions';
 export * from './useCreateConversationDirectory';
 export * from './useDataPriority';

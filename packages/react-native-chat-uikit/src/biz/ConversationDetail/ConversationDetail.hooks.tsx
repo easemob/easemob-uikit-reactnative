@@ -21,7 +21,10 @@ import {
   ChatMessageThreadOperation,
   ChatMessageType,
 } from '../../rename.chat';
+import { AlertRef } from '../../ui/Alert';
 import { timeoutTask } from '../../utils';
+import { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { useConversationDetailActions } from '../hooks';
 import { useCreateConversationDirectory } from '../hooks/useCreateConversationDirectory';
 import { gMsgPinHeight } from './const';
 import { MessageInput } from './MessageInput';
@@ -61,6 +64,8 @@ export function useConversationDetail(props: ConversationDetailProps) {
     onForwardMessage,
     onCreateThreadResult,
     firstMessage,
+    onClickedVideo,
+    onClickedVoice,
   } = props;
   const permissionsRef = React.useRef(false);
   const messageInputRef = React.useRef<MessageInputRef>({} as any);
@@ -114,6 +119,16 @@ export function useConversationDetail(props: ConversationDetailProps) {
   );
   const [unreadCount, setUnreadCount] = React.useState<number>(0);
   const [messageTyping, setMessageTyping] = React.useState<boolean>(false);
+
+  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const alertRef = React.useRef<AlertRef>(null);
+  const { onShowAVMenu } = useConversationDetailActions({
+    menuRef: menuRef,
+    alertRef: alertRef,
+  });
+  const onRequestCloseMenu = () => {
+    menuRef.current?.startHide?.();
+  };
 
   const { getPermission } = usePermissions();
   const { createDirectoryIfNotExisted } = useCreateConversationDirectory();
@@ -392,6 +407,13 @@ export function useConversationDetail(props: ConversationDetailProps) {
     [convId, convType, startMessageTyping, stopMessageTyping]
   );
 
+  const onClickedAV = React.useCallback(() => {
+    onShowAVMenu({
+      onClickedVoice: onClickedVoice,
+      onClickedVideo: onClickedVideo,
+    });
+  }, [onClickedVideo, onClickedVoice, onShowAVMenu]);
+
   React.useEffect(() => {
     im.messageManager.setCurrentConv({ convId, convType });
     if (comType === 'chat' || comType === 'search') {
@@ -596,5 +618,8 @@ export function useConversationDetail(props: ConversationDetailProps) {
     parentName,
     messageTyping,
     onChangePinMaskHeight,
+    menuRef,
+    onRequestCloseMenu,
+    onClickedAV,
   };
 }

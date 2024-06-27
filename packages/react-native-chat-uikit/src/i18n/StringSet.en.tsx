@@ -59,6 +59,8 @@ export function createStringSetEn(): StringSet {
     '_uikit_chat_input_long_press_menu_camera': 'Camera',
     '_uikit_chat_input_long_press_menu_file': 'File',
     '_uikit_chat_input_long_press_menu_card': 'Contact Card',
+    '_uikit_chat_input_long_press_av_menu_video': 'Video Call',
+    '_uikit_chat_input_long_press_av_menu_audio': 'Audio Call',
 
     '_uikit_chat_list_long_press_menu_copy': 'Copy',
     '_uikit_chat_list_long_press_menu_replay': 'Reply',

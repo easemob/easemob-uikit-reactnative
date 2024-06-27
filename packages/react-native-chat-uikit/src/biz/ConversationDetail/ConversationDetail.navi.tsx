@@ -36,6 +36,8 @@ type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
   onClickedThread?: () => void;
   onClickedVoice?: () => void;
   onClickedVideo?: () => void;
+  onClickedAV?: () => void;
+  onClickedPinMessage?: () => void;
   onClickedThreadMore?: () => void;
   onCancelMultiSelected?: () => void;
   parentName?: string;
@@ -58,14 +60,17 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     onClickedVoice,
     onClickedThread,
     onClickedVideo,
+    onClickedAV,
     onClickedThreadMore,
+    onClickedPinMessage,
     selectMode = 'common',
     onCancelMultiSelected,
     parentName,
     messageTyping,
   } = props;
   const [status, setStatus] = React.useState<string>();
-  const { enableThread, enableAVMeeting, enablePresence } = useConfigContext();
+  const { enableThread, enableAVMeeting, enablePresence, enablePinMessage } =
+    useConfigContext();
   // const im = useChatContext();
   const { addAvatarStatusListener, removeAvatarStatusListener } =
     useAvatarStatus();
@@ -104,6 +109,12 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     do {
       if (comType === 'chat' || comType === 'search') {
         if (selectMode === 'common') {
+          if (enablePinMessage) {
+            ret.iconNameList.push('pin_2');
+            ret.onClickedList.push(() => {
+              onClickedPinMessage?.();
+            });
+          }
           if (enableThread && convType === 1) {
             ret.iconNameList.push('hashtag_in_bubble_fill');
             ret.onClickedList.push(() => {
@@ -112,14 +123,22 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
             ret.render = TopNavigationBarRightList;
           }
           if (enableAVMeeting) {
-            ret.iconNameList.push('phone_pick');
-            ret.iconNameList.push('video_camera');
-            ret.onClickedList.push(() => {
-              onClickedVoice?.();
-            });
-            ret.onClickedList.push(() => {
-              onClickedVideo?.();
-            });
+            if (convType === 0) {
+              ret.iconNameList.push('phone_pick');
+              ret.iconNameList.push('video_camera');
+              ret.onClickedList.push(() => {
+                onClickedVoice?.();
+              });
+              ret.onClickedList.push(() => {
+                onClickedVideo?.();
+              });
+            } else {
+              ret.iconNameList.push('phonen_camera');
+              ret.onClickedList.push(() => {
+                onClickedAV?.();
+              });
+            }
+
             ret.render = TopNavigationBarRightList;
           }
         } else if (selectMode === 'multi') {
@@ -145,8 +164,11 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     comType,
     convType,
     enableAVMeeting,
+    enablePinMessage,
     enableThread,
     onCancelMultiSelected,
+    onClickedAV,
+    onClickedPinMessage,
     onClickedThread,
     onClickedThreadMore,
     onClickedVideo,

@@ -242,4 +242,14 @@ export type ContainerProps = React.PropsWithChildren<{
    * Whether to enable the message pin function.
    */
   enableMessagePin?: boolean;
+
+  /**
+   * Whether to enable the message pin function.
+   */
+  enablePinMessage?: boolean;
+
+  /**
+   * Whether to enable the message pin function.
+   */
+  enableUrlPreview?: boolean;
 }>;
