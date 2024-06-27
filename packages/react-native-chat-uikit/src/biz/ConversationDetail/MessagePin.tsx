@@ -61,10 +61,16 @@ export type MessagePinProps = {
     toValue: number,
     onFinished?: ((result: Animated.EndResult) => void) | undefined
   ) => void;
+  msgPinPlaceHolderHeightAnimate: (
+    toValue: number,
+    onFinished?: ((result: Animated.EndResult) => void) | undefined
+  ) => void;
   msgPinLabelCurrentTranslateY: Animated.Value;
   msgPinBackgroundCurrentOpacity: Animated.Value;
+  msgPinCurrentHeight: Animated.Value;
   panHandlers: GestureResponderHandlers;
   onChangePinMaskHeight?: (height: number) => void;
+  onRequestClose?: () => void;
 };
 
 export type MessagePinState = {
@@ -124,6 +130,39 @@ export class MessagePin2 extends React.PureComponent<
   }
   componentWillUnmount?(): void {}
 
+  public show(): void {
+    const {
+      msgPinHeightRef,
+      msgPinPlaceHolderHeightAnimate,
+      msgPinHeightAnimate,
+      msgPinBackgroundOpacityAnimate,
+      onChangePinMaskHeight,
+      msgPinLabelTranslateYAnimate,
+    } = this.props;
+    msgPinHeightRef.current = gMsgPinHeight + this._maxListHeight;
+    msgPinPlaceHolderHeightAnimate(gMsgPinHeight);
+    msgPinHeightAnimate(gMsgPinHeight + this._maxListHeight);
+    msgPinBackgroundOpacityAnimate(1);
+    msgPinLabelTranslateYAnimate(0);
+    onChangePinMaskHeight?.(gMsgPinHeight + this._maxListHeight);
+  }
+  public hide(): void {
+    const {
+      msgPinHeightRef,
+      msgPinPlaceHolderHeightAnimate,
+      msgPinHeightAnimate,
+      msgPinBackgroundOpacityAnimate,
+      onChangePinMaskHeight,
+      msgPinLabelTranslateYAnimate,
+    } = this.props;
+    msgPinHeightRef.current = 0;
+    msgPinPlaceHolderHeightAnimate(0);
+    msgPinHeightAnimate(0);
+    msgPinBackgroundOpacityAnimate(0);
+    msgPinLabelTranslateYAnimate(-gMsgPinHeight);
+    onChangePinMaskHeight?.(0);
+  }
+
   private onListCountChanged(count: number): void {
     this._maxListHeight =
       count > 0 ? Math.min(count * 60, 8 * 60) + 16 : 60 + 16;
@@ -131,34 +170,35 @@ export class MessagePin2 extends React.PureComponent<
   }
 
   private onRequestClose(): void {
-    this.min();
+    const { onRequestClose } = this.props;
+    onRequestClose?.();
   }
 
-  private min(): void {
-    const {
-      msgPinHeightRef,
-      msgPinHeightAnimate,
-      msgPinBackgroundOpacityAnimate,
-      onChangePinMaskHeight,
-    } = this.props;
-    msgPinHeightRef.current = gMsgPinHeight;
-    msgPinHeightAnimate(gMsgPinHeight, () => {}, true);
-    onChangePinMaskHeight?.(gMsgPinHeight);
-    msgPinBackgroundOpacityAnimate(0);
-  }
-  private recover(): void {
-    const {
-      msgPinHeightRef,
-      msgPinHeightAnimate,
-      msgPinBackgroundOpacityAnimate,
-      onChangePinMaskHeight,
-    } = this.props;
-    const { maxListHeight } = this.state;
-    msgPinHeightRef.current = gMsgPinHeight + this._maxListHeight;
-    msgPinHeightAnimate(gMsgPinHeight + maxListHeight);
-    onChangePinMaskHeight?.(gMsgPinHeight + maxListHeight);
-    msgPinBackgroundOpacityAnimate(1);
-  }
+  // private min(): void {
+  //   const {
+  //     msgPinHeightRef,
+  //     msgPinHeightAnimate,
+  //     msgPinBackgroundOpacityAnimate,
+  //     onChangePinMaskHeight,
+  //   } = this.props;
+  //   msgPinHeightRef.current = gMsgPinHeight;
+  //   msgPinHeightAnimate(gMsgPinHeight, () => {}, true);
+  //   onChangePinMaskHeight?.(gMsgPinHeight);
+  //   msgPinBackgroundOpacityAnimate(0);
+  // }
+  // private recover(): void {
+  //   const {
+  //     msgPinHeightRef,
+  //     msgPinHeightAnimate,
+  //     msgPinBackgroundOpacityAnimate,
+  //     onChangePinMaskHeight,
+  //   } = this.props;
+  //   const { maxListHeight } = this.state;
+  //   msgPinHeightRef.current = gMsgPinHeight + this._maxListHeight;
+  //   msgPinHeightAnimate(gMsgPinHeight + maxListHeight);
+  //   onChangePinMaskHeight?.(gMsgPinHeight + maxListHeight);
+  //   msgPinBackgroundOpacityAnimate(1);
+  // }
 
   public addPinMessage(msg: ChatMessage): void {
     this.listRef.current?.addPinMessage(msg);
@@ -175,7 +215,8 @@ export class MessagePin2 extends React.PureComponent<
       msgPinHeightRef,
       msgPinLabelCurrentTranslateY,
       msgPinBackgroundCurrentOpacity,
-      panHandlers,
+      msgPinCurrentHeight,
+      // panHandlers,
     } = this.props;
     return (
       <>
@@ -188,13 +229,11 @@ export class MessagePin2 extends React.PureComponent<
               opacity: msgPinBackgroundCurrentOpacity,
             },
           ]}
-          pointerEvents={
-            msgPinHeightRef.current <= gMsgPinHeight ? 'none' : 'auto'
-          }
+          // pointerEvents={
+          //   msgPinHeightRef.current <= gMsgPinHeight ? 'none' : 'auto'
+          // }
           onStartShouldSetResponder={() => true}
-          onResponderRelease={() => {
-            this.min();
-          }}
+          onResponderRelease={this.onRequestClose.bind(this)}
         />
         <Animated.View
           style={[
@@ -203,16 +242,18 @@ export class MessagePin2 extends React.PureComponent<
               width: Dimensions.get('window').width,
               backgroundColor: this.uc.getColor(this.style!, 'bg'),
               overflow: 'hidden',
+              height: msgPinCurrentHeight,
             },
             style,
           ]}
           onStartShouldSetResponder={() => true}
           onResponderRelease={() => {
-            if (msgPinHeightRef.current <= gMsgPinHeight) {
-              this.recover();
-            } else {
-              this.min();
-            }
+            this.onRequestClose();
+            // if (msgPinHeightRef.current <= gMsgPinHeight) {
+            //   this.recover();
+            // } else {
+            //   this.min();
+            // }
           }}
         >
           <Animated.View
@@ -289,7 +330,7 @@ export class MessagePin2 extends React.PureComponent<
               justifyContent: 'center',
               alignItems: 'center',
             }}
-            {...panHandlers}
+            // {...panHandlers}
           >
             <View
               style={{

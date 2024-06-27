@@ -899,6 +899,16 @@ export type MessageListRef = {
    * Get multi selected messages.
    */
   getMultiSelectedMessages: () => ChatMessage[];
+
+  /**
+   * Show the pin message component.
+   */
+  showPinMessageComponent: () => void;
+
+  /**
+   * Hide the pin message component.
+   */
+  hidePinMessageComponent: () => void;
 };
 
 /**
@@ -1168,6 +1178,13 @@ export type MessageListProps = PropsWithError &
      * @param height The pin message component height.
      */
     onChangePinMaskHeight?: (height: number) => void;
+
+    /**
+     * Callback notification when request close pin message component.
+     *
+     * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
+     */
+    onRequestClosePinMessage?: () => void;
   };
 
 export type MessageThreadListRef = {};

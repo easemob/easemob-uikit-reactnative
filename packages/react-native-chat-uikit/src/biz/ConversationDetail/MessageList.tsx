@@ -52,6 +52,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       convType,
       onChangePinMaskHeight,
       type: comType,
+      onRequestClosePinMessage,
     } = props;
     const {
       ref: flatListRef,
@@ -99,6 +100,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
     } = useMessageList(props, ref);
     const {
       msgPinPlaceHolderCurrentHeight,
+      msgPinPlaceHolderHeightAnimate,
       msgListMaxCurrentHeight,
       msgPinCurrentHeight,
       msgPinHeightRef,
@@ -270,8 +272,11 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             msgPinLabelCurrentTranslateY={msgPinLabelCurrentTranslateY}
             msgPinBackgroundCurrentOpacity={msgPinBackgroundCurrentOpacity}
             msgPinBackgroundOpacityAnimate={msgPinBackgroundOpacityAnimate}
+            msgPinPlaceHolderHeightAnimate={msgPinPlaceHolderHeightAnimate}
             onChangePinMaskHeight={onChangePinMaskHeight}
+            msgPinCurrentHeight={msgPinCurrentHeight}
             panHandlers={panHandlers}
+            onRequestClose={onRequestClosePinMessage}
             style={{
               height: msgPinCurrentHeight,
             }}

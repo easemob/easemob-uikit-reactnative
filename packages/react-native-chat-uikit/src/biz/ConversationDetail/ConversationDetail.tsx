@@ -60,6 +60,8 @@ export function ConversationDetail(props: ConversationDetailProps) {
     menuRef,
     onRequestCloseMenu,
     onClickedAV,
+    onClickedPinMessage,
+    onRequestClosePinMessage,
   } = useConversationDetail(props);
 
   const getContent = () => (
@@ -83,6 +85,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
           onClickedThreadMore={onClickedThreadMore}
           selectMode={selectMode}
           onCancelMultiSelected={onCancelMultiSelected}
+          onClickedPinMessage={onClickedPinMessage}
           parentName={parentName}
           messageTyping={messageTyping}
         />
@@ -99,6 +102,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
         selectType={selectMode}
         onChangeUnreadCount={onChangeUnreadCount}
         onChangePinMaskHeight={onChangePinMaskHeight}
+        onRequestClosePinMessage={onRequestClosePinMessage}
         ref={_messageListRef}
         {...messageListProps}
       />

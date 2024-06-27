@@ -2650,6 +2650,13 @@ export function useMessageList(
     }
   }, [comType, im, onAddMessageToUI, thread, propsMsgId]);
 
+  const showPinMessage = React.useCallback(() => {
+    pinMsgListRef.current?.show();
+  }, []);
+  const hidePinMessage = React.useCallback(() => {
+    pinMsgListRef.current?.hide();
+  }, []);
+
   const onInit = React.useCallback(async () => {
     init();
     if (comType === 'chat') {
@@ -2843,6 +2850,12 @@ export function useMessageList(
         getMultiSelectedMessages: () => {
           return tmpMessageListRef.current.map((d) => d.msg);
         },
+        showPinMessageComponent: () => {
+          showPinMessage();
+        },
+        hidePinMessageComponent: () => {
+          hidePinMessage();
+        },
       };
     },
     [
@@ -2856,6 +2869,7 @@ export function useMessageList(
       deleteMessage,
       deleteMessages,
       editMessage,
+      hidePinMessage,
       im,
       inverted,
       loadAllLatestMessage,
@@ -2868,6 +2882,7 @@ export function useMessageList(
       scrollToBottom,
       sendMessageToServer,
       sendRecvMessageReadAck,
+      showPinMessage,
       thread,
       tr,
     ]
@@ -3131,5 +3146,7 @@ export function useMessageList(
     onInit,
     onTouchMove,
     pinMsgListRef,
+    showPinMessage,
+    hidePinMessage,
   };
 }

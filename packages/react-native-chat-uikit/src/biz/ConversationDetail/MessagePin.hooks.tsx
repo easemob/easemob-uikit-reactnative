@@ -46,21 +46,21 @@ export function useMessagePin(props: useMessagePinProps) {
     translateY: msgPinCurrentHeight,
   });
 
-  React.useEffect(() => {
-    if (msgPinPlaceHolderHeightRef.current === gMsgPinHeight) {
-      return;
-    }
-    setTimeout(() => {
-      msgPinPlaceHolderHeightRef.current = gMsgPinHeight;
-      msgPinPlaceHolderHeightAnimate(gMsgPinHeight);
-      msgPinHeightAnimate(gMsgPinHeight);
-      msgPinLabelTranslateYAnimate(0);
-    }, 1000);
-  }, [
-    msgPinHeightAnimate,
-    msgPinLabelTranslateYAnimate,
-    msgPinPlaceHolderHeightAnimate,
-  ]);
+  // React.useEffect(() => {
+  //   if (msgPinPlaceHolderHeightRef.current === gMsgPinHeight) {
+  //     return;
+  //   }
+  //   setTimeout(() => {
+  //     msgPinPlaceHolderHeightRef.current = gMsgPinHeight;
+  //     msgPinPlaceHolderHeightAnimate(gMsgPinHeight);
+  //     msgPinHeightAnimate(gMsgPinHeight);
+  //     msgPinLabelTranslateYAnimate(0);
+  //   }, 1000);
+  // }, [
+  //   msgPinHeightAnimate,
+  //   msgPinLabelTranslateYAnimate,
+  //   msgPinPlaceHolderHeightAnimate,
+  // ]);
 
   return {
     maxListHeight,

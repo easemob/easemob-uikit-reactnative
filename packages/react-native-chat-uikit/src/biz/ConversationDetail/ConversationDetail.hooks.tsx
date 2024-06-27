@@ -414,6 +414,20 @@ export function useConversationDetail(props: ConversationDetailProps) {
     });
   }, [onClickedVideo, onClickedVoice, onShowAVMenu]);
 
+  const showPinMessageComponent = React.useRef(false);
+  const onClickedPinMessage = React.useCallback(() => {
+    showPinMessageComponent.current = !showPinMessageComponent.current;
+    if (showPinMessageComponent.current === true) {
+      _messageListRef.current?.showPinMessageComponent?.();
+    } else {
+      _messageListRef.current?.hidePinMessageComponent?.();
+    }
+  }, [_messageListRef]);
+  const onRequestClosePinMessage = React.useCallback(() => {
+    showPinMessageComponent.current = false;
+    _messageListRef.current?.hidePinMessageComponent?.();
+  }, [_messageListRef]);
+
   React.useEffect(() => {
     im.messageManager.setCurrentConv({ convId, convType });
     if (comType === 'chat' || comType === 'search') {
@@ -621,5 +635,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
     menuRef,
     onRequestCloseMenu,
     onClickedAV,
+    onClickedPinMessage,
+    onRequestClosePinMessage,
   };
 }
