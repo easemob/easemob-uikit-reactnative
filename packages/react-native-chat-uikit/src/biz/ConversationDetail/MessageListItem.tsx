@@ -105,6 +105,10 @@ export function MessageText(props: MessageTextProps) {
       light: colors.neutral[1],
       dark: colors.neutral[1],
     },
+    left_url_text: {
+      light: colors.primary[5],
+      dark: colors.primary[5],
+    },
     right_text: {
       light: colors.neutral[98],
       dark: colors.neutral[98],
@@ -189,8 +193,8 @@ export function MessageText(props: MessageTextProps) {
               textDecorationLine: 'underline',
             }}
             urlColors={[
-              getColor(layoutType === 'left' ? 'left_text' : 'right_text')!,
-              getColor(layoutType === 'left' ? 'left_text' : 'right_text')!,
+              getColor(layoutType === 'left' ? 'left_url_text' : 'right_text')!,
+              getColor(layoutType === 'left' ? 'left_url_text' : 'right_text')!,
             ]}
             textColors={[
               getColor(layoutType === 'left' ? 'left_text' : 'right_text')!,
@@ -322,7 +326,7 @@ export function MessageText(props: MessageTextProps) {
 
       {urlPreview ? (
         urlPreview.title ? (
-          <View style={{ backgroundColor: getColor('url_bg') }}>
+          <View>
             {urlPreview.imageUrl ? (
               <DefaultImage
                 source={{
@@ -354,16 +358,30 @@ export function MessageText(props: MessageTextProps) {
                     justifyContent: 'center',
                     alignItems: 'center',
                     overflow: 'hidden',
+                    backgroundColor: getColor('url_bg'),
                   },
                 ]}
               />
-            ) : null}
+            ) : (
+              <View
+                style={{
+                  borderBottomColor: getColor(
+                    layoutType === 'left' ? 'left_divider' : 'right_divider'
+                  ),
+                  borderBottomWidth: 0.5,
+                  marginHorizontal: 12,
+                  paddingHorizontal: 12,
+                }}
+              />
+            )}
 
             <SingleLineText
               paletteType={'headline'}
               textType={'small'}
               style={{
-                color: getColor('url_text'),
+                color: getColor(
+                  layoutType === 'left' ? 'left_text' : 'right_text'
+                ),
                 paddingTop: 8,
                 paddingHorizontal: 12,
               }}
@@ -376,7 +394,9 @@ export function MessageText(props: MessageTextProps) {
               textType={'medium'}
               numberOfLines={2}
               style={{
-                color: getColor('url_text'),
+                color: getColor(
+                  layoutType === 'left' ? 'left_text' : 'right_text'
+                ),
                 paddingBottom: 8,
                 paddingHorizontal: 12,
               }}
@@ -1095,12 +1115,6 @@ export function MessageBubble(props: MessageBubbleProps) {
       msg.body.type !== ChatMessageType.VIDEO
     );
   }, [hasTriangle, msg.body.type]);
-  const urlPreview = msg.attributes?.[gMessageAttributeUrlPreview] as {
-    url: string;
-    title: string | undefined;
-    description: string | undefined;
-    imageUrl: string | undefined;
-  };
   const contentMaxWidth = React.useMemo(() => {
     const _maxWidth = maxWidth
       ? maxWidth - (paddingHorizontal ?? 0) * 2
@@ -1153,11 +1167,7 @@ export function MessageBubble(props: MessageBubbleProps) {
               width: triangleWidth,
               height: 8,
               tintColor: getColor(
-                urlPreview
-                  ? 'url_bg'
-                  : layoutType === 'left'
-                  ? 'left_bg'
-                  : 'right_bg'
+                layoutType === 'left' ? 'left_bg' : 'right_bg'
               ),
             }}
           />
