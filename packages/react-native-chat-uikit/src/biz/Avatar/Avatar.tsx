@@ -9,6 +9,7 @@ import {
 import { ICON_ASSETS } from '../../assets';
 import {
   ChatServiceListener,
+  DisconnectReasonType,
   PresenceUtil,
   useChatContext,
   useChatListener,
@@ -193,6 +194,23 @@ export function StatusAvatar(props: StatusAvatarProps) {
             urlRef.current = ret.avatarURL;
             updater();
           }
+        }
+      },
+      onConnected: () => {
+        if (userId) {
+          im.fetchPresence({
+            userIds: [userId],
+            onResult: (res) => {
+              if (res.isOk === true) {
+                onStatusChanged(res.value?.get(userId) ?? 'offline');
+              }
+            },
+          });
+        }
+      },
+      onDisconnected: (reason: DisconnectReasonType) => {
+        if (reason === DisconnectReasonType.others) {
+          onStatusChanged('offline');
         }
       },
     } as ChatServiceListener;
