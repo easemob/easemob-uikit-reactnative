@@ -13,6 +13,7 @@
       - [@react-native-clipboard/clipboard 依赖问题](#react-native-clipboardclipboard-依赖问题)
       - [react-native-gesture-handler 依赖问题](#react-native-gesture-handler-依赖问题)
       - [react-native-safe-area-context 依赖问题](#react-native-safe-area-context-依赖问题)
+      - [node 版本问题](#node-版本问题)
 
 # 问题列表
 
@@ -82,3 +83,7 @@ decorateRuntime(jsContext!!.get())
     return getInitialWindowMetrics()?.let { MapBuilder.of<String, Any>("initialWindowMetrics", it) }
   }
 ```
+
+#### node 版本问题
+
+创建 expo51 版本的应用项目，要求 node 的最低版本是 18.18.0，如果使用 yarn 工具，会有相应的提示信息。如果使用 npm 可能没有提示信息。

@@ -3,13 +3,15 @@
 # Creating a Project
 
 ```sh
-# Official method
+# Official Creation Method
 npx react-native@latest init AwesomeProject
 
-# Expo method
+# Expo Creation Method
+# This method is recommended by the official React Native website
 npx create-expo-app AwesomeProject
 
-# Expo method 2
+# Expo Creation Method 2
+# This method allows you to choose different types of templates. You can find related content on the Expo website and GitHub.
 npx create-react-native-app
 ```
 
