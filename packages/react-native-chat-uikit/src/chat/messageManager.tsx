@@ -278,7 +278,14 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
           this._sendList.delete(message.localMsgId);
         }
       },
-      onError: (localMsgId, _error) => {
+      onError: (localMsgId, e) => {
+        this._client.sendError({
+          error: new UIKitError({
+            code: ErrorCode.chat_uikit,
+            desc: e.toString(),
+          }),
+          from: 'resendMessage',
+        });
         const isExisted = this._sendList.get(localMsgId);
         if (isExisted) {
           const msg = { ...isExisted.msg } as ChatMessage;

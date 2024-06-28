@@ -109,6 +109,7 @@ export const MessageInput = React.forwardRef<
     onClickedMultiSelectShareButton,
     onKeyPress,
     msgPinBackgroundCurrentOpacity,
+    msgPinHeightRef,
   } = useMessageInput(props, ref);
 
   return (
@@ -343,6 +344,7 @@ export const MessageInput = React.forwardRef<
                     opacity: msgPinBackgroundCurrentOpacity,
                   },
                 ]}
+                pointerEvents={msgPinHeightRef.current <= 0 ? 'none' : 'auto'}
               />
             ) : null}
           </KeyboardAvoidingView>

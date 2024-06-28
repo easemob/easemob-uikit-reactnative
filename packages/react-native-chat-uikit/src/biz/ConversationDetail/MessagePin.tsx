@@ -174,32 +174,6 @@ export class MessagePin2 extends React.PureComponent<
     onRequestClose?.();
   }
 
-  // private min(): void {
-  //   const {
-  //     msgPinHeightRef,
-  //     msgPinHeightAnimate,
-  //     msgPinBackgroundOpacityAnimate,
-  //     onChangePinMaskHeight,
-  //   } = this.props;
-  //   msgPinHeightRef.current = gMsgPinHeight;
-  //   msgPinHeightAnimate(gMsgPinHeight, () => {}, true);
-  //   onChangePinMaskHeight?.(gMsgPinHeight);
-  //   msgPinBackgroundOpacityAnimate(0);
-  // }
-  // private recover(): void {
-  //   const {
-  //     msgPinHeightRef,
-  //     msgPinHeightAnimate,
-  //     msgPinBackgroundOpacityAnimate,
-  //     onChangePinMaskHeight,
-  //   } = this.props;
-  //   const { maxListHeight } = this.state;
-  //   msgPinHeightRef.current = gMsgPinHeight + this._maxListHeight;
-  //   msgPinHeightAnimate(gMsgPinHeight + maxListHeight);
-  //   onChangePinMaskHeight?.(gMsgPinHeight + maxListHeight);
-  //   msgPinBackgroundOpacityAnimate(1);
-  // }
-
   public addPinMessage(msg: ChatMessage): void {
     this.listRef.current?.addPinMessage(msg);
   }
@@ -229,9 +203,7 @@ export class MessagePin2 extends React.PureComponent<
               opacity: msgPinBackgroundCurrentOpacity,
             },
           ]}
-          // pointerEvents={
-          //   msgPinHeightRef.current <= gMsgPinHeight ? 'none' : 'auto'
-          // }
+          pointerEvents={msgPinHeightRef.current <= 0 ? 'none' : 'auto'}
           onStartShouldSetResponder={() => true}
           onResponderRelease={this.onRequestClose.bind(this)}
         />
@@ -249,11 +221,6 @@ export class MessagePin2 extends React.PureComponent<
           onStartShouldSetResponder={() => true}
           onResponderRelease={() => {
             this.onRequestClose();
-            // if (msgPinHeightRef.current <= gMsgPinHeight) {
-            //   this.recover();
-            // } else {
-            //   this.min();
-            // }
           }}
         >
           <Animated.View

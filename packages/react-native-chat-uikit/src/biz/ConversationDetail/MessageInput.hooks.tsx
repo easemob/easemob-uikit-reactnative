@@ -12,7 +12,11 @@ import emoji from 'twemoji';
 import type { IconNameType } from '../../assets';
 import { uilog } from '../../const';
 // import { useDispatchContext } from '../../dispatch';
-import { useDelayExecTask, useKeyboardHeight } from '../../hook';
+import {
+  useDelayExecTask,
+  useForceUpdate,
+  useKeyboardHeight,
+} from '../../hook';
 import type { ChatTextMessageBody } from '../../rename.chat';
 import type { AlertRef } from '../../ui/Alert';
 import { timeoutTask } from '../../utils';
@@ -95,8 +99,10 @@ export function useMessageInput(
     })
   );
   const [multiSelectVisible, setMultiSelectVisible] = React.useState(false);
+  const msgPinHeightRef = React.useRef(0);
   const { msgPinBackgroundCurrentOpacity, msgPinBackgroundOpacityAnimate } =
     useMessagePin({});
+  const { updater } = useForceUpdate();
 
   const onSetInputBarState = (state: MessageInputState) => {
     inputBarStateRef.current = state;
@@ -539,10 +545,14 @@ export function useMessageInput(
         changeInputBarState('normal');
       },
       showMask: () => {
+        msgPinHeightRef.current = 0;
         msgPinBackgroundOpacityAnimate(0);
+        updater();
       },
       hideMask: () => {
+        msgPinHeightRef.current = 1;
         msgPinBackgroundOpacityAnimate(1);
+        updater();
       },
     };
   });
@@ -633,5 +643,6 @@ export function useMessageInput(
     onClickedMultiSelectShareButton: _onClickedMultiSelectShareButton,
     onKeyPress,
     msgPinBackgroundCurrentOpacity,
+    msgPinHeightRef,
   };
 }
