@@ -109,7 +109,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     do {
       if (comType === 'chat' || comType === 'search') {
         if (selectMode === 'common') {
-          if (enablePinMessage) {
+          if (enablePinMessage && convType === 1) {
             ret.iconNameList.push('pin_2');
             ret.onClickedList.push(() => {
               onClickedPinMessage?.();
