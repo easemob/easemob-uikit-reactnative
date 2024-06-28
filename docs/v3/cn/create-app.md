@@ -7,9 +7,11 @@
 npx react-native@latest init AwesomeProject
 
 # expo创建方法
+# 这种方式是react-native官网推荐的
 npx create-expo-app AwesomeProject
 
 # expo创建方法2
+# 这种方式创建项目，可以选择不同类型的模板，在expo官网和github可以找打相关内容
 npx create-react-native-app
 ```
 
