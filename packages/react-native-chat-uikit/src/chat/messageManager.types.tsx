@@ -150,4 +150,16 @@ export interface MessageCacheManager
    * send conversation unread count change.
    */
   emitConversationUnreadCountChanged(): void;
+
+  /**
+   * Parse url preview.
+   * @param msg The message.
+   * @param isForce Whether to force parsing.
+   * @param onResult The callback notification of the result.
+   */
+  parseUrlPreview(
+    msg: ChatMessage,
+    isForce: boolean,
+    onResult: (msg: ChatMessage) => void
+  ): void;
 }

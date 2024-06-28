@@ -1,3 +1,4 @@
+import { UseUrlPreview } from '../biz/hooks';
 import { uilog } from '../const';
 import { ErrorCode, UIKitError } from '../error';
 import {
@@ -10,11 +11,13 @@ import {
   ChatMessageStatusCallback,
   ChatMessageType,
   ChatSearchDirection,
+  ChatTextMessageBody,
 } from '../rename.chat';
 import { asyncTask, getCurTs } from '../utils';
 import {
   gCustomMessageRecallEventType,
   gMessageAttributeFileProgress,
+  gMessageAttributeUrlPreview,
 } from './const';
 import type {
   MessageCacheManager,
@@ -140,8 +143,10 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   bindOnMessagesReceived(messages: Array<ChatMessage>) {
     asyncTask(this.emitConversationUnreadCountChanged.bind(this));
     messages.forEach((msg) => {
-      this._userListener.forEach((v) => {
-        v.onRecvMessage?.(msg);
+      this.parseUrlPreview(msg, false, (newMsg) => {
+        this._userListener.forEach((v) => {
+          v.onRecvMessage?.(newMsg);
+        });
       });
     });
   }
@@ -235,7 +240,9 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       onSuccess: (message) => {
         const isExisted = this._sendList.get(message.localMsgId);
         if (isExisted) {
-          this.emitSendMessageChanged(message);
+          this.parseUrlPreview(message, false, (newMsg) => {
+            this.emitSendMessageChanged(newMsg);
+          });
           this._sendList.delete(message.localMsgId);
         }
       },
@@ -463,5 +470,51 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     if (recallTimeout) {
       this._recallTimeout = recallTimeout;
     }
+  }
+
+  parseUrlPreview(
+    msg: ChatMessage,
+    isForce: boolean,
+    onResult: (msg: ChatMessage) => void
+  ): void {
+    if (msg.body.type !== ChatMessageType.TXT) {
+      onResult(msg);
+      return;
+    }
+    const body = msg.body as ChatTextMessageBody;
+    if (
+      msg.attributes?.[gMessageAttributeUrlPreview] !== undefined &&
+      isForce !== true
+    ) {
+      onResult(msg);
+      return;
+    }
+    const urls = UseUrlPreview.getUrlListFromText(body.content);
+    if (!urls || urls.length === 0 || urls.length > 1) {
+      onResult(msg);
+      return;
+    }
+    UseUrlPreview.fetchUrlPreview(urls[0]!).then((data) => {
+      if (data) {
+        const newMsg = { ...msg } as ChatMessage;
+        newMsg.attributes = {
+          ...msg.attributes,
+          [gMessageAttributeUrlPreview]: data,
+        };
+        onResult(newMsg);
+        this._client.updateMessage({
+          message: newMsg,
+        });
+      } else {
+        msg.attributes = {
+          ...msg.attributes,
+          [gMessageAttributeUrlPreview]: { url: urls[0]!, title: undefined },
+        };
+        onResult(msg);
+        this._client.updateMessage({
+          message: msg,
+        });
+      }
+    });
   }
 }
