@@ -10,7 +10,10 @@ module.exports = {
   ...defaultConfig,
 
   projectRoot: __dirname,
-  watchFolders: [root],
+  watchFolders: [
+    root,
+    // '/Users/asterisk/Codes/rn/react-native-agora-chat-1.3.0-beta.0',
+  ],
 
   // We need to make sure that only one version is loaded for peerDependencies
   // So we block them at the root, and alias them to the versions in example's node_modules
@@ -35,6 +38,10 @@ module.exports = {
       acc[name] = path.join(root, 'node_modules', name);
       return acc;
     }, {}),
+
+    nodeModulesPaths: [
+      // '/Users/asterisk/Codes/rn/react-native-chat-library-2.0-agora/node_modules',
+    ],
   },
 
   transformer: {
