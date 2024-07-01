@@ -28,6 +28,8 @@ export const agoraAppId = '';
 export const fcmSenderId = '';
 // demo mode type.
 export const demoType = 1; // 1. ui-dev 2. dev 3. prod 4. ui-prod
+// The address of the app server.
+export const restServer = '';
 // Preset account information settings. Save yourself the hassle of filling it out manually.
 export const account = [{ id: '', token: '' }];
 `;
