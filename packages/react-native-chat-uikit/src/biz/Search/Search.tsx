@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { TextInput as RNTextInput, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -7,6 +7,7 @@ import { usePaletteContext, useThemeContext } from '../../theme';
 import { IconButton, Text1Button } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { TextInput } from '../../ui/TextInput';
+import { timeoutTask } from '../../utils';
 
 /**
  * Search Component properties.
@@ -35,6 +36,7 @@ export type SearchProps = {
  */
 export function Search(props: SearchProps) {
   const { onCancel, onChangeText, value, onBack } = props;
+  const inputRef = React.useRef<RNTextInput>(null);
   const { tr } = useI18nContext();
   const { style, cornerRadius } = useThemeContext();
   const { input } = cornerRadius;
@@ -65,6 +67,12 @@ export function Search(props: SearchProps) {
       dark: colors.neutral[4],
     },
   });
+
+  React.useEffect(() => {
+    // !!! node_modules/@react-navigation/native-stack/src/types.tsx `animationDuration`
+    timeoutTask(500, () => inputRef.current?.focus());
+  }, []);
+
   return (
     <View
       style={
@@ -102,6 +110,7 @@ export function Search(props: SearchProps) {
           }}
         >
           <TextInput
+            ref={inputRef}
             containerStyle={{
               backgroundColor: getColor('bg2'),
               justifyContent: 'center',
@@ -115,7 +124,7 @@ export function Search(props: SearchProps) {
             onChangeText={onChangeText}
             value={value}
             keyboardAppearance={style === 'light' ? 'light' : 'dark'}
-            autoFocus={true}
+            autoFocus={false}
             cursorColor={getColor('cursor')}
             enableClearButton={true}
             clearButtonContainerStyle={{ padding: 7 }}
