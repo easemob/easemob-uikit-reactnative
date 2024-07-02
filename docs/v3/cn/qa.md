@@ -14,6 +14,7 @@
       - [react-native-gesture-handler 依赖问题](#react-native-gesture-handler-依赖问题)
       - [react-native-safe-area-context 依赖问题](#react-native-safe-area-context-依赖问题)
       - [node 版本问题](#node-版本问题)
+      - [expo-updates 的问题](#expo-updates-的问题)
 
 # 问题列表
 
@@ -87,3 +88,10 @@ decorateRuntime(jsContext!!.get())
 #### node 版本问题
 
 创建 expo51 版本的应用项目，要求 node 的最低版本是 18.18.0，如果使用 yarn 工具，会有相应的提示信息。如果使用 npm 可能没有提示信息。
+
+#### expo-updates 的问题
+
+在 release 模式下，使用 `expo-updates` 可能导致图片无法被找到。
+
+参考：1. https://github.com/expo/expo/issues/22656  
+ 解决方法主要以下几种： 1. 删除依赖项 `expo-updates`, 该依赖项在 `package.json` 配置文件中。 2. 禁用 `expo-updates`, 修改设置在 `Expo.plist` 文件中的属性 `EXUpdatesEnabled` 3. 使用命令 `eas build` 构建

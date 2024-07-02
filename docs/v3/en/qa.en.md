@@ -13,6 +13,7 @@
       - [@react-native-clipboard/clipboard Dependency Issue](#react-native-clipboardclipboard-dependency-issue)
       - [react-native-gesture-handler Dependency Issue](#react-native-gesture-handler-dependency-issue)
       - [react-native-safe-area-context Dependency Issue](#react-native-safe-area-context-dependency-issue)
+    - [Issues with `expo-updates`](#issues-with-expo-updates)
 
 # Question List
 
@@ -84,3 +85,14 @@ Message description: kotlin syntax issue.
     return getInitialWindowMetrics()?.let { MapBuilder.of<String, Any>("initialWindowMetrics", it) }
   }
 ```
+
+### Issues with `expo-updates`
+
+In release mode, using `expo-updates` may result in images not being found.
+
+Reference: 1. https://github.com/expo/expo/issues/22656  
+Main solutions include:
+
+1. Remove the `expo-updates` dependency from the `package.json` configuration file.
+2. Disable `expo-updates` by modifying the `EXUpdatesEnabled` property in the `Expo.plist` file.
+3. Use the command `eas build` to build the project.
