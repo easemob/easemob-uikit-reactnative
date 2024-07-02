@@ -19,7 +19,7 @@
 const env = require('../../env');
 export const useSendBox = env.useSendBox as boolean;
 export const appKey = env.appKey as string;
-export const restServer = useSendBox ? 'a1-hsb.easemob.com' : 'a1.easemob.com';
+export const restServer = env.restServer as string;
 export const imServer = useSendBox ? '180.184.143.60' : undefined;
 export const imPort = useSendBox ? '6717' : undefined;
 export const enableDNSConfig = useSendBox ? false : undefined;

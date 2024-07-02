@@ -27,12 +27,16 @@ export function createStringSetEn(): StringSet {
     '_demo_info_theme': 'theme',
     '_demo_info_language': 'language setting',
 
-    '_demo_splash_title': 'Easemob IM',
+    '_demo_splash_title': (accountType) =>
+      accountType === 'agora' ? 'Agora Chat' : 'Easemob IM',
 
-    '_demo_login_title': 'Login',
+    '_demo_login_title': (accountType) =>
+      accountType === 'agora' ? 'Login' : 'Login',
     '_demo_login_title_version': (v) => `V${v}`,
-    '_demo_login_input_phone_number_tip': 'Phone number',
-    '_demo_login_input_phone_number_captcha_tip': 'Verification code',
+    '_demo_login_input_phone_number_tip': (accountType) =>
+      accountType === 'agora' ? 'Username' : 'Phone number',
+    '_demo_login_input_phone_number_captcha_tip': (accountType) =>
+      accountType === 'agora' ? 'Password' : 'Verification code',
     '_demo_login_input_phone_number_captcha_button_1': 'Get code',
     '_demo_login_input_phone_number_captcha_button_2': (second) =>
       `Resend captcha(${second}s)`,

@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 
 import { getFileExtension } from '../../rename.uikit';
+import { accountType } from './const';
 
 export type RequestResult<Value, Error = any> = {
   isOk: boolean;
@@ -8,12 +9,26 @@ export type RequestResult<Value, Error = any> = {
   error?: Error | undefined;
 };
 
-export type RequestLoginResult = {
+export type EasemobRequestLoginResult = {
   chatUserName: string;
   code: number;
   phoneNumber: string;
   token: string;
   avatarUrl?: string;
+};
+export type AgoraRequestLoginResult = {
+  chatUserName: string;
+  code: number;
+  agoraUid: string;
+  accessToken: string;
+  expireTimestamp: number;
+  avatarUrl?: string;
+};
+export type RequestLoginResult = (
+  | EasemobRequestLoginResult
+  | AgoraRequestLoginResult
+) & {
+  accountType: string;
 };
 export type RequestUploadAvatarResult = {
   code: number;
@@ -136,9 +151,40 @@ export class RestApi {
       });
       const value = await response.json();
       console.log('RestApi:requestLogin:', value, url);
-      return { isOk: true, value };
+      return { isOk: true, value: { ...value, accountType } };
     } catch (error) {
       console.warn('RestApi:requestLogin:error:', error);
+      return { isOk: false, error };
+    }
+  }
+
+  public static async requestAgoraLogin(params: {
+    userId: string;
+    password: string;
+  }): Promise<RequestResult<RequestLoginResult>> {
+    const { userId, password } = params;
+    const url = this.getBasicUrl() + `/app/chat/user/login`;
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userAccount: userId, userPassword: password }),
+      });
+      const value = await response.json();
+      console.log('RestApi:requestAgoraLogin:', value, url);
+      return {
+        isOk: true,
+        value: {
+          ...value,
+          accountType,
+          code: value.code === 'RES_OK' ? 200 : 999,
+        },
+      };
+    } catch (error) {
+      console.warn('RestApi:requestAgoraLogin:error:', error);
       return { isOk: false, error };
     }
   }

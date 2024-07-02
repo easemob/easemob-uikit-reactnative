@@ -206,6 +206,9 @@ export function App() {
       }
       isReadyRef.current = true;
 
+      if (accountType === 'agora') {
+        RestApi.setBasicUrl('');
+      }
       RestApi.setServer(restServer);
 
       await initPush();

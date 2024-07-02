@@ -26,12 +26,16 @@ export function createStringSetCn(): StringSet {
     '_demo_info_theme': '明暗模式',
     '_demo_info_language': '语言设置',
 
-    '_demo_splash_title': '环信即时通讯云',
+    '_demo_splash_title': (accountType) =>
+      accountType === 'agora' ? '声网即时通讯云' : '环信即时通讯云',
 
-    '_demo_login_title': '环信IM',
+    '_demo_login_title': (accountType) =>
+      accountType === 'agora' ? '声网IM' : '环信IM',
     '_demo_login_title_version': (v) => `V${v}`,
-    '_demo_login_input_phone_number_tip': '手机号',
-    '_demo_login_input_phone_number_captcha_tip': '验证码',
+    '_demo_login_input_phone_number_tip': (accountType) =>
+      accountType === 'agora' ? '用户名' : '手机号',
+    '_demo_login_input_phone_number_captcha_tip': (accountType) =>
+      accountType === 'agora' ? '密码' : '验证码',
     '_demo_login_input_phone_number_captcha_button_1': '获取验证码',
     '_demo_login_input_phone_number_captcha_button_2': (second) =>
       `重新获取(${second}s)`,

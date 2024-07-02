@@ -11,6 +11,7 @@ import {
   usePaletteContext,
 } from '../../rename.uikit';
 import { logo, main_bg } from '../common/assets';
+import { accountType } from '../common/const';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
@@ -55,7 +56,10 @@ export function SplashScreen(props: Props) {
           color: getColor('p'),
         }}
       >
-        {tr('_demo_splash_title')}
+        {tr(
+          '_demo_splash_title',
+          accountType === 'agora' ? 'agora' : 'easemob'
+        )}
       </Text>
       <View style={{ flex: 322 }} />
       <Text
@@ -67,7 +71,7 @@ export function SplashScreen(props: Props) {
           color: getColor('n'),
         }}
       >
-        {'Powered by Easemob'}
+        {accountType === 'agora' ? 'Powered by Agora' : 'Powered by Easemob'}
       </Text>
 
       <View style={{ flex: 62 }} />

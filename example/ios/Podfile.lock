@@ -542,7 +542,7 @@ PODS:
   - react-native-chat-sdk (1.5.0-beta.0):
     - HyphenateChat (= 4.6.1)
     - React-Core
-  - react-native-chat-uikit (2.2.1):
+  - react-native-chat-uikit (2.3.0-alpha.0):
     - React-Core
   - react-native-create-thumbnail (1.6.6):
     - RCT-Folly (= 2021.07.22.00)
@@ -1138,7 +1138,7 @@ SPEC CHECKSUMS:
   react-native-cameraroll: 755bcc628148a90a7c9cf3f817a252be3a601bc5
   react-native-chat-callkit: a1b5e4885d58e4ac5153aade90b6f6fbb32d333b
   react-native-chat-sdk: 2ab93752a02916334208642778a6e908fdf50485
-  react-native-chat-uikit: abaebb64f58a6ddd53a3e060f8ac9f43e50df6cf
+  react-native-chat-uikit: 3ce91a7b5c45f496dc52b01de6d34a9032480e8f
   react-native-create-thumbnail: e4fc6953a754bcfa3a03d74ec8687850134b1b93
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
