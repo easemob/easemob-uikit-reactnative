@@ -300,7 +300,9 @@ export function App() {
         palette={paletteRef.current}
         theme={isLightRef.current ? light : dark}
         language={languageRef.current}
-        translateLanguage={translateLanguageRef.current}
+        translateLanguage={
+          accountType === 'agora' ? 'en' : translateLanguageRef.current
+        }
         releaseArea={releaseAreaRef.current}
         enablePresence={enablePresenceRef.current}
         enableReaction={enableReactionRef.current}

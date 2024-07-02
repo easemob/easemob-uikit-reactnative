@@ -15,6 +15,7 @@ import {
   useI18nContext,
   usePaletteContext,
 } from '../../rename.uikit';
+import { accountType } from '../common/const';
 import { useStackScreenRoute } from '../hooks';
 import { useGeneralSetting } from '../hooks/useGeneralSetting';
 import type { RootScreenParamsList } from '../routes';
@@ -221,38 +222,40 @@ export function GeneralSettingScreen(props: Props) {
         }
       />
 
-      <ListItem
-        onClicked={onClickedLanguage}
-        containerStyle={{ paddingHorizontal: 16 }}
-        LeftName={
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
-              textType={'medium'}
-              paletteType={'title'}
-              style={{ color: getColor('fg') }}
-            >
-              {tr('_demo_general_setting_language')}
-            </Text>
-          </View>
-        }
-        RightIcon={
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <SingleLineText
-              paletteType={'label'}
-              textType={'large'}
-              style={{
-                color: getColor('t1'),
-              }}
-            >
-              {appLanguage === 'en' ? tr('en') : tr('zh-Hans')}
-            </SingleLineText>
-            <Icon
-              name={'chevron_right'}
-              style={{ height: 20, width: 20, tintColor: getColor('right') }}
-            />
-          </View>
-        }
-      />
+      {accountType === 'agora' ? null : (
+        <ListItem
+          onClicked={onClickedLanguage}
+          containerStyle={{ paddingHorizontal: 16 }}
+          LeftName={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text
+                textType={'medium'}
+                paletteType={'title'}
+                style={{ color: getColor('fg') }}
+              >
+                {tr('_demo_general_setting_language')}
+              </Text>
+            </View>
+          }
+          RightIcon={
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <SingleLineText
+                paletteType={'label'}
+                textType={'large'}
+                style={{
+                  color: getColor('t1'),
+                }}
+              >
+                {appLanguage === 'en' ? tr('en') : tr('zh-Hans')}
+              </SingleLineText>
+              <Icon
+                name={'chevron_right'}
+                style={{ height: 20, width: 20, tintColor: getColor('right') }}
+              />
+            </View>
+          }
+        />
+      )}
 
       <ListItem
         onClicked={onClickedTranslationLanguage}
