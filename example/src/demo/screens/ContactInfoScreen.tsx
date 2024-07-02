@@ -1,15 +1,26 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+import { View } from 'react-native';
 
 import {
   ChatServiceListener,
   ContactInfo,
   ContactModel,
+  Icon,
+  ListItem,
+  ResultValue,
+  SingleLineText,
+  Text,
+  UIContactListListener,
+  UIListenerType,
   useChatContext,
   useChatListener,
+  useColors,
   useI18nContext,
+  usePaletteContext,
 } from '../../rename.uikit';
 import { useCallApi } from '../common/AVView';
+import { accountType } from '../common/const';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useOnce, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
@@ -29,6 +40,27 @@ export function ContactInfoScreen(props: Props) {
   const im = useChatContext();
   const avTypeRef = React.useRef<'video' | 'voice'>('video');
   const { showCall } = useCallApi({});
+  const [userRemark, setUserRemark] = React.useState<string | undefined>();
+
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    fg: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    t1: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+    icon: {
+      light: colors.neutral[3],
+      dark: colors.neutral[95],
+    },
+  });
 
   const listener = React.useMemo<ChatServiceListener>(() => {
     return {
@@ -81,6 +113,65 @@ export function ContactInfoScreen(props: Props) {
     [showCall]
   );
 
+  const customItemRender = React.useCallback(
+    (list: React.ReactNode[]) => {
+      const item = (
+        <ListItem
+          key={'101'}
+          onClicked={() => {
+            start(() => {
+              navi.push({
+                to: 'EditInfo',
+                props: {
+                  backName: tr('_demo_edit_contact_remark'),
+                  saveName: tr('done'),
+                  initialData: userRemark,
+                  editType: 'contactRemark',
+                  maxLength: 128,
+                },
+              });
+            });
+          }}
+          containerStyle={{ paddingHorizontal: 16 }}
+          LeftName={
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_uikit_info_item_contact_remark')}
+            </Text>
+          }
+          RightText={
+            <SingleLineText
+              textType={'large'}
+              paletteType={'label'}
+              style={{ color: getColor('t1'), maxWidth: 100 }}
+            >
+              {userRemark}
+            </SingleLineText>
+          }
+          RightIcon={
+            <View>
+              <Icon
+                name={'chevron_right'}
+                style={{
+                  height: 20,
+                  width: 20,
+                  tintColor: getColor('icon'),
+                }}
+              />
+            </View>
+          }
+        />
+      );
+      list.splice(1, 0, item);
+
+      return list;
+    },
+    [getColor, navi, start, tr, userRemark]
+  );
+
   React.useEffect(() => {
     hash;
     if (from === 'EditInfo') {
@@ -91,6 +182,37 @@ export function ContactInfoScreen(props: Props) {
       });
     }
   }, [editType, editedData, stop, userId, hash, from]);
+
+  React.useEffect(() => {
+    if (accountType === 'agora') {
+      return;
+    }
+    im.getContactSync({ userId: userId })
+      .then((res: ResultValue<ContactModel | undefined>) => {
+        if (res.value) {
+          setUserRemark(res.value.remark);
+        }
+      })
+      .catch();
+  }, [im, userId]);
+
+  React.useEffect(() => {
+    if (accountType === 'agora') {
+      return;
+    }
+    const listener: UIContactListListener = {
+      onUpdatedEvent: (data) => {
+        if (data.userId === userId) {
+          setUserRemark(data.remark);
+        }
+      },
+      type: UIListenerType.Contact,
+    };
+    im.addUIListener(listener);
+    return () => {
+      im.removeUIListener(listener);
+    };
+  }, [im, userId]);
 
   return (
     <SafeAreaViewFragment>
@@ -110,6 +232,9 @@ export function ContactInfoScreen(props: Props) {
           navi.goBack();
         }}
         onClickedContactRemark={(_userId, remark) => {
+          if (accountType === 'agora') {
+            return;
+          }
           start(() => {
             navi.push({
               to: 'EditInfo',
@@ -132,6 +257,9 @@ export function ContactInfoScreen(props: Props) {
         onRequestData={onRequestData}
         onAudioCall={onClickedVoice}
         onVideoCall={onClickedVideo}
+        customItemRender={
+          accountType === 'agora' ? undefined : customItemRender
+        }
       />
     </SafeAreaViewFragment>
   );

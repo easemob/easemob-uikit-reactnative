@@ -106,7 +106,7 @@ export function useSearchContact(props: SearchContactProps) {
       return;
     }
     if (isAutoLoad === true) {
-      im.getAllContacts({
+      im.getAllContacts2({
         onResult: (result) => {
           const { isOk, value, error } = result;
           if (isOk === true) {

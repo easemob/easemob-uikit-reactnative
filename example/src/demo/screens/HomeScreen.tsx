@@ -23,6 +23,7 @@ import {
   useI18nContext,
   usePaletteContext,
 } from '../../rename.uikit';
+import { accountType } from '../common/const';
 import {
   useGeneralSetting,
   useLogin,
@@ -190,6 +191,13 @@ export function HomeScreen(props: Props) {
   React.useEffect(() => {
     initParamsCallback().catch();
   }, [initParamsCallback]);
+
+  React.useEffect(() => {
+    if (accountType === 'agora') {
+    } else {
+      im.client.contactManager.fetchAllContacts();
+    }
+  }, [im.client.contactManager]);
 
   React.useEffect(() => {
     im.getAllBlockList({

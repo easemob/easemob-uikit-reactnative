@@ -1232,6 +1232,107 @@ export class ChatServiceImpl
     });
   }
 
+  getAllContacts2(params: {
+    requestServer?: boolean;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void {
+    const { requestServer = false } = params;
+    if (this._contactList.size > 0 && requestServer === false) {
+      this.tryCatch({
+        promise: this.client.contactManager.getAllContactsFromDB(),
+        event: 'getAllContactsFromDB',
+        onFinished: async (value) => {
+          const list = new Map() as Map<string, ContactModel>;
+          const tmp = new Map<string, DataModel>();
+          value.forEach((v: string) => {
+            tmp.set(v, {
+              id: v,
+              type: 'user',
+              remark: undefined,
+            } as DataModel);
+          });
+          this._updateDataList({
+            dataList: tmp,
+            disableDispatch: true,
+            isUpdateNotExisted: true,
+          });
+          await this._requestData({
+            list: Array.from(tmp.keys()),
+            type: 'user',
+            requestHasData: true,
+            isUpdateNotExisted: true,
+          });
+          const tmp2 = this._dataFileProvider.getUserList(
+            Array.from(tmp.keys())
+          );
+          tmp2.forEach((v) => {
+            list.set(v.id, {
+              userId: v.id,
+              userName: v.name,
+              userAvatar: v.avatar,
+              remark: v.remark,
+            } as ContactModel);
+          });
+
+          this._contactList = list;
+
+          params.onResult({
+            isOk: true,
+            value: Array.from(this._contactList.values()),
+          });
+        },
+        onError: (e) => {
+          params.onResult({ isOk: false, error: e });
+        },
+      });
+      return;
+    }
+    this.tryCatch({
+      promise: this.client.contactManager.getAllContactsFromServer(),
+      event: 'getAllContactsFromServer',
+      onFinished: async (value) => {
+        const list = new Map() as Map<string, ContactModel>;
+        const tmp = new Map<string, DataModel>();
+        value.forEach((v: string) => {
+          tmp.set(v, {
+            id: v,
+            type: 'user',
+            remark: undefined,
+          } as DataModel);
+        });
+        this._updateDataList({
+          dataList: tmp,
+          disableDispatch: true,
+          isUpdateNotExisted: true,
+        });
+        await this._requestData({
+          list: Array.from(tmp.keys()),
+          type: 'user',
+          requestHasData: true,
+          isUpdateNotExisted: true,
+        });
+        const tmp2 = this._dataFileProvider.getUserList(Array.from(tmp.keys()));
+        tmp2.forEach((v) => {
+          list.set(v.id, {
+            userId: v.id,
+            userName: v.name,
+            userAvatar: v.avatar,
+            remark: v.remark,
+          } as ContactModel);
+        });
+        this._contactList = list;
+
+        params.onResult({
+          isOk: true,
+          value: Array.from(this._contactList.values()),
+        });
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
+    });
+  }
+
   addNewContact(params: {
     userId: string;
     reason?: string;

@@ -58,11 +58,9 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       isSelf,
       onAddContact,
       onCopyId,
-      onClickedRemark,
       getNickName,
       onSearch,
       hasAudioCall,
-      userRemark,
       enableBlock,
       switchRef,
     } = useContactInfo(props, ref);
@@ -104,43 +102,43 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       const items = [] as React.ReactNode[];
       if (isContact === true) {
         items.push(<View key={'100'} style={{ height: 20 }} />);
-        items.push(
-          <ListItem
-            key={'101'}
-            onClicked={onClickedRemark}
-            containerStyle={{ paddingHorizontal: 16 }}
-            LeftName={
-              <Text
-                textType={'medium'}
-                paletteType={'title'}
-                style={{ color: getColor('fg') }}
-              >
-                {tr('_uikit_info_item_contact_remark')}
-              </Text>
-            }
-            RightText={
-              <SingleLineText
-                textType={'large'}
-                paletteType={'label'}
-                style={{ color: getColor('t1'), maxWidth: 100 }}
-              >
-                {userRemark}
-              </SingleLineText>
-            }
-            RightIcon={
-              <View>
-                <Icon
-                  name={'chevron_right'}
-                  style={{
-                    height: 20,
-                    width: 20,
-                    tintColor: getColor('icon'),
-                  }}
-                />
-              </View>
-            }
-          />
-        );
+        // items.push(
+        //   <ListItem
+        //     key={'101'}
+        //     onClicked={onClickedRemark}
+        //     containerStyle={{ paddingHorizontal: 16 }}
+        //     LeftName={
+        //       <Text
+        //         textType={'medium'}
+        //         paletteType={'title'}
+        //         style={{ color: getColor('fg') }}
+        //       >
+        //         {tr('_uikit_info_item_contact_remark')}
+        //       </Text>
+        //     }
+        //     RightText={
+        //       <SingleLineText
+        //         textType={'large'}
+        //         paletteType={'label'}
+        //         style={{ color: getColor('t1'), maxWidth: 100 }}
+        //       >
+        //         {userRemark}
+        //       </SingleLineText>
+        //     }
+        //     RightIcon={
+        //       <View>
+        //         <Icon
+        //           name={'chevron_right'}
+        //           style={{
+        //             height: 20,
+        //             width: 20,
+        //             tintColor: getColor('icon'),
+        //           }}
+        //         />
+        //       </View>
+        //     }
+        //   />
+        // );
         items.push(
           <View
             key={'102'}
@@ -255,11 +253,9 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
       onAddContact,
       onBlockUser,
       onClearChat,
-      onClickedRemark,
       onDoNotDisturb,
       switchRef,
       tr,
-      userRemark,
     ]);
 
     return (

@@ -44,13 +44,13 @@ export function useContactInfo(
     onClickedNavigationBarButton,
     onAddContact: propsOnAddContact,
     onCopyId: propsOnCopyId,
-    onClickedContactRemark,
+    // onClickedContactRemark,
     // onRequestData,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [blockUser, setBlockUser] = React.useState(propsBlockUser);
   const [userName, setUserName] = React.useState(propsUserName);
-  const [userRemark, setUserRemark] = React.useState(propsUserName);
+  // const [userRemark, setUserRemark] = React.useState(propsUserName);
   const [userAvatar, setUserAvatar] = React.useState(propsUserAvatar);
   const [isContact, setIsContact] = React.useState(propsIsContact);
   const [isSelf, setIsSelf] = React.useState(false);
@@ -122,7 +122,7 @@ export function useContactInfo(
                       if (res.value?.userName === undefined) {
                         setUserName(value.value?.userName);
                       }
-                      setUserRemark(value.value?.remark);
+                      // setUserRemark(value.value?.remark);
 
                       const contact = {
                         userId: userId,
@@ -310,16 +310,16 @@ export function useContactInfo(
     });
   };
 
-  const onClickedRemark = () => {
-    im.getContact({
-      userId,
-      onResult: (res) => {
-        if (res.isOk === true) {
-          onClickedContactRemark?.(userId, res.value?.remark);
-        }
-      },
-    });
-  };
+  // const onClickedRemark = () => {
+  //   im.getContact({
+  //     userId,
+  //     onResult: (res) => {
+  //       if (res.isOk === true) {
+  //         onClickedContactRemark?.(userId, res.value?.remark);
+  //       }
+  //     },
+  //   });
+  // };
 
   const getNickName = React.useCallback(() => {
     if (userName && userName.length > 0) {
@@ -360,7 +360,7 @@ export function useContactInfo(
         if (data.userId === userId) {
           setUserAvatar(data.userAvatar);
           setUserName(data.userName);
-          setUserRemark(data.remark);
+          // setUserRemark(data.remark);
         }
       },
       type: UIListenerType.Contact,
@@ -428,7 +428,7 @@ export function useContactInfo(
     onDoNotDisturb,
     onClearChat,
     userName,
-    userRemark,
+    // userRemark,
     userAvatar,
     userId,
     isContact,
@@ -444,7 +444,7 @@ export function useContactInfo(
     onVideoCall,
     onAddContact,
     onCopyId,
-    onClickedRemark,
+    // onClickedRemark,
     getNickName,
     onSearch,
     hasAudioCall: hasAudioCall,

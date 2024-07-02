@@ -30,7 +30,7 @@ import {
   LanguageCode,
   StringSet,
   UIGroupListListener,
-  UIKitError,
+  // UIKitError,
   UIListenerType,
   useDarkTheme,
   useForceUpdate,
@@ -42,6 +42,7 @@ import {
 import { createStringSetCn, createStringSetEn } from '../common';
 import { boloo_da_ttf, twemoji_ttf } from '../common/assets';
 import {
+  accountType,
   appKey as gAppKey,
   boloo_da_ttf_name,
   enableDNSConfig,
@@ -111,9 +112,9 @@ export function useApp() {
   const [_initParams, setInitParams] = React.useState(false);
   const {
     getDataFromStorage,
-    updateDataFromServer,
-    updateDataToStorage,
-    users,
+    // updateDataFromServer,
+    // updateDataToStorage,
+    // users,
   } = useUserInfo();
 
   const { updater } = useForceUpdate();
@@ -140,91 +141,112 @@ export function useApp() {
     } as ChatOptionsType;
   }, [autoLogin]);
 
-  const onUsersProvider = React.useCallback(
-    (params: {
-      ids: string[];
-      result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-    }) => {
-      const userIds = params.ids;
-      const noExistedIds = [] as string[];
-      userIds.forEach((id) => {
-        const isExisted = users.current.get(id);
-        if (
-          isExisted &&
-          isExisted.avatarURL &&
-          isExisted.avatarURL.length > 0 &&
-          isExisted.userName &&
-          isExisted.userName.length > 0
-        )
-          return;
-        noExistedIds.push(id);
-      });
-      if (noExistedIds.length === 0) {
-        const finalUsers = userIds
-          .map<DataModel | undefined>((id) => {
-            const ret = users.current.get(id);
-            if (ret) {
-              return {
-                id: ret.userId,
-                name: ret.userName,
-                avatar: ret.avatarURL,
-                type: 'user',
-              } as DataModel;
-            }
-            return undefined;
-          })
-          .filter((item) => item !== undefined) as DataModel[];
-        params?.result({ data: finalUsers ?? [] });
-      } else {
-        if (userIds.length === 0) {
-          params?.result({ data: [] });
-          return;
-        }
-        im.getUsersInfo({
-          userIds: userIds,
-          onResult: (res) => {
-            if (res.isOk && res.value) {
-              const u = res.value;
-              updateDataFromServer(u);
-              const finalUsers = userIds
-                .map<DataModel | undefined>((id) => {
-                  const ret = users.current.get(id);
-                  if (ret) {
-                    return {
-                      id: ret.userId,
-                      name: ret.userName,
-                      avatar: ret.avatarURL,
-                      type: 'user',
-                    } as DataModel;
-                  }
-                  return undefined;
-                })
-                .filter((item) => item !== undefined) as DataModel[];
-              params?.result({ data: finalUsers ?? [] });
-              updateDataToStorage();
-            } else {
-              params?.result({ error: res.error });
-            }
-          },
-        });
-      }
-    },
-    [im, users, updateDataFromServer, updateDataToStorage]
-  );
-  const onGroupsProvider = React.useCallback(
-    (params: {
-      ids: string[];
-      result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-    }) => {
-      params.result({ data: [] });
-    },
-    []
-  );
+  // const onUsersProvider = React.useCallback(
+  //   (params: {
+  //     ids: string[];
+  //     result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
+  //   }) => {
+  //     const userIds = params.ids;
+  //     const noExistedIds = [] as string[];
+  //     userIds.forEach((id) => {
+  //       const isExisted = users.current.get(id);
+  //       if (
+  //         isExisted &&
+  //         isExisted.avatarURL &&
+  //         isExisted.avatarURL.length > 0 &&
+  //         isExisted.userName &&
+  //         isExisted.userName.length > 0
+  //       )
+  //         return;
+  //       noExistedIds.push(id);
+  //     });
+  //     if (noExistedIds.length === 0) {
+  //       const finalUsers = userIds
+  //         .map<DataModel | undefined>((id) => {
+  //           const ret = users.current.get(id);
+  //           if (ret) {
+  //             return {
+  //               id: ret.userId,
+  //               name: ret.userName,
+  //               avatar: ret.avatarURL,
+  //               type: 'user',
+  //             } as DataModel;
+  //           }
+  //           return undefined;
+  //         })
+  //         .filter((item) => item !== undefined) as DataModel[];
+  //       params?.result({ data: finalUsers ?? [] });
+  //     } else {
+  //       if (userIds.length === 0) {
+  //         params?.result({ data: [] });
+  //         return;
+  //       }
+  //       im.getUsersInfo({
+  //         userIds: userIds,
+  //         onResult: (res) => {
+  //           if (res.isOk && res.value) {
+  //             const u = res.value;
+  //             updateDataFromServer(u);
+  //             const finalUsers = userIds
+  //               .map<DataModel | undefined>((id) => {
+  //                 const ret = users.current.get(id);
+  //                 if (ret) {
+  //                   return {
+  //                     id: ret.userId,
+  //                     name: ret.userName,
+  //                     avatar: ret.avatarURL,
+  //                     type: 'user',
+  //                   } as DataModel;
+  //                 }
+  //                 return undefined;
+  //               })
+  //               .filter((item) => item !== undefined) as DataModel[];
+  //             params?.result({ data: finalUsers ?? [] });
+  //             updateDataToStorage();
+  //           } else {
+  //             params?.result({ error: res.error });
+  //           }
+  //         },
+  //       });
+  //     }
+  //   },
+  //   [im, users, updateDataFromServer, updateDataToStorage]
+  // );
+  // const onGroupsProvider = React.useCallback(
+  //   (params: {
+  //     ids: string[];
+  //     result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
+  //   }) => {
+  //     params.result({ data: [] });
+  //   },
+  //   []
+  // );
 
   const onUsersHandler = React.useCallback(
     async (data: Map<string, DataModel>) => {
       if (data.size === 0) return data;
       const userIds = Array.from(data.keys());
+      const remarkMap = new Map<string, string>();
+      if (accountType === 'agora') {
+      } else {
+        await new Promise<void>((resolve, reject) => {
+          im.client.contactManager
+            .getAllContacts()
+            .then((res) => {
+              if (res) {
+                res.forEach((v) => {
+                  if (v.remark) {
+                    remarkMap.set(v.userId, v.remark);
+                  }
+                });
+                resolve();
+              } else {
+                reject();
+              }
+            })
+            .catch();
+        });
+      }
       const ret = new Promise<Map<string, DataModel>>((resolve, reject) => {
         im.getUsersInfo({
           userIds: userIds,
@@ -237,7 +259,7 @@ export function useApp() {
                   type: 'user',
                   name: user.userName,
                   avatar: user.avatarURL,
-                  remark: user.remark,
+                  remark: remarkMap.get(user.userId) ?? user.remark,
                 } as DataModel);
               }
               resolve(DataProfileProvider.toMap(finalUsers));
@@ -825,8 +847,8 @@ export function useApp() {
     requestCurrentUser,
     requestUserInfo,
     onInitLanguageSet,
-    onUsersProvider,
-    onGroupsProvider,
+    // onUsersProvider,
+    // onGroupsProvider,
     onStateChange,
     onUnhandledAction,
     onGroupsHandler,

@@ -542,7 +542,7 @@ export function useContactList(props: ContactListProps) {
         if (s === 'logged') {
           updateState('loading');
           if (contactType === 'add-group-member') {
-            im.getAllContacts({
+            im.getAllContacts2({
               onResult: async (result) => {
                 const { isOk, value, error } = result;
                 if (isOk === true) {
@@ -593,7 +593,7 @@ export function useContactList(props: ContactListProps) {
               },
             });
           } else {
-            im.getAllContacts({
+            im.getAllContacts2({
               requestServer: requestServer,
               onResult: (result) => {
                 const { isOk, value, error } = result;
@@ -695,23 +695,6 @@ export function useContactList(props: ContactListProps) {
       tr,
     ]
   );
-
-  // const onAddedContact = React.useCallback(
-  //   (userId: string) => {
-  //     if (contactType !== 'contact-list') {
-  //       return;
-  //     }
-  //     im.getContact({
-  //       userId,
-  //       onResult: (result) => {
-  //         if (result.isOk === true && result.value) {
-  //           addContactToUI(result.value);
-  //         }
-  //       },
-  //     });
-  //   },
-  //   [addContactToUI, contactType, im]
-  // );
 
   useChatListener(
     React.useMemo(() => {

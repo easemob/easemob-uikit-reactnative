@@ -431,6 +431,13 @@ export interface ContactServices {
     userId: string;
   }): Promise<ResultValue<ContactModel | undefined>>;
   /**
+   * Get all contacts by old chat sdk method.
+   */
+  getAllContacts2(params: {
+    requestServer?: boolean;
+    onResult: ResultCallback<ContactModel[]>;
+  }): void;
+  /**
    * Add a new contact.
    *
    * Trigger contact callback notification. {@link UIContactListListener}
