@@ -30,6 +30,10 @@ export type TextInputProps = RNTextInputProps & {
    */
   enableClearButton?: boolean;
   /**
+   * Enable show password.
+   */
+  enableShowPassword?: boolean;
+  /**
    * Clear button container style.
    */
   clearButtonContainerStyle?: StyleProp<ViewStyle>;
@@ -37,6 +41,14 @@ export type TextInputProps = RNTextInputProps & {
    * Clear button style.
    */
   clearButtonStyle?: StyleProp<ImageStyle>;
+  /**
+   * Password button style.
+   */
+  passwordButtonStyle?: StyleProp<ImageStyle>;
+  /**
+   * Password button container style.
+   */
+  passwordButtonContainerStyle?: StyleProp<ViewStyle>;
   /**
    * Callback notification when clear button is pressed.
    */
@@ -85,7 +97,11 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       value,
       clearButtonMode: _,
       clearTextOnFocus: __,
+      secureTextEntry,
       enableClearButton,
+      enableShowPassword,
+      passwordButtonStyle,
+      passwordButtonContainerStyle,
       clearButtonContainerStyle,
       clearButtonStyle,
       onClear,
@@ -126,10 +142,12 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       return undefined;
     };
     const maxHeightRef = React.useRef<number | undefined>(getMaxHeight());
-    let [_maxHeight, setMaxHeight] = React.useState<number | undefined>(
+    const [_maxHeight, setMaxHeight] = React.useState<number | undefined>(
       maxHeightRef.current
     );
-    let [_height, setHeight] = React.useState<number | undefined>(minHeight);
+    const [_height, setHeight] = React.useState<number | undefined>(minHeight);
+    const [_secureTextEntry, setSecureTextEntry] =
+      React.useState(secureTextEntry);
 
     const _onChangeText = React.useCallback(
       (text: string) => {
@@ -145,6 +163,10 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
       _onChangeText('');
       onClear?.();
     }, [_onChangeText, onClear]);
+
+    const _onPressPassword = React.useCallback(() => {
+      setSecureTextEntry((prev) => !prev);
+    }, []);
 
     const getStyle = (): StyleProp<TextStyle> => {
       if (multiline !== true) {
@@ -233,6 +255,7 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
           onChangeText={_onChangeText}
           autoCapitalize={'none'}
           value={value}
+          secureTextEntry={_secureTextEntry}
           {...others}
         />
         {statistics ? (
@@ -260,7 +283,10 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
             >{`${statistics.count}/${statistics.maxCount}`}</Text>
           </View>
         ) : null}
-        {value && value?.length > 0 && enableClearButton === true ? (
+        {value &&
+        value?.length > 0 &&
+        enableClearButton === true &&
+        enableShowPassword !== true ? (
           <Pressable
             style={[
               {
@@ -280,6 +306,34 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
               style={[
                 { height: 22, width: 22, tintColor: getColor('clear') },
                 clearButtonStyle,
+              ]}
+            />
+          </Pressable>
+        ) : null}
+
+        {value &&
+        value?.length > 0 &&
+        secureTextEntry === true &&
+        enableShowPassword === true ? (
+          <Pressable
+            style={[
+              {
+                position: 'absolute',
+                right: 0,
+                padding: 13,
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              passwordButtonContainerStyle,
+            ]}
+            onPress={_onPressPassword}
+          >
+            <Icon
+              name={'eye_slash_fill'}
+              resolution={'3x'}
+              style={[
+                { height: 22, width: 22, tintColor: getColor('clear') },
+                passwordButtonStyle,
               ]}
             />
           </Pressable>
