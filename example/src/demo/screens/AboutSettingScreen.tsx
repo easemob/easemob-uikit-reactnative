@@ -18,11 +18,12 @@ import {
   usePaletteContext,
 } from '../../rename.uikit';
 import { about_logo } from '../common/assets';
+import { accountType } from '../common/const';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function AboutSettingScreen(props: Props) {
+export function EasemobAboutSettingScreen(props: Props) {
   const {} = props;
   const navi = useStackScreenRoute(props);
   const { tr } = useI18nContext();
@@ -301,3 +302,229 @@ export function AboutSettingScreen(props: Props) {
     </SafeAreaView>
   );
 }
+
+export function AgoraAboutSettingScreen(props: Props) {
+  const {} = props;
+  const navi = useStackScreenRoute(props);
+  const { tr } = useI18nContext();
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    bg: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    t1: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    fg: {
+      light: colors.neutral[1],
+      dark: colors.neutral[98],
+    },
+    enable: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+    disable: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+    right: {
+      light: colors.neutral[3],
+      dark: colors.neutral[5],
+    },
+  });
+
+  const onBack = () => {
+    navi.goBack();
+  };
+
+  const onClickedDocsSite = () => {
+    Linking.openURL(
+      'https://docs.agora.io/en/agora-chat/overview/product-overview'
+    );
+  };
+  const onClickedContactSite = () => {
+    Linking.openURL('https://www.agora.io/en/talk-to-us/');
+  };
+  const onClickedGithubSite = () => {
+    Linking.openURL('https://github.com/AgoraIO/Agora-Chat-API-Examples');
+  };
+  const onClickedMoreSite = () => {
+    Linking.openURL('https://agora.io');
+  };
+
+  return (
+    <SafeAreaView
+      style={{
+        backgroundColor: getColor('bg'),
+        flex: 1,
+      }}
+    >
+      <TopNavigationBar
+        containerStyle={{ backgroundColor: undefined }}
+        Left={
+          <TopNavigationBarLeft
+            onBack={onBack}
+            content={tr('_demo_about_setting_navi_title')}
+          />
+        }
+        Right={<View />}
+      />
+
+      <Pressable style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <Image source={about_logo} style={{ width: 72, height: 72 }} />
+        <SingleLineText
+          textType={'medium'}
+          paletteType={'title'}
+          style={{ color: getColor('t1'), padding: 4 }}
+        >
+          {tr('_demo_about_title', accountType)}
+        </SingleLineText>
+        <SingleLineText
+          textType={'medium'}
+          paletteType={'label'}
+          style={{ color: getColor('disable') }}
+        >
+          {tr(`Version ${constants.manifest?.version}`)}
+        </SingleLineText>
+        <SingleLineText
+          textType={'medium'}
+          paletteType={'label'}
+          style={{ color: getColor('disable') }}
+        >
+          {tr(`UIKit Version ${UIKIT_VERSION}`)}
+        </SingleLineText>
+      </Pressable>
+
+      <View style={{ height: 54 }} />
+
+      <ListItem
+        containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={onClickedDocsSite}
+        LeftName={
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_agora_about_setting_docs_site')}
+            </Text>
+            <Text
+              textType={'small'}
+              paletteType={'title'}
+              style={{ color: getColor('enable') }}
+            >
+              {tr('_demo_agora_about_setting_docs_site_url')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
+
+      <ListItem
+        containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={onClickedContactSite}
+        LeftName={
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_agora_about_setting_contact_site')}
+            </Text>
+            <Text
+              textType={'small'}
+              paletteType={'title'}
+              style={{ color: getColor('enable') }}
+            >
+              {tr('_demo_agora_about_setting_contact_site_url')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
+
+      <ListItem
+        containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={onClickedGithubSite}
+        LeftName={
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_agora_about_setting_github_site')}
+            </Text>
+            <Text
+              textType={'small'}
+              paletteType={'title'}
+              style={{ color: getColor('enable') }}
+            >
+              {tr('_demo_agora_about_setting_github_site_url')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
+
+      <ListItem
+        containerStyle={{ paddingHorizontal: 16 }}
+        onClicked={onClickedMoreSite}
+        LeftName={
+          <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+            <Text
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_agora_about_setting_more_site')}
+            </Text>
+            <Text
+              textType={'small'}
+              paletteType={'title'}
+              style={{ color: getColor('enable') }}
+            >
+              {tr('_demo_agora_about_setting_more_site_url')}
+            </Text>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
+    </SafeAreaView>
+  );
+}
+
+export const AboutSettingScreen =
+  accountType === 'agora' ? AgoraAboutSettingScreen : EasemobAboutSettingScreen;

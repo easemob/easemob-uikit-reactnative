@@ -92,7 +92,8 @@ export function createStringSetCn(): StringSet {
     '_demo_language_setting_language_en': 'English',
 
     '_demo_style_setting_navi_title': '主题',
-    '_demo_about_title': '环信 IM',
+    '_demo_about_title': (accountType) =>
+      accountType === 'agora' ? '声网 IM' : '环信 IM',
     '_demo_style_setting_navi_confim': '完成',
     '_demo_style_setting_language_classic': '经典',
     '_demo_style_setting_language_modern': '现代',
@@ -109,6 +110,16 @@ export function createStringSetCn(): StringSet {
     '_demo_about_setting_advise': '投诉建议',
     '_demo_about_setting_advise_email': 'issues@easemob.com',
     '_demo_about_setting_privacy': '隐私政策',
+
+    '_demo_agora_about_setting_docs_site': '官方网站',
+    '_demo_agora_about_setting_docs_site_url': 'docs.agora.io/en/agora-chat',
+    '_demo_agora_about_setting_contact_site': '服务提供商',
+    '_demo_agora_about_setting_contact_site_url': 'docs.agora.io/en/agora-chat',
+    '_demo_agora_about_setting_github_site': '服务提供商',
+    '_demo_agora_about_setting_github_site_url':
+      'github.com/AgoraIO/Agora-Chat-API-Examples',
+    '_demo_agora_about_setting_more_site': '更多',
+    '_demo_agora_about_setting_more_site_url': 'agora.io',
 
     '_demo_color_setting_navi_title': '主题色',
     '_demo_color_setting_navi_confirm': '完成',

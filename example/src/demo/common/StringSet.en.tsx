@@ -100,10 +100,10 @@ export function createStringSetEn(): StringSet {
     '_demo_style_setting_language_modern': 'Modern',
 
     '_demo_about_setting_navi_title': 'About',
-    '_demo_about_title': 'Easemob IM',
+    '_demo_about_title': (accountType) =>
+      accountType === 'agora' ? 'Agora Chat' : 'Easemob IM',
     '_demo_about_setting_site': 'Official Website',
     '_demo_about_setting_site_url': 'www.huanxin.com',
-
     '_demo_about_setting_phone': 'Contact Us',
     '_demo_about_setting_phone_number': '400-622-1776',
     '_demo_about_setting_partner': 'Business Cooperation',
@@ -113,6 +113,16 @@ export function createStringSetEn(): StringSet {
     '_demo_about_setting_advise': 'Feedback',
     '_demo_about_setting_advise_email': 'issues@easemob.com',
     '_demo_about_setting_privacy': 'Privacy Policy',
+
+    '_demo_agora_about_setting_docs_site': 'Agora Chat documentation',
+    '_demo_agora_about_setting_docs_site_url': 'docs.agora.io/en/agora-chat',
+    '_demo_agora_about_setting_contact_site': 'Contact sales',
+    '_demo_agora_about_setting_contact_site_url': 'docs.agora.io/en/agora-chat',
+    '_demo_agora_about_setting_github_site': 'Demo app github repo',
+    '_demo_agora_about_setting_github_site_url':
+      'github.com/AgoraIO/Agora-Chat-API-Examples',
+    '_demo_agora_about_setting_more_site': 'More',
+    '_demo_agora_about_setting_more_site_url': 'agora.io',
 
     '_demo_color_setting_navi_title': 'Theme Color',
     '_demo_color_setting_navi_confirm': 'Done',
