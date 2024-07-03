@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {
   generateFileName,
   getFileExtension,
@@ -6,7 +7,7 @@ import {
   Services,
   useSaveFile,
   uuid,
-} from 'react-native-chat-uikit';
+} from '../../rename.uikit';
 
 export function useSaveFileToAlbum() {
   const { getDocumentPath } = useSaveFile();
