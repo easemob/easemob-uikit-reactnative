@@ -194,7 +194,7 @@ export function EmojiList(props: EmojiListProps) {
           isVisible={true}
           onClicked={onDel}
           containerStyle={{
-            right: 16 + 36 + 12,
+            right: 16 + 44 + 12,
             bottom: 16,
             borderRadius: getBorderRadius({
               height: 36,
@@ -217,7 +217,7 @@ export function EmojiList(props: EmojiListProps) {
             right: 16,
             bottom: 16,
             borderRadius: getBorderRadius({
-              height: 36,
+              height: 44,
               crt: corner.avatar,
               cr: cornerRadius,
             }),

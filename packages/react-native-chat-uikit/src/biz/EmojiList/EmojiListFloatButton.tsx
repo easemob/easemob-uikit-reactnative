@@ -48,7 +48,7 @@ export function EmojiListFloatButton(params: EmojiListFloatButtonProps) {
             {
               position: 'absolute',
               backgroundColor: getColor('bg'),
-              borderRadius: 36,
+              borderRadius: 44,
             },
             containerStyle,
           ]}
@@ -57,9 +57,9 @@ export function EmojiListFloatButton(params: EmojiListFloatButtonProps) {
             iconName={iconName}
             style={[
               {
-                width: 20,
-                height: 20,
-                margin: 8,
+                width: 24,
+                height: 24,
+                margin: 10,
                 tintColor: getColor('fg'),
               },
               style,
