@@ -166,7 +166,7 @@ export function useLogin() {
       pass: string;
       onResult: (params: { isOk: boolean; reason?: string }) => void;
     }) => {
-      console.log('loginAction', params);
+      console.log('dev:loginAction', params);
       const { id, pass, onResult } = params;
       try {
         do {
@@ -214,7 +214,7 @@ export function useLogin() {
       pass: string;
       onResult: (params: { isOk: boolean; reason?: string }) => void;
     }) => {
-      console.log('agoraLoginAction', params);
+      console.log('dev:agoraLoginAction', params);
       const { id, pass, onResult } = params;
       try {
         do {

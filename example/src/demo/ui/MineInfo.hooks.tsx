@@ -151,7 +151,7 @@ export function useMineInfo(props: MineInfoProps) {
     getSelfInfo().then(async (res) => {
       if (res?.id && res.token) {
         const ret = await RestApi.requestDestroyAccount({
-          userId: res.phone,
+          phone: res.phone,
           userToken: res.token,
         });
         if (ret.isOk) {

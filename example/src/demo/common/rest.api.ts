@@ -56,9 +56,28 @@ export type RequestDestroyAccountResult = {
 export class RestApi {
   private static _protocol: string = 'http://';
   private static _server: string = 'localhost:8096';
-  private static _basicUrl: string = '/inside/app';
-  private static _rtcTokenUrl: string = '/inside/token/rtc/channel';
-  private static _rtcMapUrl: string = '/inside/agora/channel/mapper';
+  private static _basicUrl: string =
+    accountType === 'agora' ? '/app/chat' : '/inside/app';
+  private static _rtcTokenUrl: string =
+    accountType === 'agora'
+      ? '/app/chat/token/rtc/channel'
+      : '/inside/token/rtc/channel';
+  private static _rtcMapUrl: string =
+    accountType === 'agora'
+      ? '/app/chat/agora/channel/mapper'
+      : '/inside/agora/channel/mapper';
+
+  private static isOk(value: any) {
+    return value.code === 200 || value.code === 'RES_OK' ? true : false;
+  }
+
+  private static code(value: any) {
+    return typeof value.code === 'string'
+      ? value.code === 'RES_OK'
+        ? 200
+        : 999
+      : value.code ?? 999;
+  }
 
   public static setProtocol(protocol: string) {
     this._protocol = protocol;
@@ -151,7 +170,10 @@ export class RestApi {
       });
       const value = await response.json();
       console.log('RestApi:requestLogin:', value, url);
-      return { isOk: true, value: { ...value, accountType } };
+      return {
+        isOk: RestApi.isOk(value),
+        value: { ...value, accountType, code: RestApi.code(value) },
+      };
     } catch (error) {
       console.warn('RestApi:requestLogin:error:', error);
       return { isOk: false, error };
@@ -163,7 +185,7 @@ export class RestApi {
     password: string;
   }): Promise<RequestResult<RequestLoginResult>> {
     const { userId, password } = params;
-    const url = this.getBasicUrl() + `/app/chat/user/login`;
+    const url = this.getBasicUrl() + `/user/login`;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -176,11 +198,11 @@ export class RestApi {
       const value = await response.json();
       console.log('RestApi:requestAgoraLogin:', value, url);
       return {
-        isOk: true,
+        isOk: RestApi.isOk(value),
         value: {
           ...value,
           accountType,
-          code: value.code === 'RES_OK' ? 200 : 999,
+          code: RestApi.code(value),
         },
       };
     } catch (error) {
@@ -232,19 +254,32 @@ export class RestApi {
       );
       const value = await response.json();
       console.log('RestApi:requestUploadAvatar:', value, url);
-      return { isOk: true, value };
+      return {
+        isOk: RestApi.isOk(value),
+        value: {
+          ...value,
+          accountType,
+          code: RestApi.code(value),
+        },
+      };
     } catch (error) {
       console.warn('RestApi:requestUploadAvatar:error:', error);
       return { isOk: false, error };
     }
   }
 
+  /**
+   * Request rtc token.
+   */
   public static async requestRtcToken(params: {
     userId: string;
     channelId: string;
   }): Promise<RequestResult<RequestRtcTokenResult>> {
     const { userId, channelId } = params;
-    const url = this.getRtcTokenUrl() + `/${channelId}/user/${userId}`;
+    const url =
+      accountType === 'agora'
+        ? this.getRtcTokenUrl() + `/${channelId}?userAccount=${userId}`
+        : this.getRtcTokenUrl() + `/${channelId}/user/${userId}`;
     try {
       const response = await fetch(url, {
         method: 'GET',
@@ -255,13 +290,23 @@ export class RestApi {
       });
       const value = await response.json();
       console.log('RestApi:requestRtcToken:', value, url);
-      return { isOk: true, value };
+      return {
+        isOk: RestApi.isOk(value),
+        value: {
+          ...value,
+          accountType,
+          code: RestApi.code(value),
+        },
+      };
     } catch (error) {
       console.warn('RestApi:requestRtcToken:error:', error);
       return { isOk: false, error };
     }
   }
 
+  /**
+   * Request rtc map.
+   */
   public static async requestRtcMap(params: {
     channelId: string;
   }): Promise<RequestResult<RequestRtcMapResult>> {
@@ -277,7 +322,14 @@ export class RestApi {
       });
       const value = await response.json();
       console.log('RestApi:requestRtcMap:', value, url);
-      return { isOk: true, value };
+      return {
+        isOk: RestApi.isOk(value),
+        value: {
+          ...value,
+          accountType,
+          code: RestApi.code(value),
+        },
+      };
     } catch (error) {
       console.warn('RestApi:requestRtcMap:error:', error);
       return { isOk: false, error };
@@ -299,19 +351,31 @@ export class RestApi {
       });
       const value = await response.json();
       console.log('RestApi:requestGroupAvatar:', value, url);
-      return { isOk: true, value };
+      return {
+        isOk: RestApi.isOk(value),
+        value: {
+          ...value,
+          accountType,
+          code: RestApi.code(value),
+        },
+      };
     } catch (error) {
       console.warn('RestApi:requestGroupAvatar:error:', error);
       return { isOk: false, error };
     }
   }
 
+  /**
+   * Request destroy account.
+   *
+   * **Note** agora is not support this api.
+   */
   public static async requestDestroyAccount(params: {
-    userId: string;
+    phone: string;
     userToken: string;
   }): Promise<RequestResult<RequestDestroyAccountResult>> {
-    const { userId, userToken } = params;
-    const url = this.getBasicUrl() + `/user/${userId}`;
+    const { phone, userToken } = params;
+    const url = this.getBasicUrl() + `/user/${phone}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE',
@@ -323,7 +387,14 @@ export class RestApi {
       });
       const value = await response.json();
       console.log('RestApi:requestDestroyAccount:', value, url);
-      return { isOk: true, value };
+      return {
+        isOk: RestApi.isOk(value),
+        value: {
+          ...value,
+          accountType,
+          code: RestApi.code(value),
+        },
+      };
     } catch (error) {
       console.warn('RestApi:requestDestroyAccount:error:', error);
       return { isOk: false, error };

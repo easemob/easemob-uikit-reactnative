@@ -411,16 +411,26 @@ export function useApp() {
         channelId: params.channelId,
       })
         .then((res) => {
-          params.onResult({
-            error: res.isOk !== true ? res.error : undefined,
-            data: {
-              uid: res.value?.agoraUid !== undefined ? +res.value.agoraUid : 0,
-              token: res.value?.accessToken,
-            },
-          });
+          if (res.isOk) {
+            params.onResult({
+              error: undefined,
+              data: {
+                uid:
+                  res.value?.agoraUid !== undefined ? +res.value.agoraUid : 0,
+                token: res.value?.accessToken,
+              },
+            });
+          } else {
+            params.onResult({
+              error: 'requestRtcToken:error',
+            });
+          }
         })
         .catch((e) => {
           console.warn('dev:requestRtcToken:error:', e);
+          params.onResult({
+            error: `requestRtcToken:error:${e}`,
+          });
         });
     },
     []
@@ -446,7 +456,10 @@ export function useApp() {
           });
         })
         .catch((e) => {
-          console.warn('dev:requestRtcToken:error:', e);
+          console.warn('dev:requestUserMap:error:', e);
+          params.onResult({
+            error: `requestUserMap:error:${e}`,
+          });
         });
     },
     []
