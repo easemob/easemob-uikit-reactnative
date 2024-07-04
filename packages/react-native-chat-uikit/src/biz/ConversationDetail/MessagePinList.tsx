@@ -4,7 +4,7 @@ import { ListRenderItemInfo, Pressable, View } from 'react-native';
 import {
   getMessageSnapshot,
   getMessageSnapshotParams,
-  MessageServiceListener,
+  MessageManagerListener,
   useChatContext,
 } from '../../chat';
 import { useColors } from '../../hook';
@@ -231,14 +231,7 @@ export function MessagePinListItem(props: MessagePinListItemProps) {
 export const MessagePinListItemMemo = React.memo(MessagePinListItem);
 
 export function useMessagePinList(props: MessagePinListProps) {
-  const {
-    onClickedItem,
-    convId,
-    convType,
-    propsRef,
-    onCountChanged,
-    onRequestClose,
-  } = props;
+  const { onClickedItem, convId, convType, propsRef, onCountChanged } = props;
   const flatListProps = useFlatList<MessagePinListItemProps>({
     listState: 'loading',
   });
@@ -322,10 +315,9 @@ export function useMessagePinList(props: MessagePinListProps) {
         } else if (onClickedItemRef.current) {
           onClickedItemRef.current(data);
         }
-        onRequestClose?.();
       }
     },
-    [onClickedItem, onRequestClose]
+    [onClickedItem]
   );
 
   const onClickedItemDeleteButtonCallback = React.useCallback(
@@ -405,32 +397,20 @@ export function useMessagePinList(props: MessagePinListProps) {
   }, [addPinMessage, propsRef, registerCallback]);
 
   React.useEffect(() => {
-    const listener: MessageServiceListener = {
-      onMessagePinChanged: async (params: {
-        messageId: string;
-        convId: string;
-        pinOperation: number;
-        pinInfo: ChatMessagePinInfo;
-      }) => {
-        if (params.pinOperation === 0) {
-          try {
-            const msg = await im.getMessage({
-              messageId: params.messageId,
-            });
-            if (msg) {
-              addItemToUI([msg], 'before');
-            }
-          } catch (error) {}
-        } else if (params.pinOperation === 1) {
-          removeItemToUI(params.messageId);
+    const listener: MessageManagerListener = {
+      onPinMessageChanged: (msg: ChatMessage, pinOperation: number) => {
+        if (pinOperation === 0) {
+          addItemToUI([msg], 'before');
+        } else if (pinOperation === 1) {
+          removeItemToUI(msg.msgId);
         }
       },
     };
-    im.addListener(listener);
+    im.messageManager.addListener('MessagePinList', listener);
     return () => {
-      im.removeListener(listener);
+      im.messageManager.removeListener('MessagePinList');
     };
-  }, [addItemToUI, dataRef, im, removeItemToUI]);
+  }, [addItemToUI, im.messageManager, removeItemToUI]);
 
   return {
     ...flatListProps,

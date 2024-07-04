@@ -12,6 +12,7 @@ import {
   ChatGroupMessageAck,
   ChatMessage,
   ChatMessageEventListener,
+  ChatMessagePinInfo,
   ChatMessageReactionEvent,
   ChatMessageThreadEvent,
   ChatMultiDeviceEvent,
@@ -293,6 +294,17 @@ export class ChatServiceListenerImpl {
     });
   }
 
+  onMessagePinChanged(params: {
+    messageId: string;
+    convId: string;
+    pinOperation: number;
+    pinInfo: ChatMessagePinInfo;
+  }) {
+    this._listeners.forEach((v) => {
+      v.onMessagePinChanged?.(params);
+    });
+  }
+
   _initMessageListener() {
     gMessageListener = {
       onMessagesReceived: this.onMessagesReceived.bind(this),
@@ -311,6 +323,7 @@ export class ChatServiceListenerImpl {
       onChatMessageThreadUserRemoved:
         this.onChatMessageThreadUserRemoved.bind(this),
       onMessageContentChanged: this.onMessageContentChanged.bind(this),
+      onMessagePinChanged: this.onMessagePinChanged.bind(this),
     };
     this.client.chatManager.addMessageListener(gMessageListener);
   }

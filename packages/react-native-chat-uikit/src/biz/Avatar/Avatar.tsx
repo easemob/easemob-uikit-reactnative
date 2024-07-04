@@ -220,7 +220,11 @@ export function StatusAvatar(props: StatusAvatarProps) {
   React.useEffect(() => {
     if (userId) {
       if (im.userId !== userId) {
-        im.subPresence({ userIds: [userId] });
+        im.loginState().then((state) => {
+          if (state === 'logged') {
+            im.subPresence({ userIds: [userId] });
+          }
+        });
       }
       im.fetchPresence({
         userIds: [userId],
@@ -233,7 +237,11 @@ export function StatusAvatar(props: StatusAvatarProps) {
     }
     return () => {
       if (userId && im.userId !== userId) {
-        im.unSubPresence({ userIds: [userId] });
+        im.loginState().then((state) => {
+          if (state === 'logged') {
+            im.unSubPresence({ userIds: [userId] });
+          }
+        });
       }
     };
   }, [im, onStatusChanged, userId]);

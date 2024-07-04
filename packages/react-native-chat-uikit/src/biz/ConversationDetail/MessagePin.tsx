@@ -90,11 +90,12 @@ export class MessagePin2 extends React.PureComponent<
   private colors?: ColorsPalette | undefined;
   private style?: ThemeType | undefined;
   private _maxListHeight: number;
+  private _hadShow: boolean;
 
   constructor(props: MessagePinProps) {
     super(props);
     this.uc = new UseColors();
-    this._maxListHeight = 60;
+    this._maxListHeight = 0;
     this.listRef = React.createRef();
     this.getListRef = React.createRef() as any;
     this.getListRef.current = (ref: React.RefObject<MessagePinListRef>) =>
@@ -102,6 +103,7 @@ export class MessagePin2 extends React.PureComponent<
     this.state = {
       maxListHeight: 0,
     };
+    this._hadShow = false;
   }
 
   componentDidMount?(): void {
@@ -139,6 +141,7 @@ export class MessagePin2 extends React.PureComponent<
       onChangePinMaskHeight,
       msgPinLabelTranslateYAnimate,
     } = this.props;
+    this._hadShow = true;
     msgPinHeightRef.current = gMsgPinHeight + this._maxListHeight;
     msgPinPlaceHolderHeightAnimate(gMsgPinHeight);
     msgPinHeightAnimate(gMsgPinHeight + this._maxListHeight);
@@ -155,6 +158,7 @@ export class MessagePin2 extends React.PureComponent<
       onChangePinMaskHeight,
       msgPinLabelTranslateYAnimate,
     } = this.props;
+    this._hadShow = false;
     msgPinHeightRef.current = 0;
     msgPinPlaceHolderHeightAnimate(0);
     msgPinHeightAnimate(0);
@@ -164,9 +168,26 @@ export class MessagePin2 extends React.PureComponent<
   }
 
   private onListCountChanged(count: number): void {
+    const { msgPinHeightAnimate } = this.props;
     this._maxListHeight =
-      count > 0 ? Math.min(count * 60, 8 * 60) + 16 : 60 + 16;
+      count > 0
+        ? Math.min(
+            count * 60,
+            Math.min(
+              8 * 60,
+              (Dimensions.get('window').height * (844 - 176)) / 844
+            )
+          ) + 16
+        : 16;
     this.setState({ maxListHeight: this._maxListHeight });
+    if (this._hadShow === false) {
+      return;
+    }
+    if (count > 0) {
+      msgPinHeightAnimate(gMsgPinHeight + this._maxListHeight);
+    } else {
+      msgPinHeightAnimate(gMsgPinHeight);
+    }
   }
 
   private onRequestClose(): void {
@@ -240,10 +261,10 @@ export class MessagePin2 extends React.PureComponent<
               style={{
                 height: 12,
                 borderRadius: 12,
-                backgroundColor: this.uc.getColor(
-                  this.style!,
-                  msgPinHeightRef.current <= gMsgPinHeight ? 'bg3' : ''
-                ),
+                // backgroundColor: this.uc.getColor(
+                //   this.style!,
+                //   msgPinHeightRef.current <= gMsgPinHeight ? 'bg3' : ''
+                // ),
                 width: Dimensions.get('window').width - 24 - 16,
                 bottom: -28,
               }}
@@ -252,10 +273,10 @@ export class MessagePin2 extends React.PureComponent<
               style={{
                 height: 34,
                 width: Dimensions.get('window').width - 24,
-                backgroundColor: this.uc.getColor(
-                  this.style!,
-                  msgPinHeightRef.current <= gMsgPinHeight ? 'bg2' : ''
-                ),
+                // backgroundColor: this.uc.getColor(
+                //   this.style!,
+                //   msgPinHeightRef.current <= gMsgPinHeight ? 'bg2' : ''
+                // ),
                 borderRadius: 4,
                 top: -12,
                 flexDirection: 'row',

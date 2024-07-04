@@ -61,7 +61,17 @@ export type MessageManagerListener = {
    * @param tipMsg Recall tip message.
    */
   onRecvRecallMessage?: (orgMsg: ChatMessage, tipMsg: ChatMessage) => void;
+  /**
+   * Callback notification of all conversation unread count change.
+   */
   onAllConversationUnreadCountChanged?: (count: number) => void;
+
+  /**
+   * Callback notification of message pin list change.
+   * @param msg The message.
+   * @param pinOperation 0: add, 1: remove.
+   */
+  onPinMessageChanged?: (msg: ChatMessage, pinOperation: number) => void;
 };
 
 /**

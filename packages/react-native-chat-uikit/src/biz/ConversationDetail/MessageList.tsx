@@ -277,9 +277,9 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             msgPinCurrentHeight={msgPinCurrentHeight}
             panHandlers={panHandlers}
             onRequestClose={onRequestClosePinMessage}
-            style={{
-              height: msgPinCurrentHeight,
-            }}
+            // style={{
+            //   height: msgPinCurrentHeight,
+            // }}
           />
         ) : null}
 

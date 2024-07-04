@@ -7,6 +7,7 @@ import {
   ChatFileMessageBody,
   ChatGroupMessageAck,
   ChatMessage,
+  ChatMessagePinInfo,
   ChatMessageStatus,
   ChatMessageStatusCallback,
   ChatMessageType,
@@ -60,6 +61,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       onMessagesDelivered: this.bindOnMessagesDelivered.bind(this),
       onMessagesRecalled: this.bindOnMessagesRecalled.bind(this),
       onMessageContentChanged: this.bindOnMessageContentChanged.bind(this),
+      onMessagePinChanged: this.bindOnMessagePinChanged.bind(this),
     };
     this._client.addListener(gListener);
   }
@@ -193,6 +195,27 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     this._userListener.forEach((v) => {
       v.onRecvMessageContentChanged?.(message, lastModifyOperatorId);
     });
+  }
+  bindOnMessagePinChanged(params: {
+    messageId: string;
+    convId: string;
+    pinOperation: number;
+    pinInfo: ChatMessagePinInfo;
+  }) {
+    this._client
+      .getMessage({ messageId: params.messageId })
+      .then((msg) => {
+        if (msg) {
+          this._userListener.forEach((v) => {
+            v.onPinMessageChanged?.(msg, params.pinOperation);
+          });
+        } else {
+          // todo: fetch pin message list.
+        }
+      })
+      .catch((e) => {
+        uilog.warn('bindOnMessagePinChanged', e);
+      });
   }
 
   setCurrentConv(conv?: ConversationModel): void {
