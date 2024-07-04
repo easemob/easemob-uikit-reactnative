@@ -168,6 +168,7 @@ export function createStringSetEn(): StringSet {
     '_demo_copyUserId': 'Copy Successful',
     '_demo_imageSaved': 'Saved',
     '_demo_videoSaved': 'Saved',
+    '_demo_fetchPinnedMessagesResult': 'No pinned messages',
 
     'save': 'Save',
     'done': 'Done',

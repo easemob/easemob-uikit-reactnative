@@ -909,6 +909,12 @@ export type MessageListRef = {
    * Hide the pin message component.
    */
   hidePinMessageComponent: () => void;
+
+  /**
+   * Request to show the pin message component.
+   * @param onResult Request result callback. You can decide whether to display a component based on its quantity.
+   */
+  requestShowPinMessageComponent: (onResult: (count: number) => void) => void;
 };
 
 /**

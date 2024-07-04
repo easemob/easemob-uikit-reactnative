@@ -416,13 +416,23 @@ export function useConversationDetail(props: ConversationDetailProps) {
 
   const showPinMessageComponent = React.useRef(false);
   const onClickedPinMessage = React.useCallback(() => {
-    showPinMessageComponent.current = !showPinMessageComponent.current;
-    if (showPinMessageComponent.current === true) {
-      _messageListRef.current?.showPinMessageComponent?.();
+    if (showPinMessageComponent.current === false) {
+      _messageListRef.current?.requestShowPinMessageComponent?.((count) => {
+        if (count > 0) {
+          showPinMessageComponent.current = true;
+          _messageListRef.current?.showPinMessageComponent?.();
+        } else {
+          im.sendFinished({
+            event: 'fetchPinnedMessagesResult',
+            extra: { count: count },
+          });
+        }
+      });
     } else {
+      showPinMessageComponent.current = false;
       _messageListRef.current?.hidePinMessageComponent?.();
     }
-  }, [_messageListRef]);
+  }, [_messageListRef, im]);
   const onRequestClosePinMessage = React.useCallback(() => {
     showPinMessageComponent.current = false;
     _messageListRef.current?.hidePinMessageComponent?.();

@@ -161,6 +161,7 @@ export function createStringSetCn(): StringSet {
     '_demo_copyUserId': '复制成功',
     '_demo_imageSaved': '已保存',
     '_demo_videoSaved': '已保存',
+    '_demo_fetchPinnedMessagesResult': '没有置顶消息',
 
     'save': '保存',
     'done': '完成',

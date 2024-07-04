@@ -12,6 +12,8 @@ export function useOnFinishedParser() {
         return tr('_demo_imageSaved');
       case 'videoSaved':
         return tr('_demo_videoSaved');
+      case 'fetchPinnedMessagesResult':
+        return tr('_demo_fetchPinnedMessagesResult');
 
       default:
         break;

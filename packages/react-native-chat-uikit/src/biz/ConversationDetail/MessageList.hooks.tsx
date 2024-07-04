@@ -2613,6 +2613,22 @@ export function useMessageList(
   const hidePinMessage = React.useCallback(() => {
     pinMsgListRef.current?.hide();
   }, []);
+  const requestShowPinMessage = React.useCallback(
+    (r: (count: number) => void) => {
+      im.fetchPinnedMessages({
+        convId,
+        convType,
+        onResult: (res) => {
+          if (res.isOk && res.value) {
+            r(res.value.length);
+          } else {
+            r(0);
+          }
+        },
+      });
+    },
+    [convId, convType, im]
+  );
 
   const onInit = React.useCallback(async () => {
     init();
@@ -2813,6 +2829,9 @@ export function useMessageList(
         hidePinMessageComponent: () => {
           hidePinMessage();
         },
+        requestShowPinMessageComponent: (onResult: (count: number) => void) => {
+          requestShowPinMessage(onResult);
+        },
       };
     },
     [
@@ -2836,6 +2855,7 @@ export function useMessageList(
       onShowMessageThreadListMoreActions,
       onUpdateMessageToUI,
       recallMessage,
+      requestShowPinMessage,
       scrollToBottom,
       sendMessageToServer,
       sendRecvMessageReadAck,
