@@ -21,7 +21,7 @@ export function splitStringWithDelimiter(str: string, delimiter: string) {
 
 export const gUrlPattern =
   // eslint-disable-next-line no-useless-escape
-  /(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})(:[0-9]+)?(\/[\w\.-]*)*\/?(\?[=&\w]*)?/gi;
+  /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})(:[0-9]+)?(\/[\w\.-]*)*\/?(\?[=&\w]*)?/gi;
 // /https?:\/\/[^\s]+/gi;
 // /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)/gi;
 export function splitStringByUrl(str: string, urlRegex?: RegExp) {

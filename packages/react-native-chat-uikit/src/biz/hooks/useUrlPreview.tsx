@@ -3,7 +3,7 @@ import { uilog } from '../../const';
 // const g_url_regexp: RegExp = /^https?:\/\/[^\s/$.?#].[^\s]*$/;
 const urlPattern: RegExp =
   // eslint-disable-next-line no-useless-escape
-  /(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})(:[0-9]+)?(\/[\w\.-]*)*\/?(\?[=&\w]*)?/gi;
+  /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})(:[0-9]+)?(\/[\w\.-]*)*\/?(\?[=&\w]*)?/gi;
 
 // x regex patterns
 const titleOGPattern = /<meta property="og:title" content="(.*?)"\s*\/?>/i;
@@ -70,12 +70,13 @@ export class UseUrlPreview {
     if (!r || r.length === 0) {
       return undefined;
     }
+    const _url = url.startsWith('http') ? url : `https://${url}`;
     try {
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Request timed out')), 5000);
       });
       const res = (await Promise.race([
-        fetch(url),
+        fetch(_url),
         timeoutPromise,
       ])) as Response;
       const html = await res.text();

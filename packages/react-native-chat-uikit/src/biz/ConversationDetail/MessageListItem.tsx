@@ -203,7 +203,8 @@ export function MessageText(props: MessageTextProps) {
             textType={'large'}
             paletteType={'body'}
             onClicked={(url) => {
-              Linking.openURL(url);
+              const _url = url.startsWith('http') ? url : `https://${url}`;
+              Linking.openURL(_url);
             }}
           />
         ) : (
