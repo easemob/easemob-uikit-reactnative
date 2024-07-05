@@ -13,6 +13,7 @@ import type {
   ListItemProps,
   ListItemRequestProps,
   ListRequestProps,
+  ListStateType,
   PropsWithBack,
   PropsWithError,
   PropsWithInit,
@@ -85,6 +86,11 @@ export type GroupParticipantListProps = Pick<
      * Callback notification when a group is removed.
      */
     onKicked?: (groupId: string) => void;
+
+    /**
+     * Callback notification of list data status. For example: the session list usually changes from loading state to normal state. If the data request fails, an error state will be reached.
+     */
+    onStateChanged?: (state: ListStateType) => void;
   };
 
 /**

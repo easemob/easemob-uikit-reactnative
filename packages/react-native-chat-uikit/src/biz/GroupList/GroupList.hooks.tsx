@@ -26,7 +26,6 @@ import type {
 
 export function useGroupList(props: GroupListProps) {
   const {
-    testMode,
     onClickedItem,
     onLongPressedItem,
     onNoMore,
@@ -39,7 +38,7 @@ export function useGroupList(props: GroupListProps) {
     onForwardMessage,
   } = props;
   const flatListProps = useFlatList<GroupListItemProps>({
-    listState: testMode === 'only-ui' ? 'normal' : 'loading',
+    listState: 'loading',
     onVisibleItems: (items: GroupListItemProps[]) => onVisibleItems(items),
   });
   const { setData, dataRef, setListState, ref: flatListRef } = flatListProps;
@@ -162,48 +161,44 @@ export function useGroupList(props: GroupListProps) {
 
   const requestList = React.useCallback(
     (pageNum: number) => {
-      if (testMode === 'only-ui') {
-      } else {
-        im.getPageGroups({
-          pageSize: gGroupListPageNumber,
-          pageNum: pageNum,
-          onResult: (result) => {
-            const { isOk, value, error } = result;
-            if (isOk === true) {
-              if (pageNum === 0) {
-                currentPageNumberRef.current = 0;
-                dataRef.current = [];
-                isNoMoreRef.current = false;
-              }
+      updateState('loading');
+      im.getPageGroups({
+        pageSize: gGroupListPageNumber,
+        pageNum: pageNum,
+        onResult: (result) => {
+          const { isOk, value } = result;
+          if (isOk === true) {
+            if (pageNum === 0) {
+              currentPageNumberRef.current = 0;
+              dataRef.current = [];
+              isNoMoreRef.current = false;
+            }
 
-              if (groupType === 'forward-message') {
-                value?.forEach((item) => {
-                  item.forwarded = false;
-                });
-              }
+            if (groupType === 'forward-message') {
+              value?.forEach((item) => {
+                item.forwarded = false;
+              });
+            }
 
-              if (value) {
-                addGroupToUI(value, 'after');
+            if (value) {
+              addGroupToUI(value, 'after');
 
-                if (value?.length < gGroupListPageNumber) {
-                  isNoMoreRef.current = true;
-                  onNoMore?.();
-                } else {
-                  currentPageNumberRef.current = pageNum + 1;
-                }
-              }
-
-              updateState('normal');
-            } else {
-              if (error) {
-                im.sendError({ error });
+              if (value?.length < gGroupListPageNumber) {
+                isNoMoreRef.current = true;
+                onNoMore?.();
+              } else {
+                currentPageNumberRef.current = pageNum + 1;
               }
             }
-          },
-        });
-      }
+
+            updateState('normal');
+          } else {
+            updateState('error');
+          }
+        },
+      });
     },
-    [addGroupToUI, dataRef, groupType, im, onNoMore, testMode, updateState]
+    [addGroupToUI, dataRef, groupType, im, onNoMore, updateState]
   );
 
   const init = React.useCallback(() => {
@@ -284,6 +279,10 @@ export function useGroupList(props: GroupListProps) {
       });
     }
   };
+
+  const onReload = React.useCallback(() => {
+    requestList(0);
+  }, [requestList]);
 
   if (propsRef?.current) {
     propsRef.current.deleteItem = (item) => {
@@ -416,5 +415,6 @@ export function useGroupList(props: GroupListProps) {
     closeMenu,
     flatListProps: propsFlatListProps,
     groupCount,
+    onReload,
   };
 }

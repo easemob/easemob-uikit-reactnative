@@ -13,6 +13,7 @@ import type { AlertRef } from '../../ui/Alert';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useFlatList } from '../List';
+import { ListStateType } from '../types';
 import { GroupParticipantListItemMemo } from './GroupParticipantList.item';
 import type {
   GroupParticipantListItemComponentType,
@@ -24,7 +25,6 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
   const {
     onClickedItem,
     onLongPressedItem,
-    testMode,
     groupId,
     participantType,
     onClickedAddParticipant,
@@ -34,12 +34,13 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     onChangeOwner,
     ListItemRender: propsListItemRender,
     onKicked: propsOnKicked,
+    onStateChanged,
     // onRequestGroupData,
   } = props;
   const flatListProps = useFlatList<GroupParticipantListItemProps>({
-    // onInit: () => init(),
+    listState: 'loading',
   });
-  const { setData, dataRef } = flatListProps;
+  const { setData, dataRef, setListState } = flatListProps;
   const [participantCount, setParticipantCount] = React.useState(0);
   const [selectedCount, setSelectedCount] = React.useState(0);
   const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
@@ -52,6 +53,14 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
 
   const im = useChatContext();
   const { tr } = useI18nContext();
+
+  const updateState = React.useCallback(
+    (state: ListStateType) => {
+      setListState?.(state);
+      onStateChanged?.(state);
+    },
+    [onStateChanged, setListState]
+  );
 
   const onClickedCallback = React.useCallback(
     (data?: GroupParticipantModel | undefined) => {
@@ -147,105 +156,98 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
   );
 
   const init = React.useCallback(async () => {
-    if (testMode === 'only-ui') {
-    } else {
-      // im.setGroupParticipantOnRequestData(onRequestGroupData);
-      const owner = await im.getGroupOwner({ groupId });
-      if (owner) {
-        setOwnerId(owner.memberId);
-      }
-      if (participantType === 'delete' || participantType === 'av-meeting') {
-        im.clearModelState({ tag: groupId });
-      }
-      im.getGroupAllMembers({
-        groupId: groupId,
-        owner,
-        isReset:
-          participantType === undefined || participantType === 'common'
-            ? true
-            : false,
-        onResult: (result) => {
-          const { isOk, value, error } = result;
-          if (isOk === true) {
-            if (value) {
-              dataRef.current = value.map((item) => {
-                if (participantType === 'delete') {
-                  const modelState = im.getModelState({
-                    tag: groupId,
-                    id: item.memberId,
-                  });
-                  return {
-                    id: item.memberId,
-                    data: {
-                      ...item,
-                      isOwner: item.memberId === owner?.memberId,
-                      checked: modelState?.checked ?? false,
-                    },
-                  } as GroupParticipantListItemProps;
-                } else if (participantType === 'av-meeting') {
-                  const modelState = im.getModelState({
-                    tag: groupId,
-                    id: item.memberId,
-                  });
-                  return {
-                    id: item.memberId,
-                    data: {
-                      ...item,
-                      isOwner: item.memberId === owner?.memberId,
-                      checked:
-                        im.userId === item.memberId
-                          ? true
-                          : modelState?.checked ?? false,
-                      disable: im.userId === item.memberId ? true : undefined,
-                    },
-                  } as GroupParticipantListItemProps;
-                } else {
-                  return {
-                    id: item.memberId,
-                    data: {
-                      ...item,
-                      isOwner: item.memberId === owner?.memberId,
-                      checked: undefined,
-                    },
-                  } as GroupParticipantListItemProps;
-                }
-              });
-              if (participantType === 'change-owner') {
-                dataRef.current = dataRef.current.filter((item) => {
-                  return (
-                    item.data.memberId !== im.userId ||
-                    item.data.isOwner !== true
-                  );
-                });
-              } else if (participantType === 'delete') {
-                dataRef.current = dataRef.current.filter((item) => {
-                  return (
-                    item.data.memberId !== im.userId ||
-                    item.data.isOwner !== true
-                  );
-                });
-              } else if (participantType === 'av-meeting') {
-              } else if (participantType === 'mention') {
-                dataRef.current.unshift({
-                  id: 'All',
-                  data: {
-                    memberId: 'All',
-                    memberName: 'All',
-                  } as GroupParticipantModel,
-                });
-              }
-              refreshToUI();
-              setParticipantCount(dataRef.current.length);
-            }
-          } else {
-            if (error) {
-              im.sendError({ error });
-            }
-          }
-        },
-      });
+    // im.setGroupParticipantOnRequestData(onRequestGroupData);
+    const owner = await im.getGroupOwner({ groupId });
+    if (owner) {
+      setOwnerId(owner.memberId);
     }
-  }, [dataRef, groupId, im, participantType, refreshToUI, testMode]);
+    if (participantType === 'delete' || participantType === 'av-meeting') {
+      im.clearModelState({ tag: groupId });
+    }
+    updateState('loading');
+    im.getGroupAllMembers({
+      groupId: groupId,
+      owner,
+      isReset:
+        participantType === undefined || participantType === 'common'
+          ? true
+          : false,
+      onResult: (result) => {
+        const { isOk, value } = result;
+        if (isOk === true && value) {
+          dataRef.current = value.map((item) => {
+            if (participantType === 'delete') {
+              const modelState = im.getModelState({
+                tag: groupId,
+                id: item.memberId,
+              });
+              return {
+                id: item.memberId,
+                data: {
+                  ...item,
+                  isOwner: item.memberId === owner?.memberId,
+                  checked: modelState?.checked ?? false,
+                },
+              } as GroupParticipantListItemProps;
+            } else if (participantType === 'av-meeting') {
+              const modelState = im.getModelState({
+                tag: groupId,
+                id: item.memberId,
+              });
+              return {
+                id: item.memberId,
+                data: {
+                  ...item,
+                  isOwner: item.memberId === owner?.memberId,
+                  checked:
+                    im.userId === item.memberId
+                      ? true
+                      : modelState?.checked ?? false,
+                  disable: im.userId === item.memberId ? true : undefined,
+                },
+              } as GroupParticipantListItemProps;
+            } else {
+              return {
+                id: item.memberId,
+                data: {
+                  ...item,
+                  isOwner: item.memberId === owner?.memberId,
+                  checked: undefined,
+                },
+              } as GroupParticipantListItemProps;
+            }
+          });
+          if (participantType === 'change-owner') {
+            dataRef.current = dataRef.current.filter((item) => {
+              return (
+                item.data.memberId !== im.userId || item.data.isOwner !== true
+              );
+            });
+          } else if (participantType === 'delete') {
+            dataRef.current = dataRef.current.filter((item) => {
+              return (
+                item.data.memberId !== im.userId || item.data.isOwner !== true
+              );
+            });
+          } else if (participantType === 'av-meeting') {
+          } else if (participantType === 'mention') {
+            dataRef.current.unshift({
+              id: 'All',
+              data: {
+                memberId: 'All',
+                memberName: 'All',
+              } as GroupParticipantModel,
+            });
+          }
+          refreshToUI();
+          setParticipantCount(dataRef.current.length);
+          updateState('normal');
+        } else {
+          updateState('error');
+        }
+      },
+    });
+  }, [dataRef, groupId, im, participantType, refreshToUI, updateState]);
 
   const onClickedAddParticipantCallback = React.useCallback(() => {
     if (onClickedAddParticipant) {
@@ -339,6 +341,10 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     }
   };
 
+  const onReload = React.useCallback(() => {
+    init();
+  }, [init]);
+
   const chatListenerRef = React.useRef<ChatServiceListener>({
     onMemberRemoved: (_params: { groupId: string; groupName?: string }) => {
       propsOnKicked?.(groupId);
@@ -415,5 +421,6 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     ListItemRender: ListItemRenderRef.current,
     groupId,
     ownerId,
+    onReload,
   };
 }

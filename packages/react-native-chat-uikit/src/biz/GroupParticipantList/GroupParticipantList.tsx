@@ -51,6 +51,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
     ListItemRender,
     groupId,
     ownerId,
+    onReload,
   } = useGroupParticipantList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -134,7 +135,7 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
             listState === 'error' ? (
               <ErrorPlaceholder
                 onClicked={() => {
-                  onRefresh?.();
+                  onReload?.();
                 }}
               />
             ) : null

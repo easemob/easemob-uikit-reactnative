@@ -46,7 +46,6 @@ export function useContactList(props: ContactListProps) {
   const {
     onClickedItem,
     onLongPressedItem,
-    testMode,
     onSort: propsOnSort,
     onClickedNewContact: propsOnClickedNewContact,
     onCreateGroupResultValue,
@@ -73,7 +72,9 @@ export function useContactList(props: ContactListProps) {
     ContactListItemProps,
     IndexModel,
     ListIndexProps
-  >({});
+  >({
+    listState: 'loading',
+  });
   const {
     isSort,
     setIndexTitles,
@@ -472,52 +473,6 @@ export function useContactList(props: ContactListProps) {
       onFinished?: () => void;
     }) => {
       const { isClearState, onFinished, requestServer } = params;
-      if (testMode === 'only-ui') {
-        const names = [
-          'James',
-          'John',
-          'Robert',
-          'Michael',
-          'William',
-          'David',
-          'Richard',
-          'Joseph',
-          'Thomas',
-          'Charles',
-          'Patricia',
-          'Jennifer',
-          'Linda',
-          'Elizabeth',
-          'Susan',
-          'Jessica',
-          'Sarah',
-          'Karen',
-          'Nancy',
-          'Lisa',
-        ]; // Add more names as needed
-
-        const generateRandomNames = () => {
-          const randomIndex = Math.floor(Math.random() * names.length);
-          return names[randomIndex];
-        };
-        const array = Array.from({ length: 10 }, (_, index) => ({
-          id: index.toString(),
-        }));
-        const testList = array.map((item) => {
-          return {
-            id: item.id,
-            section: {
-              userId: item.id,
-              remark: item.id + generateRandomNames(),
-              userName: generateRandomNames(),
-              userAvatar:
-                'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-            },
-          } as ContactListItemProps;
-        });
-        refreshToUI(testList);
-        return;
-      }
       const url = im.user(im.userId)?.avatarURL;
       if (url) {
         setAvatarUrl(url);
@@ -544,50 +499,42 @@ export function useContactList(props: ContactListProps) {
           if (contactType === 'add-group-member') {
             im.getAllContacts2({
               onResult: async (result) => {
-                const { isOk, value, error } = result;
-                if (isOk === true) {
-                  if (value && groupId) {
-                    im.getGroupAllMembers({
-                      groupId,
-                      onResult: (groupResult) => {
-                        if (groupResult.isOk === true) {
-                          const groupMembers = groupResult.value ?? [];
-                          const list = value.map((item) => {
-                            const isExisted = groupMembers.find((member) => {
-                              return member.memberId === item.userId;
-                            });
-                            return {
-                              id: item.userId,
-                              section: {
-                                ...item,
-                                checked:
-                                  isExisted !== undefined
-                                    ? true
-                                    : im.getModelState({
-                                        tag: groupId,
-                                        id: item.userId,
-                                      })?.checked ?? false,
-                                disable: isExisted !== undefined,
-                              },
-                              contactType: contactType,
-                            } as ContactListItemProps;
+                const { isOk, value } = result;
+                if (isOk === true && value && groupId) {
+                  im.getGroupAllMembers({
+                    groupId,
+                    onResult: (res) => {
+                      if (res.isOk === true && res.value) {
+                        const groupMembers = res.value ?? [];
+                        const list = value.map((item) => {
+                          const isExisted = groupMembers.find((member) => {
+                            return member.memberId === item.userId;
                           });
-                          refreshToUI(list);
-                          updateState('normal');
-                        } else {
-                          if (groupResult.error) {
-                            updateState('error');
-                            im.sendError({ error: groupResult.error });
-                          }
-                        }
-                      },
-                    });
-                  }
+                          return {
+                            id: item.userId,
+                            section: {
+                              ...item,
+                              checked:
+                                isExisted !== undefined
+                                  ? true
+                                  : im.getModelState({
+                                      tag: groupId,
+                                      id: item.userId,
+                                    })?.checked ?? false,
+                              disable: isExisted !== undefined,
+                            },
+                            contactType: contactType,
+                          } as ContactListItemProps;
+                        });
+                        refreshToUI(list);
+                        updateState('normal');
+                      } else {
+                        updateState('error');
+                      }
+                    },
+                  });
                 } else {
-                  if (error) {
-                    updateState('error');
-                    im.sendError({ error });
-                  }
+                  updateState('error');
                 }
                 onFinished?.();
               },
@@ -596,43 +543,38 @@ export function useContactList(props: ContactListProps) {
             im.getAllContacts2({
               requestServer: requestServer,
               onResult: (result) => {
-                const { isOk, value, error } = result;
-                if (isOk === true) {
-                  if (value) {
-                    const list = value.map((item) => {
-                      return {
-                        id: item.userId,
-                        section:
-                          contactType === 'create-group'
-                            ? {
-                                ...item,
-                                checked:
-                                  im.getModelState({
-                                    tag: contactType,
-                                    id: item.userId,
-                                  })?.checked ?? false,
-                              }
-                            : contactType === 'forward-message'
-                            ? {
-                                ...item,
-                                forwarded:
-                                  im.getModelState({
-                                    tag: contactType,
-                                    id: item.userId,
-                                  })?.forwarded ?? false,
-                              }
-                            : item,
-                        contactType: contactType,
-                      } as ContactListItemProps;
-                    });
-                    refreshToUI(list);
-                    updateState('normal');
-                  }
+                const { isOk, value } = result;
+                if (isOk === true && value) {
+                  const list = value.map((item) => {
+                    return {
+                      id: item.userId,
+                      section:
+                        contactType === 'create-group'
+                          ? {
+                              ...item,
+                              checked:
+                                im.getModelState({
+                                  tag: contactType,
+                                  id: item.userId,
+                                })?.checked ?? false,
+                            }
+                          : contactType === 'forward-message'
+                          ? {
+                              ...item,
+                              forwarded:
+                                im.getModelState({
+                                  tag: contactType,
+                                  id: item.userId,
+                                })?.forwarded ?? false,
+                            }
+                          : item,
+                      contactType: contactType,
+                    } as ContactListItemProps;
+                  });
+                  refreshToUI(list);
+                  updateState('normal');
                 } else {
-                  if (error) {
-                    updateState('error');
-                    im.sendError({ error });
-                  }
+                  updateState('error');
                 }
                 onFinished?.();
               },
@@ -652,7 +594,6 @@ export function useContactList(props: ContactListProps) {
       onChangeGroupCount,
       refreshToUI,
       setUserId,
-      testMode,
       updateState,
     ]
   );
@@ -830,7 +771,7 @@ export function useContactList(props: ContactListProps) {
     return <View>{ret}</View>;
   }, [contactItems, groupCount, requestCount]);
 
-  const onError = React.useCallback(() => {
+  const onReload = React.useCallback(() => {
     init({ requestServer: true });
   }, [init]);
 
@@ -978,7 +919,7 @@ export function useContactList(props: ContactListProps) {
     contactItems,
     ListHeaderComponent,
     onClickedForward,
-    onError,
+    onReload,
     userId,
   };
 }

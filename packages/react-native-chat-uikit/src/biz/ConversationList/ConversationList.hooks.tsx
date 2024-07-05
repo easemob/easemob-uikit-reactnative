@@ -19,7 +19,6 @@ import { useI18nContext } from '../../i18n';
 import {
   ChatConversationType,
   ChatMessage,
-  ChatMessageType,
   ChatMultiDeviceEvent,
 } from '../../rename.chat';
 import type { AlertRef } from '../../ui/Alert';
@@ -42,7 +41,6 @@ export function useConversationList(props: ConversationListProps) {
   const {
     onClickedItem,
     onLongPressedItem,
-    testMode,
     onSort: propsOnSort,
     onClickedNewContact,
     onClickedNewConversation,
@@ -58,7 +56,7 @@ export function useConversationList(props: ConversationListProps) {
     onChangeUnreadCount,
   } = props;
   const flatListProps = useFlatList<ConversationListItemProps>({
-    listState: testMode === 'only-ui' ? 'normal' : 'loading',
+    listState: 'loading',
     // onInit: () => init(),
   });
   const {
@@ -102,7 +100,7 @@ export function useConversationList(props: ConversationListProps) {
 
   const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
 
-  const onSetState = React.useCallback(
+  const updateState = React.useCallback(
     (state: ListStateType) => {
       setListState?.(state);
       onStateChanged?.(state);
@@ -242,36 +240,6 @@ export function useConversationList(props: ConversationListProps) {
 
   const init = React.useCallback(
     async (params: { onFinished?: () => void }) => {
-      if (testMode === 'only-ui') {
-        const array = Array.from({ length: 10 }, (_, index) => ({
-          id: index.toString(),
-        }));
-        const testList = array.map((item, i) => {
-          return {
-            id: item.id,
-            data: {
-              convId: item.id,
-              convType: i % 2 === 0 ? 0 : 1,
-              convAvatar:
-                'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-              convName: 'user',
-              unreadMessageCount: 1,
-              isPinned: i % 2 === 0,
-              lastMessage:
-                i % 4 === 0
-                  ? undefined
-                  : {
-                      localTime: new Date().getTime() + i * 1000 * 60,
-                      body: { type: ChatMessageType.TXT, content: 'hello' },
-                    },
-            },
-            onLongPressed: onLongPressedRef.current,
-            onClicked: onClickedRef.current,
-          } as ConversationListItemProps;
-        });
-        refreshToUI(testList);
-        return;
-      }
       if (isAutoLoad === true) {
         if (im.userId) {
           setUserId(im.userId);
@@ -283,6 +251,7 @@ export function useConversationList(props: ConversationListProps) {
 
         const s = await im.loginState();
         if (s === 'logged') {
+          updateState('loading');
           im.getAllConversations({
             onResult: (result) => {
               const { isOk, value: list } = result;
@@ -313,15 +282,15 @@ export function useConversationList(props: ConversationListProps) {
                     calculateUnreadCount();
                   }
                 }
-                onSetState('normal');
+                updateState('normal');
               } else {
-                onSetState('error');
+                updateState('error');
               }
               params.onFinished?.();
             },
           });
         } else {
-          onSetState('error');
+          updateState('error');
         }
       }
     },
@@ -332,9 +301,8 @@ export function useConversationList(props: ConversationListProps) {
       im,
       isAutoLoad,
       isShowAfterLoaded,
-      onSetState,
+      updateState,
       refreshToUI,
-      testMode,
     ]
   );
 

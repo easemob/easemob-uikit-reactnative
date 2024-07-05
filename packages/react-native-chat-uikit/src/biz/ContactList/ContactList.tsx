@@ -69,6 +69,7 @@ export function ContactList(props: ContactListProps) {
     ListHeaderComponent,
     onClickedForward,
     userId,
+    onReload,
   } = useContactList(props);
   const {
     style,
@@ -195,7 +196,7 @@ export function ContactList(props: ContactListProps) {
             listState === 'error' ? (
               <ErrorPlaceholder
                 onClicked={() => {
-                  onRefresh?.();
+                  onReload?.();
                 }}
               />
             ) : null

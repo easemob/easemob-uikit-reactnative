@@ -49,6 +49,7 @@ export function GroupList(props: GroupListProps) {
     closeMenu,
     flatListProps,
     groupCount,
+    onReload,
   } = useGroupList(props);
   const {
     style,
@@ -153,7 +154,7 @@ export function GroupList(props: GroupListProps) {
             listState === 'error' ? (
               <ErrorPlaceholder
                 onClicked={() => {
-                  onRefresh?.();
+                  onReload?.();
                 }}
               />
             ) : null

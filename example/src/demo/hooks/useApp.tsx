@@ -476,11 +476,13 @@ export function useApp() {
           let userName = result;
           let userAvatarUrl;
           if (im.userId) {
-            const ret = await im.getUserInfoSync({
-              userId: im.userId,
-            });
-            userName = ret.value?.userName ?? ret.value?.userId ?? result;
-            userAvatarUrl = ret.value?.avatarURL;
+            try {
+              const ret = await im.getUserInfoSync({
+                userId: im.userId,
+              });
+              userName = ret.value?.userName ?? ret.value?.userId ?? result;
+              userAvatarUrl = ret.value?.avatarURL;
+            } catch (error) {}
           }
 
           params.onResult({
@@ -507,15 +509,17 @@ export function useApp() {
       let userName = params.userId;
       let userAvatarUrl;
       if (im.userId) {
-        const ret = await im.getUserInfoSync({
-          userId: params.userId,
-        });
-        userName =
-          ret.value?.remark ??
-          ret.value?.userName ??
-          ret.value?.userId ??
-          params.userId;
-        userAvatarUrl = ret.value?.avatarURL;
+        try {
+          const ret = await im.getUserInfoSync({
+            userId: params.userId,
+          });
+          userName =
+            ret.value?.remark ??
+            ret.value?.userName ??
+            ret.value?.userId ??
+            params.userId;
+          userAvatarUrl = ret.value?.avatarURL;
+        } catch (error) {}
       }
 
       params.onResult({
