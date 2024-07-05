@@ -18,6 +18,7 @@ import {
   usePaletteContext,
   useThemeContext,
 } from '../../rename.uikit';
+import { accountType } from '../common/const';
 import { mineInfo } from '../utils/utils';
 import { useMineInfo } from './MineInfo.hooks';
 import type { MineInfoProps } from './types';
@@ -399,29 +400,31 @@ export function MineInfo(props: MineInfoProps) {
           }
         />
 
-        <ListItem
-          // onClicked={onClickedDestroyAccount}
-          // containerStyle={{ paddingHorizontal: 16 }}
-          LeftName={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text2Button
-                sizesType={'middle'}
-                radiusType={input}
-                text={tr('_demo_info_account_destroy')}
-                textStyle={{
-                  fontSize: 16,
-                  fontStyle: 'normal',
-                  fontWeight: '500',
-                  color: getColor('n'),
-                }}
-                onPress={onClickedDestroyAccount}
-              />
-            </View>
-          }
-          RightIcon={
-            <View style={{ flexDirection: 'row', alignItems: 'center' }} />
-          }
-        />
+        {accountType === 'agora' ? null : (
+          <ListItem
+            // onClicked={onClickedDestroyAccount}
+            // containerStyle={{ paddingHorizontal: 16 }}
+            LeftName={
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text2Button
+                  sizesType={'middle'}
+                  radiusType={input}
+                  text={tr('_demo_info_account_destroy')}
+                  textStyle={{
+                    fontSize: 16,
+                    fontStyle: 'normal',
+                    fontWeight: '500',
+                    color: getColor('n'),
+                  }}
+                  onPress={onClickedDestroyAccount}
+                />
+              </View>
+            }
+            RightIcon={
+              <View style={{ flexDirection: 'row', alignItems: 'center' }} />
+            }
+          />
+        )}
       </ScrollView>
 
       <Alert ref={alertRef} />
