@@ -295,6 +295,9 @@ export function useMessageList(
   const scrollToBottom = React.useCallback(
     (animated?: boolean) => {
       timeoutTask(0, () => {
+        if (dataRef.current.length <= 0) {
+          return;
+        }
         if (inverted === true) {
           listRef?.current?.scrollToIndex?.({ index: 0, animated });
         } else {
@@ -304,16 +307,19 @@ export function useMessageList(
       setIsBottom(true);
       setUnreadCount(0);
     },
-    [inverted, listRef, setIsBottom, setUnreadCount]
+    [dataRef, inverted, listRef, setIsBottom, setUnreadCount]
   );
 
   const scrollTo = React.useCallback(
     (index: number, animated?: boolean) => {
       timeoutTask(0, () => {
+        if (dataRef.current.length <= 0) {
+          return;
+        }
         listRef?.current?.scrollToIndex?.({ index, animated, viewPosition: 1 });
       });
     },
-    [listRef]
+    [dataRef, listRef]
   );
 
   const onRenderItem = React.useCallback(
