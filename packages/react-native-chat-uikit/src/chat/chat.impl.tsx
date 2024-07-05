@@ -359,6 +359,12 @@ export class ChatServiceImpl
           this.sendFinished({ event: 'autoLogin', extra: { isOk: false } });
         }
       },
+      onError: (e) => {
+        params.result?.({
+          isOk: false,
+          error: e,
+        });
+      },
     });
   }
   async loginState(): Promise<'logged' | 'noLogged'> {
@@ -784,11 +790,21 @@ export class ChatServiceImpl
         await Promise.all(ret);
       }
 
+      this.sendFinished({
+        event: 'getAllConversations',
+        extra: { isOk: true },
+      });
       onResult({
         isOk: true,
         value: Array.from(this._convList.values()),
       });
     } catch (e) {
+      this.sendError({
+        error: new UIKitError({
+          code: ErrorCode.chat_uikit,
+          desc: 'getAllConversations failed.',
+        }),
+      });
       onResult({
         isOk: false,
         error: new UIKitError({
@@ -1413,6 +1429,9 @@ export class ChatServiceImpl
 
         params.onResult?.({ isOk: true });
       },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   acceptInvitation(params: {
@@ -1427,6 +1446,9 @@ export class ChatServiceImpl
           isOk: true,
         });
       },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
     });
   }
   declineInvitation(params: {
@@ -1440,6 +1462,9 @@ export class ChatServiceImpl
         params.onResult({
           isOk: true,
         });
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -1473,6 +1498,9 @@ export class ChatServiceImpl
         }
         params.onResult({ isOk: true, value: list });
         return false;
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -1677,6 +1705,9 @@ export class ChatServiceImpl
         params.onResult({ isOk: true, value: value });
         return false;
       },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
     });
   }
 
@@ -1728,6 +1759,9 @@ export class ChatServiceImpl
             isOk: false,
           });
         }
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -1873,6 +1907,9 @@ export class ChatServiceImpl
           isOk: true,
         });
       },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   destroyGroup(params: {
@@ -1892,6 +1929,9 @@ export class ChatServiceImpl
         params.onResult?.({
           isOk: true,
         });
+      },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -1929,6 +1969,9 @@ export class ChatServiceImpl
           isOk: true,
         });
       },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   setGroupDescription(params: {
@@ -1951,6 +1994,9 @@ export class ChatServiceImpl
         params.onResult?.({
           isOk: true,
         });
+      },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -1978,6 +2024,9 @@ export class ChatServiceImpl
           isOk: true,
         });
       },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   getGroupMyRemark(params: {
@@ -1997,6 +2046,9 @@ export class ChatServiceImpl
           group.myRemark = result?.[gGroupMemberMyRemark];
         }
         params.onResult({ isOk: true, value: result?.[gGroupMemberMyRemark] });
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -2049,6 +2101,9 @@ export class ChatServiceImpl
           });
         }
       },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   removeGroupMembers(params: {
@@ -2082,6 +2137,9 @@ export class ChatServiceImpl
           isOk: true,
         });
       },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
     });
   }
 
@@ -2103,6 +2161,9 @@ export class ChatServiceImpl
           this.sendUIEvent(UIListenerType.Group, 'onUpdatedEvent', group);
         }
         params.onResult?.({ isOk: true });
+      },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2151,7 +2212,7 @@ export class ChatServiceImpl
     this.tryCatch({
       promise: this.client.userManager.fetchUserInfoById(params.userIds),
       event: 'getUsersInfo',
-      onFinished: async (value) => {
+      onFinished: (value) => {
         if (value) {
           const list = Array.from(value.values()).map((v) => {
             return this.toUserData(v);
@@ -2167,6 +2228,9 @@ export class ChatServiceImpl
             value: [],
           });
         }
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -2186,6 +2250,9 @@ export class ChatServiceImpl
       event: 'updateSelfInfo',
       onFinished: () => {
         this.setUser({ users: [{ ...this.user, ...self }] });
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -2223,13 +2290,7 @@ export class ChatServiceImpl
         });
       },
       onError: (e) => {
-        params.onResult({
-          isOk: false,
-          error: new UIKitError({
-            code: ErrorCode.common,
-            desc: this._fromChatError(e),
-          }),
-        });
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2247,10 +2308,7 @@ export class ChatServiceImpl
         });
       },
       onError: (e) => {
-        params.onResult?.({
-          isOk: false,
-          error: e,
-        });
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2267,10 +2325,7 @@ export class ChatServiceImpl
         });
       },
       onError: (e) => {
-        params.onResult?.({
-          isOk: false,
-          error: e,
-        });
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2293,10 +2348,7 @@ export class ChatServiceImpl
         });
       },
       onError: (e) => {
-        params.onResult?.({
-          isOk: false,
-          error: e,
-        });
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2332,10 +2384,7 @@ export class ChatServiceImpl
         });
       },
       onError: (e) => {
-        params.onResult({
-          isOk: false,
-          error: e,
-        });
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2358,10 +2407,7 @@ export class ChatServiceImpl
         });
       },
       onError: (e) => {
-        params.onResult({
-          isOk: false,
-          error: e,
-        });
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2390,6 +2436,9 @@ export class ChatServiceImpl
           value: value,
         });
         return false;
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -2495,6 +2544,9 @@ export class ChatServiceImpl
         params.onResult({ isOk: true });
         return false;
       },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
     });
   }
 
@@ -2510,6 +2562,9 @@ export class ChatServiceImpl
           isOk: true,
         });
         return false;
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -2527,8 +2582,8 @@ export class ChatServiceImpl
       onFinished: async () => {
         params.onResult?.({ isOk: true });
       },
-      onError: () => {
-        params.onResult?.({ isOk: false });
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2565,6 +2620,9 @@ export class ChatServiceImpl
         params.onResult({ isOk: true, value: value });
         return false;
       },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
     });
   }
 
@@ -2575,8 +2633,8 @@ export class ChatServiceImpl
       onFinished: () => {
         params.onResult?.({ isOk: true });
       },
-      onError: () => {
-        params.onResult?.({ isOk: false });
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2590,8 +2648,8 @@ export class ChatServiceImpl
       onFinished: () => {
         params.onResult?.({ isOk: true });
       },
-      onError: () => {
-        params.onResult?.({ isOk: false });
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2615,6 +2673,9 @@ export class ChatServiceImpl
         params.onResult({ isOk: true, value: value });
         return false;
       },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
     });
   }
   getPinnedMessages(params: {
@@ -2631,6 +2692,9 @@ export class ChatServiceImpl
       onFinished: (value) => {
         params.onResult({ isOk: true, value: value });
         return false;
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -2649,8 +2713,8 @@ export class ChatServiceImpl
       onFinished: () => {
         params.onResult?.({ isOk: true });
       },
-      onError: () => {
-        params.onResult?.({ isOk: false });
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2669,8 +2733,8 @@ export class ChatServiceImpl
       onFinished: () => {
         params.onResult?.({ isOk: true });
       },
-      onError: () => {
-        params.onResult?.({ isOk: false });
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2688,6 +2752,9 @@ export class ChatServiceImpl
           value: value,
         });
         return false;
+      },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -2714,6 +2781,9 @@ export class ChatServiceImpl
         });
         return false;
       },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
     });
   }
 
@@ -2727,19 +2797,15 @@ export class ChatServiceImpl
         60 * 60 * 24 * 3
       ),
       event: 'subPresence',
-      onFinished: params.onResult
-        ? (res) => {
-            params.onResult?.({
-              isOk: true,
-              value: res,
-            });
-          }
-        : undefined,
-      onError: params.onResult
-        ? (e) => {
-            params.onResult?.({ isOk: false, error: e });
-          }
-        : undefined,
+      onFinished: (res) => {
+        params.onResult?.({
+          isOk: true,
+          value: res,
+        });
+      },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   unSubPresence(params: {
@@ -2749,18 +2815,14 @@ export class ChatServiceImpl
     this.tryCatch({
       promise: this.client.presenceManager.unsubscribe(params.userIds),
       event: 'unSubPresence',
-      onFinished: params.onResult
-        ? () => {
-            params.onResult?.({
-              isOk: true,
-            });
-          }
-        : undefined,
-      onError: params.onResult
-        ? (e) => {
-            params.onResult?.({ isOk: false, error: e });
-          }
-        : undefined,
+      onFinished: () => {
+        params.onResult?.({
+          isOk: true,
+        });
+      },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   publishPresence(params: {
@@ -2790,6 +2852,9 @@ export class ChatServiceImpl
         }
         params.onResult?.({ isOk: true });
       },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   fetchPresence(params: {
@@ -2809,8 +2874,8 @@ export class ChatServiceImpl
           value: map,
         });
       },
-      onError: () => {
-        params.onResult?.({ isOk: false });
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
       },
     });
   }
@@ -2834,6 +2899,9 @@ export class ChatServiceImpl
           value: value,
         });
       },
+      onError: (e) => {
+        params.onResult({ isOk: false, error: e });
+      },
     });
   }
   joinThread(params: {
@@ -2849,6 +2917,9 @@ export class ChatServiceImpl
           value: value,
         });
       },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   leaveThread(params: {
@@ -2863,6 +2934,9 @@ export class ChatServiceImpl
           isOk: true,
         });
       },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   destroyThread(params: {
@@ -2876,6 +2950,9 @@ export class ChatServiceImpl
         params.onResult?.({
           isOk: true,
         });
+      },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2895,6 +2972,9 @@ export class ChatServiceImpl
           isOk: true,
         });
       },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   removeMemberFromThread(params: {
@@ -2912,6 +2992,9 @@ export class ChatServiceImpl
         params.onResult?.({
           isOk: true,
         });
+      },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
@@ -2934,6 +3017,9 @@ export class ChatServiceImpl
           value: value,
         });
       },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   fetchThreadsFromGroup(params: {
@@ -2955,6 +3041,9 @@ export class ChatServiceImpl
           value: value,
         });
       },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
+      },
     });
   }
   fetchThreadsLastMessage(params: {
@@ -2971,6 +3060,9 @@ export class ChatServiceImpl
           isOk: true,
           value: value,
         });
+      },
+      onError: (e) => {
+        params.onResult?.({ isOk: false, error: e });
       },
     });
   }
