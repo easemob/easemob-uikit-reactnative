@@ -89,8 +89,9 @@ export function useContactList(props: ContactListProps) {
   const [selectedMemberCount, setSelectedMemberCount] =
     React.useState<number>(0);
   const choiceType = React.useRef<ChoiceType>('multiple').current;
-  const [requestCount, setRequestCount] = React.useState(0);
+  const [_requestCount, setRequestCount] = React.useState(0);
   const rememberCountRef = React.useRef<number>(0);
+  const rememberCountTmpRef = React.useRef<number>(0);
   const [groupCount] = React.useState(0);
   const [avatarUrl, setAvatarUrl] = React.useState<string>();
   const { tr } = useI18nContext();
@@ -448,7 +449,7 @@ export function useContactList(props: ContactListProps) {
 
   const onRememberRequestCount = React.useCallback(() => {
     dbRef.current.setCurrentId(im.userId ?? 'unknown');
-    rememberCountRef.current = requestCount;
+    rememberCountRef.current = rememberCountTmpRef.current;
     dbRef.current
       .setDataWithUser({
         key: 'profile/contact_request_count',
@@ -457,7 +458,7 @@ export function useContactList(props: ContactListProps) {
       .catch((error) => {
         uilog.warn('dev:onRememberRequestCount:error:', error);
       });
-  }, [im.userId, requestCount]);
+  }, [im.userId]);
 
   const _onClickedNewRequest = React.useCallback(() => {
     onRememberRequestCount();
@@ -767,9 +768,9 @@ export function useContactList(props: ContactListProps) {
   }, [addContact, onShowContactListMoreActions, propsOnClickedNewContact]);
 
   const ListHeaderComponent = React.useCallback(() => {
-    const ret = contactItems({ groupCount, requestCount });
+    const ret = contactItems({ groupCount, requestCount: _requestCount });
     return <View>{ret}</View>;
-  }, [contactItems, groupCount, requestCount]);
+  }, [contactItems, groupCount, _requestCount]);
 
   const onReload = React.useCallback(() => {
     init({ requestServer: true });
@@ -862,6 +863,7 @@ export function useContactList(props: ContactListProps) {
             : 0;
         setRequestCount(c);
         onChangeRequestCount?.(c);
+        rememberCountTmpRef.current = count;
       },
     };
     im.requestList.addListener('ContactList', listener);
@@ -886,6 +888,7 @@ export function useContactList(props: ContactListProps) {
               : 0;
           setRequestCount(c);
           onChangeRequestCount?.(c);
+          rememberCountTmpRef.current = count;
         } else {
           setRequestCount(result.value?.length ?? 0);
           onChangeRequestCount?.(result.value?.length ?? 0);
@@ -910,7 +913,7 @@ export function useContactList(props: ContactListProps) {
     onClickedCreateGroup: onCreateGroupCallback,
     selectedMemberCount,
     onClickedAddGroupParticipant,
-    requestCount,
+    requestCount: _requestCount,
     groupCount,
     avatarUrl,
     tr,
