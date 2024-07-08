@@ -21,6 +21,9 @@ export function useContactListMoreActions(
       isSaveInput: false,
       enableClearButton: true,
       autoFocus: true,
+      inputProps: {
+        multiline: false,
+      },
       buttons: [
         {
           text: tr('cancel'),

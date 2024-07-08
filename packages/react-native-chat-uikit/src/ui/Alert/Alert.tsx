@@ -65,6 +65,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
       isSaveInput = true,
       enableClearButton = false,
       autoFocus,
+      inputProps,
     } = updatedProps;
     const count = buttons?.length ?? 1;
     if (count > 3) {
@@ -225,6 +226,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 }
                 enableClearButton={enableClearButton}
                 autoFocus={autoFocus}
+                {...inputProps}
               />
             </View>
           ) : null}

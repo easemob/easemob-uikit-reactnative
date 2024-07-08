@@ -1,5 +1,7 @@
 import type { AlertButton, StyleProp, ViewStyle } from 'react-native';
 
+import { TextInputProps } from '../TextInput';
+
 export type AlertRef = {
   alert: () => void;
   alertWithInit: (props: AlertProps) => void;
@@ -17,6 +19,7 @@ export type AlertProps = {
   containerStyle?: StyleProp<ViewStyle>;
   enableClearButton?: boolean;
   autoFocus?: boolean | undefined;
+  inputProps?: TextInputProps;
 };
 
 export type AlertContextType = {
