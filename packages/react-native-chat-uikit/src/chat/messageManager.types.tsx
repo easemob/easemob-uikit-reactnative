@@ -1,6 +1,7 @@
 import type {
   ChatConversationType,
   ChatMessage,
+  ChatMessageChatType,
   ChatSearchDirection,
 } from '../rename.chat';
 import type { CommonManager } from './commonManager.types';
@@ -72,6 +73,12 @@ export type MessageManagerListener = {
    * @param pinOperation 0: add, 1: remove.
    */
   onPinMessageChanged?: (msg: ChatMessage, pinOperation: number) => void;
+
+  /**
+   * Callback notification of add tip message.
+   * @param msg The tip message.
+   */
+  onAddTipMessage?: (msg: ChatMessage) => void;
 };
 
 /**
@@ -172,4 +179,23 @@ export interface MessageCacheManager
     isForce: boolean,
     onResult: (msg: ChatMessage) => void
   ): void;
+
+  /**
+   * Add tip message.
+   * @params params -
+   * @param convId The conversation id.
+   * @param convType The conversation type.
+   * @param tipType The tip type.
+   * @param kvs The key-value pairs.
+   * @param isChatThread Whether the message is a chat thread.
+   * @param onResult The callback notification of the result.
+   */
+  addTipMessage(params: {
+    convId: string;
+    convType: ChatMessageChatType;
+    tipType: string;
+    kvs: Record<string, string>;
+    isChatThread?: boolean;
+    onResult?: (isOk: boolean) => void;
+  }): void;
 }

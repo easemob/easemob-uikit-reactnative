@@ -2,6 +2,7 @@ import { StyleProp, ViewStyle } from 'react-native';
 
 import type { StatusType } from '../biz/types';
 import type { LanguageCode } from '../i18n';
+import { ChatMessage } from '../rename.chat';
 import { ReleaseArea } from '../types';
 
 export type ConversationDetailType = {
@@ -135,6 +136,16 @@ export type Config = {
           style?: StyleProp<ViewStyle>;
         }) => JSX.Element
       >;
+
+  /**
+   * System message prompt callback.
+   * @param msg The tip message.
+   * @param tr The translation function.
+   */
+  onSystemTip?: (
+    msg: ChatMessage,
+    tr: (key: string, ...args: any[]) => string
+  ) => string | undefined;
 
   /**
    * Whether to activate the thread function. If you do not activate it, you will not be able to actively use thread-related functions, if there are still problems after activation, check whether the relevant settings of the console are enabled.

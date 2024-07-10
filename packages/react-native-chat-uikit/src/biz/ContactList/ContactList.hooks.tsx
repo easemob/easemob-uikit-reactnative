@@ -855,15 +855,25 @@ export function useContactList(props: ContactListProps) {
 
   React.useEffect(() => {
     const listener: RequestListListener = {
-      onNewRequestListChanged: (list: NewRequestModel[]) => {
+      onNewRequestListChanged: (list: NewRequestModel[], changed: number) => {
         const count = list.length;
+
+        if (rememberCountTmpRef.current + changed === list.length) {
+          if (changed < 0) {
+            rememberCountRef.current += changed;
+            if (rememberCountRef.current < 0) {
+              rememberCountRef.current = 0;
+            }
+          }
+        }
+
+        rememberCountTmpRef.current = count;
         const c =
           count - rememberCountRef.current > 0
             ? count - rememberCountRef.current
             : 0;
         setRequestCount(c);
         onChangeRequestCount?.(c);
-        rememberCountTmpRef.current = count;
       },
     };
     im.requestList.addListener('ContactList', listener);

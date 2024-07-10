@@ -87,7 +87,7 @@ export function useNewRequests(props: NewRequestsProps) {
   useLifecycle((state) => {
     if (state === 'load') {
       im.requestList.addListener('newRequests', {
-        onNewRequestListChanged: (list) => {
+        onNewRequestListChanged: (list, _) => {
           dataRef.current = list.map((item) => {
             return {
               id: item.requestId,

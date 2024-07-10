@@ -277,16 +277,7 @@ export type ConversationDetailProps = PropsWithError &
     /**
      * The first message to be sent. This parameter is required in thread mode.
      */
-    firstMessage?:
-      | SendFileProps
-      | SendImageProps
-      | SendTextProps
-      | SendVideoProps
-      | SendVoiceProps
-      | SendTimeProps
-      | SendSystemProps
-      | SendCardProps
-      | SendCustomProps;
+    firstMessage?: SendMessageProps;
 
     /**
      * The message ID.
@@ -413,16 +404,7 @@ export type ConversationDetailProps = PropsWithError &
      */
     onCreateThreadResult?: (
       thread?: ChatMessageThread,
-      firstMessage?:
-        | SendFileProps
-        | SendImageProps
-        | SendTextProps
-        | SendVideoProps
-        | SendVoiceProps
-        | SendTimeProps
-        | SendSystemProps
-        | SendCardProps
-        | SendCustomProps
+      firstMessage?: SendMessageProps
     ) => void;
   };
 
@@ -514,6 +496,16 @@ export type SendCustomProps = SendBasicProps & {
   msg: ChatMessage;
 };
 
+export type SendMessageProps =
+  | SendTextProps
+  | SendFileProps
+  | SendImageProps
+  | SendVideoProps
+  | SendVoiceProps
+  | SendTimeProps
+  | SendSystemProps
+  | SendCardProps
+  | SendCustomProps;
 /**
  * Message bubble type.
  */
@@ -818,39 +810,22 @@ export type MessageAddPosition = 'top' | 'bottom';
 export type MessageListRef = {
   /**
    * Add a message to the message list at the bottom position.
-   * @param value send message props. See detail {@link SendTextProps} {@link SendFileProps} {@link SendImageProps} {@link SendVideoProps} {@link SendVoiceProps} {@link SendTimeProps} {@link SendSystemProps} {@link SendCardProps}.
+   * @param value send message props. See detail {@link SendTextProps} {@link SendFileProps} {@link SendImageProps} {@link SendVideoProps} {@link SendVoiceProps} {@link SendTimeProps} {@link SendSystemProps} {@link SendCardProps} {@link SendCustomProps}.
    */
-  addSendMessage: (
-    value:
-      | SendFileProps
-      | SendImageProps
-      | SendTextProps
-      | SendVideoProps
-      | SendVoiceProps
-      | SendTimeProps
-      | SendSystemProps
-      | SendCardProps
-      | SendCustomProps
-  ) => void;
+  addSendMessage: (value: SendMessageProps) => void;
 
   addSendMessageToUI: (params: {
-    value:
-      | SendFileProps
-      | SendImageProps
-      | SendTextProps
-      | SendVideoProps
-      | SendVoiceProps
-      | SendTimeProps
-      | SendSystemProps
-      | SendCardProps
-      | SendCustomProps;
+    value: SendMessageProps;
 
     onFinished?: (item: MessageListItemProps) => void;
     onBeforeCallback?: () => void | Promise<void>;
   }) => Promise<void>;
 
   sendMessageToServer: (msg: ChatMessage) => void;
-
+  /**
+   * Add a message to local database.
+   */
+  saveMessage: (msg: ChatMessage) => void;
   /**
    * Remove a message from the message list.
    */
@@ -969,16 +944,7 @@ export type MessageListProps = PropsWithError &
     /**
      * The first message to be sent. This parameter is required in thread mode.
      */
-    firstMessage?:
-      | SendFileProps
-      | SendImageProps
-      | SendTextProps
-      | SendVideoProps
-      | SendVoiceProps
-      | SendTimeProps
-      | SendSystemProps
-      | SendCardProps
-      | SendCustomProps;
+    firstMessage?: SendMessageProps;
 
     /**
      * Background image.
@@ -1101,16 +1067,7 @@ export type MessageListProps = PropsWithError &
      */
     onCreateThreadResult?: (
       thread?: ChatMessageThread,
-      firstMessage?:
-        | SendFileProps
-        | SendImageProps
-        | SendTextProps
-        | SendVideoProps
-        | SendVoiceProps
-        | SendTimeProps
-        | SendSystemProps
-        | SendCardProps
-        | SendCustomProps
+      firstMessage?: SendMessageProps
     ) => void;
 
     /**

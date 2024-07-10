@@ -2442,6 +2442,7 @@ export function MessageView(props: MessageViewProps) {
 export function SystemTipView(props: SystemTipViewProps) {
   const { isVisible = true, model } = props;
   const { msg } = model;
+  const { onSystemTip } = useConfigContext();
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -2450,6 +2451,14 @@ export function SystemTipView(props: SystemTipViewProps) {
       dark: colors.neutral[6],
     },
   });
+
+  const systemTip = React.useCallback(
+    (msg: ChatMessage, tr: (key: string, ...args: any[]) => string) => {
+      return onSystemTip?.(msg, tr) ?? getSystemTip(msg, tr);
+    },
+    [onSystemTip]
+  );
+
   return (
     <View
       style={{
@@ -2465,7 +2474,7 @@ export function SystemTipView(props: SystemTipViewProps) {
           color: getColor('fg'),
         }}
       >
-        {getSystemTip(msg, tr)}
+        {systemTip(msg, tr)}
       </Text>
     </View>
   );

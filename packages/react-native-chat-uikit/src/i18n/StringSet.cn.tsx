@@ -90,6 +90,7 @@ export function createStringSetCn(): StringSet {
       id ? `${id} 创建了话题` : '创建了话题',
     '_uikit_msg_tip_create_group_success_with_params': (name) =>
       `群组${name}已创建`,
+    '_uikit_msg_tip_added_contact': (name) => `你已添加 ${name} 为联系人`,
 
     '_uikit_info_send_msg': '发消息',
     '_uikit_info_send_audio': '音频通话',

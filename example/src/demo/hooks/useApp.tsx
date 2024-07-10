@@ -7,7 +7,13 @@ import { useFonts } from 'expo-font';
 import * as React from 'react';
 import { BackHandler, DeviceEventEmitter, Platform } from 'react-native';
 
-import { CallType, CallUser } from '../../rename.callkit';
+import {
+  CallType,
+  CallUser,
+  ChatCustomMessageBody,
+  ChatMessage,
+  ChatMessageType,
+} from '../../rename.callkit';
 import {
   ChatGroup,
   ChatMultiDeviceEvent,
@@ -18,10 +24,12 @@ import {
 import {
   ChatOptionsType,
   ChatServiceListener,
+  ContactServiceListener,
   createDefaultStringSet,
   DataModel,
   DataProfileProvider,
   DisconnectReasonType,
+  gCustomMessageAddedContactTip,
   generateNeutralColor,
   generateNeutralSpecialColor,
   generatePrimaryColor,
@@ -566,6 +574,28 @@ export function useApp() {
     console.log('dev:onUnhandledAction:', action);
   }, []);
 
+  const onSystemTip = React.useCallback(
+    (msg: ChatMessage, tr: (key: string, ...args: any[]) => string) => {
+      if (msg.body.type !== ChatMessageType.CUSTOM) {
+        return undefined;
+      }
+      const body = msg.body as ChatCustomMessageBody;
+      if (body.event === gCustomMessageAddedContactTip) {
+        try {
+          const ret = body.params as { userName: string };
+          return tr(
+            '_uikit_msg_tip_added_contact',
+            ret?.userName ?? msg.conversationId
+          );
+        } catch (error) {
+          return tr('_uikit_msg_tip_added_contact');
+        }
+      }
+      return undefined;
+    },
+    []
+  );
+
   React.useEffect(() => {
     const uiListener: UIGroupListListener = {
       onUpdatedEvent: (_data) => {
@@ -825,6 +855,28 @@ export function useApp() {
     };
   }, []);
 
+  React.useEffect(() => {
+    const listener = {
+      onContactAdded: async (userName: string) => {
+        try {
+          const user = await im.getUserInfoSync({ userId: userName });
+          im.messageManager.addTipMessage({
+            convId: userName,
+            convType: 0,
+            tipType: gCustomMessageAddedContactTip,
+            kvs: { userName: user.value?.userName ?? userName },
+          });
+        } catch (error) {
+          console.warn('dev:onContactAdded:error:', error);
+        }
+      },
+    } as ContactServiceListener;
+    im.addListener(listener);
+    return () => {
+      im.removeListener(listener);
+    };
+  }, [im]);
+
   return {
     im,
     permissionsRef,
@@ -871,5 +923,6 @@ export function useApp() {
     onGroupsHandler,
     onUsersHandler,
     fontFamily,
+    onSystemTip,
   };
 }

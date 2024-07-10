@@ -119,6 +119,7 @@ export function App() {
     onGroupsHandler,
     onUsersHandler,
     fontFamily,
+    onSystemTip,
   } = useApp();
 
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
@@ -331,6 +332,7 @@ export function App() {
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}
+        onSystemTip={onSystemTip}
       >
         <CallKitContainer
           option={{

@@ -556,6 +556,9 @@ export function useConversationList(props: ConversationListProps) {
           }
         }
       },
+      onAddTipMessage: (msg: ChatMessage) => {
+        onMessage([msg]);
+      },
     } as MessageManagerListener;
     im.messageManager.addListener('conv_list', listener);
     return () => {

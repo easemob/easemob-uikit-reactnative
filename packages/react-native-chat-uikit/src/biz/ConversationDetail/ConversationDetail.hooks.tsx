@@ -36,12 +36,7 @@ import type {
   MessageListRef,
   MessageModel,
   SendCardProps,
-  SendCustomProps,
-  SendFileProps,
-  SendImageProps,
-  SendTextProps,
-  SendVideoProps,
-  SendVoiceProps,
+  SendMessageProps,
 } from './types';
 
 export function useConversationDetail(props: ConversationDetailProps) {
@@ -225,16 +220,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
   }, [convId, convType, im, thread, comType]);
 
   const onClickedSend = React.useCallback(
-    (
-      value:
-        | SendTextProps
-        | SendFileProps
-        | SendImageProps
-        | SendVideoProps
-        | SendVoiceProps
-        | SendCardProps
-        | SendCustomProps
-    ) => {
+    (value: SendMessageProps) => {
       timeoutTask(0, () => {
         _messageListRef.current?.addSendMessage(value);
       });

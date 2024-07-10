@@ -93,6 +93,8 @@ export function createStringSetEn(): StringSet {
       id ? `${id} create thread finished.` : 'Create thread finished.',
     '_uikit_msg_tip_create_group_success_with_params': (name) =>
       `Group ${name} has been created.`,
+    '_uikit_msg_tip_added_contact': (name) =>
+      `You have added ${name} as a contact.`,
 
     '_uikit_info_send_msg': 'Send Messages',
     '_uikit_info_send_audio': 'Voice Call',

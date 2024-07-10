@@ -75,6 +75,7 @@ export function Container(props: ContainerProps) {
     releaseArea,
     onGroupsHandler,
     onUsersHandler,
+    onSystemTip,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -164,6 +165,7 @@ export function Container(props: ContainerProps) {
                   enablePinMessage: enablePinMessage,
                   enableUrlPreview: enableUrlPreview,
                   releaseArea: releaseArea ?? _releaseArea,
+                  onSystemTip: onSystemTip,
                 }}
               >
                 <AbsoluteViewContextProvider>

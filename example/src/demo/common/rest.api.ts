@@ -52,6 +52,10 @@ export type RequestGroupAvatarResult = {
 export type RequestDestroyAccountResult = {
   code: number;
 };
+export type RequestGetUserByPhoneResult = {
+  chatUserName: string;
+  code: number;
+};
 
 export class RestApi {
   private static _protocol: string = 'http://';
@@ -397,6 +401,31 @@ export class RestApi {
       };
     } catch (error) {
       console.warn('RestApi:requestDestroyAccount:error:', error);
+      return { isOk: false, error };
+    }
+  }
+
+  public static async requestGetUserByPhone(params: {
+    phone: string;
+    chatUserName: string;
+    userToken: string;
+  }): Promise<RequestResult<RequestGetUserByPhoneResult>> {
+    const { phone, chatUserName, userToken } = params;
+    const url = this.getBasicUrl() + `/user/${phone}?operator=${chatUserName}`;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userToken}`,
+        },
+      });
+      const value = await response.json();
+      console.log('RestApi:requestGetUserByPhone:', value, url);
+      return value;
+    } catch (error) {
+      console.warn('RestApi:requestGetUserByPhone:error:', error);
       return { isOk: false, error };
     }
   }

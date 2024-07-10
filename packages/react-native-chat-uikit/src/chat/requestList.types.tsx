@@ -9,7 +9,7 @@ export type RequestListListener = {
   /**
    * Callback notification of new request list changed.
    */
-  onNewRequestListChanged: (list: NewRequestModel[]) => void;
+  onNewRequestListChanged: (list: NewRequestModel[], changed: number) => void;
 };
 
 /**
@@ -18,8 +18,10 @@ export type RequestListListener = {
 export interface RequestList extends CommonManager<RequestListListener> {
   /**
    * Send new request list changed.
+   *
+   * @param count New request list count changed. > 0, = 0, < 0.
    */
-  emitNewRequestListChanged(): void;
+  emitNewRequestListChanged(changed: number): void;
   /**
    * Get new request list.
    */

@@ -7,6 +7,7 @@ import {
   ChatFileMessageBody,
   ChatGroupMessageAck,
   ChatMessage,
+  ChatMessageChatType,
   ChatMessagePinInfo,
   ChatMessageStatus,
   ChatMessageStatusCallback,
@@ -141,6 +142,11 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
         });
       })
       .catch();
+  }
+  emitTipMessage(msg: ChatMessage): void {
+    this._userListener.forEach((v) => {
+      v.onAddTipMessage?.(msg);
+    });
   }
   bindOnMessagesReceived(messages: Array<ChatMessage>) {
     asyncTask(this.emitConversationUnreadCountChanged.bind(this));
@@ -545,6 +551,29 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
           message: msg,
         });
       }
+    });
+  }
+
+  addTipMessage(params: {
+    convId: string;
+    convType: ChatMessageChatType;
+    tipType: string;
+    kvs: Record<string, string>;
+    isChatThread?: boolean;
+    onResult?: (isOk: boolean) => void;
+  }): void {
+    const tipMsg = ChatMessage.createCustomMessage(
+      params.convId,
+      params.tipType,
+      params.convType,
+      { params: params.kvs, isChatThread: params.isChatThread }
+    );
+    this._client.insertMessage({
+      message: tipMsg,
+      onResult: (result) => {
+        this.emitTipMessage(tipMsg);
+        params.onResult?.(result.isOk);
+      },
     });
   }
 }

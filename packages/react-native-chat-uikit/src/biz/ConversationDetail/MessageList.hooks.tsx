@@ -87,6 +87,7 @@ import type {
   SendCustomProps,
   SendFileProps,
   SendImageProps,
+  SendMessageProps,
   SendSystemProps,
   SendTextProps,
   SendTimeProps,
@@ -848,6 +849,13 @@ export function useMessageList(
       }
     },
     [comType, dataRef, refreshToUI]
+  );
+
+  const saveMessage = React.useCallback(
+    (msg: ChatMessage) => {
+      im.insertMessage({ message: msg });
+    },
+    [im]
   );
 
   const deleteMessage = React.useCallback(
@@ -1630,7 +1638,7 @@ export function useMessageList(
     [comType, dataRef, enableThread, onAddMessageToUI, refreshToUI]
   );
 
-  const onRecallMessageToUI = React.useCallback(
+  const onTipMessageToUI = React.useCallback(
     (tipMsg: ChatMessage) => {
       onAddDataToUI(
         {
@@ -1652,9 +1660,9 @@ export function useMessageList(
     (orgMsg: ChatMessage, tipMsg: ChatMessage) => {
       onDelMessageToUI(orgMsg);
       onDelMessageQuoteToUI(orgMsg);
-      onRecallMessageToUI(tipMsg);
+      onTipMessageToUI(tipMsg);
     },
-    [onDelMessageQuoteToUI, onDelMessageToUI, onRecallMessageToUI]
+    [onDelMessageQuoteToUI, onDelMessageToUI, onTipMessageToUI]
   );
 
   const sendRecvMessageReadAck = React.useCallback(
@@ -1931,16 +1939,7 @@ export function useMessageList(
 
   const _addSendMessageToUI = React.useCallback(
     (
-      value:
-        | SendFileProps
-        | SendImageProps
-        | SendTextProps
-        | SendVideoProps
-        | SendVoiceProps
-        | SendTimeProps
-        | SendSystemProps
-        | SendCardProps
-        | SendCustomProps,
+      value: SendMessageProps,
       isShow: boolean
     ): MessageListItemProps | undefined => {
       let ret: MessageListItemProps | undefined;
@@ -2198,17 +2197,7 @@ export function useMessageList(
 
   const addSendMessageToUI = React.useCallback(
     async (params: {
-      value:
-        | SendFileProps
-        | SendImageProps
-        | SendTextProps
-        | SendVideoProps
-        | SendVoiceProps
-        | SendTimeProps
-        | SendSystemProps
-        | SendCardProps
-        | SendCustomProps;
-
+      value: SendMessageProps;
       onFinished?: (item: MessageListItemProps) => void;
       onBeforeCallback?: () => void | Promise<void>;
       forceVisible?: boolean;
@@ -2294,21 +2283,6 @@ export function useMessageList(
               if (inverted === false) {
                 setIsBottom(true);
               }
-              // addSendMessageToUI({
-              //   value: {
-              //     type: 'system',
-              //     msg: createMessageTip({
-              //       convId: convId,
-              //       convType: convType,
-              //       event: gCustomMessageCreateThreadTip,
-              //     }),
-              //   },
-              //   onFinished: (item) => {
-              //     im.insertMessage({
-              //       message: (item.model as MessageModel).msg,
-              //     });
-              //   },
-              // });
               addSendMessageToUI({
                 value: firstMessage,
                 onFinished: (item) => {
@@ -2676,18 +2650,7 @@ export function useMessageList(
     ref,
     () => {
       return {
-        addSendMessage: (
-          value:
-            | SendFileProps
-            | SendImageProps
-            | SendTextProps
-            | SendVideoProps
-            | SendVoiceProps
-            | SendTimeProps
-            | SendSystemProps
-            | SendCardProps
-            | SendCustomProps
-        ) => {
+        addSendMessage: (value: SendMessageProps) => {
           if (comType === 'create_thread') {
             createThread((res) => {
               if (res.isOk === true && res.value) {
@@ -2714,16 +2677,7 @@ export function useMessageList(
           });
         },
         addSendMessageToUI: (params: {
-          value:
-            | SendFileProps
-            | SendImageProps
-            | SendTextProps
-            | SendVideoProps
-            | SendVoiceProps
-            | SendTimeProps
-            | SendSystemProps
-            | SendCardProps
-            | SendCustomProps;
+          value: SendMessageProps;
 
           onFinished?: (item: MessageListItemProps) => void;
           onBeforeCallback?: () => void | Promise<void>;
@@ -2732,6 +2686,9 @@ export function useMessageList(
         },
         sendMessageToServer: (msg: ChatMessage) => {
           return sendMessageToServer(msg);
+        },
+        saveMessage: (msg: ChatMessage) => {
+          saveMessage(msg);
         },
         removeMessage: (msg: ChatMessage) => {
           deleteMessage(msg);
@@ -2862,6 +2819,7 @@ export function useMessageList(
       onUpdateMessageToUI,
       recallMessage,
       requestShowPinMessage,
+      saveMessage,
       scrollToBottom,
       sendMessageToServer,
       sendRecvMessageReadAck,
@@ -2960,6 +2918,9 @@ export function useMessageList(
           }
         }
       },
+      onAddTipMessage: (msg: ChatMessage) => {
+        onTipMessageToUI(msg);
+      },
     } as MessageManagerListener;
     im.messageManager.addListener(convId, listener);
     return () => {
@@ -2973,6 +2934,7 @@ export function useMessageList(
     inverted,
     onAddMessageToUI,
     onRecvRecallMessage,
+    onTipMessageToUI,
     onUpdateMessageToUI,
     recvMessageAutoScroll,
     scrollToBottom,

@@ -66,10 +66,10 @@ export class RequestListImpl implements RequestList {
   removeListener(key: string) {
     this._userList.delete(key);
   }
-  emitNewRequestListChanged() {
+  emitNewRequestListChanged(changed: number) {
     for (const listener of this._userList.values()) {
       timeoutTask(0, () =>
-        listener.onNewRequestListChanged([...this._newRequestList])
+        listener.onNewRequestListChanged([...this._newRequestList], changed)
       );
     }
   }
@@ -115,7 +115,7 @@ export class RequestListImpl implements RequestList {
           this._client.insertMessage({
             message: newMsg,
             onResult: () => {
-              this.emitNewRequestListChanged();
+              this.emitNewRequestListChanged(1);
             },
           });
         } else {
@@ -127,7 +127,7 @@ export class RequestListImpl implements RequestList {
           this._client.insertMessage({
             message: newMsg,
             onResult: () => {
-              this.emitNewRequestListChanged();
+              this.emitNewRequestListChanged(1);
             },
           });
         }
@@ -138,7 +138,7 @@ export class RequestListImpl implements RequestList {
     for (const request of this._newRequestList) {
       if (request.requestId === userId) {
         request.state = 'accepted';
-        this.updateRequest(request);
+        this.removeRequest(request);
         break;
       }
     }
@@ -147,7 +147,7 @@ export class RequestListImpl implements RequestList {
     for (const request of this._newRequestList) {
       if (request.requestId === userId) {
         request.state = 'declined';
-        this.updateRequest(request);
+        this.removeRequest(request);
         break;
       }
     }
@@ -257,7 +257,7 @@ export class RequestListImpl implements RequestList {
     this._client.updateMessage({
       message: request.msg,
       onResult: () => {
-        this.emitNewRequestListChanged();
+        this.emitNewRequestListChanged(0);
       },
     });
   }
@@ -279,7 +279,7 @@ export class RequestListImpl implements RequestList {
       this._client.removeMessage({
         message: request.msg,
         onResult: () => {
-          this.emitNewRequestListChanged();
+          this.emitNewRequestListChanged(-1);
         },
       });
     }

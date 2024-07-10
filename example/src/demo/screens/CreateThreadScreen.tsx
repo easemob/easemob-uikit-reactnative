@@ -1,19 +1,12 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 
-import { ChatConversationType, ChatMessageThread } from '../../rename.uikit';
 import {
+  ChatConversationType,
+  ChatMessageThread,
   ConversationDetail,
   ConversationDetailModelType,
-  SendCardProps,
-  SendCustomProps,
-  SendFileProps,
-  SendImageProps,
-  SendSystemProps,
-  SendTextProps,
-  SendTimeProps,
-  SendVideoProps,
-  SendVoiceProps,
+  SendMessageProps,
   uuid,
 } from '../../rename.uikit';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
@@ -34,16 +27,7 @@ export function CreateThreadScreen(props: Props) {
 
   const onCreateThreadResult = (
     thread?: ChatMessageThread,
-    firstMessage?:
-      | SendFileProps
-      | SendImageProps
-      | SendTextProps
-      | SendVideoProps
-      | SendVoiceProps
-      | SendTimeProps
-      | SendSystemProps
-      | SendCardProps
-      | SendCustomProps
+    firstMessage?: SendMessageProps
   ) => {
     if (!thread) {
       navi.goBack();
