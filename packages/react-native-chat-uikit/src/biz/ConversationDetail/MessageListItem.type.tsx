@@ -23,6 +23,8 @@ export type MessageBasicProps = {
   layoutType: MessageLayoutType;
   msg: ChatMessage;
   maxWidth?: number;
+  onClicked?: () => void;
+  onLongPress?: () => void;
 };
 
 /**
@@ -119,6 +121,8 @@ export type MessageContentProps = {
   layoutType: MessageLayoutType;
   contentMaxWidth?: number | undefined;
   isVoicePlaying?: boolean | undefined;
+  onClicked?: () => void;
+  onLongPress?: () => void;
 };
 /**
  * Message Location component render type.

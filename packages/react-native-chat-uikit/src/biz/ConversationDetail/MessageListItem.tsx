@@ -96,7 +96,7 @@ import type {
 } from './types';
 
 export function MessageText(props: MessageTextProps) {
-  const { layoutType, msg, isSupport } = props;
+  const { layoutType, msg, isSupport, onLongPress } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getUrlListFromText } = useUrlPreview();
@@ -206,6 +206,7 @@ export function MessageText(props: MessageTextProps) {
               const _url = url.startsWith('http') ? url : `https://${url}`;
               Linking.openURL(_url);
             }}
+            onLongPress={onLongPress}
           />
         ) : (
           <Text
@@ -966,7 +967,14 @@ export function MessageCustomCard(props: MessageCustomCardProps) {
 }
 
 export function MessageContent(props: MessageContentProps) {
-  const { msg, isSupport, layoutType, contentMaxWidth, isVoicePlaying } = props;
+  const {
+    msg,
+    isSupport,
+    layoutType,
+    contentMaxWidth,
+    isVoicePlaying,
+    ...others
+  } = props;
   if (isSupport === true) {
     switch (msg.body.type) {
       case ChatMessageType.TXT: {
@@ -976,6 +984,7 @@ export function MessageContent(props: MessageContentProps) {
             layoutType={layoutType}
             isSupport={isSupport}
             maxWidth={contentMaxWidth}
+            {...others}
           />
         );
       }
@@ -985,6 +994,7 @@ export function MessageContent(props: MessageContentProps) {
             layoutType={layoutType}
             msg={msg}
             maxWidth={contentMaxWidth}
+            {...others}
           />
         );
       }
@@ -995,6 +1005,7 @@ export function MessageContent(props: MessageContentProps) {
             layoutType={layoutType}
             isPlay={isVoicePlaying}
             maxWidth={contentMaxWidth}
+            {...others}
           />
         );
       }
@@ -1004,6 +1015,7 @@ export function MessageContent(props: MessageContentProps) {
             msg={msg}
             layoutType={layoutType}
             maxWidth={contentMaxWidth}
+            {...others}
           />
         );
       }
@@ -1013,6 +1025,7 @@ export function MessageContent(props: MessageContentProps) {
             msg={msg}
             layoutType={layoutType}
             maxWidth={contentMaxWidth}
+            {...others}
           />
         );
       }
@@ -1022,6 +1035,7 @@ export function MessageContent(props: MessageContentProps) {
             msg={msg}
             layoutType={layoutType}
             maxWidth={contentMaxWidth}
+            {...others}
           />
         );
       }
@@ -1033,6 +1047,7 @@ export function MessageContent(props: MessageContentProps) {
               msg={msg}
               layoutType={layoutType}
               maxWidth={contentMaxWidth}
+              {...others}
             />
           );
         }
@@ -1042,6 +1057,7 @@ export function MessageContent(props: MessageContentProps) {
             layoutType={layoutType}
             isSupport={isSupport}
             maxWidth={contentMaxWidth}
+            {...others}
           />
         );
       }
@@ -1052,13 +1068,19 @@ export function MessageContent(props: MessageContentProps) {
             layoutType={layoutType}
             isSupport={isSupport}
             maxWidth={contentMaxWidth}
+            {...others}
           />
         );
       }
     }
   } else {
     return (
-      <MessageText msg={msg} layoutType={layoutType} isSupport={isSupport} />
+      <MessageText
+        msg={msg}
+        layoutType={layoutType}
+        isSupport={isSupport}
+        {...others}
+      />
     );
   }
 }
@@ -1147,6 +1169,10 @@ export function MessageBubble(props: MessageBubbleProps) {
     }
   }, [checked, model, msg.msgId, onClickedChecked, onLongPress]);
 
+  const _onClickedContent = _onClicked;
+
+  const _onLongPressContent = _onLongPress;
+
   return (
     <View
       style={[
@@ -1223,6 +1249,8 @@ export function MessageBubble(props: MessageBubbleProps) {
           layoutType,
           isVoicePlaying,
           contentMaxWidth,
+          onClicked: _onClickedContent,
+          onLongPress: _onLongPressContent,
         })}
       </Pressable>
     </View>
