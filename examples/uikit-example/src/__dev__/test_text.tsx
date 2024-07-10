@@ -1,6 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import * as React from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Container, Text } from 'react-native-chat-uikit';
 
 export function Test1() {
@@ -26,6 +26,58 @@ export function Test1() {
   );
 }
 
+export function Test2() {
+  return (
+    <View style={{ top: 100 }}>
+      <Pressable
+        style={{ backgroundColor: 'red', padding: 20 }}
+        onLongPress={() => {
+          console.log('test:zuoyu:Pressable:longPress:');
+        }}
+        // onPress={() => {
+        //   console.log('test:zuoyu:Pressable:press:');
+        // }}
+        // onStartShouldSetResponderCapture={() => true}
+        // onStartShouldSetResponder={() => true}
+        // onMoveShouldSetResponderCapture={() => true}
+        // onMoveShouldSetResponder={() => true}
+        onPressIn={() => {
+          console.log('test:zuoyu:Pressable:pressIn:');
+        }}
+        onPressOut={() => {
+          console.log('test:zuoyu:Pressable:pressOut:');
+        }}
+      >
+        <Text
+          selectable={true}
+          selectionColor={'red'}
+          // onStartShouldSetResponderCapture={() => true}
+          // onStartShouldSetResponder={() => true}
+          // onMoveShouldSetResponderCapture={() => true}
+          // onMoveShouldSetResponder={() => true}
+          onLongPress={(e) => {
+            e.stopPropagation();
+            console.log('test:zuoyu:Text:longPress:');
+          }}
+          onPress={(e) => {
+            e.stopPropagation();
+            console.log('test:zuoyu:Text:press:');
+          }}
+          onPressIn={(e) => {
+            e.stopPropagation();
+            console.log('test:zuoyu:Text:pressIn:');
+          }}
+          onPressOut={() => {
+            console.log('test:zuoyu:Text:pressOut:');
+          }}
+        >
+          {'test you welcome.'}
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
 export default function TestText() {
   return (
     <Container
@@ -35,7 +87,7 @@ export default function TestText() {
         autoLogin: false,
       }}
     >
-      <Test1 />
+      <Test2 />
     </Container>
   );
 }
