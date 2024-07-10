@@ -679,6 +679,7 @@ export interface MessageServices {
   fetchPinnedMessages(params: {
     convId: string;
     convType: ChatConversationType;
+    forceRequest?: boolean;
     onResult: ResultCallback<ChatMessage[]>;
   }): void;
   getPinnedMessages(params: {

@@ -184,7 +184,7 @@ export function MessagePinListItem(props: MessagePinListItemProps) {
             textType={'small'}
             style={{ color: getColor('time') }}
           >
-            {formatTsForConvList(msg.localTime)}
+            {formatTsForConvList(pinInfo?.pinTime ?? msg.serverTime)}
           </SingleLineText>
         </View>
         <View style={{ flex: 1 }} />
@@ -347,7 +347,7 @@ export function useMessagePinList(props: MessagePinListProps) {
         msgId: msg.msgId,
         onResult: (res) => {
           if (res.isOk) {
-            addItemToUI([msg], 'after');
+            addItemToUI([msg], 'before');
           }
         },
       });
@@ -366,18 +366,30 @@ export function useMessagePinList(props: MessagePinListProps) {
     registerCallback: registerCallback,
   });
 
-  const requestList = React.useCallback(() => {
-    im.fetchPinnedMessages({
-      convId: convId,
-      convType: convType,
-      onResult: (res) => {
-        if (res.isOk && res.value) {
-          const list = res.value;
-          addItemToUI(list, 'before');
-        }
-      },
-    });
-  }, [addItemToUI, convId, convType, im]);
+  const requestList = React.useCallback(
+    (forceRequest?: boolean) => {
+      im.fetchPinnedMessages({
+        convId: convId,
+        convType: convType,
+        forceRequest: forceRequest,
+        onResult: (res) => {
+          if (res.isOk && res.value) {
+            const list = res.value;
+            addItemToUI(list, 'before');
+          }
+        },
+      });
+    },
+    [addItemToUI, convId, convType, im]
+  );
+
+  const onRecvRecallMessage = React.useCallback(
+    (_orgMsg: ChatMessage, _tipMsg: ChatMessage) => {
+      dataRef.current = [];
+      requestList(true);
+    },
+    [dataRef, requestList]
+  );
 
   React.useEffect(() => {
     requestList();
@@ -405,12 +417,36 @@ export function useMessagePinList(props: MessagePinListProps) {
           removeItemToUI(msg.msgId);
         }
       },
+      onRecvRecallMessage: (orgMsg: ChatMessage, tipMsg: ChatMessage) => {
+        if (orgMsg.conversationId === convId) {
+          onRecvRecallMessage(orgMsg, tipMsg);
+        }
+      },
+      onRecallMessageResult: (params: {
+        isOk: boolean;
+        orgMsg?: ChatMessage;
+        tipMsg?: ChatMessage;
+      }) => {
+        if (params.isOk === true) {
+          if (params.orgMsg && params.tipMsg) {
+            if (params.orgMsg.conversationId === convId) {
+              onRecvRecallMessage(params.orgMsg, params.tipMsg);
+            }
+          }
+        }
+      },
     };
     im.messageManager.addListener('MessagePinList', listener);
     return () => {
       im.messageManager.removeListener('MessagePinList');
     };
-  }, [addItemToUI, im.messageManager, removeItemToUI]);
+  }, [
+    addItemToUI,
+    convId,
+    im.messageManager,
+    onRecvRecallMessage,
+    removeItemToUI,
+  ]);
 
   return {
     ...flatListProps,

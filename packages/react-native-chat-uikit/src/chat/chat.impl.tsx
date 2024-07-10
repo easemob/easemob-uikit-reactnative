@@ -2656,9 +2656,11 @@ export class ChatServiceImpl
   fetchPinnedMessages(params: {
     convId: string;
     convType: ChatConversationType;
+    forceRequest?: boolean;
     onResult: ResultCallback<ChatMessage[]>;
   }): void {
-    if (this._pinMessageList.has(params.convId)) {
+    const { forceRequest = false } = params;
+    if (this._pinMessageList.has(params.convId) && forceRequest === false) {
       this.getPinnedMessages(params);
       return;
     }
