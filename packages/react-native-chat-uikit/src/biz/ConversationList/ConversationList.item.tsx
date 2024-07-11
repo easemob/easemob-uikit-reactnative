@@ -25,17 +25,9 @@ export function ConversationListItem(props: ConversationListItemProps) {
   const { formatTime } = useConfigContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
     pin_bg: {
       light: colors.neutral[9],
       dark: colors.neutral[2],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
     },
     t2: {
       light: colors.neutral[5],
@@ -44,10 +36,6 @@ export function ConversationListItem(props: ConversationListItemProps) {
     t3: {
       light: colors.neutral[7],
       dark: colors.neutral[5],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
     },
     mention: {
       light: colors.primary[5],
@@ -141,7 +129,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
             <SingleLineText
               paletteType={'title'}
               textType={'medium'}
-              style={{ color: getColor('t1') }}
+              style={{ color: getColor('fg') }}
             >
               {data.convName ?? data.convId}
             </SingleLineText>

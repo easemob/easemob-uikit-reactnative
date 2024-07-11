@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 
 /**
@@ -9,13 +8,7 @@ import { Icon } from '../../ui/Image';
  * @returns JSX.Element
  */
 export function BackButton() {
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
-    },
-  });
+  const { getColor } = useColors({});
   return (
     <Icon
       name={'chevron_left'}

@@ -55,15 +55,7 @@ export const MessageThreadList = React.forwardRef<
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    text2: {
+    t2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
     },
@@ -100,14 +92,14 @@ export const MessageThreadList = React.forwardRef<
                   <SingleLineText
                     paletteType={'title'}
                     textType={'medium'}
-                    style={{ color: getColor('text') }}
+                    style={{ color: getColor('fg') }}
                   >
                     {tr('_uikit_thread_list', threadCount)}
                   </SingleLineText>
                   <SingleLineText
                     paletteType={'body'}
                     textType={'extraSmall'}
-                    style={{ color: getColor('text2') }}
+                    style={{ color: getColor('t2') }}
                   >
                     {`#${parentId}`}
                   </SingleLineText>
@@ -350,14 +342,6 @@ function ListItemRender(props: MessageThreadListItemProps) {
   const { getMessageSnapshot } = useMessageSnapshot();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     t2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
@@ -365,10 +349,6 @@ function ListItemRender(props: MessageThreadListItemProps) {
     count: {
       light: colors.primary[5],
       dark: colors.primary[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
     },
   });
 
@@ -398,7 +378,7 @@ function ListItemRender(props: MessageThreadListItemProps) {
             <SingleLineText
               paletteType={'title'}
               textType={'small'}
-              style={{ color: getColor('t1') }}
+              style={{ color: getColor('fg') }}
             >
               {title}
             </SingleLineText>

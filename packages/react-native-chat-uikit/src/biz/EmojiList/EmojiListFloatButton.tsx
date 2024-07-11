@@ -17,13 +17,9 @@ export function EmojiListFloatButton(params: EmojiListFloatButtonProps) {
   const { isVisible, onClicked, iconName, containerStyle, style } = params;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    fg: {
+    fg2: {
       light: colors.neutral[3],
       dark: colors.neutral[98],
-    },
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
     },
   });
   const { shadow } = useThemeContext();
@@ -60,7 +56,7 @@ export function EmojiListFloatButton(params: EmojiListFloatButtonProps) {
                 width: 24,
                 height: 24,
                 margin: 10,
-                tintColor: getColor('fg'),
+                tintColor: getColor('fg2'),
               },
               style,
             ]}

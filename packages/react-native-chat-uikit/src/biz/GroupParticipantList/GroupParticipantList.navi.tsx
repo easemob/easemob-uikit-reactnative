@@ -39,14 +39,6 @@ export const GroupParticipantListNavigationBar = (
   const isOwner = ownerId === im.userId;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     text_disable: {
       light: colors.neutral[7],
       dark: colors.neutral[3],
@@ -54,14 +46,6 @@ export const GroupParticipantListNavigationBar = (
     text_enable: {
       light: colors.error[5],
       dark: colors.error[6],
-    },
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
-    },
-    p: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
     },
   });
 
@@ -140,7 +124,7 @@ export const GroupParticipantListNavigationBar = (
               paletteType={'label'}
               style={{
                 color: getColor(
-                  selectedCount && selectedCount > 0 ? 'p' : 'text_disable'
+                  selectedCount && selectedCount > 0 ? 'enable' : 'text_disable'
                 ),
               }}
             >

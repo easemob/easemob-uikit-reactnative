@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { SectionListFactory } from '../../ui/SectionList';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
@@ -82,25 +81,7 @@ export function ContactList(props: ContactListProps) {
     showsVerticalScrollIndicator,
     ...others
   } = sectionListProps ?? {};
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    text_disable: {
-      light: colors.neutral[7],
-      dark: colors.neutral[3],
-    },
-    text_enable: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
-  });
+  const { getColor } = useColors({});
 
   return (
     <View

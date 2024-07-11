@@ -30,30 +30,6 @@ export function ContactListItem(props: ContactListItemProps) {
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    t2: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
-    },
-    disable: {
-      light: colors.neutral[7],
-      dark: colors.neutral[4],
-    },
-    enable: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
     btn_bg: {
       light: colors.neutral[95],
       dark: colors.neutral[2],
@@ -123,7 +99,7 @@ export function ContactListItem(props: ContactListItemProps) {
                 height: 28,
                 width: 28,
                 tintColor: getColor(
-                  checked !== false && disable !== true ? 'enable' : 'disable'
+                  checked !== false && disable !== true ? 'enable' : 'disable2'
                 ),
               }}
               onPress={() => {
@@ -145,7 +121,7 @@ export function ContactListItem(props: ContactListItemProps) {
           <SingleLineText
             paletteType={'title'}
             textType={'medium'}
-            style={{ color: getColor('t1') }}
+            style={{ color: getColor('fg') }}
           >
             {getNickName(section)}
           </SingleLineText>
@@ -162,7 +138,7 @@ export function ContactListItem(props: ContactListItemProps) {
                 backgroundColor: getColor('btn_bg'),
               }}
               textStyle={{
-                color: getColor(forwarded === true ? 'disable' : 't1'),
+                color: getColor(forwarded === true ? 'disable2' : 'fg'),
               }}
               onPress={_onForwardClicked}
             />
@@ -191,21 +167,9 @@ export function ContactListItemHeader(
   const { indexTitle } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     t2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
     },
   });
   return (
@@ -245,17 +209,7 @@ export const ContactListItemHeaderMemo = React.memo(ContactListItemHeader);
  */
 export function ContactItem(props: ContactItemProps) {
   const { icon, name, count, hasArrow, onClicked } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    icon: {
-      light: colors.neutral[6],
-      dark: colors.neutral[5],
-    },
-  });
+  const { getColor } = useColors({});
   return (
     <ListItem
       LeftName={
@@ -276,7 +230,7 @@ export function ContactItem(props: ContactItemProps) {
             paletteType={'title'}
             textType={'medium'}
             style={{
-              color: getColor('bg'),
+              color: getColor('fg'),
             }}
           >
             {name}

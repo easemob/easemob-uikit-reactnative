@@ -16,21 +16,9 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
   const { data, onClicked, onLongPressed, onCheckClicked } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     t2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
     },
     no_checked: {
       light: colors.neutral[7],
@@ -40,21 +28,13 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
       light: colors.primary[5],
       dark: colors.primary[6],
     },
-    disable: {
-      light: colors.neutral[7],
-      dark: colors.neutral[4],
-    },
-    enable: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
   });
   const getCheckedButton = (disable?: boolean, checked?: boolean) => {
     const name = (checked?: boolean) => {
       return checked !== false ? 'checked_rectangle' : 'unchecked_rectangle';
     };
     const color = (disable?: boolean) => {
-      return disable !== true ? getColor('enable') : getColor('disable');
+      return disable !== true ? getColor('enable') : getColor('disable2');
     };
     if (checked === undefined) {
       return null;
@@ -112,7 +92,7 @@ export function GroupParticipantListItem(props: GroupParticipantListItemProps) {
           <SingleLineText
             paletteType={'title'}
             textType={'medium'}
-            style={{ color: getColor('t1') }}
+            style={{ color: getColor('fg') }}
           >
             {data.memberName ?? data.memberId}
           </SingleLineText>

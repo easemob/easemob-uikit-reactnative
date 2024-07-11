@@ -4,7 +4,6 @@ import { View } from 'react-native';
 import type { IconNameType } from '../../assets';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
-import { usePaletteContext } from '../../theme';
 import { BottomSheetMenu, BottomSheetMenuRef } from './BottomSheetMenu';
 import { BottomSheetMenuItem } from './BottomSheetMenu.item';
 import type {
@@ -170,13 +169,7 @@ export const BottomSheetNameMenu = React.forwardRef<
 });
 
 function useGetListItems(onGetData?: () => any) {
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[0],
-    },
-  });
+  const { getColor } = useColors({});
   const { tr } = useI18nContext();
   const getItems = React.useCallback(
     (props: BottomSheetNameMenuProps) => {

@@ -75,17 +75,9 @@ export const BottomSheetReactionDetail = React.forwardRef<
   const isShow = React.useRef(false);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg1: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    bg2: {
+    bg3: {
       light: colors.neutral[8],
       dark: colors.neutral[3],
-    },
-    c1: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
     },
   });
   const {} = useSafeAreaInsets();
@@ -137,7 +129,7 @@ export const BottomSheetReactionDetail = React.forwardRef<
       <SafeAreaView
         style={{
           // height: 56 * 6 + 36 + 80,
-          backgroundColor: getColor('bg1'),
+          backgroundColor: getColor('bg'),
           alignItems: 'center',
           width: '100%',
           // borderTopLeftRadius: 16,
@@ -277,19 +269,11 @@ function TabItem(props: TabReactionItemProps) {
   const { getBorderRadius } = useGetStyleProps();
   const { fontFamily } = useConfigContext();
   const { getColor } = useColors({
-    common: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
     dis: {
       light: colors.neutral[3],
       dark: colors.neutral[7],
     },
-    bg: {
-      light: colors.primary[95],
-      dark: colors.primary[2],
-    },
-    bg2: {
+    bg4: {
       light: colors.neutral[9],
       dark: colors.neutral[7],
     },
@@ -311,13 +295,13 @@ function TabItem(props: TabReactionItemProps) {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            // borderColor: getColor('common'),
+            // borderColor: getColor('enable'),
             // borderWidth: 1,
             marginRight: 4,
             paddingRight: 8,
             paddingLeft: 6,
             backgroundColor: getColor(
-              currentSelected === reaction ? 'bg2' : ''
+              currentSelected === reaction ? 'bg4' : ''
             ),
             borderRadius: getBorderRadius({
               height: 36,
@@ -488,22 +472,6 @@ function UserListItem(props: UserListItemProps) {
   const { userId, userAvatar, userName, onClickedItem, isMyself } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    t2: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
-    },
     trash: {
       light: colors.neutral[7],
       dark: colors.neutral[7],

@@ -77,10 +77,6 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     text_disable: {
       light: colors.neutral[7],
       dark: colors.neutral[3],
@@ -88,10 +84,6 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     text_enable: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
-    },
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
     },
     t3: {
       light: colors.neutral[7],
@@ -247,7 +239,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
                 textType={'medium'}
                 paletteType={'title'}
                 style={{
-                  color: getColor('text'),
+                  color: getColor('fg'),
                 }}
               >
                 {comType === 'chat' || comType === 'search'

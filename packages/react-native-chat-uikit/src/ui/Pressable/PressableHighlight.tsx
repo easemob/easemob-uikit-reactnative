@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 
 export type PressableHighlightProps = PressableProps &
   React.RefAttributes<View> & {
@@ -28,13 +27,8 @@ export function PressableHighlight(props: PressableHighlightProps) {
   const [_underlayColor, setUnderlayColor] = React.useState<
     ColorValue | undefined
   >(underlayColor);
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg2: {
-      light: colors.neutral[95],
-      dark: colors.neutral[3],
-    },
-  });
+
+  const { getColor } = useColors({});
 
   const _onPressIn = React.useCallback(
     (event: GestureResponderEvent) => {

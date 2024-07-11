@@ -54,11 +54,7 @@ export const BottomSheetMessageReport = React.forwardRef<
   const { colors } = usePaletteContext();
   const { tr } = useI18nContext();
   const { getColor } = useColors({
-    backgroundColor: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    backgroundColor2: {
+    bg3: {
       light: colors.neutral[8],
       dark: colors.neutral[3],
     },
@@ -102,7 +98,7 @@ export const BottomSheetMessageReport = React.forwardRef<
         style={[
           {
             height: height,
-            backgroundColor: getColor('backgroundColor'),
+            backgroundColor: getColor('bg'),
             alignItems: 'center',
             width: '100%',
           },
@@ -114,7 +110,7 @@ export const BottomSheetMessageReport = React.forwardRef<
             width: 36,
             height: gBottomSheetHeaderHeight - 6 * 2,
             marginVertical: 6,
-            backgroundColor: getColor('backgroundColor2'),
+            backgroundColor: getColor('bg3'),
             borderRadius: 2.5,
           }}
         /> */}

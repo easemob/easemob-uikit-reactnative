@@ -86,14 +86,6 @@ export function MessagePinListItem(props: MessagePinListItemProps) {
   const { getMsgInfo, getContactInfo } = useDataPriority({});
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[95],
-      dark: colors.neutral[2],
-    },
-    fg: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     btn: {
       light: colors.neutralSpecial[5],
       dark: colors.neutralSpecial[6],
@@ -117,7 +109,7 @@ export function MessagePinListItem(props: MessagePinListItemProps) {
   return (
     <View
       style={{
-        backgroundColor: getColor('bg'),
+        backgroundColor: getColor('bg2'),
         marginHorizontal: 12,
         marginBottom: 8,
         borderRadius: 8,

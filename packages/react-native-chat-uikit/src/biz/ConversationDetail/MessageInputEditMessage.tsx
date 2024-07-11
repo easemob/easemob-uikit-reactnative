@@ -97,21 +97,9 @@ export const MessageInputEditMessage = React.forwardRef<
   const { fontFamily } = useConfigContext();
   const modalRef = React.useRef<SlideModalRef>({} as any);
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    bg2: {
-      light: colors.neutral[95],
-      dark: colors.neutral[2],
-    },
     state: {
       light: colors.neutralSpecial[5],
       dark: colors.neutralSpecial[6],
-    },
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
     },
     btn_disable: {
       light: colors.neutral[7],

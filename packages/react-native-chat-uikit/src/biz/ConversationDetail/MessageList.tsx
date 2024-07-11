@@ -9,7 +9,6 @@ import {
 
 import { useColors } from '../../hook';
 import { ChatConversationType } from '../../rename.chat';
-import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
 import { BottomSheetEmojiList } from '../BottomSheetEmojiList/BottomSheetEmojiList';
@@ -113,13 +112,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       msgPinBackgroundCurrentOpacity,
       msgPinBackgroundOpacityAnimate,
     } = useMessagePin({});
-    const { colors } = usePaletteContext();
-    const { getColor } = useColors({
-      bg: {
-        light: colors.neutral[98],
-        dark: colors.neutral[1],
-      },
-    });
+    const { getColor } = useColors({});
 
     return (
       <View

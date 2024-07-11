@@ -42,25 +42,9 @@ export function Search(props: SearchProps) {
   const { input } = cornerRadius;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    bg2: {
-      light: colors.neutral[95],
-      dark: colors.neutral[2],
-    },
-    color: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     cursor: {
       light: colors.primary[5],
       dark: colors.primary[6],
-    },
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
     },
     h: {
       light: colors.neutral[6],
@@ -119,7 +103,7 @@ export function Search(props: SearchProps) {
             }}
             style={{
               paddingLeft: 35,
-              color: getColor('color'),
+              color: getColor('fg'),
             }}
             onChangeText={onChangeText}
             value={value}

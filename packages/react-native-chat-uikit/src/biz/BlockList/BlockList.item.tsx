@@ -17,21 +17,9 @@ export function BlockListItem(props: BlockListItemProps) {
   const { section, onClicked, onLongPressed } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    t2: {
+    fg2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
     },
   });
 
@@ -77,7 +65,7 @@ export function BlockListItem(props: BlockListItemProps) {
           <SingleLineText
             paletteType={'title'}
             textType={'medium'}
-            style={{ color: getColor('t1') }}
+            style={{ color: getColor('fg') }}
           >
             {getNickName(section)}
           </SingleLineText>
@@ -105,21 +93,9 @@ export function BlockListItemHeader(
   const { indexTitle } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    t2: {
+    fg2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
     },
   });
   return (
@@ -143,7 +119,7 @@ export function BlockListItemHeader(
           paletteType={'title'}
           textType={'small'}
           style={{
-            color: getColor('t2'),
+            color: getColor('fg2'),
           }}
         >
           {indexTitle}

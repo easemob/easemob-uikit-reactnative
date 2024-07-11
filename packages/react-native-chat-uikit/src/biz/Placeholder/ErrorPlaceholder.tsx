@@ -19,11 +19,7 @@ export function ErrorPlaceholder({ onClicked }: { onClicked: () => void }) {
   const { input } = cornerRadius;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    fg: {
+    fg2: {
       light: colors.neutral[7],
       dark: colors.neutral[4],
     },
@@ -39,7 +35,7 @@ export function ErrorPlaceholder({ onClicked }: { onClicked: () => void }) {
         <Text
           paletteType={'body'}
           textType={'medium'}
-          style={{ color: getColor('fg') }}
+          style={{ color: getColor('fg2') }}
         >
           {tr('_uikit_error_placeholder_tip')}
         </Text>

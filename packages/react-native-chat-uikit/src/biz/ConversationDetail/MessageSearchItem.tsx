@@ -24,25 +24,9 @@ export function MessageSearchItem(props: MessageSearchItemProps) {
   const { formatTime } = useConfigContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     t2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
-    },
-    t3: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
     },
   });
   const { getMessageSnapshot } = useMessageSnapshot();
@@ -97,7 +81,7 @@ export function MessageSearchItem(props: MessageSearchItemProps) {
             <SingleLineText
               paletteType={'title'}
               textType={'medium'}
-              style={{ color: getColor('t1') }}
+              style={{ color: getColor('fg') }}
             >
               {userName ?? userId}
             </SingleLineText>

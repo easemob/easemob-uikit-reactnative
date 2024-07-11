@@ -74,10 +74,6 @@ export function EmojiList(props: EmojiListProps) {
   const { colors } = usePaletteContext();
   const { width: winWidth } = useWindowDimensions();
   const { getColor } = useColors({
-    bg1: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
     btn1: {
       light: colors.neutral[3],
       dark: colors.neutral[98],
@@ -132,7 +128,7 @@ export function EmojiList(props: EmojiListProps) {
       style={[
         {
           // height: gAspectRatio * winWidth,
-          backgroundColor: getColor('bg1'),
+          backgroundColor: getColor('bg'),
         },
         containerStyle,
       ]}
@@ -201,7 +197,7 @@ export function EmojiList(props: EmojiListProps) {
               crt: corner.avatar,
               cr: cornerRadius,
             }),
-            backgroundColor: getColor('bg1'),
+            backgroundColor: getColor('bg'),
           }}
           style={{
             tintColor: getColor('btn1'),
@@ -224,7 +220,7 @@ export function EmojiList(props: EmojiListProps) {
             backgroundColor: getColor('btn2'),
           }}
           style={{
-            tintColor: getColor('bg1'),
+            tintColor: getColor('bg'),
           }}
         />
       ) : null}

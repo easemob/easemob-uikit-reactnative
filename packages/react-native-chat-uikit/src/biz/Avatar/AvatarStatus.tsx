@@ -2,7 +2,6 @@ import * as React from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 import { StatusType } from '../types';
 
 type Point = {
@@ -63,17 +62,7 @@ export function AvatarStatus(props: AvatarStatusProps) {
     AvatarStatusRender,
     status,
   } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    bg2: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
+  const { getColor } = useColors({});
 
   return (
     <View
@@ -107,7 +96,7 @@ export function AvatarStatus(props: AvatarStatusProps) {
           status={status}
           style={[
             {
-              backgroundColor: getColor('bg2'),
+              backgroundColor: getColor('bg'),
               height: parentSize / scale - childrenPaddingSize * 2,
               width: parentSize / scale - childrenPaddingSize * 2,
               borderRadius: parentSize / scale - childrenPaddingSize * 2,
@@ -119,7 +108,7 @@ export function AvatarStatus(props: AvatarStatusProps) {
         <View
           style={[
             {
-              backgroundColor: getColor('bg2'),
+              backgroundColor: getColor('bg'),
               height: parentSize / scale - childrenPaddingSize * 2,
               width: parentSize / scale - childrenPaddingSize * 2,
               borderRadius: parentSize / scale - childrenPaddingSize * 2,

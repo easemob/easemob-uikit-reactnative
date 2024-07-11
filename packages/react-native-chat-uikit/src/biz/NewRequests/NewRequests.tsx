@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ListRenderItemInfo, View } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
@@ -53,21 +52,7 @@ export function NewRequests(props: NewRequestsProps) {
     alertRef,
     onRequestCloseMenu,
   } = useNewRequests(props);
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
-    },
-  });
+  const { getColor } = useColors({});
 
   return (
     <View

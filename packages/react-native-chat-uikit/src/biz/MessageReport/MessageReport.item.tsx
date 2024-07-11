@@ -18,14 +18,6 @@ export function MessageReportItem(props: MessageReportItemProps) {
   const { colors } = usePaletteContext();
   const { tr } = useI18nContext();
   const { getColor } = useColors({
-    backgroundColor: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    color: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     checked: {
       light: colors.primary[5],
       dark: colors.primary[6],
@@ -41,7 +33,7 @@ export function MessageReportItem(props: MessageReportItemProps) {
     <View
       key={id}
       style={{
-        backgroundColor: getColor('backgroundColor'),
+        backgroundColor: getColor('bg'),
         paddingHorizontal: 16,
         width: '100%',
         height: gMessageReportItemHeight,
@@ -64,7 +56,7 @@ export function MessageReportItem(props: MessageReportItemProps) {
             textType={'medium'}
             paletteType={'title'}
             style={{
-              color: getColor('color'),
+              color: getColor('fg'),
             }}
           >
             {tr(title)}

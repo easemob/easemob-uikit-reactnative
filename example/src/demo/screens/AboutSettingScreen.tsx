@@ -41,14 +41,14 @@ export function EasemobAboutSettingScreen(props: Props) {
       light: colors.neutral[1],
       dark: colors.neutral[98],
     },
-    enable: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
-    disable: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
-    },
+    // enable: {
+    //   light: colors.primary[5],
+    //   dark: colors.primary[6],
+    // },
+    // disable: {
+    //   light: colors.neutral[5],
+    //   dark: colors.neutral[6],
+    // },
     right: {
       light: colors.neutral[3],
       dark: colors.neutral[5],
@@ -321,14 +321,14 @@ export function AgoraAboutSettingScreen(props: Props) {
       light: colors.neutral[1],
       dark: colors.neutral[98],
     },
-    enable: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
-    disable: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
-    },
+    // enable: {
+    //   light: colors.primary[5],
+    //   dark: colors.primary[6],
+    // },
+    // disable: {
+    //   light: colors.neutral[5],
+    //   dark: colors.neutral[6],
+    // },
     right: {
       light: colors.neutral[3],
       dark: colors.neutral[5],

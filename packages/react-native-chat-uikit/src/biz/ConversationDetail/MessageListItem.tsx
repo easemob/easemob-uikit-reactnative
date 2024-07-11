@@ -522,11 +522,7 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
   const { getBorderRadius } = useGetStyleProps();
   const { releaseArea } = useConfigContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[8],
-      dark: colors.neutral[3],
-    },
-    fg: {
+    thumb: {
       light: colors.neutral[7],
       dark: colors.neutral[2],
     },
@@ -550,7 +546,7 @@ export function MessageDefaultImage(props: MessageDefaultImageProps) {
       defaultStyle={{
         width: thumbWidth,
         height: thumbHeight,
-        tintColor: getColor('fg'),
+        tintColor: getColor('thumb'),
       }}
       defaultContainerStyle={{
         width: width,
@@ -1470,10 +1466,6 @@ export function MessageThreadBubble(props: MessageThreadBubbleProps) {
       light: colors.neutral[3],
       dark: colors.neutral[7],
     },
-    bg: {
-      light: colors.neutral[95],
-      dark: colors.neutral[2],
-    },
     text2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
@@ -1504,7 +1496,7 @@ export function MessageThreadBubble(props: MessageThreadBubbleProps) {
           marginLeft: layoutType === 'left' ? paddingWidth : undefined,
           marginRight: layoutType === 'left' ? undefined : paddingWidth,
           marginTop: 2,
-          backgroundColor: getColor('bg'),
+          backgroundColor: getColor('bg2'),
           width: maxWidth,
         },
         getMessageBubbleBorderRadius({
@@ -1609,14 +1601,6 @@ export function MessageReaction(props: MessageReactionProps) {
       light: colors.neutral[3],
       dark: colors.neutral[7],
     },
-    bg: {
-      light: colors.primary[95],
-      dark: colors.primary[2],
-    },
-    bg2: {
-      light: colors.neutral[95],
-      dark: colors.neutral[2],
-    },
     green: {
       light: colors.secondary[4],
       dark: colors.secondary[5],
@@ -1661,7 +1645,7 @@ export function MessageReaction(props: MessageReactionProps) {
                   marginLeft: layoutType === 'left' ? undefined : 4,
                   paddingRight: 8,
                   paddingLeft: 6,
-                  backgroundColor: getColor(v.isAddedBySelf ? 'bg' : 'bg2'),
+                  backgroundColor: getColor('bg2'),
                   borderRadius: getBorderRadius({
                     height: 36,
                     crt:
@@ -2295,10 +2279,6 @@ export function MessageView(props: MessageViewProps) {
   const userAvatar = model.userAvatar;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
     h: {
       light: colors.neutral[95],
       dark: colors.neutral[6],
@@ -2474,7 +2454,7 @@ export function SystemTipView(props: SystemTipViewProps) {
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    fg: {
+    t1: {
       light: colors.neutral[7],
       dark: colors.neutral[6],
     },
@@ -2499,7 +2479,7 @@ export function SystemTipView(props: SystemTipViewProps) {
         style={{
           flexWrap: 'wrap',
           textAlign: 'center',
-          color: getColor('fg'),
+          color: getColor('t1'),
         }}
       >
         {systemTip(msg, tr)}
@@ -2514,7 +2494,7 @@ export function TimeTipView(props: TimeTipViewProps) {
   const date = new Date(timestamp);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    fg: {
+    t1: {
       light: colors.neutral[7],
       dark: colors.neutral[6],
     },
@@ -2531,7 +2511,7 @@ export function TimeTipView(props: TimeTipViewProps) {
         style={{
           flexWrap: 'wrap',
           textAlign: 'center',
-          color: getColor('fg'),
+          color: getColor('t1'),
         }}
       >
         {date.toDateString()}

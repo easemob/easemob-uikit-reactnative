@@ -64,18 +64,6 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
     } = useGroupInfo(props, ref);
     const { colors } = usePaletteContext();
     const { getColor } = useColors({
-      bg: {
-        light: colors.neutral[98],
-        dark: colors.neutral[1],
-      },
-      bg2: {
-        light: colors.neutral[95],
-        dark: colors.neutral[2],
-      },
-      fg: {
-        light: colors.neutral[1],
-        dark: colors.neutral[98],
-      },
       t1: {
         light: colors.neutral[5],
         dark: colors.neutral[6],
@@ -87,10 +75,6 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
       t3: {
         light: colors.neutral[7],
         dark: colors.neutral[6],
-      },
-      icon: {
-        light: colors.neutral[3],
-        dark: colors.neutral[95],
       },
     });
 

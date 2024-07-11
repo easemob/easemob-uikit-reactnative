@@ -22,11 +22,7 @@ export const DefaultSlide = (props: SlideProps) => {
 const Internal = (props: SlideProps) => {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    backgroundColor: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    backgroundColor2: {
+    bg3: {
       light: colors.neutral[8],
       dark: colors.neutral[3],
     },
@@ -37,7 +33,7 @@ const Internal = (props: SlideProps) => {
         {
           height: 32,
           width: '100%',
-          backgroundColor: getColor('backgroundColor'),
+          backgroundColor: getColor('bg'),
           alignItems: 'center',
           borderTopRightRadius: 16,
           borderTopLeftRadius: 16,
@@ -51,7 +47,7 @@ const Internal = (props: SlideProps) => {
           width: 36,
           height: 5,
           marginTop: 6,
-          backgroundColor: getColor('backgroundColor2'),
+          backgroundColor: getColor('bg3'),
           borderRadius: 2.5,
         }}
       />

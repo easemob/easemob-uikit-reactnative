@@ -2,7 +2,6 @@ import * as React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import type { BottomVoiceBarProps, BottomVoiceBarRef } from './types';
 import { VoiceBar } from './VoiceBar';
@@ -16,13 +15,7 @@ export const BottomVoiceBar = React.forwardRef<
 ) {
   const { onRequestModalClose, ...others } = props;
   const modalRef = React.useRef<SlideModalRef>({} as any);
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
+  const { getColor } = useColors({});
 
   React.useImperativeHandle(
     ref,

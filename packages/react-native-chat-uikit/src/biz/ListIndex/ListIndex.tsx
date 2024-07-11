@@ -45,14 +45,6 @@ export const ListIndex = (props: ListIndexProps) => {
   });
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
-    fg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
     fg2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],

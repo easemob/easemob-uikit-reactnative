@@ -6,7 +6,6 @@ import {
 } from 'react-native-safe-area-context';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { EmojiListMemo } from '../EmojiList';
 import type { EmojiIconItem } from '../types';
@@ -55,7 +54,6 @@ export const BottomSheetEmojiList = React.forwardRef<
   props: BottomSheetEmojiListProps,
   ref?: React.ForwardedRef<BottomSheetEmojiListRef>
 ) {
-  const { colors } = usePaletteContext();
   const {} = useSafeAreaInsets();
   const modalRef = React.useRef<SlideModalRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
@@ -66,20 +64,7 @@ export const BottomSheetEmojiList = React.forwardRef<
     maxHeight: propsMaxHeight,
     onFace,
   } = useGetProps(props);
-  const { getColor } = useColors({
-    bg1: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    bg2: {
-      light: colors.neutral[8],
-      dark: colors.neutral[3],
-    },
-    c1: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
-    },
-  });
+  const { getColor } = useColors({});
   const isShow = React.useRef(false);
 
   React.useImperativeHandle(
@@ -124,7 +109,7 @@ export const BottomSheetEmojiList = React.forwardRef<
       <SafeAreaView
         style={{
           // height: 56 * 6 + 36 + 80,
-          backgroundColor: getColor('bg1'),
+          backgroundColor: getColor('bg'),
           alignItems: 'center',
           width: '100%',
           // borderTopLeftRadius: 16,

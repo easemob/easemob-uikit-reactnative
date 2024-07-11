@@ -2,7 +2,6 @@ import * as React from 'react';
 import type { ImageStyle, StyleProp } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 import { IconButton } from './IconButton';
 
 export type CheckButtonProps = {
@@ -14,23 +13,13 @@ export type CheckButtonProps = {
 
 export function CheckButton(props: CheckButtonProps) {
   const { checked, disable = false, onClicked, style } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    disable: {
-      light: colors.neutral[7],
-      dark: colors.neutral[4],
-    },
-    enable: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
-  });
+  const { getColor } = useColors({});
 
   const name = (checked?: boolean) => {
     return checked !== false ? 'checked_rectangle' : 'unchecked_rectangle';
   };
   const color = (disable?: boolean) => {
-    return disable !== true ? getColor('enable') : getColor('disable');
+    return disable !== true ? getColor('enable') : getColor('disable2');
   };
 
   return (

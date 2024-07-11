@@ -30,11 +30,7 @@ export function SearchStyle(props: SearchStyleProps) {
   const { cornerRadius: corner } = useThemeContext();
   const { getBorderRadius } = useGetStyleProps();
   const { getColor } = useColors({
-    backgroundColor: {
-      light: colors.neutral[95],
-      dark: colors.neutral[2],
-    },
-    color: {
+    fg2: {
       light: colors.neutral[6],
       dark: colors.neutral[4],
     },
@@ -61,7 +57,7 @@ export function SearchStyle(props: SearchStyleProps) {
             height: 36,
             paddingVertical: 7,
             width: '100%',
-            backgroundColor: getColor('backgroundColor'),
+            backgroundColor: getColor('bg2'),
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -71,7 +67,7 @@ export function SearchStyle(props: SearchStyleProps) {
             style={{
               width: 22,
               height: 22,
-              tintColor: getColor('color'),
+              tintColor: getColor('fg2'),
             }}
           />
           <View style={{ width: 4 }} />
@@ -79,7 +75,7 @@ export function SearchStyle(props: SearchStyleProps) {
             textType={'large'}
             paletteType={'body'}
             style={{
-              color: getColor('color'),
+              color: getColor('fg2'),
             }}
           >
             {tr(title)}

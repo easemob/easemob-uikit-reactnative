@@ -113,14 +113,6 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
     const { cornerRadius, colors } = usePaletteContext();
     const { getBorderRadius } = useGetStyleProps();
     const { getColor } = useColors({
-      bg: {
-        light: colors.neutral[95],
-        dark: colors.neutral[2],
-      },
-      fg: {
-        light: colors.neutral[1],
-        dark: colors.neutral[98],
-      },
       clear: {
         light: colors.neutral[3],
         dark: colors.neutral[8],
@@ -202,7 +194,7 @@ export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
               cr: cornerRadius,
               style: containerStyle,
             }),
-            backgroundColor: getColor('bg'),
+            backgroundColor: getColor('bg2'),
           },
           containerStyle,
           getStyle(),

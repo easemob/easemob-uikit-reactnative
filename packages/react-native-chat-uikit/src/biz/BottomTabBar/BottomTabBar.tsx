@@ -32,10 +32,6 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
   const { width: winWidth } = useWindowDimensions();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    backgroundColor: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
     selected: {
       light: colors.primary[5],
       dark: colors.primary[6],

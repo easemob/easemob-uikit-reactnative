@@ -40,25 +40,9 @@ export const ContactListNavigationBar = (
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     text_disable: {
       light: colors.neutral[7],
       dark: colors.neutral[3],
-    },
-    text_enable: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
     },
   });
 
@@ -119,7 +103,7 @@ export const ContactListNavigationBar = (
               textType={'medium'}
               style={{
                 color: getColor(
-                  selectedCount === 0 ? 'text_disable' : 'text_enable'
+                  selectedCount === 0 ? 'text_disable' : 'enable'
                 ),
               }}
             >
@@ -151,7 +135,7 @@ export const ContactListNavigationBar = (
               textType={'medium'}
               style={{
                 color: getColor(
-                  selectedMemberCount === 0 ? 'text_disable' : 'text_enable'
+                  selectedMemberCount === 0 ? 'text_disable' : 'enable'
                 ),
               }}
             >

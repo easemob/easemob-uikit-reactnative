@@ -21,23 +21,11 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
     const { getBorderRadius } = useGetStyleProps();
     const { fontFamily } = useConfigContext();
     const { getColor } = useColors({
-      bg: {
-        light: colors.neutral[98],
-        dark: colors.neutral[1],
-      },
-      bg2: {
-        light: colors.neutral[95],
-        dark: colors.neutral[2],
-      },
-      text: {
-        light: colors.neutral[1],
-        dark: colors.neutral[98],
-      },
-      text2: {
+      t2: {
         light: colors.neutral[7],
         dark: colors.neutral[4],
       },
-      text3: {
+      t3: {
         light: colors.neutral[5],
         dark: colors.neutral[6],
       },
@@ -141,7 +129,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
               textType={'large'}
               paletteType={'title'}
               style={{
-                color: getColor('text'),
+                color: getColor('fg'),
               }}
             >
               {title}
@@ -155,7 +143,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                   textType={'medium'}
                   paletteType={'label'}
                   style={{
-                    color: getColor('text3'),
+                    color: getColor('t3'),
                     textAlign: 'center',
                   }}
                 >
@@ -218,7 +206,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                         maxCount: inputMaxCount ?? 200,
                         onCountChange: setTextCount,
                         textStyles: {
-                          color: getColor('text2'),
+                          color: getColor('t2'),
                           paddingRight: 12,
                         },
                       }

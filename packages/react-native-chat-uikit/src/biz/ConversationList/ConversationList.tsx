@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ListRenderItemInfo, View } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
 import { StatusAvatar } from '../Avatar';
@@ -66,13 +65,7 @@ export function ConversationList(props: ConversationListProps) {
     onViewableItemsChanged: propsOnViewableItemsChanged,
     ...others
   } = propsFlatListProps ?? {};
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
+  const { getColor } = useColors({});
 
   return (
     <View

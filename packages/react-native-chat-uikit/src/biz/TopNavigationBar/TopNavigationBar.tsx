@@ -21,13 +21,7 @@ export function TopNavigationBar<LeftProps = any, RightProps = any>(
   props: TopNavigationBarProps<LeftProps, RightProps>
 ) {
   const { containerStyle, Title, Left, Right, LeftProps, RightProps } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
+  const { getColor } = useColors({});
 
   return (
     <View
@@ -62,7 +56,7 @@ export function TopNavigationBarRight({
 }) {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
+    fg2: {
       light: colors.neutral[3],
       dark: colors.neutral[95],
     },
@@ -79,7 +73,7 @@ export function TopNavigationBarRight({
     >
       <Icon
         name={iconName}
-        style={{ height: 24, width: 24, tintColor: getColor('bg') }}
+        style={{ height: 24, width: 24, tintColor: getColor('fg2') }}
       />
     </Pressable>
   );
@@ -93,7 +87,7 @@ export function TopNavigationBarRightTextList({
 }) {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    text: {
+    fg2: {
       light: colors.primary[5],
       dark: colors.primary[6],
     },
@@ -111,7 +105,7 @@ export function TopNavigationBarRightTextList({
       <SingleLineText
         paletteType={'label'}
         textType={'medium'}
-        style={{ color: getColor('text') }}
+        style={{ color: getColor('fg2') }}
       >
         {textList[0]}
       </SingleLineText>
@@ -127,7 +121,7 @@ export function TopNavigationBarRightList({
 }) {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
+    fg2: {
       light: colors.neutral[3],
       dark: colors.neutral[95],
     },
@@ -144,7 +138,7 @@ export function TopNavigationBarRightList({
               height: 24,
               width: 24,
               margin: 6,
-              tintColor: getColor('bg'),
+              tintColor: getColor('fg2'),
             }}
           />
         );
@@ -191,13 +185,7 @@ type TopNavigationBarLeftProps = {
 };
 export function TopNavigationBarLeft(props: TopNavigationBarLeftProps) {
   const { onBack, content } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    fg: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-  });
+  const { getColor } = useColors({});
   return (
     <Pressable
       style={{

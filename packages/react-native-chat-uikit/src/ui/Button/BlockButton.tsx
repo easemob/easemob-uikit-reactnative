@@ -32,7 +32,7 @@ export function BlockButton(props: BlockButtonProps) {
       light: colors.neutral[95],
       dark: colors.neutral[95],
     },
-    fg: {
+    t1: {
       light: colors.primary[5],
       dark: colors.primary[6],
     },
@@ -72,13 +72,13 @@ export function BlockButton(props: BlockButtonProps) {
       <View>
         <Icon
           name={iconName}
-          style={{ width: 32, height: 32, tintColor: getColor('fg') }}
+          style={{ width: 32, height: 32, tintColor: getColor('t1') }}
         />
       </View>
       <Text
         textType={'extraSmall'}
         paletteType={'body'}
-        style={{ color: getColor('fg') }}
+        style={{ color: getColor('t1') }}
       >
         {text}
       </Text>

@@ -21,25 +21,13 @@ export function NewRequestsItem(props: NewRequestsItemProps) {
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
     pin_bg: {
       light: colors.neutral[9],
       dark: colors.neutral[6],
     },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     t2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
     },
   });
   return (
@@ -76,7 +64,7 @@ export function NewRequestsItem(props: NewRequestsItemProps) {
             paletteType={'title'}
             textType={'medium'}
             style={{
-              color: getColor('t1'),
+              color: getColor('fg'),
             }}
           >
             {data.name ?? data.requestId}

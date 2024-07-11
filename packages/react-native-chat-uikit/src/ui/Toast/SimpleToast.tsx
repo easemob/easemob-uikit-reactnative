@@ -15,7 +15,7 @@ export function SimpleToast(props: SimpleToastProps) {
   const curTask = React.useRef<SimpleToastTask | undefined>(undefined);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
+    bg5: {
       light: colors.barrage.onLight[3],
       dark: colors.barrage.onDark[3],
     },
@@ -97,7 +97,7 @@ export function SimpleToast(props: SimpleToastProps) {
           paddingHorizontal: 20,
           paddingVertical: 8,
           borderRadius: 20,
-          backgroundColor: getColor('bg'),
+          backgroundColor: getColor('bg5'),
         }}
       >
         <Text

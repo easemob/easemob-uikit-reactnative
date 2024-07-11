@@ -20,22 +20,6 @@ export function VoiceBar(props: VoiceBarProps) {
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    disable: {
-      light: colors.neutral[7],
-      dark: colors.neutral[3],
-    },
-    enable: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
     trash: {
       light: colors.neutral[5],
       dark: colors.neutral[6],

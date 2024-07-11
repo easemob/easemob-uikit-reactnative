@@ -2,7 +2,6 @@ import * as React from 'react';
 import { StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 import { Text } from '../../ui/Text';
 
 export const gMaxCount = 99;
@@ -34,17 +33,7 @@ export type BadgesProps = {
  */
 export function Badges(props: BadgesProps) {
   const { count, maxCount = gMaxCount, containerStyle, textStyle } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    color: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    backgroundColor: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
-  });
+  const { getColor } = useColors({});
   const getCount = () => {
     if (count === undefined || count === 0) {
       return null;
@@ -69,7 +58,7 @@ export function Badges(props: BadgesProps) {
           borderRadius: 9,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: getColor('backgroundColor'),
+          backgroundColor: getColor('enable'),
           height: getSize('height'),
           width: getSize('width'),
         },
@@ -81,7 +70,7 @@ export function Badges(props: BadgesProps) {
         textType={'small'}
         style={[
           {
-            color: getColor('color'),
+            color: getColor('bg'),
             paddingHorizontal: 5,
           },
           textStyle,

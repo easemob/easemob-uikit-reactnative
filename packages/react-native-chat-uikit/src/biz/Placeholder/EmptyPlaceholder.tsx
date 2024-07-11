@@ -2,7 +2,6 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 import { Image } from '../../ui/Image';
 
 /**
@@ -10,17 +9,7 @@ import { Image } from '../../ui/Image';
  * @returns JSX.Element
  */
 export function EmptyPlaceholder() {
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    fg: {
-      light: colors.neutral[7],
-      dark: colors.neutral[4],
-    },
-  });
+  const { getColor } = useColors({});
   return (
     <View style={[styles.container, { backgroundColor: getColor('bg') }]}>
       <Image

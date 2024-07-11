@@ -31,21 +31,9 @@ export function DefaultListSearchItem<
   const { data, keyword, onClicked } = props;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     t2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
     },
   });
   return (
@@ -99,29 +87,9 @@ export function StateListSearchItem(
   const { checked, onCheckClicked, disable } = data;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     t2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
-    },
-    disable: {
-      light: colors.neutral[7],
-      dark: colors.neutral[4],
-    },
-    enable: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
     },
   });
   return (
@@ -158,7 +126,7 @@ export function StateListSearchItem(
                 height: 28,
                 width: 28,
                 tintColor: getColor(
-                  checked === true && disable !== true ? 'enable' : 'disable'
+                  checked === true && disable !== true ? 'enable' : 'disable2'
                 ),
               }}
               onPress={() => {
@@ -202,29 +170,9 @@ export function ForwardListSearchItem(
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     t2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
-    },
-    disable: {
-      light: colors.neutral[7],
-      dark: colors.neutral[4],
-    },
-    enable: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
     },
     btn_bg: {
       light: colors.neutral[95],
@@ -278,7 +226,7 @@ export function ForwardListSearchItem(
                 backgroundColor: getColor('btn_bg'),
               }}
               textStyle={{
-                color: getColor(forwarded === true ? 'disable' : 't1'),
+                color: getColor(forwarded === true ? 'disable2' : 'fg'),
               }}
               onPress={() => {
                 onClickedForward?.(data);

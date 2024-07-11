@@ -4,7 +4,6 @@ import { ListRenderItemInfo, View } from 'react-native';
 import { useChatContext } from '../../chat';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
-import { usePaletteContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
 import { useFlatList } from '../List';
 import {
@@ -28,13 +27,7 @@ export function MessageHistoryList(props: MessageHistoryListProps) {
     []
   );
   const { tr } = useI18nContext();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
+  const { getColor } = useColors({});
 
   const { data, listState, onClickedItem } = useMessageHistoryList(props);
 

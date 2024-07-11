@@ -39,14 +39,6 @@ export function EditInfo(props: EditInfoProps) {
   const { cornerRadius, colors } = usePaletteContext();
   const { getBorderRadius } = useGetStyleProps();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    bg2: {
-      light: colors.neutral[95],
-      dark: colors.neutral[2],
-    },
     t1: {
       light: colors.primary[1],
       dark: colors.neutral[98],
@@ -54,14 +46,6 @@ export function EditInfo(props: EditInfoProps) {
     t2: {
       light: colors.neutral[7],
       dark: colors.neutral[6],
-    },
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
-    },
-    save: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
     },
   });
 
@@ -116,7 +100,7 @@ export function EditInfo(props: EditInfoProps) {
                   textType={'medium'}
                   paletteType={'label'}
                   style={{
-                    color: getColor(disable !== true ? 'save' : 't2'),
+                    color: getColor(disable !== true ? 'enable' : 't2'),
                   }}
                 >
                   {saveName}

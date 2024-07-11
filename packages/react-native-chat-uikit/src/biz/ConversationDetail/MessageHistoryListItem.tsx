@@ -30,25 +30,7 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
   const { msg } = model;
   const { userId, userName, avatarURL } = userInfoFromMessage(msg) ?? {};
   const { formatTime } = useConfigContext();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    t2: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
-    },
-  });
+  const { getColor } = useColors({});
   const msgType = msg.body.type;
   const maxWidth = Dimensions.get('window').width * 0.6;
   const maxTextWidth = Dimensions.get('window').width - 32 - 16 * 2 - 12;
@@ -108,7 +90,7 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
             <SingleLineText
               paletteType={'title'}
               textType={'medium'}
-              style={{ color: getColor('t1') }}
+              style={{ color: getColor('fg') }}
             >
               {userName ?? userId}
             </SingleLineText>
@@ -116,7 +98,7 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
             <SingleLineText
               paletteType={'body'}
               textType={'small'}
-              style={{ color: getColor('t2') }}
+              style={{ color: getColor('disable') }}
             >
               {getMessageFormatTime(msg)}
             </SingleLineText>
@@ -130,7 +112,7 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
               <Text
                 paletteType={'body'}
                 textType={'medium'}
-                style={{ color: getColor('t2') }}
+                style={{ color: getColor('disable') }}
               >
                 {getMessageSnapshot(msg)}
               </Text>

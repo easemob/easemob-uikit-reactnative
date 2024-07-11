@@ -24,7 +24,6 @@ import {
   ChatVideoMessageBody,
 } from '../../rename.chat';
 import { Services } from '../../services';
-import { usePaletteContext } from '../../theme';
 import { Image, LoadingIcon } from '../../ui/Image';
 import {
   getFileDirectory,
@@ -97,21 +96,7 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
   //   '/var/mobile/Containers/Data/Application/F4EF9F0C-7EAB-44BE-8109-B98E5C8FFD9A/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/4c847d40-b526-11ee-94cd-1b34468849ce?em-redirect=true&share-secret=TITLYLUmEe6-5M0HikC84neFGaGOFglbHbtYyO6mFDW8pnhN&vframe=true';
 
   const { top } = useSafeAreaInsets();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    fg: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
-    },
-  });
+  const { getColor } = useColors({});
 
   return (
     <View

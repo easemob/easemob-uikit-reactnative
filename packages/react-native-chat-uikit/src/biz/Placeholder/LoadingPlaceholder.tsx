@@ -12,11 +12,7 @@ import { LoadingIcon } from '../../ui/Image';
 export function LoadingPlaceholder() {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    fg: {
+    loading: {
       light: colors.neutral[7],
       dark: colors.neutral[4],
     },
@@ -24,7 +20,7 @@ export function LoadingPlaceholder() {
   return (
     <View style={[styles.container, { backgroundColor: getColor('bg') }]}>
       <LoadingIcon
-        style={{ width: 36, height: 36, tintColor: getColor('fg') }}
+        style={{ width: 36, height: 36, tintColor: getColor('loading') }}
       />
     </View>
   );

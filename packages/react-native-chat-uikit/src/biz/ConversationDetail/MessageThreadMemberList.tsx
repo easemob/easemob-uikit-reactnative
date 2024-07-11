@@ -49,21 +49,7 @@ export function MessageThreadMemberList(props: MessageThreadMemberListProps) {
     onRequestCloseMenu,
   } = useMessageThreadMemberList(props);
   const { tr } = useI18nContext();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    text2: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
-    },
-  });
+  const { getColor } = useColors({});
 
   return (
     <View
@@ -310,10 +296,6 @@ function ListItemRender(props: MessageThreadMemberListItemProps) {
   const {} = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
     t1: {
       light: colors.neutral[1],
       dark: colors.neutral[98],
@@ -325,10 +307,6 @@ function ListItemRender(props: MessageThreadMemberListItemProps) {
     count: {
       light: colors.primary[5],
       dark: colors.primary[6],
-    },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
     },
   });
 

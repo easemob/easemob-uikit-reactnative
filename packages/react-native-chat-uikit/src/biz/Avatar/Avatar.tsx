@@ -131,10 +131,6 @@ export function StatusAvatar(props: StatusAvatarProps) {
   const im = useChatContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
     online: {
       light: colors.secondary[5],
       dark: colors.secondary[5],

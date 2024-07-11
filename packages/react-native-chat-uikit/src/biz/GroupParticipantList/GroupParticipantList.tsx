@@ -55,14 +55,6 @@ export function GroupParticipantList(props: GroupParticipantListProps) {
   } = useGroupParticipantList(props);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     text_disable: {
       light: colors.neutral[7],
       dark: colors.neutral[3],

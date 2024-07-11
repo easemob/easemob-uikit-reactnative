@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ListRenderItemInfo, View } from 'react-native';
 
 import { useColors } from '../../hook';
-import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
@@ -61,21 +60,7 @@ export function GroupList(props: GroupListProps) {
     onViewableItemsChanged: propsOnViewableItemsChanged,
     ...others
   } = flatListProps ?? {};
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
-    },
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-  });
+  const { getColor } = useColors({});
 
   return (
     <View

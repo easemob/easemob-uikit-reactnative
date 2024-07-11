@@ -108,17 +108,9 @@ export const BottomSheetMenu = React.forwardRef<
     useGetProps(props);
   const count = header ? 5 : 6;
   const { getColor } = useColors({
-    bg1: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    bg2: {
+    bg3: {
       light: colors.neutral[8],
       dark: colors.neutral[3],
-    },
-    c1: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
     },
   });
   const isShow = React.useRef(false);
@@ -182,7 +174,7 @@ export const BottomSheetMenu = React.forwardRef<
       <SafeAreaView
         style={{
           // height: 56 * 6 + 36 + 80,
-          backgroundColor: getColor('bg1'),
+          backgroundColor: getColor('bg'),
           alignItems: 'center',
           width: '100%',
           // borderTopLeftRadius: 16,
@@ -194,7 +186,7 @@ export const BottomSheetMenu = React.forwardRef<
             width: 36,
             height: 5,
             marginVertical: 6,
-            backgroundColor: getColor('bg2'),
+            backgroundColor: getColor('bg3'),
             borderRadius: 2.5,
           }}
         /> */}
@@ -205,7 +197,7 @@ export const BottomSheetMenu = React.forwardRef<
               textType={'medium'}
               paletteType={'body'}
               style={{
-                color: getColor('c1'),
+                color: getColor('disable'),
               }}
             >
               {title}

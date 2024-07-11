@@ -59,29 +59,9 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
   const { input } = cornerRadius;
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    bg2: {
-      light: colors.neutral[95],
-      dark: colors.neutral[2],
-    },
-    fg: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    t2: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
-    },
     t3: {
       light: colors.neutral[7],
       dark: colors.neutral[6],
-    },
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
     },
   });
 

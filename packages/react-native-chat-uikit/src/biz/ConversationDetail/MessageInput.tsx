@@ -45,33 +45,13 @@ export const MessageInput = React.forwardRef<
   const { style } = useThemeContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
     input_bg: {
       light: colors.neutral[95],
       dark: colors.neutral[2],
     },
-    text: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
-    disable: {
-      light: colors.neutral[7],
-      dark: colors.neutral[3],
-    },
     enable_trash: {
       light: colors.error[5],
       dark: colors.error[6],
-    },
-    enable_share: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
-    icon: {
-      light: colors.neutral[3],
-      dark: colors.neutral[95],
     },
   });
 
@@ -132,7 +112,7 @@ export const MessageInput = React.forwardRef<
               tintColor: getColor(
                 multiSelectCount !== undefined && multiSelectCount > 0
                   ? 'enable_trash'
-                  : 'disable'
+                  : 'disable2'
               ),
             }}
             containerStyle={{
@@ -148,8 +128,8 @@ export const MessageInput = React.forwardRef<
               height: 24,
               tintColor: getColor(
                 multiSelectCount !== undefined && multiSelectCount > 0
-                  ? 'enable_share'
-                  : 'disable'
+                  ? 'enable'
+                  : 'disable2'
               ),
             }}
             containerStyle={{
@@ -186,7 +166,7 @@ export const MessageInput = React.forwardRef<
                     unreadCount > 99 ? '99+' : unreadCount
                   )}
                   style={{ backgroundColor: getColor('bg') }}
-                  textStyle={{ color: getColor('enable_share') }}
+                  textStyle={{ color: getColor('enable') }}
                   onPress={onClickedUnreadCount}
                 />
               </View>
@@ -317,9 +297,7 @@ export const MessageInput = React.forwardRef<
                     width: 30,
                     height: 30,
                     tintColor: getColor(
-                      sendIconName === 'plus_in_circle'
-                        ? 'icon'
-                        : 'enable_share'
+                      sendIconName === 'plus_in_circle' ? 'icon' : 'enable'
                     ),
                     backgroundColor: undefined,
                     borderRadius: 30,

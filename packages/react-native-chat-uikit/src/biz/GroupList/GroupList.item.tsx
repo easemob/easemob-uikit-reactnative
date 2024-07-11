@@ -19,29 +19,13 @@ export function GroupListItem(props: GroupListItemProps) {
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    t1: {
-      light: colors.neutral[1],
-      dark: colors.neutral[98],
-    },
     t2: {
       light: colors.neutral[5],
       dark: colors.neutral[6],
     },
-    divider: {
-      light: colors.neutral[9],
-      dark: colors.neutral[2],
-    },
     btn_bg: {
       light: colors.neutral[95],
       dark: colors.neutral[2],
-    },
-    disable: {
-      light: colors.neutral[7],
-      dark: colors.neutral[4],
     },
   });
   return (
@@ -92,7 +76,7 @@ export function GroupListItem(props: GroupListItemProps) {
                 backgroundColor: getColor('btn_bg'),
               }}
               textStyle={{
-                color: getColor(forwarded === true ? 'disable' : 't1'),
+                color: getColor(forwarded === true ? 'disable2' : 'fg'),
               }}
               onPress={() => {
                 onClicked?.(data);
