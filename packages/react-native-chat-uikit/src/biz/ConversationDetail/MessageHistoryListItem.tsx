@@ -30,7 +30,7 @@ export function MessageHistoryListItem(props: MessageHistoryListItemProps) {
   const { msg } = model;
   const { userId, userName, avatarURL } = userInfoFromMessage(msg) ?? {};
   const { formatTime } = useConfigContext();
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
   const msgType = msg.body.type;
   const maxWidth = Dimensions.get('window').width * 0.6;
   const maxTextWidth = Dimensions.get('window').width - 32 - 16 * 2 - 12;

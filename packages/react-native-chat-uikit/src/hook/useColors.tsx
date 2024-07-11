@@ -77,7 +77,7 @@ export function useColors(pairs?: StyleColorParams) {
   const uc = React.useRef(new UseColors(resetColors)).current;
   const func = () => {
     return {
-      initColor: (pairs: StyleColorParams) => {
+      initColor: (pairs?: StyleColorParams) => {
         uc.initColor(pairs);
       },
       getColor: (key: string) => {
@@ -101,14 +101,16 @@ export class UseColors {
     string,
     KV<ThemeType, ColorValue | ColorValue[] | undefined>
   >;
-  constructor(pairs: StyleColorParams) {
+  constructor(pairs?: StyleColorParams) {
     this.list = new Map();
     this.initColor(pairs);
   }
-  public initColor(pairs: StyleColorParams): void {
-    const keys = Object.getOwnPropertyNames(pairs);
-    for (const key of keys) {
-      this.list.set(key, pairs[key]!);
+  public initColor(pairs?: StyleColorParams): void {
+    if (pairs) {
+      const keys = Object.getOwnPropertyNames(pairs);
+      for (const key of keys) {
+        this.list.set(key, pairs[key]!);
+      }
     }
   }
   public getColor(style: ThemeType, key: string) {

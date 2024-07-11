@@ -94,7 +94,7 @@ export class MessagePin2 extends React.PureComponent<
 
   constructor(props: MessagePinProps) {
     super(props);
-    this.uc = new UseColors({});
+    this.uc = new UseColors();
     this._maxListHeight = 0;
     this.listRef = React.createRef();
     this.getListRef = React.createRef() as any;

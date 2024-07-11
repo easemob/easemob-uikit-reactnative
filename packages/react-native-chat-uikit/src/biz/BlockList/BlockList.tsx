@@ -71,7 +71,7 @@ export function BlockList(props: BlockListProps) {
     showsVerticalScrollIndicator,
     ...others
   } = sectionListProps ?? {};
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
 
   return (
     <View

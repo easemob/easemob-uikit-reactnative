@@ -26,7 +26,7 @@ export function MessageSearch(props: MessageSearchProps) {
     []
   );
   const {} = useI18nContext();
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
   const { data, listState, value, setValue, deferSearch, onClickedItem } =
     useMessageSearch(props);
 

@@ -112,7 +112,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       msgPinBackgroundCurrentOpacity,
       msgPinBackgroundOpacityAnimate,
     } = useMessagePin({});
-    const { getColor } = useColors({});
+    const { getColor } = useColors();
 
     return (
       <View

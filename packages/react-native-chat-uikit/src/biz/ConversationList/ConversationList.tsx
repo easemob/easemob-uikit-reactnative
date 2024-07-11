@@ -65,7 +65,7 @@ export function ConversationList(props: ConversationListProps) {
     onViewableItemsChanged: propsOnViewableItemsChanged,
     ...others
   } = propsFlatListProps ?? {};
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
 
   return (
     <View

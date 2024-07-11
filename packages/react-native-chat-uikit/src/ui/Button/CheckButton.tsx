@@ -13,7 +13,7 @@ export type CheckButtonProps = {
 
 export function CheckButton(props: CheckButtonProps) {
   const { checked, disable = false, onClicked, style } = props;
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
 
   const name = (checked?: boolean) => {
     return checked !== false ? 'checked_rectangle' : 'unchecked_rectangle';

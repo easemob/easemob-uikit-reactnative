@@ -64,7 +64,7 @@ export const BottomSheetEmojiList = React.forwardRef<
     maxHeight: propsMaxHeight,
     onFace,
   } = useGetProps(props);
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
   const isShow = React.useRef(false);
 
   React.useImperativeHandle(

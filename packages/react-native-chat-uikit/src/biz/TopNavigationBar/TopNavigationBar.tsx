@@ -21,7 +21,7 @@ export function TopNavigationBar<LeftProps = any, RightProps = any>(
   props: TopNavigationBarProps<LeftProps, RightProps>
 ) {
   const { containerStyle, Title, Left, Right, LeftProps, RightProps } = props;
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
 
   return (
     <View
@@ -185,7 +185,7 @@ type TopNavigationBarLeftProps = {
 };
 export function TopNavigationBarLeft(props: TopNavigationBarLeftProps) {
   const { onBack, content } = props;
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
   return (
     <Pressable
       style={{

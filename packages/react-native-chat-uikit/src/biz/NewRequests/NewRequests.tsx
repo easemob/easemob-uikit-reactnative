@@ -52,7 +52,7 @@ export function NewRequests(props: NewRequestsProps) {
     alertRef,
     onRequestCloseMenu,
   } = useNewRequests(props);
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
 
   return (
     <View

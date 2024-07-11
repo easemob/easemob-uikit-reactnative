@@ -27,7 +27,7 @@ export function MessageHistoryList(props: MessageHistoryListProps) {
     []
   );
   const { tr } = useI18nContext();
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
 
   const { data, listState, onClickedItem } = useMessageHistoryList(props);
 

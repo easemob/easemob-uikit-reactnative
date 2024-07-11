@@ -169,7 +169,7 @@ export const BottomSheetNameMenu = React.forwardRef<
 });
 
 function useGetListItems(onGetData?: () => any) {
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
   const { tr } = useI18nContext();
   const getItems = React.useCallback(
     (props: BottomSheetNameMenuProps) => {

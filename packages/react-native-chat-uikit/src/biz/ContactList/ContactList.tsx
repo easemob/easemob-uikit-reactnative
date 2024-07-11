@@ -81,7 +81,7 @@ export function ContactList(props: ContactListProps) {
     showsVerticalScrollIndicator,
     ...others
   } = sectionListProps ?? {};
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
 
   return (
     <View

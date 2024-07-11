@@ -9,7 +9,7 @@ import { Image } from '../../ui/Image';
  * @returns JSX.Element
  */
 export function EmptyPlaceholder() {
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
   return (
     <View style={[styles.container, { backgroundColor: getColor('bg') }]}>
       <Image

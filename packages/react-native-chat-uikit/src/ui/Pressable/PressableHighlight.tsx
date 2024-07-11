@@ -28,7 +28,7 @@ export function PressableHighlight(props: PressableHighlightProps) {
     ColorValue | undefined
   >(underlayColor);
 
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
 
   const _onPressIn = React.useCallback(
     (event: GestureResponderEvent) => {

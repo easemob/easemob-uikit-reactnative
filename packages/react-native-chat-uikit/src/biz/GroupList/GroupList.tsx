@@ -60,7 +60,7 @@ export function GroupList(props: GroupListProps) {
     onViewableItemsChanged: propsOnViewableItemsChanged,
     ...others
   } = flatListProps ?? {};
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
 
   return (
     <View

@@ -15,7 +15,7 @@ export const BottomVoiceBar = React.forwardRef<
 ) {
   const { onRequestModalClose, ...others } = props;
   const modalRef = React.useRef<SlideModalRef>({} as any);
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
 
   React.useImperativeHandle(
     ref,

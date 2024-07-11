@@ -8,7 +8,7 @@ import { Icon } from '../../ui/Image';
  * @returns JSX.Element
  */
 export function BackButton() {
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
   return (
     <Icon
       name={'chevron_left'}

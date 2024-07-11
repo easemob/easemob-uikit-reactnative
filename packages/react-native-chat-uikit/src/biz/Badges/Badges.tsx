@@ -33,7 +33,7 @@ export type BadgesProps = {
  */
 export function Badges(props: BadgesProps) {
   const { count, maxCount = gMaxCount, containerStyle, textStyle } = props;
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
   const getCount = () => {
     if (count === undefined || count === 0) {
       return null;

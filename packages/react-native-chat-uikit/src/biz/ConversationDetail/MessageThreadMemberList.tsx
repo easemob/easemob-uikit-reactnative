@@ -49,7 +49,7 @@ export function MessageThreadMemberList(props: MessageThreadMemberListProps) {
     onRequestCloseMenu,
   } = useMessageThreadMemberList(props);
   const { tr } = useI18nContext();
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
 
   return (
     <View

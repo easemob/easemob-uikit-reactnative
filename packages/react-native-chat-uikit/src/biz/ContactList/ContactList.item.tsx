@@ -209,7 +209,7 @@ export const ContactListItemHeaderMemo = React.memo(ContactListItemHeader);
  */
 export function ContactItem(props: ContactItemProps) {
   const { icon, name, count, hasArrow, onClicked } = props;
-  const { getColor } = useColors({});
+  const { getColor } = useColors();
   return (
     <ListItem
       LeftName={
