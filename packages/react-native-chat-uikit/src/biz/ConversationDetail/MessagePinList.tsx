@@ -241,12 +241,22 @@ export function useMessagePinList(props: MessagePinListProps) {
     []
   );
 
+  const sortData = React.useCallback(() => {
+    dataRef.current = dataRef.current.sort((a, b) => {
+      if (!a.pinInfo || !b.pinInfo) {
+        return 0;
+      }
+      return b.pinInfo?.pinTime - a.pinInfo?.pinTime;
+    });
+  }, [dataRef]);
+
   const refreshToUI = React.useCallback(
     (list: MessagePinListItemProps[]) => {
+      sortData();
       dataRef.current = removeDuplicateData(list);
       setData([...dataRef.current]);
     },
-    [dataRef, removeDuplicateData, setData]
+    [dataRef, removeDuplicateData, setData, sortData]
   );
 
   const addItemToUI = React.useCallback(
