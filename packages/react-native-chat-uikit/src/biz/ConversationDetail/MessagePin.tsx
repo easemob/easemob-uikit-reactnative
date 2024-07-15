@@ -108,6 +108,18 @@ export class MessagePin2 extends React.PureComponent<
 
   componentDidMount?(): void {
     this.uc.initColor({
+      bg: {
+        light: this.colors?.neutral[98],
+        dark: this.colors?.neutral[1],
+      },
+      bg2: {
+        light: this.colors?.neutral[95],
+        dark: this.colors?.neutral[2],
+      },
+      fg: {
+        light: this.colors?.neutral[1],
+        dark: this.colors?.neutral[98],
+      },
       bg4: {
         light: this.colors?.neutral[9],
         dark: this.colors?.neutral[3],
