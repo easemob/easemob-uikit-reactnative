@@ -14,7 +14,7 @@ import { usePaletteContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
 import { PressableHighlight } from '../../ui/Pressable';
 import { SingleLineText } from '../../ui/Text';
-import { formatTsForConvList } from '../../utils';
+import { formatTsForConvDetail } from '../../utils';
 import { useDataPriority } from '../hooks';
 import { useFlatList } from '../List';
 
@@ -176,7 +176,7 @@ export function MessagePinListItem(props: MessagePinListItemProps) {
             textType={'small'}
             style={{ color: getColor('time') }}
           >
-            {formatTsForConvList(pinInfo?.pinTime ?? msg.serverTime)}
+            {formatTsForConvDetail(pinInfo?.pinTime ?? msg.serverTime)}
           </SingleLineText>
         </View>
         <View style={{ flex: 1 }} />
