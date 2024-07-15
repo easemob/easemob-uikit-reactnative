@@ -1,7 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+import FileViewer from 'react-native-file-viewer';
 
-import { FileMessagePreview } from '../../rename.uikit';
+import { FileMessagePreview } from '../common/FileMessagePreview';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
@@ -20,8 +21,13 @@ export function FileMessagePreviewScreen(props: Props) {
         onBack={() => {
           navi.goBack();
         }}
-        onOpenFile={(_localPath) => {
+        onOpenFile={async (localPath) => {
           // todo: open file with other app
+          try {
+            await FileViewer.open(localPath);
+          } catch (error) {
+            console.warn('open file error', error);
+          }
         }}
       />
     </SafeAreaViewFragment>

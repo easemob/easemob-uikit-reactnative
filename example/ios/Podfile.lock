@@ -678,6 +678,8 @@ PODS:
     - FirebaseCoreExtension (= 10.10.0)
     - React-Core
     - RNFBApp
+  - RNFileViewer (2.1.5):
+    - React-Core
   - RNFS (2.20.0):
     - React-Core
   - RNGestureHandler (2.9.0):
@@ -842,6 +844,7 @@ DEPENDENCIES:
   - RNFastImage (from `../../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../../node_modules/@react-native-firebase/messaging`)"
+  - RNFileViewer (from `../../node_modules/react-native-file-viewer`)
   - RNFS (from `../../node_modules/react-native-fs`)
   - RNGestureHandler (from `../../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../../node_modules/react-native-image-crop-picker`)
@@ -1046,6 +1049,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@react-native-firebase/app"
   RNFBMessaging:
     :path: "../../node_modules/@react-native-firebase/messaging"
+  RNFileViewer:
+    :path: "../../node_modules/react-native-file-viewer"
   RNFS:
     :path: "../../node_modules/react-native-fs"
   RNGestureHandler:
@@ -1169,6 +1174,7 @@ SPEC CHECKSUMS:
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBApp: 7da45c10070789f5e4337a5534139976e8d74e0a
   RNFBMessaging: fd543fa2aa4688fac4e88b1ce54e39cac4339b32
+  RNFileViewer: ce7ca3ac370e18554d35d6355cffd7c30437c592
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNImageCropPicker: e7ab6fb43d2fc3e84651e786ef4a080d63b0ed3d

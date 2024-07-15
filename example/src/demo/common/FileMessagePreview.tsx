@@ -2,21 +2,24 @@ import * as React from 'react';
 import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { gMessageAttributeFileProgress, useChatContext } from '../../chat';
-import type { MessageManagerListener } from '../../chat/messageManager.types';
-import { ErrorCode, UIKitError } from '../../error';
-import { useI18nContext } from '../../i18n';
 import {
+  BackButton,
   ChatDownloadStatus,
   ChatFileMessageBody,
   ChatMessage,
   ChatMessageType,
-} from '../../rename.chat';
-import { Services } from '../../services';
-import { CmnButton } from '../../ui/Button';
-import { Text } from '../../ui/Text';
-import { BackButton } from '../Back';
-import type { PropsWithBack, PropsWithChildren } from '../types';
+  CmnButton,
+  ErrorCode,
+  gMessageAttributeFileProgress,
+  MessageManagerListener,
+  PropsWithBack,
+  PropsWithChildren,
+  Services,
+  Text,
+  UIKitError,
+  useChatContext,
+  useI18nContext,
+} from '../../rename.uikit';
 
 /**
  * File Message Preview Component properties.
@@ -120,6 +123,7 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
   );
 
   const onOpenFile = React.useCallback(async () => {
+    console.log('test:zuoyu:onOpenFile:', localPath.current);
     propsOnOpenFile?.(localPath.current ?? '');
   }, [propsOnOpenFile]);
 

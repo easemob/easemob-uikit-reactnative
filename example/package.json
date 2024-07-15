@@ -55,6 +55,7 @@
     "react-native-document-picker": "^9.0.1",
     "react-native-fast-image": "^8.6.3",
     "react-native-file-access": "^3.0.4",
+    "react-native-file-viewer": "^2.1.5",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-get-random-values": "~1.8.0",

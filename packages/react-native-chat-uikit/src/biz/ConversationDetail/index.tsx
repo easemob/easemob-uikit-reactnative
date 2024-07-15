@@ -1,7 +1,6 @@
 export * from './ConversationDetail';
 export * from './ConversationDetail.hooks';
 export * from './ConversationDetail.navi';
-export * from './FileMessagePreview';
 export * from './ImageMessagePreview';
 export * from './MessageForwardSelector';
 export * from './MessageHistoryList';
