@@ -65,12 +65,21 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
     localMsgId: propsLocalMsgId,
     onBack,
     onOpenFile: propsOnOpenFile,
+    onProgress: propsOnProgress,
   } = props;
   const im = useChatContext();
   const { top } = useSafeAreaInsets();
   const [progress, setProgress] = React.useState(0);
   const { tr } = useI18nContext();
   const localPath = React.useRef<string | undefined>(undefined);
+
+  const onProgress = React.useCallback(
+    (p: number) => {
+      setProgress(p);
+      propsOnProgress?.(p);
+    },
+    [propsOnProgress]
+  );
 
   const download = React.useCallback(
     async (msg: ChatMessage) => {
@@ -84,17 +93,17 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
       localPath.current = body.localPath;
       const isExisted = await Services.dcs.isExistedFile(body.localPath);
       if (isExisted !== true) {
-        setProgress(0);
+        onProgress(0);
         if (msg.isChatThread === true) {
           im.messageManager.downloadAttachmentForThread(msg);
         } else {
           im.messageManager.downloadAttachment(msg);
         }
       } else {
-        setProgress(100);
+        onProgress(100);
       }
     },
-    [im.messageManager]
+    [im.messageManager, onProgress]
   );
 
   const onGetMessage = React.useCallback(
@@ -132,7 +141,7 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
         ) {
           const body = msg.body as ChatFileMessageBody;
           if (body.fileStatus === ChatDownloadStatus.SUCCESS) {
-            setProgress(100);
+            onProgress(100);
           }
         }
       },
@@ -144,7 +153,7 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
         ) {
           const progress = msg.attributes?.[gMessageAttributeFileProgress];
           if (progress) {
-            setProgress(progress);
+            onProgress(progress);
           }
         }
       },
@@ -156,7 +165,7 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
         ) {
           const body = msg.body as ChatFileMessageBody;
           if (body.fileStatus === ChatDownloadStatus.SUCCESS) {
-            setProgress(100);
+            onProgress(100);
           }
         }
       },
@@ -168,7 +177,7 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
         ) {
           const progress = msg.attributes?.[gMessageAttributeFileProgress];
           if (progress) {
-            setProgress(progress);
+            onProgress(progress);
           }
         }
       },
@@ -177,7 +186,7 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
     return () => {
       im.messageManager.removeListener('FileMessagePreview');
     };
-  }, [im.messageManager, propsLocalMsgId, propsMsgId]);
+  }, [im.messageManager, propsLocalMsgId, propsMsgId, onProgress]);
 
   if (children) {
     return <View style={[{ flexGrow: 1 }, containerStyle]}>{children}</View>;
