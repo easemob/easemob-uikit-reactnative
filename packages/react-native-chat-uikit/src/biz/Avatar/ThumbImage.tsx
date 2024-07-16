@@ -42,6 +42,7 @@ export function ThumbImage(props: ThumbImageProps) {
         cr: cornerRadius,
         style,
       })}
+      cache={'force-cache'}
       {...others}
     />
   );

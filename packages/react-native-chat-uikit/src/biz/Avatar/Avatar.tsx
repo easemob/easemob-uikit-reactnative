@@ -64,6 +64,7 @@ export function Avatar(props: AvatarProps) {
         cr: cornerRadius,
         style,
       })}
+      cache={'force-cache'}
       {...others}
     />
   );

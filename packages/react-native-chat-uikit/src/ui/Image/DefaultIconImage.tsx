@@ -11,15 +11,18 @@ export type DefaultIconImageProps = {
   borderRadius?: number;
   style?: StyleProp<ImageStyle>;
   defaultStyle?: StyleProp<ImageStyle>;
+  cache?: 'default' | 'reload' | 'force-cache' | 'only-if-cached' | undefined;
 };
 
 export function DefaultIconImage(props: DefaultIconImageProps) {
-  const { url, size, borderRadius, style, defaultStyle, localIcon } = props;
+  const { url, size, borderRadius, style, defaultStyle, localIcon, cache } =
+    props;
   return (
     <DefaultImage
       defaultSource={localIcon ?? ICON_ASSETS.person_single_outline('3x')}
       source={{
         uri: url,
+        cache: cache,
       }}
       style={[
         {
