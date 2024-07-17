@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 
 import { useColors } from '../../hook';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 
 export const gMaxCount = 99;
 
@@ -65,7 +65,7 @@ export function Badges(props: BadgesProps) {
         containerStyle,
       ]}
     >
-      <Text
+      <SingleLineText
         paletteType={'label'}
         textType={'small'}
         style={[
@@ -77,7 +77,7 @@ export function Badges(props: BadgesProps) {
         ]}
       >
         {getCount()}
-      </Text>
+      </SingleLineText>
     </View>
   );
 }

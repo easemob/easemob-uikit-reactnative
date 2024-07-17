@@ -10,7 +10,6 @@ import {
   Image,
   ListItem,
   SingleLineText,
-  Text,
   TopNavigationBar,
   TopNavigationBarLeft,
   UIKIT_VERSION,
@@ -136,20 +135,20 @@ export function EasemobAboutSettingScreen(props: Props) {
         onClicked={onClickedOfficeSite}
         LeftName={
           <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_about_setting_site')}
-            </Text>
-            <Text
+            </SingleLineText>
+            <SingleLineText
               textType={'small'}
               paletteType={'title'}
               style={{ color: getColor('enable') }}
             >
               {tr('_demo_about_setting_site_url')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -167,20 +166,20 @@ export function EasemobAboutSettingScreen(props: Props) {
         onClicked={onClickedPhone}
         LeftName={
           <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_about_setting_phone')}
-            </Text>
-            <Text
+            </SingleLineText>
+            <SingleLineText
               textType={'small'}
               paletteType={'title'}
               style={{ color: getColor('enable') }}
             >
               {tr('_demo_about_setting_phone_number')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -198,20 +197,20 @@ export function EasemobAboutSettingScreen(props: Props) {
         onClicked={onClickedPartner}
         LeftName={
           <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_about_setting_partner')}
-            </Text>
-            <Text
+            </SingleLineText>
+            <SingleLineText
               textType={'small'}
               paletteType={'title'}
               style={{ color: getColor('enable') }}
             >
               {tr('_demo_about_setting_partner_email')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -229,20 +228,20 @@ export function EasemobAboutSettingScreen(props: Props) {
         onClicked={onClickedChannel}
         LeftName={
           <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_about_setting_channel')}
-            </Text>
-            <Text
+            </SingleLineText>
+            <SingleLineText
               textType={'small'}
               paletteType={'title'}
               style={{ color: getColor('enable') }}
             >
               {tr('_demo_about_setting_channel_email')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -260,20 +259,20 @@ export function EasemobAboutSettingScreen(props: Props) {
         onClicked={onClickedAdvise}
         LeftName={
           <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_about_setting_advise')}
-            </Text>
-            <Text
+            </SingleLineText>
+            <SingleLineText
               textType={'small'}
               paletteType={'title'}
               style={{ color: getColor('enable') }}
             >
               {tr('_demo_about_setting_advise_email')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -290,13 +289,13 @@ export function EasemobAboutSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         onClicked={() => {}}
         LeftName={
-          <Text
+          <SingleLineText
             textType={'medium'}
             paletteType={'title'}
             style={{ color: getColor('fg') }}
           >
             {tr('_demo_about_setting_privacy')}
-          </Text>
+          </SingleLineText>
         }
         RightIcon={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -419,20 +418,20 @@ export function AgoraAboutSettingScreen(props: Props) {
         onClicked={onClickedDocsSite}
         LeftName={
           <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_agora_about_setting_docs_site')}
-            </Text>
-            <Text
+            </SingleLineText>
+            <SingleLineText
               textType={'small'}
               paletteType={'title'}
               style={{ color: getColor('enable') }}
             >
               {tr('_demo_agora_about_setting_docs_site_url')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -450,20 +449,20 @@ export function AgoraAboutSettingScreen(props: Props) {
         onClicked={onClickedContactSite}
         LeftName={
           <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_agora_about_setting_contact_site')}
-            </Text>
-            <Text
+            </SingleLineText>
+            <SingleLineText
               textType={'small'}
               paletteType={'title'}
               style={{ color: getColor('enable') }}
             >
               {tr('_demo_agora_about_setting_contact_site_url')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -481,20 +480,20 @@ export function AgoraAboutSettingScreen(props: Props) {
         onClicked={onClickedGithubSite}
         LeftName={
           <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_agora_about_setting_github_site')}
-            </Text>
-            <Text
+            </SingleLineText>
+            <SingleLineText
               textType={'small'}
               paletteType={'title'}
               style={{ color: getColor('enable') }}
             >
               {tr('_demo_agora_about_setting_github_site_url')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -512,20 +511,20 @@ export function AgoraAboutSettingScreen(props: Props) {
         onClicked={onClickedMoreSite}
         LeftName={
           <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_agora_about_setting_more_site')}
-            </Text>
-            <Text
+            </SingleLineText>
+            <SingleLineText
               textType={'small'}
               paletteType={'title'}
               style={{ color: getColor('enable') }}
             >
               {tr('_demo_agora_about_setting_more_site_url')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={

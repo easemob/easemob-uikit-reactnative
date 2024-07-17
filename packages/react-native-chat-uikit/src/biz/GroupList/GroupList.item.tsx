@@ -58,7 +58,11 @@ export function GroupListItem(props: GroupListItemProps) {
             maxWidth: groupType === 'common' ? '80%' : '60%',
           }}
         >
-          <SingleLineText paletteType={'title'} textType={'medium'}>
+          <SingleLineText
+            paletteType={'title'}
+            textType={'medium'}
+            style={{ color: getColor('fg') }}
+          >
             {data.groupName === undefined || data.groupName.length === 0
               ? data.groupId
               : data.groupName}

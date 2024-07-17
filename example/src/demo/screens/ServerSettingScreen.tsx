@@ -16,7 +16,6 @@ import {
   SingleLineText,
   SingletonObjects,
   Switch,
-  Text,
   TextInput,
   TopNavigationBar,
   TopNavigationBarLeft,
@@ -204,7 +203,7 @@ export function ServerSettingScreen(props: Props) {
                 onSave();
               }}
             >
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'label'}
                 style={{
@@ -212,7 +211,7 @@ export function ServerSettingScreen(props: Props) {
                 }}
               >
                 {tr('_demo_server_setting_navi_save')}
-              </Text>
+              </SingleLineText>
             </Pressable>
           }
         />

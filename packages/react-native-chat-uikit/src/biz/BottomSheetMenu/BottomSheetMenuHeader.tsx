@@ -7,7 +7,7 @@ import { useConfigContext } from '../../config';
 import { useColors, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { Icon } from '../../ui/Image';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import type { EmojiIconItem } from '../types';
 
 export type BottomSheetMenuHeaderProps = {
@@ -85,14 +85,15 @@ export function BottomSheetMenuHeader(props: BottomSheetMenuHeaderProps) {
               onClickedEmoji?.(isEmojiCharacter === true ? r : v.name)
             }
           >
-            <Text
+            <SingleLineText
               style={{
                 fontSize: Platform.OS === 'ios' ? 32 : 32,
                 fontFamily: fontFamily,
+                color: getColor('fg'),
               }}
             >
               {r}
-            </Text>
+            </SingleLineText>
           </Pressable>
         );
       })}

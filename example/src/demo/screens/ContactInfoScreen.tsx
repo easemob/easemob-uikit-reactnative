@@ -10,7 +10,6 @@ import {
   ListItem,
   ResultValue,
   SingleLineText,
-  Text,
   UIContactListListener,
   UIListenerType,
   useChatContext,
@@ -134,13 +133,13 @@ export function ContactInfoScreen(props: Props) {
           }}
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_uikit_info_item_contact_remark')}
-            </Text>
+            </SingleLineText>
           }
           RightText={
             <SingleLineText

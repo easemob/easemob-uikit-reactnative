@@ -9,7 +9,7 @@ import {
 import { ErrorCode, UIKitError } from '../../error';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { Text } from '../Text';
+import { SingleLineText } from '../Text';
 import {
   gHeaderHeight,
   gIndicatorBorderRadius,
@@ -122,7 +122,7 @@ export function TabPageHeader(props: TabPageHeaderProps) {
                 onClicked?.(i);
               }}
             >
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={[
@@ -135,7 +135,7 @@ export function TabPageHeader(props: TabPageHeaderProps) {
                 ]}
               >
                 {v.title}
-              </Text>
+              </SingleLineText>
             </View>
           );
         })}

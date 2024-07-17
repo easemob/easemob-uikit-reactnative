@@ -18,7 +18,7 @@ import {
   useGetStyleProps,
 } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import type { EmojiIconItem } from '../types';
 import { gCountPerRow } from './EmojiList.const';
 import { EmojiListFloatButtonMemo } from './EmojiListFloatButton';
@@ -168,15 +168,16 @@ export function EmojiList(props: EmojiListProps) {
                       alignItems: 'center',
                     }}
                   >
-                    <Text
+                    <SingleLineText
                       style={{
                         fontSize: Platform.OS === 'ios' ? 30 : 22,
                         fontFamily: fontFamily,
                         textAlign: 'center',
+                        color: getColor('fg'),
                       }}
                     >
                       {r}
-                    </Text>
+                    </SingleLineText>
                   </View>
                 </Pressable>
               );

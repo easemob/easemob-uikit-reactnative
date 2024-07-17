@@ -7,7 +7,6 @@ import {
   ListItem,
   SingleLineText,
   Switch,
-  Text,
   TopNavigationBar,
   TopNavigationBarLeft,
   useColors,
@@ -69,13 +68,13 @@ export function NotificationSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_notification_setting_offline_push')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={

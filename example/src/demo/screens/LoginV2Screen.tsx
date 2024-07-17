@@ -21,7 +21,6 @@ import {
   KeyboardAvoidingView,
   LoadingIcon,
   SingleLineText,
-  Text,
   TextInput,
   useColors,
   useForceUpdate,
@@ -297,7 +296,7 @@ function EasemobLoginV2Screen(props: Props) {
               marginTop: 20,
             }}
           >
-            <Text
+            <SingleLineText
               style={{
                 fontSize: 24,
                 fontWeight: '600',
@@ -307,7 +306,7 @@ function EasemobLoginV2Screen(props: Props) {
               }}
             >
               {tr('_demo_login_title')}
-            </Text>
+            </SingleLineText>
             <View style={{ flexGrow: 1 }} />
             <View
               style={{
@@ -319,7 +318,7 @@ function EasemobLoginV2Screen(props: Props) {
               }}
               onTouchEnd={onClickedEnableDev}
             >
-              <Text
+              <SingleLineText
                 style={{
                   fontSize: 11,
                   fontWeight: '500',
@@ -329,7 +328,7 @@ function EasemobLoginV2Screen(props: Props) {
                 }}
               >
                 {`V${version}`}
-              </Text>
+              </SingleLineText>
             </View>
           </View>
           <View
@@ -555,7 +554,7 @@ function EasemobLoginV2Screen(props: Props) {
               style={{ position: 'absolute', bottom: 99 }}
               onPress={onClickedServerSetting}
             >
-              <Text
+              <SingleLineText
                 style={{
                   fontSize: 14,
                   fontWeight: '500',
@@ -565,7 +564,7 @@ function EasemobLoginV2Screen(props: Props) {
                 }}
               >
                 {tr('_demo_login_server_setting_button')}
-              </Text>
+              </SingleLineText>
             </Pressable>
           ) : null}
 
@@ -795,7 +794,7 @@ function AgoraLoginV2Screen(props: Props) {
               marginTop: 20,
             }}
           >
-            <Text
+            <SingleLineText
               style={{
                 fontSize: 24,
                 fontWeight: '600',
@@ -805,7 +804,7 @@ function AgoraLoginV2Screen(props: Props) {
               }}
             >
               {tr('_demo_login_title', accountType)}
-            </Text>
+            </SingleLineText>
             <View style={{ flexGrow: 1 }} />
             <View
               style={{
@@ -816,7 +815,7 @@ function AgoraLoginV2Screen(props: Props) {
               }}
               onTouchEnd={onClickedEnableDev}
             >
-              <Text
+              <SingleLineText
                 style={{
                   fontSize: 11,
                   fontWeight: '500',
@@ -826,7 +825,7 @@ function AgoraLoginV2Screen(props: Props) {
                 }}
               >
                 {`V${version}`}
-              </Text>
+              </SingleLineText>
             </View>
           </View>
           <View
@@ -978,7 +977,7 @@ function AgoraLoginV2Screen(props: Props) {
               style={{ position: 'absolute', bottom: 99 }}
               onPress={onClickedServerSetting}
             >
-              <Text
+              <SingleLineText
                 style={{
                   fontSize: 14,
                   fontWeight: '500',
@@ -988,7 +987,7 @@ function AgoraLoginV2Screen(props: Props) {
                 }}
               >
                 {tr('_demo_login_server_setting_button')}
-              </Text>
+              </SingleLineText>
             </Pressable>
           ) : null}
 

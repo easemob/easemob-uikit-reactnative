@@ -6,7 +6,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   SingleLineText,
-  Text,
   TopNavigationBar,
   TopNavigationBarLeft,
   useColors,
@@ -147,7 +146,7 @@ export function ColorSettingScreen(props: Props) {
             style={{ paddingHorizontal: 8 }}
             disabled={changed ? false : true}
           >
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{
@@ -155,7 +154,7 @@ export function ColorSettingScreen(props: Props) {
               }}
             >
               {tr('_demo_color_setting_navi_confirm')}
-            </Text>
+            </SingleLineText>
           </Pressable>
         }
       />

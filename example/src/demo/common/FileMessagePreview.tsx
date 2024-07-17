@@ -15,7 +15,7 @@ import {
   PropsWithBack,
   PropsWithChildren,
   Services,
-  Text,
+  SingleLineText,
   UIKitError,
   useChatContext,
   useI18nContext,
@@ -202,7 +202,7 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
           containerStyle,
         ]}
       >
-        <Text>{progress}</Text>
+        <SingleLineText>{progress}</SingleLineText>
         <CmnButton
           text={tr('open')}
           contentType={'only-text'}

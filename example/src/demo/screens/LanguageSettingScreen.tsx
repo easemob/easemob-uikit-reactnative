@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Icon,
   ListItem,
-  Text,
+  SingleLineText,
   TopNavigationBar,
   TopNavigationBarLeft,
   useColors,
@@ -101,7 +101,7 @@ export function LanguageSettingScreen(props: Props) {
             style={{ paddingHorizontal: 8 }}
             disabled={changed ? false : true}
           >
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{
@@ -109,7 +109,7 @@ export function LanguageSettingScreen(props: Props) {
               }}
             >
               {tr('_demo_language_setting_navi_confim')}
-            </Text>
+            </SingleLineText>
           </Pressable>
         }
       />
@@ -119,13 +119,13 @@ export function LanguageSettingScreen(props: Props) {
         onClicked={() => onChanged(0)}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_language_setting_language_cn')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -156,13 +156,13 @@ export function LanguageSettingScreen(props: Props) {
         onClicked={() => onChanged(1)}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_language_setting_language_en')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={

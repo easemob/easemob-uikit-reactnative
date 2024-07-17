@@ -6,7 +6,7 @@ import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
-import { SingleLineText, Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { Avatar, GroupAvatar, StatusAvatar, useAvatarStatus } from '../Avatar';
 import { BackButton } from '../Back';
 import {
@@ -257,31 +257,31 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
 
             {convType === 0 ? (
               messageTyping === true ? (
-                <Text
+                <SingleLineText
                   textType={'extraSmall'}
                   paletteType={'body'}
                   style={{ color: getColor('text_enable') }}
                 >
                   {tr('_uikit_message_typing')}
-                </Text>
+                </SingleLineText>
               ) : enablePresence === true && status && status?.length > 0 ? (
-                <Text
+                <SingleLineText
                   textType={'extraSmall'}
                   paletteType={'body'}
                   style={{ color: getColor('text_enable') }}
                 >
                   {tr(status ?? '')}
-                </Text>
+                </SingleLineText>
               ) : null
             ) : convType === 1 ? (
               comType === 'thread' ? (
-                <Text
+                <SingleLineText
                   textType={'extraSmall'}
                   paletteType={'body'}
                   style={{ color: getColor('text_enable') }}
                 >
                   {`#${parentName}`}
-                </Text>
+                </SingleLineText>
               ) : null
             ) : null}
           </Pressable>

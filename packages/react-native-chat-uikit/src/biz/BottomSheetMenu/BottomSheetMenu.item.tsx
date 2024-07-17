@@ -14,7 +14,7 @@ import { useDispatchContext } from '../../dispatch';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon, IconResolutionType } from '../../ui/Image';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { gItemHeight } from './BottomSheetMenu.const';
 
 type ButtonInitState = 'enabled' | 'disabled' | 'warned';
@@ -204,13 +204,13 @@ const ItemContent = (props: BottomSheetMenuItemProps) => {
 
   const getContentText = () => {
     return (
-      <Text
+      <SingleLineText
         paletteType={'body'}
         textType={'large'}
         style={[{ color: getColor(buttonState) }, textStyle]}
       >
         {text}
-      </Text>
+      </SingleLineText>
     );
   };
 

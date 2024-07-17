@@ -16,7 +16,7 @@ import { usePaletteContext, useThemeContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Icon } from '../../ui/Image';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
-import { SingleLineText, Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
 import { useDataPriority } from '../hooks';
 
@@ -311,7 +311,7 @@ function TabItem(props: TabReactionItemProps) {
             maxHeight: 28,
           }}
         >
-          <Text
+          <SingleLineText
             style={{
               fontSize: Platform.OS === 'ios' ? 15 : 12,
               fontFamily: fontFamily,
@@ -319,9 +319,9 @@ function TabItem(props: TabReactionItemProps) {
             }}
           >
             {r}
-          </Text>
+          </SingleLineText>
           <View style={{ width: 6 }} />
-          <Text
+          <SingleLineText
             paletteType={'label'}
             textType={'medium'}
             style={{
@@ -329,7 +329,7 @@ function TabItem(props: TabReactionItemProps) {
             }}
           >
             {count > 99 ? '+99' : count}
-          </Text>
+          </SingleLineText>
         </View>
       </Pressable>
     </View>
@@ -505,7 +505,11 @@ function UserListItem(props: UserListItemProps) {
             maxWidth: '80%',
           }}
         >
-          <SingleLineText paletteType={'title'} textType={'medium'}>
+          <SingleLineText
+            paletteType={'title'}
+            textType={'medium'}
+            style={{ color: getColor('fg') }}
+          >
             {userName === undefined || userName.length === 0
               ? userId
               : userName}

@@ -10,7 +10,6 @@ import {
   ListItem,
   SingleLineText,
   StatusAvatar,
-  Text,
   TopNavigationBar,
   TopNavigationBarLeft,
   useChatContext,
@@ -148,13 +147,13 @@ export function PersonInfoScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_person_info_avatar')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -178,13 +177,13 @@ export function PersonInfoScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_person_info_remark')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={

@@ -5,7 +5,7 @@ import { ImageBackground, View } from 'react-native';
 import {
   Icon,
   LoadingIcon,
-  Text,
+  SingleLineText,
   useColors,
   useI18nContext,
   usePaletteContext,
@@ -46,7 +46,7 @@ export function SplashScreen(props: Props) {
       <View style={{ flex: 277 }} />
       <Icon name={logo} resolution={'3x'} style={{ width: 100, height: 100 }} />
       <View style={{ flex: 35 }} />
-      <Text
+      <SingleLineText
         style={{
           fontSize: 24,
           fontWeight: '600',
@@ -60,9 +60,9 @@ export function SplashScreen(props: Props) {
           '_demo_splash_title',
           accountType === 'agora' ? 'agora' : 'easemob'
         )}
-      </Text>
+      </SingleLineText>
       <View style={{ flex: 322 }} />
-      <Text
+      <SingleLineText
         style={{
           fontSize: 13,
           fontWeight: '400',
@@ -72,7 +72,7 @@ export function SplashScreen(props: Props) {
         }}
       >
         {accountType === 'agora' ? 'Powered by Agora' : 'Powered by Easemob'}
-      </Text>
+      </SingleLineText>
 
       <View style={{ flex: 62 }} />
 

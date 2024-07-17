@@ -8,7 +8,6 @@ import {
   ListItem,
   SingleLineText,
   Switch,
-  Text,
   TopNavigationBar,
   TopNavigationBarLeft,
   useColors,
@@ -109,13 +108,13 @@ export function GeneralSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_general_setting_theme')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -137,13 +136,13 @@ export function GeneralSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_general_setting_style')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -170,13 +169,13 @@ export function GeneralSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_general_setting_color')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -203,13 +202,13 @@ export function GeneralSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_general_setting_feature')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -228,13 +227,13 @@ export function GeneralSettingScreen(props: Props) {
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_demo_general_setting_language')}
-              </Text>
+              </SingleLineText>
             </View>
           }
           RightIcon={
@@ -262,13 +261,13 @@ export function GeneralSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_general_setting_translation_language')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={

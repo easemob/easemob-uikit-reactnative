@@ -7,7 +7,7 @@ import { Alert } from '../../ui/Alert';
 import { CmnButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { SimpleToast } from '../../ui/Toast';
 import { Avatar } from '../Avatar';
 import { BackButton } from '../Back';
@@ -117,25 +117,25 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
       <View style={{ alignItems: 'center', paddingTop: 20 }}>
         <Avatar size={100} url={userAvatar} />
         <View style={{ height: 12 }} />
-        <Text
+        <SingleLineText
           textType={'large'}
           paletteType={'headline'}
           style={{ color: getColor('fg') }}
         >
           {userName ?? userId}
-        </Text>
+        </SingleLineText>
         <View style={{ height: 4 }} />
         <Pressable
           style={{ flexDirection: 'row', alignItems: 'center' }}
           onPress={onCopyId}
         >
-          <Text
+          <SingleLineText
             textType={'small'}
             paletteType={'label'}
             style={{ color: getColor('t3') }}
           >
             {userId}
-          </Text>
+          </SingleLineText>
           <Icon
             name={'doc_on_doc'}
             style={{ width: 16, height: 16, tintColor: getColor('t3') }}
@@ -168,13 +168,13 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
           <ListItem
             containerStyle={{ paddingHorizontal: 16 }}
             LeftName={
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_uikit_info_not_disturb')}
-              </Text>
+              </SingleLineText>
             }
             RightIcon={
               <View>
@@ -193,13 +193,13 @@ export function GroupParticipantInfo(props: GroupParticipantInfoProps) {
             onClicked={onClearChat}
             containerStyle={{ paddingHorizontal: 16 }}
             LeftName={
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_uikit_info_clear_msg')}
-              </Text>
+              </SingleLineText>
             }
           />
         </>

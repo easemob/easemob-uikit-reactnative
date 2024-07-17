@@ -13,11 +13,12 @@ import {
 import type { RequestListListener } from '../../chat/requestList.types';
 import { uilog } from '../../const';
 import { AsyncStorageBasic } from '../../db';
+import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { ChatConversationType, ChatMultiDeviceEvent } from '../../rename.chat';
 import type { AlertRef } from '../../ui/Alert';
 import type { SectionListRef } from '../../ui/SectionList';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { getPinyin, SingletonObjects } from '../../utils';
 import { Badges } from '../Badges';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
@@ -97,6 +98,7 @@ export function useContactList(props: ContactListProps) {
   const [avatarUrl, setAvatarUrl] = React.useState<string>();
   const { tr } = useI18nContext();
   const im = useChatContext();
+  const { getColor } = useColors();
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
   const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
@@ -622,9 +624,13 @@ export function useContactList(props: ContactListProps) {
           key={'_uikit_contact_group_list'}
           name={tr('_uikit_contact_group_list')}
           count={
-            <Text paletteType={'label'} textType={'medium'}>
+            <SingleLineText
+              paletteType={'label'}
+              textType={'medium'}
+              style={{ color: getColor('fg') }}
+            >
               {null}
-            </Text>
+            </SingleLineText>
           }
           hasArrow={true}
           onClicked={onClickedGroupList}
@@ -638,6 +644,7 @@ export function useContactList(props: ContactListProps) {
     [
       _onClickedNewRequest,
       contactType,
+      getColor,
       onClickedGroupList,
       propsOnInitListItemActions,
       tr,

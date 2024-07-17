@@ -8,7 +8,7 @@ import { Alert } from '../../ui/Alert';
 import { CmnButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
-import { SingleLineText, Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { SimpleToast } from '../../ui/Toast';
 import { StatusAvatar } from '../Avatar';
 import { BackButton } from '../Back';
@@ -92,13 +92,13 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
         //     onClicked={onClickedRemark}
         //     containerStyle={{ paddingHorizontal: 16 }}
         //     LeftName={
-        //       <Text
+        //       <SingleLineText
         //         textType={'medium'}
         //         paletteType={'title'}
         //         style={{ color: getColor('fg') }}
         //       >
         //         {tr('_uikit_info_item_contact_remark')}
-        //       </Text>
+        //       </SingleLineText>
         //     }
         //     RightText={
         //       <SingleLineText
@@ -138,13 +138,13 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
             key={'103'}
             containerStyle={{ paddingHorizontal: 16 }}
             LeftName={
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_uikit_info_not_disturb')}
-              </Text>
+              </SingleLineText>
             }
             RightIcon={
               <View>
@@ -166,13 +166,13 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
               key={'104'}
               containerStyle={{ paddingHorizontal: 16 }}
               LeftName={
-                <Text
+                <SingleLineText
                   textType={'medium'}
                   paletteType={'title'}
                   style={{ color: getColor('fg') }}
                 >
                   {tr('_uikit_info_block_list')}
-                </Text>
+                </SingleLineText>
               }
               RightIcon={
                 <View>
@@ -196,13 +196,13 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
             onClicked={onClearChat}
             containerStyle={{ paddingHorizontal: 16 }}
             LeftName={
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_uikit_info_clear_msg')}
-              </Text>
+              </SingleLineText>
             }
           />
         );
@@ -312,7 +312,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
               alignItems: 'center',
             }}
           >
-            <Text
+            <SingleLineText
               textType={'large'}
               paletteType={'headline'}
               style={{
@@ -320,7 +320,7 @@ export const ContactInfo = React.forwardRef<ContactInfoRef, ContactInfoProps>(
               }}
             >
               {getNickName()}
-            </Text>
+            </SingleLineText>
             {doNotDisturb === true ? (
               <Icon
                 name={'bell_slash'}

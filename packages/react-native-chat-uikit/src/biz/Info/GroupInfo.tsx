@@ -6,7 +6,7 @@ import { usePaletteContext } from '../../theme';
 import { Alert } from '../../ui/Alert';
 import { Icon } from '../../ui/Image';
 import { CommonSwitch } from '../../ui/Switch';
-import { SingleLineText, Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { SimpleToast } from '../../ui/Toast';
 import { GroupAvatar } from '../Avatar';
 import { BackButton } from '../Back';
@@ -90,13 +90,13 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
               alignItems: 'center',
             }}
           >
-            <Text
+            <SingleLineText
               textType={'large'}
               paletteType={'headline'}
               style={{ color: getColor('fg') }}
             >
               {groupName ?? groupId}
-            </Text>
+            </SingleLineText>
             {doNotDisturb === true ? (
               <Icon
                 name={'bell_slash'}
@@ -106,13 +106,13 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
           </View>
 
           {groupDescription ? (
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'body'}
               style={{ color: getColor('t2'), paddingTop: 4 }}
             >
               {groupDescription ?? 'test description'}
-            </Text>
+            </SingleLineText>
           ) : null}
 
           <Pressable
@@ -171,22 +171,22 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
           onClicked={onParticipant}
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_uikit_info_item_member')}
-            </Text>
+            </SingleLineText>
           }
           RightText={
-            <Text
+            <SingleLineText
               textType={'large'}
               paletteType={'label'}
               style={{ color: getColor('t1') }}
             >
               {groupMemberCount}
-            </Text>
+            </SingleLineText>
           }
           RightIcon={
             <View>
@@ -213,13 +213,13 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
           key={'104'}
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_uikit_info_not_disturb')}
-            </Text>
+            </SingleLineText>
           }
           RightIcon={
             <View>
@@ -241,13 +241,13 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
           onClicked={onClearChat}
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_uikit_info_clear_msg')}
-            </Text>
+            </SingleLineText>
           }
         />
       );
@@ -268,13 +268,13 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
             onClicked={onGroupName}
             containerStyle={{ paddingHorizontal: 16 }}
             LeftName={
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_uikit_info_item_group_name')}
-              </Text>
+              </SingleLineText>
             }
             RightIcon={
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -305,13 +305,13 @@ export const GroupInfo = React.forwardRef<GroupInfoRef, GroupInfoProps>(
             onClicked={onGroupDescription}
             containerStyle={{ paddingHorizontal: 16 }}
             LeftName={
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_uikit_info_item_group_desc')}
-              </Text>
+              </SingleLineText>
             }
             RightIcon={
               <View>

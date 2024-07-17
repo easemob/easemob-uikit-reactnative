@@ -11,7 +11,7 @@ import type {
 import { usePaletteContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
 import { Icon } from '../../ui/Image';
-import { SingleLineText, Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { BackButton } from '../Back';
 import { useMessageSnapshot } from '../hooks';
 import { useFlatList } from '../List';
@@ -396,13 +396,13 @@ function ListItemRender(props: MessageThreadListItemProps) {
             />
           </View>
           <View>
-            <Text
+            <SingleLineText
               paletteType={'label'}
               textType={'medium'}
               style={{ color: getColor('t2') }}
             >
               {getMessageSnapshot(thread.lastMessage)}
-            </Text>
+            </SingleLineText>
           </View>
         </View>
       </View>

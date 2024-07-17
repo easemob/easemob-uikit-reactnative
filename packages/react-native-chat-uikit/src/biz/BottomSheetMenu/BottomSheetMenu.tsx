@@ -10,7 +10,7 @@ import { ErrorCode, UIKitError } from '../../error';
 import { getElement, useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { gMaxItemCount } from './BottomSheetMenu.const';
 import { useGetProps } from './BottomSheetMenu.hooks';
 import type {
@@ -193,7 +193,7 @@ export const BottomSheetMenu = React.forwardRef<
 
         {title ? (
           <View style={{ paddingVertical: 13, paddingHorizontal: 16 }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'body'}
               style={{
@@ -201,7 +201,7 @@ export const BottomSheetMenu = React.forwardRef<
               }}
             >
               {title}
-            </Text>
+            </SingleLineText>
           </View>
         ) : null}
 

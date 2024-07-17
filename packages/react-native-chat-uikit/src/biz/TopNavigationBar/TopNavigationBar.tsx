@@ -8,7 +8,7 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
-import { SingleLineText, Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { BackButton } from '../Back';
 import type { TopNavigationBarProps } from './types';
 
@@ -162,7 +162,7 @@ export function TopNavigationBarTitle({ text }: { text: string }) {
   });
   return (
     <View style={{ justifyContent: 'center' }}>
-      <Text
+      <SingleLineText
         style={{
           fontSize: 24,
           fontWeight: '400',
@@ -174,7 +174,7 @@ export function TopNavigationBarTitle({ text }: { text: string }) {
         }}
       >
         {tr(text)}
-      </Text>
+      </SingleLineText>
     </View>
   );
 }

@@ -6,7 +6,7 @@ import { useI18nContext } from '../../i18n';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { CmnButton } from '../../ui/Button';
 import { Image } from '../../ui/Image';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 
 /**
  * Placeholder component after error. You can click the retry button
@@ -32,13 +32,13 @@ export function ErrorPlaceholder({ onClicked }: { onClicked: () => void }) {
         resizeMode={'contain'}
       />
       <View>
-        <Text
+        <SingleLineText
           paletteType={'body'}
           textType={'medium'}
           style={{ color: getColor('fg2') }}
         >
           {tr('_uikit_error_placeholder_tip')}
-        </Text>
+        </SingleLineText>
       </View>
       <View>
         <CmnButton

@@ -7,7 +7,7 @@ import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
 import { Icon } from '../../ui/Image';
 import { Ripple } from '../../ui/Ripple';
-import { Text, TimerText } from '../../ui/Text';
+import { SingleLineText, TimerText } from '../../ui/Text';
 import { gVoiceBarHeight } from '../const';
 import type { VoiceBarProps } from './types';
 import { useVoiceBar } from './VoiceBar.hooks';
@@ -150,7 +150,7 @@ export function VoiceBar(props: VoiceBarProps) {
                   onChanged={onContentTimeChanged}
                   propsRef={contentTimerRef}
                 />
-                <Text
+                <SingleLineText
                   textType={'small'}
                   paletteType={'headline'}
                   style={{
@@ -158,7 +158,7 @@ export function VoiceBar(props: VoiceBarProps) {
                   }}
                 >
                   {'s'}
-                </Text>
+                </SingleLineText>
               </View>
             </View>
           </Pressable>
@@ -188,7 +188,7 @@ export function VoiceBar(props: VoiceBarProps) {
         ) : null}
       </View>
       <View style={{ flexGrow: 1, alignSelf: 'center', alignItems: 'center' }}>
-        <Text
+        <SingleLineText
           textType={'medium'}
           paletteType={'label'}
           style={{
@@ -197,7 +197,7 @@ export function VoiceBar(props: VoiceBarProps) {
           }}
         >
           {getTextTip()}
-        </Text>
+        </SingleLineText>
         <View
           style={{
             flexDirection: 'row',
@@ -205,7 +205,7 @@ export function VoiceBar(props: VoiceBarProps) {
             display: currentTime > 50 ? 'flex' : 'none',
           }}
         >
-          <Text
+          <SingleLineText
             textType={'small'}
             paletteType={'body'}
             style={{
@@ -213,7 +213,7 @@ export function VoiceBar(props: VoiceBarProps) {
             }}
           >
             {tr('voice_bar_remain', 60 - currentTime)}
-          </Text>
+          </SingleLineText>
         </View>
       </View>
     </View>

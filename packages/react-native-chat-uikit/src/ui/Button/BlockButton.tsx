@@ -5,7 +5,7 @@ import type { IconNameType } from '../../assets';
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../Image';
-import { Text } from '../Text';
+import { SingleLineText } from '../Text';
 import { gMaxTimeout } from './Button.const';
 
 export type BlockButtonProps = {
@@ -75,13 +75,13 @@ export function BlockButton(props: BlockButtonProps) {
           style={{ width: 32, height: 32, tintColor: getColor('t1') }}
         />
       </View>
-      <Text
+      <SingleLineText
         textType={'extraSmall'}
         paletteType={'body'}
         style={{ color: getColor('t1') }}
       >
         {text}
-      </Text>
+      </SingleLineText>
     </TouchableOpacity>
   );
 }

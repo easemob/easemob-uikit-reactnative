@@ -4,7 +4,7 @@ import { Pressable, View } from 'react-native';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { StatusAvatar } from '../Avatar';
 import {
   TopNavigationBar,
@@ -78,13 +78,13 @@ export const ContactListNavigationBar = (
       <TopNavigationBar
         Left={
           <Pressable style={{ flexDirection: 'row' }} onPress={onBack}>
-            <Text
+            <SingleLineText
               paletteType={'label'}
               textType={'medium'}
               style={{ color: getColor('icon') }}
             >
               {tr('cancel')}
-            </Text>
+            </SingleLineText>
           </Pressable>
         }
         Right={<View style={{ width: 32, height: 32 }} />}
@@ -105,7 +105,7 @@ export const ContactListNavigationBar = (
             onPress={onClickedCreateGroup}
             disabled={selectedCount && selectedCount > 0 ? false : true}
           >
-            <Text
+            <SingleLineText
               paletteType={'label'}
               textType={'medium'}
               style={{
@@ -115,7 +115,7 @@ export const ContactListNavigationBar = (
               }}
             >
               {tr('_uikit_create_group_button', selectedCount)}
-            </Text>
+            </SingleLineText>
           </Pressable>
         }
         Title={TopNavigationBarTitle({ text: '' })}
@@ -137,7 +137,7 @@ export const ContactListNavigationBar = (
               selectedMemberCount && selectedMemberCount > 0 ? false : true
             }
           >
-            <Text
+            <SingleLineText
               paletteType={'label'}
               textType={'medium'}
               style={{
@@ -147,7 +147,7 @@ export const ContactListNavigationBar = (
               }}
             >
               {tr('_uikit_add_group_member_button', selectedMemberCount)}
-            </Text>
+            </SingleLineText>
           </Pressable>
         }
         Title={TopNavigationBarTitle({ text: '' })}
@@ -158,13 +158,13 @@ export const ContactListNavigationBar = (
       <TopNavigationBar
         Left={
           <Pressable style={{ flexDirection: 'row' }} onPress={onBack}>
-            <Text
+            <SingleLineText
               paletteType={'label'}
               textType={'medium'}
               style={{ color: getColor('icon') }}
             >
               {tr('cancel')}
-            </Text>
+            </SingleLineText>
           </Pressable>
         }
         Right={<View style={{ width: 32, height: 32 }} />}

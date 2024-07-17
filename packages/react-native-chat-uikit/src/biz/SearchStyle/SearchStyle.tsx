@@ -5,7 +5,7 @@ import { useColors, useGetStyleProps } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { Icon } from '../../ui/Image';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 
 /**
  * Search Style Component properties.
@@ -71,7 +71,7 @@ export function SearchStyle(props: SearchStyleProps) {
             }}
           />
           <View style={{ width: 4 }} />
-          <Text
+          <SingleLineText
             textType={'large'}
             paletteType={'body'}
             style={{
@@ -79,7 +79,7 @@ export function SearchStyle(props: SearchStyleProps) {
             }}
           >
             {tr(title)}
-          </Text>
+          </SingleLineText>
         </View>
       </Pressable>
     </View>

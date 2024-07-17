@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { useColors, useDelayExecTask } from '../../hook';
 import { usePaletteContext } from '../../theme';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import {
   g_index_alphabet_size,
   g_thumb_alphabet_size,
@@ -109,16 +109,15 @@ export const ListIndex = (props: ListIndexProps) => {
               borderRadius: g_index_alphabet_size,
             }}
           >
-            <Text
+            <SingleLineText
               paletteType={'label'}
               textType={'extraSmall'}
               style={{
-                color:
-                  currentIndex === index ? getColor('fg') : getColor('fg2'),
+                color: getColor(currentIndex === index ? 'fg' : 'fg2'),
               }}
             >
               {section[0]}
-            </Text>
+            </SingleLineText>
           </View>
         ))}
       </View>
@@ -143,7 +142,7 @@ export const ListIndex = (props: ListIndexProps) => {
               alignItems: 'center',
             }}
           >
-            <Text
+            <SingleLineText
               style={{
                 fontSize: 24,
                 fontWeight: '700',
@@ -152,7 +151,7 @@ export const ListIndex = (props: ListIndexProps) => {
               }}
             >
               {currentTitle}
-            </Text>
+            </SingleLineText>
           </View>
         </View>
       ) : null}

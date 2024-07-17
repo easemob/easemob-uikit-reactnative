@@ -8,8 +8,8 @@ import {
   Icon,
   ListItem,
   SimpleToast,
+  SingleLineText,
   StatusAvatar,
-  Text,
   Text1Button,
   Text2Button,
   UIKIT_VERSION,
@@ -114,13 +114,13 @@ export function MineInfo(props: MineInfoProps) {
           // statusStyle={{backgroundColor: 'red'}}
         />
         <View style={{ height: 12 }} />
-        <Text
+        <SingleLineText
           textType={'large'}
           paletteType={'headline'}
           style={{ color: getColor('fg') }}
         >
           {userName ?? userId}
-        </Text>
+        </SingleLineText>
         <View style={{ height: 4 }} />
         <Pressable
           style={{
@@ -130,13 +130,13 @@ export function MineInfo(props: MineInfoProps) {
           }}
           onPress={onCopyId}
         >
-          <Text
+          <SingleLineText
             textType={'small'}
             paletteType={'label'}
             style={{ color: getColor('t3') }}
           >
             {`ID: ${userId}`}
-          </Text>
+          </SingleLineText>
           <Icon
             name={'doc_on_doc'}
             style={{ width: 16, height: 16, tintColor: getColor('t3') }}
@@ -159,13 +159,13 @@ export function MineInfo(props: MineInfoProps) {
                   justifyContent: 'center',
                 }}
               >
-                <Text
+                <SingleLineText
                   textType={'small'}
                   paletteType={'title'}
                   style={{ color: getColor('t3') }}
                 >
                   {tr('_demo_info_state_set')}
-                </Text>
+                </SingleLineText>
               </View>
             }
             onClicked={onClickedState}
@@ -177,24 +177,24 @@ export function MineInfo(props: MineInfoProps) {
                   style={{ height: 28, width: 28, borderRadius: 8 }}
                 />
                 <View style={{ width: 8 }} />
-                <Text
+                <SingleLineText
                   textType={'medium'}
                   paletteType={'title'}
                   style={{ color: getColor('fg') }}
                 >
                   {tr('_demo_info_online_state')}
-                </Text>
+                </SingleLineText>
               </View>
             }
             RightIcon={
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text
+                <SingleLineText
                   textType={'medium'}
                   paletteType={'label'}
                   style={{ color: getColor('t3') }}
                 >
                   {tr(userState)}
-                </Text>
+                </SingleLineText>
                 <Icon
                   name={'chevron_right'}
                   style={{
@@ -218,13 +218,13 @@ export function MineInfo(props: MineInfoProps) {
                 style={{ height: 28, width: 28, borderRadius: 8 }}
               />
               <View style={{ width: 8 }} />
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_demo_info_person_info')}
-              </Text>
+              </SingleLineText>
             </View>
           }
           RightIcon={
@@ -247,13 +247,13 @@ export function MineInfo(props: MineInfoProps) {
                 style={{ height: 28, width: 28, borderRadius: 8 }}
               />
               <View style={{ width: 8 }} />
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_demo_info_common_setting')}
-              </Text>
+              </SingleLineText>
             </View>
           }
           RightIcon={
@@ -276,13 +276,13 @@ export function MineInfo(props: MineInfoProps) {
                 style={{ height: 28, width: 28, borderRadius: 8 }}
               />
               <View style={{ width: 8 }} />
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_demo_info_message_notification')}
-              </Text>
+              </SingleLineText>
             </View>
           }
           RightIcon={
@@ -305,13 +305,13 @@ export function MineInfo(props: MineInfoProps) {
                 style={{ height: 28, width: 28, borderRadius: 8 }}
               />
               <View style={{ width: 8 }} />
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_demo_info_show_privacy')}
-              </Text>
+              </SingleLineText>
             </View>
           }
           RightIcon={
@@ -334,24 +334,24 @@ export function MineInfo(props: MineInfoProps) {
                 style={{ height: 28, width: 28, borderRadius: 8 }}
               />
               <View style={{ width: 8 }} />
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('about')}
-              </Text>
+              </SingleLineText>
             </View>
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'label'}
                 style={{ color: getColor('n') }}
               >
                 {`Easemob UIKit v${UIKIT_VERSION}`}
-              </Text>
+              </SingleLineText>
               <Icon
                 name={'chevron_right'}
                 style={{ height: 20, width: 20, tintColor: getColor('right') }}
@@ -369,13 +369,13 @@ export function MineInfo(props: MineInfoProps) {
                 justifyContent: 'center',
               }}
             >
-              <Text
+              <SingleLineText
                 textType={'small'}
                 paletteType={'title'}
                 style={{ color: getColor('t3') }}
               >
                 {tr('_demo_info_state_account')}
-              </Text>
+              </SingleLineText>
             </View>
           }
           onClicked={onClickedLogout}

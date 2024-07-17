@@ -7,7 +7,6 @@ import {
   ListItem,
   SingleLineText,
   Switch,
-  Text,
   TopNavigationBar,
   TopNavigationBarLeft,
   useColors,
@@ -82,13 +81,13 @@ export function FeatureSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_feature_setting_translate')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -127,13 +126,13 @@ export function FeatureSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_feature_setting_thread')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -172,13 +171,13 @@ export function FeatureSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_feature_setting_reaction')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -217,13 +216,13 @@ export function FeatureSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_feature_setting_presence')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -262,13 +261,13 @@ export function FeatureSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_feature_setting_av')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -307,13 +306,13 @@ export function FeatureSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_feature_setting_typing')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -352,13 +351,13 @@ export function FeatureSettingScreen(props: Props) {
         containerStyle={{ paddingHorizontal: 16 }}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_feature_setting_block')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={

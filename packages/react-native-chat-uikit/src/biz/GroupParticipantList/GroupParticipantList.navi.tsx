@@ -6,7 +6,7 @@ import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { IconButton } from '../../ui/Button';
-import { SingleLineText, Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { TopNavigationBar, TopNavigationBarLeft } from '../TopNavigationBar';
 import type { GroupParticipantListNavigationBarProps } from './types';
 
@@ -68,7 +68,7 @@ export const GroupParticipantListNavigationBar = (
               style={{ flexDirection: 'row' }}
               onPress={onDelParticipant}
             >
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'label'}
                 style={{
@@ -78,7 +78,7 @@ export const GroupParticipantListNavigationBar = (
                 }}
               >
                 {tr('_uikit_group_del_member_button', selectedCount)}
-              </Text>
+              </SingleLineText>
             </Pressable>
           ) : null
         }

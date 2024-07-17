@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Icon,
   ListItem,
-  Text,
+  SingleLineText,
   TopNavigationBar,
   TopNavigationBarLeft,
   useColors,
@@ -86,7 +86,7 @@ export function StyleSettingScreen(props: Props) {
             style={{ paddingHorizontal: 8 }}
             disabled={changed ? false : true}
           >
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{
@@ -94,7 +94,7 @@ export function StyleSettingScreen(props: Props) {
               }}
             >
               {tr('_demo_style_setting_navi_confim')}
-            </Text>
+            </SingleLineText>
           </Pressable>
         }
       />
@@ -104,13 +104,13 @@ export function StyleSettingScreen(props: Props) {
         onClicked={() => onChanged(0)}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_style_setting_language_classic')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={
@@ -141,13 +141,13 @@ export function StyleSettingScreen(props: Props) {
         onClicked={() => onChanged(1)}
         LeftName={
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
+            <SingleLineText
               textType={'medium'}
               paletteType={'title'}
               style={{ color: getColor('fg') }}
             >
               {tr('_demo_style_setting_language_modern')}
-            </Text>
+            </SingleLineText>
           </View>
         }
         RightIcon={

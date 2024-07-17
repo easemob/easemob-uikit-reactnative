@@ -7,7 +7,6 @@ import {
   Icon,
   ListItem,
   SingleLineText,
-  Text,
   TopNavigationBar,
   TopNavigationBarLeft,
   useColors,
@@ -76,13 +75,13 @@ export function PrivacySettingScreen(props: Props) {
           containerStyle={{ paddingHorizontal: 16 }}
           LeftName={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text
+              <SingleLineText
                 textType={'medium'}
                 paletteType={'title'}
                 style={{ color: getColor('fg') }}
               >
                 {tr('_demo_privacy_setting_block_list')}
-              </Text>
+              </SingleLineText>
             </View>
           }
           RightIcon={

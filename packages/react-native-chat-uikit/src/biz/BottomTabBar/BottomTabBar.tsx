@@ -6,7 +6,7 @@ import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import type { TabPageHeaderProps } from '../../ui/TabPage';
 import { calculateLeft } from '../../ui/TabPage/TabPageHeader.hooks';
-import { Text } from '../../ui/Text';
+import { SingleLineText } from '../../ui/Text';
 import { gHeaderHeight } from './BottomTabBar.const';
 
 export type BottomTabBarProps = TabPageHeaderProps & {
@@ -115,7 +115,7 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
                 ]}
               />
               {v.title ? (
-                <Text
+                <SingleLineText
                   textType={'extraSmall'}
                   paletteType={'label'}
                   style={[
@@ -128,7 +128,7 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
                   ]}
                 >
                   {v.title}
-                </Text>
+                </SingleLineText>
               ) : null}
               {StateView ? (
                 <View
