@@ -22,6 +22,7 @@ import { getPinyin, SingletonObjects } from '../../utils';
 import { Badges } from '../Badges';
 import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { g_index_alphabet_range, g_index_alphabet_range_array } from '../const';
+import { useMineInfoActions } from '../hooks';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useContactListMoreActions } from '../hooks/useContactListMoreActions';
 import { useSectionList } from '../List';
@@ -98,6 +99,7 @@ export function useContactList(props: ContactListProps) {
   const im = useChatContext();
   const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
+  const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
   const { closeMenu } = useCloseMenu({ menuRef });
   const ListItemRenderRef = React.useRef<ContactListItemComponentType>(
     propsListItemRender ?? ContactListItemMemo
@@ -466,6 +468,10 @@ export function useContactList(props: ContactListProps) {
     onChangeRequestCount?.(0);
     onClickedNewRequest?.();
   }, [onChangeRequestCount, onClickedNewRequest, onRememberRequestCount]);
+
+  const onClickedAvatar = React.useCallback(() => {
+    onShowMineInfoActions();
+  }, [onShowMineInfoActions]);
 
   const init = React.useCallback(
     async (params: {
@@ -934,6 +940,7 @@ export function useContactList(props: ContactListProps) {
     onClickedForward,
     onReload,
     userId,
+    onClickedAvatar,
   };
 }
 

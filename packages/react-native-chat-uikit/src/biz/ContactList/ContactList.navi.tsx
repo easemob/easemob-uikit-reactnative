@@ -21,6 +21,7 @@ type _ContactListNavigationBarProps = ContactListNavigationBarProps & {
   avatarUrl?: string;
   onClickedAddGroupParticipant?: () => void;
   onClickedCreateGroup?: () => void;
+  onClickedAvatar?: () => void;
 };
 export const ContactListNavigationBar = (
   props: _ContactListNavigationBarProps
@@ -36,6 +37,7 @@ export const ContactListNavigationBar = (
     onClickedAddGroupParticipant,
     selectedMemberCount,
     customNavigationBar,
+    onClickedAvatar,
   } = props;
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
@@ -55,7 +57,12 @@ export const ContactListNavigationBar = (
       <TopNavigationBar
         Left={
           <View style={{ flexDirection: 'row' }}>
-            <StatusAvatar url={avatarUrl} size={32} userId={userId} />
+            <StatusAvatar
+              url={avatarUrl}
+              size={32}
+              userId={userId}
+              onClicked={onClickedAvatar}
+            />
           </View>
         }
         Right={TopNavigationBarRight}

@@ -69,6 +69,7 @@ export function ContactList(props: ContactListProps) {
     onClickedForward,
     userId,
     onReload,
+    onClickedAvatar,
   } = useContactList(props);
   const {
     style,
@@ -105,6 +106,7 @@ export function ContactList(props: ContactListProps) {
           onClickedCreateGroup={onClickedCreateGroup}
           onClickedAddGroupParticipant={onClickedAddGroupParticipant}
           customNavigationBar={customNavigationBar}
+          onClickedAvatar={onClickedAvatar}
         />
       ) : null}
 
