@@ -174,6 +174,8 @@ export function useMessageList(
   const isBottomRef = React.useRef(false);
   const isTopRef = React.useRef(false);
   const heightRef = React.useRef(0);
+  const containerHeightRef = React.useRef(0);
+  const maxListHeightRef = React.useRef(0);
   const bounces = React.useRef(true).current;
   const currentVoicePlayingRef = React.useRef<MessageModel | undefined>();
   const { tr } = useI18nContext();
@@ -294,15 +296,19 @@ export function useMessageList(
   );
 
   const scrollToBottom = React.useCallback(
-    (animated?: boolean) => {
+    (_animated?: boolean) => {
       timeoutTask(0, () => {
         if (dataRef.current.length <= 0) {
           return;
         }
         if (inverted === true) {
-          listRef?.current?.scrollToIndex?.({ index: 0, animated });
+          const _animated =
+            containerHeightRef.current >= maxListHeightRef.current;
+          listRef?.current?.scrollToIndex?.({ index: 0, animated: _animated });
         } else {
-          listRef?.current?.scrollToEnd?.();
+          const _animated =
+            containerHeightRef.current >= maxListHeightRef.current;
+          listRef?.current?.scrollToEnd?.({ animated: _animated });
         }
       });
       setIsBottom(true);
@@ -443,8 +449,13 @@ export function useMessageList(
   );
 
   const onLayout = React.useCallback((event: LayoutChangeEvent) => {
-    // uilog.log('test:zuoyu:onLayout:', event.nativeEvent.layout.height);
+    // uilog.log('dev:onLayout:', event.nativeEvent.layout.height);
     heightRef.current = event.nativeEvent.layout.height;
+  }, []);
+
+  const onContainerLayout = React.useCallback((event: LayoutChangeEvent) => {
+    // uilog.log('dev:onContainerLayout:', event.nativeEvent.layout.height);
+    containerHeightRef.current = event.nativeEvent.layout.height;
   }, []);
 
   const updateMessageVoiceUIState = React.useCallback(
@@ -3088,5 +3099,7 @@ export function useMessageList(
     pinMsgListRef,
     showPinMessage,
     hidePinMessage,
+    onContainerLayout,
+    maxListHeightRef,
   };
 }

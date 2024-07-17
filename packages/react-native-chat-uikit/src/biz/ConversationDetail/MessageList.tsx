@@ -96,6 +96,8 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onCheckedItem,
       onLongPressItemReaction,
       pinMsgListRef,
+      onContainerLayout,
+      maxListHeightRef,
     } = useMessageList(props, ref);
     const {
       msgPinPlaceHolderCurrentHeight,
@@ -128,6 +130,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
         ]}
         onTouchEnd={onClicked}
         onLayout={(e) => {
+          maxListHeightRef.current = e.nativeEvent.layout.height;
           setMaxListHeight(e.nativeEvent.layout.height);
         }}
       >
@@ -156,6 +159,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             maxHeight: msgListMaxCurrentHeight,
             // backgroundColor: 'red',
           }}
+          onLayout={onContainerLayout}
         >
           <FlatList
             ref={flatListRef}
