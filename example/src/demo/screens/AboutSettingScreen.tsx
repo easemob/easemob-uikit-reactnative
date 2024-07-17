@@ -387,7 +387,7 @@ export function AgoraAboutSettingScreen(props: Props) {
           paletteType={'title'}
           style={{ color: getColor('t1'), padding: 4 }}
         >
-          {tr('_demo_about_title')}
+          {tr('_demo_about_title', accountType)}
         </SingleLineText>
         {/* <SingleLineText
           textType={'medium'}
