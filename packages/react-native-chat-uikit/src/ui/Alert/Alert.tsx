@@ -214,6 +214,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 }
                 enableClearButton={enableClearButton}
                 autoFocus={autoFocus}
+                onBlur={onRequestModalClose}
                 {...inputProps}
               />
             </View>
