@@ -141,9 +141,9 @@ export function createStringSetCn(): StringSet {
     '_demo_feature_setting_av': '音视频通话',
     '_demo_feature_setting_av_tip': ' ',
     '_demo_feature_setting_typing': '输入状态',
-    '_demo_feature_setting_typing_tip': ' ',
+    '_demo_feature_setting_typing_tip': '在对方界面显示你正在输入的状态',
     '_demo_feature_setting_block': '黑名单',
-    '_demo_feature_setting_block_tip': ' ',
+    '_demo_feature_setting_block_tip': '设置后，长按消息将翻译为指定的目标语言',
 
     '_demo_notification_setting_navi_title': '消息通知',
     '_demo_notification_setting_offline_push': '消息离线推送',

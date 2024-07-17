@@ -5,6 +5,7 @@ import { Linking, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
+  CHAT_VERSION,
   Icon,
   Image,
   ListItem,
@@ -111,6 +112,13 @@ export function EasemobAboutSettingScreen(props: Props) {
           style={{ color: getColor('disable') }}
         >
           {tr(`Version ${constants.manifest?.version}`)}
+        </SingleLineText>
+        <SingleLineText
+          textType={'medium'}
+          paletteType={'label'}
+          style={{ color: getColor('disable') }}
+        >
+          {tr(`SDK Version ${CHAT_VERSION}`)}
         </SingleLineText>
         <SingleLineText
           textType={'medium'}
@@ -379,14 +387,21 @@ export function AgoraAboutSettingScreen(props: Props) {
           paletteType={'title'}
           style={{ color: getColor('t1'), padding: 4 }}
         >
-          {tr('_demo_about_title', accountType)}
+          {tr('_demo_about_title')}
         </SingleLineText>
-        <SingleLineText
+        {/* <SingleLineText
           textType={'medium'}
           paletteType={'label'}
           style={{ color: getColor('disable') }}
         >
           {tr(`Version ${constants.manifest?.version}`)}
+        </SingleLineText> */}
+        <SingleLineText
+          textType={'medium'}
+          paletteType={'label'}
+          style={{ color: getColor('disable') }}
+        >
+          {tr(`SDK Version ${CHAT_VERSION}`)}
         </SingleLineText>
         <SingleLineText
           textType={'medium'}
