@@ -137,7 +137,8 @@ export function createStringSetCn(): StringSet {
     '_demo_feature_setting_reaction': '表情回复',
     '_demo_feature_setting_reaction_tip': '长按消息添加表情回应',
     '_demo_feature_setting_presence': '订阅状态',
-    '_demo_feature_setting_presence_tip': ' ',
+    '_demo_feature_setting_presence_tip':
+      '向其他用户展示当前的可用性和活动状态',
     '_demo_feature_setting_av': '音视频通话',
     '_demo_feature_setting_av_tip': ' ',
     '_demo_feature_setting_typing': '输入状态',

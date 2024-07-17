@@ -143,12 +143,13 @@ export function createStringSetEn(): StringSet {
     '_demo_feature_setting_reaction_tip':
       'Long press a message to add emoji reactions',
     '_demo_feature_setting_presence': 'Presence',
-    '_demo_feature_setting_presence_tip': ' ',
+    '_demo_feature_setting_presence_tip':
+      'Displaying current availability and activity status to other users',
     '_demo_feature_setting_av': 'Audio and Video Call',
     '_demo_feature_setting_av_tip': ' ',
     '_demo_feature_setting_typing': 'Typing Indicator',
     '_demo_feature_setting_typing_tip':
-      'Show the other person that you are typing.',
+      'Show the other user that you are typing',
     '_demo_feature_setting_block': 'Block List',
     '_demo_feature_setting_block_tip':
       'After setting, long-pressing a message will translate it into the specified target language.',
