@@ -3,12 +3,11 @@ import { DeviceEventEmitter } from 'react-native';
 
 import {
   AsyncStorageBasic,
-  getReleaseArea,
   presetPaletteColors,
   SingletonObjects,
   useForceUpdate,
 } from '../../rename.uikit';
-import { appKey as gAppKey } from '../common/const';
+import { accountType, appKey as gAppKey } from '../common/const';
 
 export function useGeneralSetting() {
   const {} = useForceUpdate();
@@ -16,8 +15,10 @@ export function useGeneralSetting() {
     undefined
   );
   const appThemeRef = React.useRef<boolean | undefined>(undefined);
-  const [appStyle, setAppStyle] = React.useState<string>('classic');
-  const appStyleRef = React.useRef('classic');
+  const appStyleRef = React.useRef(
+    accountType === 'agora' ? 'modern' : 'classic'
+  );
+  const [appStyle, setAppStyle] = React.useState<string>(appStyleRef.current);
   const [appPrimaryColor, setAppPrimaryColor] = React.useState<number>(
     presetPaletteColors.primary
   );
@@ -40,15 +41,21 @@ export function useGeneralSetting() {
   const appNeutralSColorRef = React.useRef<number>(
     presetPaletteColors.neutralSpecial
   );
-  const [appLanguage, setAppLanguage] = React.useState<string>('zh-Hans');
-  const appLanguageRef = React.useRef<string>('zh-Hans');
+  const appLanguageRef = React.useRef<string>(
+    accountType === 'agora' ? 'en' : 'zh-Hans'
+  );
+  const [appLanguage, setAppLanguage] = React.useState<string>(
+    appLanguageRef.current
+  );
   const [appTranslate, setAppTranslate] = React.useState<boolean | undefined>(
     undefined
   );
   const appTranslateRef = React.useRef<boolean | undefined>(undefined);
+  const appTranslateLanguageRef = React.useRef<string>(
+    accountType === 'agora' ? 'en' : 'zh-Hans'
+  );
   const [appTranslateLanguage, setAppTranslateLanguage] =
-    React.useState<string>('zh-Hans');
-  const appTranslateLanguageRef = React.useRef<string>('zh-Hans');
+    React.useState<string>(appTranslateLanguageRef.current);
   const [appThread, setAppThread] = React.useState<boolean | undefined>(
     undefined
   );
@@ -293,20 +300,20 @@ export function useGeneralSetting() {
     const res16 = await s.getData({ key: 'translateLanguage' });
     const res17 = await s.getData({ key: 'typing' });
     const res18 = await s.getData({ key: 'block' });
-    const releaseArea = getReleaseArea();
     return {
       appTheme: res.value ? res.value !== 'light' : false,
-      appTranslate: res10.value ? res10.value === 'enable' : false,
-      appThread: res11.value ? res11.value === 'enable' : false,
-      appReaction: res12.value ? res12.value === 'enable' : false,
-      appPresence: res13.value ? res13.value === 'enable' : false,
+      appTranslate: res10.value ? res10.value === 'enable' : true,
+      appThread: res11.value ? res11.value === 'enable' : true,
+      appReaction: res12.value ? res12.value === 'enable' : true,
+      appPresence: res13.value ? res13.value === 'enable' : true,
       appAv: res14.value ? res14.value === 'enable' : true,
       appNotification: res15.value ? res15.value === 'enable' : false,
       appTyping: res17.value ? res17.value === 'enable' : true,
       appBlock: res18.value ? res18.value === 'enable' : true,
-      appStyle: res2.value ?? (releaseArea === 'china' ? 'classic' : 'modern'),
-      appLanguage: res4.value ?? 'zh-Hans',
-      appTranslateLanguage: res16.value ?? 'zh-Hans',
+      appStyle: res2.value ?? (accountType === 'agora' ? 'modern' : 'classic'),
+      appLanguage: res4.value ?? (accountType === 'agora' ? 'en' : 'zh-Hans'),
+      appTranslateLanguage:
+        res16.value ?? (accountType === 'agora' ? 'en' : 'zh-Hans'),
       appPrimaryColor: res5.value ? +res5.value : presetPaletteColors.primary,
       appSecondColor: res6.value ? +res6.value : presetPaletteColors.secondary,
       appErrorColor: res7.value ? +res7.value : presetPaletteColors.error,
