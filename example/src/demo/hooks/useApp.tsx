@@ -640,7 +640,10 @@ export function useApp() {
       console.log('dev:onConnected:');
     },
     onDisconnected: (reason) => {
-      if (reason !== DisconnectReasonType.others) {
+      if (
+        reason !== DisconnectReasonType.others &&
+        reason !== DisconnectReasonType.token_will_expire
+      ) {
         rootRef.navigate('LoginV2', {});
       }
     },
