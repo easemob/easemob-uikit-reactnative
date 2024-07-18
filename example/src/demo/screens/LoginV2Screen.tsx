@@ -45,6 +45,7 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 function EasemobLoginV2Screen(props: Props) {
   const {} = props;
   const navi = useStackScreenRoute(props);
+  const { push } = navi;
   const [id, setId] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [captchaState, setCaptchaState] = React.useState<CaptchaState>('init');
@@ -180,16 +181,16 @@ function EasemobLoginV2Screen(props: Props) {
       if (countRef.current >= 4) {
         countRef.current = 0;
         SetServerSettingVisible(true);
-        navi.push({ to: 'LoginV2Setting' });
+        push({ to: 'LoginV2Setting' });
         return;
       }
       ++countRef.current;
     }
-  }, [navi]);
+  }, [push]);
 
   const onClickedServerSetting = React.useCallback(() => {
-    navi.push({ to: 'LoginV2Setting' });
-  }, [navi]);
+    push({ to: 'LoginV2Setting' });
+  }, [push]);
 
   const onClickedEnableDev = React.useCallback(() => {
     clearTimer();
@@ -621,6 +622,7 @@ function EasemobLoginV2Screen(props: Props) {
 function AgoraLoginV2Screen(props: Props) {
   const {} = props;
   const navi = useStackScreenRoute(props);
+  const { push } = navi;
   const [id, setId] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -693,16 +695,16 @@ function AgoraLoginV2Screen(props: Props) {
       if (countRef.current >= 4) {
         countRef.current = 0;
         SetServerSettingVisible(true);
-        navi.push({ to: 'LoginV2Setting' });
+        push({ to: 'LoginV2Setting' });
         return;
       }
       ++countRef.current;
     }
-  }, [navi]);
+  }, [push]);
 
   const onClickedServerSetting = React.useCallback(() => {
-    navi.push({ to: 'LoginV2Setting' });
-  }, [navi]);
+    push({ to: 'LoginV2Setting' });
+  }, [push]);
 
   const onClickedEnableDev = React.useCallback(() => {
     clearTimer();

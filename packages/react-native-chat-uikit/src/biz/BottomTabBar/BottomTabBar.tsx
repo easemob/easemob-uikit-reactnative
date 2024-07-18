@@ -71,6 +71,8 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
         height: gHeaderHeight,
         justifyContent: 'center',
         marginVertical: 3,
+        borderTopColor: getColor('divider'),
+        borderTopWidth: 0.5,
       }}
     >
       <View

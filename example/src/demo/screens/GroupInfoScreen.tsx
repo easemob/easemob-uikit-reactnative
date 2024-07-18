@@ -16,6 +16,7 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function GroupInfoScreen(props: Props) {
   const { route } = props;
   const navi = useStackScreenRoute(props);
+  const { navigate } = navi;
   const { start, stop } = useOnce();
   const { tr } = useI18nContext();
   const groupInfoRef = React.useRef<GroupInfoRef>({} as any);
@@ -37,7 +38,7 @@ export function GroupInfoScreen(props: Props) {
     (id: string) => {
       avTypeRef.current = 'video';
       start(() => {
-        navi.navigate({
+        navigate({
           to: 'AVSelectGroupParticipant',
           props: {
             groupId: id,
@@ -46,13 +47,13 @@ export function GroupInfoScreen(props: Props) {
         });
       });
     },
-    [navi, ownerId, start]
+    [navigate, ownerId, start]
   );
   const onClickedVoice = React.useCallback(
     (id: string) => {
       avTypeRef.current = 'voice';
       start(() => {
-        navi.navigate({
+        navigate({
           to: 'AVSelectGroupParticipant',
           props: {
             groupId: id,
@@ -61,7 +62,7 @@ export function GroupInfoScreen(props: Props) {
         });
       });
     },
-    [navi, ownerId, start]
+    [navigate, ownerId, start]
   );
 
   React.useEffect(() => {

@@ -40,6 +40,7 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ServerSettingScreen(props: Props) {
   const {} = props;
   const navi = useStackScreenRoute(props);
+  const { goBack } = navi;
   const { style } = useThemeContext();
   const { tr } = useI18nContext();
   const { getAlertRef } = useServerSettingScreen();
@@ -76,8 +77,8 @@ export function ServerSettingScreen(props: Props) {
   >(undefined);
 
   const onBack = React.useCallback(() => {
-    navi.goBack();
-  }, [navi]);
+    goBack();
+  }, [goBack]);
   const onSave = React.useCallback(() => {
     // todo: 将变量保存到本地，之后重启时读取
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {

@@ -1241,7 +1241,15 @@ export interface ChatService
   refreshToken(params: {
     token: string;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
-  }): Promise<void>;
+  }): void;
+
+  /**
+   * Check whether the token has expired.
+   *
+   * @params params
+   * - result: The result after performing the operation. If failed, an error object is returned.
+   */
+  checkTokenIsExpired(params: { onResult: (isExisted: boolean) => void }): void;
 
   /**
    * Get the current logged user ID. If you are not logged in, undefined is returned.

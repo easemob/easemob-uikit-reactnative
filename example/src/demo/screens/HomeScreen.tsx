@@ -159,6 +159,7 @@ export function HomeScreen(props: Props) {
   const releaseAreaRef = React.useRef(ra);
   useNavigationState(props);
   const im = useChatContext();
+  const { replace } = useNativeStackRoute();
 
   const { initParams } = useGeneralSetting();
   const [_initParams, setInitParams] = React.useState(false);
@@ -205,6 +206,16 @@ export function HomeScreen(props: Props) {
       onResult: () => {},
     });
   }, [im]);
+
+  React.useEffect(() => {
+    im.checkTokenIsExpired({
+      onResult: (isExpired) => {
+        if (isExpired) {
+          replace({ to: 'LoginV2' });
+        }
+      },
+    });
+  }, [im, replace]);
 
   return (
     <SafeAreaView

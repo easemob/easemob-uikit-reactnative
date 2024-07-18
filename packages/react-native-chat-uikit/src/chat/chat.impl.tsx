@@ -8,6 +8,7 @@ import {
   ChatConversation,
   ChatConversationType,
   ChatCursorResult,
+  ChatError,
   ChatGroup,
   ChatGroupOptions,
   ChatGroupStyle,
@@ -371,10 +372,10 @@ export class ChatServiceImpl
     const r = await this.client.isLoginBefore();
     return r === true ? 'logged' : 'noLogged';
   }
-  async refreshToken(params: {
+  refreshToken(params: {
     token: string;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
-  }): Promise<void> {
+  }): void {
     this.tryCatch({
       promise: this.client.renewAgoraToken(params.token),
       event: 'refreshToken',
@@ -391,6 +392,23 @@ export class ChatServiceImpl
         });
       },
     });
+  }
+
+  checkTokenIsExpired(params: {
+    onResult: (isExpired: boolean) => void;
+  }): void {
+    this.client.userManager
+      .fetchUserInfoById(['test'])
+      .then(() => {
+        params.onResult?.(false);
+      })
+      .catch((e: ChatError) => {
+        if (e.code === 401) {
+          params.onResult?.(true);
+        } else {
+          params.onResult?.(false);
+        }
+      });
   }
 
   get userId(): string | undefined {

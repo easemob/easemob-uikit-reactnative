@@ -28,6 +28,7 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ContactInfoScreen(props: Props) {
   const { route } = props;
   const navi = useStackScreenRoute(props);
+  const { goBack, push } = navi;
   const { start, stop } = useOnce();
   const { tr } = useI18nContext();
   const userId = ((route.params as any)?.params as any)?.userId;
@@ -64,10 +65,10 @@ export function ContactInfoScreen(props: Props) {
   const listener = React.useMemo<ChatServiceListener>(() => {
     return {
       onContactDeleted: (_userId: string): void => {
-        navi.goBack();
+        goBack();
       },
     } as ChatServiceListener;
-  }, [navi]);
+  }, [goBack]);
   useChatListener(listener);
 
   const onRequestData = React.useCallback(
@@ -119,7 +120,7 @@ export function ContactInfoScreen(props: Props) {
           key={'101'}
           onClicked={() => {
             start(() => {
-              navi.push({
+              push({
                 to: 'EditInfo',
                 props: {
                   backName: tr('_demo_edit_contact_remark'),
@@ -168,7 +169,7 @@ export function ContactInfoScreen(props: Props) {
 
       return list;
     },
-    [getColor, navi, start, tr, userRemark]
+    [getColor, push, start, tr, userRemark]
   );
 
   React.useEffect(() => {
