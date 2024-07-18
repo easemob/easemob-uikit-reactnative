@@ -233,7 +233,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             // !!! https://github.com/facebook/react-native/issues/42967
             // !!! https://github.com/facebook/react-native/issues/36766
             // !!! https://github.com/facebook/react-native/issues/39421
-            initialNumToRender={9999}
+            // initialNumToRender={9999}
             // renderScrollComponent={null}
             // maxToRenderPerBatch={50}
             // overScrollMode={'always'}
