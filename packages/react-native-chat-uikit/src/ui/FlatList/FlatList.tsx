@@ -34,8 +34,13 @@ export const _FlatList = <ItemT,>(
   props: FlatListProps<ItemT>,
   ref?: React.ForwardedRef<FlatListRef<ItemT>>
 ) => {
-  const { ListErrorComponent, ListLoadingComponent } = props;
+  const { ListErrorComponent, ListLoadingComponent, ListEmptyComponent, data } =
+    props;
+  console.log('test:zuoyu:_FlatList', data?.length);
 
+  // !!! https://github.com/facebook/react-native/issues/42967
+  // !!! https://github.com/facebook/react-native/issues/36766
+  // !!! https://github.com/facebook/react-native/issues/39421
   return (
     <View
       style={{
@@ -44,7 +49,8 @@ export const _FlatList = <ItemT,>(
         // flex: 1,
       }}
     >
-      <RNFlatList ref={ref} {...props} />
+      {data?.length !== 0 && <RNFlatList ref={ref} {...props} />}
+      {data?.length === 0 && getElement(ListEmptyComponent)}
       {getElement(ListErrorComponent)}
       {getElement(ListLoadingComponent)}
     </View>
