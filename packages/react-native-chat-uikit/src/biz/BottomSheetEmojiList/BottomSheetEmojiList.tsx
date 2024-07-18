@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions, useWindowDimensions } from 'react-native';
+import { Dimensions, useWindowDimensions, View } from 'react-native';
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -54,7 +54,7 @@ export const BottomSheetEmojiList = React.forwardRef<
   props: BottomSheetEmojiListProps,
   ref?: React.ForwardedRef<BottomSheetEmojiListRef>
 ) {
-  const {} = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
   const modalRef = React.useRef<SlideModalRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
   const {
@@ -126,7 +126,7 @@ export const BottomSheetEmojiList = React.forwardRef<
           isEmojiCharacter={true}
         />
 
-        {/* <View style={{ height: bottom }} /> */}
+        <View style={{ height: bottom }} />
       </SafeAreaView>
     </SlideModal>
   );
