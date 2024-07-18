@@ -36,7 +36,6 @@ export const _FlatList = <ItemT,>(
 ) => {
   const { ListErrorComponent, ListLoadingComponent, ListEmptyComponent, data } =
     props;
-  console.log('test:zuoyu:_FlatList', data?.length);
 
   // !!! https://github.com/facebook/react-native/issues/42967
   // !!! https://github.com/facebook/react-native/issues/36766

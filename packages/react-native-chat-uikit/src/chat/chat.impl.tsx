@@ -722,7 +722,12 @@ export class ChatServiceImpl
             });
           });
         }
-        await this._requestConvData(list);
+        try {
+          await this._requestConvData(list);
+        } catch (e) {
+          uilog.warn('dev:getAllConversations:requestConvData:', e);
+        }
+
         this._convList.clear();
 
         const ret = list.map(async (v) => {
@@ -752,9 +757,17 @@ export class ChatServiceImpl
               pageSize2
             );
           list.list?.forEach((v) => {
-            map.set(v.convId, {
-              ...v,
-            } as ChatConversation);
+            const item = map.get(v.convId);
+            if (item) {
+              map.set(v.convId, {
+                ...item,
+                ...v,
+              } as ChatConversation);
+            } else {
+              map.set(v.convId, {
+                ...v,
+              } as ChatConversation);
+            }
           });
 
           if (
@@ -767,23 +780,30 @@ export class ChatServiceImpl
         }
 
         if (map.size > 0) {
-          const silentList =
-            await this.client.pushManager.fetchSilentModeForConversations(
-              Array.from(map.values()).map((v) => {
-                return {
-                  convId: v.convId,
-                  convType: v.convType,
-                } as any;
-              })
-            );
-          silentList.forEach((v) => {
-            this._silentModeList.set(v.conversationId, {
-              convId: v.conversationId,
-              doNotDisturb:
-                v.remindType === ChatPushRemindType.MENTION_ONLY ||
-                v.remindType === ChatPushRemindType.NONE,
-            });
+          const reqList = Array.from(map.values()).map((v) => {
+            return {
+              convId: v.convId,
+              convType: v.convType,
+            } as any;
           });
+          let index = 0;
+          while (index < reqList.length) {
+            const subReqList = reqList.slice(index, index + pageSize2);
+            index += pageSize2;
+            const silentList =
+              await this.client.pushManager.fetchSilentModeForConversations(
+                subReqList
+              );
+            silentList.forEach((v) => {
+              this._silentModeList.set(v.conversationId, {
+                convId: v.conversationId,
+                doNotDisturb:
+                  v.remindType === ChatPushRemindType.MENTION_ONLY ||
+                  v.remindType === ChatPushRemindType.NONE,
+              });
+            });
+          }
+
           if (this._silentModeList.size > 0) {
             await this._convStorage?.setAllConversation(
               Array.from(this._silentModeList.values()).map((item) => {
@@ -798,7 +818,11 @@ export class ChatServiceImpl
 
         await this._convStorage?.setFinishedForFetchList(true);
 
-        await this._requestConvData(Array.from(map.values()));
+        try {
+          await this._requestConvData(Array.from(map.values()));
+        } catch (e) {
+          uilog.warn('dev:getAllConversations:requestConvData:', e);
+        }
 
         const ret = Array.from(map.values()).map(async (v) => {
           const conv = await this.toUIConversation(v);
@@ -851,12 +875,17 @@ export class ChatServiceImpl
         event: 'getConversation',
       });
       if (ret) {
-        await this._requestConvData([
-          {
-            convId: params.convId,
-            convType: params.convType,
-          } as ChatConversation,
-        ]);
+        try {
+          await this._requestConvData([
+            {
+              convId: params.convId,
+              convType: params.convType,
+            } as ChatConversation,
+          ]);
+        } catch (e) {
+          uilog.warn('dev:getConversation:', e);
+        }
+
         const c1 = await this.toUIConversation(ret);
         const c2 = this._convList.get(params.convId);
         if (c2) {
@@ -877,12 +906,17 @@ export class ChatServiceImpl
         if (isExisted) {
           return isExisted;
         } else {
-          await this._requestConvData([
-            {
-              convId: params.convId,
-              convType: params.convType,
-            } as ChatConversation,
-          ]);
+          try {
+            await this._requestConvData([
+              {
+                convId: params.convId,
+                convType: params.convType,
+              } as ChatConversation,
+            ]);
+          } catch (e) {
+            uilog.warn('dev:getConversation:', e);
+          }
+
           const conv = await this.toUIConversation({
             convId: params.convId,
             convType: params.convType,
@@ -1153,12 +1187,17 @@ export class ChatServiceImpl
             disableDispatch: true,
             isUpdateNotExisted: true,
           });
-          await this._requestData({
-            list: Array.from(tmp.keys()),
-            type: 'user',
-            requestHasData: true,
-            isUpdateNotExisted: true,
-          });
+          try {
+            await this._requestData({
+              list: Array.from(tmp.keys()),
+              type: 'user',
+              requestHasData: true,
+              isUpdateNotExisted: true,
+            });
+          } catch (error) {
+            uilog.warn('dev:getAllContacts', error);
+          }
+
           const tmp2 = this._dataFileProvider.getUserList(
             Array.from(tmp.keys())
           );
@@ -1202,12 +1241,17 @@ export class ChatServiceImpl
           disableDispatch: true,
           isUpdateNotExisted: true,
         });
-        await this._requestData({
-          list: Array.from(tmp.keys()),
-          type: 'user',
-          requestHasData: true,
-          isUpdateNotExisted: true,
-        });
+        try {
+          await this._requestData({
+            list: Array.from(tmp.keys()),
+            type: 'user',
+            requestHasData: true,
+            isUpdateNotExisted: true,
+          });
+        } catch (error) {
+          uilog.warn('dev:getAllContacts', error);
+        }
+
         const tmp2 = this._dataFileProvider.getUserList(Array.from(tmp.keys()));
         tmp2.forEach((v) => {
           list.set(v.id, {
@@ -1290,12 +1334,17 @@ export class ChatServiceImpl
             disableDispatch: true,
             isUpdateNotExisted: true,
           });
-          await this._requestData({
-            list: Array.from(tmp.keys()),
-            type: 'user',
-            requestHasData: true,
-            isUpdateNotExisted: true,
-          });
+          try {
+            await this._requestData({
+              list: Array.from(tmp.keys()),
+              type: 'user',
+              requestHasData: true,
+              isUpdateNotExisted: true,
+            });
+          } catch (error) {
+            uilog.warn('dev:getAllContacts2', error);
+          }
+
           const tmp2 = this._dataFileProvider.getUserList(
             Array.from(tmp.keys())
           );
@@ -1339,12 +1388,17 @@ export class ChatServiceImpl
           disableDispatch: true,
           isUpdateNotExisted: true,
         });
-        await this._requestData({
-          list: Array.from(tmp.keys()),
-          type: 'user',
-          requestHasData: true,
-          isUpdateNotExisted: true,
-        });
+        try {
+          await this._requestData({
+            list: Array.from(tmp.keys()),
+            type: 'user',
+            requestHasData: true,
+            isUpdateNotExisted: true,
+          });
+        } catch (error) {
+          uilog.warn('dev:getAllContacts2', error);
+        }
+
         const tmp2 = this._dataFileProvider.getUserList(Array.from(tmp.keys()));
         tmp2.forEach((v) => {
           list.set(v.id, {
@@ -1548,12 +1602,17 @@ export class ChatServiceImpl
           isUpdateNotExisted: true,
           disableDispatch: true,
         });
-        await this._requestData({
-          list: value.map((v) => v.groupId),
-          type: 'group',
-          requestHasData: true,
-          isUpdateNotExisted: true,
-        });
+        try {
+          await this._requestData({
+            list: value.map((v) => v.groupId),
+            type: 'group',
+            requestHasData: true,
+            isUpdateNotExisted: true,
+          });
+        } catch (error) {
+          uilog.warn('dev:getPageGroups', error);
+        }
+
         value.forEach(async (v) => {
           const group = this.toUIGroup(v);
           this._groupList.set(v.groupId, group);
@@ -1633,12 +1692,17 @@ export class ChatServiceImpl
           memberList.set(owner.memberId, owner);
         }
 
-        await this._requestData({
-          list: Array.from(memberList.keys()),
-          type: 'user',
-          requestHasData: true,
-          isUpdateNotExisted: true,
-        });
+        try {
+          await this._requestData({
+            list: Array.from(memberList.keys()),
+            type: 'user',
+            requestHasData: true,
+            isUpdateNotExisted: true,
+          });
+        } catch (error) {
+          uilog.warn('dev:getGroupAllMembers', error);
+        }
+
         memberList.forEach((v) => {
           v.memberAvatar = this._getAvatarFromCache(v.memberId);
           v.memberName = this._getNameFromCache(v.memberId);
@@ -1671,11 +1735,16 @@ export class ChatServiceImpl
         if (member && member.memberName && member.memberAvatar) {
           return member;
         }
-        await this._requestData({
-          list: [ret.owner],
-          type: 'user',
-          requestHasData: true,
-        });
+        try {
+          await this._requestData({
+            list: [ret.owner],
+            type: 'user',
+            requestHasData: true,
+          });
+        } catch (error) {
+          uilog.warn('dev:getGroupOwner', error);
+        }
+
         groupMember.set(ret.owner, {
           memberId: ret.owner,
           ...member,
@@ -1686,11 +1755,16 @@ export class ChatServiceImpl
         groupMember = new Map([
           [ret.owner, { memberId: ret.owner } as GroupParticipantModel],
         ]);
-        await this._requestData({
-          list: [ret.owner],
-          type: 'user',
-          requestHasData: true,
-        });
+        try {
+          await this._requestData({
+            list: [ret.owner],
+            type: 'user',
+            requestHasData: true,
+          });
+        } catch (error) {
+          uilog.warn('dev:getGroupOwner', error);
+        }
+
         groupMember.set(ret.owner, {
           memberId: ret.owner,
           memberAvatar: this._getAvatarFromCache(ret.owner),
@@ -1752,11 +1826,15 @@ export class ChatServiceImpl
               return false;
             },
           });
-          await this._requestData({
-            list: [value.groupId],
-            type: 'group',
-            requestHasData: true,
-          });
+          try {
+            await this._requestData({
+              list: [value.groupId],
+              type: 'group',
+              requestHasData: true,
+            });
+          } catch (error) {
+            uilog.warn('dev:getGroupInfoFromServer', error);
+          }
 
           const localGroup = this._groupList.get(params.groupId);
           const group = this.toUIGroup(value);
@@ -1818,11 +1896,15 @@ export class ChatServiceImpl
             return false;
           },
         });
-        await this._requestData({
-          list: [ret2.groupId],
-          type: 'group',
-          requestHasData: true,
-        });
+        try {
+          await this._requestData({
+            list: [ret2.groupId],
+            type: 'group',
+            requestHasData: true,
+          });
+        } catch (error) {
+          uilog.warn('dev:getGroupInfoSync', error);
+        }
 
         const localGroup = this._groupList.get(params.groupId);
         const group = this.toUIGroup(ret2);
@@ -2087,12 +2169,16 @@ export class ChatServiceImpl
       onFinished: async () => {
         const groupMembers = this._groupMemberList.get(params.groupId);
         if (groupMembers) {
-          await this._requestData({
-            list: params.members.map((item) => item.memberId),
-            type: 'user',
-            requestHasData: true,
-            isUpdateNotExisted: true,
-          });
+          try {
+            await this._requestData({
+              list: params.members.map((item) => item.memberId),
+              type: 'user',
+              requestHasData: true,
+              isUpdateNotExisted: true,
+            });
+          } catch (error) {
+            uilog.warn('dev:addGroupMembers', error);
+          }
 
           for (const member of params.members) {
             groupMembers.set(member.memberId, {
@@ -3157,12 +3243,17 @@ export class ChatServiceImpl
         ret = await this.client.contactManager.getBlockListFromDB();
       }
       if (ret.length > 0) {
-        await this._requestData({
-          list: ret,
-          type: 'user',
-          requestHasData: true,
-          isUpdateNotExisted: true,
-        });
+        try {
+          await this._requestData({
+            list: ret,
+            type: 'user',
+            requestHasData: true,
+            isUpdateNotExisted: true,
+          });
+        } catch (error) {
+          uilog.warn('dev:getAllBlockList', error);
+        }
+
         this._blockList.clear();
         for (const item of ret) {
           this._blockList.set(item, {

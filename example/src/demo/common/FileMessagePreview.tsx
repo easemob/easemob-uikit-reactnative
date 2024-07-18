@@ -123,7 +123,6 @@ export function FileMessagePreview(props: FileMessagePreviewProps) {
   );
 
   const onOpenFile = React.useCallback(async () => {
-    console.log('test:zuoyu:onOpenFile:', localPath.current);
     propsOnOpenFile?.(localPath.current ?? '');
   }, [propsOnOpenFile]);
 
