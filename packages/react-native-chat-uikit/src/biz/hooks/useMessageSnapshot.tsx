@@ -7,6 +7,7 @@ import {
   getMessageSnapshot,
   getMessageSnapshotParams,
 } from '../../chat';
+import { useConfigContext } from '../../config';
 import { useI18nContext } from '../../i18n';
 import {
   ChatCustomMessageBody,
@@ -18,6 +19,10 @@ import { useDataPriority } from './useDataPriority';
 
 export function useMessageSnapshot() {
   const { tr } = useI18nContext();
+  const {
+    onConversationListLastMessageSnapshot,
+    onConversationListLastMessageSnapshotParams = () => [],
+  } = useConfigContext();
   const { getMsgInfo } = useDataPriority({});
   const _getMessageSnapshot = React.useCallback(
     (msg?: ChatMessage) => {
@@ -33,14 +38,24 @@ export function useMessageSnapshot() {
             gCustomMessageRecallEventType ||
           (msg.body as ChatCustomMessageBody).event ===
             gCustomMessageCreateThreadTip);
-      const ret = tr(getMessageSnapshot(msg), ...getMessageSnapshotParams(msg));
+      const ret = onConversationListLastMessageSnapshot
+        ? tr(
+            onConversationListLastMessageSnapshot(msg),
+            ...onConversationListLastMessageSnapshotParams(msg)
+          )
+        : tr(getMessageSnapshot(msg), ...getMessageSnapshotParams(msg));
       if (isGroup === true && isTip === false) {
         const info = getMsgInfo(msg);
         return `${info.remark ?? info.name ?? info.id}: ${ret}`;
       }
       return ret;
     },
-    [getMsgInfo, tr]
+    [
+      getMsgInfo,
+      onConversationListLastMessageSnapshot,
+      onConversationListLastMessageSnapshotParams,
+      tr,
+    ]
   );
 
   return {

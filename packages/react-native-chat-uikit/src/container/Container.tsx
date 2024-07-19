@@ -76,6 +76,8 @@ export function Container(props: ContainerProps) {
     onGroupsHandler,
     onUsersHandler,
     onSystemTip,
+    onConversationListLastMessageSnapshot,
+    onConversationListLastMessageSnapshotParams,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -166,6 +168,10 @@ export function Container(props: ContainerProps) {
                   enableUrlPreview: enableUrlPreview,
                   releaseArea: releaseArea ?? _releaseArea,
                   onSystemTip: onSystemTip,
+                  onConversationListLastMessageSnapshot:
+                    onConversationListLastMessageSnapshot,
+                  onConversationListLastMessageSnapshotParams:
+                    onConversationListLastMessageSnapshotParams,
                 }}
               >
                 <AbsoluteViewContextProvider>

@@ -197,6 +197,21 @@ export type ContainerProps = React.PropsWithChildren<{
   ) => string | undefined;
 
   /**
+   * Customize the conversation list message snapshot.
+   *
+   * @param msg The last message.
+   * @returns The snapshot string.
+   */
+  onConversationListLastMessageSnapshot?: (msg: ChatMessage) => string;
+
+  /**
+   * Customize the conversation list message snapshot params.
+   * @param msg The last message.
+   * @returns The snapshot string array.
+   */
+  onConversationListLastMessageSnapshotParams?: (msg: ChatMessage) => any[];
+
+  /**
    * Whether to activate the thread function. If you do not activate it, you will not be able to actively use thread-related functions, if there are still problems after activation, check whether the relevant settings of the console are enabled.
    *
    * Default is `false`.
