@@ -130,7 +130,7 @@ export const Switch = React.forwardRef<SwitchRef, SwitchProps>(function (
     },
     thumbColor: {
       light: thumbColor ?? colors.neutral[98],
-      dark: thumbColor ?? colors.neutral[1],
+      dark: thumbColor ?? colors.neutral[98],
     },
     thumbBackgroundColor: {
       light: thumbBackgroundColor ?? colors.primary[5],

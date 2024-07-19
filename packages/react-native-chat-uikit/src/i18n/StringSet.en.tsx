@@ -138,7 +138,7 @@ export function createStringSetEn(): StringSet {
     '_uikit_new_quest_list_item_tip': 'requests to add you as a contact.',
 
     '_uikit_thread_msg_count': (count) => `${count}replay`,
-    '_uikit_thread_list': (count) => `thread(${count})`,
+    '_uikit_thread_list': (count) => `Thread(${count})`,
 
     '_uikit_thread_menu_edit_thread_name': 'Edit Thread Name',
     '_uikit_thread_menu_open_thread_member_list': 'Thread Members',

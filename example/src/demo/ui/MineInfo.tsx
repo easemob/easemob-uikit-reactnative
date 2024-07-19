@@ -12,7 +12,6 @@ import {
   StatusAvatar,
   Text1Button,
   Text2Button,
-  UIKIT_VERSION,
   useColors,
   useI18nContext,
   usePaletteContext,
@@ -345,13 +344,6 @@ export function MineInfo(props: MineInfoProps) {
           }
           RightIcon={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <SingleLineText
-                textType={'medium'}
-                paletteType={'label'}
-                style={{ color: getColor('n') }}
-              >
-                {`Easemob UIKit v${UIKIT_VERSION}`}
-              </SingleLineText>
               <Icon
                 name={'chevron_right'}
                 style={{ height: 20, width: 20, tintColor: getColor('right') }}
