@@ -1,7 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   Icon,
@@ -15,6 +14,7 @@ import {
   usePaletteContext,
 } from '../../rename.uikit';
 import { accountType } from '../common/const';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import { useGeneralSetting } from '../hooks/useGeneralSetting';
 import type { RootScreenParamsList } from '../routes';
@@ -87,12 +87,7 @@ export function GeneralSettingScreen(props: Props) {
   }, [from, hash, updater]);
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <TopNavigationBar
         containerStyle={{ backgroundColor: undefined }}
         Left={
@@ -288,6 +283,6 @@ export function GeneralSettingScreen(props: Props) {
           </View>
         }
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

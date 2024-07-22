@@ -1,7 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   ListItem,
@@ -13,6 +12,7 @@ import {
   useI18nContext,
   usePaletteContext,
 } from '../../rename.uikit';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useGeneralSetting, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -60,12 +60,7 @@ export function FeatureSettingScreen(props: Props) {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <TopNavigationBar
         containerStyle={{ backgroundColor: undefined }}
         Left={
@@ -391,6 +386,6 @@ export function FeatureSettingScreen(props: Props) {
           </View>
         }
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

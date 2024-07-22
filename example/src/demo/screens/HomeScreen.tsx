@@ -1,7 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CallConstKey } from '../../rename.callkit';
 import type { ChatMessage } from '../../rename.uikit';
@@ -24,6 +23,7 @@ import {
   usePaletteContext,
 } from '../../rename.uikit';
 import { accountType } from '../common/const';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import {
   useGeneralSetting,
   useLogin,
@@ -147,13 +147,6 @@ export function HomeScreen(props: Props) {
   const tabRef = React.useRef<TabPageRef>(null);
   const currentIndexRef = React.useRef<number>(0);
   const { tr } = useI18nContext();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
   const { updater } = useForceUpdate();
   const ra = getReleaseArea();
   const releaseAreaRef = React.useRef(ra);
@@ -218,12 +211,7 @@ export function HomeScreen(props: Props) {
   }, [im, replace]);
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <TabPage
         ref={tabRef}
         header={{
@@ -280,7 +268,7 @@ export function HomeScreen(props: Props) {
           currentIndexRef.current = index;
         }}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }
 

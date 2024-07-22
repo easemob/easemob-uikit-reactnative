@@ -2,7 +2,6 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import constants from 'expo-constants';
 import * as React from 'react';
 import { Linking, Pressable, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   CHAT_VERSION,
@@ -19,6 +18,7 @@ import {
 } from '../../rename.uikit';
 import { about_logo } from '../common/assets';
 import { accountType } from '../common/const';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -79,12 +79,7 @@ export function EasemobAboutSettingScreen(props: Props) {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <TopNavigationBar
         containerStyle={{ backgroundColor: undefined }}
         Left={
@@ -306,7 +301,7 @@ export function EasemobAboutSettingScreen(props: Props) {
           </View>
         }
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }
 
@@ -362,12 +357,7 @@ export function AgoraAboutSettingScreen(props: Props) {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <TopNavigationBar
         containerStyle={{ backgroundColor: undefined }}
         Left={
@@ -536,7 +526,7 @@ export function AgoraAboutSettingScreen(props: Props) {
           </View>
         }
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }
 

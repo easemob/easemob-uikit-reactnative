@@ -2,7 +2,6 @@ import { default as Slider } from '@react-native-community/slider';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   SingleLineText,
@@ -12,6 +11,7 @@ import {
   useI18nContext,
   usePaletteContext,
 } from '../../rename.uikit';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import { useGeneralSetting } from '../hooks/useGeneralSetting';
 import type { RootScreenParamsList } from '../routes';
@@ -126,12 +126,7 @@ export function ColorSettingScreen(props: Props) {
   }, [appNeutralSColor]);
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <TopNavigationBar
         containerStyle={{ backgroundColor: undefined }}
         Left={
@@ -315,7 +310,7 @@ export function ColorSettingScreen(props: Props) {
           colorFormat={(v) => `hsla(${v}, 36%, 50%, 1)`}
         />
       </View>
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }
 

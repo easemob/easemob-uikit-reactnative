@@ -3,7 +3,6 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   Icon,
@@ -18,6 +17,7 @@ import {
   usePaletteContext,
 } from '../../rename.uikit';
 import { RestApi } from '../common/rest.api';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
@@ -125,12 +125,7 @@ export function PersonInfoScreen(props: Props) {
   }, [im]);
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <TopNavigationBar
         containerStyle={{ backgroundColor: undefined }}
         Left={
@@ -204,6 +199,6 @@ export function PersonInfoScreen(props: Props) {
           </View>
         }
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

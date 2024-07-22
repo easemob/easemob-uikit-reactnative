@@ -32,6 +32,7 @@ import {
 import { main_bg, main_bg_dark } from '../common/assets';
 import { accountType } from '../common/const';
 import { RestApi } from '../common/rest.api';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import {
   useGeneralSetting,
   useLogin,
@@ -268,267 +269,229 @@ function EasemobLoginV2Screen(props: Props) {
     <ImageBackground
       style={{
         backgroundColor: getColor('bg'),
-        justifyContent: 'center',
-        alignItems: 'center',
         flex: 1,
       }}
       source={style === 'light' ? main_bg : main_bg_dark}
     >
-      <TouchableWithoutFeedback
-        style={{
-          // backgroundColor: getColor('bg'),
-          justifyContent: 'center', // !!!
-          alignItems: 'center', // !!!
-          width: '100%', // !!!
-        }}
-        onPress={Keyboard.dismiss}
-      >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{
-            // backgroundColor: getColor('bg'),
-            justifyContent: 'center',
-            alignItems: 'center',
-            // backgroundColor: 'yellow',
-            height: '100%',
-          }}
-          // pointerEvents={'box-none'}
-        >
-          <View
+      <SafeAreaViewFragment backgroundColor={null} visibleStatusBar={false}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{
-              flexDirection: 'row',
+              justifyContent: 'center',
               alignItems: 'center',
-              marginBottom: 20,
-              alignSelf: 'flex-start',
-              paddingHorizontal: 30,
-              width: '100%',
-              marginTop: 20,
+              height: '100%',
             }}
+            // pointerEvents={'box-none'}
           >
-            <SingleLineText
-              style={{
-                fontSize: 24,
-                fontWeight: '600',
-                lineHeight: 34,
-                color: getColor('p'),
-                marginRight: 8,
-              }}
-            >
-              {tr('_demo_login_title')}
-            </SingleLineText>
-            <View style={{ flexGrow: 1 }} />
             <View
               style={{
-                backgroundColor: getColor('v'),
-                borderRadius: 6,
-                // borderBottomLeftRadius: 2,
-                paddingHorizontal: 6,
-                paddingVertical: 2,
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 20,
+                alignSelf: 'flex-start',
+                paddingHorizontal: 30,
+                width: '100%',
+                marginTop: 20,
               }}
-              onTouchEnd={onClickedEnableDev}
             >
               <SingleLineText
                 style={{
-                  fontSize: 11,
-                  fontWeight: '500',
-                  lineHeight: 14,
-                  fontStyle: 'normal',
-                  color: getColor('bg'),
-                }}
-              >
-                {`V${version}`}
-              </SingleLineText>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingHorizontal: 30,
-              marginBottom: 24,
-            }}
-            // onStartShouldSetResponder={() => true}
-            // onStartShouldSetResponderCapture={() => true}
-          >
-            <TextInput
-              containerStyle={{
-                backgroundColor: getColor('bg2'),
-                justifyContent: 'center',
-                height: 48,
-                flex: 1,
-                borderRadius: getBorderRadius({
-                  height: 48,
-                  crt: corner.input,
-                  cr: cornerRadius,
-                }),
-              }}
-              style={{
-                paddingLeft: 16,
-                paddingRight: 13,
-                paddingVertical: 13,
-                color: getColor('fg'),
-                fontSize: 16,
-                fontStyle: 'normal',
-                fontWeight: '400',
-                // lineHeight: 22,
-              }}
-              onChangeText={setId}
-              value={id}
-              keyboardAppearance={style === 'light' ? 'light' : 'dark'}
-              autoFocus={true}
-              cursorColor={getColor('p')}
-              enableClearButton={true}
-              placeholder={tr('_demo_login_input_phone_number_tip')}
-              clearButtonStyle={{ tintColor: getColor('clear') }}
-              placeholderTextColor={getColor('placeholder')}
-              keyboardType={'number-pad'}
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingHorizontal: 30,
-              marginBottom: 24,
-            }}
-            // onStartShouldSetResponderCapture={() => true}
-          >
-            <TextInput
-              containerStyle={{
-                backgroundColor: getColor('bg2'),
-                justifyContent: 'center',
-                height: 48,
-                flex: 1,
-                borderRadius: getBorderRadius({
-                  height: 48,
-                  crt: corner.input,
-                  cr: cornerRadius,
-                }),
-              }}
-              style={{
-                paddingLeft: 16,
-                paddingRight: 13,
-                paddingVertical: 13,
-                color: getColor('fg'),
-                fontSize: 16,
-                fontStyle: 'normal',
-                fontWeight: '400',
-              }}
-              onChangeText={setPassword}
-              value={password}
-              keyboardAppearance={style === 'light' ? 'light' : 'dark'}
-              cursorColor={getColor('p')}
-              enableClearButton={false}
-              secureTextEntry={false}
-              placeholder={tr('_demo_login_input_phone_number_captcha_tip')}
-              placeholderTextColor={getColor('placeholder')}
-              keyboardType={'number-pad'}
-            />
-            <Pressable
-              style={[
-                StyleSheet.absoluteFill,
-                {
-                  justifyContent: 'center',
-                  alignItems: 'flex-end',
-                  left: Dimensions.get('window').width - 30 - 150,
-                  right: 30 + 22,
-                },
-              ]}
-              onPress={startCaptcha}
-            >
-              <SingleLineText
-                style={{
-                  fontSize: 14,
-                  fontStyle: 'normal',
-                  fontWeight: '500',
-                  lineHeight: 18,
-                  color: getCaptchaColor(),
-                }}
-              >
-                {getCaptchaText()}
-              </SingleLineText>
-            </Pressable>
-          </View>
-
-          <View
-            style={{
-              marginBottom: 20,
-              flexDirection: 'row',
-              paddingHorizontal: 30,
-            }}
-          >
-            <CmnButton
-              contentType={'only-text'}
-              text={tr('_demo_login_button')}
-              style={{ flex: 1, height: 46 }}
-              maxRadius={46}
-              radiusType={input}
-              sizesType={'large'}
-              textStyle={{
-                fontSize: 16,
-                fontWeight: '600',
-                fontStyle: 'normal',
-              }}
-              onPress={onClickedLogin}
-            />
-          </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginBottom: 20,
-            }}
-          >
-            <Pressable
-              onPress={() => {
-                setCheck((pre) => !pre);
-              }}
-            >
-              <Icon
-                name={
-                  check
-                    ? releaseAreaRef.current === 'china'
-                      ? 'checked_rectangle'
-                      : 'checked_ellipse'
-                    : releaseAreaRef.current === 'china'
-                    ? 'unchecked_rectangle'
-                    : 'unchecked_ellipse'
-                }
-                style={{
-                  width: 20,
-                  height: 20,
-                  marginHorizontal: 4,
-                  tintColor: getColor(check ? 'p' : 'clear'),
-                }}
-              />
-            </Pressable>
-
-            <SingleLineText
-              style={{
-                maxWidth: '100%',
-                fontSize: 12,
-                fontStyle: 'normal',
-                fontWeight: '500',
-                lineHeight: 16,
-                color: getColor('tip'),
-                textAlign: 'center',
-              }}
-            >
-              {tr('_demo_login_tip_1')}
-              <SingleLineText
-                style={{
-                  maxWidth: '100%',
-                  fontSize: 12,
-                  fontStyle: 'normal',
-                  fontWeight: '500',
-                  lineHeight: 16,
+                  fontSize: 24,
+                  fontWeight: '600',
+                  lineHeight: 34,
                   color: getColor('p'),
-                  textAlign: 'center',
-                  textDecorationLine: 'underline',
+                  marginRight: 8,
                 }}
-                onPress={onClickedServices}
               >
-                {tr('_demo_login_tip_2')}
+                {tr('_demo_login_title')}
               </SingleLineText>
+              <View style={{ flexGrow: 1 }} />
+              <View
+                style={{
+                  backgroundColor: getColor('v'),
+                  borderRadius: 6,
+                  // borderBottomLeftRadius: 2,
+                  paddingHorizontal: 6,
+                  paddingVertical: 2,
+                }}
+                onTouchEnd={onClickedEnableDev}
+              >
+                <SingleLineText
+                  style={{
+                    fontSize: 11,
+                    fontWeight: '500',
+                    lineHeight: 14,
+                    fontStyle: 'normal',
+                    color: getColor('bg'),
+                  }}
+                >
+                  {`V${version}`}
+                </SingleLineText>
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                paddingHorizontal: 30,
+                marginBottom: 24,
+              }}
+              // onStartShouldSetResponder={() => true}
+              // onStartShouldSetResponderCapture={() => true}
+            >
+              <TextInput
+                containerStyle={{
+                  backgroundColor: getColor('bg2'),
+                  justifyContent: 'center',
+                  height: 48,
+                  flex: 1,
+                  borderRadius: getBorderRadius({
+                    height: 48,
+                    crt: corner.input,
+                    cr: cornerRadius,
+                  }),
+                }}
+                style={{
+                  paddingLeft: 16,
+                  paddingRight: 13,
+                  paddingVertical: 13,
+                  color: getColor('fg'),
+                  fontSize: 16,
+                  fontStyle: 'normal',
+                  fontWeight: '400',
+                  // lineHeight: 22,
+                }}
+                onChangeText={setId}
+                value={id}
+                keyboardAppearance={style === 'light' ? 'light' : 'dark'}
+                autoFocus={true}
+                cursorColor={getColor('p')}
+                enableClearButton={true}
+                placeholder={tr('_demo_login_input_phone_number_tip')}
+                clearButtonStyle={{ tintColor: getColor('clear') }}
+                placeholderTextColor={getColor('placeholder')}
+                keyboardType={'number-pad'}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                paddingHorizontal: 30,
+                marginBottom: 24,
+              }}
+              // onStartShouldSetResponderCapture={() => true}
+            >
+              <TextInput
+                containerStyle={{
+                  backgroundColor: getColor('bg2'),
+                  justifyContent: 'center',
+                  height: 48,
+                  flex: 1,
+                  borderRadius: getBorderRadius({
+                    height: 48,
+                    crt: corner.input,
+                    cr: cornerRadius,
+                  }),
+                }}
+                style={{
+                  paddingLeft: 16,
+                  paddingRight: 13,
+                  paddingVertical: 13,
+                  color: getColor('fg'),
+                  fontSize: 16,
+                  fontStyle: 'normal',
+                  fontWeight: '400',
+                }}
+                onChangeText={setPassword}
+                value={password}
+                keyboardAppearance={style === 'light' ? 'light' : 'dark'}
+                cursorColor={getColor('p')}
+                enableClearButton={false}
+                secureTextEntry={false}
+                placeholder={tr('_demo_login_input_phone_number_captcha_tip')}
+                placeholderTextColor={getColor('placeholder')}
+                keyboardType={'number-pad'}
+              />
+              <Pressable
+                style={[
+                  StyleSheet.absoluteFill,
+                  {
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                    left: Dimensions.get('window').width - 30 - 150,
+                    right: 30 + 22,
+                  },
+                ]}
+                onPress={startCaptcha}
+              >
+                <SingleLineText
+                  style={{
+                    fontSize: 14,
+                    fontStyle: 'normal',
+                    fontWeight: '500',
+                    lineHeight: 18,
+                    color: getCaptchaColor(),
+                  }}
+                >
+                  {getCaptchaText()}
+                </SingleLineText>
+              </Pressable>
+            </View>
+
+            <View
+              style={{
+                marginBottom: 20,
+                flexDirection: 'row',
+                paddingHorizontal: 30,
+              }}
+            >
+              <CmnButton
+                contentType={'only-text'}
+                text={tr('_demo_login_button')}
+                style={{ flex: 1, height: 46 }}
+                maxRadius={46}
+                radiusType={input}
+                sizesType={'large'}
+                textStyle={{
+                  fontSize: 16,
+                  fontWeight: '600',
+                  fontStyle: 'normal',
+                }}
+                onPress={onClickedLogin}
+              />
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 20,
+              }}
+            >
+              <Pressable
+                onPress={() => {
+                  setCheck((pre) => !pre);
+                }}
+              >
+                <Icon
+                  name={
+                    check
+                      ? releaseAreaRef.current === 'china'
+                        ? 'checked_rectangle'
+                        : 'checked_ellipse'
+                      : releaseAreaRef.current === 'china'
+                      ? 'unchecked_rectangle'
+                      : 'unchecked_ellipse'
+                  }
+                  style={{
+                    width: 20,
+                    height: 20,
+                    marginHorizontal: 4,
+                    tintColor: getColor(check ? 'p' : 'clear'),
+                  }}
+                />
+              </Pressable>
+
               <SingleLineText
                 style={{
                   maxWidth: '100%',
@@ -540,91 +503,119 @@ function EasemobLoginV2Screen(props: Props) {
                   textAlign: 'center',
                 }}
               >
-                {tr('_demo_login_tip_3')}
-              </SingleLineText>
-              <SingleLineText
-                style={{
-                  maxWidth: '100%',
-                  fontSize: 12,
-                  fontStyle: 'normal',
-                  fontWeight: '500',
-                  lineHeight: 16,
-                  color: getColor('p'),
-                  textAlign: 'center',
-                  textDecorationLine: 'underline',
-                }}
-                onPress={onClickedProtocol}
-              >
-                {tr('_demo_login_tip_4')}
-              </SingleLineText>
-            </SingleLineText>
-          </View>
-
-          {serverSettingVisible === true ? (
-            <Pressable
-              style={{ position: 'absolute', bottom: 99 }}
-              onPress={onClickedServerSetting}
-            >
-              <SingleLineText
-                style={{
-                  fontSize: 14,
-                  fontWeight: '500',
-                  fontStyle: 'normal',
-                  textDecorationLine: 'underline',
-                  color: getColor('n'),
-                }}
-              >
-                {tr('_demo_login_server_setting_button')}
-              </SingleLineText>
-            </Pressable>
-          ) : null}
-
-          {isLoading ? (
-            <View
-              style={[
-                StyleSheet.absoluteFill,
-                {
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  top: '40%',
-                },
-              ]}
-            >
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 94,
-                  height: 78,
-                  backgroundColor: '#00000059',
-                  borderRadius: 12,
-                }}
-              >
-                <LoadingIcon
-                  name={'spinner'}
+                {tr('_demo_login_tip_1')}
+                <SingleLineText
                   style={{
-                    width: 36,
-                    height: 36,
-                    tintColor: getColor('loading'),
+                    maxWidth: '100%',
+                    fontSize: 12,
+                    fontStyle: 'normal',
+                    fontWeight: '500',
+                    lineHeight: 16,
+                    color: getColor('p'),
+                    textAlign: 'center',
+                    textDecorationLine: 'underline',
                   }}
-                />
-                <View style={{ height: 4 }} />
+                  onPress={onClickedServices}
+                >
+                  {tr('_demo_login_tip_2')}
+                </SingleLineText>
+                <SingleLineText
+                  style={{
+                    maxWidth: '100%',
+                    fontSize: 12,
+                    fontStyle: 'normal',
+                    fontWeight: '500',
+                    lineHeight: 16,
+                    color: getColor('tip'),
+                    textAlign: 'center',
+                  }}
+                >
+                  {tr('_demo_login_tip_3')}
+                </SingleLineText>
+                <SingleLineText
+                  style={{
+                    maxWidth: '100%',
+                    fontSize: 12,
+                    fontStyle: 'normal',
+                    fontWeight: '500',
+                    lineHeight: 16,
+                    color: getColor('p'),
+                    textAlign: 'center',
+                    textDecorationLine: 'underline',
+                  }}
+                  onPress={onClickedProtocol}
+                >
+                  {tr('_demo_login_tip_4')}
+                </SingleLineText>
+              </SingleLineText>
+            </View>
+
+            {serverSettingVisible === true ? (
+              <Pressable
+                style={{ position: 'absolute', bottom: 99 }}
+                onPress={onClickedServerSetting}
+              >
                 <SingleLineText
                   style={{
                     fontSize: 14,
-                    fontStyle: 'normal',
                     fontWeight: '500',
-                    lineHeight: 18,
-                    color: getColor('loading'),
+                    fontStyle: 'normal',
+                    textDecorationLine: 'underline',
+                    color: getColor('n'),
                   }}
                 >
-                  {tr('_demo_login_loading_tip')}
+                  {tr('_demo_login_server_setting_button')}
                 </SingleLineText>
+              </Pressable>
+            ) : null}
+
+            {isLoading ? (
+              <View
+                style={[
+                  StyleSheet.absoluteFill,
+                  {
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    top: '40%',
+                  },
+                ]}
+              >
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 94,
+                    height: 78,
+                    backgroundColor: '#00000059',
+                    borderRadius: 12,
+                  }}
+                >
+                  <LoadingIcon
+                    name={'spinner'}
+                    style={{
+                      width: 36,
+                      height: 36,
+                      tintColor: getColor('loading'),
+                    }}
+                  />
+                  <View style={{ height: 4 }} />
+                  <SingleLineText
+                    style={{
+                      fontSize: 14,
+                      fontStyle: 'normal',
+                      fontWeight: '500',
+                      lineHeight: 18,
+                      color: getColor('loading'),
+                    }}
+                  >
+                    {tr('_demo_login_loading_tip')}
+                  </SingleLineText>
+                </View>
               </View>
-            </View>
-          ) : null}
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+            ) : null}
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </SafeAreaViewFragment>
     </ImageBackground>
   );
 }
@@ -772,283 +763,280 @@ function AgoraLoginV2Screen(props: Props) {
     <ImageBackground
       style={{
         backgroundColor: getColor('bg'),
-        justifyContent: 'center',
-        alignItems: 'center',
         flex: 1,
       }}
       source={style === 'light' ? main_bg : main_bg_dark}
     >
-      <TouchableWithoutFeedback
-        style={{
-          justifyContent: 'center', // !!!
-          alignItems: 'center', // !!!
-          width: '100%', // !!!
-        }}
-        onPress={Keyboard.dismiss}
-      >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-          }}
-          // pointerEvents={'box-none'}
-        >
-          <View
+      <SafeAreaViewFragment backgroundColor={null} visibleStatusBar={false}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{
-              flexDirection: 'row',
+              justifyContent: 'center',
               alignItems: 'center',
-              marginBottom: 20,
-              alignSelf: 'flex-start',
-              paddingHorizontal: 30,
-              width: '100%',
-              marginTop: 20,
+              height: '100%',
             }}
+            // pointerEvents={'box-none'}
           >
-            <SingleLineText
-              style={{
-                fontSize: 24,
-                fontWeight: '600',
-                lineHeight: 34,
-                color: getColor('p'),
-                marginRight: 8,
-              }}
-            >
-              {tr('_demo_login_title', accountType)}
-            </SingleLineText>
-            <View style={{ flexGrow: 1 }} />
-            <View
-              style={{
-                backgroundColor: getColor('v'),
-                borderRadius: 6,
-                paddingHorizontal: 6,
-                paddingVertical: 2,
-              }}
-              onTouchEnd={onClickedEnableDev}
-            >
-              <SingleLineText
-                style={{
-                  fontSize: 11,
-                  fontWeight: '500',
-                  lineHeight: 14,
-                  fontStyle: 'normal',
-                  color: getColor('bg'),
-                }}
-              >
-                {`V${version}`}
-              </SingleLineText>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingHorizontal: 30,
-              marginBottom: 24,
-            }}
-          >
-            <TextInput
-              containerStyle={{
-                backgroundColor: getColor('bg2'),
-                justifyContent: 'center',
-                height: 48,
-                flex: 1,
-                borderRadius: getBorderRadius({
-                  height: 48,
-                  crt: corner.input,
-                  cr: cornerRadius,
-                }),
-              }}
-              style={{
-                paddingLeft: 16,
-                paddingRight: 13,
-                paddingVertical: 13,
-                color: getColor('fg'),
-                fontSize: 16,
-                fontStyle: 'normal',
-                fontWeight: '400',
-                // lineHeight: 22,
-              }}
-              onChangeText={setId}
-              value={id}
-              keyboardAppearance={style === 'light' ? 'light' : 'dark'}
-              autoFocus={true}
-              cursorColor={getColor('p')}
-              enableClearButton={true}
-              placeholder={tr(
-                '_demo_login_input_phone_number_tip',
-                accountType
-              )}
-              clearButtonStyle={{ tintColor: getColor('clear') }}
-              keyboardType={accountType === 'agora' ? 'default' : 'number-pad'}
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingHorizontal: 30,
-              marginBottom: 24,
-            }}
-          >
-            <TextInput
-              containerStyle={{
-                backgroundColor: getColor('bg2'),
-                justifyContent: 'center',
-                height: 48,
-                flex: 1,
-                borderRadius: getBorderRadius({
-                  height: 48,
-                  crt: corner.input,
-                  cr: cornerRadius,
-                }),
-              }}
-              style={{
-                paddingLeft: 16,
-                paddingRight: 13,
-                paddingVertical: 13,
-                color: getColor('fg'),
-                fontSize: 16,
-                fontStyle: 'normal',
-                fontWeight: '400',
-              }}
-              onChangeText={setPassword}
-              value={password}
-              keyboardAppearance={style === 'light' ? 'light' : 'dark'}
-              cursorColor={getColor('p')}
-              enableClearButton={false}
-              secureTextEntry={accountType === 'agora' ? true : false}
-              enableShowPassword={accountType === 'agora' ? true : undefined}
-              passwordButtonStyle={{ tintColor: getColor('clear') }}
-              placeholder={tr(
-                '_demo_login_input_phone_number_captcha_tip',
-                accountType
-              )}
-              keyboardType={accountType === 'agora' ? 'default' : 'number-pad'}
-            />
-          </View>
-
-          <View
-            style={{
-              marginBottom: 20,
-              flexDirection: 'row',
-              paddingHorizontal: 30,
-            }}
-          >
-            <CmnButton
-              contentType={'only-text'}
-              text={tr('_demo_login_button')}
-              style={{ flex: 1, height: 46 }}
-              maxRadius={46}
-              radiusType={input}
-              sizesType={'large'}
-              textStyle={{
-                fontSize: 16,
-                fontWeight: '600',
-                fontStyle: 'normal',
-              }}
-              onPress={onClickedLogin}
-            />
-          </View>
-
-          {showTip.length > 0 ? (
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginBottom: 20,
+                alignSelf: 'flex-start',
+                paddingHorizontal: 30,
+                width: '100%',
+                marginTop: 20,
               }}
             >
-              <Icon
-                name={'candle_in_circle_fill'}
-                style={{
-                  width: 20,
-                  height: 20,
-                  marginHorizontal: 4,
-                  tintColor: getColor('p'),
-                }}
-              />
-
               <SingleLineText
                 style={{
-                  maxWidth: '100%',
-                  fontSize: 12,
-                  fontStyle: 'normal',
-                  fontWeight: '500',
-                  lineHeight: 16,
-                  color: getColor('tip'),
-                  textAlign: 'center',
+                  fontSize: 24,
+                  fontWeight: '600',
+                  lineHeight: 34,
+                  color: getColor('p'),
+                  marginRight: 8,
                 }}
               >
-                {tr('_demo_login_tip_1')}
+                {tr('_demo_login_title', accountType)}
               </SingleLineText>
-            </View>
-          ) : null}
-
-          {serverSettingVisible === true ? (
-            <Pressable
-              style={{ position: 'absolute', bottom: 99 }}
-              onPress={onClickedServerSetting}
-            >
-              <SingleLineText
-                style={{
-                  fontSize: 14,
-                  fontWeight: '500',
-                  fontStyle: 'normal',
-                  textDecorationLine: 'underline',
-                  color: getColor('n'),
-                }}
-              >
-                {tr('_demo_login_server_setting_button')}
-              </SingleLineText>
-            </Pressable>
-          ) : null}
-
-          {isLoading ? (
-            <View
-              style={[
-                StyleSheet.absoluteFill,
-                {
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  top: '40%',
-                },
-              ]}
-            >
+              <View style={{ flexGrow: 1 }} />
               <View
                 style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 94,
-                  height: 78,
-                  backgroundColor: '#00000059',
-                  borderRadius: 12,
+                  backgroundColor: getColor('v'),
+                  borderRadius: 6,
+                  paddingHorizontal: 6,
+                  paddingVertical: 2,
                 }}
+                onTouchEnd={onClickedEnableDev}
               >
-                <LoadingIcon
-                  name={'spinner'}
-                  style={{
-                    width: 36,
-                    height: 36,
-                    tintColor: getColor('loading'),
-                  }}
-                />
-                <View style={{ height: 4 }} />
                 <SingleLineText
                   style={{
-                    fontSize: 14,
-                    fontStyle: 'normal',
+                    fontSize: 11,
                     fontWeight: '500',
-                    lineHeight: 18,
-                    color: getColor('loading'),
+                    lineHeight: 14,
+                    fontStyle: 'normal',
+                    color: getColor('bg'),
                   }}
                 >
-                  {tr('_demo_login_loading_tip')}
+                  {`V${version}`}
                 </SingleLineText>
               </View>
             </View>
-          ) : null}
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+            <View
+              style={{
+                flexDirection: 'row',
+                paddingHorizontal: 30,
+                marginBottom: 24,
+              }}
+            >
+              <TextInput
+                containerStyle={{
+                  backgroundColor: getColor('bg2'),
+                  justifyContent: 'center',
+                  height: 48,
+                  flex: 1,
+                  borderRadius: getBorderRadius({
+                    height: 48,
+                    crt: corner.input,
+                    cr: cornerRadius,
+                  }),
+                }}
+                style={{
+                  paddingLeft: 16,
+                  paddingRight: 13,
+                  paddingVertical: 13,
+                  color: getColor('fg'),
+                  fontSize: 16,
+                  fontStyle: 'normal',
+                  fontWeight: '400',
+                  // lineHeight: 22,
+                }}
+                onChangeText={setId}
+                value={id}
+                keyboardAppearance={style === 'light' ? 'light' : 'dark'}
+                autoFocus={true}
+                cursorColor={getColor('p')}
+                enableClearButton={true}
+                placeholder={tr(
+                  '_demo_login_input_phone_number_tip',
+                  accountType
+                )}
+                clearButtonStyle={{ tintColor: getColor('clear') }}
+                keyboardType={
+                  accountType === 'agora' ? 'default' : 'number-pad'
+                }
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                paddingHorizontal: 30,
+                marginBottom: 24,
+              }}
+            >
+              <TextInput
+                containerStyle={{
+                  backgroundColor: getColor('bg2'),
+                  justifyContent: 'center',
+                  height: 48,
+                  flex: 1,
+                  borderRadius: getBorderRadius({
+                    height: 48,
+                    crt: corner.input,
+                    cr: cornerRadius,
+                  }),
+                }}
+                style={{
+                  paddingLeft: 16,
+                  paddingRight: 13,
+                  paddingVertical: 13,
+                  color: getColor('fg'),
+                  fontSize: 16,
+                  fontStyle: 'normal',
+                  fontWeight: '400',
+                }}
+                onChangeText={setPassword}
+                value={password}
+                keyboardAppearance={style === 'light' ? 'light' : 'dark'}
+                cursorColor={getColor('p')}
+                enableClearButton={false}
+                secureTextEntry={accountType === 'agora' ? true : false}
+                enableShowPassword={accountType === 'agora' ? true : undefined}
+                passwordButtonStyle={{ tintColor: getColor('clear') }}
+                placeholder={tr(
+                  '_demo_login_input_phone_number_captcha_tip',
+                  accountType
+                )}
+                keyboardType={
+                  accountType === 'agora' ? 'default' : 'number-pad'
+                }
+              />
+            </View>
+
+            <View
+              style={{
+                marginBottom: 20,
+                flexDirection: 'row',
+                paddingHorizontal: 30,
+              }}
+            >
+              <CmnButton
+                contentType={'only-text'}
+                text={tr('_demo_login_button')}
+                style={{ flex: 1, height: 46 }}
+                maxRadius={46}
+                radiusType={input}
+                sizesType={'large'}
+                textStyle={{
+                  fontSize: 16,
+                  fontWeight: '600',
+                  fontStyle: 'normal',
+                }}
+                onPress={onClickedLogin}
+              />
+            </View>
+
+            {showTip.length > 0 ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 20,
+                }}
+              >
+                <Icon
+                  name={'candle_in_circle_fill'}
+                  style={{
+                    width: 20,
+                    height: 20,
+                    marginHorizontal: 4,
+                    tintColor: getColor('p'),
+                  }}
+                />
+
+                <SingleLineText
+                  style={{
+                    maxWidth: '100%',
+                    fontSize: 12,
+                    fontStyle: 'normal',
+                    fontWeight: '500',
+                    lineHeight: 16,
+                    color: getColor('tip'),
+                    textAlign: 'center',
+                  }}
+                >
+                  {tr('_demo_login_tip_1')}
+                </SingleLineText>
+              </View>
+            ) : null}
+
+            {serverSettingVisible === true ? (
+              <Pressable
+                style={{ position: 'absolute', bottom: 99 }}
+                onPress={onClickedServerSetting}
+              >
+                <SingleLineText
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '500',
+                    fontStyle: 'normal',
+                    textDecorationLine: 'underline',
+                    color: getColor('n'),
+                  }}
+                >
+                  {tr('_demo_login_server_setting_button')}
+                </SingleLineText>
+              </Pressable>
+            ) : null}
+
+            {isLoading ? (
+              <View
+                style={[
+                  StyleSheet.absoluteFill,
+                  {
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    top: '40%',
+                  },
+                ]}
+              >
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: 94,
+                    height: 78,
+                    backgroundColor: '#00000059',
+                    borderRadius: 12,
+                  }}
+                >
+                  <LoadingIcon
+                    name={'spinner'}
+                    style={{
+                      width: 36,
+                      height: 36,
+                      tintColor: getColor('loading'),
+                    }}
+                  />
+                  <View style={{ height: 4 }} />
+                  <SingleLineText
+                    style={{
+                      fontSize: 14,
+                      fontStyle: 'normal',
+                      fontWeight: '500',
+                      lineHeight: 18,
+                      color: getColor('loading'),
+                    }}
+                  >
+                    {tr('_demo_login_loading_tip')}
+                  </SingleLineText>
+                </View>
+              </View>
+            ) : null}
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </SafeAreaViewFragment>
     </ImageBackground>
   );
 }

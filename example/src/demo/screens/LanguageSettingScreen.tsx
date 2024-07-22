@@ -1,7 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
   Icon,
@@ -13,6 +12,7 @@ import {
   useI18nContext,
   usePaletteContext,
 } from '../../rename.uikit';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import { useGeneralSetting } from '../hooks/useGeneralSetting';
 import type { RootParamsName, RootScreenParamsList } from '../routes';
@@ -81,12 +81,7 @@ export function LanguageSettingScreen(props: Props) {
   }, [appLanguage, appTranslateLanguage, name]);
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <TopNavigationBar
         containerStyle={{ backgroundColor: undefined }}
         Left={
@@ -187,6 +182,6 @@ export function LanguageSettingScreen(props: Props) {
           </Pressable>
         }
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }
