@@ -13,6 +13,7 @@ export const logo = accountType === 'agora' ? _logo.agora : _logo.easemob;
 export const about_logo =
   accountType === 'agora' ? _about_logo.agora : _about_logo.easemob;
 export const main_bg = require('../../../assets/main_bg.png');
+export const main_bg_dark = require('../../../assets/main_bg_dark.png');
 export const boloo_da_ttf = require('../../../assets/fonts/BalooDa-Regular.ttf');
 export const twemoji_ttf = require('../../../assets/fonts/Twemoji.Mozilla.ttf');
 

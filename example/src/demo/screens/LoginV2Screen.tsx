@@ -29,7 +29,7 @@ import {
   usePaletteContext,
   useThemeContext,
 } from '../../rename.uikit';
-import { main_bg } from '../common/assets';
+import { main_bg, main_bg_dark } from '../common/assets';
 import { accountType } from '../common/const';
 import { RestApi } from '../common/rest.api';
 import {
@@ -85,6 +85,10 @@ function EasemobLoginV2Screen(props: Props) {
     tip: {
       light: colors.neutral[3],
       dark: colors.neutral[8],
+    },
+    placeholder: {
+      light: colors.neutral[6],
+      dark: colors.neutral[4],
     },
   });
   const { getToastRef, loginAction } = useLogin();
@@ -264,7 +268,7 @@ function EasemobLoginV2Screen(props: Props) {
         alignItems: 'center',
         flex: 1,
       }}
-      source={main_bg}
+      source={style === 'light' ? main_bg : main_bg_dark}
     >
       <TouchableWithoutFeedback
         style={{
@@ -357,7 +361,7 @@ function EasemobLoginV2Screen(props: Props) {
                 paddingLeft: 16,
                 paddingRight: 13,
                 paddingVertical: 13,
-                color: getColor('color'),
+                color: getColor('fg'),
                 fontSize: 16,
                 fontStyle: 'normal',
                 fontWeight: '400',
@@ -371,6 +375,7 @@ function EasemobLoginV2Screen(props: Props) {
               enableClearButton={true}
               placeholder={tr('_demo_login_input_phone_number_tip')}
               clearButtonStyle={{ tintColor: getColor('clear') }}
+              placeholderTextColor={getColor('placeholder')}
               keyboardType={'number-pad'}
             />
           </View>
@@ -398,7 +403,7 @@ function EasemobLoginV2Screen(props: Props) {
                 paddingLeft: 16,
                 paddingRight: 13,
                 paddingVertical: 13,
-                color: getColor('color'),
+                color: getColor('fg'),
                 fontSize: 16,
                 fontStyle: 'normal',
                 fontWeight: '400',
@@ -410,6 +415,7 @@ function EasemobLoginV2Screen(props: Props) {
               enableClearButton={false}
               secureTextEntry={false}
               placeholder={tr('_demo_login_input_phone_number_captcha_tip')}
+              placeholderTextColor={getColor('placeholder')}
               keyboardType={'number-pad'}
             />
             <Pressable
@@ -766,7 +772,7 @@ function AgoraLoginV2Screen(props: Props) {
         alignItems: 'center',
         flex: 1,
       }}
-      source={main_bg}
+      source={style === 'light' ? main_bg : main_bg_dark}
     >
       <TouchableWithoutFeedback
         style={{
@@ -853,7 +859,7 @@ function AgoraLoginV2Screen(props: Props) {
                 paddingLeft: 16,
                 paddingRight: 13,
                 paddingVertical: 13,
-                color: getColor('color'),
+                color: getColor('fg'),
                 fontSize: 16,
                 fontStyle: 'normal',
                 fontWeight: '400',
@@ -896,7 +902,7 @@ function AgoraLoginV2Screen(props: Props) {
                 paddingLeft: 16,
                 paddingRight: 13,
                 paddingVertical: 13,
-                color: getColor('color'),
+                color: getColor('fg'),
                 fontSize: 16,
                 fontStyle: 'normal',
                 fontWeight: '400',
