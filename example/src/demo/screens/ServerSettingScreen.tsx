@@ -25,7 +25,7 @@ import {
   usePaletteContext,
   useThemeContext,
 } from '../../rename.uikit';
-import { main_bg } from '../common/assets';
+import { main_bg, main_bg_dark } from '../common/assets';
 import {
   appKey as gAppKey,
   enableDNSConfig as gEnableDNSConfig,
@@ -178,7 +178,7 @@ export function ServerSettingScreen(props: Props) {
         // alignItems: 'center',
         flex: 1,
       }}
-      source={main_bg}
+      source={style === 'light' ? main_bg : main_bg_dark}
     >
       <SafeAreaView
         style={{

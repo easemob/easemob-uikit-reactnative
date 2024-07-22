@@ -9,8 +9,9 @@ import {
   useColors,
   useI18nContext,
   usePaletteContext,
+  useThemeContext,
 } from '../../rename.uikit';
-import { logo, main_bg } from '../common/assets';
+import { logo, main_bg, main_bg_dark } from '../common/assets';
 import { accountType } from '../common/const';
 import type { RootScreenParamsList } from '../routes';
 
@@ -18,6 +19,7 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function SplashScreen(props: Props) {
   const {} = props;
   const { tr } = useI18nContext();
+  const { style } = useThemeContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -41,7 +43,7 @@ export function SplashScreen(props: Props) {
         alignItems: 'center',
         flex: 1,
       }}
-      source={main_bg}
+      source={style === 'light' ? main_bg : main_bg_dark}
     >
       <View style={{ flex: 277 }} />
       <Icon name={logo} resolution={'3x'} style={{ width: 100, height: 100 }} />
