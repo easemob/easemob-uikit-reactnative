@@ -90,6 +90,10 @@ function EasemobLoginV2Screen(props: Props) {
       light: colors.neutral[6],
       dark: colors.neutral[4],
     },
+    loading: {
+      light: colors.neutral[98],
+      dark: colors.neutral[98],
+    },
   });
   const { getToastRef, loginAction } = useLogin();
   const timerRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -601,7 +605,7 @@ function EasemobLoginV2Screen(props: Props) {
                   style={{
                     width: 36,
                     height: 36,
-                    tintColor: getColor('bg2'),
+                    tintColor: getColor('loading'),
                   }}
                 />
                 <View style={{ height: 4 }} />
@@ -611,7 +615,7 @@ function EasemobLoginV2Screen(props: Props) {
                     fontStyle: 'normal',
                     fontWeight: '500',
                     lineHeight: 18,
-                    color: getColor('bg2'),
+                    color: getColor('loading'),
                   }}
                 >
                   {tr('_demo_login_loading_tip')}
@@ -1025,7 +1029,7 @@ function AgoraLoginV2Screen(props: Props) {
                   style={{
                     width: 36,
                     height: 36,
-                    tintColor: getColor('bg2'),
+                    tintColor: getColor('loading'),
                   }}
                 />
                 <View style={{ height: 4 }} />
@@ -1035,7 +1039,7 @@ function AgoraLoginV2Screen(props: Props) {
                     fontStyle: 'normal',
                     fontWeight: '500',
                     lineHeight: 18,
-                    color: getColor('bg2'),
+                    color: getColor('loading'),
                   }}
                 >
                   {tr('_demo_login_loading_tip')}
