@@ -120,6 +120,7 @@ export function App() {
     onUsersHandler,
     fontFamily,
     onSystemTip,
+    getNaviTheme,
   } = useApp();
 
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
@@ -349,6 +350,7 @@ export function App() {
         >
           <NavigationContainer
             ref={rootRef}
+            theme={getNaviTheme(isLightRef.current ? 'light' : 'dark')}
             onStateChange={onStateChange}
             onUnhandledAction={onUnhandledAction}
             onReady={onNavigationInitialized}

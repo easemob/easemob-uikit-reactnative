@@ -3,6 +3,10 @@ import {
   NavigationState,
   useNavigationContainerRef,
 } from '@react-navigation/native';
+import {
+  DefaultTheme as NaviDefaultTheme,
+  Theme as NaviTheme,
+} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as React from 'react';
 import { BackHandler, DeviceEventEmitter, Platform } from 'react-native';
@@ -37,6 +41,7 @@ import {
   getReleaseArea,
   LanguageCode,
   StringSet,
+  ThemeType,
   UIGroupListListener,
   // UIKitError,
   UIListenerType,
@@ -101,6 +106,7 @@ export function useApp() {
   const enableOfflinePushRef = React.useRef(false);
   const enableTypingRef = React.useRef(false);
   const enableBlockRef = React.useRef(false);
+  const naviThemeRef = React.useRef(NaviDefaultTheme);
   const pageDeepRef = React.useRef(0);
   const [fontsLoaded] = useFonts({
     [twemoji_ttf_name]: twemoji_ttf,
@@ -596,6 +602,33 @@ export function useApp() {
     []
   );
 
+  const naviLightMemo = React.useMemo(() => {
+    return {
+      dark: false,
+      colors: {
+        primary: paletteRef.current.colors.primary[5],
+        background: paletteRef.current.colors.neutral[98],
+        text: paletteRef.current.colors.neutral[1],
+      },
+    } as NaviTheme;
+  }, []);
+  const naviDarkMemo = React.useMemo(() => {
+    return {
+      dark: true,
+      colors: {
+        primary: paletteRef.current.colors.primary[6],
+        background: paletteRef.current.colors.neutral[1],
+        text: paletteRef.current.colors.neutral[98],
+      },
+    } as NaviTheme;
+  }, []);
+  const getNaviTheme = React.useCallback(
+    (theme: ThemeType) => {
+      return theme === 'light' ? naviLightMemo : naviDarkMemo;
+    },
+    [naviDarkMemo, naviLightMemo]
+  );
+
   React.useEffect(() => {
     const uiListener: UIGroupListListener = {
       onUpdatedEvent: (_data) => {
@@ -927,5 +960,7 @@ export function useApp() {
     onUsersHandler,
     fontFamily,
     onSystemTip,
+    naviThemeRef,
+    getNaviTheme,
   };
 }
