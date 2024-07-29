@@ -13,7 +13,8 @@
       - [@react-native-clipboard/clipboard Dependency Issue](#react-native-clipboardclipboard-dependency-issue)
       - [react-native-gesture-handler Dependency Issue](#react-native-gesture-handler-dependency-issue)
       - [react-native-safe-area-context Dependency Issue](#react-native-safe-area-context-dependency-issue)
-    - [Issues with `expo-updates`](#issues-with-expo-updates)
+      - [Issues with `expo-updates`](#issues-with-expo-updates)
+      - [Create expo project and integrate uikit problem](#create-expo-project-and-integrate-uikit-problem)
 
 # Question List
 
@@ -86,7 +87,7 @@ Message description: kotlin syntax issue.
   }
 ```
 
-### Issues with `expo-updates`
+#### Issues with `expo-updates`
 
 In release mode, using `expo-updates` may result in images not being found.
 
@@ -96,3 +97,9 @@ Main solutions include:
 1. Remove the `expo-updates` dependency from the `package.json` configuration file.
 2. Disable `expo-updates` by modifying the `EXUpdatesEnabled` property in the `Expo.plist` file.
 3. Use the command `eas build` to build the project.
+
+#### Create expo project and integrate uikit problem
+
+The react-native project created with expo cannot compile and run `uikit` normally.
+
+Reference: The `expo` project created by default does not have `native` configuration. You need to use `npx expo prebuild` to create `ios` and `android` folders and configurations. In this way, `uikit` can be compiled and run normally.
