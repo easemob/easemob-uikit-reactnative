@@ -15,6 +15,7 @@
       - [react-native-safe-area-context 依赖问题](#react-native-safe-area-context-依赖问题)
       - [node 版本问题](#node-版本问题)
       - [expo-updates 的问题](#expo-updates-的问题)
+      - [创建 expo 项目 集成 uikit 问题](#创建-expo-项目-集成-uikit-问题)
 
 # 问题列表
 
@@ -95,3 +96,9 @@ decorateRuntime(jsContext!!.get())
 
 参考：1. https://github.com/expo/expo/issues/22656  
  解决方法主要以下几种： 1. 删除依赖项 `expo-updates`, 该依赖项在 `package.json` 配置文件中。 2. 禁用 `expo-updates`, 修改设置在 `Expo.plist` 文件中的属性 `EXUpdatesEnabled` 3. 使用命令 `eas build` 构建
+
+#### 创建 expo 项目 集成 uikit 问题
+
+使用 expo 创建的 react-native 项目，无法正常编译运行 `uikit`。
+
+参考：默认创建的`expo`的项目没有`native`配置，需要使用 `npx expo prebuild` 创建 `ios` 和 `android` 的文件夹以及配置。这样 `uikit` 可以正常编译运行了。
