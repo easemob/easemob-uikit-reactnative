@@ -98,6 +98,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       pinMsgListRef,
       onContainerLayout,
       maxListHeightRef,
+      enableMessagePin,
     } = useMessageList(props, ref);
     const {
       msgPinPlaceHolderCurrentHeight,
@@ -258,7 +259,9 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           />
         </Animated.View>
 
-        {convType === ChatConversationType.GroupChat && comType === 'chat' ? (
+        {enableMessagePin === true &&
+        convType === ChatConversationType.GroupChat &&
+        comType === 'chat' ? (
           <AnimatedMessagePin
             ref={pinMsgListRef}
             convId={convId}

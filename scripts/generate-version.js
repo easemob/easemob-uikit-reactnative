@@ -24,7 +24,7 @@ workspaces.forEach((it) => {
   console.log(
     `📝 Generate the ${pak.name}@${pak.version} version file: ${file}`
   );
-  const content = `// This file is generated automatically. Please do not edit it manually. If necessary, you can run the 'scripts/bundle-icons.js' script to generate it again.\n
+  const content = `// This file is generated automatically. Please do not edit it manually. If necessary, you can run the 'scripts/generate-version.js' script to generate it again.\n
 const VERSION = '${pak.version}';
 export default VERSION;
 `;

@@ -73,7 +73,7 @@ import type {
 import type { EmojiIconItem } from '../types';
 import { gRequestMaxMessageCount, gRequestMaxThreadCount } from './const';
 import { MessageListItemMemo } from './MessageListItem';
-import { MessagePin2 } from './MessagePin';
+import { MessagePin } from './MessagePin';
 import type {
   MessageAddPosition,
   MessageHistoryModel,
@@ -217,7 +217,8 @@ export function useMessageList(
   });
   const {} = useMessageContext();
   const { getMsgInfo } = useDataPriority({});
-  const { recallTimeout, languageCode, enableThread } = useConfigContext();
+  const { recallTimeout, languageCode, enableThread, enableMessagePin } =
+    useConfigContext();
   const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
     userScrollGestureRef.current = isUserScroll;
   }, []);
@@ -235,7 +236,7 @@ export function useMessageList(
   const onRequestCloseReaction = React.useCallback(() => {
     reactionRef.current?.startHide?.();
   }, []);
-  const pinMsgListRef = React.useRef<MessagePin2>();
+  const pinMsgListRef = React.useRef<MessagePin>();
 
   const setIsTop = React.useCallback((isTop: boolean) => {
     // uilog.log('test:zuoyu:setIsTop:', isTop, comType);
@@ -3101,5 +3102,6 @@ export function useMessageList(
     hidePinMessage,
     onContainerLayout,
     maxListHeightRef,
+    enableMessagePin,
   };
 }

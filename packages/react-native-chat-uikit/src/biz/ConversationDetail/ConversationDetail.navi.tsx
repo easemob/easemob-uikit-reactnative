@@ -69,7 +69,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     messageTyping,
   } = props;
   const [status, setStatus] = React.useState<string>();
-  const { enableThread, enableAVMeeting, enablePresence, enablePinMessage } =
+  const { enableThread, enableAVMeeting, enablePresence, enableMessagePin } =
     useConfigContext();
   // const im = useChatContext();
   const { addAvatarStatusListener, removeAvatarStatusListener } =
@@ -101,7 +101,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     do {
       if (comType === 'chat' || comType === 'search') {
         if (selectMode === 'common') {
-          if (enablePinMessage && convType === 1) {
+          if (enableMessagePin && convType === 1) {
             ret.iconNameList.push('pin_2');
             ret.onClickedList.push(() => {
               onClickedPinMessage?.();
@@ -156,7 +156,7 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
     comType,
     convType,
     enableAVMeeting,
-    enablePinMessage,
+    enableMessagePin,
     enableThread,
     onCancelMultiSelected,
     onClickedAV,

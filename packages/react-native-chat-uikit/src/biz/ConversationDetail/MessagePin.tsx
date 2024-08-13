@@ -77,7 +77,7 @@ export type MessagePinState = {
   maxListHeight: number;
 };
 
-export class MessagePin2 extends React.PureComponent<
+export class MessagePin extends React.PureComponent<
   MessagePinProps,
   MessagePinState
 > {
@@ -359,4 +359,4 @@ export class MessagePin2 extends React.PureComponent<
     );
   }
 }
-export const AnimatedMessagePin = Animated.createAnimatedComponent(MessagePin2);
+export const AnimatedMessagePin = Animated.createAnimatedComponent(MessagePin);
