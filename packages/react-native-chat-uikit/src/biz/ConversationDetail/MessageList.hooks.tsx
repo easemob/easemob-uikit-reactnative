@@ -217,7 +217,8 @@ export function useMessageList(
   });
   const {} = useMessageContext();
   const { getMsgInfo } = useDataPriority({});
-  const { recallTimeout, languageCode, enableThread } = useConfigContext();
+  const { recallTimeout, languageCode, enableThread, enableMessagePin } =
+    useConfigContext();
   const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
     userScrollGestureRef.current = isUserScroll;
   }, []);
@@ -3101,5 +3102,6 @@ export function useMessageList(
     hidePinMessage,
     onContainerLayout,
     maxListHeightRef,
+    enableMessagePin,
   };
 }
