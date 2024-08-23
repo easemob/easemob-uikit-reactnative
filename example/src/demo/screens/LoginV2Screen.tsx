@@ -901,6 +901,8 @@ function AgoraLoginV2Screen(props: Props) {
                 keyboardAppearance={style === 'light' ? 'light' : 'dark'}
                 cursorColor={getColor('p')}
                 enableClearButton={false}
+                // !!! secureTextEntry={true} Setting to true causes layout changes.
+                // !!! https://github.com/facebook/react-native/issues/45347
                 secureTextEntry={accountType === 'agora' ? true : false}
                 enableShowPassword={accountType === 'agora' ? true : undefined}
                 passwordButtonStyle={{ tintColor: getColor('clear') }}
