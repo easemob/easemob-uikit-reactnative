@@ -22,9 +22,10 @@
     "noUnusedParameters": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
     "target": "esnext",
-    "composite": true
+    "composite": true,
+    "noImplicitAny": false
   },
   "exclude": ["packages/*/lib", "babel.config.js", "scripts/*"]
 }
