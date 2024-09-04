@@ -2261,12 +2261,12 @@ export function useMessageList(
       // );
       if (hasNoNewMsgRef.current === true) {
         setUnreadCount(0);
-        return;
+        return 0;
       }
       if (isGettingRef.current === false) {
         setIsGetting(true);
       } else {
-        return;
+        return 0;
       }
 
       let msgCount = 0;

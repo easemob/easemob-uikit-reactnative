@@ -55,7 +55,7 @@ const convertDefaultSource = (
   source: ImageProps['source']
 ): number | undefined => {
   if (source === undefined) {
-    return source;
+    return undefined;
   }
   if (Array.isArray(source)) {
     return convertDefaultSource(source[0]!);
