@@ -32,8 +32,9 @@ const ContextMenu = (props: {
   );
   console.log('test:ContextMenu:', screenWidth, screenHeight);
 
-  // 计算组件在屏幕中的位置，返回组件屏幕上下左右的位置
-  // 如果组件超出屏幕范围，则调整组件位置
+  // 计算组件的位置。
+  // 通过按下屏幕坐标位置，根据组件宽高值计算组件在屏幕上下左右的位置
+  // 由于组件可能由于宽或者高的原因超出屏幕范围，所以需要调整组件的位置
   // 如果组件左边距离右边屏幕小于组件宽度，则将左边值设置为undefined，右边值为鼠标点击位置
   // 如果组件右边距离左边屏幕小于组件宽度，则将右边值设置为undefined, 左边值为鼠标点击位置
   // 如果组件上边距离下边屏幕小于组件高度，则将上边值设置为undefined，下边值为鼠标点击位置
@@ -147,7 +148,7 @@ const ContextMenu = (props: {
   );
 };
 
-export default function YourComponent() {
+export function TestContextMenu1() {
   const modalRef = React.useRef<SlideModalRef>({} as any);
   const touchRef = React.useRef<TouchableOpacity>(null);
   const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
@@ -159,8 +160,9 @@ export default function YourComponent() {
     { label: 'Option 2', onPress: () => console.log('Option 2 selected') },
   ];
 
-  // 通过计算选择组件的上下左右的坐标点
-  // 组件内部分为4个象限，分别为左上，右上，左下，右下，如果按下坐标在其中一个象限，则选择该象限的坐标
+  // 计算组件的4个定点的屏幕坐标。
+  // 通过按下位置的屏幕坐标，获取当前该组件的屏幕坐标（4个定点中的1个）
+  // 组件内部分为4个象限，分别为左上，右上，左下，右下，如果按下坐标在其中一个象限，则返回该象限的组件的顶点的坐标值
   const calculate = (params: {
     pressedX: number;
     pressedY: number;
@@ -247,6 +249,7 @@ export default function YourComponent() {
     console.log('pressedY:', pressedY);
     console.log('locationX:', locationX);
     console.log('locationY:', locationY);
+    // 设置当前按下的坐标点
     // setTouchPosition({ x: pressedX, y: pressedY }); // 设置当前长按位置坐标
 
     // 获取当前组件的屏幕坐标
@@ -260,7 +263,7 @@ export default function YourComponent() {
       console.log('ScreenWidth:', screenWidth);
       console.log('ScreenHeight:', screenHeight);
 
-      // setTouchPosition({ x: pageX, y: pageY }); // 设置当前组件位置坐标
+      // 设置当前组件的坐标点
       setTouchPosition(
         calculate({
           pressedX: pressedX,
@@ -317,3 +320,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default function TestMain() {
+  return <TestContextMenu1 />;
+}

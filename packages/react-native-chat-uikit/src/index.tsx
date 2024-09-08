@@ -43,6 +43,7 @@ export * from './theme';
 export * from './types';
 export * from './ui/Alert';
 export * from './ui/Button';
+export * from './ui/ContextMenu';
 export * from './ui/FlatList';
 export * from './ui/Image';
 export * from './ui/ImagePreview';

@@ -1,13 +1,10 @@
 import * as React from 'react';
-import type { GestureResponderHandlers, ViewProps } from 'react-native';
 import { Pressable, View } from 'react-native';
 
 import { useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
+import { SlideProps } from './types';
 
-export type ModalType = 'simu-modal' | 'modal';
-export type SlideProps = ViewProps &
-  GestureResponderHandlers & { modalType: ModalType };
 export const DefaultSlide = (props: SlideProps) => {
   if (props.modalType === 'simu-modal') {
     return <Internal {...props} />;
@@ -19,6 +16,7 @@ export const DefaultSlide = (props: SlideProps) => {
     );
   }
 };
+
 const Internal = (props: SlideProps) => {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
