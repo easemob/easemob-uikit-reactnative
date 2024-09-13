@@ -19,10 +19,7 @@ export function TestContextMenu1() {
   const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
   const screenWidth = React.useRef(Dimensions.get('window').width).current;
   const screenHeight = React.useRef(Dimensions.get('window').height).current;
-  const { getComponentVerticesCoordinate } = useContextMenu({
-    propsRef: modalRef,
-    position: touchPosition,
-  });
+  const { getComponentVerticesCoordinate } = useContextMenu();
 
   const options = React.useMemo(
     () => [
@@ -75,7 +72,14 @@ export function TestContextMenu1() {
   };
 
   return (
-    <View style={{ top: 100, justifyContent: 'center', alignItems: 'center' }}>
+    <View
+      style={{
+        top: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        // backgroundColor: 'blue',
+      }}
+    >
       <TouchableOpacity
         ref={touchRef}
         onLongPress={handleLongPress}
@@ -109,12 +113,6 @@ export function TestContextMenu1() {
 }
 
 const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
   menuContainer: {
     backgroundColor: 'white',
     borderRadius: 5,

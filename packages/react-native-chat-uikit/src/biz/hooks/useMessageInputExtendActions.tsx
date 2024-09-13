@@ -1,9 +1,9 @@
-import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type {
   SendFileProps,
   SendImageProps,
   SendVideoProps,
 } from '../ConversationDetail';
+import type { InitMenuItemsType } from '../types';
 import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
 

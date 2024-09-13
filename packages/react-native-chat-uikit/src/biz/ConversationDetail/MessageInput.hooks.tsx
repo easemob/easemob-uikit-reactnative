@@ -20,7 +20,6 @@ import {
 import type { ChatTextMessageBody } from '../../rename.chat';
 import type { AlertRef } from '../../ui/Alert';
 import { timeoutTask } from '../../utils';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 // import { gVoiceBarHeight } from '../const';
 import { FACE_ASSETS_UTF16 } from '../EmojiList';
 import { useMessageInputExtendActions } from '../hooks/useMessageInputExtendActions';
@@ -30,6 +29,7 @@ import {
   selectOnePicture,
   selectOneShortVideo,
 } from '../hooks/useSelectFile';
+import type { MessageNameMenuRef } from '../types';
 import type { EmojiIconItem } from '../types';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
 import type { MessageInputEditMessageRef } from './MessageInputEditMessage';
@@ -86,7 +86,7 @@ export function useMessageInput(
   const hasLayoutAnimation = React.useRef(false);
   const voiceBarRef = React.useRef<BottomVoiceBarRef>({} as any);
   const voiceBarStateRef = React.useRef<VoiceBarState>('idle');
-  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const menuRef = React.useRef<MessageNameMenuRef>(null);
   const quoteMessageRef = React.useRef<MessageModel | undefined>(undefined);
   const [showQuote, setShowQuote] = React.useState(false);
   const editRef = React.useRef<MessageInputEditMessageRef>({} as any);

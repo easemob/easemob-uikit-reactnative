@@ -7,9 +7,9 @@ import type {
   ChatMessageReaction,
   ChatMessageThread,
 } from '../../rename.chat';
-import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type { TopNavigationBarElementType } from '../TopNavigationBar';
 import type {
+  InitMenuItemsType,
   ListActions,
   MessageLayoutType,
   PropsWithBack,

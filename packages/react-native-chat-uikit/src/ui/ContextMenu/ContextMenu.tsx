@@ -7,7 +7,7 @@ import { useContextMenu } from './useContextMenu';
 
 export function ContextMenu(props: ContextMenuProps) {
   const { position, children, propsRef, containerStyle } = props;
-  const { calculateComponentPosition } = useContextMenu(props);
+  const { calculateComponentPosition } = useContextMenu();
   const screenWidth = React.useRef(Dimensions.get('window').width).current;
   const screenHeight = React.useRef(Dimensions.get('window').height).current;
   const [componentHeight, setComponentHeight] = React.useState<
@@ -47,8 +47,7 @@ export function ContextMenu(props: ContextMenuProps) {
     <SlideModal
       propsRef={propsRef}
       modalAnimationType="fade"
-      backgroundColor={'rgba(1,1,1, 0.2)'}
-      backgroundTransparent={false}
+      backgroundTransparent={true}
       onRequestModalClose={() => {
         propsRef.current.startHide();
       }}

@@ -11,58 +11,9 @@ import { getElement, useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { SingleLineText } from '../../ui/Text';
+import { MessageMenuProps, MessageMenuRef } from '../types';
 import { gMaxItemCount } from './BottomSheetMenu.const';
 import { useGetProps } from './BottomSheetMenu.hooks';
-import type {
-  BottomSheetMenuHeaderProps,
-  BottomSheetMenuHeaderType,
-} from './BottomSheetMenuHeader';
-
-/**
- * Referencing Values of the `BottomSheetMenu` component.
- */
-export type BottomSheetMenuRef = SlideModalRef & {
-  /**
-   * While displaying the component, the menu items will also be dynamically changed.
-   */
-  startShowWithInit: (initItems: React.ReactElement[], others?: any) => void;
-  /**
-   * Start displaying the component with the specified properties.
-   */
-  startShowWithProps: (props: BottomSheetMenuProps) => void;
-
-  /**
-   * Get the data of the component.
-   */
-  getData: () => any;
-};
-/**
- * Properties of the `BottomSheetMenu` component.
- */
-export type BottomSheetMenuProps = {
-  /**
-   * To request to close the component, you usually need to call the `startHide` method here.
-   */
-  onRequestModalClose: () => void;
-  /**
-   * If no title is specified, it will not be displayed.
-   */
-  title?: string;
-  /**
-   * The maximum number should not exceed 6.
-   * If it is not set here, it can be set dynamically when calling `startShowWithInit`.
-   */
-  initItems?: React.ReactElement[];
-  /**
-   * The maximum height of the component.
-   *
-   * @default half of the entire screen.
-   */
-  maxHeight?: number;
-
-  headerProps?: BottomSheetMenuHeaderProps;
-  header?: BottomSheetMenuHeaderType;
-};
 
 /**
  * The BottomSheetMenu component provides menu functionality.
@@ -72,7 +23,7 @@ export type BottomSheetMenuProps = {
  * @example
  *
  * ```tsx
- * const ref = React.useRef<BottomSheetMenuRef>({} as any);
+ * const ref = React.useRef<MessageMenuRef>({} as any);
  * // ...
  *  <BottomSheetMenu
  *   ref={ref}
@@ -87,12 +38,9 @@ export type BottomSheetMenuProps = {
  * ```
  */
 export const BottomSheetMenu = React.forwardRef<
-  BottomSheetMenuRef,
-  BottomSheetMenuProps
->(function (
-  props: BottomSheetMenuProps,
-  ref?: React.ForwardedRef<BottomSheetMenuRef>
-) {
+  MessageMenuRef,
+  MessageMenuProps
+>(function (props: MessageMenuProps, ref?: React.ForwardedRef<MessageMenuRef>) {
   const {
     onRequestModalClose,
     initItems,
@@ -137,7 +85,7 @@ export const BottomSheetMenu = React.forwardRef<
             modalRef?.current?.startShow?.();
           }
         },
-        startShowWithProps: (props: BottomSheetMenuProps) => {
+        startShowWithProps: (props: MessageMenuProps) => {
           const { initItems } = props;
           if (initItems !== items && initItems) {
             isShow.current = true;

@@ -2,7 +2,7 @@ import type { StyleProp, ViewStyle } from 'react-native';
 
 import type { ContactModel } from '../../chat';
 import type { BlockButtonProps } from '../../ui/Button';
-import type { InitMenuItemsType } from '../BottomSheetMenu';
+import type { InitMenuItemsType } from '../types';
 import type { PropsWithBack, PropsWithNavigationBar } from '../types';
 
 /**

@@ -51,7 +51,6 @@ import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import { LocalPath, seqId, timeoutTask } from '../../utils';
 import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList/BottomSheetEmojiList';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import type { BottomSheetReactionDetailRef } from '../BottomSheetReactionDetail';
 import { gReportMessageList } from '../const';
 import { useMessageContext } from '../Context';
@@ -70,6 +69,7 @@ import type {
   BottomSheetMessageReportRef,
   ReportItemModel,
 } from '../MessageReport';
+import type { MessageNameMenuRef } from '../types';
 import type { EmojiIconItem } from '../types';
 import { gRequestMaxMessageCount, gRequestMaxThreadCount } from './const';
 import { MessageListItemMemo } from './MessageListItem';
@@ -204,7 +204,7 @@ export function useMessageList(
   const hasNoMoreRef = React.useRef(false); // !!! deprecated, use hasNoOldMsgRef and hasNoNewMsgRef
   const hasNoOldMsgRef = React.useRef(false);
   const hasNoNewMsgRef = React.useRef(false);
-  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const menuRef = React.useRef<MessageNameMenuRef>(null);
   const reportRef = React.useRef<BottomSheetMessageReportRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
   const currentReportMessageRef = React.useRef<MessageModel>();

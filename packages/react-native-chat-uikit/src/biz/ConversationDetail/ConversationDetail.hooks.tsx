@@ -23,9 +23,9 @@ import {
 } from '../../rename.chat';
 import { AlertRef } from '../../ui/Alert';
 import { timeoutTask } from '../../utils';
-import { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useConversationDetailActions } from '../hooks';
 import { useCreateConversationDirectory } from '../hooks/useCreateConversationDirectory';
+import { MessageNameMenuRef } from '../types';
 import { gMsgPinHeight } from './const';
 import { MessageInput } from './MessageInput';
 import { MessageList } from './MessageList';
@@ -115,7 +115,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const [unreadCount, setUnreadCount] = React.useState<number>(0);
   const [messageTyping, setMessageTyping] = React.useState<boolean>(false);
 
-  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const menuRef = React.useRef<MessageNameMenuRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
   const { onShowAVMenu } = useConversationDetailActions({
     menuRef: menuRef,

@@ -17,7 +17,7 @@ import {
 } from '../../rename.chat';
 import { Services } from '../../services';
 import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList';
-import { BottomSheetMenuHeader, InitMenuItemsType } from '../BottomSheetMenu';
+import { BottomSheetMenuHeader } from '../BottomSheetMenu';
 import type {
   ConversationDetailModelType,
   MessageModel,
@@ -25,6 +25,7 @@ import type {
   TimeMessageModel,
 } from '../ConversationDetail';
 import type { EmojiIconItem } from '../types';
+import { InitMenuItemsType } from '../types';
 import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
 

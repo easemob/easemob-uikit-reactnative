@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import type { BottomSheetMenuProps } from './BottomSheetMenu';
-import type { BottomSheetMenuHeaderType } from './BottomSheetMenuHeader';
+import { MessageMenuHeaderType, MessageMenuProps } from '../types';
 
 export function useGetItems(initItems?: React.ReactElement[]) {
   const [_items, setItems] = React.useState(initItems ?? []);
@@ -13,17 +12,17 @@ export function useGetItems(initItems?: React.ReactElement[]) {
     updateItems: _updateItems,
   };
 }
-export function useGetProps(props: BottomSheetMenuProps) {
+export function useGetProps(props: MessageMenuProps) {
   const { initItems, header, headerProps } = props;
   const [_items, setItems] = React.useState(initItems ?? []);
   const [_header, setHeader] = React.useState<
-    BottomSheetMenuHeaderType | undefined
+    MessageMenuHeaderType | undefined
   >(header);
   const [_headerProps, setHeaderProps] = React.useState(headerProps);
   const _updateItems = (items: React.ReactElement[]) => {
     setItems([...items]);
   };
-  const _updateProps = (props: BottomSheetMenuProps) => {
+  const _updateProps = (props: MessageMenuProps) => {
     const { headerProps, header, initItems } = props;
     if (initItems) {
       setItems(initItems);

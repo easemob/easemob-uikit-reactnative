@@ -1,5 +1,5 @@
 import { useI18nContext } from '../../i18n';
-import type { InitMenuItemsType } from '../BottomSheetMenu';
+import type { InitMenuItemsType } from '../types';
 import type { BasicActionsProps } from './types';
 import { useCloseAlert } from './useCloseAlert';
 import { useCloseMenu } from './useCloseMenu';

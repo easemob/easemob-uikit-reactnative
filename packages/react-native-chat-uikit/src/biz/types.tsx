@@ -11,11 +11,8 @@ import type { DataModelType } from '../chat';
 import type { UIKitError } from '../error';
 import type { AlertRef } from '../ui/Alert';
 import type { FlatListProps, FlatListRef } from '../ui/FlatList';
+import { SlideModalRef } from '../ui/Modal';
 import type { SectionListProps, SectionListRef } from '../ui/SectionList';
-import type {
-  BottomSheetNameMenuRef,
-  InitMenuItemsType,
-} from './BottomSheetMenu';
 
 export type MessageLayoutType = 'left' | 'right' | 'middle';
 export type MessageBubbleType = 'content' | 'quote' | 'thread';
@@ -510,7 +507,7 @@ export type BasicListRefType<DataModel> = {
   /**
    * Gets a reference to the menu component of the content.
    */
-  getMenuRef: () => React.RefObject<BottomSheetNameMenuRef>;
+  getMenuRef: () => React.RefObject<MessageNameMenuRef>;
   /**
    * Gets a reference to the alert component of the content.
    */
@@ -548,4 +545,120 @@ export type EmojiIconStateType = 'selected' | 'common';
 export type EmojiIconItem = {
   name: IconNameType | string;
   state: EmojiIconStateType;
+};
+
+export type MessageMenuHeaderType =
+  | React.FC<MessageMenuHeaderProps>
+  | React.ReactElement<MessageMenuHeaderProps>;
+
+export type MessageMenuHeaderProps = {
+  emojiList?: EmojiIconItem[];
+  onClickedEmoji?: (emoji: IconNameType | string) => void;
+  /**
+   * Whether to use the emoji chat mode.
+   *
+   * Its setting will affect the type of the return value of `onClickedEmoji`. If true, returns the emoji string, otherwise returns the `U+xxxxx` string.
+   *
+   * @default false
+   */
+  isEmojiCharacter?: boolean;
+};
+export type InitMenuItemsType = {
+  /**
+   * The text to be displayed.
+   */
+  name: string;
+  /**
+   * Whether the text is highlighted.
+   */
+  isHigh: boolean;
+  /**
+   * The icon to be displayed.
+   */
+  icon?: IconNameType;
+  /**
+   * The callback function when the text is clicked.
+   *
+   * @param name The text to be displayed.
+   * @param others Other parameters. You can pass in the parameters you need. For example, you can pass in the user ID.
+   */
+  onClicked?: (name: string, others?: any) => void;
+};
+export type MessageNameMenuRef = Omit<
+  MessageMenuRef,
+  'startShowWithInit' | 'startShowWithProps'
+> & {
+  startShowWithInit: (initItems: InitMenuItemsType[], others?: any) => void;
+  startShowWithProps: (props: MessageNameMenuProps) => void;
+};
+export type MessageNameMenuProps = {
+  /**
+   * To request to close the component, you usually need to call the `startHide` method here.
+   */
+  onRequestModalClose: () => void;
+  /**
+   * If no title is specified, it will not be displayed.
+   */
+  title?: string;
+  /**
+   * The maximum number should not exceed 6.
+   */
+  initItems?: InitMenuItemsType[];
+  /**
+   * The layout type of the component.
+   */
+  layoutType?: 'left' | 'center';
+  /**
+   * Whether to display the cancel button.
+   */
+  hasCancel?: boolean;
+
+  headerProps?: MessageMenuHeaderProps;
+  header?: MessageMenuHeaderType;
+};
+
+/**
+ * Referencing Values of the `MessageMenu` component.
+ */
+export type MessageMenuRef = SlideModalRef & {
+  /**
+   * While displaying the component, the menu items will also be dynamically changed.
+   */
+  startShowWithInit: (initItems: React.ReactElement[], others?: any) => void;
+  /**
+   * Start displaying the component with the specified properties.
+   */
+  startShowWithProps: (props: MessageMenuProps) => void;
+
+  /**
+   * Get the data of the component.
+   */
+  getData: () => any;
+};
+/**
+ * Properties of the `MessageMenu` component.
+ */
+export type MessageMenuProps = {
+  /**
+   * To request to close the component, you usually need to call the `startHide` method here.
+   */
+  onRequestModalClose: () => void;
+  /**
+   * If no title is specified, it will not be displayed.
+   */
+  title?: string;
+  /**
+   * The maximum number should not exceed 6.
+   * If it is not set here, it can be set dynamically when calling `startShowWithInit`.
+   */
+  initItems?: React.ReactElement[];
+  /**
+   * The maximum height of the component.
+   *
+   * @default half of the entire screen.
+   */
+  maxHeight?: number;
+
+  headerProps?: MessageMenuHeaderProps;
+  header?: MessageMenuHeaderType;
 };

@@ -1,6 +1,6 @@
 import type { ConversationModel } from '../../chat';
 import { useI18nContext } from '../../i18n';
-import type { InitMenuItemsType } from '../BottomSheetMenu';
+import type { InitMenuItemsType } from '../types';
 import type { BasicActionsProps } from './types';
 
 export type ConversationLongPressActionsProps = BasicActionsProps & {

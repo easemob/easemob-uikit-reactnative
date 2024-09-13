@@ -1,10 +1,6 @@
 import * as React from 'react';
 
-import { ContextMenuProps } from './types';
-
-export function useContextMenu(props: ContextMenuProps) {
-  const {} = props;
-
+export function useContextMenu() {
   // Calculate the position of the component.
   // By pressing the screen coordinate position, calculate the top, bottom, left, and right positions of the component on the screen based on the component's width and height.
   // Since the component may exceed the screen bounds due to its width or height, the position of the component needs to be adjusted.

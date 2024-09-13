@@ -10,9 +10,9 @@ import {
 } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useFlatList } from '../List';
+import type { MessageNameMenuRef } from '../types';
 import { ListStateType } from '../types';
 import { GroupParticipantListItemMemo } from './GroupParticipantList.item';
 import type {
@@ -43,7 +43,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
   const { setData, dataRef, setListState } = flatListProps;
   const [participantCount, setParticipantCount] = React.useState(0);
   const [selectedCount, setSelectedCount] = React.useState(0);
-  const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const menuRef = React.useRef<MessageNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const { closeMenu } = useCloseMenu({ menuRef });
   const ListItemRenderRef = React.useRef<GroupParticipantListItemComponentType>(
