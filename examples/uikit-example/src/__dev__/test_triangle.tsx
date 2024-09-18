@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import {
   Container,
   useLightTheme,
@@ -161,6 +161,101 @@ export function MyTriangle2() {
   );
 }
 
+export function MyTriangle3() {
+  return (
+    <SafeAreaView style={styles.test}>
+      <View style={styles.container}>
+        <View style={styles.triangle} />
+        <View style={{ height: 100 }} />
+        <View style={[styles.triangle, styles.triangle2]} />
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  test: {
+    top: 100,
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  triangle: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 50,
+    borderRightWidth: 50,
+    borderBottomWidth: 100,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'blue',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5, // For Android shadow
+  },
+  triangle2: {
+    transform: [{ rotate: '180deg' }],
+  },
+});
+
+export const ChatBubble = ({ text }) => {
+  return (
+    <View style={styles2.container}>
+      <View style={styles2.bubbleWrapper}>
+        <View style={styles2.triangle} />
+        <View style={styles2.bubble}>
+          <Text style={styles2.text}>{text}</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const styles2 = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  bubbleWrapper: {
+    // flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5, // For Android shadow
+    backgroundColor: 'transparent', // 确保阴影效果应用在整个包裹视图上
+    padding: 5, // 添加一些内边距以确保阴影效果更明显
+    borderRadius: 10, // 确保阴影效果的圆角
+  },
+  triangle: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderBottomWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'white',
+  },
+  bubble: {
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 10,
+    maxWidth: '80%',
+  },
+  text: {
+    fontSize: 16,
+  },
+});
+
 export default function TestTriangle() {
   const p = usePresetPalette();
   const t = useLightTheme(p, 'global');
@@ -174,7 +269,7 @@ export default function TestTriangle() {
       palette={p}
       theme={t}
     >
-      <MyTriangle2 />
+      <ChatBubble text={'hello, world~'} />
     </Container>
   );
 }

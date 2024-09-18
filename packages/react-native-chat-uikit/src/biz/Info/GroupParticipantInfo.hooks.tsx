@@ -13,7 +13,7 @@ import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import { useCloseMenu } from '../hooks';
-import type { MessageNameMenuRef } from '../types';
+import type { ContextNameMenuRef } from '../types';
 import type { GroupParticipantInfoProps } from './types';
 
 export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
@@ -34,7 +34,7 @@ export function useGroupParticipantInfo(props: GroupParticipantInfoProps) {
     onAudioCall: propsOnAudioCall,
     onVideoCall: propsOnVideoCall,
   } = props;
-  const menuRef = React.useRef<MessageNameMenuRef>({} as any);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);

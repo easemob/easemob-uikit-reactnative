@@ -27,7 +27,7 @@ import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useContactListMoreActions } from '../hooks/useContactListMoreActions';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
-import type { MessageNameMenuRef } from '../types';
+import type { ContextNameMenuRef } from '../types';
 import type { ChoiceType, ListStateType } from '../types';
 import {
   ContactItem,
@@ -99,7 +99,7 @@ export function useContactList(props: ContactListProps) {
   const { tr } = useI18nContext();
   const im = useChatContext();
   const { getColor } = useColors();
-  const menuRef = React.useRef<MessageNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
   const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
   const { closeMenu } = useCloseMenu({ menuRef });

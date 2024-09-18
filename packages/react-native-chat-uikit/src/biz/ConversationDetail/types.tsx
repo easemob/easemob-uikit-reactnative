@@ -9,9 +9,12 @@ import type {
 } from '../../rename.chat';
 import type { TopNavigationBarElementType } from '../TopNavigationBar';
 import type {
+  ContextNameMenuProps,
+  ContextNameMenuRef,
   InitMenuItemsType,
   ListActions,
   MessageLayoutType,
+  PressedComponentEvent,
   PropsWithBack,
   PropsWithCancel,
   PropsWithError,
@@ -406,6 +409,16 @@ export type ConversationDetailProps = PropsWithError &
       thread?: ChatMessageThread,
       firstMessage?: SendMessageProps
     ) => void;
+
+    /**
+     * The custom message long press menu.
+     *
+     * set `messageMenuStyle` to `custom` to use this.
+     */
+    MessageCustomLongPressMenu?: React.ForwardRefExoticComponent<
+      React.PropsWithoutRef<ContextNameMenuProps> &
+        React.RefAttributes<ContextNameMenuRef>
+    >;
   };
 
 /**
@@ -649,7 +662,8 @@ export type MessageListItemActionsProps = {
    */
   onClicked?: (
     id: string,
-    model: SystemMessageModel | TimeMessageModel | MessageModel
+    model: SystemMessageModel | TimeMessageModel | MessageModel,
+    event?: PressedComponentEvent
   ) => void;
   /**
    * Callback notification when a list item is long pressed.
@@ -658,7 +672,8 @@ export type MessageListItemActionsProps = {
    */
   onLongPress?: (
     id: string,
-    model: SystemMessageModel | TimeMessageModel | MessageModel
+    model: SystemMessageModel | TimeMessageModel | MessageModel,
+    event?: PressedComponentEvent
   ) => void;
   /**
    * Callback notification when the avatar of a list item is clicked.
@@ -1148,6 +1163,15 @@ export type MessageListProps = PropsWithError &
      * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.
      */
     onRequestClosePinMessage?: () => void;
+    /**
+     * The custom message long press menu.
+     *
+     * set `messageMenuStyle` to `custom` to use this.
+     */
+    MessageCustomLongPressMenu?: React.ForwardRefExoticComponent<
+      React.PropsWithoutRef<ContextNameMenuProps> &
+        React.RefAttributes<ContextNameMenuRef>
+    >;
   };
 
 export type MessageThreadListRef = {};

@@ -16,7 +16,7 @@ import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import type { SimpleToastRef } from '../../ui/Toast';
 import { useGroupInfoActions } from '../hooks/useGroupInfoActions';
-import type { MessageNameMenuRef } from '../types';
+import type { ContextNameMenuRef } from '../types';
 import type { GroupInfoProps, GroupInfoRef } from './types';
 
 export function useGroupInfo(
@@ -53,7 +53,7 @@ export function useGroupInfo(
   const { tr } = useI18nContext();
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
-  const menuRef = React.useRef<MessageNameMenuRef>({} as any);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const ownerIdRef = React.useRef('');
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
   const [groupName, setGroupName] = React.useState(propsGroupName);

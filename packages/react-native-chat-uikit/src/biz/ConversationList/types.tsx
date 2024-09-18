@@ -76,7 +76,7 @@ export type ConversationListRef = Omit<
 //   /**
 //    * The reference object of the menu component. You can control operations such as menu pop-up.
 //    */
-//   menuRef: React.RefObject<MessageNameMenuRef>;
+//   menuRef: React.RefObject<ContextNameMenuRef>;
 //   /**
 //    * The reference object of the list component.
 //    */

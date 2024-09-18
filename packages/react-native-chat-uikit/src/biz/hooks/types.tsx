@@ -1,12 +1,12 @@
 import type { AlertRef } from '../../ui/Alert';
-import type { MessageNameMenuRef } from '../types';
+import type { ContextNameMenuRef } from '../types';
 import type { InitMenuItemsType } from '../types';
 
 export type BasicActionsProps = {
   /**
    * menu reference.
    */
-  menuRef: React.RefObject<MessageNameMenuRef>;
+  menuRef: React.RefObject<ContextNameMenuRef>;
   /**
    * alert reference.
    */

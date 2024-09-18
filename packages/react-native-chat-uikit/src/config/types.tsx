@@ -3,7 +3,7 @@ import { StyleProp, ViewStyle } from 'react-native';
 import type { StatusType } from '../biz/types';
 import type { LanguageCode } from '../i18n';
 import { ChatMessage } from '../rename.chat';
-import { ReleaseArea } from '../types';
+import { MessageMenuStyle, ReleaseArea } from '../types';
 
 export type ConversationDetailType = {
   bubble?: {
@@ -63,6 +63,12 @@ export type Config = {
    * The conversation detail config.
    */
   conversationDetail?: ConversationDetailType;
+  /**
+   * The message long press menu style.
+   *
+   * Detail for `BottomSheetNameMenu` and `BottomSheetNameMenu`.
+   */
+  messageMenuStyle?: MessageMenuStyle;
 
   /**
    * The group config.

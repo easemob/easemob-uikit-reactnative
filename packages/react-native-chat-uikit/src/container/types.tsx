@@ -6,7 +6,7 @@ import type { ConversationDetailType } from '../config';
 import type { CreateStringSet, LanguageCode, StringSet } from '../i18n';
 import { ChatMessage } from '../rename.chat';
 import type { CornerRadiusPaletteType, Palette, Theme } from '../theme';
-import type { ReleaseArea } from '../types';
+import type { MessageMenuStyle, ReleaseArea } from '../types';
 
 /**
  * Properties of the Container.
@@ -94,6 +94,13 @@ export type ContainerProps = React.PropsWithChildren<{
    * The conversation detail config.
    */
   conversationDetail?: ConversationDetailType;
+  /**
+   * The message long press menu style.
+   *
+   * Detail for `BottomSheetNameMenu` and `BottomSheetNameMenu`.
+   */
+  messageMenuStyle?: MessageMenuStyle;
+
   /**
    * The group config.
    */

@@ -121,6 +121,7 @@ export function App() {
     fontFamily,
     onSystemTip,
     getNaviTheme,
+    messageMenuStyleRef,
   } = useApp();
 
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
@@ -330,6 +331,7 @@ export function App() {
         onGroupsHandler={onGroupsHandler}
         onUsersHandler={onUsersHandler}
         AvatarStatusRender={AvatarStatusRenderMemo}
+        messageMenuStyle={messageMenuStyleRef.current}
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}

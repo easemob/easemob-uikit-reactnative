@@ -3,7 +3,7 @@ import type { ChatPresence } from 'react-native-chat-sdk';
 import {
   type AlertRef,
   type ChatServiceListener,
-  type MessageNameMenuRef,
+  type ContextNameMenuRef,
   PresenceUtil,
   type SimpleToastRef,
   useChatContext,
@@ -33,7 +33,7 @@ export function useMineInfo(props: MineInfoProps) {
   const [userAvatar, setUserAvatar] = React.useState(propsUserAvatar);
   const [userSign, setUserSign] = React.useState<string>();
   const [userState, setUserState] = React.useState<UserState>('offline');
-  const menuRef = React.useRef<MessageNameMenuRef>({} as any);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
@@ -151,7 +151,7 @@ export function useMineInfo(props: MineInfoProps) {
 
 export function useCommonInfo(props: CommonInfoProps) {
   const {} = props;
-  const menuRef = React.useRef<MessageNameMenuRef>({} as any);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const { style } = useThemeContext();

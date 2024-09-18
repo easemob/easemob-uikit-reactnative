@@ -40,6 +40,7 @@ import {
   getChatService,
   getReleaseArea,
   LanguageCode,
+  MessageMenuStyle,
   StringSet,
   ThemeType,
   UIGroupListListener,
@@ -108,6 +109,7 @@ export function useApp() {
   const enableBlockRef = React.useRef(false);
   const naviThemeRef = React.useRef(NaviDefaultTheme);
   const pageDeepRef = React.useRef(0);
+  const messageMenuStyleRef = React.useRef<MessageMenuStyle>('context'); // todo: need design from 'hanxiao'
   const [fontsLoaded] = useFonts({
     [twemoji_ttf_name]: twemoji_ttf,
     [boloo_da_ttf_name]: boloo_da_ttf,
@@ -143,7 +145,7 @@ export function useApp() {
       requireDeliveryAck: true,
       restServer: useSendBox ? restServer : undefined,
       imServer: useSendBox ? imServerRef.current : undefined,
-      imPort: useSendBox ? imPortRef.current : undefined,
+      imPort: useSendBox ? imPortRef.current : (undefined as any),
       enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
       pushConfig:
         fcmSenderId && fcmSenderId.length > 0
@@ -962,5 +964,6 @@ export function useApp() {
     onSystemTip,
     naviThemeRef,
     getNaviTheme,
+    messageMenuStyleRef,
   };
 }

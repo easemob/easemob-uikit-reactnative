@@ -17,7 +17,7 @@ import { g_index_alphabet_range, g_index_alphabet_range_array } from '../const';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
-import type { MessageNameMenuRef } from '../types';
+import type { ContextNameMenuRef } from '../types';
 import type { ListStateType } from '../types';
 import { BlockListItemHeaderMemo, BlockListItemMemo } from './BlockList.item';
 import type {
@@ -61,7 +61,7 @@ export function useBlockList(props: BlockListProps) {
   const [blockCount, setBlockCount] = React.useState(0);
   const { tr } = useI18nContext();
   const im = useChatContext();
-  const menuRef = React.useRef<MessageNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
   const ListItemRenderRef = React.useRef<BlockListItemComponentType>(

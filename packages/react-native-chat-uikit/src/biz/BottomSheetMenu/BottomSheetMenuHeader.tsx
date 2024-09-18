@@ -10,7 +10,12 @@ import { SingleLineText } from '../../ui/Text';
 import { MessageMenuHeaderProps } from '../types';
 
 export function BottomSheetMenuHeader(props: MessageMenuHeaderProps) {
-  const { emojiList, onClickedEmoji, isEmojiCharacter = false } = props;
+  const {
+    emojiList,
+    onClickedEmoji,
+    isEmojiCharacter = false,
+    messageMenuStyle = 'bottom-sheet',
+  } = props;
   const { fontFamily } = useConfigContext();
   const { cornerRadius } = usePaletteContext();
   const { getBorderRadius } = useGetStyleProps();
@@ -22,6 +27,10 @@ export function BottomSheetMenuHeader(props: MessageMenuHeaderProps) {
       dark: colors.primary[6],
     },
   });
+  const screenWidth = Dimensions.get('window').width;
+  const contentWidth = screenWidth >= 392 ? 392 - 42 : 392 - 20;
+  const width =
+    messageMenuStyle === 'bottom-sheet' ? screenWidth : contentWidth;
 
   return (
     <View
@@ -30,7 +39,7 @@ export function BottomSheetMenuHeader(props: MessageMenuHeaderProps) {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        width: Dimensions.get('window').width,
+        width: width,
       }}
     >
       {emojiList?.map((v, i) => {

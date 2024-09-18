@@ -35,7 +35,7 @@ import { BackButton } from '../Back';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks';
 import { useImageSize } from '../hooks/useImageSize';
-import type { MessageNameMenuRef, PropsWithBack } from '../types';
+import type { ContextNameMenuRef, PropsWithBack } from '../types';
 import { getImageSizeFromUrl } from './MessageListItem.hooks';
 
 /**
@@ -61,7 +61,7 @@ export type VideoMessagePreviewProps = PropsWithBack & {
   /**
    * Callback function for showing the bottom sheet.
    */
-  onShowBottomSheet?: (menuRef: React.RefObject<MessageNameMenuRef>) => void;
+  onShowBottomSheet?: (menuRef: React.RefObject<ContextNameMenuRef>) => void;
 };
 
 /**
@@ -200,7 +200,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
   );
   const [pause, setPause] = React.useState(false);
   const { getImageSize } = useImageSize({});
-  const menuRef = React.useRef<MessageNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
 
   const genThumb = React.useCallback(

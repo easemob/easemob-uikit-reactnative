@@ -11,19 +11,17 @@ import { getElement, useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { SingleLineText } from '../../ui/Text';
-import { MessageMenuProps, MessageMenuRef } from '../types';
+import { useMessageMenu } from '../hooks';
+import { BizContextMenuProps, BizContextMenuRef } from '../types';
 import { gMaxItemCount } from './BottomSheetMenu.const';
-import { useGetProps } from './BottomSheetMenu.hooks';
 
 /**
  * The BottomSheetMenu component provides menu functionality.
  *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/192a6e98cf2f168dd3a5e0e5a306a6762cf5e0d6/example/src/__dev__/test_bottom_sheet_menu.tsx}
- *
  * @example
  *
  * ```tsx
- * const ref = React.useRef<MessageMenuRef>({} as any);
+ * const ref = React.useRef<BizContextMenuRef>({} as any);
  * // ...
  *  <BottomSheetMenu
  *   ref={ref}
@@ -38,9 +36,12 @@ import { useGetProps } from './BottomSheetMenu.hooks';
  * ```
  */
 export const BottomSheetMenu = React.forwardRef<
-  MessageMenuRef,
-  MessageMenuProps
->(function (props: MessageMenuProps, ref?: React.ForwardedRef<MessageMenuRef>) {
+  BizContextMenuRef,
+  BizContextMenuProps
+>(function (
+  props: BizContextMenuProps,
+  ref?: React.ForwardedRef<BizContextMenuRef>
+) {
   const {
     onRequestModalClose,
     initItems,
@@ -53,7 +54,7 @@ export const BottomSheetMenu = React.forwardRef<
   const { height: winHeight } = useWindowDimensions();
   const othersRef = React.useRef();
   const { items, updateItems, header, headerProps, updateProps } =
-    useGetProps(props);
+    useMessageMenu(props);
   const count = header ? 5 : 6;
   const { getColor } = useColors({
     bg3: {
@@ -85,7 +86,7 @@ export const BottomSheetMenu = React.forwardRef<
             modalRef?.current?.startShow?.();
           }
         },
-        startShowWithProps: (props: MessageMenuProps) => {
+        startShowWithProps: (props: BizContextMenuProps) => {
           const { initItems } = props;
           if (initItems !== items && initItems) {
             isShow.current = true;

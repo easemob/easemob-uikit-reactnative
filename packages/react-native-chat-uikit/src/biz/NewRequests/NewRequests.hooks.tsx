@@ -6,7 +6,7 @@ import { useI18nContext } from '../../i18n';
 import type { AlertRef } from '../../ui/Alert';
 import { useCloseMenu, useContactListMoreActions } from '../hooks';
 import { useFlatList } from '../List';
-import type { MessageNameMenuRef } from '../types';
+import type { ContextNameMenuRef } from '../types';
 import { NewRequestsItemMemo } from './NewRequests.item';
 import type {
   NewRequestsItemComponentType,
@@ -33,7 +33,7 @@ export function useNewRequests(props: NewRequestsProps) {
   const ListItemRenderRef = React.useRef<NewRequestsItemComponentType>(
     propsListItemRender ?? NewRequestsItemMemo
   );
-  const menuRef = React.useRef<MessageNameMenuRef>({} as any);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const { closeMenu } = useCloseMenu({ menuRef });
   const { onShowContactListMoreActions } = useContactListMoreActions({

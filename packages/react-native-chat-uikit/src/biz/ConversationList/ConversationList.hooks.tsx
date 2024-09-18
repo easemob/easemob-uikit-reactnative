@@ -28,7 +28,7 @@ import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useConversationListMoreActions } from '../hooks/useConversationListMoreActions';
 import { useConversationLongPressActions } from '../hooks/useConversationLongPressActions';
 import { useFlatList } from '../List';
-import type { MessageNameMenuRef } from '../types';
+import type { ContextNameMenuRef } from '../types';
 import type { ListStateType } from '../types';
 import { ConversationListItemMemo } from './ConversationList.item';
 import type {
@@ -74,7 +74,7 @@ export function useConversationList(props: ConversationListProps) {
   const [avatarUrl, setAvatarUrl] = React.useState<string>();
   const { tr } = useI18nContext();
   const alertRef = React.useRef<AlertRef>(null);
-  const menuRef = React.useRef<MessageNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
   const ListItemRenderRef = React.useRef<ConversationListItemComponentType>(
     propsListItemRender ?? ConversationListItemMemo

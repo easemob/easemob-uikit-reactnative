@@ -12,7 +12,6 @@ import { ChatConversationType } from '../../rename.chat';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
 import { BottomSheetEmojiList } from '../BottomSheetEmojiList/BottomSheetEmojiList';
-import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { BottomSheetReactionDetail } from '../BottomSheetReactionDetail';
 import { BottomSheetMessageReport } from '../MessageReport';
 import {
@@ -99,6 +98,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       onContainerLayout,
       maxListHeightRef,
       enableMessagePin,
+      MessageLongPressMenu,
     } = useMessageList(props, ref);
     const {
       msgPinPlaceHolderCurrentHeight,
@@ -284,7 +284,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           />
         ) : null}
 
-        <BottomSheetNameMenu
+        <MessageLongPressMenu
           ref={menuRef}
           onRequestModalClose={onRequestCloseMenu}
         />

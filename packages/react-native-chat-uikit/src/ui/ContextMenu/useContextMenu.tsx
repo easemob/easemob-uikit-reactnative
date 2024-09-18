@@ -1,6 +1,88 @@
 import * as React from 'react';
 
+import { ComponentArea, ComponentArea1, ComponentArea2 } from './types';
+
 export function useContextMenu() {
+  const convertComponentCoordinate = React.useCallback(
+    (params: ComponentArea): ComponentArea1 => {
+      if (params.hasOwnProperty('x')) {
+        const {
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+        } = params as ComponentArea2;
+        const leftTop = { x: x, y: y };
+        const rightTop = { x: x + width, y: y };
+        const leftBottom = { x: x, y: y + height };
+        const rightBottom = {
+          x: x + width,
+          y: y + height,
+        };
+        return {
+          leftTop,
+          rightTop,
+          leftBottom,
+          rightBottom,
+        };
+      } else {
+        return params as ComponentArea1;
+      }
+    },
+    []
+  );
+
+  // If there is enough height above the restricted overlay area, the component is displayed above the restricted overlay area, setting the bottom value
+  // If there is enough height below the restricted overlay area, the component is displayed below the restricted overlay area, setting the top value
+  // If there is enough width to the left of the restricted overlay area, the component is displayed to the left of the restricted overlay area, setting the right value
+  // If there is enough width to the right of the restricted overlay area, the component is displayed to the right of the restricted overlay area, setting the left value
+  const reviseComponentPosition = React.useCallback(
+    (params: {
+      screenWidth: number;
+      screenHeight: number;
+      componentWidth: number;
+      componentHeight: number;
+      noCoverageArea?: ComponentArea;
+      position: {
+        left?: number;
+        top?: number;
+        right?: number;
+        bottom?: number;
+      };
+    }) => {
+      const {
+        screenHeight,
+        screenWidth,
+        componentHeight,
+        componentWidth,
+        noCoverageArea,
+        position,
+      } = params;
+      if (noCoverageArea) {
+        const c = convertComponentCoordinate(noCoverageArea);
+        const left = c.leftTop.x;
+        const top = c.leftTop.y;
+        const right = c.rightBottom.x;
+        const bottom = c.rightBottom.y;
+        if (top >= componentHeight) {
+          position.bottom = screenHeight - top;
+          position.top = undefined;
+        } else if (screenHeight - bottom >= componentHeight) {
+          position.top = bottom;
+          position.bottom = undefined;
+        } else if (left >= componentWidth) {
+          position.right = screenWidth - left;
+          position.left = undefined;
+        } else if (screenWidth - right >= componentWidth) {
+          position.left = right;
+          position.right = undefined;
+        }
+      }
+      return position;
+    },
+    [convertComponentCoordinate]
+  );
+
   // Calculate the position of the component.
   // By pressing the screen coordinate position, calculate the top, bottom, left, and right positions of the component on the screen based on the component's width and height.
   // Since the component may exceed the screen bounds due to its width or height, the position of the component needs to be adjusted.
@@ -16,6 +98,7 @@ export function useContextMenu() {
       screenHeight: number;
       componentWidth: number;
       componentHeight: number;
+      noCoverageArea?: ComponentArea;
     }) => {
       const {
         pressedX,
@@ -30,16 +113,29 @@ export function useContextMenu() {
       let right: number | undefined;
       let bottom: number | undefined;
       if (pressedX + componentWidth > screenWidth) {
-        left = undefined;
-        right = screenWidth - pressedX;
+        if (pressedX > componentWidth) {
+          left = undefined;
+          right = screenWidth - pressedX;
+        } else {
+          left = (screenWidth - componentWidth) / 2;
+          right = undefined;
+        }
       }
       if (pressedY + componentHeight > screenHeight) {
-        top = undefined;
-        bottom = screenHeight - pressedY;
+        if (pressedY > componentHeight) {
+          top = undefined;
+          bottom = screenHeight - pressedY;
+        } else {
+          top = (screenHeight - componentHeight) / 2;
+          bottom = undefined;
+        }
       }
-      return { left, top, right, bottom };
+      return reviseComponentPosition({
+        ...params,
+        position: { left, top, right, bottom },
+      });
     },
-    []
+    [reviseComponentPosition]
   );
 
   // Calculate the screen coordinates of the 4 vertices of the component.
@@ -108,8 +204,10 @@ export function useContextMenu() {
     },
     []
   );
+
   return {
     calculateComponentPosition,
     getComponentVerticesCoordinate,
+    convertComponentCoordinate,
   };
 }

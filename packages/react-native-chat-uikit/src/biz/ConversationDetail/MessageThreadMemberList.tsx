@@ -18,7 +18,7 @@ import {
   LoadingPlaceholder,
 } from '../Placeholder';
 import { TopNavigationBar, TopNavigationBarLeft } from '../TopNavigationBar';
-import { MessageNameMenuRef } from '../types';
+import { ContextNameMenuRef } from '../types';
 import { gRequestMaxThreadCount } from './const';
 import type {
   MessageThreadMemberListItemProps,
@@ -146,7 +146,7 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
   const currentCursorRef = React.useRef<string>('');
   const bounces = React.useRef(true).current;
   const im = useChatContext();
-  const menuRef = React.useRef<MessageNameMenuRef>({} as any);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const alertRef = React.useRef<any>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
   const groupOwnerRef = React.useRef<string>('');

@@ -56,3 +56,5 @@ export type RequireAtLeastOne<T> = {
 export type UnknownType = Record<string, unknown>;
 
 export type ReleaseArea = 'china' | 'global';
+
+export type MessageMenuStyle = 'bottom-sheet' | 'context' | 'custom';

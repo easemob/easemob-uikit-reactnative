@@ -26,7 +26,7 @@ import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { useCloseMenu } from '../hooks';
 import { useImageSize } from '../hooks/useImageSize';
 import type {
-  MessageNameMenuRef,
+  ContextNameMenuRef,
   PropsWithBack,
   PropsWithError,
 } from '../types';
@@ -56,7 +56,7 @@ export type ImageMessagePreviewProps = PropsWithBack &
     /**
      * Callback function for showing the bottom sheet.
      */
-    onShowBottomSheet?: (menuRef: React.RefObject<MessageNameMenuRef>) => void;
+    onShowBottomSheet?: (menuRef: React.RefObject<ContextNameMenuRef>) => void;
   };
 
 /**
@@ -166,7 +166,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
   });
   const { width: winWidth, height: winHeight } = useWindowDimensions();
   const { getImageSize } = useImageSize({});
-  const menuRef = React.useRef<MessageNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
 
   const showImage = React.useCallback(

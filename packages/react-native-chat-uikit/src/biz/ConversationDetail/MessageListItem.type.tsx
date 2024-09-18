@@ -1,4 +1,4 @@
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native';
 
 import type { IconNameType } from '../../assets';
 import type {
@@ -121,8 +121,8 @@ export type MessageContentProps = {
   layoutType: MessageLayoutType;
   contentMaxWidth?: number | undefined;
   isVoicePlaying?: boolean | undefined;
-  onClicked?: () => void;
-  onLongPress?: () => void;
+  onClicked?: (event?: GestureResponderEvent) => void;
+  onLongPress?: (event?: GestureResponderEvent) => void;
 };
 /**
  * Message Location component render type.

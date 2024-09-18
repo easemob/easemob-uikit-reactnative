@@ -5,9 +5,9 @@ import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { InitMenuItemsType } from '../types';
 import {
-  MessageMenuRef,
-  MessageNameMenuProps,
-  MessageNameMenuRef,
+  BizContextMenuRef,
+  ContextNameMenuProps,
+  ContextNameMenuRef,
 } from '../types';
 import { BottomSheetMenu } from './BottomSheetMenu';
 import { BottomSheetMenuItem } from './BottomSheetMenu.item';
@@ -17,13 +17,9 @@ import { BottomSheetMenuItem } from './BottomSheetMenu.item';
  *
  * Compared with `BottomSheetMenu`, it is simpler to use, you only need to enter a text array.
  *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/57b8f2ea9b24cd0e4fb8606dc3b246b3fd91d52f/src/biz/ParticipantList/ParticipantContextMenu.tsx}
- *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/57b8f2ea9b24cd0e4fb8606dc3b246b3fd91d52f/src/biz/MessageList/MessageList.tsx}
- *
  * @example
  * ```tsx
- * const menuRef = React.useRef<MessageNameMenuRef>({} as any);
+ * const menuRef = React.useRef<ContextNameMenuRef>({} as any);
  * // ...
  * <BottomSheetNameMenu
  *   ref={menuRef}
@@ -58,17 +54,17 @@ import { BottomSheetMenuItem } from './BottomSheetMenu.item';
  * ```
  */
 export const BottomSheetNameMenu = React.forwardRef<
-  MessageNameMenuRef,
-  MessageNameMenuProps
+  ContextNameMenuRef,
+  ContextNameMenuProps
 >(function (
-  props: MessageNameMenuProps,
-  ref?: React.ForwardedRef<MessageNameMenuRef>
+  props: ContextNameMenuProps,
+  ref?: React.ForwardedRef<ContextNameMenuRef>
 ) {
   const { onRequestModalClose, title, header, headerProps } = props;
   const { getItems } = useGetListItems(() => {
     return menuRef?.current?.getData?.();
   });
-  const menuRef = React.useRef<MessageMenuRef>({} as any);
+  const menuRef = React.useRef<BizContextMenuRef>({} as any);
   React.useImperativeHandle(
     ref,
     () => {
@@ -83,7 +79,7 @@ export const BottomSheetNameMenu = React.forwardRef<
           const items = getItems({ initItems, onRequestModalClose });
           menuRef?.current?.startShowWithInit?.(items, others);
         },
-        startShowWithProps: (props: MessageNameMenuProps) => {
+        startShowWithProps: (props: ContextNameMenuProps) => {
           const { initItems: _, ...others } = props;
           _;
           const items = getItems({
@@ -119,7 +115,7 @@ function useGetListItems(onGetData?: () => any) {
   const { getColor } = useColors();
   const { tr } = useI18nContext();
   const getItems = React.useCallback(
-    (props: MessageNameMenuProps) => {
+    (props: ContextNameMenuProps) => {
       const {
         initItems,
         onRequestModalClose,

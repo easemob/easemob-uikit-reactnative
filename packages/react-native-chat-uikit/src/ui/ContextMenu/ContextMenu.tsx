@@ -6,7 +6,16 @@ import { ContextMenuProps } from './types';
 import { useContextMenu } from './useContextMenu';
 
 export function ContextMenu(props: ContextMenuProps) {
-  const { position, children, propsRef, containerStyle } = props;
+  const {
+    position = { x: 0, y: 0 },
+    children,
+    propsRef,
+    containerStyle,
+    autoCalculateSize = true,
+    onRequestModalClose,
+    noCoverageArea,
+    onLayout,
+  } = props;
   const { calculateComponentPosition } = useContextMenu();
   const screenWidth = React.useRef(Dimensions.get('window').width).current;
   const screenHeight = React.useRef(Dimensions.get('window').height).current;
@@ -26,11 +35,13 @@ export function ContextMenu(props: ContextMenuProps) {
         screenHeight: screenHeight,
         componentWidth: componentWidth ?? 0,
         componentHeight: componentHeight ?? 0,
+        noCoverageArea: noCoverageArea,
       }),
     [
       calculateComponentPosition,
       componentHeight,
       componentWidth,
+      noCoverageArea,
       position.x,
       position.y,
       screenHeight,
@@ -38,19 +49,24 @@ export function ContextMenu(props: ContextMenuProps) {
     ]
   );
 
-  const _onLayout = React.useCallback((event: LayoutChangeEvent) => {
-    setComponentHeight(event.nativeEvent.layout.height);
-    setComponentWidth(event.nativeEvent.layout.width);
-  }, []);
+  const _onLayout = React.useCallback(
+    (event: LayoutChangeEvent) => {
+      onLayout?.(event);
+      if (autoCalculateSize === false) {
+        return;
+      }
+      setComponentHeight(event.nativeEvent.layout.height);
+      setComponentWidth(event.nativeEvent.layout.width);
+    },
+    [autoCalculateSize, onLayout]
+  );
 
   return (
     <SlideModal
       propsRef={propsRef}
       modalAnimationType="fade"
       backgroundTransparent={true}
-      onRequestModalClose={() => {
-        propsRef.current.startHide();
-      }}
+      onRequestModalClose={onRequestModalClose}
       enableSlideComponent={false}
     >
       <View
