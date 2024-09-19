@@ -1307,7 +1307,10 @@ export function useMessageList(
       const ret = propsOnLongPress?.(id, model);
       if (ret !== false) {
         if (model.modelType === 'message') {
-          const list = emojiListRef.current.slice(0, 7);
+          const list = emojiListRef.current.slice(
+            0,
+            messageMenuStyle === 'bottom-sheet' ? 7 : 6
+          );
           const onFace = (face: string) => {
             if (face === 'faceplus') {
               menuRef.current?.startHide?.(() => {
@@ -1362,6 +1365,7 @@ export function useMessageList(
       convId,
       convType,
       getEmojiState,
+      messageMenuStyle,
       onEmojiClicked,
       onShowEmojiLongPressActions,
       onShowMessageLongPressActions,
