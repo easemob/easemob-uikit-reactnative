@@ -109,7 +109,7 @@ export function useApp() {
   const enableBlockRef = React.useRef(false);
   const naviThemeRef = React.useRef(NaviDefaultTheme);
   const pageDeepRef = React.useRef(0);
-  const messageMenuStyleRef = React.useRef<MessageMenuStyle>('context'); // todo: need design from 'hanxiao'
+  const messageMenuStyleRef = React.useRef<MessageMenuStyle>('custom'); // todo: need design from 'hanxiao'
   const [fontsLoaded] = useFonts({
     [twemoji_ttf_name]: twemoji_ttf,
     [boloo_da_ttf_name]: boloo_da_ttf,

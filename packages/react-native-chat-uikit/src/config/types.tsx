@@ -67,6 +67,8 @@ export type Config = {
    * The message long press menu style.
    *
    * Detail for `BottomSheetNameMenu` and `BottomSheetNameMenu`.
+   *
+   * If you want to customize it, you need to set the custom component `MessageCustomLongPressMenu` in the properties of `ConversationDetail`.
    */
   messageMenuStyle?: MessageMenuStyle;
 
