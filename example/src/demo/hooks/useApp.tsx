@@ -40,7 +40,8 @@ import {
   getChatService,
   getReleaseArea,
   LanguageCode,
-  MessageMenuStyle,
+  MessageContextMenuStyle,
+  MessageInputBarExtensionStyle,
   StringSet,
   ThemeType,
   UIGroupListListener,
@@ -109,7 +110,10 @@ export function useApp() {
   const enableBlockRef = React.useRef(false);
   const naviThemeRef = React.useRef(NaviDefaultTheme);
   const pageDeepRef = React.useRef(0);
-  const messageMenuStyleRef = React.useRef<MessageMenuStyle>('custom'); // todo: need design from 'hanxiao'
+  const messageMenuStyleRef =
+    React.useRef<MessageContextMenuStyle>('bottom-sheet');
+  const messageInputBarExtensionStyleRef =
+    React.useRef<MessageInputBarExtensionStyle>('bottom-sheet');
   const [fontsLoaded] = useFonts({
     [twemoji_ttf_name]: twemoji_ttf,
     [boloo_da_ttf_name]: boloo_da_ttf,
@@ -850,6 +854,22 @@ export function useApp() {
         updater();
       }
     );
+    const ret18 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_message_context_menu_style',
+      (e) => {
+        console.log('dev:emit:app:message_menu:', e);
+        messageMenuStyleRef.current = e;
+        updater();
+      }
+    );
+    const ret19 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_message_input_bar_extension_style',
+      (e) => {
+        console.log('dev:emit:app:message_input_bar_ext:', e);
+        messageInputBarExtensionStyleRef.current = e;
+        updater();
+      }
+    );
     return () => {
       ret.remove();
       ret2.remove();
@@ -868,6 +888,8 @@ export function useApp() {
       ret15.remove();
       ret16.remove();
       ret17.remove();
+      ret18.remove();
+      ret19.remove();
     };
   }, [dark, light, updatePush, updater]);
 
@@ -965,5 +987,6 @@ export function useApp() {
     naviThemeRef,
     getNaviTheme,
     messageMenuStyleRef,
+    messageInputBarExtensionStyleRef,
   };
 }

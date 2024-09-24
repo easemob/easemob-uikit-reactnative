@@ -9,7 +9,7 @@ import type {
 import type { IconNameType } from '../assets';
 import type { DataModelType } from '../chat';
 import type { UIKitError } from '../error';
-import type { MessageMenuStyle } from '../types';
+import type { MessageContextMenuStyle } from '../types';
 import type { AlertRef } from '../ui/Alert';
 import { ComponentArea } from '../ui/ContextMenu';
 import type { FlatListProps, FlatListRef } from '../ui/FlatList';
@@ -569,7 +569,7 @@ export type MessageMenuHeaderProps = {
    *
    * Detail for `BottomSheetNameMenu` and `BottomSheetNameMenu`.
    */
-  messageMenuStyle?: MessageMenuStyle;
+  messageMenuStyle?: MessageContextMenuStyle;
 };
 export type InitMenuItemsType = {
   /**

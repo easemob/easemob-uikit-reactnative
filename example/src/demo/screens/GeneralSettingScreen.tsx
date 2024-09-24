@@ -48,6 +48,8 @@ export function GeneralSettingScreen(props: Props) {
   const {
     appLanguage,
     appTranslateLanguage,
+    appMessageContextMenuStyle,
+    appMessageInputBarExtensionStyle,
     appStyle,
     appTheme,
     onSetAppTheme,
@@ -73,6 +75,12 @@ export function GeneralSettingScreen(props: Props) {
   const onClickedTranslationLanguage = () => {
     navi.push({ to: 'TranslationLanguageSetting' });
   };
+  const onClickedMessageMenu = () => {
+    navi.push({ to: 'MessageContextMenuSetting' });
+  };
+  const onClickedMessageInputBar = () => {
+    navi.push({ to: 'MessageInputBarMenuSetting' });
+  };
 
   React.useEffect(() => {
     if (from === 'LanguageSetting' && hash) {
@@ -82,6 +90,10 @@ export function GeneralSettingScreen(props: Props) {
     } else if (from === 'ColorSetting' && hash) {
       updater();
     } else if (from === 'StyleSetting' && hash) {
+      updater();
+    } else if (from === 'MessageContextMenuSetting' && hash) {
+      updater();
+    } else if (from === 'MessageInputBarMenuSetting' && hash) {
       updater();
     }
   }, [from, hash, updater]);
@@ -275,6 +287,76 @@ export function GeneralSettingScreen(props: Props) {
               }}
             >
               {appTranslateLanguage === 'en' ? tr('en') : tr('zh-Hans')}
+            </SingleLineText>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
+
+      <ListItem
+        onClicked={onClickedMessageMenu}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_general_setting_message_menu')}
+            </SingleLineText>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              paletteType={'label'}
+              textType={'large'}
+              style={{
+                color: getColor('t1'),
+              }}
+            >
+              {appMessageContextMenuStyle === 'bottom-sheet'
+                ? tr('style1')
+                : tr('style2')}
+            </SingleLineText>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
+
+      <ListItem
+        onClicked={onClickedMessageInputBar}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_general_setting_message_input_menu')}
+            </SingleLineText>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              paletteType={'label'}
+              textType={'large'}
+              style={{
+                color: getColor('t1'),
+              }}
+            >
+              {appMessageInputBarExtensionStyle === 'bottom-sheet'
+                ? tr('style1')
+                : tr('style2')}
             </SingleLineText>
             <Icon
               name={'chevron_right'}

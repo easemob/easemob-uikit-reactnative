@@ -51,8 +51,10 @@ import {
   ImageMessagePreviewScreen,
   LanguageSettingScreen,
   LoginV2Screen,
+  MessageContextMenuSettingScreen,
   MessageForwardSelectorScreen,
   MessageHistoryListScreen,
+  MessageInputBarMenuSettingScreen,
   MessageSearchScreen,
   MessageThreadListScreen,
   MessageThreadMemberListScreen,
@@ -122,6 +124,7 @@ export function App() {
     onSystemTip,
     getNaviTheme,
     messageMenuStyleRef,
+    messageInputBarExtensionStyleRef,
   } = useApp();
 
   const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
@@ -332,6 +335,7 @@ export function App() {
         onUsersHandler={onUsersHandler}
         AvatarStatusRender={AvatarStatusRenderMemo}
         messageMenuStyle={messageMenuStyleRef.current}
+        messageInputBarStyle={messageInputBarExtensionStyleRef.current}
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}
@@ -686,6 +690,20 @@ export function App() {
                   headerShown: false,
                 }}
                 component={PrivacySettingScreen}
+              />
+              <Root.Screen
+                name={'MessageContextMenuSetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={MessageContextMenuSettingScreen}
+              />
+              <Root.Screen
+                name={'MessageInputBarMenuSetting'}
+                options={{
+                  headerShown: false,
+                }}
+                component={MessageInputBarMenuSettingScreen}
               />
             </Root.Navigator>
           </NavigationContainer>

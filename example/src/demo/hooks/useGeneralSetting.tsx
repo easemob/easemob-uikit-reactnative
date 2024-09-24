@@ -3,6 +3,8 @@ import { DeviceEventEmitter } from 'react-native';
 
 import {
   AsyncStorageBasic,
+  MessageContextMenuStyle,
+  MessageInputBarExtensionStyle,
   presetPaletteColors,
   SingletonObjects,
   useForceUpdate,
@@ -84,6 +86,20 @@ export function useGeneralSetting() {
   const [appBlock, setAppBlock] = React.useState<boolean | undefined>(
     undefined
   );
+
+  const appMessageContextMenuStyleRef = React.useRef<
+    MessageContextMenuStyle | undefined
+  >('bottom-sheet');
+  const [appMessageContextMenuStyle, setAppMessageContextMenuStyle] =
+    React.useState<MessageContextMenuStyle>('bottom-sheet');
+
+  const appMessageInputBarExtensionStyleRef = React.useRef<
+    MessageInputBarExtensionStyle | undefined
+  >('bottom-sheet');
+  const [
+    appMessageInputBarExtensionStyle,
+    setAppMessageInputBarExtensionStyle,
+  ] = React.useState<MessageInputBarExtensionStyle>('bottom-sheet');
 
   const onSetAppTheme = React.useCallback((value: boolean) => {
     appThemeRef.current = value;
@@ -279,6 +295,38 @@ export function useGeneralSetting() {
     DeviceEventEmitter.emit('_demo_emit_app_language', value);
   }, []);
 
+  const onSetAppMessageContextMenuStyle = React.useCallback(
+    (value: MessageContextMenuStyle) => {
+      appMessageContextMenuStyleRef.current = value;
+      setAppMessageContextMenuStyle(value);
+      const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+        appKey: `${gAppKey}/uikit/demo`,
+      });
+      s.setData({ key: 'messageContextMenuStyle', value });
+      DeviceEventEmitter.emit(
+        '_demo_emit_app_message_context_menu_style',
+        value
+      );
+    },
+    []
+  );
+
+  const onSetAppMessageInputBarExtensionStyle = React.useCallback(
+    (value: MessageInputBarExtensionStyle) => {
+      appMessageInputBarExtensionStyleRef.current = value;
+      setAppMessageInputBarExtensionStyle(value);
+      const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+        appKey: `${gAppKey}/uikit/demo`,
+      });
+      s.setData({ key: 'messageInputBarExtensionStyle', value });
+      DeviceEventEmitter.emit(
+        '_demo_emit_app_message_input_bar_extension_style',
+        value
+      );
+    },
+    []
+  );
+
   const initParams = React.useCallback(async () => {
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -300,6 +348,8 @@ export function useGeneralSetting() {
     const res16 = await s.getData({ key: 'translateLanguage' });
     const res17 = await s.getData({ key: 'typing' });
     const res18 = await s.getData({ key: 'block' });
+    const res19 = await s.getData({ key: 'messageContextMenuStyle' });
+    const res20 = await s.getData({ key: 'messageInputBarExtensionStyle' });
     return {
       appTheme: res.value ? res.value !== 'light' : false,
       appTranslate: res10.value ? res10.value === 'enable' : true,
@@ -321,6 +371,10 @@ export function useGeneralSetting() {
       appNeutralSColor: res9.value
         ? +res9.value
         : presetPaletteColors.neutralSpecial,
+      appMessageContextMenuStyle: res19.value ? res19.value : 'bottom-sheet',
+      appMessageInputBarExtensionStyle: res20.value
+        ? res20.value
+        : 'bottom-sheet',
     };
   }, []);
 
@@ -361,6 +415,16 @@ export function useGeneralSetting() {
         appTypingRef.current = res.appTyping;
         setAppBlock(res.appBlock);
         appBlockRef.current = res.appBlock;
+        setAppMessageContextMenuStyle(
+          res.appMessageContextMenuStyle as MessageContextMenuStyle
+        );
+        appMessageContextMenuStyleRef.current =
+          res.appMessageContextMenuStyle as MessageContextMenuStyle;
+        setAppMessageInputBarExtensionStyle(
+          res.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle
+        );
+        appMessageInputBarExtensionStyleRef.current =
+          res.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle;
         // updater();
       })
       .catch((e) => {
@@ -409,5 +473,9 @@ export function useGeneralSetting() {
     onSetAppTyping,
     appBlock,
     onSetAppBlock,
+    appMessageContextMenuStyle,
+    onSetAppMessageContextMenuStyle,
+    appMessageInputBarExtensionStyle,
+    onSetAppMessageInputBarExtensionStyle,
   };
 }

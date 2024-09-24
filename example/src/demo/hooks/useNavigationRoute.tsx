@@ -8,7 +8,7 @@ import * as React from 'react';
 import type { RootParamsName, RootScreenParamsList } from '../routes';
 import type { NavigationParams } from './types';
 
-function navigateFC<Props extends NavigationParams<any>>(
+function navigateFC<Props extends NavigationParams<{}>>(
   navigation: NavigationProp<RootScreenParamsList>,
   params: {
     from?: RootParamsName;
@@ -37,7 +37,7 @@ function navigateFC<Props extends NavigationParams<any>>(
     merge: params.merge ?? true,
   });
 }
-function goBackFC<Props extends NavigationParams<any>>(
+function goBackFC<Props extends NavigationParams<{}>>(
   navigation: NavigationProp<RootScreenParamsList>,
   params?: {
     from?: RootParamsName;
