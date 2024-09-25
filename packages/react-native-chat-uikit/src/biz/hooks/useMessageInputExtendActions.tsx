@@ -1,8 +1,14 @@
+import * as React from 'react';
+
 import type {
   SendFileProps,
   SendImageProps,
   SendVideoProps,
 } from '../ConversationDetail';
+import {
+  MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT,
+  MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT_HALF,
+} from '../MessageInputBarExtension';
 import type { InitMenuItemsType } from '../types';
 import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
@@ -86,8 +92,9 @@ export function useMessageInputExtendActions(
     onBeforeCall,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
-  const onShowMenu = () => {
-    let items = [
+  const extensionHeightCallbackRef = React.useRef<(height: number) => void>();
+  const initItems = React.useMemo(() => {
+    return [
       {
         name: '_uikit_chat_input_long_press_menu_picture',
         isHigh: false,
@@ -160,79 +167,29 @@ export function useMessageInputExtendActions(
           });
         },
       },
-      // todo:
-      {
-        name: '_uikit_chat_input_long_press_menu_card',
-        isHigh: false,
-        icon: 'person_single_fill',
-        onClicked: () => {
-          closeMenu(() => {
-            onBeforeCall?.();
-            onSelectSendCard();
-          });
-        },
-      },
-      {
-        name: '_uikit_chat_input_long_press_menu_card',
-        isHigh: false,
-        icon: 'person_single_fill',
-        onClicked: () => {
-          closeMenu(() => {
-            onBeforeCall?.();
-            onSelectSendCard();
-          });
-        },
-      },
-      {
-        name: '_uikit_chat_input_long_press_menu_card',
-        isHigh: false,
-        icon: 'person_single_fill',
-        onClicked: () => {
-          closeMenu(() => {
-            onBeforeCall?.();
-            onSelectSendCard();
-          });
-        },
-      },
-      {
-        name: '_uikit_chat_input_long_press_menu_file',
-        isHigh: false,
-        icon: 'folder',
-        onClicked: () => {
-          closeMenu(() => {
-            onBeforeCall?.();
-            onSelectFile({
-              onResult: (params) => {
-                onSelectFileResult(params);
-              },
-            });
-          });
-        },
-      },
-      {
-        name: '_uikit_chat_input_long_press_menu_card',
-        isHigh: false,
-        icon: 'person_single_fill',
-        onClicked: () => {
-          closeMenu(() => {
-            onBeforeCall?.();
-            onSelectSendCard();
-          });
-        },
-      },
-      {
-        name: '_uikit_chat_input_long_press_menu_card',
-        isHigh: false,
-        icon: 'person_single_fill',
-        onClicked: () => {
-          closeMenu(() => {
-            onBeforeCall?.();
-            onSelectSendCard();
-          });
-        },
-      },
     ] as InitMenuItemsType[];
+  }, [
+    closeMenu,
+    convId,
+    onBeforeCall,
+    onSelectFile,
+    onSelectFileResult,
+    onSelectOnePicture,
+    onSelectOnePictureFromCamera,
+    onSelectOnePictureResult,
+    onSelectOneShortVideo,
+    onSelectOneShortVideoResult,
+    onSelectSendCard,
+  ]);
+  const onShowMenu = () => {
+    let items: InitMenuItemsType[] = [];
+    items.push(...initItems);
     items = onInit ? onInit(items) : items;
+    extensionHeightCallbackRef.current?.(
+      items.length > 4
+        ? MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT
+        : MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT_HALF
+    );
     menuRef.current?.startShowWithProps?.({
       initItems: items,
       onRequestModalClose: closeMenu,
@@ -241,7 +198,15 @@ export function useMessageInputExtendActions(
     });
   };
 
+  const setMessageInputExtendCallback = React.useCallback(
+    (cb: (height: number) => void) => {
+      extensionHeightCallbackRef.current = cb;
+    },
+    []
+  );
+
   return {
     onShowMessageInputExtendActions: onShowMenu,
+    setMessageInputExtendCallback: setMessageInputExtendCallback,
   };
 }

@@ -10,6 +10,10 @@ import { SingleLineText } from '../../ui/Text';
 import { useMessageInputBarNameMenu } from '../hooks';
 import { InitMenuItemsType } from '../types';
 import { ContextNameMenuProps, ContextNameMenuRef } from '../types';
+import {
+  MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT,
+  MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT_HALF,
+} from './MessageInputBarExtensionNameMenu.const';
 
 /**
  * The MessageInputBarExtensionNameMenu component provides menu functionality.
@@ -70,7 +74,6 @@ export const MessageInputBarExtensionNameMenu = React.forwardRef<
   return (
     <View
       style={{
-        height: 220,
         backgroundColor: getColor('bg'),
         display: isShow === true ? 'flex' : 'none',
       }}
@@ -109,7 +112,6 @@ export const MessageInputBarExtensionNameMenu = React.forwardRef<
               } as any,
             },
           }}
-          height={220}
           headerPosition="down"
         />
       )}
@@ -208,3 +210,19 @@ const ItemsRender = (
     </View>
   );
 };
+
+export function useMessageInputBarExtensionNameMenu(
+  props: ContextNameMenuProps
+) {
+  const { initItems } = props;
+  const getMenuHeight = React.useCallback(() => {
+    if (initItems.length <= 4) {
+      return MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT_HALF;
+    } else {
+      return MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT;
+    }
+  }, [initItems.length]);
+  return {
+    getMenuHeight,
+  };
+}

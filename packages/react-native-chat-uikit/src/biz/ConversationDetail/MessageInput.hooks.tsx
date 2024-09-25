@@ -29,7 +29,10 @@ import {
   selectOnePicture,
   selectOneShortVideo,
 } from '../hooks/useSelectFile';
-import { MessageInputBarExtensionNameMenu } from '../MessageInputBarExtension';
+import {
+  MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT,
+  MessageInputBarExtensionNameMenu,
+} from '../MessageInputBarExtension';
 import type { ContextNameMenuRef } from '../types';
 import type { EmojiIconItem } from '../types';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
@@ -99,6 +102,9 @@ export function useMessageInput(
   const voiceBarRef = React.useRef<BottomVoiceBarRef>({} as any);
   const voiceBarStateRef = React.useRef<VoiceBarState>('idle');
   const menuRef = React.useRef<ContextNameMenuRef>(null);
+  const extensionHeightRef = React.useRef<number>(
+    MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT
+  );
   const quoteMessageRef = React.useRef<MessageModel | undefined>(undefined);
   const [showQuote, setShowQuote] = React.useState(false);
   const editRef = React.useRef<MessageInputEditMessageRef>({} as any);
@@ -380,7 +386,7 @@ export function useMessageInput(
   }, []);
   const closeEmojiList = React.useCallback(() => {
     if (isClosedExtension.current === false) {
-      setEmojiHeight(220);
+      setEmojiHeight(extensionHeightRef.current);
     } else {
       setEmojiHeight(0);
     }
@@ -392,7 +398,7 @@ export function useMessageInput(
 
   const showEmojiList = React.useCallback(() => {
     if (isClosedExtension.current === false) {
-      setEmojiHeight(220);
+      setEmojiHeight(extensionHeightRef.current);
     } else {
       const tmp = keyboardHeight === 0 ? 300 : keyboardHeight;
       setEmojiHeight(tmp - (bottom ?? 0));
@@ -489,21 +495,22 @@ export function useMessageInput(
     changeInputBarState('normal');
   };
 
-  const { onShowMessageInputExtendActions } = useMessageInputExtendActions({
-    menuRef,
-    convId,
-    alertRef,
-    onSelectOnePicture: selectOnePicture,
-    onSelectOnePictureFromCamera: selectCamera,
-    onSelectFile: selectFile,
-    onSelectOneShortVideo: selectOneShortVideo,
-    onSelectSendCard,
-    onSelectFileResult: onSelectSendFile,
-    onSelectOnePictureResult: onSelectSendImage,
-    onSelectOneShortVideoResult: onSelectSendVideo,
-    onInit: onInitMenu,
-    onBeforeCall: onBeforeShowMessageInputExtendActions,
-  });
+  const { onShowMessageInputExtendActions, setMessageInputExtendCallback } =
+    useMessageInputExtendActions({
+      menuRef,
+      convId,
+      alertRef,
+      onSelectOnePicture: selectOnePicture,
+      onSelectOnePictureFromCamera: selectCamera,
+      onSelectFile: selectFile,
+      onSelectOneShortVideo: selectOneShortVideo,
+      onSelectSendCard,
+      onSelectFileResult: onSelectSendFile,
+      onSelectOnePictureResult: onSelectSendImage,
+      onSelectOneShortVideoResult: onSelectSendVideo,
+      onInit: onInitMenu,
+      onBeforeCall: onBeforeShowMessageInputExtendActions,
+    });
 
   const onVoiceFailed = React.useCallback(
     (error: { reason: string; error: any }) => {
@@ -567,6 +574,12 @@ export function useMessageInput(
       );
     }
   }, [keyboardCurrentHeight, emojiHeight, onHeightChange]);
+
+  React.useEffect(() => {
+    setMessageInputExtendCallback((height) => {
+      extensionHeightRef.current = height;
+    });
+  }, [setMessageInputExtendCallback]);
 
   React.useImperativeHandle(ref, () => {
     return {
