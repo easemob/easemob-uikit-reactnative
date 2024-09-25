@@ -2,6 +2,7 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
+import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { BlockButton, BlockButtonProps } from '../../ui/Button';
 
@@ -70,6 +71,7 @@ export const BlockButtons = (props: BlockButtonsProps) => {
   } = props;
   const itemWidth = itemCount <= 3 ? 114 : itemCount <= 4 ? 83.5 : 62.5;
   const { tr } = useI18nContext();
+  const { getColor } = useColors();
   const items = [] as React.ReactElement<BlockButtonProps>[];
   if (hasSendMessage) {
     items.push(
@@ -77,7 +79,10 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'100'}
         iconName={'bubble_fill'}
         text={tr('_uikit_info_send_msg')}
-        containerStyle={[styles.c, { width: itemWidth }]}
+        containerStyle={[
+          styles.c,
+          { width: itemWidth, backgroundColor: getColor('bg2') },
+        ]}
         onPress={onSendMessage}
       />
     );
@@ -88,7 +93,10 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'101'}
         iconName={'phone_pick'}
         text={tr('_uikit_info_send_audio')}
-        containerStyle={[styles.c, { width: itemWidth }]}
+        containerStyle={[
+          styles.c,
+          { width: itemWidth, backgroundColor: getColor('bg2') },
+        ]}
         onPress={onAudioCall}
       />
     );
@@ -99,7 +107,10 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'102'}
         iconName={'video_camera'}
         text={tr('_uikit_info_send_video')}
-        containerStyle={[styles.c, { width: itemWidth }]}
+        containerStyle={[
+          styles.c,
+          { width: itemWidth, backgroundColor: getColor('bg2') },
+        ]}
         onPress={onVideoCall}
       />
     );
@@ -110,7 +121,10 @@ export const BlockButtons = (props: BlockButtonsProps) => {
         key={'103'}
         iconName={'magnifier'}
         text={tr('_uikit_info_search_message')}
-        containerStyle={[styles.c, { width: itemWidth }]}
+        containerStyle={[
+          styles.c,
+          { width: itemWidth, backgroundColor: getColor('bg2') },
+        ]}
         onPress={onSearch}
       />
     );
