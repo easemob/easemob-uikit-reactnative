@@ -8,6 +8,8 @@ import {
   type ChatService,
   type ChatServiceListener,
   Container as UIKitContainer,
+  MessageContextMenuStyle,
+  MessageInputBarExtensionStyle,
   useChatListener,
 } from '../rename.uikit';
 import { ToastView } from './common';
@@ -154,6 +156,10 @@ export function App() {
       enableOfflinePushRef.current = ret.appNotification;
       enableTypingRef.current = ret.appTyping;
       enableBlockRef.current = ret.appBlock;
+      messageMenuStyleRef.current =
+        ret.appMessageContextMenuStyle as MessageContextMenuStyle;
+      messageInputBarExtensionStyleRef.current =
+        ret.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle;
       console.log(
         'dev:init:params:',
         isLightRef.current,
@@ -167,7 +173,9 @@ export function App() {
         enableAVMeetingRef.current,
         enableOfflinePushRef.current,
         enableTypingRef.current,
-        enableBlockRef.current
+        enableBlockRef.current,
+        messageInputBarExtensionStyleRef.current,
+        messageMenuStyleRef.current
       );
       setInitParams(true);
     } catch (error) {
@@ -192,6 +200,8 @@ export function App() {
     initParams,
     isLightRef,
     languageRef,
+    messageInputBarExtensionStyleRef,
+    messageMenuStyleRef,
     releaseAreaRef,
     setInitParams,
     translateLanguageRef,

@@ -9,7 +9,6 @@ import { usePaletteContext, useThemeContext } from '../../theme';
 import { CmnButton, IconButton, IconButtonMemo } from '../../ui/Button';
 import { KeyboardAvoidingView } from '../../ui/Keyboard';
 import { TextInput } from '../../ui/TextInput';
-import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { EmojiListMemo } from '../EmojiList';
 import { BottomVoiceBar } from '../VoiceBar';
 import { useMessageInput } from './MessageInput.hooks';
@@ -90,6 +89,8 @@ export const MessageInput = React.forwardRef<
     onKeyPress,
     msgPinBackgroundCurrentOpacity,
     msgPinHeightRef,
+    MessageInputBarMenu,
+    messageInputBarStyle,
   } = useMessageInput(props, ref);
 
   return (
@@ -343,6 +344,12 @@ export const MessageInput = React.forwardRef<
               onSend={onClickedEmojiSend}
               emojiList={emojiList}
             />
+            {messageInputBarStyle === 'extension' ? (
+              <MessageInputBarMenu
+                ref={menuRef}
+                onRequestModalClose={onRequestCloseMenu}
+              />
+            ) : null}
           </View>
         </>
       )}
@@ -354,10 +361,13 @@ export const MessageInput = React.forwardRef<
         onState={onVoiceStateChange}
         onFailed={onVoiceFailed}
       />
-      <BottomSheetNameMenu
-        ref={menuRef}
-        onRequestModalClose={onRequestCloseMenu}
-      />
+      {messageInputBarStyle === 'bottom-sheet' ? (
+        <MessageInputBarMenu
+          ref={menuRef}
+          onRequestModalClose={onRequestCloseMenu}
+        />
+      ) : null}
+
       <MessageInputEditMessage
         ref={editRef}
         top={top}

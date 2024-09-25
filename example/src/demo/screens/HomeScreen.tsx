@@ -6,7 +6,6 @@ import { CallConstKey } from '../../rename.callkit';
 import type { ChatMessage } from '../../rename.uikit';
 import {
   Badges,
-  BottomTabBar,
   ContactItem,
   ContactList,
   ConversationList,
@@ -14,6 +13,7 @@ import {
   getReleaseArea,
   TabPage,
   TabPageRef,
+  TabPageTabBarHeader,
   useAlertContext,
   useChatContext,
   useColors,
@@ -215,7 +215,7 @@ export function HomeScreen(props: Props) {
       <TabPage
         ref={tabRef}
         header={{
-          Header: BottomTabBar as any,
+          Header: TabPageTabBarHeader as any,
           HeaderProps: {
             titles:
               releaseAreaRef.current === 'global'

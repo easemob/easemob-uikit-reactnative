@@ -59,7 +59,4 @@ export type ReleaseArea = 'china' | 'global';
 
 export type MessageContextMenuStyle = 'bottom-sheet' | 'context' | 'custom';
 
-export type MessageInputBarExtensionStyle =
-  | 'bottom-sheet'
-  | 'extension'
-  | 'custom';
+export type MessageInputBarExtensionStyle = 'bottom-sheet' | 'extension';

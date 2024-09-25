@@ -6,7 +6,6 @@ export * from './biz/BlockList';
 export * from './biz/BottomSheetEmojiList';
 export * from './biz/BottomSheetMenu';
 export * from './biz/BottomSheetReactionDetail';
-export * from './biz/BottomTabBar';
 export * from './biz/ContactList';
 export * from './biz/Context';
 export * from './biz/ConversationDetail';

@@ -20,8 +20,6 @@ import { ContextNameMenuProps, ContextNameMenuRef } from '../types';
 /**
  * The MessageContextNameMenu component provides menu functionality.
  *
- * Compared with `BottomSheetMenu`, it is simpler to use, you only need to enter a text array.
- *
  */
 export const MessageContextNameMenu = React.forwardRef<
   ContextNameMenuRef,
@@ -242,6 +240,7 @@ export const MessageContextNameMenu = React.forwardRef<
 
 const ItemsRender = (props: ContextNameMenuProps) => {
   const { initItems, maxRowCount, unitCountPerRow } = props;
+  const { getColor } = useColors();
   let screenWidth = Dimensions.get('window').width;
   screenWidth = screenWidth >= 392 ? 392 - 42 : 392 - 32;
   const itemWidth = 68;
@@ -274,15 +273,19 @@ const ItemsRender = (props: ContextNameMenuProps) => {
                     (screenWidth -
                       itemWidth * Math.floor(screenWidth / itemWidth)) /
                     (Math.floor(screenWidth / itemWidth) * 2),
-                  marginBottom: index !== initItems.length ? 8 : 0,
+                  marginBottom: index !== initItems.length - 1 ? 8 : 0,
                 }}
                 onPress={() => item.onClicked?.(item.name)}
               >
                 <Icon
                   name={item.icon ?? 'star_fill'}
-                  style={{ width: 32, height: 32 }}
+                  style={{ width: 32, height: 32, tintColor: getColor('fg') }}
                 />
-                <SingleLineText paletteType={'label'} textType={'small'}>
+                <SingleLineText
+                  paletteType={'label'}
+                  textType={'small'}
+                  style={{ color: getColor('fg') }}
+                >
                   {item.name}
                 </SingleLineText>
               </PressableHighlight>

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
 import {
-  BottomTabBar,
   Container,
   type ConversationListItemProps,
   TabPage,
+  TabPageTabBarHeader,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -88,7 +88,7 @@ export function CL2() {
     <SafeAreaView>
       <TabPage
         header={{
-          Header: BottomTabBar as any,
+          Header: TabPageTabBarHeader as any,
           HeaderProps: {
             titles: ['1', '2', '3'],
             items: [

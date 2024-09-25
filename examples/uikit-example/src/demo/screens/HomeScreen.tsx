@@ -7,7 +7,6 @@ import * as React from 'react';
 import { View } from 'react-native';
 import {
   Badges,
-  BottomTabBar,
   ChatServiceListener,
   ContactList,
   ConversationList,
@@ -145,7 +144,7 @@ export function HomeScreen(props: Props) {
       <TabPage
         ref={tabRef}
         header={{
-          Header: BottomTabBar as any,
+          Header: TabPage.TabBarHeader,
           HeaderProps: {
             titles: [
               {

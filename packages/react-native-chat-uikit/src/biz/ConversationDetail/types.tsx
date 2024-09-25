@@ -218,7 +218,8 @@ export type MessageInputState =
   | 'emoji'
   | 'voice'
   | 'keyboard'
-  | 'multi-select';
+  | 'multi-select'
+  | 'extension';
 
 /**
  * Conversation detail component type.

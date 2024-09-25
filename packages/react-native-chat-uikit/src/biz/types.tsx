@@ -646,16 +646,13 @@ export type ContextBaseMenuProps = {
  */
 export type BizContextMenuProps = ContextBaseMenuProps & {
   /**
-   * The maximum number should not exceed 6.
-   * If it is not set here, it can be set dynamically when calling `startShowWithInit`.
+   * initialization component items.
    *
-   * This property max length is only valid for the built-in component `BottomSheetMenu`, and not for the built-in component `MessageContextMenu`
+   * If it is not set here, it can be set dynamically when calling `startShowWithInit`.
    */
   initItems?: React.ReactElement[];
   /**
    * The maximum height of the component.
-   *
-   * This property is only valid for the built-in component `BottomSheetMenu`, and not for the built-in component `MessageContextMenu`
    *
    * @default half of the entire screen.
    */
@@ -664,27 +661,25 @@ export type BizContextMenuProps = ContextBaseMenuProps & {
 
 export type ContextNameMenuProps = Omit<BizContextMenuProps, 'initItems'> & {
   /**
-   * The maximum number should not exceed 6.
-   *
-   * This property max length is only valid for the built-in component `BottomSheetMenu`, and not for the built-in component `MessageContextMenu`
+   * initialization component items.
    */
   initItems?: InitMenuItemsType[];
   /**
    * The layout type of the component.
    *
-   * This property is only valid for the built-in component `BottomSheetMenu`, and not for the built-in component `MessageContextMenu`
+   * This property is only valid for the built-in component `BottomSheetMenu`.
    */
   layoutType?: 'left' | 'center';
   /**
    * Whether to display the cancel button.
    *
-   * This property is only valid for the built-in component `BottomSheetMenu`, and not for the built-in component `MessageContextMenu`
+   * This property is only valid for the built-in component `BottomSheetMenu`.
    */
   hasCancel?: boolean;
   /**
    * The display position is suggested by the caller, but the final display position may be adjusted dynamically due to factors such as component layout and component layout.
    *
-   * This property is only valid for the built-in component `MessageContextMenu`, and not for the built-in component `BottomSheetMenu`
+   * This property is only valid for the built-in component `MessageContextMenu`.
    */
   suggestedPosition?: {
     x: number;
@@ -693,15 +688,29 @@ export type ContextNameMenuProps = Omit<BizContextMenuProps, 'initItems'> & {
   /**
    * Areas that are prohibited from being covered. If there is a blank area, it will be used first. If there is no blank area, the covered area or the default area will be used.
    *
-   * This property is only valid for the built-in component `MessageContextMenu`, and not for the built-in component `BottomSheetMenu`
+   * This property is only valid for the built-in component `MessageContextMenu`.
    */
   noCoverageArea?: ComponentArea;
   /**
-   * The maximum number of rows for a `MessageContextMenu` component. The default maximum is 3 rows, and more content will not be displayed.
+   * The maximum number of rows for a component.
+   *
+   * The default maximum is 3 rows for `MessageContextMenu`, and more content will not be displayed.
+   *
+   * The default maximum is 2 rows for `MessageInputBarExtensionNameMenu`, and more content will not be displayed.
+   *
+   * This property is only valid for the built-in component `MessageContextMenu` or `MessageInputBarExtensionNameMenu`.
+   *
    */
   maxRowCount?: number;
   /**
-   * The count per row for the `MessageContextMenu` component. default is 5.
+   * The count per row for the `MessageContextMenu` component.
+   *
+   * default is 5 for `MessageContextMenu`.
+   *
+   * default is 4 for `MessageInputBarExtensionNameMenu`
+   *
+   * This property is only valid for the built-in component `MessageContextMenu` or `MessageInputBarExtensionNameMenu`.
+   *
    */
   unitCountPerRow?: number;
 };

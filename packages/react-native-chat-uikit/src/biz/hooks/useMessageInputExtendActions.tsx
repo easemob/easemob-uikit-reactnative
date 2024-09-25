@@ -63,6 +63,10 @@ export type UseMessageInputExtendActionsProps = BasicActionsProps & {
    * Routing operations are usually required.
    */
   onSelectSendCard: () => void;
+  /**
+   * callback notification of before call.
+   */
+  onBeforeCall?: () => void;
 };
 export function useMessageInputExtendActions(
   props: UseMessageInputExtendActionsProps
@@ -79,6 +83,7 @@ export function useMessageInputExtendActions(
     onSelectFileResult,
     onSelectSendCard,
     onInit,
+    onBeforeCall,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
   const onShowMenu = () => {
@@ -89,6 +94,7 @@ export function useMessageInputExtendActions(
         icon: 'img',
         onClicked: () => {
           closeMenu(() => {
+            onBeforeCall?.();
             onSelectOnePicture({
               onResult: (params) => {
                 onSelectOnePictureResult(params);
@@ -103,6 +109,7 @@ export function useMessageInputExtendActions(
         icon: 'triangle_in_rectangle',
         onClicked: () => {
           closeMenu(() => {
+            onBeforeCall?.();
             onSelectOneShortVideo({
               convId: convId,
               onResult: (params) => {
@@ -118,6 +125,7 @@ export function useMessageInputExtendActions(
         icon: 'camera_fill',
         onClicked: () => {
           closeMenu(() => {
+            onBeforeCall?.();
             onSelectOnePictureFromCamera({
               onResult: (params) => {
                 onSelectOnePictureResult(params);
@@ -132,6 +140,7 @@ export function useMessageInputExtendActions(
         icon: 'folder',
         onClicked: () => {
           closeMenu(() => {
+            onBeforeCall?.();
             onSelectFile({
               onResult: (params) => {
                 onSelectFileResult(params);
@@ -146,6 +155,78 @@ export function useMessageInputExtendActions(
         icon: 'person_single_fill',
         onClicked: () => {
           closeMenu(() => {
+            onBeforeCall?.();
+            onSelectSendCard();
+          });
+        },
+      },
+      // todo:
+      {
+        name: '_uikit_chat_input_long_press_menu_card',
+        isHigh: false,
+        icon: 'person_single_fill',
+        onClicked: () => {
+          closeMenu(() => {
+            onBeforeCall?.();
+            onSelectSendCard();
+          });
+        },
+      },
+      {
+        name: '_uikit_chat_input_long_press_menu_card',
+        isHigh: false,
+        icon: 'person_single_fill',
+        onClicked: () => {
+          closeMenu(() => {
+            onBeforeCall?.();
+            onSelectSendCard();
+          });
+        },
+      },
+      {
+        name: '_uikit_chat_input_long_press_menu_card',
+        isHigh: false,
+        icon: 'person_single_fill',
+        onClicked: () => {
+          closeMenu(() => {
+            onBeforeCall?.();
+            onSelectSendCard();
+          });
+        },
+      },
+      {
+        name: '_uikit_chat_input_long_press_menu_file',
+        isHigh: false,
+        icon: 'folder',
+        onClicked: () => {
+          closeMenu(() => {
+            onBeforeCall?.();
+            onSelectFile({
+              onResult: (params) => {
+                onSelectFileResult(params);
+              },
+            });
+          });
+        },
+      },
+      {
+        name: '_uikit_chat_input_long_press_menu_card',
+        isHigh: false,
+        icon: 'person_single_fill',
+        onClicked: () => {
+          closeMenu(() => {
+            onBeforeCall?.();
+            onSelectSendCard();
+          });
+        },
+      },
+      {
+        name: '_uikit_chat_input_long_press_menu_card',
+        isHigh: false,
+        icon: 'person_single_fill',
+        onClicked: () => {
+          closeMenu(() => {
+            onBeforeCall?.();
             onSelectSendCard();
           });
         },
