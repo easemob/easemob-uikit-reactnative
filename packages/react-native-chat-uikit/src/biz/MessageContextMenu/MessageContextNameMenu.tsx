@@ -254,59 +254,101 @@ export const MessageContextNameMenu = React.forwardRef<
 });
 
 const ItemsRender = (props: ContextNameMenuProps) => {
-  const { initItems, maxRowCount, unitCountPerRow } = props;
+  const { initItems, maxRowCount, unitCountPerRow = 5 } = props;
   const { getColor } = useColors();
   let screenWidth = Dimensions.get('window').width;
   screenWidth = screenWidth >= 392 ? screenWidth - 42 : screenWidth - 32;
-  const itemWidth = 68;
+  const itemWidth = 66;
   const itemHeight = 58;
+  const currentRowCount = Math.ceil(initItems.length / unitCountPerRow);
+
+  const items = React.useMemo(() => {
+    return initItems.length < unitCountPerRow
+      ? initItems
+      : initItems.concat(
+          Array(unitCountPerRow * currentRowCount - initItems.length).fill(
+            {} as InitMenuItemsType
+          )
+        );
+  }, [currentRowCount, initItems, unitCountPerRow]);
+
+  const getMarginBottom = React.useCallback(
+    (index: number) => {
+      return items.length < unitCountPerRow
+        ? undefined
+        : index < items.length - 1 - unitCountPerRow
+        ? 8
+        : undefined;
+    },
+    [items.length, unitCountPerRow]
+  );
 
   return (
     <View
       style={{
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        width: screenWidth,
-        marginHorizontal: 4,
-        marginVertical: 12,
+        justifyContent: 'center',
       }}
     >
-      {initItems
-        ? initItems.map((item, index) => {
-            if (index >= maxRowCount * unitCountPerRow) {
-              return null;
-            }
-            return (
-              <PressableHighlight
-                key={index}
-                style={{
-                  width: itemWidth,
-                  height: itemHeight,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginHorizontal:
-                    (screenWidth -
-                      itemWidth * Math.floor(screenWidth / itemWidth)) /
-                    (Math.floor(screenWidth / itemWidth) * 2),
-                  marginBottom: index !== initItems.length - 1 ? 8 : 0,
-                }}
-                onPress={() => item.onClicked?.(item.name)}
-              >
-                <Icon
-                  name={item.icon ?? 'star_fill'}
-                  style={{ width: 32, height: 32, tintColor: getColor('fg') }}
-                />
-                <SingleLineText
-                  paletteType={'label'}
-                  textType={'small'}
-                  style={{ color: getColor('fg') }}
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          maxWidth: screenWidth,
+          marginVertical: 12,
+          // alignItems: 'center',
+          // alignSelf: 'flex-end',
+          // alignContent: 'flex-end',
+          justifyContent: 'space-evenly',
+        }}
+      >
+        {items
+          ? items.map((item, index) => {
+              if (index >= maxRowCount * unitCountPerRow) {
+                return null;
+              }
+              if (item.icon === undefined && item.name === undefined) {
+                return (
+                  <View
+                    style={{
+                      width: itemWidth,
+                      height: itemHeight,
+                    }}
+                  />
+                );
+              }
+              return (
+                <PressableHighlight
+                  key={index}
+                  style={{
+                    width: itemWidth,
+                    height: itemHeight,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // marginHorizontal: header
+                    //   ? (screenWidth -
+                    //       itemWidth * Math.floor(screenWidth / itemWidth)) /
+                    //     (Math.floor(screenWidth / itemWidth) * 2)
+                    //   : undefined,
+                    marginBottom: getMarginBottom(index),
+                  }}
+                  onPress={() => item.onClicked?.(item.name)}
                 >
-                  {item.name}
-                </SingleLineText>
-              </PressableHighlight>
-            );
-          })
-        : ([] as JSX.Element[])}
+                  <Icon
+                    name={item.icon ?? 'star_fill'}
+                    style={{ width: 32, height: 32, tintColor: getColor('fg') }}
+                  />
+                  <SingleLineText
+                    paletteType={'label'}
+                    textType={'small'}
+                    style={{ color: getColor('fg') }}
+                  >
+                    {item.name}
+                  </SingleLineText>
+                </PressableHighlight>
+              );
+            })
+          : ([] as JSX.Element[])}
+      </View>
     </View>
   );
 };
