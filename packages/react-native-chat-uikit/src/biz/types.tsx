@@ -713,6 +713,14 @@ export type ContextNameMenuProps = Omit<BizContextMenuProps, 'initItems'> & {
    *
    */
   unitCountPerRow?: number;
+  /**
+   * The emoji list position.
+   *
+   * default is `bottom` for `MessageMenuHeaderType`.
+   *
+   * This property is only valid for the built-in component `MessageContextMenu`.
+   */
+  emojiListPosition?: 'top' | 'bottom';
 };
 
 export type PressedComponentEvent = {

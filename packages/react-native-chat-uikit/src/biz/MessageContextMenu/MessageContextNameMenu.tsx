@@ -42,6 +42,7 @@ export const MessageContextNameMenu = React.forwardRef<
     headerProps,
     suggestedPosition,
     noCoverageArea,
+    emojiListPosition,
   } = stateProps;
   const {
     onLayout,
@@ -186,8 +187,22 @@ export const MessageContextNameMenu = React.forwardRef<
           ) : null}
 
           <View style={{ backgroundColor: getColor('bg'), borderRadius: 4 }}>
+            {header && emojiListPosition === 'top' ? (
+              <>
+                <View style={{ marginVertical: 12 }}>
+                  {getElement(header, headerProps)}
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 0.5,
+                    borderBottomColor: getColor('divider'),
+                    marginHorizontal: 21,
+                  }}
+                />
+              </>
+            ) : null}
             <ItemsRender {...props} initItems={items} />
-            {header ? (
+            {header && emojiListPosition === 'bottom' ? (
               <>
                 <View
                   style={{
@@ -242,7 +257,7 @@ const ItemsRender = (props: ContextNameMenuProps) => {
   const { initItems, maxRowCount, unitCountPerRow } = props;
   const { getColor } = useColors();
   let screenWidth = Dimensions.get('window').width;
-  screenWidth = screenWidth >= 392 ? 392 - 42 : 392 - 32;
+  screenWidth = screenWidth >= 392 ? screenWidth - 42 : screenWidth - 32;
   const itemWidth = 68;
   const itemHeight = 58;
 

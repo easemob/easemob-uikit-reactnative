@@ -43,6 +43,7 @@ export function useMessageNameMenu(props: ContextNameMenuProps) {
     suggestedPosition,
     maxRowCount = 3,
     unitCountPerRow = 5,
+    emojiListPosition = 'bottom',
     maxHeight,
     noCoverageArea,
   } = props;
@@ -59,6 +60,8 @@ export function useMessageNameMenu(props: ContextNameMenuProps) {
   const [_maxHeight, setMaxHeight] = React.useState(
     maxHeight ?? Dimensions.get('window').height / 2
   );
+  const [_emojiListPosition, setEmojiListPosition] =
+    React.useState(emojiListPosition);
 
   const calculateMaxRowCount = React.useCallback(
     (itemLength: number, unitCount: number = 5, maxRows: number = 3) => {
@@ -82,6 +85,7 @@ export function useMessageNameMenu(props: ContextNameMenuProps) {
       maxHeight,
       maxRowCount = 3,
       unitCountPerRow = 5,
+      emojiListPosition = 'bottom',
       suggestedPosition,
       noCoverageArea,
     } = props;
@@ -96,6 +100,7 @@ export function useMessageNameMenu(props: ContextNameMenuProps) {
     );
     setSuggestedPosition(suggestedPosition);
     setNoCoverageArea(noCoverageArea);
+    setEmojiListPosition(emojiListPosition);
   };
   return {
     items: _items,
@@ -107,6 +112,7 @@ export function useMessageNameMenu(props: ContextNameMenuProps) {
     maxRowCount: _maxRowCount,
     maxHeight: _maxHeight,
     noCoverageArea: _noCoverageArea,
+    emojiListPosition: _emojiListPosition,
   };
 }
 

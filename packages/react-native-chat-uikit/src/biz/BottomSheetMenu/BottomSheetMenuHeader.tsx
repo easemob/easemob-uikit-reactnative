@@ -28,7 +28,7 @@ export function BottomSheetMenuHeader(props: MessageMenuHeaderProps) {
     },
   });
   const screenWidth = Dimensions.get('window').width;
-  const contentWidth = screenWidth >= 392 ? 392 - 42 : 392 - 20;
+  const contentWidth = screenWidth >= 392 ? screenWidth - 42 : screenWidth - 32;
   const width =
     messageMenuStyle === 'bottom-sheet' ? screenWidth : contentWidth;
 
