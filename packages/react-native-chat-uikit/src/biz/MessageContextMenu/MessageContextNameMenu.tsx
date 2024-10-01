@@ -201,7 +201,7 @@ export const MessageContextNameMenu = React.forwardRef<
                 />
               </>
             ) : null}
-            <ItemsRender {...props} initItems={items} />
+            <ItemsRender {...props} initItems={items} header={header} />
             {header && emojiListPosition === 'bottom' ? (
               <>
                 <View
@@ -254,7 +254,7 @@ export const MessageContextNameMenu = React.forwardRef<
 });
 
 const ItemsRender = (props: ContextNameMenuProps) => {
-  const { initItems, maxRowCount, unitCountPerRow = 5 } = props;
+  const { initItems, maxRowCount, unitCountPerRow = 5, header } = props;
   const { getColor } = useColors();
   let screenWidth = Dimensions.get('window').width;
   screenWidth = screenWidth >= 392 ? screenWidth - 42 : screenWidth - 32;
@@ -263,14 +263,14 @@ const ItemsRender = (props: ContextNameMenuProps) => {
   const currentRowCount = Math.ceil(initItems.length / unitCountPerRow);
 
   const items = React.useMemo(() => {
-    return initItems.length < unitCountPerRow
+    return initItems.length < unitCountPerRow && header === undefined
       ? initItems
       : initItems.concat(
           Array(unitCountPerRow * currentRowCount - initItems.length).fill(
             {} as InitMenuItemsType
           )
         );
-  }, [currentRowCount, initItems, unitCountPerRow]);
+  }, [currentRowCount, header, initItems, unitCountPerRow]);
 
   const getMarginBottom = React.useCallback(
     (index: number) => {
