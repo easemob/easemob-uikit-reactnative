@@ -298,7 +298,10 @@ export const MessageInput = React.forwardRef<
                     width: 30,
                     height: 30,
                     tintColor: getColor(
-                      sendIconName === 'plus_in_circle' ? 'icon' : 'enable'
+                      sendIconName === 'plus_in_circle' ||
+                        sendIconName === 'xmark_in_circle'
+                        ? 'icon'
+                        : 'enable'
                     ),
                     backgroundColor: undefined,
                     borderRadius: 30,

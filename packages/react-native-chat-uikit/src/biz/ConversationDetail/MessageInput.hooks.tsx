@@ -149,6 +149,7 @@ export function useMessageInput(
       isClosedVoiceBar.current = true;
       onSetInputBarState('normal');
       setEmojiIconName('face');
+      setSendIconName('plus_in_circle');
       closeExtension();
       closeEmojiList();
       closeVoiceBar();
@@ -173,6 +174,7 @@ export function useMessageInput(
       isClosedVoiceBar.current = true;
       onSetInputBarState('extension');
       setEmojiIconName('face');
+      setSendIconName('xmark_in_circle');
       closeKeyboard();
       closeVoiceBar();
       closeEmojiList();
@@ -204,6 +206,9 @@ export function useMessageInput(
     } else if (nextState === 'keyboard') {
       isClosedKeyboard.current = false;
       onSetInputBarState('keyboard');
+      if (valueRef.current.length === 0) {
+        setSendIconName('plus_in_circle');
+      }
       setEmojiIconName('face');
       if (Platform.OS !== 'ios') {
         isClosedEmoji.current = true;
