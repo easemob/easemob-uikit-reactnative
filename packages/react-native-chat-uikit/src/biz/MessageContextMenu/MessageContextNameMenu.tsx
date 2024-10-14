@@ -16,6 +16,7 @@ import { TriangleView } from '../../ui/TriangleView';
 import { useMessageNameMenu } from '../hooks';
 import { InitMenuItemsType, MessageLayoutType } from '../types';
 import { ContextNameMenuProps, ContextNameMenuRef } from '../types';
+import { MESSAGE_CONTEXT_NAME_MENU_MAX_WIDTH } from './MessageContextNameMenu.const';
 
 /**
  * The MessageContextNameMenu component provides menu functionality.
@@ -43,6 +44,7 @@ export const MessageContextNameMenu = React.forwardRef<
     suggestedPosition,
     noCoverageArea,
     emojiListPosition,
+    policy,
   } = stateProps;
   const {
     onLayout,
@@ -56,6 +58,9 @@ export const MessageContextNameMenu = React.forwardRef<
     componentPageX,
   } = useMessageContextNameMenu(props);
   const triangleViewWidth = React.useRef(8).current;
+  const padding = React.useRef(
+    (Dimensions.get('window').width - MESSAGE_CONTEXT_NAME_MENU_MAX_WIDTH) / 2
+  ).current;
 
   const trianglePosition = React.useMemo(() => {
     const first = calculateNoCoverageAreaMiddlePosition({
@@ -134,6 +139,8 @@ export const MessageContextNameMenu = React.forwardRef<
       position={suggestedPosition}
       onRequestModalClose={onRequestModalClose}
       noCoverageArea={noCoverageArea}
+      policy={policy}
+      padding={padding}
       onLayout={React.useCallback(
         (event: LayoutChangeEvent) => {
           onLayout(event, noCoverageArea);
@@ -147,6 +154,7 @@ export const MessageContextNameMenu = React.forwardRef<
           {
             backgroundColor: 'transparent',
             borderRadius: 4,
+            flex: 1,
           },
         ]}
       >
@@ -157,6 +165,7 @@ export const MessageContextNameMenu = React.forwardRef<
             {
               backgroundColor: 'transparent',
               borderRadius: 4,
+              flex: 1,
             },
           ]}
         >
@@ -256,8 +265,6 @@ export const MessageContextNameMenu = React.forwardRef<
 const ItemsRender = (props: ContextNameMenuProps) => {
   const { initItems, maxRowCount, unitCountPerRow = 5, header } = props;
   const { getColor } = useColors();
-  let screenWidth = Dimensions.get('window').width;
-  screenWidth = screenWidth >= 392 ? screenWidth - 42 : screenWidth - 32;
   const itemWidth = 66;
   const itemHeight = 58;
   const currentRowCount = Math.ceil(initItems.length / unitCountPerRow);
@@ -293,7 +300,7 @@ const ItemsRender = (props: ContextNameMenuProps) => {
         style={{
           flexDirection: 'row',
           flexWrap: 'wrap',
-          maxWidth: screenWidth,
+          maxWidth: MESSAGE_CONTEXT_NAME_MENU_MAX_WIDTH,
           marginVertical: 12,
           // alignItems: 'center',
           // alignSelf: 'flex-end',
@@ -309,6 +316,7 @@ const ItemsRender = (props: ContextNameMenuProps) => {
               if (item.icon === undefined && item.name === undefined) {
                 return (
                   <View
+                    key={index}
                     style={{
                       width: itemWidth,
                       height: itemHeight,

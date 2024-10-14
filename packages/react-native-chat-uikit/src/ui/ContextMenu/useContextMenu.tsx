@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { ErrorCode, UIKitError } from '../../error';
 import { ComponentArea, ComponentArea1, ComponentArea2 } from './types';
 
 export function useContextMenu() {
@@ -43,6 +44,8 @@ export function useContextMenu() {
       componentWidth: number;
       componentHeight: number;
       noCoverageArea?: ComponentArea;
+      policy?: 'side' | 'center';
+      padding?: number;
       position: {
         left?: number;
         top?: number;
@@ -56,6 +59,8 @@ export function useContextMenu() {
         componentHeight,
         componentWidth,
         noCoverageArea,
+        policy = 'side',
+        padding = 0,
         position,
       } = params;
       if (noCoverageArea) {
@@ -64,18 +69,50 @@ export function useContextMenu() {
         const top = c.leftTop.y;
         const right = c.rightBottom.x;
         const bottom = c.rightBottom.y;
-        if (top >= componentHeight) {
-          position.bottom = screenHeight - top;
-          position.top = undefined;
-        } else if (screenHeight - bottom >= componentHeight) {
-          position.top = bottom;
-          position.bottom = undefined;
-        } else if (left >= componentWidth) {
-          position.right = screenWidth - left;
-          position.left = undefined;
-        } else if (screenWidth - right >= componentWidth) {
-          position.left = right;
-          position.right = undefined;
+
+        if (policy === 'center') {
+          const center = {
+            x: (left + right) / 2,
+            y: (top + bottom) / 2,
+          };
+          if (center.x + componentWidth / 2 > screenWidth) {
+            position.right = padding;
+            position.left = undefined;
+          } else if (center.x - componentWidth / 2 < 0) {
+            position.left = padding;
+            position.right = undefined;
+          } else {
+            position.left = center.x - componentWidth / 2;
+            position.right = undefined;
+          }
+          if (top >= componentHeight) {
+            position.bottom = screenHeight - top;
+            position.top = undefined;
+          } else if (screenHeight - bottom >= componentHeight) {
+            position.top = bottom;
+            position.bottom = undefined;
+          } else {
+            console.log('test:zuoyu:reviseComponentPosition:4', policy);
+          }
+        } else if (policy === 'side') {
+          if (top >= componentHeight) {
+            position.bottom = screenHeight - top;
+            position.top = undefined;
+          } else if (screenHeight - bottom >= componentHeight) {
+            position.top = bottom;
+            position.bottom = undefined;
+          } else if (left >= componentWidth) {
+            position.right = screenWidth - left;
+            position.left = undefined;
+          } else if (screenWidth - right >= componentWidth) {
+            position.left = right;
+            position.right = undefined;
+          }
+        } else {
+          throw new UIKitError({
+            code: ErrorCode.chat_uikit,
+            desc: 'Invalid policy',
+          });
         }
       }
       return position;
@@ -90,6 +127,7 @@ export function useContextMenu() {
   // If the distance from the right side of the component to the left side of the screen is less than the component's width, set the right value to undefined and the left value to the mouse click position.
   // If the distance from the top side of the component to the bottom side of the screen is less than the component's height, set the top value to undefined and the bottom value to the mouse click position.
   // If the distance from the bottom side of the component to the top side of the screen is less than the component's height, set the bottom value to undefined and the top value to the mouse click position.
+  // If the strategy is `center` then the component is moved to the center of the pressed location, otherwise the component is moved to the side of the pressed location.
   const calculateComponentPosition = React.useCallback(
     (params: {
       pressedX: number;
@@ -99,6 +137,8 @@ export function useContextMenu() {
       componentWidth: number;
       componentHeight: number;
       noCoverageArea?: ComponentArea;
+      policy?: 'side' | 'center';
+      padding?: number;
     }) => {
       const {
         pressedX,

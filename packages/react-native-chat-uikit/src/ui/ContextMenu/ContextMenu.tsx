@@ -15,6 +15,8 @@ export function ContextMenu(props: ContextMenuProps) {
     onRequestModalClose,
     noCoverageArea,
     onLayout,
+    policy,
+    padding = 0,
   } = props;
   const { calculateComponentPosition } = useContextMenu();
   const screenWidth = React.useRef(Dimensions.get('window').width).current;
@@ -36,12 +38,16 @@ export function ContextMenu(props: ContextMenuProps) {
         componentWidth: componentWidth ?? 0,
         componentHeight: componentHeight ?? 0,
         noCoverageArea: noCoverageArea,
+        policy: policy,
+        padding: padding,
       }),
     [
       calculateComponentPosition,
       componentHeight,
       componentWidth,
       noCoverageArea,
+      padding,
+      policy,
       position.x,
       position.y,
       screenHeight,
@@ -73,13 +79,14 @@ export function ContextMenu(props: ContextMenuProps) {
         style={[
           containerStyle,
           {
+            flex: 1,
             position: 'absolute',
             top: position.y,
             left: position.x,
             bottom: undefined,
             right: undefined,
-            height: componentHeight,
-            width: componentWidth,
+            // maxHeight: componentHeight,
+            // maxWidth: componentWidth,
             ...calculateResult,
           },
         ]}

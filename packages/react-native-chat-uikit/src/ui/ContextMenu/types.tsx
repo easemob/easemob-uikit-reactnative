@@ -42,4 +42,6 @@ export type ContextMenuProps = PropsWithChildren<{
   autoCalculateSize?: boolean;
   onRequestModalClose?: () => void;
   onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
+  policy?: 'side' | 'center';
+  padding?: number;
 }>;
