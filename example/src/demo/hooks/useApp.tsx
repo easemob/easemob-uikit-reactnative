@@ -126,6 +126,7 @@ export function useApp() {
     default: undefined,
   });
   const rootRef = useNavigationContainerRef<RootParamsList>();
+  const appKeyRef = React.useRef(gAppKey);
   const imServerRef = React.useRef(imServer);
   const imPortRef = React.useRef(imPort);
   const enableDNSConfigRef = React.useRef(enableDNSConfig);
@@ -141,7 +142,7 @@ export function useApp() {
 
   const getOptions = React.useCallback(() => {
     return {
-      appKey: gAppKey,
+      appKey: appKeyRef.current,
       debugModel: isDevMode,
       autoLogin: autoLogin,
       autoAcceptGroupInvitation: true,
@@ -961,6 +962,7 @@ export function useApp() {
     enableBlockRef,
     fontsLoaded,
     rootRef,
+    appKeyRef,
     imServerRef,
     imPortRef,
     enableDNSConfigRef,

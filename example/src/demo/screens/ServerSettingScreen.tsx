@@ -11,9 +11,7 @@ import {
 } from 'react-native';
 
 import {
-  AsyncStorageBasic,
   SingleLineText,
-  SingletonObjects,
   Switch,
   TextInput,
   TopNavigationBar,
@@ -25,15 +23,9 @@ import {
   useThemeContext,
 } from '../../rename.uikit';
 import { main_bg, main_bg_dark } from '../common/assets';
-import {
-  appKey as gAppKey,
-  enableDNSConfig as gEnableDNSConfig,
-  imPort as gImPort,
-  imServer as gImServer,
-} from '../common/const';
-import { RestApi } from '../common/rest.api';
+import { appKey as gAppKey } from '../common/const';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
-import { useStackScreenRoute } from '../hooks';
+import { useServerConfig, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
@@ -43,7 +35,19 @@ export function ServerSettingScreen(props: Props) {
   const { goBack } = navi;
   const { style } = useThemeContext();
   const { tr } = useI18nContext();
-  const { getAlertRef } = useServerSettingScreen();
+  const {
+    getAlertRef,
+    getAppKey,
+    getImPort,
+    getEnableDNSConfig,
+    getImServer,
+    getRestSever,
+    setAppKey: _setAppKey,
+    setImServer: _setImServer,
+    setEnableDNSConfig: _setEnableDNSConfig,
+    setImPort: _setImPort,
+    setRestSever: _setRestServer,
+  } = useServerSettingScreen();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     bg: {
@@ -71,31 +75,24 @@ export function ServerSettingScreen(props: Props) {
   const [appKey, setAppKey] = React.useState<string>(gAppKey);
   const [imServer, setImServer] = React.useState<string>('');
   const [imPort, setImPort] = React.useState<string>('');
-  const [_restServer, setRestServer] = React.useState<string>('');
+  const [restServer, setRestServer] = React.useState<string>('');
   const [enablePrivateServer, setEnablePrivateServer] = React.useState<
     boolean | undefined
   >(undefined);
+  const initRef = React.useRef<boolean>(false);
 
   const onBack = React.useCallback(() => {
     goBack();
   }, [goBack]);
-  const onSave = React.useCallback(() => {
+  const onSave = React.useCallback(async () => {
     // todo: 将变量保存到本地，之后重启时读取
-    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${appKey}/uikit/demo`,
-    });
     try {
-      s.setData({ key: 'appKey', value: appKey });
-      s.setData({ key: 'imServer', value: imServer });
-      s.setData({ key: 'imPort', value: imPort });
-      s.setData({ key: '_restServer', value: _restServer });
-      s.setData({
-        key: 'enablePrivateServer',
-        value:
-          enablePrivateServer !== undefined
-            ? enablePrivateServer.toString()
-            : 'false',
-      });
+      await _setAppKey(appKey);
+      await _setImPort(imPort);
+      await _setEnableDNSConfig(enablePrivateServer);
+      await _setImServer(imServer);
+      await _setRestServer(restServer);
+
       getAlertRef().alertWithInit({
         title: tr('_demo_alert_server_setting_save_title'),
         message: tr('_demo_alert_server_setting_save_message'),
@@ -119,7 +116,12 @@ export function ServerSettingScreen(props: Props) {
       console.warn('save error:', error);
     }
   }, [
-    _restServer,
+    restServer,
+    _setAppKey,
+    _setEnableDNSConfig,
+    _setImPort,
+    _setImServer,
+    _setRestServer,
     appKey,
     enablePrivateServer,
     getAlertRef,
@@ -129,46 +131,39 @@ export function ServerSettingScreen(props: Props) {
   ]);
 
   const getData = React.useCallback(async () => {
-    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${appKey}/uikit/demo`,
-    });
     try {
-      const _appKey = await s.getData({ key: 'appKey' });
-      const _imServer = await s.getData({ key: 'imServer' });
-      const _imPort = await s.getData({ key: 'imPort' });
-      const _restServer = await s.getData({ key: '_restServer' });
-      const enablePrivateServer = await s.getData({
-        key: 'enablePrivateServer',
-      });
+      const _appKey = await getAppKey();
+      const _imServer = await getImServer();
+      const _imPort = await getImPort();
+      const _restServer = await getRestSever();
+      const _enablePrivateServer = await getEnableDNSConfig();
       return {
-        appKey: _appKey.value ?? gAppKey,
-        imServer: _imServer.value ?? gImServer,
-        imPort: _imPort.value ?? gImPort,
-        _restServer: _restServer.value ?? RestApi.server,
-        enablePrivateServer:
-          enablePrivateServer.value === 'true'
-            ? true
-            : enablePrivateServer.value === 'false'
-            ? false
-            : gEnableDNSConfig,
+        appKey: _appKey,
+        imServer: _imServer,
+        imPort: _imPort,
+        restServer: _restServer,
+        enablePrivateServer: _enablePrivateServer,
       };
     } catch (error) {
       console.warn('get error:', error);
       return undefined;
     }
-  }, [appKey]);
+  }, [getAppKey, getEnableDNSConfig, getImPort, getImServer, getRestSever]);
 
   React.useEffect(() => {
-    getData().then((value) => {
-      if (value) {
-        setAppKey(value.appKey);
-        setImServer(value.imServer ?? '');
-        setImPort(value.imPort ?? '0');
-        setRestServer(value._restServer);
-        setEnablePrivateServer(value.enablePrivateServer ?? false);
-      }
-    });
-  }, [getData]);
+    if (initRef.current === false) {
+      initRef.current = true;
+      getData().then((value) => {
+        if (value) {
+          setAppKey(value.appKey);
+          setImServer(value.imServer);
+          setImPort(value.imPort);
+          setRestServer(value.restServer);
+          setEnablePrivateServer(value.enablePrivateServer ?? false);
+        }
+      });
+    }
+  }, [getAppKey, getData]);
 
   return (
     <ImageBackground
@@ -358,7 +353,7 @@ export function ServerSettingScreen(props: Props) {
                   paddingLeft: 24,
                 }}
                 onChangeText={setRestServer}
-                value={_restServer}
+                value={restServer}
                 keyboardAppearance={style === 'light' ? 'light' : 'dark'}
                 autoFocus={true}
                 cursorColor={getColor('p')}
@@ -376,7 +371,9 @@ export function ServerSettingScreen(props: Props) {
 
 function useServerSettingScreen() {
   const { getAlertRef } = useAlertContext();
+  const callbacks = useServerConfig();
   return {
     getAlertRef,
+    ...callbacks,
   };
 }

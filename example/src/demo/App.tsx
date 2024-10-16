@@ -18,7 +18,6 @@ import { AVView } from './common/AVView';
 import {
   accountType,
   agoraAppId,
-  appKey as gAppKey,
   boloo_da_ttf_name,
   isDevMode,
   restServer,
@@ -103,6 +102,7 @@ export function App() {
     enableBlockRef,
     fontsLoaded,
     rootRef,
+    appKeyRef,
     imServerRef,
     imPortRef,
     enableDNSConfigRef,
@@ -129,7 +129,9 @@ export function App() {
     messageInputBarExtensionStyleRef,
   } = useApp();
 
-  const { getEnableDNSConfig, getImPort, getImServer } = useServerConfig();
+  const { getAppKey, getEnableDNSConfig, getImPort, getImServer } =
+    useServerConfig();
+
   const { initParams } = useGeneralSetting();
   const imRef = React.useRef<ChatService>();
   const { autoLoginAction } = useAutoLogin();
@@ -139,6 +141,7 @@ export function App() {
       return;
     }
     try {
+      appKeyRef.current = await getAppKey();
       imPortRef.current = await getImPort();
       imServerRef.current = await getImServer();
       enableDNSConfigRef.current = await getEnableDNSConfig();
@@ -183,6 +186,7 @@ export function App() {
     }
   }, [
     _initParams,
+    appKeyRef,
     enableAVMeetingRef,
     enableBlockRef,
     enableDNSConfigRef,
@@ -192,6 +196,7 @@ export function App() {
     enableThreadRef,
     enableTranslateRef,
     enableTypingRef,
+    getAppKey,
     getEnableDNSConfig,
     getImPort,
     getImServer,
@@ -353,7 +358,7 @@ export function App() {
       >
         <CallKitContainer
           option={{
-            appKey: gAppKey,
+            appKey: appKeyRef.current,
             agoraAppId: agoraAppId,
           }}
           type={accountType as any}
