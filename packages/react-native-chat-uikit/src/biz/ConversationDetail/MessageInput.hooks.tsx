@@ -382,7 +382,7 @@ export function useMessageInput(
 
   const closeExtension = React.useCallback(() => {
     if (messageInputBarStyle === 'extension') {
-      menuRef.current.startHide?.();
+      menuRef.current?.startHide?.();
     }
   }, [messageInputBarStyle]);
 
