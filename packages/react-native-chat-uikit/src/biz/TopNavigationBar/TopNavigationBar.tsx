@@ -95,7 +95,7 @@ export function TopNavigationBarRightTextList({
   return (
     <Pressable
       style={{
-        width: 36,
+        // width: 36,
         height: 36,
         justifyContent: 'center',
         alignItems: 'center',
