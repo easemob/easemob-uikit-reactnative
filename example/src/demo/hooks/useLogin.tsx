@@ -160,6 +160,31 @@ export function useLogin() {
     }
   }, []);
 
+  const devLoginAction = React.useCallback(
+    async (params: {
+      id: string;
+      passOrToken: string;
+      usePassword: boolean;
+      onResult: (params: { isOk: boolean; reason?: string }) => void;
+    }) => {
+      const { id, passOrToken, usePassword, onResult } = params;
+      im.login({
+        userId: id,
+        userToken: passOrToken,
+        usePassword: usePassword,
+        userAvatarURL: undefined,
+        result: (r) => {
+          if (r.isOk) {
+            onResult({ isOk: true });
+          } else {
+            onResult({ isOk: false, reason: r.error?.desc });
+          }
+        },
+      });
+    },
+    [im]
+  );
+
   const loginAction = React.useCallback(
     async (params: {
       id: string;
@@ -198,7 +223,7 @@ export function useLogin() {
               break;
             }
           }
-          onResult?.({ isOk: false });
+          onResult?.({ isOk: false, reason: (res.value as any)?.errorInfo });
         } while (false);
       } catch (error) {
         console.warn('dev:loginAction:error:', error);
@@ -249,7 +274,7 @@ export function useLogin() {
               break;
             }
           }
-          onResult?.({ isOk: false });
+          onResult?.({ isOk: false, reason: (res.value as any)?.errorInfo });
         } while (false);
       } catch (error) {
         console.warn('dev:agoraLoginAction:error:', error);
@@ -265,6 +290,7 @@ export function useLogin() {
     getAlertRef,
     requestUpdatePushToken,
     loginAction: accountType === 'agora' ? agoraLoginAction : loginAction,
+    devLoginAction,
     saveSelfInfo,
     getFcmToken,
   };

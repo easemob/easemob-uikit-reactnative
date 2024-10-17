@@ -18,6 +18,7 @@ import { AVView } from './common/AVView';
 import {
   accountType,
   agoraAppId,
+  appKey as gAppKey,
   boloo_da_ttf_name,
   isDevMode,
   restServer,
@@ -102,6 +103,7 @@ export function App() {
     enableBlockRef,
     fontsLoaded,
     rootRef,
+    serverConfigVisibleRef,
     appKeyRef,
     imServerRef,
     imPortRef,
@@ -129,8 +131,13 @@ export function App() {
     messageInputBarExtensionStyleRef,
   } = useApp();
 
-  const { getAppKey, getEnableDNSConfig, getImPort, getImServer } =
-    useServerConfig();
+  const {
+    getEnableDevMode,
+    getAppKey,
+    getEnableDNSConfig,
+    getImPort,
+    getImServer,
+  } = useServerConfig();
 
   const { initParams } = useGeneralSetting();
   const imRef = React.useRef<ChatService>();
@@ -141,10 +148,19 @@ export function App() {
       return;
     }
     try {
-      appKeyRef.current = await getAppKey();
-      imPortRef.current = await getImPort();
-      imServerRef.current = await getImServer();
-      enableDNSConfigRef.current = await getEnableDNSConfig();
+      serverConfigVisibleRef.current = await getEnableDevMode();
+      appKeyRef.current =
+        serverConfigVisibleRef.current === true ? await getAppKey() : gAppKey;
+      imPortRef.current =
+        serverConfigVisibleRef.current === true ? await getImPort() : undefined;
+      imServerRef.current =
+        serverConfigVisibleRef.current === true
+          ? await getImServer()
+          : undefined;
+      enableDNSConfigRef.current =
+        serverConfigVisibleRef.current === true
+          ? await getEnableDNSConfig()
+          : undefined;
       const ret = await initParams();
       isLightRef.current = !ret.appTheme;
       releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
@@ -198,6 +214,7 @@ export function App() {
     enableTypingRef,
     getAppKey,
     getEnableDNSConfig,
+    getEnableDevMode,
     getImPort,
     getImServer,
     imPortRef,
@@ -208,6 +225,7 @@ export function App() {
     messageInputBarExtensionStyleRef,
     messageMenuStyleRef,
     releaseAreaRef,
+    serverConfigVisibleRef,
     setInitParams,
     translateLanguageRef,
   ]);
@@ -241,16 +259,24 @@ export function App() {
               if (res.isOk) {
                 rootRef.navigate('Home', {});
               } else {
-                rootRef.navigate('LoginV2', {});
+                rootRef.navigate('LoginV2', {
+                  params: {
+                    serverConfigVisible: serverConfigVisibleRef.current,
+                  },
+                });
               }
             },
           });
         } else {
-          rootRef.navigate('LoginV2', {});
+          rootRef.navigate('LoginV2', {
+            params: {
+              serverConfigVisible: serverConfigVisibleRef.current,
+            },
+          });
         }
       }, 1000);
     },
-    [isReadyRef, initPush, autoLoginAction, rootRef]
+    [isReadyRef, initPush, autoLoginAction, rootRef, serverConfigVisibleRef]
   );
 
   const onContainerInitialized = React.useCallback(

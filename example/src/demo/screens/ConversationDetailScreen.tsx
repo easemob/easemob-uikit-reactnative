@@ -245,7 +245,7 @@ export function ConversationDetailScreen(props: Props) {
 
   React.useEffect(() => {
     if (comType !== 'chat' && comType !== 'search') {
-      return;
+      return () => {};
     }
     const sub = DeviceEventEmitter.addListener(
       'onSignallingMessage',

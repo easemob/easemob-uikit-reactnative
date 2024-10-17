@@ -198,7 +198,7 @@ export function ContactInfoScreen(props: Props) {
 
   React.useEffect(() => {
     if (accountType === 'agora') {
-      return;
+      return () => {};
     }
     const listener: UIContactListListener = {
       onUpdatedEvent: (data) => {

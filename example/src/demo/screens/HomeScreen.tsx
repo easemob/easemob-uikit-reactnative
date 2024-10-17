@@ -29,6 +29,7 @@ import {
   useLogin,
   useNativeStackRoute,
   useNavigationState,
+  useServerConfig,
 } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 import { MineInfo } from '../ui/MineInfo';
@@ -153,6 +154,7 @@ export function HomeScreen(props: Props) {
   useNavigationState(props);
   const im = useChatContext();
   const { replace } = useNativeStackRoute();
+  const { getEnableDevMode } = useServerConfig();
 
   const { initParams } = useGeneralSetting();
   const [_initParams, setInitParams] = React.useState(false);
@@ -202,13 +204,14 @@ export function HomeScreen(props: Props) {
 
   React.useEffect(() => {
     im.checkTokenIsExpired({
-      onResult: (isExpired) => {
+      onResult: async (isExpired) => {
         if (isExpired) {
-          replace({ to: 'LoginV2' });
+          const ret = await getEnableDevMode();
+          replace({ to: 'LoginV2', props: { serverConfigVisible: ret } });
         }
       },
     });
-  }, [im, replace]);
+  }, [getEnableDevMode, im, replace]);
 
   return (
     <SafeAreaViewFragment>
@@ -429,23 +432,7 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
   const [userId, setUserId] = React.useState<string>();
   const { getFcmToken } = useLogin();
   const { getAlertRef } = useAlertContext();
-
-  // const s = React.useCallback(async () => {
-  //   const autoLogin = im.client.options?.autoLogin ?? false;
-  //   if (autoLogin === true) {
-  //     autoLoginAction({
-  //       onResult: (res) => {
-  //         if (res.isOk) {
-  //           setUserId(im.userId);
-  //         } else {
-  //           replace({ to: 'LoginV2' });
-  //         }
-  //       },
-  //     });
-  //   } else {
-  //     setUserId(im.userId);
-  //   }
-  // }, [autoLoginAction, im.client.options?.autoLogin, im.userId, replace]);
+  const { getEnableDevMode } = useServerConfig();
 
   React.useEffect(() => {
     if (im.userId) {
@@ -475,8 +462,12 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
                   getAlertRef()?.close(() => {
                     im.logout({
                       unbindDeviceToken: getFcmToken() !== undefined,
-                      result: () => {
-                        navi.replace({ to: 'LoginV2' });
+                      result: async () => {
+                        const ret = await getEnableDevMode();
+                        navi.replace({
+                          to: 'LoginV2',
+                          props: { serverConfigVisible: ret },
+                        });
                       },
                     });
                   });

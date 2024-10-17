@@ -28,7 +28,7 @@ export function useEventEmitter() {
     console.log('test:zuoyu:useEffect', v);
     v;
     if (!keyRef.current || !listenerRef.current) {
-      return;
+      return () => {};
     }
     console.log('test:zuoyu:useEffect:2');
     const sub = EventEmitter.addListener(keyRef.current, listenerRef.current);

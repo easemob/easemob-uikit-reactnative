@@ -52,6 +52,10 @@ export function useServerConfig() {
   const getRestSever = React.useCallback(async () => {
     return (await getKey('restServer')) ?? restServer;
   }, [getKey]);
+  const getEnableDevMode = React.useCallback(async () => {
+    const ret = await getKey(`enableDevMode`);
+    return ret === 'true' ? true : ret === 'false' ? false : false;
+  }, [getKey]);
 
   const setAppKey = React.useCallback(
     async (value: string) => {
@@ -86,6 +90,15 @@ export function useServerConfig() {
     },
     [setKey]
   );
+  const setEnableDevMode = React.useCallback(
+    async (value: boolean) => {
+      setKey(
+        'enableDevMode',
+        value === true ? 'true' : value === false ? 'false' : 'false'
+      );
+    },
+    [setKey]
+  );
 
   return {
     getAppKey,
@@ -93,10 +106,12 @@ export function useServerConfig() {
     getImPort,
     getEnableDNSConfig,
     getRestSever,
+    getEnableDevMode,
     setAppKey,
     setImServer,
     setImPort,
     setEnableDNSConfig,
     setRestSever,
+    setEnableDevMode,
   };
 }

@@ -92,7 +92,6 @@ export function useContextMenu() {
             position.top = bottom;
             position.bottom = undefined;
           } else {
-            console.log('test:zuoyu:reviseComponentPosition:4', policy);
           }
         } else if (policy === 'side') {
           if (top >= componentHeight) {

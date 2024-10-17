@@ -30,7 +30,9 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ServerSettingScreen(props: Props) {
-  const {} = props;
+  const { route } = props;
+  const _serverConfigVisible: boolean =
+    (route.params as any).params?.serverConfigVisible ?? false;
   const navi = useStackScreenRoute(props);
   const { goBack } = navi;
   const { style } = useThemeContext();
@@ -82,8 +84,12 @@ export function ServerSettingScreen(props: Props) {
   const initRef = React.useRef<boolean>(false);
 
   const onBack = React.useCallback(() => {
-    goBack();
-  }, [goBack]);
+    goBack({
+      props: {
+        serverConfigVisible: _serverConfigVisible,
+      },
+    });
+  }, [_serverConfigVisible, goBack]);
   const onSave = React.useCallback(async () => {
     // todo: 将变量保存到本地，之后重启时读取
     try {

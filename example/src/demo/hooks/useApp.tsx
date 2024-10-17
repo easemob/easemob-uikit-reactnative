@@ -126,6 +126,7 @@ export function useApp() {
     default: undefined,
   });
   const rootRef = useNavigationContainerRef<RootParamsList>();
+  const serverConfigVisibleRef = React.useRef(false);
   const appKeyRef = React.useRef(gAppKey);
   const imServerRef = React.useRef(imServer);
   const imPortRef = React.useRef(imPort);
@@ -684,7 +685,11 @@ export function useApp() {
         reason !== DisconnectReasonType.others &&
         reason !== DisconnectReasonType.token_will_expire
       ) {
-        rootRef.navigate('LoginV2', {});
+        rootRef.navigate('LoginV2', {
+          params: {
+            serverConfigVisible: serverConfigVisibleRef.current,
+          },
+        });
       }
     },
     onFinished: (params) => {
@@ -897,7 +902,7 @@ export function useApp() {
   // !!! Customize the android platform return button operation.
   React.useEffect(() => {
     if (Platform.OS !== 'android') {
-      return;
+      return () => {};
     }
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -962,6 +967,7 @@ export function useApp() {
     enableBlockRef,
     fontsLoaded,
     rootRef,
+    serverConfigVisibleRef,
     appKeyRef,
     imServerRef,
     imPortRef,
