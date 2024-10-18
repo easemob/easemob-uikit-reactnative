@@ -405,14 +405,14 @@ export function ConversationDetailScreen(props: Props) {
                 const params = body.params;
                 if (event === gCustomMessageCardEventType) {
                   const cardParams = params as {
-                    uid: string;
+                    userId: string;
                     nickname: string;
                     avatar: string;
                   };
                   navi.push({
                     to: 'ContactInfo',
                     props: {
-                      userId: cardParams.uid,
+                      userId: cardParams.userId,
                     },
                   });
                 }
