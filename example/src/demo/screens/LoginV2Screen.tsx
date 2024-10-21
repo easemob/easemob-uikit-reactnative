@@ -1,7 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
-  DeviceEventEmitter,
   Dimensions,
   ImageBackground,
   Keyboard,
@@ -16,13 +15,13 @@ import DeviceInfo from 'react-native-device-info';
 
 import {
   CmnButton,
-  getReleaseArea,
   Icon,
   KeyboardAvoidingView,
   LoadingIcon,
   SingleLineText,
   TextInput,
   useColors,
+  useConfigContext,
   useForceUpdate,
   useGetStyleProps,
   useI18nContext,
@@ -34,7 +33,6 @@ import { accountType } from '../common/const';
 import { RestApi } from '../common/rest.api';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import {
-  useGeneralSetting,
   useLogin,
   useNavigationState,
   useServerConfig,
@@ -62,7 +60,7 @@ function EasemobLoginV2Screen(props: Props) {
     devLoginAction,
     version,
     serverSettingVisible,
-    releaseAreaRef,
+    releaseArea,
     navi,
     corner,
     cornerRadius,
@@ -428,10 +426,10 @@ function EasemobLoginV2Screen(props: Props) {
                 <Icon
                   name={
                     check
-                      ? releaseAreaRef.current === 'china'
+                      ? releaseArea === 'china'
                         ? 'checked_rectangle'
                         : 'checked_ellipse'
-                      : releaseAreaRef.current === 'china'
+                      : releaseArea === 'china'
                       ? 'unchecked_rectangle'
                       : 'unchecked_ellipse'
                   }
@@ -946,6 +944,7 @@ function useLoginV2Screen(props: Props) {
   const [password, setPassword] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const { tr } = useI18nContext();
+  const { releaseArea } = useConfigContext();
   const { getEnableDevMode, setEnableDevMode } = useServerConfig();
   const { style, cornerRadius: corner } = useThemeContext();
   const { getBorderRadius } = useGetStyleProps();
@@ -996,26 +995,8 @@ function useLoginV2Screen(props: Props) {
   const [serverSettingVisible, SetServerSettingVisible] =
     React.useState(_serverConfigVisible);
   const { updater } = useForceUpdate();
-  const ra = getReleaseArea();
-  const releaseAreaRef = React.useRef(ra);
   const requestNavigationRef = React.useRef(false);
   useNavigationState(props);
-
-  const { initParams } = useGeneralSetting();
-  const [_initParams, setInitParams] = React.useState(false);
-
-  const initParamsCallback = React.useCallback(async () => {
-    if (_initParams === true) {
-      return;
-    }
-    try {
-      const ret = await initParams();
-      releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
-      setInitParams(true);
-    } catch (error) {
-      setInitParams(true);
-    }
-  }, [_initParams, initParams, releaseAreaRef, setInitParams]);
 
   const clearTimer = React.useCallback(() => {
     if (timerRef.current) {
@@ -1052,22 +1033,6 @@ function useLoginV2Screen(props: Props) {
     console.log('dev:appVersion:', appVersion);
     setVersion(appVersion);
   }, []);
-
-  React.useEffect(() => {
-    initParamsCallback().catch();
-  }, [initParamsCallback]);
-
-  React.useEffect(() => {
-    const ret8 = DeviceEventEmitter.addListener('_demo_emit_app_style', (e) => {
-      console.log('dev:emit:app:style:', e);
-      releaseAreaRef.current = e === 'classic' ? 'china' : 'global';
-      updater();
-    });
-
-    return () => {
-      ret8.remove();
-    };
-  }, [updater]);
 
   React.useEffect(() => {
     if (serverSettingVisible) {
@@ -1114,10 +1079,8 @@ function useLoginV2Screen(props: Props) {
     serverSettingVisible,
     SetServerSettingVisible,
     updater,
-    releaseAreaRef,
+    releaseArea,
     requestNavigationRef,
-    initParams,
-    setInitParams,
     getToastRef,
     loginAction,
     devLoginAction,

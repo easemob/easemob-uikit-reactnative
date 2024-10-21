@@ -20,3 +20,12 @@ export const twemoji_ttf = require('../../../assets/fonts/Twemoji.Mozilla.ttf');
 export const avatar_status_leave = require('../assets/avatar_status/leave_3x.png');
 export const avatar_status_custom = require('../assets/avatar_status/custom_3x.png');
 export const avatar_status_no_disturb = require('../assets/avatar_status/no_disturb_3x.png');
+
+export const attr_msg_style1_ondark = require('../assets/attmsg_style1/ondark_3x.png');
+export const attr_msg_style1_onlight = require('../assets/attmsg_style1/onlight_3x.png');
+export const attr_msg_style2_ondark = require('../assets/attmsg_style2/ondark_3x.png');
+export const attr_msg_style2_onlight = require('../assets/attmsg_style2/onlight_3x.png');
+export const msg_menu_style1_ondark = require('../assets/msgmenu_style1/ondark_3x.png');
+export const msg_menu_style1_onlight = require('../assets/msgmenu_style1/onlight_3x.png');
+export const msg_menu_style2_ondark = require('../assets/msgmenu_style2/ondark_3x.png');
+export const msg_menu_style2_onlight = require('../assets/msgmenu_style2/onlight_3x.png');

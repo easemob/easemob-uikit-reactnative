@@ -10,22 +10,20 @@ import {
   ContactList,
   ConversationList,
   ConversationListRef,
-  getReleaseArea,
   TabPage,
   TabPageRef,
   TabPageTabBarHeader,
   useAlertContext,
   useChatContext,
   useColors,
+  useConfigContext,
   useDispatchContext,
-  useForceUpdate,
   useI18nContext,
   usePaletteContext,
 } from '../../rename.uikit';
 import { accountType } from '../common/const';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import {
-  useGeneralSetting,
   useLogin,
   useNativeStackRoute,
   useNavigationState,
@@ -148,45 +146,11 @@ export function HomeScreen(props: Props) {
   const tabRef = React.useRef<TabPageRef>(null);
   const currentIndexRef = React.useRef<number>(0);
   const { tr } = useI18nContext();
-  const { updater } = useForceUpdate();
-  const ra = getReleaseArea();
-  const releaseAreaRef = React.useRef(ra);
+  const { releaseArea } = useConfigContext();
   useNavigationState(props);
   const im = useChatContext();
   const { replace } = useNativeStackRoute();
   const { getEnableDevMode } = useServerConfig();
-
-  const { initParams } = useGeneralSetting();
-  const [_initParams, setInitParams] = React.useState(false);
-
-  const initParamsCallback = React.useCallback(async () => {
-    if (_initParams === true) {
-      return;
-    }
-    try {
-      const ret = await initParams();
-      releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
-      setInitParams(true);
-    } catch (error) {
-      setInitParams(true);
-    }
-  }, [_initParams, initParams, releaseAreaRef, setInitParams]);
-
-  React.useEffect(() => {
-    const ret8 = DeviceEventEmitter.addListener('_demo_emit_app_style', (e) => {
-      console.log('dev:emit:app:style:', e);
-      releaseAreaRef.current = e === 'classic' ? 'china' : 'global';
-      updater();
-    });
-
-    return () => {
-      ret8.remove();
-    };
-  }, [updater]);
-
-  React.useEffect(() => {
-    initParamsCallback().catch();
-  }, [initParamsCallback]);
 
   React.useEffect(() => {
     if (accountType === 'agora') {
@@ -221,7 +185,7 @@ export function HomeScreen(props: Props) {
           Header: TabPageTabBarHeader as any,
           HeaderProps: {
             titles:
-              releaseAreaRef.current === 'global'
+              releaseArea === 'global'
                 ? [
                     {
                       icon: 'bubble_fill',

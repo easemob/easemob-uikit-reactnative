@@ -53,8 +53,9 @@ export function GeneralSettingScreen(props: Props) {
     appStyle,
     appTheme,
     onSetAppTheme,
-    updater,
+    updateParams,
   } = useGeneralSetting();
+  console.log('test:zuoyu:123:', appMessageContextMenuStyle);
 
   const onBack = () => {
     navi.goBack();
@@ -84,19 +85,23 @@ export function GeneralSettingScreen(props: Props) {
 
   React.useEffect(() => {
     if (from === 'LanguageSetting' && hash) {
-      updater();
+      updateParams();
     } else if (from === 'TranslationLanguageSetting' && hash) {
-      updater();
+      updateParams();
     } else if (from === 'ColorSetting' && hash) {
-      updater();
+      updateParams();
     } else if (from === 'StyleSetting' && hash) {
-      updater();
+      updateParams();
     } else if (from === 'MessageContextMenuSetting' && hash) {
-      updater();
+      updateParams();
     } else if (from === 'MessageInputBarMenuSetting' && hash) {
-      updater();
+      updateParams();
     }
-  }, [from, hash, updater]);
+  }, [from, hash, updateParams]);
+
+  React.useEffect(() => {
+    updateParams();
+  }, [updateParams]);
 
   return (
     <SafeAreaViewFragment>
@@ -320,8 +325,8 @@ export function GeneralSettingScreen(props: Props) {
               }}
             >
               {appMessageContextMenuStyle === 'bottom-sheet'
-                ? tr('style1')
-                : tr('style2')}
+                ? tr('style2')
+                : tr('style1')}
             </SingleLineText>
             <Icon
               name={'chevron_right'}
@@ -355,8 +360,8 @@ export function GeneralSettingScreen(props: Props) {
               }}
             >
               {appMessageInputBarExtensionStyle === 'bottom-sheet'
-                ? tr('style1')
-                : tr('style2')}
+                ? tr('style2')
+                : tr('style1')}
             </SingleLineText>
             <Icon
               name={'chevron_right'}

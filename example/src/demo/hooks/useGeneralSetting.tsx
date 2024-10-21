@@ -13,6 +13,7 @@ import { accountType, appKey as gAppKey } from '../common/const';
 
 export function useGeneralSetting() {
   const {} = useForceUpdate();
+
   const [appTheme, setAppTheme] = React.useState<boolean | undefined>(
     undefined
   );
@@ -371,70 +372,116 @@ export function useGeneralSetting() {
       appNeutralSColor: res9.value
         ? +res9.value
         : presetPaletteColors.neutralSpecial,
-      appMessageContextMenuStyle: res19.value ? res19.value : 'bottom-sheet',
-      appMessageInputBarExtensionStyle: res20.value
-        ? res20.value
-        : 'bottom-sheet',
+      appMessageContextMenuStyle:
+        res19.value ?? (accountType === 'agora' ? 'bottom-sheet' : 'context'),
+      appMessageInputBarExtensionStyle:
+        res20.value ?? (accountType === 'agora' ? 'bottom-sheet' : 'extension'),
     };
   }, []);
 
-  const init = React.useCallback(() => {
-    initParams()
-      .then((res) => {
-        setAppTheme(res.appTheme);
-        appThemeRef.current = res.appTheme;
-        setAppStyle(res.appStyle);
-        appStyleRef.current = res.appStyle;
-        setAppLanguage(res.appLanguage);
-        appLanguageRef.current = res.appLanguage;
-        setAppPrimaryColor(res.appPrimaryColor);
-        appPrimaryColorRef.current = res.appPrimaryColor;
-        setAppSecondColor(res.appSecondColor);
-        appSecondColorRef.current = res.appSecondColor;
-        setAppErrorColor(res.appErrorColor);
-        appErrorColorRef.current = res.appErrorColor;
-        setAppNeutralColor(res.appNeutralColor);
-        appNeutralColorRef.current = res.appNeutralColor;
-        setAppNeutralSColor(res.appNeutralSColor);
-        appNeutralSColorRef.current = res.appNeutralSColor;
-        setAppTranslate(res.appTranslate);
-        appTranslateRef.current = res.appTranslate;
-        setAppTranslateLanguage(res.appTranslateLanguage);
-        appTranslateLanguageRef.current = res.appTranslateLanguage;
-        setAppThread(res.appThread);
-        appThreadRef.current = res.appThread;
-        setAppReaction(res.appReaction);
-        appReactionRef.current = res.appReaction;
-        setAppPresence(res.appPresence);
-        appPresenceRef.current = res.appPresence;
-        setAppAv(res.appAv);
-        appAvRef.current = res.appAv;
-        setAppNotification(res.appNotification);
-        appNotificationRef.current = res.appNotification;
-        setAppTyping(res.appTyping);
-        appTypingRef.current = res.appTyping;
-        setAppBlock(res.appBlock);
-        appBlockRef.current = res.appBlock;
-        setAppMessageContextMenuStyle(
-          res.appMessageContextMenuStyle as MessageContextMenuStyle
-        );
-        appMessageContextMenuStyleRef.current =
-          res.appMessageContextMenuStyle as MessageContextMenuStyle;
-        setAppMessageInputBarExtensionStyle(
-          res.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle
-        );
-        appMessageInputBarExtensionStyleRef.current =
-          res.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle;
-        // updater();
-      })
-      .catch((e) => {
-        console.warn('dev:initParams:', e);
-      });
-  }, [initParams]);
+  const updateParams = React.useCallback(
+    (
+      onResult?: (params?: {
+        appTheme: boolean;
+        appStyle: string;
+        appLanguage: string;
+        appPrimaryColor: number;
+        appSecondColor: number;
+        appErrorColor: number;
+        appNeutralColor: number;
+        appNeutralSColor: number;
+        appTranslate: boolean;
+        appTranslateLanguage: string;
+        appThread: boolean;
+        appReaction: boolean;
+        appPresence: boolean;
+        appAv: boolean;
+        appNotification: boolean;
+        appTyping: boolean;
+        appBlock: boolean;
+        appMessageContextMenuStyle: MessageContextMenuStyle;
+        appMessageInputBarExtensionStyle: MessageInputBarExtensionStyle;
+      }) => void
+    ) => {
+      initParams()
+        .then((res) => {
+          setAppTheme(res.appTheme);
+          appThemeRef.current = res.appTheme;
+          setAppStyle(res.appStyle);
+          appStyleRef.current = res.appStyle;
+          setAppLanguage(res.appLanguage);
+          appLanguageRef.current = res.appLanguage;
+          setAppPrimaryColor(res.appPrimaryColor);
+          appPrimaryColorRef.current = res.appPrimaryColor;
+          setAppSecondColor(res.appSecondColor);
+          appSecondColorRef.current = res.appSecondColor;
+          setAppErrorColor(res.appErrorColor);
+          appErrorColorRef.current = res.appErrorColor;
+          setAppNeutralColor(res.appNeutralColor);
+          appNeutralColorRef.current = res.appNeutralColor;
+          setAppNeutralSColor(res.appNeutralSColor);
+          appNeutralSColorRef.current = res.appNeutralSColor;
+          setAppTranslate(res.appTranslate);
+          appTranslateRef.current = res.appTranslate;
+          setAppTranslateLanguage(res.appTranslateLanguage);
+          appTranslateLanguageRef.current = res.appTranslateLanguage;
+          setAppThread(res.appThread);
+          appThreadRef.current = res.appThread;
+          setAppReaction(res.appReaction);
+          appReactionRef.current = res.appReaction;
+          setAppPresence(res.appPresence);
+          appPresenceRef.current = res.appPresence;
+          setAppAv(res.appAv);
+          appAvRef.current = res.appAv;
+          setAppNotification(res.appNotification);
+          appNotificationRef.current = res.appNotification;
+          setAppTyping(res.appTyping);
+          appTypingRef.current = res.appTyping;
+          setAppBlock(res.appBlock);
+          appBlockRef.current = res.appBlock;
+          setAppMessageContextMenuStyle(
+            res.appMessageContextMenuStyle as MessageContextMenuStyle
+          );
+          appMessageContextMenuStyleRef.current =
+            res.appMessageContextMenuStyle as MessageContextMenuStyle;
+          setAppMessageInputBarExtensionStyle(
+            res.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle
+          );
+          appMessageInputBarExtensionStyleRef.current =
+            res.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle;
+          // updater();
 
-  React.useEffect(() => {
-    init();
-  }, [init]);
+          onResult?.({
+            appTheme: res.appTheme,
+            appStyle: res.appStyle,
+            appLanguage: res.appLanguage,
+            appPrimaryColor: res.appPrimaryColor,
+            appSecondColor: res.appSecondColor,
+            appErrorColor: res.appErrorColor,
+            appNeutralColor: res.appNeutralColor,
+            appNeutralSColor: res.appNeutralSColor,
+            appTranslate: res.appTranslate,
+            appTranslateLanguage: res.appTranslateLanguage,
+            appThread: res.appThread,
+            appReaction: res.appReaction,
+            appPresence: res.appPresence,
+            appAv: res.appAv,
+            appNotification: res.appNotification,
+            appTyping: res.appTyping,
+            appBlock: res.appBlock,
+            appMessageContextMenuStyle:
+              res.appMessageContextMenuStyle as MessageContextMenuStyle,
+            appMessageInputBarExtensionStyle:
+              res.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle,
+          });
+        })
+        .catch((e) => {
+          console.warn('dev:updateParams:', e);
+          onResult?.();
+        });
+    },
+    [initParams]
+  );
 
   return {
     appTheme,
@@ -444,7 +491,7 @@ export function useGeneralSetting() {
     appLanguage,
     onSetAppLanguage,
     initParams,
-    updater: init,
+    updateParams,
     appPrimaryColor,
     onSetAppPrimaryColor,
     appSecondColor,
