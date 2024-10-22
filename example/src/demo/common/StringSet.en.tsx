@@ -33,10 +33,20 @@ export function createStringSetEn(): StringSet {
     '_demo_login_title': (accountType) =>
       accountType === 'agora' ? 'Login' : 'Login',
     '_demo_login_title_version': (v) => `V${v}`,
-    '_demo_login_input_phone_number_tip': (accountType) =>
-      accountType === 'agora' ? 'Username' : 'Phone number',
-    '_demo_login_input_phone_number_captcha_tip': (accountType) =>
-      accountType === 'agora' ? 'Password' : 'Verification code',
+    '_demo_login_input_phone_number_tip': (accountType, devMode) =>
+      devMode === true
+        ? 'id'
+        : accountType === 'agora'
+        ? 'Username'
+        : 'Phone number',
+    '_demo_login_input_phone_number_captcha_tip': (accountType, devMode) =>
+      devMode === true
+        ? accountType === 'agora'
+          ? 'token'
+          : 'password'
+        : accountType === 'agora'
+        ? 'Password'
+        : 'Verification code',
     '_demo_login_input_phone_number_captcha_button_1': 'Get code',
     '_demo_login_input_phone_number_captcha_button_2': (second) =>
       `Resend captcha(${second}s)`,
@@ -88,11 +98,24 @@ export function createStringSetEn(): StringSet {
     '_demo_general_setting_feature': 'Advanced Features',
     '_demo_general_setting_language': 'System Language',
     '_demo_general_setting_translation_language': 'Translation Target Language',
+    '_demo_general_setting_message_menu': 'Message Context Menu Style',
+    '_demo_general_setting_message_input_menu': 'Message Input Bar Menu Style',
 
     '_demo_language_setting_navi_title': 'System Language',
     '_demo_language_setting_navi_confim': 'Done',
     '_demo_language_setting_language_cn': '中文',
     '_demo_language_setting_language_en': 'English',
+
+    '_demo_message_context_menu_setting_navi_title':
+      'Message Context Menu Style',
+    '_demo_message_context_menu_setting_navi_confim': 'Done',
+    '_demo_message_context_menu_setting_style1': 'Style 1',
+    '_demo_message_context_menu_setting_style2': 'Style 2',
+
+    '_demo_message_input_bar_menu_setting_navi_title': 'Message Input Bar Menu',
+    '_demo_message_input_bar_menu_setting_navi_confim': 'Done',
+    '_demo_message_input_bar_menu_setting_style1': 'Style1',
+    '_demo_message_input_bar_menu_setting_style2': 'Style2',
 
     '_demo_style_setting_navi_title': 'Theme',
     '_demo_style_setting_navi_confim': 'Done',
@@ -179,5 +202,7 @@ export function createStringSetEn(): StringSet {
     'zh-Hans': '中文',
     'classic': 'Classic',
     'modern': 'Modern',
+    'style1': 'Style1',
+    'style2': 'Style2',
   };
 }

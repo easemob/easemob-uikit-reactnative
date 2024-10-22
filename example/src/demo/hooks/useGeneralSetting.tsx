@@ -3,6 +3,8 @@ import { DeviceEventEmitter } from 'react-native';
 
 import {
   AsyncStorageBasic,
+  MessageContextMenuStyle,
+  MessageInputBarExtensionStyle,
   presetPaletteColors,
   SingletonObjects,
   useForceUpdate,
@@ -11,6 +13,7 @@ import { accountType, appKey as gAppKey } from '../common/const';
 
 export function useGeneralSetting() {
   const {} = useForceUpdate();
+
   const [appTheme, setAppTheme] = React.useState<boolean | undefined>(
     undefined
   );
@@ -84,6 +87,20 @@ export function useGeneralSetting() {
   const [appBlock, setAppBlock] = React.useState<boolean | undefined>(
     undefined
   );
+
+  const appMessageContextMenuStyleRef = React.useRef<
+    MessageContextMenuStyle | undefined
+  >('bottom-sheet');
+  const [appMessageContextMenuStyle, setAppMessageContextMenuStyle] =
+    React.useState<MessageContextMenuStyle>('bottom-sheet');
+
+  const appMessageInputBarExtensionStyleRef = React.useRef<
+    MessageInputBarExtensionStyle | undefined
+  >('bottom-sheet');
+  const [
+    appMessageInputBarExtensionStyle,
+    setAppMessageInputBarExtensionStyle,
+  ] = React.useState<MessageInputBarExtensionStyle>('bottom-sheet');
 
   const onSetAppTheme = React.useCallback((value: boolean) => {
     appThemeRef.current = value;
@@ -279,6 +296,38 @@ export function useGeneralSetting() {
     DeviceEventEmitter.emit('_demo_emit_app_language', value);
   }, []);
 
+  const onSetAppMessageContextMenuStyle = React.useCallback(
+    (value: MessageContextMenuStyle) => {
+      appMessageContextMenuStyleRef.current = value;
+      setAppMessageContextMenuStyle(value);
+      const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+        appKey: `${gAppKey}/uikit/demo`,
+      });
+      s.setData({ key: 'messageContextMenuStyle', value });
+      DeviceEventEmitter.emit(
+        '_demo_emit_app_message_context_menu_style',
+        value
+      );
+    },
+    []
+  );
+
+  const onSetAppMessageInputBarExtensionStyle = React.useCallback(
+    (value: MessageInputBarExtensionStyle) => {
+      appMessageInputBarExtensionStyleRef.current = value;
+      setAppMessageInputBarExtensionStyle(value);
+      const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+        appKey: `${gAppKey}/uikit/demo`,
+      });
+      s.setData({ key: 'messageInputBarExtensionStyle', value });
+      DeviceEventEmitter.emit(
+        '_demo_emit_app_message_input_bar_extension_style',
+        value
+      );
+    },
+    []
+  );
+
   const initParams = React.useCallback(async () => {
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${gAppKey}/uikit/demo`,
@@ -300,6 +349,8 @@ export function useGeneralSetting() {
     const res16 = await s.getData({ key: 'translateLanguage' });
     const res17 = await s.getData({ key: 'typing' });
     const res18 = await s.getData({ key: 'block' });
+    const res19 = await s.getData({ key: 'messageContextMenuStyle' });
+    const res20 = await s.getData({ key: 'messageInputBarExtensionStyle' });
     return {
       appTheme: res.value ? res.value !== 'light' : false,
       appTranslate: res10.value ? res10.value === 'enable' : true,
@@ -321,56 +372,116 @@ export function useGeneralSetting() {
       appNeutralSColor: res9.value
         ? +res9.value
         : presetPaletteColors.neutralSpecial,
+      appMessageContextMenuStyle:
+        res19.value ?? (accountType === 'agora' ? 'bottom-sheet' : 'context'),
+      appMessageInputBarExtensionStyle:
+        res20.value ?? (accountType === 'agora' ? 'bottom-sheet' : 'extension'),
     };
   }, []);
 
-  const init = React.useCallback(() => {
-    initParams()
-      .then((res) => {
-        setAppTheme(res.appTheme);
-        appThemeRef.current = res.appTheme;
-        setAppStyle(res.appStyle);
-        appStyleRef.current = res.appStyle;
-        setAppLanguage(res.appLanguage);
-        appLanguageRef.current = res.appLanguage;
-        setAppPrimaryColor(res.appPrimaryColor);
-        appPrimaryColorRef.current = res.appPrimaryColor;
-        setAppSecondColor(res.appSecondColor);
-        appSecondColorRef.current = res.appSecondColor;
-        setAppErrorColor(res.appErrorColor);
-        appErrorColorRef.current = res.appErrorColor;
-        setAppNeutralColor(res.appNeutralColor);
-        appNeutralColorRef.current = res.appNeutralColor;
-        setAppNeutralSColor(res.appNeutralSColor);
-        appNeutralSColorRef.current = res.appNeutralSColor;
-        setAppTranslate(res.appTranslate);
-        appTranslateRef.current = res.appTranslate;
-        setAppTranslateLanguage(res.appTranslateLanguage);
-        appTranslateLanguageRef.current = res.appTranslateLanguage;
-        setAppThread(res.appThread);
-        appThreadRef.current = res.appThread;
-        setAppReaction(res.appReaction);
-        appReactionRef.current = res.appReaction;
-        setAppPresence(res.appPresence);
-        appPresenceRef.current = res.appPresence;
-        setAppAv(res.appAv);
-        appAvRef.current = res.appAv;
-        setAppNotification(res.appNotification);
-        appNotificationRef.current = res.appNotification;
-        setAppTyping(res.appTyping);
-        appTypingRef.current = res.appTyping;
-        setAppBlock(res.appBlock);
-        appBlockRef.current = res.appBlock;
-        // updater();
-      })
-      .catch((e) => {
-        console.warn('dev:initParams:', e);
-      });
-  }, [initParams]);
+  const updateParams = React.useCallback(
+    (
+      onResult?: (params?: {
+        appTheme: boolean;
+        appStyle: string;
+        appLanguage: string;
+        appPrimaryColor: number;
+        appSecondColor: number;
+        appErrorColor: number;
+        appNeutralColor: number;
+        appNeutralSColor: number;
+        appTranslate: boolean;
+        appTranslateLanguage: string;
+        appThread: boolean;
+        appReaction: boolean;
+        appPresence: boolean;
+        appAv: boolean;
+        appNotification: boolean;
+        appTyping: boolean;
+        appBlock: boolean;
+        appMessageContextMenuStyle: MessageContextMenuStyle;
+        appMessageInputBarExtensionStyle: MessageInputBarExtensionStyle;
+      }) => void
+    ) => {
+      initParams()
+        .then((res) => {
+          setAppTheme(res.appTheme);
+          appThemeRef.current = res.appTheme;
+          setAppStyle(res.appStyle);
+          appStyleRef.current = res.appStyle;
+          setAppLanguage(res.appLanguage);
+          appLanguageRef.current = res.appLanguage;
+          setAppPrimaryColor(res.appPrimaryColor);
+          appPrimaryColorRef.current = res.appPrimaryColor;
+          setAppSecondColor(res.appSecondColor);
+          appSecondColorRef.current = res.appSecondColor;
+          setAppErrorColor(res.appErrorColor);
+          appErrorColorRef.current = res.appErrorColor;
+          setAppNeutralColor(res.appNeutralColor);
+          appNeutralColorRef.current = res.appNeutralColor;
+          setAppNeutralSColor(res.appNeutralSColor);
+          appNeutralSColorRef.current = res.appNeutralSColor;
+          setAppTranslate(res.appTranslate);
+          appTranslateRef.current = res.appTranslate;
+          setAppTranslateLanguage(res.appTranslateLanguage);
+          appTranslateLanguageRef.current = res.appTranslateLanguage;
+          setAppThread(res.appThread);
+          appThreadRef.current = res.appThread;
+          setAppReaction(res.appReaction);
+          appReactionRef.current = res.appReaction;
+          setAppPresence(res.appPresence);
+          appPresenceRef.current = res.appPresence;
+          setAppAv(res.appAv);
+          appAvRef.current = res.appAv;
+          setAppNotification(res.appNotification);
+          appNotificationRef.current = res.appNotification;
+          setAppTyping(res.appTyping);
+          appTypingRef.current = res.appTyping;
+          setAppBlock(res.appBlock);
+          appBlockRef.current = res.appBlock;
+          setAppMessageContextMenuStyle(
+            res.appMessageContextMenuStyle as MessageContextMenuStyle
+          );
+          appMessageContextMenuStyleRef.current =
+            res.appMessageContextMenuStyle as MessageContextMenuStyle;
+          setAppMessageInputBarExtensionStyle(
+            res.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle
+          );
+          appMessageInputBarExtensionStyleRef.current =
+            res.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle;
+          // updater();
 
-  React.useEffect(() => {
-    init();
-  }, [init]);
+          onResult?.({
+            appTheme: res.appTheme,
+            appStyle: res.appStyle,
+            appLanguage: res.appLanguage,
+            appPrimaryColor: res.appPrimaryColor,
+            appSecondColor: res.appSecondColor,
+            appErrorColor: res.appErrorColor,
+            appNeutralColor: res.appNeutralColor,
+            appNeutralSColor: res.appNeutralSColor,
+            appTranslate: res.appTranslate,
+            appTranslateLanguage: res.appTranslateLanguage,
+            appThread: res.appThread,
+            appReaction: res.appReaction,
+            appPresence: res.appPresence,
+            appAv: res.appAv,
+            appNotification: res.appNotification,
+            appTyping: res.appTyping,
+            appBlock: res.appBlock,
+            appMessageContextMenuStyle:
+              res.appMessageContextMenuStyle as MessageContextMenuStyle,
+            appMessageInputBarExtensionStyle:
+              res.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle,
+          });
+        })
+        .catch((e) => {
+          console.warn('dev:updateParams:', e);
+          onResult?.();
+        });
+    },
+    [initParams]
+  );
 
   return {
     appTheme,
@@ -380,7 +491,7 @@ export function useGeneralSetting() {
     appLanguage,
     onSetAppLanguage,
     initParams,
-    updater: init,
+    updateParams,
     appPrimaryColor,
     onSetAppPrimaryColor,
     appSecondColor,
@@ -409,5 +520,9 @@ export function useGeneralSetting() {
     onSetAppTyping,
     appBlock,
     onSetAppBlock,
+    appMessageContextMenuStyle,
+    onSetAppMessageContextMenuStyle,
+    appMessageInputBarExtensionStyle,
+    onSetAppMessageInputBarExtensionStyle,
   };
 }

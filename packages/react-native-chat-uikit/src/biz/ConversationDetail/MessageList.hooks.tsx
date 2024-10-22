@@ -51,7 +51,7 @@ import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import { LocalPath, seqId, timeoutTask } from '../../utils';
 import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList/BottomSheetEmojiList';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import type { BottomSheetReactionDetailRef } from '../BottomSheetReactionDetail';
 import { gReportMessageList } from '../const';
 import { useMessageContext } from '../Context';
@@ -66,10 +66,12 @@ import {
   useMessageLongPressActions,
 } from '../hooks/useMessageLongPressActions';
 import { useFlatList } from '../List';
+import { MessageContextNameMenu } from '../MessageContextMenu';
 import type {
   BottomSheetMessageReportRef,
   ReportItemModel,
 } from '../MessageReport';
+import type { ContextNameMenuRef, PressedComponentEvent } from '../types';
 import type { EmojiIconItem } from '../types';
 import { gRequestMaxMessageCount, gRequestMaxThreadCount } from './const';
 import { MessageListItemMemo } from './MessageListItem';
@@ -138,6 +140,7 @@ export function useMessageList(
     onClickedSingleSelect,
     onClickedHistoryDetail,
     onChangeUnreadCount,
+    MessageCustomLongPressMenu,
   } = props;
   const inverted = React.useRef(
     comType === 'chat' || comType === 'search' ? true : false
@@ -167,6 +170,13 @@ export function useMessageList(
     ref: listRef,
   } = flatListProps;
 
+  const {
+    recallTimeout,
+    languageCode,
+    enableThread,
+    enableMessagePin,
+    messageMenuStyle,
+  } = useConfigContext();
   // const [refreshing, setRefreshing] = React.useState(false);
   const preBottomDataRef = React.useRef<MessageListItemProps>();
   const scrollEventThrottle = React.useRef(16).current;
@@ -204,7 +214,7 @@ export function useMessageList(
   const hasNoMoreRef = React.useRef(false); // !!! deprecated, use hasNoOldMsgRef and hasNoNewMsgRef
   const hasNoOldMsgRef = React.useRef(false);
   const hasNoNewMsgRef = React.useRef(false);
-  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>(null);
   const reportRef = React.useRef<BottomSheetMessageReportRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
   const currentReportMessageRef = React.useRef<MessageModel>();
@@ -217,8 +227,6 @@ export function useMessageList(
   });
   const {} = useMessageContext();
   const { getMsgInfo } = useDataPriority({});
-  const { recallTimeout, languageCode, enableThread, enableMessagePin } =
-    useConfigContext();
   const setUserScrollGesture = React.useCallback((isUserScroll: boolean) => {
     userScrollGestureRef.current = isUserScroll;
   }, []);
@@ -255,6 +263,18 @@ export function useMessageList(
     // uilog.log('test:zuoyu:setNoOldMsg:', noOldMsg);
     hasNoOldMsgRef.current = noOldMsg;
   }, []);
+
+  const MessageLongPressMenu = React.useMemo(() => {
+    if (messageMenuStyle === 'bottom-sheet') {
+      return BottomSheetNameMenu;
+    } else if (messageMenuStyle === 'context') {
+      return MessageContextNameMenu;
+    } else if (messageMenuStyle === 'custom') {
+      return MessageCustomLongPressMenu;
+    } else {
+      return null;
+    }
+  }, [MessageCustomLongPressMenu, messageMenuStyle]);
 
   const canAddNewMessageToUI = React.useCallback(() => {
     // uilog.log(
@@ -1107,7 +1127,8 @@ export function useMessageList(
   const onClickedListItem = React.useCallback(
     async (
       id: string,
-      model: SystemMessageModel | TimeMessageModel | MessageModel
+      model: SystemMessageModel | TimeMessageModel | MessageModel,
+      _?: PressedComponentEvent
     ) => {
       const ret = propsOnClicked?.(id, model);
       if (ret !== false) {
@@ -1277,7 +1298,8 @@ export function useMessageList(
   const onLongPressListItem = React.useCallback(
     (
       id: string,
-      model: SystemMessageModel | TimeMessageModel | MessageModel
+      model: SystemMessageModel | TimeMessageModel | MessageModel,
+      event?: PressedComponentEvent
     ) => {
       if (selectType === 'multi') {
         return;
@@ -1285,7 +1307,10 @@ export function useMessageList(
       const ret = propsOnLongPress?.(id, model);
       if (ret !== false) {
         if (model.modelType === 'message') {
-          const list = emojiListRef.current.slice(0, 7);
+          const list = emojiListRef.current.slice(
+            0,
+            messageMenuStyle === 'bottom-sheet' ? 7 : 6
+          );
           const onFace = (face: string) => {
             if (face === 'faceplus') {
               menuRef.current?.startHide?.(() => {
@@ -1319,6 +1344,7 @@ export function useMessageList(
                 convId,
                 convType,
                 comType,
+                event,
               });
             } else {
               onShowMessageLongPressActions({
@@ -1327,6 +1353,7 @@ export function useMessageList(
                 convId,
                 convType,
                 comType,
+                event,
               });
             }
           });
@@ -1338,6 +1365,7 @@ export function useMessageList(
       convId,
       convType,
       getEmojiState,
+      messageMenuStyle,
       onEmojiClicked,
       onShowEmojiLongPressActions,
       onShowMessageLongPressActions,
@@ -3103,5 +3131,6 @@ export function useMessageList(
     onContainerLayout,
     maxListHeightRef,
     enableMessagePin,
+    MessageLongPressMenu,
   };
 }

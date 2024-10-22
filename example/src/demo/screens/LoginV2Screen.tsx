@@ -1,7 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
-  DeviceEventEmitter,
   Dimensions,
   ImageBackground,
   Keyboard,
@@ -16,13 +15,13 @@ import DeviceInfo from 'react-native-device-info';
 
 import {
   CmnButton,
-  getReleaseArea,
   Icon,
   KeyboardAvoidingView,
   LoadingIcon,
   SingleLineText,
   TextInput,
   useColors,
+  useConfigContext,
   useForceUpdate,
   useGetStyleProps,
   useI18nContext,
@@ -34,9 +33,9 @@ import { accountType } from '../common/const';
 import { RestApi } from '../common/rest.api';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import {
-  useGeneralSetting,
   useLogin,
   useNavigationState,
+  useServerConfig,
   useStackScreenRoute,
 } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
@@ -44,83 +43,33 @@ import type { RootScreenParamsList } from '../routes';
 type CaptchaState = 'init' | 'sending' | 'sent' | 'resend' | 'error';
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 function EasemobLoginV2Screen(props: Props) {
-  const {} = props;
-  const navi = useStackScreenRoute(props);
-  const { push } = navi;
-  const [id, setId] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const {
+    id,
+    setId,
+    password,
+    setPassword,
+    isLoading,
+    setIsLoading,
+    tr,
+    style,
+    getBorderRadius,
+    input,
+    getColor,
+    getToastRef,
+    loginAction,
+    devLoginAction,
+    version,
+    serverSettingVisible,
+    releaseArea,
+    navi,
+    corner,
+    cornerRadius,
+    onClickedServerSetting,
+    onClickedEnableDev,
+  } = useLoginV2Screen(props);
   const [captchaState, setCaptchaState] = React.useState<CaptchaState>('init');
   const [second, setSecond] = React.useState(60);
   const [check, setCheck] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const { tr } = useI18nContext();
-  const { style, cornerRadius: corner } = useThemeContext();
-  const { getBorderRadius } = useGetStyleProps();
-  const { colors, cornerRadius } = usePaletteContext();
-  const { input } = corner;
-  const { getColor } = useColors({
-    bg: {
-      light: '#EFF4FF',
-      dark: 'rgba(142, 199, 239, 0.49)',
-    },
-    bg2: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    p: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
-    clear: {
-      light: colors.neutral[7],
-      dark: colors.neutral[8],
-    },
-    n: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
-    },
-    v: {
-      light: 'rgba(0, 0, 0, 0.20)',
-      dark: 'rgba(0, 0, 0, 0.20)',
-    },
-    tip: {
-      light: colors.neutral[3],
-      dark: colors.neutral[8],
-    },
-    placeholder: {
-      light: colors.neutral[6],
-      dark: colors.neutral[4],
-    },
-    loading: {
-      light: colors.neutral[98],
-      dark: colors.neutral[98],
-    },
-  });
-  const { getToastRef, loginAction } = useLogin();
-  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
-  const countRef = React.useRef(0);
-  const [version, setVersion] = React.useState('');
-  const [serverSettingVisible, SetServerSettingVisible] = React.useState(false);
-  const { updater } = useForceUpdate();
-  const ra = getReleaseArea();
-  const releaseAreaRef = React.useRef(ra);
-  useNavigationState(props);
-
-  const { initParams } = useGeneralSetting();
-  const [_initParams, setInitParams] = React.useState(false);
-
-  const initParamsCallback = React.useCallback(async () => {
-    if (_initParams === true) {
-      return;
-    }
-    try {
-      const ret = await initParams();
-      releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
-      setInitParams(true);
-    } catch (error) {
-      setInitParams(true);
-    }
-  }, [_initParams, initParams, releaseAreaRef, setInitParams]);
 
   const getCaptchaText = () => {
     if (captchaState === 'init') {
@@ -183,32 +132,25 @@ function EasemobLoginV2Screen(props: Props) {
     return true;
   };
 
-  const clearTimer = React.useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-      if (countRef.current >= 4) {
-        countRef.current = 0;
-        SetServerSettingVisible(true);
-        push({ to: 'LoginV2Setting' });
-        return;
-      }
-      ++countRef.current;
-    }
-  }, [push]);
-
-  const onClickedServerSetting = React.useCallback(() => {
-    push({ to: 'LoginV2Setting' });
-  }, [push]);
-
-  const onClickedEnableDev = React.useCallback(() => {
-    clearTimer();
-    timerRef.current = setTimeout(() => {
-      countRef.current = 0;
-    }, 1000);
-  }, [clearTimer]);
-
   const onClickedLogin = React.useCallback(() => {
+    if (serverSettingVisible === true) {
+      devLoginAction({
+        id: id,
+        passOrToken: password,
+        usePassword: true,
+        onResult: (res) => {
+          if (res.isOk) {
+            navi.replace({ to: 'Home' });
+          } else {
+            getToastRef().show({
+              message: res.reason,
+              showPosition: 'center',
+            });
+          }
+        },
+      });
+      return;
+    }
     if (check === false) {
       getToastRef().show({
         message: tr('_demo_login_tip_reason_2'),
@@ -238,32 +180,26 @@ function EasemobLoginV2Screen(props: Props) {
         setIsLoading(false);
         if (res.isOk) {
           navi.replace({ to: 'Home' });
+        } else {
+          getToastRef().show({
+            message: res.reason ?? '',
+            showPosition: 'center',
+          });
         }
       },
     });
-  }, [check, getToastRef, id, loginAction, navi, password, tr]);
-
-  React.useEffect(() => {
-    const appVersion = DeviceInfo.getVersion();
-    console.log('dev:appVersion:', appVersion);
-    setVersion(appVersion);
-  }, []);
-
-  React.useEffect(() => {
-    initParamsCallback().catch();
-  }, [initParamsCallback]);
-
-  React.useEffect(() => {
-    const ret8 = DeviceEventEmitter.addListener('_demo_emit_app_style', (e) => {
-      console.log('dev:emit:app:style:', e);
-      releaseAreaRef.current = e === 'classic' ? 'china' : 'global';
-      updater();
-    });
-
-    return () => {
-      ret8.remove();
-    };
-  }, [updater]);
+  }, [
+    check,
+    devLoginAction,
+    getToastRef,
+    id,
+    loginAction,
+    navi,
+    password,
+    serverSettingVisible,
+    setIsLoading,
+    tr,
+  ]);
 
   return (
     <ImageBackground
@@ -367,10 +303,16 @@ function EasemobLoginV2Screen(props: Props) {
                 autoFocus={true}
                 cursorColor={getColor('p')}
                 enableClearButton={true}
-                placeholder={tr('_demo_login_input_phone_number_tip')}
+                placeholder={tr(
+                  '_demo_login_input_phone_number_tip',
+                  accountType,
+                  serverSettingVisible
+                )}
                 clearButtonStyle={{ tintColor: getColor('clear') }}
                 placeholderTextColor={getColor('placeholder')}
-                keyboardType={'number-pad'}
+                keyboardType={
+                  serverSettingVisible === true ? 'default' : 'number-pad'
+                }
               />
             </View>
             <View
@@ -408,34 +350,42 @@ function EasemobLoginV2Screen(props: Props) {
                 cursorColor={getColor('p')}
                 enableClearButton={false}
                 secureTextEntry={false}
-                placeholder={tr('_demo_login_input_phone_number_captcha_tip')}
+                placeholder={tr(
+                  '_demo_login_input_phone_number_captcha_tip',
+                  accountType,
+                  serverSettingVisible
+                )}
                 placeholderTextColor={getColor('placeholder')}
-                keyboardType={'number-pad'}
+                keyboardType={
+                  serverSettingVisible === true ? 'default' : 'number-pad'
+                }
               />
-              <Pressable
-                style={[
-                  StyleSheet.absoluteFill,
-                  {
-                    justifyContent: 'center',
-                    alignItems: 'flex-end',
-                    left: Dimensions.get('window').width - 30 - 150,
-                    right: 30 + 22,
-                  },
-                ]}
-                onPress={startCaptcha}
-              >
-                <SingleLineText
-                  style={{
-                    fontSize: 14,
-                    fontStyle: 'normal',
-                    fontWeight: '500',
-                    lineHeight: 18,
-                    color: getCaptchaColor(),
-                  }}
+              {!serverSettingVisible ? (
+                <Pressable
+                  style={[
+                    StyleSheet.absoluteFill,
+                    {
+                      justifyContent: 'center',
+                      alignItems: 'flex-end',
+                      left: Dimensions.get('window').width - 30 - 150,
+                      right: 30 + 22,
+                    },
+                  ]}
+                  onPress={startCaptcha}
                 >
-                  {getCaptchaText()}
-                </SingleLineText>
-              </Pressable>
+                  <SingleLineText
+                    style={{
+                      fontSize: 14,
+                      fontStyle: 'normal',
+                      fontWeight: '500',
+                      lineHeight: 18,
+                      color: getCaptchaColor(),
+                    }}
+                  >
+                    {getCaptchaText()}
+                  </SingleLineText>
+                </Pressable>
+              ) : null}
             </View>
 
             <View
@@ -476,10 +426,10 @@ function EasemobLoginV2Screen(props: Props) {
                 <Icon
                   name={
                     check
-                      ? releaseAreaRef.current === 'china'
+                      ? releaseArea === 'china'
                         ? 'checked_rectangle'
                         : 'checked_ellipse'
-                      : releaseAreaRef.current === 'china'
+                      : releaseArea === 'china'
                       ? 'unchecked_rectangle'
                       : 'unchecked_ellipse'
                   }
@@ -621,100 +571,51 @@ function EasemobLoginV2Screen(props: Props) {
 }
 
 function AgoraLoginV2Screen(props: Props) {
-  const {} = props;
-  const navi = useStackScreenRoute(props);
-  const { push } = navi;
-  const [id, setId] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [isLoading, setIsLoading] = React.useState(false);
-  const { tr } = useI18nContext();
-  const { style, cornerRadius: corner } = useThemeContext();
-  const { getBorderRadius } = useGetStyleProps();
-  const { colors, cornerRadius } = usePaletteContext();
-  const { input } = corner;
-  const { getColor } = useColors({
-    bg: {
-      light: '#EFF4FF',
-      dark: 'rgba(142, 199, 239, 0.49)',
-    },
-    bg2: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-    p: {
-      light: colors.primary[5],
-      dark: colors.primary[6],
-    },
-    clear: {
-      light: colors.neutral[7],
-      dark: colors.neutral[8],
-    },
-    n: {
-      light: colors.neutral[5],
-      dark: colors.neutral[6],
-    },
-    v: {
-      light: 'rgba(0, 0, 0, 0.20)',
-      dark: 'rgba(0, 0, 0, 0.20)',
-    },
-    tip: {
-      light: colors.neutral[3],
-      dark: colors.neutral[8],
-    },
-  });
-  const { getToastRef, loginAction } = useLogin();
-  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
-  const countRef = React.useRef(0);
-  const [version, setVersion] = React.useState('');
-  const [serverSettingVisible, SetServerSettingVisible] = React.useState(false);
-  const { updater } = useForceUpdate();
-  const ra = getReleaseArea();
-  const releaseAreaRef = React.useRef(ra);
-  useNavigationState(props);
+  const {
+    id,
+    setId,
+    password,
+    setPassword,
+    isLoading,
+    setIsLoading,
+    tr,
+    style,
+    getBorderRadius,
+    input,
+    getColor,
+    getToastRef,
+    loginAction,
+    devLoginAction,
+    version,
+    serverSettingVisible,
+    navi,
+    corner,
+    cornerRadius,
+    onClickedServerSetting,
+    onClickedEnableDev,
+  } = useLoginV2Screen(props);
 
-  const { initParams } = useGeneralSetting();
-  const [_initParams, setInitParams] = React.useState(false);
   const [showTip, setShowTip] = React.useState('');
 
-  const initParamsCallback = React.useCallback(async () => {
-    if (_initParams === true) {
+  const onClickedLogin = React.useCallback(() => {
+    if (serverSettingVisible === true) {
+      devLoginAction({
+        id: id,
+        passOrToken: password,
+        usePassword: false,
+        onResult: (res) => {
+          if (res.isOk) {
+            navi.replace({ to: 'Home' });
+          } else {
+            getToastRef().show({
+              message: res.reason,
+              showPosition: 'center',
+            });
+          }
+        },
+      });
       return;
     }
-    try {
-      const ret = await initParams();
-      releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
-      setInitParams(true);
-    } catch (error) {
-      setInitParams(true);
-    }
-  }, [_initParams, initParams, releaseAreaRef, setInitParams]);
-
-  const clearTimer = React.useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-      if (countRef.current >= 4) {
-        countRef.current = 0;
-        SetServerSettingVisible(true);
-        push({ to: 'LoginV2Setting' });
-        return;
-      }
-      ++countRef.current;
-    }
-  }, [push]);
-
-  const onClickedServerSetting = React.useCallback(() => {
-    push({ to: 'LoginV2Setting' });
-  }, [push]);
-
-  const onClickedEnableDev = React.useCallback(() => {
-    clearTimer();
-    timerRef.current = setTimeout(() => {
-      countRef.current = 0;
-    }, 1000);
-  }, [clearTimer]);
-
-  const onClickedLogin = React.useCallback(() => {
     if (password.length === 0) {
       getToastRef().show({
         message: tr('_demo_login_tip_reason_3'),
@@ -731,33 +632,21 @@ function AgoraLoginV2Screen(props: Props) {
         if (res.isOk) {
           navi.replace({ to: 'Home' });
         } else {
-          setShowTip(res.reason ?? '');
+          setShowTip(res.reason.toString() ?? '');
         }
       },
     });
-  }, [getToastRef, id, loginAction, navi, password, tr]);
-
-  React.useEffect(() => {
-    const appVersion = DeviceInfo.getVersion();
-    console.log('dev:appVersion:', appVersion);
-    setVersion(appVersion);
-  }, []);
-
-  React.useEffect(() => {
-    initParamsCallback().catch();
-  }, [initParamsCallback]);
-
-  React.useEffect(() => {
-    const ret8 = DeviceEventEmitter.addListener('_demo_emit_app_style', (e) => {
-      console.log('dev:emit:app:style:', e);
-      releaseAreaRef.current = e === 'classic' ? 'china' : 'global';
-      updater();
-    });
-
-    return () => {
-      ret8.remove();
-    };
-  }, [updater]);
+  }, [
+    devLoginAction,
+    getToastRef,
+    id,
+    loginAction,
+    navi,
+    password,
+    serverSettingVisible,
+    setIsLoading,
+    tr,
+  ]);
 
   return (
     <ImageBackground
@@ -860,7 +749,8 @@ function AgoraLoginV2Screen(props: Props) {
                 enableClearButton={true}
                 placeholder={tr(
                   '_demo_login_input_phone_number_tip',
-                  accountType
+                  accountType,
+                  serverSettingVisible
                 )}
                 clearButtonStyle={{ tintColor: getColor('clear') }}
                 keyboardType={
@@ -908,7 +798,8 @@ function AgoraLoginV2Screen(props: Props) {
                 passwordButtonStyle={{ tintColor: getColor('clear') }}
                 placeholder={tr(
                   '_demo_login_input_phone_number_captcha_tip',
-                  accountType
+                  accountType,
+                  serverSettingVisible
                 )}
                 keyboardType={
                   accountType === 'agora' ? 'default' : 'number-pad'
@@ -968,7 +859,7 @@ function AgoraLoginV2Screen(props: Props) {
                     textAlign: 'center',
                   }}
                 >
-                  {tr('_demo_login_tip_1')}
+                  {tr(showTip)}
                 </SingleLineText>
               </View>
             ) : null}
@@ -1041,6 +932,165 @@ function AgoraLoginV2Screen(props: Props) {
       </SafeAreaViewFragment>
     </ImageBackground>
   );
+}
+
+function useLoginV2Screen(props: Props) {
+  const { route } = props;
+  const _serverConfigVisible: boolean =
+    (route.params as any).params?.serverConfigVisible ?? false;
+  const navi = useStackScreenRoute(props);
+  const { push } = navi;
+  const [id, setId] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { tr } = useI18nContext();
+  const { releaseArea } = useConfigContext();
+  const { getEnableDevMode, setEnableDevMode } = useServerConfig();
+  const { style, cornerRadius: corner } = useThemeContext();
+  const { getBorderRadius } = useGetStyleProps();
+  const { colors, cornerRadius } = usePaletteContext();
+  const { input } = corner;
+  const { getColor } = useColors({
+    bg: {
+      light: '#EFF4FF',
+      dark: 'rgba(142, 199, 239, 0.49)',
+    },
+    bg2: {
+      light: colors.neutral[98],
+      dark: colors.neutral[1],
+    },
+    p: {
+      light: colors.primary[5],
+      dark: colors.primary[6],
+    },
+    clear: {
+      light: colors.neutral[7],
+      dark: colors.neutral[8],
+    },
+    n: {
+      light: colors.neutral[5],
+      dark: colors.neutral[6],
+    },
+    v: {
+      light: 'rgba(0, 0, 0, 0.20)',
+      dark: 'rgba(0, 0, 0, 0.20)',
+    },
+    tip: {
+      light: colors.neutral[3],
+      dark: colors.neutral[8],
+    },
+    placeholder: {
+      light: colors.neutral[6],
+      dark: colors.neutral[4],
+    },
+    loading: {
+      light: colors.neutral[98],
+      dark: colors.neutral[98],
+    },
+  });
+  const { getToastRef, loginAction, devLoginAction } = useLogin();
+  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
+  const countRef = React.useRef(0);
+  const [version, setVersion] = React.useState('');
+  const [serverSettingVisible, SetServerSettingVisible] =
+    React.useState(_serverConfigVisible);
+  const { updater } = useForceUpdate();
+  const requestNavigationRef = React.useRef(false);
+  useNavigationState(props);
+
+  const clearTimer = React.useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+      if (countRef.current >= 4) {
+        countRef.current = 0;
+        SetServerSettingVisible((pre) => {
+          requestNavigationRef.current = !pre;
+          return !pre;
+        });
+        return;
+      }
+      ++countRef.current;
+    }
+  }, []);
+
+  const onClickedServerSetting = React.useCallback(() => {
+    push({
+      to: 'LoginV2Setting',
+      props: { serverConfigVisible: true },
+    });
+  }, [push]);
+
+  const onClickedEnableDev = React.useCallback(() => {
+    clearTimer();
+    timerRef.current = setTimeout(() => {
+      countRef.current = 0;
+    }, 1000);
+  }, [clearTimer]);
+
+  React.useEffect(() => {
+    const appVersion = DeviceInfo.getVersion();
+    console.log('dev:appVersion:', appVersion);
+    setVersion(appVersion);
+  }, []);
+
+  React.useEffect(() => {
+    if (serverSettingVisible) {
+      setEnableDevMode(true)
+        .then(async () => {
+          if (requestNavigationRef.current) {
+            requestNavigationRef.current = false;
+            onClickedServerSetting();
+          }
+        })
+        .catch(() => {
+          requestNavigationRef.current = false;
+        });
+    } else {
+      setEnableDevMode(false).catch();
+    }
+  }, [
+    getEnableDevMode,
+    onClickedServerSetting,
+    serverSettingVisible,
+    setEnableDevMode,
+  ]);
+
+  return {
+    route,
+    push,
+    id,
+    setId,
+    password,
+    setPassword,
+    isLoading,
+    setIsLoading,
+    tr,
+    getEnableDevMode,
+    setEnableDevMode,
+    style,
+    getBorderRadius,
+    cornerRadius,
+    input,
+    getColor,
+    version,
+    setVersion,
+    countRef,
+    serverSettingVisible,
+    SetServerSettingVisible,
+    updater,
+    releaseArea,
+    requestNavigationRef,
+    getToastRef,
+    loginAction,
+    devLoginAction,
+    timerRef,
+    onClickedServerSetting,
+    onClickedEnableDev,
+    clearTimer,
+    navi,
+    corner,
+  };
 }
 
 export const LoginV2Screen =

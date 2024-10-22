@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useChatContext } from '../../chat';
 import { useI18nContext } from '../../i18n';
 import type { ChatMessageThread } from '../../rename.chat';
-import type { InitMenuItemsType } from '../BottomSheetMenu';
+import type { InitMenuItemsType } from '../types';
 import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
 

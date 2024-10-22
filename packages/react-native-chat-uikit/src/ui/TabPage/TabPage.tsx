@@ -7,7 +7,9 @@ import { useTabPageAPI } from './TabPage.hooks';
 import { TabPageBody } from './TabPageBody';
 import { TabPageBodyLIST } from './TabPageBody.LIST';
 import { TabPageBodyT } from './TabPageBody.T';
+import { TabPageDotHeader } from './TabPageDotHeader';
 import { TabPageHeader } from './TabPageHeader';
+import { TabPageTabBarHeader } from './TabPageTabBarHeader';
 import type {
   TabPageBodyLISTProps,
   TabPageBodyProps,
@@ -80,6 +82,8 @@ interface TabPageComponent
     TabPageProps & React.RefAttributes<TabPageRef>
   > {
   DefaultHeader: typeof TabPageHeader;
+  DotHeader: typeof TabPageDotHeader;
+  TabBarHeader: typeof TabPageTabBarHeader;
   DefaultBody: typeof TabPageBody;
 }
 
@@ -237,6 +241,8 @@ const _TabPage = React.forwardRef<TabPageRef, TabPageProps>(
 ) as TabPageComponent;
 
 _TabPage.DefaultHeader = TabPageHeader;
+_TabPage.DotHeader = TabPageDotHeader;
+_TabPage.TabBarHeader = TabPageTabBarHeader;
 _TabPage.DefaultBody = TabPageBody;
 
 export const TabPage = _TabPage;

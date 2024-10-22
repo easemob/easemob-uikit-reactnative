@@ -6,7 +6,11 @@ import type { ConversationDetailType } from '../config';
 import type { CreateStringSet, LanguageCode, StringSet } from '../i18n';
 import { ChatMessage } from '../rename.chat';
 import type { CornerRadiusPaletteType, Palette, Theme } from '../theme';
-import type { ReleaseArea } from '../types';
+import type {
+  MessageContextMenuStyle,
+  MessageInputBarExtensionStyle,
+  ReleaseArea,
+} from '../types';
 
 /**
  * Properties of the Container.
@@ -94,6 +98,22 @@ export type ContainerProps = React.PropsWithChildren<{
    * The conversation detail config.
    */
   conversationDetail?: ConversationDetailType;
+  /**
+   * The message long press menu style.
+   *
+   * Detail for `BottomSheetNameMenu` and `MessageContextNameMenu`.
+   *
+   * If you want to customize it, you need to set the custom component `MessageCustomLongPressMenu` in the properties of `ConversationDetail`.
+   */
+  messageMenuStyle?: MessageContextMenuStyle;
+
+  /**
+   * The message input bar style.
+   *
+   * Detail for `BottomSheetNameMenu` and `MessageInputBarExtensionMenu`.
+   */
+  messageInputBarStyle?: MessageInputBarExtensionStyle;
+
   /**
    * The group config.
    */

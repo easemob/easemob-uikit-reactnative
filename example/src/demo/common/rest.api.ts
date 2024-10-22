@@ -15,6 +15,7 @@ export type EasemobRequestLoginResult = {
   phoneNumber: string;
   token: string;
   avatarUrl?: string;
+  errorInfo?: any;
 };
 export type AgoraRequestLoginResult = {
   chatUserName: string;
@@ -23,6 +24,7 @@ export type AgoraRequestLoginResult = {
   accessToken: string;
   expireTimestamp: number;
   avatarUrl?: string;
+  errorInfo?: any;
 };
 export type RequestLoginResult = (
   | EasemobRequestLoginResult

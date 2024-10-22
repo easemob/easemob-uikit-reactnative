@@ -18,8 +18,8 @@ import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import { SwitchRef } from '../../ui/Switch';
 import type { SimpleToastRef } from '../../ui/Toast';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { useContactInfoActions } from '../hooks/useContactInfoActions';
+import type { ContextNameMenuRef } from '../types';
 import type { ContactInfoProps, ContactInfoRef } from './types';
 
 export function useContactInfo(
@@ -54,7 +54,7 @@ export function useContactInfo(
   const [userAvatar, setUserAvatar] = React.useState(propsUserAvatar);
   const [isContact, setIsContact] = React.useState(propsIsContact);
   const [isSelf, setIsSelf] = React.useState(false);
-  const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const switchRef = React.useRef<SwitchRef | null>(null);

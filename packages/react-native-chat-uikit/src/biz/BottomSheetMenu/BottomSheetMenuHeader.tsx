@@ -2,29 +2,20 @@ import * as React from 'react';
 import { Dimensions, Platform, Pressable, View } from 'react-native';
 import emoji from 'twemoji';
 
-import type { IconNameType } from '../../assets';
 import { useConfigContext } from '../../config';
 import { useColors, useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { SingleLineText } from '../../ui/Text';
-import type { EmojiIconItem } from '../types';
+import { MessageMenuHeaderProps } from '../types';
 
-export type BottomSheetMenuHeaderProps = {
-  emojiList?: EmojiIconItem[];
-  onClickedEmoji?: (emoji: IconNameType | string) => void;
-  /**
-   * Whether to use the emoji chat mode.
-   *
-   * Its setting will affect the type of the return value of `onClickedEmoji`. If true, returns the emoji string, otherwise returns the `U+xxxxx` string.
-   *
-   * @default false
-   */
-  isEmojiCharacter?: boolean;
-};
-
-export function BottomSheetMenuHeader(props: BottomSheetMenuHeaderProps) {
-  const { emojiList, onClickedEmoji, isEmojiCharacter = false } = props;
+export function BottomSheetMenuHeader(props: MessageMenuHeaderProps) {
+  const {
+    emojiList,
+    onClickedEmoji,
+    isEmojiCharacter = false,
+    messageMenuStyle = 'bottom-sheet',
+  } = props;
   const { fontFamily } = useConfigContext();
   const { cornerRadius } = usePaletteContext();
   const { getBorderRadius } = useGetStyleProps();
@@ -36,6 +27,10 @@ export function BottomSheetMenuHeader(props: BottomSheetMenuHeaderProps) {
       dark: colors.primary[6],
     },
   });
+  const screenWidth = Dimensions.get('window').width;
+  const contentWidth = screenWidth >= 392 ? screenWidth - 42 : screenWidth - 32;
+  const width =
+    messageMenuStyle === 'bottom-sheet' ? screenWidth : contentWidth;
 
   return (
     <View
@@ -44,7 +39,7 @@ export function BottomSheetMenuHeader(props: BottomSheetMenuHeaderProps) {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        width: Dimensions.get('window').width,
+        width: width,
       }}
     >
       {emojiList?.map((v, i) => {
@@ -100,7 +95,3 @@ export function BottomSheetMenuHeader(props: BottomSheetMenuHeaderProps) {
     </View>
   );
 }
-
-export type BottomSheetMenuHeaderType =
-  | React.FC<BottomSheetMenuHeaderProps>
-  | React.ReactElement<BottomSheetMenuHeaderProps>;

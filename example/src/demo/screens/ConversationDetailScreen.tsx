@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { DeviceEventEmitter } from 'react-native';
+import { DeviceEventEmitter, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CallConstKey } from '../../rename.callkit';
@@ -11,6 +11,9 @@ import {
   ChatMessageChatType,
   ChatMessageStatus,
   ChatMessageType,
+  ContextNameMenuProps,
+  ContextNameMenuRef,
+  InitMenuItemsType,
   MessageView,
   MessageViewProps,
 } from '../../rename.uikit';
@@ -65,6 +68,33 @@ export function MyMessageView(props: MessageViewProps) {
   }
   return MessageView(props);
 }
+
+export const MyMessageContextNameMenu = React.forwardRef<
+  ContextNameMenuRef,
+  ContextNameMenuProps
+>(function (
+  props: ContextNameMenuProps,
+  ref?: React.ForwardedRef<ContextNameMenuRef>
+) {
+  const {} = props;
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        startShow: () => {},
+        startHide: (_onFinished?: () => void) => {},
+        startShowWithInit: (_initItems: InitMenuItemsType[], _?: any) => {},
+        startShowWithProps: (_props: ContextNameMenuProps) => {},
+        getData: () => {
+          return undefined;
+        },
+      };
+    },
+    []
+  );
+  ref;
+  return <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />;
+});
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ConversationDetailScreen(props: Props) {
@@ -215,7 +245,7 @@ export function ConversationDetailScreen(props: Props) {
 
   React.useEffect(() => {
     if (comType !== 'chat' && comType !== 'search') {
-      return;
+      return () => {};
     }
     const sub = DeviceEventEmitter.addListener(
       'onSignallingMessage',
@@ -375,14 +405,14 @@ export function ConversationDetailScreen(props: Props) {
                 const params = body.params;
                 if (event === gCustomMessageCardEventType) {
                   const cardParams = params as {
-                    uid: string;
+                    userId: string;
                     nickname: string;
                     avatar: string;
                   };
                   navi.push({
                     to: 'ContactInfo',
                     props: {
-                      userId: cardParams.uid,
+                      userId: cardParams.userId,
                     },
                   });
                 }
@@ -555,10 +585,11 @@ export function ConversationDetailScreen(props: Props) {
         }}
         onClickedVideo={onClickedVideo}
         onClickedVoice={onClickedVoice}
-        // ConversationDetailNavigationBar={
+        // NavigationBar={
         //   <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />
         // }
         // enableNavigationBar={true}
+        // MessageCustomLongPressMenu={MyMessageContextNameMenu}
       />
     </SafeAreaViewFragment>
   );

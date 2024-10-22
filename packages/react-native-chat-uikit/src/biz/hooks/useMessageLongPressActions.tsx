@@ -17,14 +17,15 @@ import {
 } from '../../rename.chat';
 import { Services } from '../../services';
 import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList';
-import { BottomSheetMenuHeader, InitMenuItemsType } from '../BottomSheetMenu';
+import { BottomSheetMenuHeader } from '../BottomSheetMenu';
 import type {
   ConversationDetailModelType,
   MessageModel,
   SystemMessageModel,
   TimeMessageModel,
 } from '../ConversationDetail';
-import type { EmojiIconItem } from '../types';
+import type { EmojiIconItem, PressedComponentEvent } from '../types';
+import { InitMenuItemsType } from '../types';
 import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
 
@@ -106,6 +107,7 @@ export function useMessageLongPressActions(
     enableMessageForward,
     enableMessageMultiSelect,
     enableMessagePin,
+    messageMenuStyle,
   } = useConfigContext();
 
   const isCardMessage = (msg: ChatMessage) => {
@@ -126,6 +128,7 @@ export function useMessageLongPressActions(
       emojiList={emojiList}
       onClickedEmoji={onFace}
       isEmojiCharacter={true}
+      messageMenuStyle={messageMenuStyle}
     />
   );
 
@@ -137,8 +140,9 @@ export function useMessageLongPressActions(
     convId: string;
     convType: number;
     comType: ConversationDetailModelType;
+    event?: PressedComponentEvent;
   }) => {
-    const { model, emojiList, onFace, convType, comType } = params;
+    const { model, emojiList, onFace, convType, comType, event } = params;
     if (model.modelType !== 'message') {
       return;
     }
@@ -417,6 +421,22 @@ export function useMessageLongPressActions(
       header:
         emojiList && enableReaction === true
           ? header(emojiList, onFace)
+          : undefined,
+      suggestedPosition:
+        messageMenuStyle === 'context'
+          ? {
+              x: event?.pressedX,
+              y: event?.pressedY,
+            }
+          : undefined,
+      noCoverageArea:
+        messageMenuStyle === 'context'
+          ? {
+              x: event?.componentX,
+              y: event?.componentY,
+              width: event?.componentWidth,
+              height: event?.componentHeight,
+            }
           : undefined,
     });
   };

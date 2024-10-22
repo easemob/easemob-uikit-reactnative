@@ -1,82 +1,25 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import type { IconNameType } from '../../assets';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
-import { BottomSheetMenu, BottomSheetMenuRef } from './BottomSheetMenu';
+import { InitMenuItemsType } from '../types';
+import {
+  BizContextMenuRef,
+  ContextNameMenuProps,
+  ContextNameMenuRef,
+} from '../types';
+import { BottomSheetMenu } from './BottomSheetMenu';
 import { BottomSheetMenuItem } from './BottomSheetMenu.item';
-import type {
-  BottomSheetMenuHeaderProps,
-  BottomSheetMenuHeaderType,
-} from './BottomSheetMenuHeader';
-
-export type InitMenuItemsType = {
-  /**
-   * The text to be displayed.
-   */
-  name: string;
-  /**
-   * Whether the text is highlighted.
-   */
-  isHigh: boolean;
-  /**
-   * The icon to be displayed.
-   */
-  icon?: IconNameType;
-  /**
-   * The callback function when the text is clicked.
-   *
-   * @param name The text to be displayed.
-   * @param others Other parameters. You can pass in the parameters you need. For example, you can pass in the user ID.
-   */
-  onClicked?: (name: string, others?: any) => void;
-};
-export type BottomSheetNameMenuRef = Omit<
-  BottomSheetMenuRef,
-  'startShowWithInit' | 'startShowWithProps'
-> & {
-  startShowWithInit: (initItems: InitMenuItemsType[], others?: any) => void;
-  startShowWithProps: (props: BottomSheetNameMenuProps) => void;
-};
-export type BottomSheetNameMenuProps = {
-  /**
-   * To request to close the component, you usually need to call the `startHide` method here.
-   */
-  onRequestModalClose: () => void;
-  /**
-   * If no title is specified, it will not be displayed.
-   */
-  title?: string;
-  /**
-   * The maximum number should not exceed 6.
-   */
-  initItems?: InitMenuItemsType[];
-  /**
-   * The layout type of the component.
-   */
-  layoutType?: 'left' | 'center';
-  /**
-   * Whether to display the cancel button.
-   */
-  hasCancel?: boolean;
-
-  headerProps?: BottomSheetMenuHeaderProps;
-  header?: BottomSheetMenuHeaderType;
-};
 
 /**
  * The BottomSheetNameMenu component provides menu functionality.
  *
  * Compared with `BottomSheetMenu`, it is simpler to use, you only need to enter a text array.
  *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/57b8f2ea9b24cd0e4fb8606dc3b246b3fd91d52f/src/biz/ParticipantList/ParticipantContextMenu.tsx}
- *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/57b8f2ea9b24cd0e4fb8606dc3b246b3fd91d52f/src/biz/MessageList/MessageList.tsx}
- *
  * @example
  * ```tsx
- * const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+ * const menuRef = React.useRef<ContextNameMenuRef>({} as any);
  * // ...
  * <BottomSheetNameMenu
  *   ref={menuRef}
@@ -111,17 +54,17 @@ export type BottomSheetNameMenuProps = {
  * ```
  */
 export const BottomSheetNameMenu = React.forwardRef<
-  BottomSheetNameMenuRef,
-  BottomSheetNameMenuProps
+  ContextNameMenuRef,
+  ContextNameMenuProps
 >(function (
-  props: BottomSheetNameMenuProps,
-  ref?: React.ForwardedRef<BottomSheetNameMenuRef>
+  props: ContextNameMenuProps,
+  ref?: React.ForwardedRef<ContextNameMenuRef>
 ) {
   const { onRequestModalClose, title, header, headerProps } = props;
   const { getItems } = useGetListItems(() => {
     return menuRef?.current?.getData?.();
   });
-  const menuRef = React.useRef<BottomSheetMenuRef>({} as any);
+  const menuRef = React.useRef<BizContextMenuRef>({} as any);
   React.useImperativeHandle(
     ref,
     () => {
@@ -136,7 +79,7 @@ export const BottomSheetNameMenu = React.forwardRef<
           const items = getItems({ initItems, onRequestModalClose });
           menuRef?.current?.startShowWithInit?.(items, others);
         },
-        startShowWithProps: (props: BottomSheetNameMenuProps) => {
+        startShowWithProps: (props: ContextNameMenuProps) => {
           const { initItems: _, ...others } = props;
           _;
           const items = getItems({
@@ -172,7 +115,7 @@ function useGetListItems(onGetData?: () => any) {
   const { getColor } = useColors();
   const { tr } = useI18nContext();
   const getItems = React.useCallback(
-    (props: BottomSheetNameMenuProps) => {
+    (props: ContextNameMenuProps) => {
       const {
         initItems,
         onRequestModalClose,

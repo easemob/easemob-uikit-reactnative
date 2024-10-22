@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { useI18nContext } from '../../i18n';
-import type { InitMenuItemsType } from '../BottomSheetMenu';
+import { InitMenuItemsType } from '../types';
 import type { BasicActionsProps } from './types';
 import { useCloseMenu } from './useCloseMenu';
 

@@ -10,8 +10,8 @@ import {
 import emoji from 'twemoji';
 
 import type { IconNameType } from '../../assets';
+import { useConfigContext } from '../../config';
 import { uilog } from '../../const';
-// import { useDispatchContext } from '../../dispatch';
 import {
   useDelayExecTask,
   useForceUpdate,
@@ -20,8 +20,7 @@ import {
 import type { ChatTextMessageBody } from '../../rename.chat';
 import type { AlertRef } from '../../ui/Alert';
 import { timeoutTask } from '../../utils';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
-// import { gVoiceBarHeight } from '../const';
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { FACE_ASSETS_UTF16 } from '../EmojiList';
 import { useMessageInputExtendActions } from '../hooks/useMessageInputExtendActions';
 import {
@@ -30,6 +29,11 @@ import {
   selectOnePicture,
   selectOneShortVideo,
 } from '../hooks/useSelectFile';
+import {
+  MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT,
+  MessageInputBarExtensionNameMenu,
+} from '../MessageInputBarExtension';
+import type { ContextNameMenuRef } from '../types';
 import type { EmojiIconItem } from '../types';
 import type { BottomVoiceBarRef, VoiceBarState } from '../VoiceBar';
 import type { MessageInputEditMessageRef } from './MessageInputEditMessage';
@@ -71,6 +75,7 @@ export function useMessageInput(
   const [_value, _setValue] = React.useState('');
   const [emojiHeight, _setEmojiHeight] = React.useState(0);
   const isClosedEmoji = React.useRef(true);
+  const isClosedExtension = React.useRef(true);
   const isClosedKeyboard = React.useRef(true);
   const isClosedVoiceBar = React.useRef(true);
   const [emojiIconName, setEmojiIconName] =
@@ -82,11 +87,24 @@ export function useMessageInput(
   /// !!! tell me why? inputBarState
   const [inputBarState, setInputBarState] =
     React.useState<MessageInputState>('normal');
+  const { messageInputBarStyle } = useConfigContext();
+  const MessageInputBarMenu = React.useMemo(() => {
+    if (messageInputBarStyle === 'bottom-sheet') {
+      return BottomSheetNameMenu;
+    } else if (messageInputBarStyle === 'extension') {
+      return MessageInputBarExtensionNameMenu;
+    } else {
+      return null;
+    }
+  }, [messageInputBarStyle]);
   const inputBarStateRef = React.useRef<MessageInputState>('normal');
   const hasLayoutAnimation = React.useRef(false);
   const voiceBarRef = React.useRef<BottomVoiceBarRef>({} as any);
   const voiceBarStateRef = React.useRef<VoiceBarState>('idle');
-  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>(null);
+  const extensionHeightRef = React.useRef<number>(
+    MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT
+  );
   const quoteMessageRef = React.useRef<MessageModel | undefined>(undefined);
   const [showQuote, setShowQuote] = React.useState(false);
   const editRef = React.useRef<MessageInputEditMessageRef>({} as any);
@@ -126,52 +144,78 @@ export function useMessageInput(
   const changeInputBarState = (nextState: MessageInputState) => {
     if (nextState === 'normal') {
       isClosedEmoji.current = true;
+      isClosedExtension.current = true;
       isClosedKeyboard.current = true;
       isClosedVoiceBar.current = true;
       onSetInputBarState('normal');
       setEmojiIconName('face');
+      setSendIconName('plus_in_circle');
+      closeExtension();
       closeEmojiList();
       closeVoiceBar();
       closeKeyboard();
       hideMultiSelectBar();
     } else if (nextState === 'emoji') {
       isClosedEmoji.current = false;
+      isClosedExtension.current = true;
       isClosedKeyboard.current = true;
       isClosedVoiceBar.current = true;
       onSetInputBarState('emoji');
       setEmojiIconName('keyboard2');
       closeKeyboard();
       closeVoiceBar();
+      closeExtension();
       showEmojiList();
+      hideMultiSelectBar();
+    } else if (nextState === 'extension') {
+      isClosedEmoji.current = true;
+      isClosedExtension.current = false;
+      isClosedKeyboard.current = true;
+      isClosedVoiceBar.current = true;
+      onSetInputBarState('extension');
+      setEmojiIconName('face');
+      setSendIconName('xmark_in_circle');
+      closeKeyboard();
+      closeVoiceBar();
+      closeEmojiList();
       hideMultiSelectBar();
     } else if (nextState === 'voice') {
       isClosedEmoji.current = true;
+      isClosedExtension.current = true;
       isClosedKeyboard.current = true;
       isClosedVoiceBar.current = false;
       onSetInputBarState('voice');
       setEmojiIconName('face');
       closeKeyboard();
       closeEmojiList();
+      closeExtension();
       showVoiceBar();
       hideMultiSelectBar();
     } else if (nextState === 'multi-select') {
       isClosedEmoji.current = true;
+      isClosedExtension.current = true;
       isClosedKeyboard.current = true;
       isClosedVoiceBar.current = true;
       onSetInputBarState('multi-select');
       setEmojiIconName('face');
       closeKeyboard();
       closeEmojiList();
+      closeExtension();
       onCloseVoiceBar();
       showMultiSelectBar();
     } else if (nextState === 'keyboard') {
       isClosedKeyboard.current = false;
       onSetInputBarState('keyboard');
+      if (valueRef.current.length === 0) {
+        setSendIconName('plus_in_circle');
+      }
       setEmojiIconName('face');
       if (Platform.OS !== 'ios') {
         isClosedEmoji.current = true;
+        isClosedExtension.current = true;
         isClosedVoiceBar.current = true;
         closeEmojiList();
+        closeExtension();
         closeVoiceBar();
         hideMultiSelectBar();
       }
@@ -190,6 +234,9 @@ export function useMessageInput(
     } else {
       setEmojiIconName('keyboard2');
       showEmojiList();
+    }
+    if (isClosedExtension.current === true) {
+      closeExtension();
     }
     if (isClosedVoiceBar.current === true) {
       closeVoiceBar();
@@ -333,11 +380,21 @@ export function useMessageInput(
     [setLayoutAnimation]
   );
 
+  const closeExtension = React.useCallback(() => {
+    if (messageInputBarStyle === 'extension') {
+      menuRef.current?.startHide?.();
+    }
+  }, [messageInputBarStyle]);
+
   const closeKeyboard = React.useCallback(() => {
     Keyboard.dismiss();
   }, []);
   const closeEmojiList = React.useCallback(() => {
-    setEmojiHeight(0);
+    if (isClosedExtension.current === false) {
+      setEmojiHeight(extensionHeightRef.current);
+    } else {
+      setEmojiHeight(0);
+    }
   }, [setEmojiHeight]);
   const closeVoiceBar = React.useCallback(() => {
     // setVoiceHeight(0);
@@ -345,8 +402,12 @@ export function useMessageInput(
   }, []);
 
   const showEmojiList = React.useCallback(() => {
-    const tmp = keyboardHeight === 0 ? 300 : keyboardHeight;
-    setEmojiHeight(tmp - (bottom ?? 0));
+    if (isClosedExtension.current === false) {
+      setEmojiHeight(extensionHeightRef.current);
+    } else {
+      const tmp = keyboardHeight === 0 ? 300 : keyboardHeight;
+      setEmojiHeight(tmp - (bottom ?? 0));
+    }
   }, [bottom, keyboardHeight, setEmojiHeight]);
 
   const showVoiceBar = React.useCallback(() => {
@@ -413,6 +474,9 @@ export function useMessageInput(
       }
     } else {
       onShowMessageInputExtendActions();
+      if (messageInputBarStyle === 'extension') {
+        changeInputBarState('extension');
+      }
     }
   };
 
@@ -421,7 +485,6 @@ export function useMessageInput(
   };
   const onSelectSendVoice = (props: SendVoiceProps) => {
     propsOnClickedSend?.(props);
-    changeInputBarState('normal');
   };
   const onSelectSendVideo = (props: SendVideoProps) => {
     propsOnClickedSend?.(props);
@@ -433,20 +496,26 @@ export function useMessageInput(
     propsOnClickedCardMenu?.();
   };
 
-  const { onShowMessageInputExtendActions } = useMessageInputExtendActions({
-    menuRef,
-    convId,
-    alertRef,
-    onSelectOnePicture: selectOnePicture,
-    onSelectOnePictureFromCamera: selectCamera,
-    onSelectFile: selectFile,
-    onSelectOneShortVideo: selectOneShortVideo,
-    onSelectSendCard,
-    onSelectFileResult: onSelectSendFile,
-    onSelectOnePictureResult: onSelectSendImage,
-    onSelectOneShortVideoResult: onSelectSendVideo,
-    onInit: onInitMenu,
-  });
+  const onBeforeShowMessageInputExtendActions = () => {
+    changeInputBarState('normal');
+  };
+
+  const { onShowMessageInputExtendActions, setMessageInputExtendCallback } =
+    useMessageInputExtendActions({
+      menuRef,
+      convId,
+      alertRef,
+      onSelectOnePicture: selectOnePicture,
+      onSelectOnePictureFromCamera: selectCamera,
+      onSelectFile: selectFile,
+      onSelectOneShortVideo: selectOneShortVideo,
+      onSelectSendCard,
+      onSelectFileResult: onSelectSendFile,
+      onSelectOnePictureResult: onSelectSendImage,
+      onSelectOneShortVideoResult: onSelectSendVideo,
+      onInit: onInitMenu,
+      onBeforeCall: onBeforeShowMessageInputExtendActions,
+    });
 
   const onVoiceFailed = React.useCallback(
     (error: { reason: string; error: any }) => {
@@ -510,6 +579,12 @@ export function useMessageInput(
       );
     }
   }, [keyboardCurrentHeight, emojiHeight, onHeightChange]);
+
+  React.useEffect(() => {
+    setMessageInputExtendCallback((height) => {
+      extensionHeightRef.current = height;
+    });
+  }, [setMessageInputExtendCallback]);
 
   React.useImperativeHandle(ref, () => {
     return {
@@ -644,5 +719,7 @@ export function useMessageInput(
     onKeyPress,
     msgPinBackgroundCurrentOpacity,
     msgPinHeightRef,
+    MessageInputBarMenu,
+    messageInputBarStyle,
   };
 }

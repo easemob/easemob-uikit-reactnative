@@ -1,9 +1,9 @@
 import type { StyleProp, ViewStyle } from 'react-native';
 
 import type { ConversationModel, DataModel } from '../../chat';
-import type { InitMenuItemsType } from '../BottomSheetMenu';
 import type {
   FlatListRefType,
+  InitMenuItemsType,
   ListActions,
   ListItemActions,
   ListItemProps,
@@ -76,7 +76,7 @@ export type ConversationListRef = Omit<
 //   /**
 //    * The reference object of the menu component. You can control operations such as menu pop-up.
 //    */
-//   menuRef: React.RefObject<BottomSheetNameMenuRef>;
+//   menuRef: React.RefObject<ContextNameMenuRef>;
 //   /**
 //    * The reference object of the list component.
 //    */

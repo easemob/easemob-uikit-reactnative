@@ -211,6 +211,14 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  MessageContextMenuSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  MessageInputBarMenuSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
 };
 export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
@@ -431,6 +439,14 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   PrivacySetting: {
+    option: undefined,
+    params: undefined,
+  },
+  MessageContextMenuSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  MessageInputBarMenuSetting: {
     option: undefined,
     params: undefined,
   },

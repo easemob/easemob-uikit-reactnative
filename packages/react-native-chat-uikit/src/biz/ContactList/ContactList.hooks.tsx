@@ -21,13 +21,13 @@ import type { SectionListRef } from '../../ui/SectionList';
 import { SingleLineText } from '../../ui/Text';
 import { getPinyin, SingletonObjects } from '../../utils';
 import { Badges } from '../Badges';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { g_index_alphabet_range, g_index_alphabet_range_array } from '../const';
 import { useMineInfoActions } from '../hooks';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useContactListMoreActions } from '../hooks/useContactListMoreActions';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
+import type { ContextNameMenuRef } from '../types';
 import type { ChoiceType, ListStateType } from '../types';
 import {
   ContactItem,
@@ -99,7 +99,7 @@ export function useContactList(props: ContactListProps) {
   const { tr } = useI18nContext();
   const im = useChatContext();
   const { getColor } = useColors();
-  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>(null);
   const alertRef = React.useRef<AlertRef>(null);
   const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
   const { closeMenu } = useCloseMenu({ menuRef });

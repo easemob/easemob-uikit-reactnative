@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
+import type { ContextNameMenuRef } from '../types';
 
 export type UseCloseMenuProps = {
-  menuRef: React.RefObject<BottomSheetNameMenuRef>;
+  menuRef: React.RefObject<ContextNameMenuRef>;
 };
 
 /**

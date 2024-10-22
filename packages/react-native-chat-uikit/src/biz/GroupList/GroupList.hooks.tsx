@@ -12,10 +12,10 @@ import { useI18nContext } from '../../i18n';
 import { ChatMultiDeviceEvent } from '../../rename.chat';
 import type { AlertRef } from '../../ui/Alert';
 import type { FlatListRef } from '../../ui/FlatList';
-import type { BottomSheetNameMenuRef } from '../BottomSheetMenu';
 import { gGroupListPageNumber } from '../const';
 import { useCloseMenu } from '../hooks';
 import { useFlatList } from '../List';
+import type { ContextNameMenuRef } from '../types';
 import type { ListStateType } from '../types';
 import { GroupListItemMemo } from './GroupList.item';
 import type {
@@ -45,7 +45,7 @@ export function useGroupList(props: GroupListProps) {
   const im = useChatContext();
   const currentPageNumberRef = React.useRef(0);
   const alertRef = React.useRef<AlertRef>(null);
-  const menuRef = React.useRef<BottomSheetNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
   const isNoMoreRef = React.useRef(false);
   const { tr } = useI18nContext();

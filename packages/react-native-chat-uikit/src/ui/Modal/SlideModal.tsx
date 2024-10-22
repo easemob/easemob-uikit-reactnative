@@ -15,21 +15,9 @@ import {
 import { g_mask_color } from '../../const';
 import { timeoutTask } from '../../utils';
 import { KeyboardAvoidingView } from '../Keyboard';
-import { DefaultSlide, SlideProps } from './DefaultSlide';
-import type { ModalProps, ModalRef } from './Modal';
+import { DefaultSlide } from './DefaultSlide';
 import { useModalAnimation, useModalPanResponder } from './Modal.hooks';
-import type { ModalAnimationType } from './types';
-
-/**
- * Why not use properties to show and hide components? The method of using attributes has been tried, but this method requires more renderings (the function needs to be executed multiple times internally).
- *
- * ref: example/src/__dev__/test_modal_prototype.tsx
- */
-export type SlideModalRef = ModalRef;
-
-export type SlideModalProps = ModalProps & {
-  Slide?: React.ComponentType<SlideProps>;
-};
+import type { ModalAnimationType, SlideModalProps, SlideProps } from './types';
 
 /**
  * Mainly solves the effect problem of native modal component `RNModal` display mask.

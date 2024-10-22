@@ -3,6 +3,10 @@
 - [UIKit 介绍](#uikit-介绍)
   - [初始化](#初始化)
   - [主题](#主题)
+    - [主题和调色板](#主题和调色板)
+    - [自定义颜色](#自定义颜色)
+    - [自定义字体](#自定义字体)
+    - [自定义阴影效果](#自定义阴影效果)
   - [国际化](#国际化)
   - [业务组件](#业务组件)
     - [会话列表（ConversationList）](#会话列表conversationlist)
@@ -69,7 +73,7 @@ export function App() {
   return (
     <UIKitContainer
       options={getOptions()}
-      palette={paletteRef.current}
+      palette={customPalette}
       theme={isLightRef.current ? light : dark}
       language={languageRef.current}
       translateLanguage={translateLanguageRef.current}
@@ -95,6 +99,101 @@ export function App() {
 
 详见 `example/src/demo/App.tsx` 示例[源码](../../../example/src/demo/App.tsx)。
 
+### 主题和调色板
+
+主题主要包括主题对象 `Palette` 和调色板对象 `Theme`。
+调色板对象是主题对象的基础，主体对象通过组合不同调色板的具体颜色、样式等构成主题对象。主题对象目前内置有明暗两种风格。
+调色板主要包括颜色、字体、渐变、圆角等子部分。
+
+创建默认调色板对象。例如：
+
+```tsx
+const palette = usePresetPalette();
+```
+
+创建自定义的调色板对象。例如：
+
+```tsx
+const customParams = {
+  colors: {
+    primary: 203,
+    secondary: 155,
+    error: 350,
+    neutral: 203,
+    neutralSpecial: 220,
+  },
+};
+const { createPalette } = useCreatePalette(customParams);
+const customPalette = createPalette();
+```
+
+创建默认主题对象。例如：
+
+```tsx
+const dark = useDarkTheme(palette);
+const light = useLightTheme(palette);
+```
+
+创建自定义主题对象。例如：
+
+```tsx
+const params = React.useMemo(() => {
+  return { palette, themeType: 'light' as ThemeType, releaseArea };
+}, [palette, releaseArea]);
+const { createTheme } = useCreateTheme(params);
+const customTheme = createTheme();
+```
+
+### 自定义颜色
+
+自定义颜色的方式主要有两种。
+
+1. 通过 `useCreatePalette` 进行修改。
+
+   ```tsx
+   const customParams = {
+     colors: {
+       primary: 100,
+       ...defaultParams.colors,
+     },
+   };
+   const { createPalette } = useCreatePalette(customParams);
+   const customPalette = createPalette();
+   ```
+
+2. 通过修改现有对象的属性。
+
+   ```tsx
+   customPalette.colors.primary = generatePrimaryColor(100);
+   ```
+
+### 自定义字体
+
+通过修改现有对象的属性。
+
+```tsx
+customPalette.fonts.headline = {
+  large: {
+    fontSize: 23,
+    ...customPalette.fonts.headline.large,
+  },
+  ...customPalette.fonts.headline,
+};
+```
+
+### 自定义阴影效果
+
+通过修改现有对象的属性。
+
+```tsx
+customTheme.shadow.style.small = [
+  {
+    shadowColor: 'red',
+    ...customTheme.shadow.style.small[0],
+  } as Shadow,
+];
+```
+
 ## 国际化
 
 国际化目前提供了中文和英文两种默认内容。支持自定义其它语言包、扩展现有语言内容。
@@ -106,7 +205,7 @@ export function App() {
 业务组件是基础组件组成的，主要包括会话列表组件、联系人列表组件、群组列表组件、群成员列表组件、群成员列表组件、好友申请通知列表组件、聊天页面组件、群详情组件、联系人详情组件等。
 其中联系人列表组件为复用组件，支持创建群组、创建新会话、邀请多人音视频等操作。聊天页面组件也是复用组件，支持普通聊天模式、话题模式、搜索模式。
 
-示例源码详见 `example/src/demo/screens/ConversationDetailScreen.tsx` 示例[源码](../../../example/src/demo/screens/ConversationDetailScreen.tsx)。
+示例源码详见 `example/src/demo/screens/MyConversationDetailScreen.tsx` 示例[源码](../../../example/src/demo/screens/MyConversationDetailScreen.tsx)。
 
 核心组件介绍如下：
 
@@ -155,16 +254,7 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
       customNavigationBar={
         <TopNavigationBar
           Left={
-            <StatusAvatar
-              url={
-                'https://cdn3.iconfinder.com/data/icons/vol-2/128/dog-128.png'
-              }
-              size={32}
-              onClicked={() => {
-                convRef.current?.showStatusActions?.();
-              }}
-              userId={'userId'}
-            />
+            <TopNavigationBarLeft onBack={() => {}} content={'participant'} />
           }
           Right={TopNavigationBarRight}
           RightProps={{
@@ -282,6 +372,70 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 }
 ```
 
+自定义列表项长按菜单
+
+```tsx
+type MyConversationListScreenProps = {};
+function MyConversationListScreen(props: MyConversationListScreenProps) {
+  const {} = props;
+
+  return (
+    <ConversationList
+      onInitMenu={(initItems: InitMenuItemsType[]) => {
+        initItems.push({
+          name: 'custom menu item',
+          onClicked: (name: string, others?: any) => {
+            console.log('onClicked:', name, others);
+          },
+        });
+        return initItems;
+      }}
+    />
+  );
+}
+```
+
+自定义手势。例如：自定义长按列表项、点击列表项手势。
+
+```tsx
+type MyConversationListScreenProps = {};
+function MyConversationListScreen(props: MyConversationListScreenProps) {
+  const {} = props;
+
+  return (
+    <ConversationList
+      onClickedItem={(data: ConversationModel) => {
+        console.log('onClickedItem', data);
+      }}
+      onLongPressedItem={(data: ConversationModel) => {
+        console.log('onLongPressedItem', data);
+      }}
+    />
+  );
+}
+```
+
+自定义搜索。
+
+可以显示隐藏搜索功能，可以响应搜索事件，可以自定义搜索组件样式。
+
+```tsx
+type MyConversationListScreenProps = {};
+function MyConversationListScreen(props: MyConversationListScreenProps) {
+  const {} = props;
+
+  return (
+    <ConversationList
+      searchStyleVisible={true}
+      customSearch={<View style={{ height: 100, width: '100%' }} />}
+      onClickedSearch={(data?: DataT): void => {
+        console.log('onClickedSearch');
+      }}
+    />
+  );
+}
+```
+
 ### 消息列表（ConversationDetail）
 
 该组件从布局角度包括 导航栏、中部消息列表、底部功能栏以及可以隐藏的菜单。
@@ -289,6 +443,39 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 #### 自定义导航栏
 
 该导航栏组件为通用组件，在聊天页面,导航栏左边组件为头像、右边为功能扩展菜单。自定义方式和方法和会话列表类似。
+
+```tsx
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function MyConversationDetailScreen(props: Props) {
+  const { route } = props;
+  const convId = ((route.params as any)?.params as any)?.convId;
+  const convType = ((route.params as any)?.params as any)?.convType;
+  const convRef = React.useRef<ConversationDetailRef>({} as any);
+  const comType = React.useRef<ConversationDetailModelType>(
+    name === 'ConversationDetail'
+      ? 'chat'
+      : name === 'MessageThreadDetail'
+      ? 'thread'
+      : name === 'MessageHistory'
+      ? 'search'
+      : 'create_thread'
+  ).current;
+
+  return (
+    <SafeAreaViewFragment>
+      <ConversationDetail
+        type={comType}
+        convId={convId}
+        convType={convType}
+        NavigationBar={
+          <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />
+        }
+        enableNavigationBar={true}
+      />
+    </SafeAreaViewFragment>
+  );
+}
+```
 
 #### 自定义消息列表
 
@@ -298,7 +485,7 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 
 ```tsx
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ConversationDetailScreen(props: Props) {
+export function MyConversationDetailScreen(props: Props) {
   const { route } = props;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
@@ -322,7 +509,7 @@ export function ConversationDetailScreen(props: Props) {
 
 ```tsx
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ConversationDetailScreen(props: Props) {
+export function MyConversationDetailScreen(props: Props) {
   const { route } = props;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
@@ -388,7 +575,7 @@ export function MyMessageContent(props: MessageContentProps) {
 }
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ConversationDetailScreen(props: Props) {
+export function MyConversationDetailScreen(props: Props) {
   const { route } = props;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
@@ -410,6 +597,64 @@ export function ConversationDetailScreen(props: Props) {
 }
 ```
 
+5. 自定义消息上下文菜单。
+
+首先，在全局设置属性 `Container.messageMenuStyle` 为 `custom`。
+
+```tsx
+export function App() {
+  return (
+    <UIKitContainer messageMenuStyle={'custom'}>
+      {/* sub component */}
+    </UIKitContainer>
+  );
+}
+```
+
+其次，在 `ConversationDetail` 组件中设置属性 `MessageCustomLongPressMenu`。
+
+```tsx
+export const MyMessageContextNameMenu = React.forwardRef<
+  ContextNameMenuRef,
+  ContextNameMenuProps
+>(function (
+  props: ContextNameMenuProps,
+  ref?: React.ForwardedRef<ContextNameMenuRef>
+) {
+  const {} = props;
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        startShow: () => {},
+        startHide: (_onFinished?: () => void) => {},
+        startShowWithInit: (_initItems: InitMenuItemsType[], _?: any) => {},
+        startShowWithProps: (_props: ContextNameMenuProps) => {},
+        getData: () => {
+          return undefined;
+        },
+      };
+    },
+    []
+  );
+  ref;
+  return <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />;
+});
+
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function MyConversationDetailScreen(props: Props) {
+  const { route } = props;
+
+  return (
+    <SafeAreaViewFragment>
+      <ConversationDetail
+        MessageCustomLongPressMenu={MyMessageContextNameMenu}
+      />
+    </SafeAreaViewFragment>
+  );
+}
+```
+
 如果想要隐藏消息的头像，则示例代码如下：
 其它可以自定义的内容可以参考 `MessageViewProps` 属性。
 
@@ -423,7 +668,7 @@ export function MyMessageView(props: MessageViewProps) {
 }
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ConversationDetailScreen(props: Props) {
+export function MyConversationDetailScreen(props: Props) {
   const { route } = props;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
@@ -450,6 +695,36 @@ export function ConversationDetailScreen(props: Props) {
 #### 自定义导航栏
 
 该导航栏组件为通用组件，在联系人页面,导航栏左边组件为头像、右边为功能扩展菜单。自定义方式和方法和会话列表类似。
+
+```tsx
+export type MyContactListScreenProps = {};
+function MyContactListScreen(props: MyContactListScreenProps) {
+  const {} = props;
+
+  return (
+    <ContactList
+      contactType={'contact-list'}
+      customNavigationBar={
+        <TopNavigationBar
+          Left={
+            <TopNavigationBarLeft onBack={() => {}} content={'participant'} />
+          }
+          Right={TopNavigationBarRight}
+          RightProps={{
+            onClicked: () => {
+              convRef.current?.showMoreActions?.();
+            },
+            iconName: 'plus_in_circle',
+          }}
+          Title={TopNavigationBarTitle({
+            text: tr('_uikit_navi_title_chat'),
+          })}
+        />
+      }
+    />
+  );
+}
+```
 
 #### 自定义联系人列表项
 
@@ -490,11 +765,96 @@ function MyContactListScreen(props: MyContactListScreenProps) {
 }
 ```
 
+3. 自定义单独列表项。例如：内置了好友请求通知列表项、群组列表项。
+
+```tsx
+export const MyCustomItemView = (props: ContactItemProps) => {
+  const {} = props;
+  return <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />;
+};
+
+export type MyContactListScreenProps = {};
+function MyContactListScreen(props: MyContactListScreenProps) {
+  const {} = props;
+
+  return (
+    <ContactList
+      contactType={'contact-list'}
+      onInitListItemActions={(
+        defaultItems: React.ReactElement<ContactItemProps>[]
+      ) => {
+        defaultItems.push(<MyCustomItemView name={'custom item'} />);
+        return defaultItems;
+      }}
+    />
+  );
+}
+```
+
+4. 自定义列表的排序方式
+
+需要设置 `ContactList.onSort` 属性。
+
+```tsx
+export type MyContactListScreenProps = {};
+function MyContactListScreen(props: MyContactListScreenProps) {
+  const {} = props;
+
+  return (
+    <ContactList
+      contactType={'contact-list'}
+      onSort={(
+        prevProps: ContactListItemProps,
+        nextProps: ContactListItemProps
+      ) => {
+        return prevProps.id === nextProps.id
+          ? 0
+          : prevProps.id < nextProps.id
+          ? 1
+          : -1;
+      }}
+    />
+  );
+}
+```
+
 ### 联系人详情（ContactInfo） / 群详情（GroupInfo）
 
 #### 自定义导航栏
 
 该导航栏组件为通用组件，在详情页面,导航栏左边组件为返回按钮、右边为功能扩展菜单。自定义方式和方法和会话列表类似。
+
+```tsx
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function MyContactInfoScreen(props: Props) {
+  const { route } = props;
+  const userId = ((route.params as any)?.params as any)?.userId;
+
+  return (
+    <ContactInfo
+      userId={userId}
+      navigationBarVisible={true}
+      customNavigationBar={
+        <TopNavigationBar
+          Left={
+            <TopNavigationBarLeft onBack={() => {}} content={'participant'} />
+          }
+          Right={TopNavigationBarRight}
+          RightProps={{
+            onClicked: () => {
+              convRef.current?.showMoreActions?.();
+            },
+            iconName: 'plus_in_circle',
+          }}
+          Title={TopNavigationBarTitle({
+            text: tr('_uikit_navi_title_chat'),
+          })}
+        />
+      }
+    />
+  );
+}
+```
 
 #### 自定义列表项
 
@@ -502,7 +862,7 @@ function MyContactListScreen(props: MyContactListScreenProps) {
 
 ```tsx
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ContactInfoScreen(props: Props) {
+export function MyContactInfoScreen(props: Props) {
   const { route } = props;
   const userId = ((route.params as any)?.params as any)?.userId;
 
@@ -510,7 +870,6 @@ export function ContactInfoScreen(props: Props) {
     <ContactInfo
       userId={userId}
       customItemRender={(list) => {
-        // todo: 增加自定义列表项
         list.push(
           <View style={{ height: 100, width: 100, backgroundColor: 'green' }} />
         );
@@ -523,7 +882,7 @@ export function ContactInfoScreen(props: Props) {
 
 ```tsx
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function GroupInfoScreen(props: Props) {
+export function MyGroupInfoScreen(props: Props) {
   const { route } = props;
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
@@ -549,7 +908,7 @@ export function GroupInfoScreen(props: Props) {
 
 ```tsx
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ContactInfoScreen(props: Props) {
+export function MyContactInfoScreen(props: Props) {
   const { route } = props;
   const userId = ((route.params as any)?.params as any)?.userId;
 
@@ -570,7 +929,7 @@ export function ContactInfoScreen(props: Props) {
 
 ```tsx
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function GroupInfoScreen(props: Props) {
+export function MyGroupInfoScreen(props: Props) {
   const { route } = props;
   const groupId = ((route.params as any)?.params as any)?.groupId;
   const ownerId = ((route.params as any)?.params as any)?.ownerId;
@@ -610,27 +969,7 @@ export function GroupParticipantListScreen(props: Props) {
           Left={
             <TopNavigationBarLeft onBack={() => {}} content={'participant'} />
           }
-          Right={
-            isOwner === true ? (
-              <View style={{ flexDirection: 'row' }}>
-                <Pressable style={{ padding: 6 }}>
-                  <IconButton
-                    iconName={'person_add'}
-                    style={{ width: 24, height: 24 }}
-                    onPress={() => {}}
-                  />
-                </Pressable>
-                <View style={{ width: 4 }} />
-                <Pressable style={{ padding: 6 }}>
-                  <IconButton
-                    iconName={'person_minus'}
-                    style={{ width: 24, height: 24, padding: 6 }}
-                    onPress={() => {}}
-                  />
-                </Pressable>
-              </View>
-            ) : null
-          }
+          Right={<View />}
         />
       }
     />
@@ -680,7 +1019,7 @@ export function GroupParticipantListScreen(props: Props) {
 
 ```tsx
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ConversationDetailScreen(props: Props) {
+export function MyConversationDetailScreen(props: Props) {
   const { route } = props;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
@@ -744,7 +1083,7 @@ export function ConversationDetailScreen(props: Props) {
 
 ```tsx
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ConversationDetailScreen(props: Props) {
+export function MyConversationDetailScreen(props: Props) {
   const { route } = props;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;
@@ -780,7 +1119,7 @@ export function ConversationDetailScreen(props: Props) {
 
 ```tsx
 type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ConversationDetailScreen(props: Props) {
+export function MyConversationDetailScreen(props: Props) {
   const { route } = props;
   const convId = ((route.params as any)?.params as any)?.convId;
   const convType = ((route.params as any)?.params as any)?.convType;

@@ -59,8 +59,6 @@ export type MessageInputEditMessageProps = {
 /**
  * The MessageInputEditMessage component provides menu functionality.
  *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/192a6e98cf2f168dd3a5e0e5a306a6762cf5e0d6/example/src/__dev__/test_bottom_sheet_menu.tsx}
- *
  * @example
  *
  * ```tsx

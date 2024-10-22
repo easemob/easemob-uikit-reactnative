@@ -32,10 +32,16 @@ export function createStringSetCn(): StringSet {
     '_demo_login_title': (accountType) =>
       accountType === 'agora' ? '声网IM' : '环信IM',
     '_demo_login_title_version': (v) => `V${v}`,
-    '_demo_login_input_phone_number_tip': (accountType) =>
-      accountType === 'agora' ? '用户名' : '手机号',
-    '_demo_login_input_phone_number_captcha_tip': (accountType) =>
-      accountType === 'agora' ? '密码' : '验证码',
+    '_demo_login_input_phone_number_tip': (accountType, devMode) =>
+      devMode === true ? 'id' : accountType === 'agora' ? '用户名' : '手机号',
+    '_demo_login_input_phone_number_captcha_tip': (accountType, devMode) =>
+      devMode === true
+        ? accountType === 'agora'
+          ? 'token'
+          : 'password'
+        : accountType === 'agora'
+        ? '密码'
+        : '验证码',
     '_demo_login_input_phone_number_captcha_button_1': '获取验证码',
     '_demo_login_input_phone_number_captcha_button_2': (second) =>
       `重新获取(${second}s)`,
@@ -85,11 +91,23 @@ export function createStringSetCn(): StringSet {
     '_demo_general_setting_feature': '特性开关',
     '_demo_general_setting_language': '系统语言',
     '_demo_general_setting_translation_language': '翻译目标语言',
+    '_demo_general_setting_message_menu': '消息上下文菜单样式',
+    '_demo_general_setting_message_input_menu': '消息附件扩展菜单样式',
 
     '_demo_language_setting_navi_title': '系统语言',
     '_demo_language_setting_navi_confim': '完成',
     '_demo_language_setting_language_cn': '中文',
     '_demo_language_setting_language_en': 'English',
+
+    '_demo_message_context_menu_setting_navi_title': '消息上下文菜单样式',
+    '_demo_message_context_menu_setting_navi_confim': '完成',
+    '_demo_message_context_menu_setting_style1': '样式1',
+    '_demo_message_context_menu_setting_style2': '样式2',
+
+    '_demo_message_input_bar_menu_setting_navi_title': '消息附件扩展菜单样式',
+    '_demo_message_input_bar_menu_setting_navi_confim': '完成',
+    '_demo_message_input_bar_menu_setting_style1': '样式1',
+    '_demo_message_input_bar_menu_setting_style2': '样式2',
 
     '_demo_style_setting_navi_title': '主题',
     '_demo_about_title': (accountType) =>
@@ -170,5 +188,7 @@ export function createStringSetCn(): StringSet {
     'zh-Hans': '中文',
     'classic': '经典',
     'modern': '现代',
+    'style1': '样式1',
+    'style2': '样式2',
   };
 }

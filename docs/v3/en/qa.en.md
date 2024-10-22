@@ -15,6 +15,7 @@
       - [react-native-safe-area-context Dependency Issue](#react-native-safe-area-context-dependency-issue)
       - [Issues with `expo-updates`](#issues-with-expo-updates)
       - [Create expo project and integrate uikit problem](#create-expo-project-and-integrate-uikit-problem)
+      - [flipper compile question](#flipper-compile-question)
 
 # Question List
 
@@ -103,3 +104,12 @@ Main solutions include:
 The react-native project created with expo cannot compile and run `uikit` normally.
 
 Reference: The `expo` project created by default does not have `native` configuration. You need to use `npx expo prebuild` to create `ios` and `android` folders and configurations. In this way, `uikit` can be compiled and run normally.
+
+#### flipper compile question
+
+Flipper Compilation Issue
+In macOS 14.6.1 with Xcode 15.4, compiling react-native 0.71.11 with flipper 0.182.0 may result in the following issue:
+
+The simplest solution is to add the header file #include <functional> in FlipperTransportTypes.h.
+
+Reference: Debugging React Native apps with Flipper is deprecated in React Native 0.73. We will eventually remove out-of-the box support for JS debugging via Flipper.

@@ -3,7 +3,11 @@ import { StyleProp, ViewStyle } from 'react-native';
 import type { StatusType } from '../biz/types';
 import type { LanguageCode } from '../i18n';
 import { ChatMessage } from '../rename.chat';
-import { ReleaseArea } from '../types';
+import {
+  MessageContextMenuStyle,
+  MessageInputBarExtensionStyle,
+  ReleaseArea,
+} from '../types';
 
 export type ConversationDetailType = {
   bubble?: {
@@ -63,6 +67,21 @@ export type Config = {
    * The conversation detail config.
    */
   conversationDetail?: ConversationDetailType;
+  /**
+   * The message long press menu style.
+   *
+   * Detail for `BottomSheetNameMenu` and `MessageContextNameMenu`.
+   *
+   * If you want to customize it, you need to set the custom component `MessageCustomLongPressMenu` in the properties of `ConversationDetail`.
+   */
+  messageMenuStyle?: MessageContextMenuStyle;
+
+  /**
+   * The message input bar style.
+   *
+   * Detail for `BottomSheetNameMenu` and `MessageInputBarExtensionMenu`.
+   */
+  messageInputBarStyle?: MessageInputBarExtensionStyle;
 
   /**
    * The group config.

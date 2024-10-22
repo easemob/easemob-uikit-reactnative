@@ -40,6 +40,8 @@ import {
   getChatService,
   getReleaseArea,
   LanguageCode,
+  MessageContextMenuStyle,
+  MessageInputBarExtensionStyle,
   StringSet,
   ThemeType,
   UIGroupListListener,
@@ -108,6 +110,10 @@ export function useApp() {
   const enableBlockRef = React.useRef(false);
   const naviThemeRef = React.useRef(NaviDefaultTheme);
   const pageDeepRef = React.useRef(0);
+  const messageMenuStyleRef =
+    React.useRef<MessageContextMenuStyle>('bottom-sheet');
+  const messageInputBarExtensionStyleRef =
+    React.useRef<MessageInputBarExtensionStyle>('bottom-sheet');
   const [fontsLoaded] = useFonts({
     [twemoji_ttf_name]: twemoji_ttf,
     [boloo_da_ttf_name]: boloo_da_ttf,
@@ -120,6 +126,8 @@ export function useApp() {
     default: undefined,
   });
   const rootRef = useNavigationContainerRef<RootParamsList>();
+  const serverConfigVisibleRef = React.useRef(false);
+  const appKeyRef = React.useRef(gAppKey);
   const imServerRef = React.useRef(imServer);
   const imPortRef = React.useRef(imPort);
   const enableDNSConfigRef = React.useRef(enableDNSConfig);
@@ -135,7 +143,7 @@ export function useApp() {
 
   const getOptions = React.useCallback(() => {
     return {
-      appKey: gAppKey,
+      appKey: appKeyRef.current,
       debugModel: isDevMode,
       autoLogin: autoLogin,
       autoAcceptGroupInvitation: true,
@@ -143,7 +151,7 @@ export function useApp() {
       requireDeliveryAck: true,
       restServer: useSendBox ? restServer : undefined,
       imServer: useSendBox ? imServerRef.current : undefined,
-      imPort: useSendBox ? imPortRef.current : undefined,
+      imPort: useSendBox ? imPortRef.current : (undefined as any),
       enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
       pushConfig:
         fcmSenderId && fcmSenderId.length > 0
@@ -677,7 +685,11 @@ export function useApp() {
         reason !== DisconnectReasonType.others &&
         reason !== DisconnectReasonType.token_will_expire
       ) {
-        rootRef.navigate('LoginV2', {});
+        rootRef.navigate('LoginV2', {
+          params: {
+            serverConfigVisible: serverConfigVisibleRef.current,
+          },
+        });
       }
     },
     onFinished: (params) => {
@@ -848,6 +860,22 @@ export function useApp() {
         updater();
       }
     );
+    const ret18 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_message_context_menu_style',
+      (e) => {
+        console.log('dev:emit:app:message_menu:', e);
+        messageMenuStyleRef.current = e;
+        updater();
+      }
+    );
+    const ret19 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_message_input_bar_extension_style',
+      (e) => {
+        console.log('dev:emit:app:message_input_bar_ext:', e);
+        messageInputBarExtensionStyleRef.current = e;
+        updater();
+      }
+    );
     return () => {
       ret.remove();
       ret2.remove();
@@ -866,13 +894,15 @@ export function useApp() {
       ret15.remove();
       ret16.remove();
       ret17.remove();
+      ret18.remove();
+      ret19.remove();
     };
   }, [dark, light, updatePush, updater]);
 
   // !!! Customize the android platform return button operation.
   React.useEffect(() => {
     if (Platform.OS !== 'android') {
-      return;
+      return () => {};
     }
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -937,6 +967,8 @@ export function useApp() {
     enableBlockRef,
     fontsLoaded,
     rootRef,
+    serverConfigVisibleRef,
+    appKeyRef,
     imServerRef,
     imPortRef,
     enableDNSConfigRef,
@@ -962,5 +994,7 @@ export function useApp() {
     onSystemTip,
     naviThemeRef,
     getNaviTheme,
+    messageMenuStyleRef,
+    messageInputBarExtensionStyleRef,
   };
 }

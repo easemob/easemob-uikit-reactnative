@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
-  BottomTabBar,
   Container,
   GroupParticipantList,
   SearchGroupParticipant,
   TabPage,
+  TabPageTabBarHeader,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -97,7 +97,7 @@ export function CL2() {
         //   },
         // }}
         header={{
-          Header: BottomTabBar as any,
+          Header: TabPageTabBarHeader as any,
           HeaderProps: {
             titles: ['1', '2', '3'],
             items: [

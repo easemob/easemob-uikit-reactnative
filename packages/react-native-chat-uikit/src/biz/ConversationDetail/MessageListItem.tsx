@@ -3,6 +3,7 @@ import {
   Animated,
   Dimensions,
   Easing,
+  GestureResponderEvent,
   Linking,
   Platform,
   // Image as RNImage,
@@ -1101,6 +1102,7 @@ export function MessageBubble(props: MessageBubbleProps) {
     quoteMsg,
     thread: threadMsg,
   } = model;
+  const touchRef = React.useRef<View>(null);
   const { releaseArea } = useConfigContext();
   const { paddingHorizontal, paddingVertical, hasBorderRadius } = React.useMemo(
     () => getMessageBubblePadding(msg),
@@ -1145,25 +1147,63 @@ export function MessageBubble(props: MessageBubbleProps) {
     }
   }, [isShowTriangle, maxWidth, paddingHorizontal, triangleWidth]);
 
-  const _onClicked = React.useCallback(() => {
-    if (checked !== undefined) {
-      onClickedChecked?.();
-    } else {
-      if (onClicked) {
-        onClicked(msg.msgId.toString(), model);
-      }
-    }
-  }, [checked, model, msg.msgId, onClicked, onClickedChecked]);
+  const _onClicked = React.useCallback(
+    (event?: GestureResponderEvent) => {
+      if (checked !== undefined) {
+        onClickedChecked?.();
+      } else {
+        if (onClicked) {
+          if (event) {
+            const pressedX = event.nativeEvent.pageX;
+            const pressedY = event.nativeEvent.pageY;
 
-  const _onLongPress = React.useCallback(() => {
-    if (checked !== undefined) {
-      onClickedChecked?.();
-    } else {
-      if (onLongPress) {
-        onLongPress(msg.msgId.toString(), model);
+            touchRef.current?.measure((_, __, width, height, pageX, pageY) => {
+              onClicked(msg.msgId.toString(), model, {
+                pressedX: pressedX,
+                pressedY: pressedY,
+                componentHeight: height,
+                componentWidth: width,
+                componentX: pageX,
+                componentY: pageY,
+              });
+            });
+          } else {
+            onClicked(msg.msgId.toString(), model);
+          }
+        }
       }
-    }
-  }, [checked, model, msg.msgId, onClickedChecked, onLongPress]);
+    },
+    [checked, model, msg.msgId, onClicked, onClickedChecked]
+  );
+
+  const _onLongPress = React.useCallback(
+    (event?: GestureResponderEvent) => {
+      if (checked !== undefined) {
+        onClickedChecked?.();
+      } else {
+        if (onLongPress) {
+          if (event) {
+            const pressedX = event.nativeEvent.pageX;
+            const pressedY = event.nativeEvent.pageY;
+
+            touchRef.current?.measure((_, __, width, height, pageX, pageY) => {
+              onLongPress(msg.msgId.toString(), model, {
+                pressedX: pressedX,
+                pressedY: pressedY,
+                componentHeight: height,
+                componentWidth: width,
+                componentX: pageX,
+                componentY: pageY,
+              });
+            });
+          } else {
+            onLongPress(msg.msgId.toString(), model);
+          }
+        }
+      }
+    },
+    [checked, model, msg.msgId, onClickedChecked, onLongPress]
+  );
 
   const _onClickedContent = _onClicked;
 
@@ -1198,6 +1238,7 @@ export function MessageBubble(props: MessageBubbleProps) {
       ) : null}
 
       <Pressable
+        ref={touchRef}
         style={[
           styles.bubble,
           {

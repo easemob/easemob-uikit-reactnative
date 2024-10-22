@@ -9,13 +9,12 @@ import type {
 import type { IconNameType } from '../assets';
 import type { DataModelType } from '../chat';
 import type { UIKitError } from '../error';
+import type { MessageContextMenuStyle } from '../types';
 import type { AlertRef } from '../ui/Alert';
+import { ComponentArea } from '../ui/ContextMenu';
 import type { FlatListProps, FlatListRef } from '../ui/FlatList';
+import { SlideModalRef } from '../ui/Modal';
 import type { SectionListProps, SectionListRef } from '../ui/SectionList';
-import type {
-  BottomSheetNameMenuRef,
-  InitMenuItemsType,
-} from './BottomSheetMenu';
 
 export type MessageLayoutType = 'left' | 'right' | 'middle';
 export type MessageBubbleType = 'content' | 'quote' | 'thread';
@@ -510,7 +509,7 @@ export type BasicListRefType<DataModel> = {
   /**
    * Gets a reference to the menu component of the content.
    */
-  getMenuRef: () => React.RefObject<BottomSheetNameMenuRef>;
+  getMenuRef: () => React.RefObject<ContextNameMenuRef>;
   /**
    * Gets a reference to the alert component of the content.
    */
@@ -548,4 +547,187 @@ export type EmojiIconStateType = 'selected' | 'common';
 export type EmojiIconItem = {
   name: IconNameType | string;
   state: EmojiIconStateType;
+};
+
+export type MessageMenuHeaderType =
+  | React.FC<MessageMenuHeaderProps>
+  | React.ReactElement<MessageMenuHeaderProps>;
+
+export type MessageMenuHeaderProps = {
+  emojiList?: EmojiIconItem[];
+  onClickedEmoji?: (emoji: IconNameType | string) => void;
+  /**
+   * Whether to use the emoji chat mode.
+   *
+   * Its setting will affect the type of the return value of `onClickedEmoji`. If true, returns the emoji string, otherwise returns the `U+xxxxx` string.
+   *
+   * @default false
+   */
+  isEmojiCharacter?: boolean;
+  /**
+   * The message long press menu style.
+   *
+   * Detail for `BottomSheetNameMenu` and `BottomSheetNameMenu`.
+   */
+  messageMenuStyle?: MessageContextMenuStyle;
+};
+export type InitMenuItemsType = {
+  /**
+   * The text to be displayed.
+   */
+  name: string;
+  /**
+   * Whether the text is highlighted.
+   */
+  isHigh: boolean;
+  /**
+   * The icon to be displayed.
+   */
+  icon?: IconNameType;
+  /**
+   * The callback function when the text is clicked.
+   *
+   * @param name The text to be displayed.
+   * @param others Other parameters. You can pass in the parameters you need. For example, you can pass in the user ID.
+   */
+  onClicked?: (name: string, others?: any) => void;
+};
+
+/**
+ * Referencing Values of the `MessageMenu` component.
+ */
+export type BizContextMenuRef = SlideModalRef & {
+  /**
+   * While displaying the component, the menu items will also be dynamically changed.
+   */
+  startShowWithInit: (initItems: React.ReactElement[], others?: any) => void;
+  /**
+   * Start displaying the component with the specified properties.
+   */
+  startShowWithProps: (props: BizContextMenuProps) => void;
+
+  /**
+   * Get the data of the component.
+   */
+  getData: () => any;
+};
+
+export type ContextNameMenuRef = Omit<
+  BizContextMenuRef,
+  'startShowWithInit' | 'startShowWithProps'
+> & {
+  startShowWithInit: (initItems: InitMenuItemsType[], others?: any) => void;
+  startShowWithProps: (props: ContextNameMenuProps) => void;
+};
+
+export type ContextBaseMenuProps = {
+  /**
+   * To request to close the component, you usually need to call the `startHide` method here.
+   */
+  onRequestModalClose: () => void;
+  /**
+   * If no title is specified, it will not be displayed.
+   *
+   * This property is only valid for the built-in component `BottomSheetMenu`, and not for the built-in component `MessageContextMenu`
+   */
+  title?: string;
+  /**
+   * The emotion list header component's properties.
+   */
+  headerProps?: MessageMenuHeaderProps;
+  /**
+   * The emotion list header component.
+   */
+  header?: MessageMenuHeaderType;
+};
+
+/**
+ * Properties of the `MessageMenu` component.
+ */
+export type BizContextMenuProps = ContextBaseMenuProps & {
+  /**
+   * initialization component items.
+   *
+   * If it is not set here, it can be set dynamically when calling `startShowWithInit`.
+   */
+  initItems?: React.ReactElement[];
+  /**
+   * The maximum height of the component.
+   *
+   * @default half of the entire screen.
+   */
+  maxHeight?: number;
+};
+
+export type ContextNameMenuProps = Omit<BizContextMenuProps, 'initItems'> & {
+  /**
+   * initialization component items.
+   */
+  initItems?: InitMenuItemsType[];
+  /**
+   * The layout type of the component.
+   *
+   * This property is only valid for the built-in component `BottomSheetMenu`.
+   */
+  layoutType?: 'left' | 'center';
+  /**
+   * Whether to display the cancel button.
+   *
+   * This property is only valid for the built-in component `BottomSheetMenu`.
+   */
+  hasCancel?: boolean;
+  /**
+   * The display position is suggested by the caller, but the final display position may be adjusted dynamically due to factors such as component layout and component layout.
+   *
+   * This property is only valid for the built-in component `MessageContextMenu`.
+   */
+  suggestedPosition?: {
+    x: number;
+    y: number;
+  };
+  /**
+   * Areas that are prohibited from being covered. If there is a blank area, it will be used first. If there is no blank area, the covered area or the default area will be used.
+   *
+   * This property is only valid for the built-in component `MessageContextMenu`.
+   */
+  noCoverageArea?: ComponentArea;
+  /**
+   * The maximum number of rows for a component.
+   *
+   * The default maximum is 3 rows for `MessageContextMenu`, and more content will not be displayed.
+   *
+   * The default maximum is 2 rows for `MessageInputBarExtensionNameMenu`, and more content will not be displayed.
+   *
+   * This property is only valid for the built-in component `MessageContextMenu` or `MessageInputBarExtensionNameMenu`.
+   *
+   */
+  maxRowCount?: number;
+  /**
+   * The count per row for the `MessageContextMenu` component.
+   *
+   * default is 5 for `MessageContextMenu`.
+   *
+   * default is 4 for `MessageInputBarExtensionNameMenu`
+   *
+   * This property is only valid for the built-in component `MessageContextMenu` or `MessageInputBarExtensionNameMenu`.
+   *
+   */
+  unitCountPerRow?: number;
+  /**
+   * The emoji list position.
+   *
+   * default is `bottom` for `MessageMenuHeaderType`.
+   *
+   * This property is only valid for the built-in component `MessageContextMenu`.
+   */
+  emojiListPosition?: 'top' | 'bottom';
+};
+
+export type PressedComponentEvent = {
+  pressedX: number;
+  pressedY: number;
+  componentX: number;
+  componentY: number;
+  componentWidth: number;
+  componentHeight: number;
 };

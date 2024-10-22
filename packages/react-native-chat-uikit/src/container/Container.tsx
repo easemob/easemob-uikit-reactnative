@@ -77,6 +77,8 @@ export function Container(props: ContainerProps) {
     onSystemTip,
     onConversationListLastMessageSnapshot,
     onConversationListLastMessageSnapshotParams,
+    messageMenuStyle = 'bottom-sheet',
+    messageInputBarStyle = 'bottom-sheet',
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -170,6 +172,8 @@ export function Container(props: ContainerProps) {
                     onConversationListLastMessageSnapshot,
                   onConversationListLastMessageSnapshotParams:
                     onConversationListLastMessageSnapshotParams,
+                  messageMenuStyle: messageMenuStyle,
+                  messageInputBarStyle: messageInputBarStyle,
                 }}
               >
                 <AbsoluteViewContextProvider>

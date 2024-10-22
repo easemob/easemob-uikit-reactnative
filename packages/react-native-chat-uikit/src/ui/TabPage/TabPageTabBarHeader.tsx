@@ -7,18 +7,18 @@ import { Icon } from '../../ui/Image';
 import type { TabPageHeaderProps } from '../../ui/TabPage';
 import { calculateLeft } from '../../ui/TabPage/TabPageHeader.hooks';
 import { SingleLineText } from '../../ui/Text';
-import { gHeaderHeight } from './BottomTabBar.const';
+import { gTabBarHeaderHeight } from './TabPage.const';
 
-export type BottomTabBarProps = TabPageHeaderProps & {
+export type TabPageTabBarHeaderProps = TabPageHeaderProps & {
   StateViews?: (React.FC | React.ReactElement | null | undefined)[];
 };
 
 /**
  * tab component.
  */
-export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
-  props: BottomTabBarProps
-) => {
+export const TabPageTabBarHeader: React.FunctionComponent<
+  TabPageTabBarHeaderProps
+> = (props: TabPageTabBarHeaderProps) => {
   const {
     propRef,
     onClicked,
@@ -68,7 +68,7 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
     <View
       style={{
         flexDirection: 'column',
-        height: gHeaderHeight,
+        height: gTabBarHeaderHeight,
         justifyContent: 'center',
         marginVertical: 3,
         borderTopColor: getColor('divider'),
@@ -93,7 +93,7 @@ export const BottomTabBar: React.FunctionComponent<BottomTabBarProps> = (
               key={i}
               style={[
                 {
-                  height: gHeaderHeight,
+                  height: gTabBarHeaderHeight,
                   width: unitWidth - unitWidth * 0.1,
                   justifyContent: 'center',
                   alignItems: 'center',

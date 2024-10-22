@@ -11,6 +11,7 @@ export * from './useGroupInfoActions';
 export * from './useImageSize';
 export * from './useMessageInputExtendActions';
 export * from './useMessageLongPressActions';
+export * from './useMessageMenu';
 export * from './useMessageReactionListDetail';
 export * from './useMessageSnapshot';
 export * from './useMessageThreadListMoreActions';

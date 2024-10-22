@@ -8,10 +8,7 @@ import { usePaletteContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
 import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
-import {
-  BottomSheetNameMenu,
-  BottomSheetNameMenuRef,
-} from '../BottomSheetMenu';
+import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { useCloseMenu, useDataPriority } from '../hooks';
 import { useMessageThreadMemberListMoreActions } from '../hooks/useMessageThreadMemberListMoreActions';
 import { useFlatList } from '../List';
@@ -21,6 +18,7 @@ import {
   LoadingPlaceholder,
 } from '../Placeholder';
 import { TopNavigationBar, TopNavigationBarLeft } from '../TopNavigationBar';
+import { ContextNameMenuRef } from '../types';
 import { gRequestMaxThreadCount } from './const';
 import type {
   MessageThreadMemberListItemProps,
@@ -148,7 +146,7 @@ function useMessageThreadMemberList(props: MessageThreadMemberListProps) {
   const currentCursorRef = React.useRef<string>('');
   const bounces = React.useRef(true).current;
   const im = useChatContext();
-  const menuRef = React.useRef<BottomSheetNameMenuRef>({} as any);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const alertRef = React.useRef<any>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
   const groupOwnerRef = React.useRef<string>('');

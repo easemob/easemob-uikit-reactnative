@@ -11,68 +11,17 @@ import { getElement, useColors } from '../../hook';
 import { usePaletteContext } from '../../theme';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { SingleLineText } from '../../ui/Text';
+import { useMessageMenu } from '../hooks';
+import { BizContextMenuProps, BizContextMenuRef } from '../types';
 import { gMaxItemCount } from './BottomSheetMenu.const';
-import { useGetProps } from './BottomSheetMenu.hooks';
-import type {
-  BottomSheetMenuHeaderProps,
-  BottomSheetMenuHeaderType,
-} from './BottomSheetMenuHeader';
-
-/**
- * Referencing Values of the `BottomSheetMenu` component.
- */
-export type BottomSheetMenuRef = SlideModalRef & {
-  /**
-   * While displaying the component, the menu items will also be dynamically changed.
-   */
-  startShowWithInit: (initItems: React.ReactElement[], others?: any) => void;
-  /**
-   * Start displaying the component with the specified properties.
-   */
-  startShowWithProps: (props: BottomSheetMenuProps) => void;
-
-  /**
-   * Get the data of the component.
-   */
-  getData: () => any;
-};
-/**
- * Properties of the `BottomSheetMenu` component.
- */
-export type BottomSheetMenuProps = {
-  /**
-   * To request to close the component, you usually need to call the `startHide` method here.
-   */
-  onRequestModalClose: () => void;
-  /**
-   * If no title is specified, it will not be displayed.
-   */
-  title?: string;
-  /**
-   * The maximum number should not exceed 6.
-   * If it is not set here, it can be set dynamically when calling `startShowWithInit`.
-   */
-  initItems?: React.ReactElement[];
-  /**
-   * The maximum height of the component.
-   *
-   * @default half of the entire screen.
-   */
-  maxHeight?: number;
-
-  headerProps?: BottomSheetMenuHeaderProps;
-  header?: BottomSheetMenuHeaderType;
-};
 
 /**
  * The BottomSheetMenu component provides menu functionality.
  *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/192a6e98cf2f168dd3a5e0e5a306a6762cf5e0d6/example/src/__dev__/test_bottom_sheet_menu.tsx}
- *
  * @example
  *
  * ```tsx
- * const ref = React.useRef<BottomSheetMenuRef>({} as any);
+ * const ref = React.useRef<BizContextMenuRef>({} as any);
  * // ...
  *  <BottomSheetMenu
  *   ref={ref}
@@ -87,11 +36,11 @@ export type BottomSheetMenuProps = {
  * ```
  */
 export const BottomSheetMenu = React.forwardRef<
-  BottomSheetMenuRef,
-  BottomSheetMenuProps
+  BizContextMenuRef,
+  BizContextMenuProps
 >(function (
-  props: BottomSheetMenuProps,
-  ref?: React.ForwardedRef<BottomSheetMenuRef>
+  props: BizContextMenuProps,
+  ref?: React.ForwardedRef<BizContextMenuRef>
 ) {
   const {
     onRequestModalClose,
@@ -105,7 +54,7 @@ export const BottomSheetMenu = React.forwardRef<
   const { height: winHeight } = useWindowDimensions();
   const othersRef = React.useRef();
   const { items, updateItems, header, headerProps, updateProps } =
-    useGetProps(props);
+    useMessageMenu(props);
   const count = header ? 5 : 6;
   const { getColor } = useColors({
     bg3: {
@@ -137,7 +86,7 @@ export const BottomSheetMenu = React.forwardRef<
             modalRef?.current?.startShow?.();
           }
         },
-        startShowWithProps: (props: BottomSheetMenuProps) => {
+        startShowWithProps: (props: BizContextMenuProps) => {
           const { initItems } = props;
           if (initItems !== items && initItems) {
             isShow.current = true;

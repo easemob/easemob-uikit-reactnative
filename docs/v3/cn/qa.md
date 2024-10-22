@@ -16,6 +16,7 @@
       - [node 版本问题](#node-版本问题)
       - [expo-updates 的问题](#expo-updates-的问题)
       - [创建 expo 项目 集成 uikit 问题](#创建-expo-项目-集成-uikit-问题)
+      - [flipper compilation problem](#flipper-compilation-problem)
 
 # 问题列表
 
@@ -102,3 +103,16 @@ decorateRuntime(jsContext!!.get())
 使用 expo 创建的 react-native 项目，无法正常编译运行 `uikit`。
 
 参考：默认创建的`expo`的项目没有`native`配置，需要使用 `npx expo prebuild` 创建 `ios` 和 `android` 的文件夹以及配置。这样 `uikit` 可以正常编译运行了。
+
+#### flipper compilation problem
+
+In `macos 14.6.1` version, using `xcode 15.4` version, compiling `react-native 0.71.11` version, `flipper 0.182.0` version may have the following problems:
+
+```log
+Showing Recent Errors Only
+/Users/asterisk/Codes/rn/react-native-chat-library-2.0/examples/uikit-example/ios/Pods/Headers/Private/Flipper/FlipperTransportTypes.h:24:14: No template named 'function' in namespace 'std'
+```
+
+The easiest way is to add the header file `#include <functional>` in `FlipperTransportTypes.h`
+
+Reference: [Debugging React Native apps with Flipper is deprecated in React Native 0.73. We will eventually remove out-of-the box support for JS debugging via Flipper.](https://reactnative.dev/docs/debugging)

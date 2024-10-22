@@ -48,11 +48,14 @@ export function GeneralSettingScreen(props: Props) {
   const {
     appLanguage,
     appTranslateLanguage,
+    appMessageContextMenuStyle,
+    appMessageInputBarExtensionStyle,
     appStyle,
     appTheme,
     onSetAppTheme,
-    updater,
+    updateParams,
   } = useGeneralSetting();
+  console.log('test:zuoyu:123:', appMessageContextMenuStyle);
 
   const onBack = () => {
     navi.goBack();
@@ -73,18 +76,32 @@ export function GeneralSettingScreen(props: Props) {
   const onClickedTranslationLanguage = () => {
     navi.push({ to: 'TranslationLanguageSetting' });
   };
+  const onClickedMessageMenu = () => {
+    navi.push({ to: 'MessageContextMenuSetting' });
+  };
+  const onClickedMessageInputBar = () => {
+    navi.push({ to: 'MessageInputBarMenuSetting' });
+  };
 
   React.useEffect(() => {
     if (from === 'LanguageSetting' && hash) {
-      updater();
+      updateParams();
     } else if (from === 'TranslationLanguageSetting' && hash) {
-      updater();
+      updateParams();
     } else if (from === 'ColorSetting' && hash) {
-      updater();
+      updateParams();
     } else if (from === 'StyleSetting' && hash) {
-      updater();
+      updateParams();
+    } else if (from === 'MessageContextMenuSetting' && hash) {
+      updateParams();
+    } else if (from === 'MessageInputBarMenuSetting' && hash) {
+      updateParams();
     }
-  }, [from, hash, updater]);
+  }, [from, hash, updateParams]);
+
+  React.useEffect(() => {
+    updateParams();
+  }, [updateParams]);
 
   return (
     <SafeAreaViewFragment>
@@ -275,6 +292,76 @@ export function GeneralSettingScreen(props: Props) {
               }}
             >
               {appTranslateLanguage === 'en' ? tr('en') : tr('zh-Hans')}
+            </SingleLineText>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
+
+      <ListItem
+        onClicked={onClickedMessageMenu}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_general_setting_message_menu')}
+            </SingleLineText>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              paletteType={'label'}
+              textType={'large'}
+              style={{
+                color: getColor('t1'),
+              }}
+            >
+              {appMessageContextMenuStyle === 'bottom-sheet'
+                ? tr('style2')
+                : tr('style1')}
+            </SingleLineText>
+            <Icon
+              name={'chevron_right'}
+              style={{ height: 20, width: 20, tintColor: getColor('right') }}
+            />
+          </View>
+        }
+      />
+
+      <ListItem
+        onClicked={onClickedMessageInputBar}
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_general_setting_message_input_menu')}
+            </SingleLineText>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              paletteType={'label'}
+              textType={'large'}
+              style={{
+                color: getColor('t1'),
+              }}
+            >
+              {appMessageInputBarExtensionStyle === 'bottom-sheet'
+                ? tr('style2')
+                : tr('style1')}
             </SingleLineText>
             <Icon
               name={'chevron_right'}

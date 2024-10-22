@@ -6,29 +6,28 @@ import { CallConstKey } from '../../rename.callkit';
 import type { ChatMessage } from '../../rename.uikit';
 import {
   Badges,
-  BottomTabBar,
   ContactItem,
   ContactList,
   ConversationList,
   ConversationListRef,
-  getReleaseArea,
   TabPage,
   TabPageRef,
+  TabPageTabBarHeader,
   useAlertContext,
   useChatContext,
   useColors,
+  useConfigContext,
   useDispatchContext,
-  useForceUpdate,
   useI18nContext,
   usePaletteContext,
 } from '../../rename.uikit';
 import { accountType } from '../common/const';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import {
-  useGeneralSetting,
   useLogin,
   useNativeStackRoute,
   useNavigationState,
+  useServerConfig,
 } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 import { MineInfo } from '../ui/MineInfo';
@@ -147,44 +146,11 @@ export function HomeScreen(props: Props) {
   const tabRef = React.useRef<TabPageRef>(null);
   const currentIndexRef = React.useRef<number>(0);
   const { tr } = useI18nContext();
-  const { updater } = useForceUpdate();
-  const ra = getReleaseArea();
-  const releaseAreaRef = React.useRef(ra);
+  const { releaseArea } = useConfigContext();
   useNavigationState(props);
   const im = useChatContext();
   const { replace } = useNativeStackRoute();
-
-  const { initParams } = useGeneralSetting();
-  const [_initParams, setInitParams] = React.useState(false);
-
-  const initParamsCallback = React.useCallback(async () => {
-    if (_initParams === true) {
-      return;
-    }
-    try {
-      const ret = await initParams();
-      releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
-      setInitParams(true);
-    } catch (error) {
-      setInitParams(true);
-    }
-  }, [_initParams, initParams, releaseAreaRef, setInitParams]);
-
-  React.useEffect(() => {
-    const ret8 = DeviceEventEmitter.addListener('_demo_emit_app_style', (e) => {
-      console.log('dev:emit:app:style:', e);
-      releaseAreaRef.current = e === 'classic' ? 'china' : 'global';
-      updater();
-    });
-
-    return () => {
-      ret8.remove();
-    };
-  }, [updater]);
-
-  React.useEffect(() => {
-    initParamsCallback().catch();
-  }, [initParamsCallback]);
+  const { getEnableDevMode } = useServerConfig();
 
   React.useEffect(() => {
     if (accountType === 'agora') {
@@ -202,23 +168,24 @@ export function HomeScreen(props: Props) {
 
   React.useEffect(() => {
     im.checkTokenIsExpired({
-      onResult: (isExpired) => {
+      onResult: async (isExpired) => {
         if (isExpired) {
-          replace({ to: 'LoginV2' });
+          const ret = await getEnableDevMode();
+          replace({ to: 'LoginV2', props: { serverConfigVisible: ret } });
         }
       },
     });
-  }, [im, replace]);
+  }, [getEnableDevMode, im, replace]);
 
   return (
     <SafeAreaViewFragment>
       <TabPage
         ref={tabRef}
         header={{
-          Header: BottomTabBar as any,
+          Header: TabPageTabBarHeader as any,
           HeaderProps: {
             titles:
-              releaseAreaRef.current === 'global'
+              releaseArea === 'global'
                 ? [
                     {
                       icon: 'bubble_fill',
@@ -429,23 +396,7 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
   const [userId, setUserId] = React.useState<string>();
   const { getFcmToken } = useLogin();
   const { getAlertRef } = useAlertContext();
-
-  // const s = React.useCallback(async () => {
-  //   const autoLogin = im.client.options?.autoLogin ?? false;
-  //   if (autoLogin === true) {
-  //     autoLoginAction({
-  //       onResult: (res) => {
-  //         if (res.isOk) {
-  //           setUserId(im.userId);
-  //         } else {
-  //           replace({ to: 'LoginV2' });
-  //         }
-  //       },
-  //     });
-  //   } else {
-  //     setUserId(im.userId);
-  //   }
-  // }, [autoLoginAction, im.client.options?.autoLogin, im.userId, replace]);
+  const { getEnableDevMode } = useServerConfig();
 
   React.useEffect(() => {
     if (im.userId) {
@@ -475,8 +426,12 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
                   getAlertRef()?.close(() => {
                     im.logout({
                       unbindDeviceToken: getFcmToken() !== undefined,
-                      result: () => {
-                        navi.replace({ to: 'LoginV2' });
+                      result: async () => {
+                        const ret = await getEnableDevMode();
+                        navi.replace({
+                          to: 'LoginV2',
+                          props: { serverConfigVisible: ret },
+                        });
                       },
                     });
                   });

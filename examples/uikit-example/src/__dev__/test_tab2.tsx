@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 import {
-  BottomTabBar,
+  // TabPageTabBarHeader,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
@@ -86,32 +86,47 @@ export function TestTab() {
       <PaletteContextProvider value={palette}>
         <View style={{ top: 100 }}>
           <TabPage
-            // header={{
-            //   // Header: TabPage.DefaultHeader,
-            //   HeaderProps: {
-            //     titles: ['1', '2', '3', '4'],
-            //   },
-            // }}
             header={{
-              Header: BottomTabBar as any,
+              // Header: TabPage.DefaultHeader,
+              Header: TabPage.DotHeader,
               HeaderProps: {
-                titles: ['1', '2', '3'],
-                items: [
-                  {
-                    title: '会话',
-                    icon: 'bubble_fill',
-                  },
-                  {
-                    title: '联系人',
-                    icon: 'person_double_fill',
-                  },
-                  {
-                    title: '我',
-                    icon: 'person_single_fill',
-                  },
+                titles: [
+                  { title: '1' },
+                  { title: '2' },
+                  { title: '3' },
+                  { title: '4' },
                 ],
-              } as any,
+                content: {
+                  containerStyle: {
+                    // marginHorizontal: 16,
+                  },
+                },
+                containerStyle: {
+                  // paddingTop: 2,
+                  // paddingBottom: 8,
+                },
+              },
             }}
+            // header={{
+            //   Header: TabPageTabBarHeader as any,
+            //   HeaderProps: {
+            //     titles: ['1', '2', '3'],
+            //     items: [
+            //       {
+            //         title: '会话',
+            //         icon: 'bubble_fill',
+            //       },
+            //       {
+            //         title: '联系人',
+            //         icon: 'person_double_fill',
+            //       },
+            //       {
+            //         title: '我',
+            //         icon: 'person_single_fill',
+            //       },
+            //     ],
+            //   } as any,
+            // }}
             // body={{
             //   type: 'TabPageBody',
             //   // Body: TabPage.DefaultBody,

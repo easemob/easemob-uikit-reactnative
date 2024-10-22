@@ -15,13 +15,13 @@ export interface DispatchApi {
   /**
    * Add listener.
    *
-   * @param key identifier. It is recommended to obtain it through the `seqId` method. {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/8594b4dc45691568f0e4dd1db6ed6b14af718b40/src/utils/Sequence.ts}
+   * @param key identifier. It is recommended to obtain it through the `seqId` method.
    * @param listener {@link Listener}
    */
   addListener(key: string, listener: Listener): void;
   /**
    * Remove listener.
-   * @param key identifier. It is recommended to obtain it through the `seqId` method. {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/8594b4dc45691568f0e4dd1db6ed6b14af718b40/src/utils/Sequence.ts}
+   * @param key identifier. It is recommended to obtain it through the `seqId` method.
    * @param listener {@link Listener}
    *
    * **Note**: May not be removed if used with `React.useCallback`. For example.
