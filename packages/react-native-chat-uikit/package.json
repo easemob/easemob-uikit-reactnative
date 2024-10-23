@@ -85,13 +85,13 @@
     "react-native": "0.71.11",
     "react-native-audio-recorder-player": "^3.5.3",
     "react-native-builder-bob": "^0.20.4",
-    "react-native-chat-sdk": "1.5.0-beta.0",
+    "react-native-chat-sdk": "1.6.2",
     "react-native-device-info": "^10.12.0",
     "react-native-document-picker": "^9.0.1",
     "react-native-fast-image": "^8.6.3",
     "react-native-file-access": "^3.0.4",
     "react-native-fs": "^2.20.0",
-    "react-native-gesture-handler": "~2.9.0",
+    "react-native-gesture-handler": "^2.20.0",
     "react-native-get-random-values": "~1.8.0",
     "react-native-image-picker": "https://github.com/AsteriskZuo/react-native-image-picker.git#dc2ed7b89a9da54fb3d29d0b8c9134a99eb84223",
     "react-native-linear-gradient": "^2.8.3",
@@ -99,7 +99,7 @@
     "react-native-paper": "^5.8.0",
     "react-native-permissions": "^3.8.0",
     "react-native-reanimated": "~2.14.4",
-    "react-native-safe-area-context": "4.5.0",
+    "react-native-safe-area-context": "^4.11.1",
     "react-native-screens": "^3.20.0",
     "react-native-tab-view": "^3.5.1",
     "react-native-video": "^5.2.1",
@@ -135,7 +135,7 @@
     "react-native-paper": ">=5.8.0",
     "react-native-permissions": ">=3.8.0",
     "react-native-reanimated": ">=2.14.4",
-    "react-native-safe-area-context": "4.5.0",
+    "react-native-safe-area-context": ">=4.11.1",
     "react-native-screens": ">=3.20.0",
     "react-native-tab-view": ">=3.5.1",
     "react-native-video": ">=5.2.1",
@@ -149,7 +149,7 @@
   "engines": {
     "node": ">= 16.0.0"
   },
-  "packageManager": "^yarn@1.22.15",
+  "packageManager": "~yarn@1.22.15",
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
