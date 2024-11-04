@@ -17,6 +17,7 @@
       - [expo-updates 的问题](#expo-updates-的问题)
       - [创建 expo 项目 集成 uikit 问题](#创建-expo-项目-集成-uikit-问题)
       - [flipper compilation problem](#flipper-compilation-problem)
+      - [ScrollView from react-native-gesture-handler](#scrollview-from-react-native-gesture-handler)
 
 # 问题列表
 
@@ -116,3 +117,7 @@ Showing Recent Errors Only
 The easiest way is to add the header file `#include <functional>` in `FlipperTransportTypes.h`
 
 Reference: [Debugging React Native apps with Flipper is deprecated in React Native 0.73. We will eventually remove out-of-the box support for JS debugging via Flipper.](https://reactnative.dev/docs/debugging)
+
+#### ScrollView from react-native-gesture-handler
+
+ERROR Error: NativeViewGestureHandler must be used as a descendant of GestureHandlerRootView. Otherwise the gestures will not be recognized. See https://docs.swmansion.com/react-native-gesture-handler/docs/installation for more details.
