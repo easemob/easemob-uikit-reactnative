@@ -1,6 +1,12 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import { RootScreenParamsList, SCREEN_NAME_LIST } from '../routes';
 
@@ -8,7 +14,7 @@ type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function TopMenuScreen(props: Props) {
   const { navigation } = props;
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View>
         <Text style={{ color: 'red' }}>
           {'Note: Please log in and enter the chat room first.'}
@@ -61,6 +67,6 @@ export function TopMenuScreen(props: Props) {
       </ScrollView>
 
       <View style={{ flex: 1 }} />
-    </View>
+    </SafeAreaView>
   );
 }

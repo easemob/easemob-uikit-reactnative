@@ -1,84 +1,46 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import {
-  DataModel,
-  DataModelType,
-  GroupParticipantList,
-  UIKitError,
-  useColors,
-  usePaletteContext,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { GroupParticipantList } from '../../rename.uikit';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function GroupParticipantListScreen(props: Props) {
-  const { navigation, route } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
   const groupId = ((route.params as any)?.params as any)?.groupId;
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <GroupParticipantList
         groupId={groupId}
-        containerStyle={{
-          flexGrow: 1,
-          // backgroundColor: 'red',
-        }}
-        onRequestGroupData={(params: {
-          groupId: string;
-          ids: string[];
-          result: (data?: DataModel[], error?: UIKitError) => void;
-        }) => {
-          params?.result(
-            params.ids.map((v) => {
-              return {
-                id: v,
-                name: v + 'name',
-                avatar:
-                  'https://cdn2.iconfinder.com/data/icons/valentines-day-flat-line-1/58/girl-avatar-512.png',
-                type: 'user' as DataModelType,
-              };
-            })
-          );
-        }}
         onClickedSearch={() => {
-          navigation.push('GroupParticipantList', {});
+          navi.push({ to: 'GroupParticipantList' });
         }}
         onClickedItem={(data) => {
           if (data) {
-            navigation.push('GroupParticipantInfo', {
-              params: {
-                groupId: groupId,
+            navi.navigate({
+              to: 'ContactInfo',
+              props: {
                 userId: data.memberId,
               },
             });
           }
         }}
         onClickedAddParticipant={() => {
-          navigation.push('AddGroupParticipant', { params: { groupId } });
+          navi.push({ to: 'AddGroupParticipant', props: { groupId } });
         }}
         onClickedDelParticipant={() => {
-          navigation.push('DelGroupParticipant', { params: { groupId } });
+          navi.push({ to: 'DelGroupParticipant', props: { groupId } });
         }}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
         onKicked={() => {
-          navigation.goBack();
+          navi.goBack();
         }}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

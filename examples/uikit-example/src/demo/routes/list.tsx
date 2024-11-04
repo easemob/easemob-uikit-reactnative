@@ -3,11 +3,23 @@ export type RootParamsList = {
     option?: {} | undefined;
     params?: {} | undefined;
   };
+  Splash: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
   Config: {
     option?: {} | undefined;
     params?: {} | undefined;
   };
   Login: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  LoginV2: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  LoginV2Setting: {
     option?: {} | undefined;
     params?: {} | undefined;
   };
@@ -148,6 +160,62 @@ export type RootParamsList = {
     params?: {} | undefined;
   };
   MessageHistory: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  AVSelectGroupParticipant: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  PersonInfo: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  LanguageSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  TranslationLanguageSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  ColorSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  StyleSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  AboutSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  FeatureSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  NotificationSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  SearchBlock: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  BlockList: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  PrivacySetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  MessageContextMenuSetting: {
+    option?: {} | undefined;
+    params?: {} | undefined;
+  };
+  MessageInputBarMenuSetting: {
     option?: {} | undefined;
     params?: {} | undefined;
   };
@@ -166,11 +234,23 @@ export const SCREEN_LIST: RootParamsList = {
     option: undefined,
     params: undefined,
   },
+  Splash: {
+    option: undefined,
+    params: undefined,
+  },
   Config: {
     option: undefined,
     params: undefined,
   },
   Login: {
+    option: undefined,
+    params: undefined,
+  },
+  LoginV2: {
+    option: undefined,
+    params: undefined,
+  },
+  LoginV2Setting: {
     option: undefined,
     params: undefined,
   },
@@ -311,6 +391,62 @@ export const SCREEN_LIST: RootParamsList = {
     params: undefined,
   },
   MessageHistory: {
+    option: undefined,
+    params: undefined,
+  },
+  AVSelectGroupParticipant: {
+    option: undefined,
+    params: undefined,
+  },
+  PersonInfo: {
+    option: undefined,
+    params: undefined,
+  },
+  LanguageSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  TranslationLanguageSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  ColorSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  StyleSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  AboutSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  FeatureSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  NotificationSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  SearchBlock: {
+    option: undefined,
+    params: undefined,
+  },
+  BlockList: {
+    option: undefined,
+    params: undefined,
+  },
+  PrivacySetting: {
+    option: undefined,
+    params: undefined,
+  },
+  MessageContextMenuSetting: {
+    option: undefined,
+    params: undefined,
+  },
+  MessageInputBarMenuSetting: {
     option: undefined,
     params: undefined,
   },

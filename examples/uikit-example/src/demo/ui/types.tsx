@@ -1,4 +1,4 @@
-import type { InfoProps, StatusType } from 'react-native-chat-uikit';
+import type { InfoProps, StatusType } from '../../rename.uikit';
 
 /**
  * User State.
@@ -13,6 +13,11 @@ export type MineInfoProps = InfoProps & {
   onClickedCommon?: () => void;
   onClickedMessageNotification?: () => void;
   onClickedPrivacy?: () => void;
+  onClickedPersonInfo?: () => void;
+  onClickedAbout?: () => void;
+  // onDestroyAccount?: () => void;
+  enableAccount?: boolean;
+  enableAVCall?: boolean;
 };
 export type CommonInfoProps = InfoProps & {
   onBack?: () => void;

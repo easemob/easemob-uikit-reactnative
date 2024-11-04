@@ -1,59 +1,30 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { View } from 'react-native';
-import {
-  GroupList,
-  useColors,
-  usePaletteContext,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { GroupList } from '../../rename.uikit';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
+import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function GroupListScreen(props: Props) {
-  const { navigation } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
+  const {} = props;
+  const navi = useStackScreenRoute(props);
   return (
-    <View
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
-      <SafeAreaView
-        style={{
-          backgroundColor: getColor('bg'),
-          flex: 1,
+    <SafeAreaViewFragment>
+      <GroupList
+        onClickedSearch={() => {
+          navi.push({ to: 'SearchGroup' });
         }}
-      >
-        <GroupList
-          containerStyle={{
-            flexGrow: 1,
-          }}
-          onClickedSearch={() => {
-            navigation.push('SearchGroup', {});
-          }}
-          onClickedItem={(data) => {
-            if (data) {
-              navigation.push('GroupInfo', {
-                params: {
-                  groupId: data.groupId,
-                },
-              });
-            }
-          }}
-          onBack={() => {
-            navigation.goBack();
-          }}
-        />
-      </SafeAreaView>
-    </View>
+        onClickedItem={(data) => {
+          if (data) {
+            navi.push({ to: 'GroupInfo', props: { groupId: data.groupId } });
+          }
+        }}
+        onBack={() => {
+          navi.goBack();
+        }}
+      />
+    </SafeAreaViewFragment>
   );
 }

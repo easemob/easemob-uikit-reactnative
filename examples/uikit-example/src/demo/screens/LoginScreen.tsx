@@ -1,12 +1,19 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Switch, Text, TouchableOpacity, View } from 'react-native';
+import {
+  SafeAreaView,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {
   TextInput,
   useChatContext,
   useChatListener,
 } from 'react-native-chat-uikit';
 
+import { useLoginWithConfig } from '../hooks/useLoginWithConfig';
 import type { RootScreenParamsList } from '../routes';
 
 const account = require('../../env').account as {
@@ -16,8 +23,6 @@ const account = require('../../env').account as {
 let gId = account[0]?.id;
 let gToken = account[0]?.token;
 let gIsPass = false;
-
-const demoType = require('../../env').demoType;
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LoginScreen(props: Props) {
@@ -43,6 +48,7 @@ export function LoginScreen(props: Props) {
   const [id, setId] = React.useState(gId);
   const [isPass, setIsPass] = React.useState(gIsPass);
   const [token, setToken] = React.useState(gToken);
+  const { devLoginAction } = useLoginWithConfig();
 
   const onToken = (t: string) => {
     gToken = t;
@@ -58,7 +64,7 @@ export function LoginScreen(props: Props) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View>
         <Text style={{ color: 'red' }}>
           {'Note: Click id to try to log in.'}
@@ -110,22 +116,17 @@ export function LoginScreen(props: Props) {
         }}
         onPress={() => {
           if (id && token) {
-            im.login({
-              userId: id,
-              userToken: token,
-              userName: `${id}name`,
-              userAvatarURL:
-                'https://cdn0.iconfinder.com/data/icons/user-pictures/100/boy-2-128.png',
+            devLoginAction({
+              id: id,
+              passOrToken: token,
               usePassword: isPass,
-              result: ({ isOk, error }) => {
+              onResult: ({ isOk, reason }) => {
                 setS(isOk === true ? 'success' : 'failed');
-                if (error) {
-                  setReason(error.toString());
+                if (reason) {
+                  setReason(reason);
                 }
-                if (demoType === 3) {
-                  if (isOk === true) {
-                    navigation.replace('Home', {});
-                  }
+                if (isOk === true) {
+                  navigation.replace('Home', {});
                 }
               },
             });
@@ -165,6 +166,6 @@ export function LoginScreen(props: Props) {
       </TouchableOpacity>
 
       <View style={{ flex: 1 }} />
-    </View>
+    </SafeAreaView>
   );
 }

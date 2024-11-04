@@ -1,34 +1,59 @@
-import { useNavigation } from '@react-navigation/native';
-import type {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   Badges,
-  ChatServiceListener,
+  ContactItem,
   ContactList,
   ConversationList,
-  DisconnectReasonType,
+  ConversationListRef,
   TabPage,
   TabPageRef,
+  TabPageTabBarHeader,
+  useAlertContext,
   useChatContext,
-  useChatListener,
   useColors,
+  useConfigContext,
   useDispatchContext,
   useI18nContext,
   usePaletteContext,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
+} from '../../rename.uikit';
+import { accountType, demoType } from '../common/const';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
+import {
+  useLogin,
+  useNativeStackRoute,
+  useNavigationState,
+  useServerConfig,
+} from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 import { MineInfo } from '../ui/MineInfo';
 
-const env = require('../../env');
-const demoType = env.demoType;
-
 type Props = NativeStackScreenProps<RootScreenParamsList>;
+
+function useContactListItemActions() {
+  const { navigate } = useNativeStackRoute();
+  const { tr } = useI18nContext();
+  const _onClickedBlockList = React.useCallback(() => {
+    navigate({ to: 'BlockList' });
+  }, [navigate]);
+  const contactItems = React.useMemo(
+    () => [
+      <ContactItem
+        key={'_uikit_contact_black_list'}
+        name={tr('_uikit_contact_black_list')}
+        count={<Badges count={0} />}
+        hasArrow={true}
+        onClicked={_onClickedBlockList}
+      />,
+    ],
+    [_onClickedBlockList, tr]
+  );
+  return {
+    contactItems,
+  };
+}
 
 function ConversationBadge() {
   const [count, setCount] = React.useState<number>(0);
@@ -119,60 +144,80 @@ export function HomeScreen(props: Props) {
   const tabRef = React.useRef<TabPageRef>(null);
   const currentIndexRef = React.useRef<number>(0);
   const { tr } = useI18nContext();
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
+  const { releaseArea } = useConfigContext();
+  useNavigationState(props);
+  const im = useChatContext();
+  const { replace } = useNativeStackRoute();
+  const { getEnableDevMode } = useServerConfig();
+
+  React.useEffect(() => {
+    if (accountType === 'agora') {
+    } else {
+      im.client.contactManager.fetchAllContacts();
+    }
+  }, [im.client.contactManager]);
+
+  React.useEffect(() => {
+    im.getAllBlockList({
+      isForce: true,
+      onResult: () => {},
+    });
+  }, [im]);
+
+  React.useEffect(() => {
+    im.checkTokenIsExpired({
+      onResult: async (isExpired) => {
+        if (isExpired) {
+          if (demoType === 1) {
+            replace({ to: 'TopMenu' });
+          } else if (demoType === 2) {
+            replace({ to: 'LoginList' });
+          } else {
+            const ret = await getEnableDevMode();
+            replace({ to: 'Login', props: { serverConfigVisible: ret } });
+          }
+        }
+      },
+    });
+  }, [getEnableDevMode, im, replace]);
+
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-      }}
-    >
-      {/* <View
-        style={{ height: 100, width: '100%' }}
-        onTouchEnd={() => {
-          const tmp = currentIndexRef.current + 1;
-          tabRef.current?.changeIndex(tmp % 3);
-        }}
-      >
-        <Text>{'change index'}</Text>
-      </View> */}
+    <SafeAreaViewFragment>
       <TabPage
         ref={tabRef}
         header={{
-          Header: TabPage.TabBarHeader,
+          Header: TabPageTabBarHeader as any,
           HeaderProps: {
-            titles: [
-              {
-                title: tr('_demo_tab_conv_list'),
-                icon: 'bubble_fill',
-              },
-              {
-                title: tr('_demo_tab_contact_list'),
-                icon: 'person_double_fill',
-              },
-              {
-                title: tr('_demo_tab_mine'),
-                icon: 'person_single_fill',
-              },
-            ],
+            titles:
+              releaseArea === 'global'
+                ? [
+                    {
+                      icon: 'bubble_fill',
+                    },
+                    {
+                      icon: 'person_double_fill',
+                    },
+                    {
+                      icon: 'person_single_fill',
+                    },
+                  ]
+                : [
+                    {
+                      title: tr('_demo_tab_conv_list'),
+                      icon: 'bubble_fill',
+                    },
+                    {
+                      title: tr('_demo_tab_contact_list'),
+                      icon: 'person_double_fill',
+                    },
+                    {
+                      title: tr('_demo_tab_mine'),
+                      icon: 'person_single_fill',
+                    },
+                  ],
             StateViews: [ConversationBadge, ContactBadge],
           } as any,
         }}
-        // body={{
-        //   type: 'TabPageBodyT',
-        //   BodyProps: {
-        //     RenderChildren: BodyPagesT,
-        //     RenderChildrenProps: {
-        //       index: 0,
-        //       currentIndex: 0,
-        //     },
-        //   },
-        // }}
         body={{
           type: 'TabPageBodyLIST',
           BodyProps: {
@@ -194,7 +239,7 @@ export function HomeScreen(props: Props) {
           currentIndexRef.current = index;
         }}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }
 
@@ -216,32 +261,13 @@ export function BodyPagesT({
   return <View />;
 }
 
-export function BodyPagesLIST({
-  index,
-  currentIndex,
-}: {
-  index: number;
-  currentIndex: number;
-}) {
-  console.log('dev:BodyPagesLIST:', index, currentIndex);
-  return (
-    <View
-      style={{
-        flexGrow: 1,
-        backgroundColor: 'red',
-        // height: 400,
-      }}
-    />
-  );
-}
-
 type HomeTabConversationListScreenProps = {};
 function HomeTabConversationListScreen(
   props: HomeTabConversationListScreenProps
 ) {
   const {} = props;
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
+  const navi = useNativeStackRoute();
+  const convRef = React.useRef<ConversationListRef>({} as any);
   const { emit } = useDispatchContext();
 
   const onChangeUnreadCount = React.useCallback(
@@ -255,16 +281,11 @@ function HomeTabConversationListScreen(
 
   return (
     <ConversationList
-      containerStyle={{
-        flexGrow: 1,
-        // backgroundColor: 'red',
-        // height: 400,
-      }}
+      propsRef={convRef}
       onChangeUnreadCount={onChangeUnreadCount}
       filterEmptyConversation={true}
-      // onInitialized={updateData}
       onClickedSearch={() => {
-        navigation.navigate('SearchConversation', {});
+        navi.navigate({ to: 'SearchConversation' });
       }}
       onClickedItem={(data) => {
         if (data === undefined) {
@@ -273,21 +294,20 @@ function HomeTabConversationListScreen(
         const convId = data?.convId;
         const convType = data?.convType;
         const convName = data?.convName;
-        navigation?.navigate?.('ConversationDetail', {
-          params: {
+        navi.navigate({
+          to: 'ConversationDetail',
+          props: {
             convId,
             convType,
             convName: convName ?? convId,
-            from: 'ConversationList',
-            hash: Date.now(),
           },
         });
       }}
       onClickedNewGroup={() => {
-        navigation?.navigate?.('CreateGroup', {});
+        navi.navigate({ to: 'CreateGroup' });
       }}
       onClickedNewConversation={() => {
-        navigation?.navigate?.('NewConversation', {});
+        navi.navigate({ to: 'NewConversation' });
       }}
     />
   );
@@ -295,9 +315,9 @@ function HomeTabConversationListScreen(
 export type HomeTabContactListScreenProps = {};
 function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
   const {} = props;
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
+  const navi = useNativeStackRoute();
   const { emit } = useDispatchContext();
+  const {} = useContactListItemActions();
 
   const onChangeRequestCount = React.useCallback(
     (count: number) => {
@@ -309,45 +329,40 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
   return (
     <ContactList
       contactType={'contact-list'}
-      containerStyle={{
-        flexGrow: 1,
-        // backgroundColor: 'red',
-        // height: 400,
-      }}
       onChangeRequestCount={onChangeRequestCount}
-      // navigationBarVisible={false}
       onClickedSearch={() => {
-        navigation.navigate('SearchContact', {
-          params: { searchType: 'contact-list' },
+        navi.navigate({
+          to: 'SearchContact',
+          props: {
+            searchType: 'contact-list',
+          },
         });
       }}
-      // onClickedNewGroup={() => {
-      //   navigation.navigate('CreateGroup', {
-      //     params: { searchType: 'create-group' },
-      //   });
-      // }}
-      // onClickedNewConversation={() => {
-      //   navigation.navigate('NewConversation', {
-      //     params: { searchType: 'new-conversation' },
-      //   });
-      // }}
       onClickedItem={(data) => {
         if (data?.userId) {
-          navigation.navigate('ContactInfo', {
-            params: { userId: data.userId },
+          navi.navigate({
+            to: 'ContactInfo',
+            props: {
+              userId: data.userId,
+            },
           });
         }
       }}
       onClickedGroupList={() => {
-        navigation.navigate('GroupList', {
-          params: {},
-        });
+        navi.navigate({ to: 'GroupList' });
       }}
       onClickedNewRequest={() => {
-        navigation.navigate('NewRequests', {
-          params: {},
-        });
+        navi.navigate({ to: 'NewRequests' });
       }}
+      // ListItemRender={() => (
+      //   <View style={{ height: 20, backgroundColor: 'red' }} />
+      // )}
+      // isVisibleIndex={false}
+      // isVisibleItemHeader={false}
+      // onInitListItemActions={(data) => {
+      //   data.push(...contactItems);
+      //   return data;
+      // }}
     />
   );
 }
@@ -355,26 +370,14 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
 export type HomeTabMineScreenProps = {};
 function HomeTabMineScreen(props: HomeTabMineScreenProps) {
   const {} = props;
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootScreenParamsList>>();
+  const navi = useNativeStackRoute();
+  const {} = navi;
   const im = useChatContext();
+  const { tr } = useI18nContext();
   const [userId, setUserId] = React.useState<string>();
-
-  useChatListener(
-    React.useMemo(() => {
-      return {
-        onConnected: (): void => {
-          setUserId(im.userId);
-        },
-        onDisconnected: (reason: DisconnectReasonType): void => {
-          if (reason === DisconnectReasonType.others) {
-            return;
-          }
-          setUserId(undefined);
-        },
-      } as ChatServiceListener;
-    }, [im.userId])
-  );
+  const { getFcmToken } = useLogin();
+  const { getAlertRef } = useAlertContext();
+  const { getEnableDevMode } = useServerConfig();
 
   React.useEffect(() => {
     if (im.userId) {
@@ -386,14 +389,63 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
     return (
       <MineInfo
         userId={userId}
+        enableAccount={true}
         onClickedLogout={() => {
-          if (demoType === 3) {
-            navigation.replace('Login', {});
-          }
+          getAlertRef()?.alertWithInit({
+            title: tr('_demo_logout_title'),
+            buttons: [
+              {
+                text: tr('cancel'),
+                isPreferred: false,
+                onPress: () => {
+                  getAlertRef()?.close();
+                },
+              },
+              {
+                text: tr('confirm'),
+                isPreferred: true,
+                onPress: () => {
+                  getAlertRef()?.close(() => {
+                    im.logout({
+                      unbindDeviceToken: getFcmToken() !== undefined,
+                      result: async () => {
+                        if (demoType === 1) {
+                          navi.replace({ to: 'TopMenu' });
+                        } else if (demoType === 2) {
+                          navi.replace({ to: 'LoginList' });
+                        } else {
+                          const ret = await getEnableDevMode();
+                          navi.replace({
+                            to: 'Login',
+                            props: { serverConfigVisible: ret },
+                          });
+                        }
+                      },
+                    });
+                  });
+                },
+              },
+            ],
+          });
         }}
         onClickedCommon={() => {
-          navigation.push('CommonSetting', {});
+          navi.push({ to: 'CommonSetting' });
         }}
+        onClickedPersonInfo={() => {
+          navi.push({ to: 'PersonInfo' });
+        }}
+        onClickedAbout={() => {
+          navi.push({ to: 'AboutSetting' });
+        }}
+        onClickedMessageNotification={() => {
+          navi.push({ to: 'NotificationSetting' });
+        }}
+        onClickedPrivacy={() => {
+          navi.push({ to: 'PrivacySetting' });
+        }}
+        // onDestroyAccount={() => {
+        //   navi.replace({ to: 'Login' });
+        // }}
       />
     );
   } else {
