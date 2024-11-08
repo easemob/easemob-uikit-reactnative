@@ -1,20 +1,24 @@
 import * as React from 'react';
-import type { ChatPresence } from 'react-native-chat-sdk';
+
+import type { ChatPresence } from '../../rename.uikit';
 import {
   type AlertRef,
   type ChatServiceListener,
   type ContextNameMenuRef,
   PresenceUtil,
+  Services,
   type SimpleToastRef,
   useChatContext,
   useChatListener,
+  useConfigContext,
   useI18nContext,
   useLifecycle,
   useMineInfoActions,
   useThemeContext,
-} from 'react-native-chat-uikit';
-
-import type { CommonInfoProps, MineInfoProps, UserState } from './types';
+} from '../../rename.uikit';
+import { RestApi } from '../common/rest.api';
+import { useAutoLogin } from '../hooks';
+import type { MineInfoProps, UserState } from './types';
 
 export function useMineInfo(props: MineInfoProps) {
   const {
@@ -27,16 +31,21 @@ export function useMineInfo(props: MineInfoProps) {
     onClickedCommon: propsOnClickedCommon,
     onClickedMessageNotification: propsOnClickedMessageNotification,
     onClickedPrivacy: propsOnClickedPrivacy,
+    onClickedPersonInfo: propsOnClickedPersonInfo,
+    onClickedAbout: propsOnClickedAbout,
+    // onDestroyAccount: propsOnDestroyAccount,
   } = props;
   const [doNotDisturb, setDoNotDisturb] = React.useState(propsDoNotDisturb);
-  const [userName, setUserName] = React.useState(propsUserName);
+  const [userName, setUserName] = React.useState(
+    propsUserName && propsUserName.length > 0 ? propsUserName : undefined
+  );
   const [userAvatar, setUserAvatar] = React.useState(propsUserAvatar);
-  const [userSign, setUserSign] = React.useState<string>();
   const [userState, setUserState] = React.useState<UserState>('offline');
   const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);
   const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
+  const { enablePresence } = useConfigContext();
   const { style } = useThemeContext();
   const { currentLanguage } = useI18nContext();
   const [value, onValueChange] = React.useState(
@@ -46,20 +55,41 @@ export function useMineInfo(props: MineInfoProps) {
     currentLanguage() === 'en' ? true : false
   );
   const im = useChatContext();
+  const { tr } = useI18nContext();
+  const { getSelfInfo } = useAutoLogin();
 
   useLifecycle(
     React.useCallback(
       (state: any) => {
         if (state === 'load') {
-          const self = im.user(userId);
-          if (self) {
-            setUserName(self.userName);
-            setUserSign('self.sign');
-            setUserAvatar(self.avatarURL);
+          if (im.userId) {
+            im.getUserInfo({
+              userId: im.userId,
+              onResult: (res) => {
+                if (res.isOk && res.value) {
+                  im.setUser({ users: [res.value] });
+                  setUserName(
+                    res.value.userName && res.value.userName.length > 0
+                      ? res.value.userName
+                      : undefined
+                  );
+                  setUserAvatar(res.value.avatarURL);
+
+                  im.fetchPresence({
+                    userIds: [res.value.userId],
+                    onResult: (res) => {
+                      if (res.isOk && res.value) {
+                        setUserState(res.value.get(im.userId!) ?? 'offline');
+                      }
+                    },
+                  });
+                }
+              },
+            });
           }
         }
       },
-      [im, userId]
+      [im]
     )
   );
   const onDoNotDisturb = (value: boolean) => {
@@ -109,6 +139,35 @@ export function useMineInfo(props: MineInfoProps) {
     propsOnClickedPrivacy?.();
   }, [propsOnClickedPrivacy]);
 
+  const onClickedPersonInfo = React.useCallback(() => {
+    propsOnClickedPersonInfo?.();
+  }, [propsOnClickedPersonInfo]);
+
+  const onClickedAbout = React.useCallback(() => {
+    propsOnClickedAbout?.();
+  }, [propsOnClickedAbout]);
+
+  const onClickedDestroyAccount = React.useCallback(() => {
+    getSelfInfo().then(async (res) => {
+      if (res?.id && res.token) {
+        const ret = await RestApi.requestDestroyAccount({
+          phone: res.phone,
+          userToken: res.token,
+        });
+        if (ret.isOk) {
+          // propsOnDestroyAccount?.();
+        }
+      }
+    });
+  }, [getSelfInfo]);
+
+  const onCopyId = React.useCallback(() => {
+    Services.cbs.setString(userId);
+    toastRef.current.show({
+      message: tr('copy_success'),
+    });
+  }, [tr, userId]);
+
   const listener = React.useMemo(() => {
     return {
       onPresenceStatusChanged: (list: ChatPresence[]) => {
@@ -119,8 +178,19 @@ export function useMineInfo(props: MineInfoProps) {
           }
         }
       },
+      onFinished: (params) => {
+        if (params.event === 'updateSelfInfo') {
+          const ret = im.user(im.userId);
+          if (ret && ret.avatarURL && ret.avatarURL.length > 0) {
+            setUserAvatar(ret.avatarURL);
+          }
+          if (ret && ret.userName && ret.userName.length > 0) {
+            setUserName(ret.userName);
+          }
+        }
+      },
     } as ChatServiceListener;
-  }, [userId]);
+  }, [im, userId]);
   useChatListener(listener);
 
   return {
@@ -135,7 +205,6 @@ export function useMineInfo(props: MineInfoProps) {
     onRequestCloseMenu,
     alertRef,
     toastRef,
-    userSign,
     onClickedState,
     onClickedLogout,
     onClickedCommon,
@@ -146,52 +215,10 @@ export function useMineInfo(props: MineInfoProps) {
     onValueChange,
     language,
     setLanguage,
-  };
-}
-
-export function useCommonInfo(props: CommonInfoProps) {
-  const {} = props;
-  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
-  const alertRef = React.useRef<AlertRef>({} as any);
-  const toastRef = React.useRef<SimpleToastRef>({} as any);
-  const { style } = useThemeContext();
-  const { currentLanguage } = useI18nContext();
-  const [stateValue, onStateValueChange] = React.useState(false);
-  const [groupValue, onGroupValueChange] = React.useState(false);
-  const [themeValue, onThemeValueChange] = React.useState(
-    style === 'light' ? false : true
-  );
-  const [languageValue, onLanguageValueChange] = React.useState(
-    currentLanguage() === 'en' ? true : false
-  );
-  const onClickedInputState = React.useCallback(() => {}, []);
-  const onRequestCloseMenu = React.useCallback(() => {
-    menuRef.current?.startHide?.();
-  }, []);
-  const onClickedAutoAcceptGroupInvite = React.useCallback(() => {}, []);
-  const onClickedTheme = React.useCallback(() => {
-    // todo: change theme
-  }, []);
-
-  const onClickedLanguage = React.useCallback(() => {
-    // todo: change language
-  }, []);
-  return {
-    menuRef,
-    alertRef,
-    toastRef,
-    onClickedInputState,
-    stateValue,
-    onStateValueChange,
-    onRequestCloseMenu,
-    onClickedAutoAcceptGroupInvite,
-    groupValue,
-    onGroupValueChange,
-    onClickedTheme,
-    onClickedLanguage,
-    themeValue,
-    onThemeValueChange,
-    languageValue,
-    onLanguageValueChange,
+    onClickedPersonInfo,
+    onClickedAbout,
+    enablePresence,
+    onCopyId,
+    onClickedDestroyAccount,
   };
 }

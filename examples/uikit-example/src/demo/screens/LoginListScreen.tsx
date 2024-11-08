@@ -1,22 +1,30 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useChatContext } from 'react-native-chat-uikit';
 
+import { useLoginWithConfig } from '../hooks/useLoginWithConfig';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LoginListScreen(props: Props) {
-  const {} = props;
+  const { navigation } = props;
   const account = require('../../env').account as {
     id: string;
     token: string;
   }[];
   const im = useChatContext();
+  const { devLoginAction } = useLoginWithConfig();
   const [s, setS] = React.useState<'' | 'success' | 'failed' | 'logouted'>('');
   const [reason, setReason] = React.useState<string>('');
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View>
         <Text style={{ color: 'red' }}>
           {'Note: Click id to try to log in.'}
@@ -69,16 +77,17 @@ export function LoginListScreen(props: Props) {
                 borderRadius: 8,
               }}
               onPress={() => {
-                im.login({
-                  userId: v.id,
-                  userToken: v.token,
-                  userName: `${v.id}name`,
-                  userAvatarURL:
-                    'https://www.iconfinder.com/icons/628296/avatar_boy_child_kid_male_user_young_icon#png-256',
-                  result: ({ isOk, error }) => {
+                devLoginAction({
+                  id: v.id,
+                  passOrToken: v.token,
+                  usePassword: false,
+                  onResult: ({ isOk, reason }) => {
                     setS(isOk === true ? 'success' : 'failed');
-                    if (error) {
-                      setReason(error.toString());
+                    if (reason) {
+                      setReason(reason);
+                    }
+                    if (isOk === true) {
+                      navigation.push('Home', {});
                     }
                   },
                 });
@@ -91,6 +100,6 @@ export function LoginListScreen(props: Props) {
       </ScrollView>
 
       <View style={{ flex: 1 }} />
-    </View>
+    </SafeAreaView>
   );
 }

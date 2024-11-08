@@ -1,44 +1,80 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import {
-  ImageMessagePreview,
-  useColors,
-  usePaletteContext,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import {
+  ChatImageMessageBody,
+  ChatMessage,
+  ChatMessageType,
+  ImageMessagePreview,
+  Services,
+  useChatContext,
+  useI18nContext,
+} from '../../rename.uikit';
+import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
+import { useSaveFileToAlbum, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ImageMessagePreviewScreen(props: Props) {
-  const { navigation, route } = props;
-  const { colors } = usePaletteContext();
-  const { getColor } = useColors({
-    bg: {
-      light: colors.neutral[98],
-      dark: colors.neutral[1],
-    },
-  });
+  const { route } = props;
+  const navi = useStackScreenRoute(props);
+  const { tr } = useI18nContext();
+  const { saveToAlbum2 } = useSaveFileToAlbum();
+  const im = useChatContext();
   const msgId = ((route.params as any)?.params as any)?.msgId;
   const localMsgId = ((route.params as any)?.params as any)?.localMsgId;
+  const msg = ((route.params as any)?.params as any)?.msg as
+    | ChatMessage
+    | undefined;
+
+  const getLocalPath = React.useCallback(async () => {
+    let ret: string | undefined;
+    if (msg) {
+      if (msg.body.type === ChatMessageType.IMAGE) {
+        ret = (msg.body as ChatImageMessageBody).localPath;
+      }
+    } else if (msgId) {
+      const msg = await im.getMessage(msgId);
+      if (msg && msg.body.type === ChatMessageType.IMAGE) {
+        ret = (msg.body as ChatImageMessageBody).localPath;
+      }
+    }
+    if (ret) {
+      const isExisted = await Services.dcs.isExistedFile(ret);
+      if (isExisted) {
+        return ret;
+      } else {
+        ret = undefined;
+      }
+    }
+    return ret;
+  }, [im, msg, msgId]);
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: getColor('bg'),
-        flex: 1,
-      }}
-    >
+    <SafeAreaViewFragment>
       <ImageMessagePreview
-        containerStyle={{
-          flexGrow: 1,
-          // backgroundColor: 'red',
-        }}
         msgId={msgId}
+        msg={msg}
         localMsgId={localMsgId}
         onBack={() => {
-          navigation.goBack();
+          navi.goBack();
+        }}
+        onShowBottomSheet={(menuRef) => {
+          menuRef.current?.startShowWithInit([
+            {
+              name: tr('save'),
+              isHigh: false,
+              onClicked: async () => {
+                const path = await getLocalPath();
+                if (path) {
+                  await saveToAlbum2(path);
+                  im.sendFinished({ event: 'imageSaved' });
+                }
+                menuRef.current?.startHide();
+              },
+            },
+          ]);
         }}
       />
-    </SafeAreaView>
+    </SafeAreaViewFragment>
   );
 }

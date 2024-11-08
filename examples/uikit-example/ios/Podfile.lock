@@ -1,9 +1,42 @@
 PODS:
+  - AgoraIrisRTC_iOS (4.2.6-build.3)
+  - AgoraRtcEngine_iOS (4.2.6):
+    - AgoraRtcEngine_iOS/AIAEC (= 4.2.6)
+    - AgoraRtcEngine_iOS/AINS (= 4.2.6)
+    - AgoraRtcEngine_iOS/AudioBeauty (= 4.2.6)
+    - AgoraRtcEngine_iOS/ClearVision (= 4.2.6)
+    - AgoraRtcEngine_iOS/ContentInspect (= 4.2.6)
+    - AgoraRtcEngine_iOS/DRM (= 4.2.6)
+    - AgoraRtcEngine_iOS/FaceDetection (= 4.2.6)
+    - AgoraRtcEngine_iOS/ReplayKit (= 4.2.6)
+    - AgoraRtcEngine_iOS/RtcBasic (= 4.2.6)
+    - AgoraRtcEngine_iOS/SpatialAudio (= 4.2.6)
+    - AgoraRtcEngine_iOS/VideoCodecDec (= 4.2.6)
+    - AgoraRtcEngine_iOS/VideoCodecEnc (= 4.2.6)
+    - AgoraRtcEngine_iOS/VirtualBackground (= 4.2.6)
+    - AgoraRtcEngine_iOS/VQA (= 4.2.6)
+  - AgoraRtcEngine_iOS/AIAEC (4.2.6)
+  - AgoraRtcEngine_iOS/AINS (4.2.6)
+  - AgoraRtcEngine_iOS/AudioBeauty (4.2.6)
+  - AgoraRtcEngine_iOS/ClearVision (4.2.6)
+  - AgoraRtcEngine_iOS/ContentInspect (4.2.6)
+  - AgoraRtcEngine_iOS/DRM (4.2.6)
+  - AgoraRtcEngine_iOS/FaceDetection (4.2.6)
+  - AgoraRtcEngine_iOS/ReplayKit (4.2.6)
+  - AgoraRtcEngine_iOS/RtcBasic (4.2.6)
+  - AgoraRtcEngine_iOS/SpatialAudio (4.2.6)
+  - AgoraRtcEngine_iOS/VideoCodecDec (4.2.6)
+  - AgoraRtcEngine_iOS/VideoCodecEnc (4.2.6)
+  - AgoraRtcEngine_iOS/VirtualBackground (4.2.6)
+  - AgoraRtcEngine_iOS/VQA (4.2.6)
+  - ASN1Decoder (1.10.0)
   - boost (1.76.0)
   - BVLinearGradient (2.8.3):
     - React-Core
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
+  - EASClient (0.5.1):
+    - ExpoModulesCore
   - EXApplication (5.1.1):
     - ExpoModulesCore
   - EXConstants (14.2.1):
@@ -98,6 +131,15 @@ PODS:
   - EXSplashScreen (0.18.2):
     - ExpoModulesCore
     - React-Core
+  - EXStructuredHeaders (3.1.2)
+  - EXUpdates (0.16.4):
+    - ASN1Decoder (~> 1.8)
+    - EASClient
+    - EXManifests
+    - ExpoModulesCore
+    - EXStructuredHeaders
+    - EXUpdatesInterface
+    - React-Core
   - EXUpdatesInterface (0.9.3)
   - FBLazyVector (0.71.11)
   - FBReactNativeSpec (0.71.11):
@@ -107,33 +149,6 @@ PODS:
     - React-Core (= 0.71.11)
     - React-jsi (= 0.71.11)
     - ReactCommon/turbomodule/core (= 0.71.11)
-  - Firebase/CoreOnly (10.10.0):
-    - FirebaseCore (= 10.10.0)
-  - Firebase/Messaging (10.10.0):
-    - Firebase/CoreOnly
-    - FirebaseMessaging (~> 10.10.0)
-  - FirebaseCore (10.10.0):
-    - FirebaseCoreInternal (~> 10.0)
-    - GoogleUtilities/Environment (~> 7.8)
-    - GoogleUtilities/Logger (~> 7.8)
-  - FirebaseCoreExtension (10.10.0):
-    - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.20.0):
-    - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.20.0):
-    - FirebaseCore (~> 10.0)
-    - GoogleUtilities/Environment (~> 7.8)
-    - GoogleUtilities/UserDefaults (~> 7.8)
-    - PromisesObjC (~> 2.1)
-  - FirebaseMessaging (10.10.0):
-    - FirebaseCore (~> 10.0)
-    - FirebaseInstallations (~> 10.0)
-    - GoogleDataTransport (~> 9.2)
-    - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
-    - GoogleUtilities/Environment (~> 7.8)
-    - GoogleUtilities/Reachability (~> 7.8)
-    - GoogleUtilities/UserDefaults (~> 7.8)
-    - nanopb (< 2.30910.0, >= 2.30908.0)
   - Flipper (0.182.0):
     - Flipper-Folly (~> 2.6)
   - Flipper-Boost-iOSX (1.76.0.1.11)
@@ -196,44 +211,7 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
-  - GoogleDataTransport (9.3.0):
-    - GoogleUtilities/Environment (~> 7.7)
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-    - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities (7.12.0):
-    - GoogleUtilities/AppDelegateSwizzler (= 7.12.0)
-    - GoogleUtilities/Environment (= 7.12.0)
-    - GoogleUtilities/ISASwizzler (= 7.12.0)
-    - GoogleUtilities/Logger (= 7.12.0)
-    - GoogleUtilities/MethodSwizzler (= 7.12.0)
-    - GoogleUtilities/Network (= 7.12.0)
-    - "GoogleUtilities/NSData+zlib (= 7.12.0)"
-    - GoogleUtilities/Reachability (= 7.12.0)
-    - GoogleUtilities/SwizzlerTestHelpers (= 7.12.0)
-    - GoogleUtilities/UserDefaults (= 7.12.0)
-  - GoogleUtilities/AppDelegateSwizzler (7.12.0):
-    - GoogleUtilities/Environment
-    - GoogleUtilities/Logger
-    - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.12.0):
-    - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/ISASwizzler (7.12.0)
-  - GoogleUtilities/Logger (7.12.0):
-    - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (7.12.0):
-    - GoogleUtilities/Logger
-  - GoogleUtilities/Network (7.12.0):
-    - GoogleUtilities/Logger
-    - "GoogleUtilities/NSData+zlib"
-    - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.12.0)"
-  - GoogleUtilities/Reachability (7.12.0):
-    - GoogleUtilities/Logger
-  - GoogleUtilities/SwizzlerTestHelpers (7.12.0):
-    - GoogleUtilities/MethodSwizzler
-  - GoogleUtilities/UserDefaults (7.12.0):
-    - GoogleUtilities/Logger
-  - HyphenateChat (4.6.1)
+  - HyphenateChat (4.8.1)
   - libevent (2.1.12)
   - libwebp (1.3.2):
     - libwebp/demux (= 1.3.2)
@@ -247,11 +225,6 @@ PODS:
   - libwebp/sharpyuv (1.3.2)
   - libwebp/webp (1.3.2):
     - libwebp/sharpyuv
-  - nanopb (2.30909.1):
-    - nanopb/decode (= 2.30909.1)
-    - nanopb/encode (= 2.30909.1)
-  - nanopb/decode (2.30909.1)
-  - nanopb/encode (2.30909.1)
   - OpenSSL-Universal (1.1.1100)
   - Permission-Camera (3.8.0):
     - RNPermissions
@@ -263,7 +236,6 @@ PODS:
     - RNPermissions
   - Permission-PhotoLibrary (3.8.0):
     - RNPermissions
-  - PromisesObjC (2.3.1)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -486,12 +458,19 @@ PODS:
   - React-jsinspector (0.71.11)
   - React-logger (0.71.11):
     - glog
+  - react-native-agora (4.2.6):
+    - AgoraIrisRTC_iOS (= 4.2.6-build.3)
+    - AgoraRtcEngine_iOS (= 4.2.6)
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
+  - react-native-blur (4.3.2):
+    - React-Core
   - react-native-cameraroll (5.6.0):
     - React-Core
   - react-native-chat-callkit (1.0.4):
     - React-Core
-  - react-native-chat-sdk (1.5.0-beta.0):
-    - HyphenateChat (= 4.6.1)
+  - react-native-chat-sdk (1.6.2):
+    - HyphenateChat (= 4.8.1)
     - React-Core
   - react-native-chat-uikit (2.3.0):
     - React-Core
@@ -502,17 +481,20 @@ PODS:
     - React-Core
   - react-native-get-random-values (1.8.0):
     - React-Core
+  - react-native-image-editor (4.1.0):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
+    - React-RCTImage
   - react-native-image-picker (7.1.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - react-native-pager-view (6.1.2):
     - React-Core
-  - react-native-safe-area-context (4.5.0):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
+  - react-native-safe-area-context (4.11.1):
     - React-Core
-    - ReactCommon/turbomodule/core
+  - react-native-slider (4.4.4):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
   - react-native-video (5.2.1):
     - React-Core
     - react-native-video/Video (= 5.2.1)
@@ -614,18 +596,22 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBApp (18.0.0):
-    - Firebase/CoreOnly (= 10.10.0)
+  - RNFileViewer (2.1.5):
     - React-Core
-  - RNFBMessaging (18.0.0):
-    - Firebase/Messaging (= 10.10.0)
-    - FirebaseCoreExtension (= 10.10.0)
-    - React-Core
-    - RNFBApp
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.9.0):
+  - RNGestureHandler (2.20.0):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
+  - RNImageCropPicker (0.40.3):
+    - React-Core
+    - React-RCTImage
+    - RNImageCropPicker/QBImagePickerController (= 0.40.3)
+    - TOCropViewController
+  - RNImageCropPicker/QBImagePickerController (0.40.3):
+    - React-Core
+    - React-RCTImage
+    - TOCropViewController
   - RNPermissions (3.8.0):
     - React-Core
   - RNReanimated (2.14.4):
@@ -665,6 +651,7 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.6.1)
+  - TOCropViewController (2.7.4)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -674,6 +661,7 @@ DEPENDENCIES:
   - boost (from `../../../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../../../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - EASClient (from `../../../node_modules/expo-eas-client/ios`)
   - EXApplication (from `../../../node_modules/expo-application/ios`)
   - EXConstants (from `../../../node_modules/expo-constants/ios`)
   - EXFileSystem (from `../../../node_modules/expo-file-system/ios`)
@@ -688,10 +676,11 @@ DEPENDENCIES:
   - ExpoKeepAwake (from `../../../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../../../node_modules/expo-modules-core`)
   - EXSplashScreen (from `../../../node_modules/expo-splash-screen/ios`)
+  - EXStructuredHeaders (from `../../../node_modules/expo-structured-headers/ios`)
+  - EXUpdates (from `../../../node_modules/expo-updates/ios`)
   - EXUpdatesInterface (from `../../../node_modules/expo-updates-interface/ios`)
   - FBLazyVector (from `../../../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../../../node_modules/react-native/React/FBReactNativeSpec`)
-  - FirebaseCore
   - Flipper (= 0.182.0)
   - Flipper-Boost-iOSX (= 1.76.0.1.11)
   - Flipper-DoubleConversion (= 3.2.0.1)
@@ -714,7 +703,6 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.182.0)
   - FlipperKit/SKIOSNetworkPlugin (= 0.182.0)
   - glog (from `../../../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - GoogleUtilities
   - OpenSSL-Universal (= 1.1.1100)
   - Permission-Camera (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/Camera`)
   - Permission-MediaLibrary (from `/Users/asterisk/Codes/rn/react-native-chat-library-2.0/node_modules/react-native-permissions/ios/MediaLibrary`)
@@ -737,6 +725,8 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../../../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../../../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../../../node_modules/react-native/ReactCommon/logger`)
+  - react-native-agora (from `../../../node_modules/react-native-agora`)
+  - "react-native-blur (from `../../../node_modules/@react-native-community/blur`)"
   - "react-native-cameraroll (from `../../../node_modules/@react-native-camera-roll/camera-roll`)"
   - react-native-chat-callkit (from `../../../packages/react-native-chat-callkit`)
   - react-native-chat-sdk (from `../../../node_modules/react-native-chat-sdk`)
@@ -744,9 +734,11 @@ DEPENDENCIES:
   - "react-native-create-thumbnail (from `../../../node_modules/@easemob/react-native-create-thumbnail`)"
   - react-native-document-picker (from `../../../node_modules/react-native-document-picker`)
   - react-native-get-random-values (from `../../../node_modules/react-native-get-random-values`)
+  - "react-native-image-editor (from `../../../node_modules/@react-native-community/image-editor`)"
   - react-native-image-picker (from `../../../node_modules/react-native-image-picker`)
   - react-native-pager-view (from `../../../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../../../node_modules/@react-native-community/slider`)"
   - react-native-video (from `../../../node_modules/react-native-video`)
   - React-perflogger (from `../../../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../../../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -767,10 +759,10 @@ DEPENDENCIES:
   - "RNCClipboard (from `../../../node_modules/@react-native-clipboard/clipboard`)"
   - RNDeviceInfo (from `../../../node_modules/react-native-device-info`)
   - RNFastImage (from `../../../node_modules/react-native-fast-image`)
-  - "RNFBApp (from `../../../node_modules/@react-native-firebase/app`)"
-  - "RNFBMessaging (from `../../../node_modules/@react-native-firebase/messaging`)"
+  - RNFileViewer (from `../../../node_modules/react-native-file-viewer`)
   - RNFS (from `../../../node_modules/react-native-fs`)
   - RNGestureHandler (from `../../../node_modules/react-native-gesture-handler`)
+  - RNImageCropPicker (from `../../../node_modules/react-native-image-crop-picker`)
   - RNPermissions (from `../../../node_modules/react-native-permissions`)
   - RNReanimated (from `../../../node_modules/react-native-reanimated`)
   - RNScreens (from `../../../node_modules/react-native-screens`)
@@ -778,13 +770,10 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AgoraIrisRTC_iOS
+    - AgoraRtcEngine_iOS
+    - ASN1Decoder
     - CocoaAsyncSocket
-    - Firebase
-    - FirebaseCore
-    - FirebaseCoreExtension
-    - FirebaseCoreInternal
-    - FirebaseInstallations
-    - FirebaseMessaging
     - Flipper
     - Flipper-Boost-iOSX
     - Flipper-DoubleConversion
@@ -795,17 +784,14 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - fmt
-    - GoogleDataTransport
-    - GoogleUtilities
     - HyphenateChat
     - libevent
     - libwebp
-    - nanopb
     - OpenSSL-Universal
-    - PromisesObjC
     - SDWebImage
     - SDWebImageWebPCoder
     - SocketRocket
+    - TOCropViewController
     - YogaKit
     - ZIPFoundation
 
@@ -816,6 +802,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-linear-gradient"
   DoubleConversion:
     :podspec: "../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  EASClient:
+    :path: "../../../node_modules/expo-eas-client/ios"
   EXApplication:
     :path: "../../../node_modules/expo-application/ios"
   EXConstants:
@@ -844,6 +832,10 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/expo-modules-core"
   EXSplashScreen:
     :path: "../../../node_modules/expo-splash-screen/ios"
+  EXStructuredHeaders:
+    :path: "../../../node_modules/expo-structured-headers/ios"
+  EXUpdates:
+    :path: "../../../node_modules/expo-updates/ios"
   EXUpdatesInterface:
     :path: "../../../node_modules/expo-updates-interface/ios"
   FBLazyVector:
@@ -890,6 +882,10 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../../../node_modules/react-native/ReactCommon/logger"
+  react-native-agora:
+    :path: "../../../node_modules/react-native-agora"
+  react-native-blur:
+    :path: "../../../node_modules/@react-native-community/blur"
   react-native-cameraroll:
     :path: "../../../node_modules/@react-native-camera-roll/camera-roll"
   react-native-chat-callkit:
@@ -904,12 +900,16 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-document-picker"
   react-native-get-random-values:
     :path: "../../../node_modules/react-native-get-random-values"
+  react-native-image-editor:
+    :path: "../../../node_modules/@react-native-community/image-editor"
   react-native-image-picker:
     :path: "../../../node_modules/react-native-image-picker"
   react-native-pager-view:
     :path: "../../../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../../../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../../../node_modules/@react-native-community/slider"
   react-native-video:
     :path: "../../../node_modules/react-native-video"
   React-perflogger:
@@ -950,14 +950,14 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-device-info"
   RNFastImage:
     :path: "../../../node_modules/react-native-fast-image"
-  RNFBApp:
-    :path: "../../../node_modules/@react-native-firebase/app"
-  RNFBMessaging:
-    :path: "../../../node_modules/@react-native-firebase/messaging"
+  RNFileViewer:
+    :path: "../../../node_modules/react-native-file-viewer"
   RNFS:
     :path: "../../../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../../../node_modules/react-native-gesture-handler"
+  RNImageCropPicker:
+    :path: "../../../node_modules/react-native-image-crop-picker"
   RNPermissions:
     :path: "../../../node_modules/react-native-permissions"
   RNReanimated:
@@ -968,10 +968,14 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AgoraIrisRTC_iOS: 8346499b82968a4967e3d0bec2cf14bf7c0c3f76
+  AgoraRtcEngine_iOS: ac647332ad8f86d79cf810601c9e62b28c3a4de0
+  ASN1Decoder: 91cb1d781b5a178ea7375b2f1519e2bdaaa4c427
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  EASClient: 950674e1098ebc09c4c2cf064a61e42e84d9d4c6
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXConstants: f348da07e21b23d2b085e270d7b74f282df1a7d9
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
@@ -986,15 +990,11 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
   ExpoModulesCore: 653958063a301098b541ae4dfed1ac0b98db607b
   EXSplashScreen: 0e0a9ba0cf7553094e93213099bd7b42e6e237e9
+  EXStructuredHeaders: f3a6d417d5d12ef369fd1a31320d1c188a1b0f4b
+  EXUpdates: 603c4dfec2ed9ef323dfbd9c59c946593d4d9a5c
   EXUpdatesInterface: e86394c0770f14eb96386cbb32be83fa6a97e8f9
   FBLazyVector: c511d4cd0210f416cb5c289bd5ae6b36d909b048
   FBReactNativeSpec: de92737f433b7edb416db4d29d03ab41229a5f70
-  Firebase: facd334e557a979bd03a0b58d90fd56b52b8aba0
-  FirebaseCore: d027ff503d37edb78db98429b11f580a24a7df2a
-  FirebaseCoreExtension: 8d93ebbf6838a874b4ed82a564c9d6705f8365dd
-  FirebaseCoreInternal: efeeb171ac02d623bdaefe121539939821e10811
-  FirebaseInstallations: 558b1da7d65afeb996fd5c814332f013234ece4e
-  FirebaseMessaging: 8a3b9a8b98ce72a42d22e69865cf662e38d2d6f5
   Flipper: 6edb735e6c3e332975d1b17956bcc584eccf5818
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
   Flipper-DoubleConversion: 2dc99b02f658daf147069aad9dbd29d8feb06d30
@@ -1006,19 +1006,15 @@ SPEC CHECKSUMS:
   FlipperKit: 2efad7007d6745a3f95e4034d547be637f89d3f6
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
-  GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
-  HyphenateChat: 006902faa37c847b0a6693bd3876873848c06c26
+  HyphenateChat: 88ff1478183f1349498bd592c89ea9c394c12f76
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
-  nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   Permission-Camera: e6d142d7d8b714afe0a83e5e6ae17eb949f1e3e9
   Permission-MediaLibrary: 6a5888dd77669b568716bea80c21340aaab74c51
   Permission-Microphone: 644b1de8bcc2afcaf934e09a22bee507a95796a7
   Permission-Notifications: aa91ec29236626ff59cb60e08389c0a59a9d32c5
   Permission-PhotoLibrary: 31787bbe77d0d3ae6a5267b8435e4a2e9ef78f1d
-  PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: f6187ec763637e6a57f5728dd9a3bdabc6d6b4e0
   RCTTypeSafety: a01aca2dd3b27fa422d5239252ad38e54e958750
@@ -1033,16 +1029,20 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 089cd07c76ecf498960a64ba8ae0f2dddd382f44
   React-jsinspector: b6ed4cb3ffa27a041cd440300503dc512b761450
   React-logger: 186dd536128ae5924bc38ed70932c00aa740cd5b
+  react-native-agora: 7026292738f2de759f532938db629c7acda377af
+  react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-cameraroll: 755bcc628148a90a7c9cf3f817a252be3a601bc5
   react-native-chat-callkit: a1b5e4885d58e4ac5153aade90b6f6fbb32d333b
-  react-native-chat-sdk: 2ab93752a02916334208642778a6e908fdf50485
+  react-native-chat-sdk: 9766d84549ae9ee0cec5be521032e6a8a983985f
   react-native-chat-uikit: 60768b225b861afe92af34264da58c578b185f7a
   react-native-create-thumbnail: e4fc6953a754bcfa3a03d74ec8687850134b1b93
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
+  react-native-image-editor: ad8248fc404d17b697b531d692b9b1ca2d1c0896
   react-native-image-picker: 5e076db26cd81660cfb6db5bcf517cfa12054d45
   react-native-pager-view: 54bed894cecebe28cede54c01038d9d1e122de43
-  react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
+  react-native-safe-area-context: 5141f11858b033636f1788b14f32eaba92cee810
+  react-native-slider: ae9441a884f8465762f1f68d31eafad42663adb4
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   React-perflogger: e706562ab7eb8eb590aa83a224d26fa13963d7f2
   React-RCTActionSheet: 57d4bd98122f557479a3359ad5dad8e109e20c5a
@@ -1063,20 +1063,21 @@ SPEC CHECKSUMS:
   RNCClipboard: d77213bfa269013bf4b857b7a9ca37ee062d8ef1
   RNDeviceInfo: db5c64a060e66e5db3102d041ebe3ef307a85120
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
-  RNFBApp: 7da45c10070789f5e4337a5534139976e8d74e0a
-  RNFBMessaging: fd543fa2aa4688fac4e88b1ce54e39cac4339b32
+  RNFileViewer: ce7ca3ac370e18554d35d6355cffd7c30437c592
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNGestureHandler: 74c531dc20aa37fb3a8d3d8514447a0d129ddb7d
+  RNImageCropPicker: e7ab6fb43d2fc3e84651e786ef4a080d63b0ed3d
   RNPermissions: 215c54462104b3925b412b0fb3c9c497b21c358b
   RNReanimated: addc4900bf47882118d0a1b21747fa6705fa8cff
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
+  TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   Yoga: f7decafdc5e8c125e6fa0da38a687e35238420fa
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
   ZIPFoundation: b1f0de4eed33e74a676f76e12559ab6b75990197
 
-PODFILE CHECKSUM: 449f5e7e76ef885e5fed96665ceb1b3dec2419ac
+PODFILE CHECKSUM: 1fe70338216881bbb7c3a74623fd94df0780fa96
 
 COCOAPODS: 1.15.2

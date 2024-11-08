@@ -1,154 +1,308 @@
-import {
-  NavigationAction,
-  NavigationContainer,
-  NavigationState,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useFonts } from 'expo-font';
-// import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
-import { DeviceEventEmitter, View } from 'react-native';
-import {
-  Container,
-  createDefaultStringSet,
-  LanguageCode,
-  StringSet,
-  useChatListener,
-  useDarkTheme,
-  useLightTheme,
-  usePermissions,
-  usePresetPalette,
-} from 'react-native-chat-uikit';
+import { View } from 'react-native';
 
-import { createStringSetCn, createStringSetEn, ToastView } from './common';
-import { useApp } from './hooks/useApp';
-import type { RootParamsList, RootParamsName } from './routes';
 import {
+  type ChatService,
+  type ChatServiceListener,
+  Container as UIKitContainer,
+  MessageContextMenuStyle,
+  MessageInputBarExtensionStyle,
+  useChatListener,
+} from '../rename.uikit';
+import { ToastView } from './common';
+import { AvatarStatusRenderMemo } from './common/AvatarStatusRender';
+import {
+  accountType,
+  appKey as gAppKey,
+  boloo_da_ttf_name,
+  demoType,
+  restServer,
+} from './common/const';
+import { RestApi } from './common/rest.api';
+import { useAutoLogin } from './hooks';
+import { useApp } from './hooks/useApp';
+import { useGeneralSetting } from './hooks/useGeneralSetting';
+import { useServerConfig } from './hooks/useServerConfig';
+import type { RootParamsList } from './routes';
+import {
+  AboutSettingScreen,
   AddGroupParticipantScreen,
+  AVSelectGroupParticipantScreen,
+  BlockListScreen,
   ChangeGroupOwnerScreen,
+  ColorSettingScreen,
   ConfigScreen,
   ContactInfoScreen,
-  ContactListScreen,
   ConversationDetailScreen,
-  ConversationListScreen,
   CreateGroupScreen,
   CreateThreadScreen,
   DelGroupParticipantScreen,
   EditInfoScreen,
+  FeatureSettingScreen,
   FileMessagePreviewScreen,
+  GeneralSettingScreen,
   GroupInfoScreen,
   GroupListScreen,
   GroupParticipantInfoScreen,
   GroupParticipantListScreen,
   HomeScreen,
   ImageMessagePreviewScreen,
+  LanguageSettingScreen,
   LoginListScreen,
   LoginScreen,
+  MessageContextMenuSettingScreen,
   MessageForwardSelectorScreen,
   MessageHistoryListScreen,
-  MessageHistoryScreen,
+  MessageInputBarMenuSettingScreen,
   MessageSearchScreen,
-  MessageThreadDetailScreen,
   MessageThreadListScreen,
   MessageThreadMemberListScreen,
   NewConversationScreen,
   NewRequestScreen,
+  NotificationSettingScreen,
+  PersonInfoScreen,
+  PrivacySettingScreen,
+  SearchBlockScreen,
   SearchContactScreen,
   SearchConversationScreen,
   SearchGroupScreen,
   SelectSingleParticipantScreen,
+  ServerSettingScreen,
   ShareContactScreen,
+  SplashScreen,
+  StyleSettingScreen,
   TopMenuScreen,
   VideoMessagePreviewScreen,
 } from './screens';
-import { defaultAvatars } from './utils/utils';
-
-const env = require('../env');
-const demoType = env.demoType;
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
 // SplashScreen?.preventAutoHideAsync?.();
 
 export function App() {
-  const [initialRouteName] = React.useState(
-    demoType === 2 ? ('TopMenu' as RootParamsName) : ('Login' as RootParamsName)
-  );
-  const palette = usePresetPalette();
-  const dark = useDarkTheme(palette);
-  const light = useLightTheme(palette);
-  const [theme, setTheme] = React.useState(light);
-  const [language, setLanguage] = React.useState<LanguageCode>('zh-Hans');
-  const isNavigationReadyRef = React.useRef(false);
-  const isContainerReadyRef = React.useRef(false);
-  const isFontReadyRef = React.useRef(false);
-  const isReadyRef = React.useRef(false);
-  const fontFamily = 'Twemoji-Mozilla';
-  const [fontsLoaded] = useFonts({
-    [fontFamily]: require('../../assets/Twemoji.Mozilla.ttf'),
-  });
+  const {
+    initialRouteNameRef,
+    paletteRef,
+    dark,
+    light,
+    isLightRef,
+    languageRef,
+    translateLanguageRef,
+    isNavigationReadyRef,
+    isContainerReadyRef,
+    isFontReadyRef,
+    isReadyRef,
+    enablePresenceRef,
+    enableReactionRef,
+    enableThreadRef,
+    enableTranslateRef,
+    enableAVMeetingRef,
+    enableTypingRef,
+    enableBlockRef,
+    fontsLoaded,
+    rootRef,
+    serverConfigVisibleRef,
+    appKeyRef,
+    imServerRef,
+    imPortRef,
+    enableDNSConfigRef,
+    _initParams,
+    setInitParams,
+    releaseAreaRef,
+    getOptions,
+    enableOfflinePushRef,
+    initPush,
+    onInitLanguageSet,
+    onStateChange,
+    onUnhandledAction,
+    onGroupsHandler,
+    onUsersHandler,
+    fontFamily,
+    onSystemTip,
+    getNaviTheme,
+    messageMenuStyleRef,
+    messageInputBarExtensionStyleRef,
+  } = useApp();
 
-  const permissionsRef = React.useRef(false);
-  const { getPermission } = usePermissions();
+  const {
+    getEnableDevMode,
+    getAppKey,
+    getEnableDNSConfig,
+    getImPort,
+    getImServer,
+  } = useServerConfig();
 
-  const {} = useApp();
+  const { initParams } = useGeneralSetting();
+  const imRef = React.useRef<ChatService>();
+  const { autoLoginAction } = useAutoLogin();
 
-  const options = React.useMemo(() => {
-    return {
-      appKey: env.appKey,
-      debugModel: env.isDevMode,
-      autoLogin: false,
-      autoAcceptGroupInvitation: true,
-      requireAck: true,
-      requireDeliveryAck: true,
-    };
-  }, []);
-
-  const formatNavigationState = (
-    state: NavigationState | undefined,
-    result: string[] & string[][]
-  ) => {
-    if (state) {
-      const ret: string[] & string[][] = [];
-      for (const route of state.routes) {
-        ret.push(route.name);
-        if (route.state) {
-          formatNavigationState(
-            route.state as NavigationState | undefined,
-            ret
-          );
-        }
-      }
-      result.push(ret);
-    }
-  };
-
-  const onReady = React.useCallback(async (_ready: boolean) => {
-    // This tells the splash screen to hide immediately! If we call this after
-    // `setAppIsReady`, then we may see a blank screen while the app is
-    // loading its initial state and rendering its first pixels. So instead,
-    // we hide the splash screen once we know the root view has already
-    // performed layout.
-    // setTimeout(async () => {
-    //   await SplashScreen.hideAsync();
-    // }, 2000);
-    if (isReadyRef.current === true) {
+  const initParamsCallback = React.useCallback(async () => {
+    if (_initParams === true) {
       return;
     }
-    isReadyRef.current = true;
-    // await SplashScreen?.hideAsync?.();
-  }, []);
-
-  const onContainerInitialized = React.useCallback(() => {
-    isContainerReadyRef.current = true;
-    if (
-      isFontReadyRef.current === true &&
-      isNavigationReadyRef.current === true &&
-      isContainerReadyRef.current === true
-    ) {
-      onReady(true);
+    try {
+      if (demoType === 1) {
+        initialRouteNameRef.current = 'TopMenu';
+      } else if (demoType === 2) {
+        initialRouteNameRef.current = 'LoginList';
+      } else if (demoType === 3) {
+        initialRouteNameRef.current = 'Splash';
+      } else if (demoType === 4) {
+        initialRouteNameRef.current = 'Login';
+      }
+      serverConfigVisibleRef.current = await getEnableDevMode();
+      appKeyRef.current =
+        serverConfigVisibleRef.current === true ? await getAppKey() : gAppKey;
+      imPortRef.current =
+        serverConfigVisibleRef.current === true ? await getImPort() : undefined;
+      imServerRef.current =
+        serverConfigVisibleRef.current === true
+          ? await getImServer()
+          : undefined;
+      enableDNSConfigRef.current =
+        serverConfigVisibleRef.current === true
+          ? await getEnableDNSConfig()
+          : undefined;
+      const ret = await initParams();
+      isLightRef.current = !ret.appTheme;
+      releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
+      languageRef.current = ret.appLanguage === 'en' ? 'en' : 'zh-Hans';
+      translateLanguageRef.current =
+        ret.appTranslateLanguage === 'en' ? 'en' : 'zh-Hans';
+      enablePresenceRef.current = ret.appPresence;
+      enableReactionRef.current = ret.appReaction;
+      enableThreadRef.current = ret.appThread;
+      enableTranslateRef.current = ret.appTranslate;
+      enableAVMeetingRef.current = ret.appAv;
+      enableOfflinePushRef.current = ret.appNotification;
+      enableTypingRef.current = ret.appTyping;
+      enableBlockRef.current = ret.appBlock;
+      messageMenuStyleRef.current =
+        ret.appMessageContextMenuStyle as MessageContextMenuStyle;
+      messageInputBarExtensionStyleRef.current =
+        ret.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle;
+      console.log(
+        'dev:init:params:',
+        isLightRef.current,
+        releaseAreaRef.current,
+        languageRef.current,
+        translateLanguageRef.current,
+        enablePresenceRef.current,
+        enableReactionRef.current,
+        enableThreadRef.current,
+        enableTranslateRef.current,
+        enableAVMeetingRef.current,
+        enableOfflinePushRef.current,
+        enableTypingRef.current,
+        enableBlockRef.current,
+        messageInputBarExtensionStyleRef.current,
+        messageMenuStyleRef.current
+      );
+      setInitParams(true);
+    } catch (error) {
+      setInitParams(true);
     }
-  }, [onReady]);
+  }, [
+    _initParams,
+    appKeyRef,
+    enableAVMeetingRef,
+    enableBlockRef,
+    enableDNSConfigRef,
+    enableOfflinePushRef,
+    enablePresenceRef,
+    enableReactionRef,
+    enableThreadRef,
+    enableTranslateRef,
+    enableTypingRef,
+    getAppKey,
+    getEnableDNSConfig,
+    getEnableDevMode,
+    getImPort,
+    getImServer,
+    imPortRef,
+    imServerRef,
+    initParams,
+    initialRouteNameRef,
+    isLightRef,
+    languageRef,
+    messageInputBarExtensionStyleRef,
+    messageMenuStyleRef,
+    releaseAreaRef,
+    serverConfigVisibleRef,
+    setInitParams,
+    translateLanguageRef,
+  ]);
+
+  const onReady = React.useCallback(
+    async (_ready: boolean) => {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      // setTimeout(async () => {
+      //   await SplashScreen.hideAsync();
+      // }, 2000);
+      if (isReadyRef.current === true) {
+        return;
+      }
+      isReadyRef.current = true;
+      RestApi.setServer(restServer);
+
+      await initPush();
+
+      // await SplashScreen?.hideAsync?.();
+      setTimeout(async () => {
+        if (demoType === 1) {
+        } else if (demoType === 2) {
+        } else if (demoType === 3) {
+          const ret = await imRef.current?.loginState();
+          console.log('dev:loginState:', ret);
+          if (ret === 'logged') {
+            autoLoginAction({
+              im: imRef.current!,
+              onResult: (res) => {
+                if (res.isOk) {
+                  rootRef.navigate('Home', {});
+                } else {
+                  rootRef.navigate('Login', {
+                    params: {
+                      serverConfigVisible: serverConfigVisibleRef.current,
+                    },
+                  });
+                }
+              },
+            });
+          } else {
+            rootRef.navigate('Login', {
+              params: {
+                serverConfigVisible: serverConfigVisibleRef.current,
+              },
+            });
+          }
+        } else if (demoType === 4) {
+        }
+      }, 1000);
+    },
+    [isReadyRef, initPush, autoLoginAction, rootRef, serverConfigVisibleRef]
+  );
+
+  const onContainerInitialized = React.useCallback(
+    (im: ChatService) => {
+      imRef.current = im;
+      isContainerReadyRef.current = true;
+      if (
+        isFontReadyRef.current === true &&
+        isNavigationReadyRef.current === true &&
+        isContainerReadyRef.current === true
+      ) {
+        onReady(true);
+      }
+    },
+    [isContainerReadyRef, isFontReadyRef, isNavigationReadyRef, onReady]
+  );
 
   const onNavigationInitialized = React.useCallback(() => {
     isNavigationReadyRef.current = true;
@@ -159,7 +313,11 @@ export function App() {
     ) {
       onReady(true);
     }
-  }, [onReady]);
+  }, [isContainerReadyRef, isFontReadyRef, isNavigationReadyRef, onReady]);
+
+  React.useEffect(() => {
+    initParamsCallback().then().catch();
+  }, [initParamsCallback]);
 
   React.useEffect(() => {
     if (fontsLoaded) {
@@ -173,149 +331,85 @@ export function App() {
         onReady(true);
       }
     }
-  }, [fontsLoaded, onReady]);
+  }, [
+    fontsLoaded,
+    isContainerReadyRef,
+    isFontReadyRef,
+    isNavigationReadyRef,
+    onReady,
+  ]);
 
-  React.useEffect(() => {
-    getPermission({
-      onResult: (isSuccess: boolean) => {
-        console.log('dev:permissions:', isSuccess);
-        permissionsRef.current = isSuccess;
-      },
-    });
-  }, [getPermission]);
-
-  React.useEffect(() => {
-    const ret = DeviceEventEmitter.addListener('_demo_emit_app_theme', (e) => {
-      if (e === 'dark') {
-        setTheme(dark);
-      } else {
-        setTheme(light);
-      }
-    });
-    const ret2 = DeviceEventEmitter.addListener(
-      '_demo_emit_app_language',
-      (e) => {
-        setLanguage(e);
-      }
-    );
-    return () => {
-      ret.remove();
-      ret2.remove();
-    };
-  }, [dark, light]);
+  if (_initParams === false) {
+    // !!! This is a workaround for the issue that the app will not start if the
+    // !!! `initParams` is not called in the `useEffect` hook.
+    return null;
+  }
+  console.log('dev:app:');
 
   return (
     <React.StrictMode>
-      <Container
-        options={options}
-        palette={palette}
-        theme={theme}
-        language={language}
-        enablePresence={true}
-        enableReaction={true}
-        enableThread={true}
-        enableTranslate={true}
-        enableAVMeeting={true}
-        // enableTranslate={false}
-        avatar={{
-          personAvatar: defaultAvatars[2],
-          groupAvatar: defaultAvatars[0],
-        }}
-        // fontFamily={fontFamily}
+      <UIKitContainer
+        options={getOptions()}
+        palette={paletteRef.current}
+        theme={isLightRef.current ? light : dark}
+        language={languageRef.current}
+        translateLanguage={
+          accountType === 'agora' ? 'en' : translateLanguageRef.current
+        }
+        releaseArea={releaseAreaRef.current}
+        enablePresence={enablePresenceRef.current}
+        enableReaction={enableReactionRef.current}
+        enableThread={enableThreadRef.current}
+        enableTranslate={enableTranslateRef.current}
+        enableAVMeeting={enableAVMeetingRef.current}
+        enableTyping={enableTypingRef.current}
+        enableBlock={enableBlockRef.current}
+        enableMessageForward={true}
+        enableMessageMultiSelect={true}
+        enableMessageQuote={true}
+        fontFamily={fontFamily}
+        // formatTime={{
+        //   locale: enAU,
+        //   conversationDetailCallback(timestamp, enAU) {
+        //     return format(timestamp, 'yyyy-MM-dd HH:mm:ss', { locale: enAU });
+        //   },
+        // }}
+        // avatar={{
+        //   personAvatar: defaultAvatars[2],
+        //   groupAvatar: defaultAvatars[0],
+        // }}
+        headerFontFamily={boloo_da_ttf_name}
         // languageExtensionFactory={languageExtensionFactory}
         onInitialized={onContainerInitialized}
-        onInitLanguageSet={() => {
-          const ret = (
-            language: LanguageCode,
-            _defaultSet: StringSet
-          ): StringSet => {
-            const d = createDefaultStringSet(language);
-            if (language === 'zh-Hans') {
-              return {
-                ...d,
-                ...createStringSetCn(),
-              };
-            } else if (language === 'en') {
-              return {
-                ...d,
-                ...createStringSetEn(),
-              };
-            }
-            return d;
-          };
-          return ret;
-        }}
+        onInitLanguageSet={onInitLanguageSet}
+        onGroupsHandler={onGroupsHandler}
+        onUsersHandler={onUsersHandler}
+        AvatarStatusRender={AvatarStatusRenderMemo}
+        messageMenuStyle={messageMenuStyleRef.current}
+        messageInputBarStyle={messageInputBarExtensionStyleRef.current}
         // formatTime={formatTime}
         // recallTimeout={1200}
         // group={{ createGroupMemberLimit: 2 }}
+        onSystemTip={onSystemTip}
       >
         <NavigationContainer
-          onStateChange={(state: NavigationState | undefined) => {
-            const rr: string[] & string[][] = [];
-            formatNavigationState(state, rr);
-            console.log(
-              'dev:onStateChange:',
-              JSON.stringify(rr, undefined, '  ')
-            );
-            // console.log('onStateChange:o:', JSON.stringify(state));
-          }}
-          onUnhandledAction={(action: NavigationAction) => {
-            console.log('dev:onUnhandledAction:', action);
-          }}
+          ref={rootRef}
+          theme={getNaviTheme(isLightRef.current ? 'light' : 'dark')}
+          onStateChange={onStateChange}
+          onUnhandledAction={onUnhandledAction}
           onReady={onNavigationInitialized}
           fallback={
             <View style={{ height: 100, width: 100, backgroundColor: 'red' }} />
           }
         >
-          <Root.Navigator initialRouteName={initialRouteName}>
-            <Root.Screen
-              name={'TopMenu'}
-              options={{
-                headerShown: true,
-              }}
-              component={TopMenuScreen}
-            />
+          <Root.Navigator initialRouteName={initialRouteNameRef.current}>
             <Root.Screen
               name={'Home'}
               options={{
                 headerShown: false,
+                gestureEnabled: false,
               }}
               component={HomeScreen}
-            />
-            <Root.Screen
-              name={'Config'}
-              options={{
-                headerShown: true,
-              }}
-              component={ConfigScreen}
-            />
-            <Root.Screen
-              name={'Login'}
-              options={{
-                headerShown: true,
-              }}
-              component={LoginScreen}
-            />
-            <Root.Screen
-              name={'LoginList'}
-              options={{
-                headerShown: true,
-              }}
-              component={LoginListScreen}
-            />
-            <Root.Screen
-              name={'ConversationList'}
-              options={{
-                headerShown: false,
-              }}
-              component={ConversationListScreen}
-            />
-            <Root.Screen
-              name={'ContactList'}
-              options={{
-                headerShown: false,
-              }}
-              component={ContactListScreen}
             />
             <Root.Screen
               name={'SearchConversation'}
@@ -476,7 +570,7 @@ export function App() {
               options={{
                 headerShown: false,
               }}
-              component={MessageThreadDetailScreen}
+              component={ConversationDetailScreen}
             />
             <Root.Screen
               name={'MessageThreadList'}
@@ -518,13 +612,161 @@ export function App() {
               options={{
                 headerShown: false,
               }}
-              component={MessageHistoryScreen}
+              component={ConversationDetailScreen}
+            />
+            <Root.Screen
+              name={'Splash'}
+              options={{
+                headerShown: false,
+              }}
+              component={SplashScreen}
+            />
+            <Root.Screen
+              name={'LoginV2Setting'}
+              options={{
+                headerShown: false,
+              }}
+              component={ServerSettingScreen}
+            />
+            <Root.Screen
+              name={'AVSelectGroupParticipant'}
+              options={{
+                headerShown: false,
+              }}
+              component={AVSelectGroupParticipantScreen}
+            />
+            <Root.Screen
+              name={'PersonInfo'}
+              options={{
+                headerShown: false,
+              }}
+              component={PersonInfoScreen}
+            />
+            <Root.Screen
+              name={'CommonSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={GeneralSettingScreen}
+            />
+            <Root.Screen
+              name={'LanguageSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={LanguageSettingScreen}
+            />
+            <Root.Screen
+              name={'TranslationLanguageSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={LanguageSettingScreen}
+            />
+            <Root.Screen
+              name={'ColorSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={ColorSettingScreen}
+            />
+            <Root.Screen
+              name={'StyleSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={StyleSettingScreen}
+            />
+            <Root.Screen
+              name={'AboutSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={AboutSettingScreen}
+            />
+            <Root.Screen
+              name={'FeatureSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={FeatureSettingScreen}
+            />
+            <Root.Screen
+              name={'NotificationSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={NotificationSettingScreen}
+            />
+            <Root.Screen
+              name={'SearchBlock'}
+              options={{
+                headerShown: false,
+              }}
+              component={SearchBlockScreen}
+            />
+            <Root.Screen
+              name={'BlockList'}
+              options={{
+                headerShown: false,
+              }}
+              component={BlockListScreen}
+            />
+            <Root.Screen
+              name={'PrivacySetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={PrivacySettingScreen}
+            />
+            <Root.Screen
+              name={'MessageContextMenuSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageContextMenuSettingScreen}
+            />
+            <Root.Screen
+              name={'MessageInputBarMenuSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageInputBarMenuSettingScreen}
+            />
+            <Root.Screen
+              name={'Login'}
+              options={{
+                headerShown: false,
+              }}
+              component={LoginScreen}
+            />
+            <Root.Screen
+              name={'LoginList'}
+              options={{
+                headerShown: false,
+              }}
+              component={LoginListScreen}
+            />
+            <Root.Screen
+              name={'TopMenu'}
+              options={{
+                headerShown: false,
+              }}
+              component={TopMenuScreen}
+            />
+            <Root.Screen
+              name={'Config'}
+              options={{
+                headerShown: false,
+              }}
+              component={ConfigScreen}
             />
           </Root.Navigator>
         </NavigationContainer>
-        <TestListener />
+
+        {/* <TestListener /> */}
         <ToastView />
-      </Container>
+      </UIKitContainer>
     </React.StrictMode>
   );
 }
@@ -539,7 +781,7 @@ export function TestListener() {
         onFinished: (params) => {
           console.log('dev:app:onFinished:', params);
         },
-      };
+      } as ChatServiceListener;
     }, [])
   );
   return <></>;
