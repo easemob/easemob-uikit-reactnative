@@ -1,5 +1,49 @@
 # Change Log
 
+## [2.4.0](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.3.0...uikit@2.4.0)(2024-11-08)
+
+- 379f64e2a89dd00cae7fe5dff81cefa62bd04642 (tag: uikit@2.4.0) v2.4.0
+- e8646b2a63f8e0272829957c31e84d05faaf4379 (asterisk/dev-2.4) chore: merge from dev
+- a611024137f24b44f47ee021ce7ad3be04ba7f30 (origin/dev-uikit-example, asterisk/dev-uikit-example, dev-uikit-example) build: update project config
+- ca332663572bccd594f98ea3b82b61331e7bf38b chore: uikit sample demo update
+- 9eaed3281090f7785f201105f79be1b4f8969d4b fix: scroll view bug for react native gesture handler
+- 0013938df87f8d99e7f83742ca2ff6c8d04e23ef chore: example: update jsengine type
+- abb4814e4bbb0d0605ccef392c80f47012653489 (tag: uikit@2.4.0-beta.0) tag: uikit@2.4.0-beta.0
+- a4eaf4d927019bc345eb47df1f620a7f00919541 chore: merge from dev-eas
+- a9897217da1f23cf875d38d776884e52cf9d765f (origin/dev-eas, asterisk/dev-eas, dev-eas) feat: example: support eas build
+- cab95a5ca5bbf584d60628e1f32a80324c0de94e chore: merge from dev-2.4
+- 23adb87b8230e252eb422d4b6c1d7a4ba6d07bc4 chore: example: update
+- c11b7ef5e882730d2c2bf5ba50bbd5d4ab4ac342 fix: example: contact card bug
+- 362c2cd307e0c5e79519726be64a1a6b7cc5ce0b feat: example: update dev mode
+- d2834235b609a619253bd2457306bd30151f4d1e fix: example: fix bug for server config
+- 2082db9999c48a990078d12eb53cb6769b782b1a fix: uikit: message input bug
+- 812c118c9765ad5809c00c500f1ec403e6b0b46f fix: uikit: converation navigation bar
+- 829a285d1ffcef92576afb1f2b37c08bfa738352 fix: uikit: message context name menu bug
+- 41405154761a83ec69155c23663546974ca5cc58 chore: uikit: update
+- 454fa197c2b841ee4d60617a70b717ed18076a32 chore: uikit: update message context menu
+- 039906e79f8e1f292de33675c198f5b6e27b89f4 chore: uikit: update message context menu
+- 667e0c0e83b115c175c2babeebd86413c4959d39 chore: uikit: update message context menu
+- 4ca9b39c9f8b4723465954803b9b3ce5e0cf2f1a chore: uikit: update message input extension menu
+- c0afe8157e53c36c8d93acdeb5b4ee50182199da fix: uikit: block button bug
+- 939e9423a56a31230a3b70fcf5ddc87ba017af6d feat: uikit: add message input bar extension menu
+- b2158807bcbb968c442c97a7002bfb3fbb1ab2d2 chore: example: add message context menu and input bar menu screen
+- 67f7e80919128014276c5d9183bd9a5574bd29ca docs: update v3
+- d9ed322c11d7d0c2735ecd01baa0be6f1ae6954d chore: update emoji list
+- e8bfa6c9d0364b635eb2683afc3df2960db0c6f0 feat: uikit: add message context menu style 2
+- 6a04ca9ae96ab6915a4605e8697b687c2be04010 chore: update bottom sheet menu name
+- 1383be0398010418c7ea7ffe6d67a824f02dd18c feat: uikit: add context menu
+- b24c95d08058feaf22b95f9df6202c1561fb4a60 chore: update uikit example
+- 56d9dfa566502c73225d0dd2a5ad5aed2386400d docs: update v3
+- ab1571bd4a0bf4ea77712dc2e3b61abc92509ea8 Merge branch 'dev-2.3' into dev
+- e26ba17eca1178340fa9904660686da52b7f172f (origin/dev-2.3, asterisk/dev-2.3, dev-2.3) chore: update tsconfig
+- 4efced1553083bd3576b9c8e1174c8117297d56c chore: update changelog
+- 8aa5cee6d6a431e8bfaf9b8740d5f780c289b3bb chore: update changelog
+- 818c954d470aa58f406ee547fadd9f77d55c1ce8 Merge branch 'dev-2.3' into dev
+- 70f173c464419d1a86dbd77f99398618c2b159a3 chore: ios known issue
+- 66862fe45831741b6d4444a5d510e4e03761f385 v2.3.0
+- 40a1dbd7606ea15198d0b3c8edef186b47aa3c5d Merge branch 'dev-2.3' into dev
+- d3bbbbc03996a17ddfad33dc769cfac61675a0db docs: update
+
 ## [2.3.0](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.2.2...uikit@2.3.0)(2024-08-21)
 
 - 1667136aff797f58db98325c038c9b9595845b5f (tag: uikit@2.3.0) tag: uikit@2.3.0
