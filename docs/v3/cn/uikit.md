@@ -14,6 +14,11 @@
       - [自定义列表项](#自定义列表项)
     - [消息列表（ConversationDetail）](#消息列表conversationdetail)
       - [自定义导航栏](#自定义导航栏-1)
+      - [自定义用户订阅状态](#自定义用户订阅状态)
+      - [自定义用户是否正在输入状态](#自定义用户是否正在输入状态)
+      - [自定义背景图片](#自定义背景图片)
+      - [启用消息 url 预览功能](#启用消息-url-预览功能)
+      - [启用群消息置顶功能](#启用群消息置顶功能)
       - [自定义消息列表](#自定义消息列表)
     - [联系人（ContactList）](#联系人contactlist)
       - [自定义导航栏](#自定义导航栏-2)
@@ -477,6 +482,96 @@ export function MyConversationDetailScreen(props: Props) {
 }
 ```
 
+#### 自定义用户订阅状态
+
+当进入单人聊天详情页面，将订阅当前用户状态，退出页面取消用户状态。
+
+可以通过全局配置启用或者禁用该功能。
+
+```tsx
+export function App() {
+  return (
+    <UIKitContainer enablePresence={false}>
+      {/* sub component */}
+    </UIKitContainer>
+  );
+}
+```
+
+#### 自定义用户是否正在输入状态
+
+当进入单人聊天详情页面，当对方正在输入文字，导航栏将显示正在输入状态。
+
+可以通过全局配置启用或者禁用该功能。
+
+```tsx
+export function App() {
+  return (
+    <UIKitContainer enableTyping={false}>{/* sub component */}</UIKitContainer>
+  );
+}
+```
+
+#### 自定义背景图片
+
+可以自定义聊天页面背景图片。
+
+```tsx
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function MyConversationDetailScreen(props: Props) {
+  const { route } = props;
+  const convId = ((route.params as any)?.params as any)?.convId;
+  const convType = ((route.params as any)?.params as any)?.convType;
+
+  return (
+    <SafeAreaViewFragment>
+      <ConversationDetail
+        type={comType}
+        convId={convId}
+        convType={convType}
+        list={{
+          props: {
+            backgroundImage: '<chat background image url>',
+          },
+        }}
+      />
+    </SafeAreaViewFragment>
+  );
+}
+```
+
+#### 启用消息 url 预览功能
+
+对于文本消息可以启用或者禁用识别文本中的 url 信息，如果是 url，可以预览 url 内容。
+
+可以通过全局设置启用或者禁用。
+
+```tsx
+export function App() {
+  return (
+    <UIKitContainer enableUrlPreview={false}>
+      {/* sub component */}
+    </UIKitContainer>
+  );
+}
+```
+
+#### 启用群消息置顶功能
+
+在一个群组中，可以将消息置顶，用户可以随时查看这些置顶消息，不需要翻页查找。
+
+可以通过全局配置启用或者禁用。
+
+```tsx
+export function App() {
+  return (
+    <UIKitContainer enableMessagePin={false}>
+      {/* sub component */}
+    </UIKitContainer>
+  );
+}
+```
+
 #### 自定义消息列表
 
 可以自定义的内容包括设置背景颜色、设置背景图片、设置消息时间戳、自定义消息样式等。
@@ -597,9 +692,48 @@ export function MyConversationDetailScreen(props: Props) {
 }
 ```
 
-5. 自定义消息上下文菜单。
+如果想要隐藏消息的头像，则示例代码如下：
+其它可以自定义的内容可以参考 `MessageViewProps` 属性。
 
-首先，在全局设置属性 `Container.messageMenuStyle` 为 `custom`。
+```tsx
+export function MyMessageView(props: MessageViewProps) {
+  if (props.model.layoutType === 'left') {
+    // todo: 如果是左边的消息，则不显示头像
+    return <MessageView {...props} avatarIsVisible={false} />;
+  }
+  return MessageView(props);
+}
+
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function MyConversationDetailScreen(props: Props) {
+  const { route } = props;
+  const convId = ((route.params as any)?.params as any)?.convId;
+  const convType = ((route.params as any)?.params as any)?.convType;
+
+  return (
+    <ConversationDetail
+      type={'chat'}
+      convId={convId}
+      convType={convType}
+      list={{
+        props: {
+          listItemRenderProps: {
+            MessageView: MyMessageView,
+          },
+        },
+      }}
+    />
+  );
+}
+```
+
+5. 自定义消息上下文菜单样式。
+
+`messageMenuStyle` 支持三种模式: 'bottom-sheet' | 'context' | 'custom', `bottom-sheet` 模式通过页面组件底部弹出菜单， `context` 模式通过消息位置和点击位置弹出菜单，`custom` 模式通过用户自定组件实现，需要遵守 `MessageCustomLongPressMenu` 约束。
+
+示例代码如下：
+
+首先，在全局设置属性 `Container.messageMenuStyle` 为 `custom`。其他模式不需要用户设置 `MessageCustomLongPressMenu`。
 
 ```tsx
 export function App() {
@@ -655,37 +789,18 @@ export function MyConversationDetailScreen(props: Props) {
 }
 ```
 
-如果想要隐藏消息的头像，则示例代码如下：
-其它可以自定义的内容可以参考 `MessageViewProps` 属性。
+6. 自定义发送消息附件菜单样式
+
+`messageInputBarStyle` 支持两种模式: 'bottom-sheet' | 'extension', `bottom-sheet` 模式通过页面组件底部弹出菜单， `context` 模式通过布局组件实现。
+
+在全局通过设置属性 `Container.messageInputBarStyle` 属性决定菜单样式。
 
 ```tsx
-export function MyMessageView(props: MessageViewProps) {
-  if (props.model.layoutType === 'left') {
-    // todo: 如果是左边的消息，则不显示头像
-    return <MessageView {...props} avatarIsVisible={false} />;
-  }
-  return MessageView(props);
-}
-
-type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function MyConversationDetailScreen(props: Props) {
-  const { route } = props;
-  const convId = ((route.params as any)?.params as any)?.convId;
-  const convType = ((route.params as any)?.params as any)?.convType;
-
+export function App() {
   return (
-    <ConversationDetail
-      type={'chat'}
-      convId={convId}
-      convType={convType}
-      list={{
-        props: {
-          listItemRenderProps: {
-            MessageView: MyMessageView,
-          },
-        },
-      }}
-    />
+    <UIKitContainer messageInputBarStyle={'extension'}>
+      {/* sub component */}
+    </UIKitContainer>
   );
 }
 ```

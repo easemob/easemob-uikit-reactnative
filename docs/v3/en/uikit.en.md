@@ -8,8 +8,13 @@
     - [Conversation List](#conversation-list)
       - [Customize Navigation Bar](#customize-navigation-bar)
       - [Customize List Item](#customize-list-item)
-    - [Message List (Conversation Details)](#message-list-conversation-details)
+    - [Message List (ConversationDetail)](#message-list-conversationdetail)
       - [Customize Navigation Bar](#customize-navigation-bar-1)
+      - [Customize user subscription status](#customize-user-subscription-status)
+      - [Customize whether the user is typing](#customize-whether-the-user-is-typing)
+      - [Custom background image](#custom-background-image)
+      - [Enable message url preview function](#enable-message-url-preview-function)
+      - [Enable group message pinning function](#enable-group-message-pinning-function)
       - [Customize Message List](#customize-message-list)
     - [Contact List](#contact-list)
       - [Customize Navigation Bar](#customize-navigation-bar-2)
@@ -282,13 +287,136 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 }
 ```
 
-### Message List (Conversation Details)
+### Message List (ConversationDetail)
 
-From a layout perspective, this component includes a navigation bar, a middle message list, a bottom function bar, and a menu that can be hidden.
+From the perspective of layout, this component includes a navigation bar, a message list in the middle, a function bar at the bottom, and a menu that can be hidden.
 
 #### Customize Navigation Bar
 
-This navigation bar component is a universal component. In the chat page, the left component of the navigation bar is an avatar and the right component is a function extension menu. The custom manner and related methods are similar to the conversation list.
+This navigation bar component is a common component. On the chat page, the components on the left of the navigation bar are avatars and the right are function extension menus. The customization method is similar to the conversation list.
+
+```tsx
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function MyConversationDetailScreen(props: Props) {
+  const { route } = props;
+  const convId = ((route.params as any)?.params as any)?.convId;
+  const convType = ((route.params as any)?.params as any)?.convType;
+  const convRef = React.useRef<ConversationDetailRef>({} as any);
+  const comType = React.useRef<ConversationDetailModelType>(
+    name === 'ConversationDetail'
+      ? 'chat'
+      : name === 'MessageThreadDetail'
+      ? 'thread'
+      : name === 'MessageHistory'
+      ? 'search'
+      : 'create_thread'
+  ).current;
+
+  return (
+    <SafeAreaViewFragment>
+      <ConversationDetail
+        type={comType}
+        convId={convId}
+        convType={convType}
+        NavigationBar={
+          <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />
+        }
+        enableNavigationBar={true}
+      />
+    </SafeAreaViewFragment>
+  );
+}
+```
+
+#### Customize user subscription status
+
+When entering the single chat details page, the current user status will be subscribed, and the user status will be canceled when exiting the page.
+
+This feature can be enabled or disabled through global configuration.
+
+```tsx
+export function App() {
+  return (
+    <UIKitContainer enablePresence={false}>
+      {/* sub component */}
+    </UIKitContainer>
+  );
+}
+```
+
+#### Customize whether the user is typing
+
+When entering the single chat details page, when the other party is typing, the navigation bar will display the typing status.
+
+This feature can be enabled or disabled through global configuration.
+
+```tsx
+export function App() {
+  return (
+    <UIKitContainer enableTyping={false}>{/* sub component */}</UIKitContainer>
+  );
+}
+```
+
+#### Custom background image
+
+You can customize the background image of the chat page.
+
+```tsx
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function MyConversationDetailScreen(props: Props) {
+  const { route } = props;
+  const convId = ((route.params as any)?.params as any)?.convId;
+  const convType = ((route.params as any)?.params as any)?.convType;
+
+  return (
+    <SafeAreaViewFragment>
+      <ConversationDetail
+        type={comType}
+        convId={convId}
+        convType={convType}
+        list={{
+          props: {
+            backgroundImage: '<chat background image url>',
+          },
+        }}
+      />
+    </SafeAreaViewFragment>
+  );
+}
+```
+
+#### Enable message url preview function
+
+For text messages, you can enable or disable the recognition of url information in the text. If it is a url, you can preview the url content.
+
+You can enable or disable it through global settings.
+
+```tsx
+export function App() {
+  return (
+    <UIKitContainer enableUrlPreview={false}>
+      {/* sub component */}
+    </UIKitContainer>
+  );
+}
+```
+
+#### Enable group message pinning function
+
+In a group, messages can be pinned to the top, and users can view these pinned messages at any time without turning pages to search.
+
+Can be enabled or disabled through global configuration.
+
+```tsx
+export function App() {
+  return (
+    <UIKitContainer enableMessagePin={false}>
+      {/* sub component */}
+    </UIKitContainer>
+  );
+}
+```
 
 #### Customize Message List
 
@@ -442,6 +570,84 @@ export function ConversationDetailScreen(props: Props) {
         },
       }}
     />
+  );
+}
+```
+
+5. Customize the message context menu style.
+
+`messageMenuStyle` supports three modes: 'bottom-sheet' | 'context' | 'custom', `bottom-sheet` mode pops up the menu through the bottom of the page component, `context` mode pops up the menu through the message position and click position, and `custom` mode is implemented by user-defined components and needs to comply with the `MessageCustomLongPressMenu` constraint.
+
+The sample code is as follows:
+
+First, set the property `Container.messageMenuStyle` to `custom` globally. Other modes do not require users to set `MessageCustomLongPressMenu`.
+
+```tsx
+export function App() {
+  return (
+    <UIKitContainer messageMenuStyle={'custom'}>
+      {/* sub component */}
+    </UIKitContainer>
+  );
+}
+```
+
+Second, set the property `MessageCustomLongPressMenu` in the `ConversationDetail` component.
+
+```tsx
+export const MyMessageContextNameMenu = React.forwardRef<
+  ContextNameMenuRef,
+  ContextNameMenuProps
+>(function (
+  props: ContextNameMenuProps,
+  ref?: React.ForwardedRef<ContextNameMenuRef>
+) {
+  const {} = props;
+  React.useImperativeHandle(
+    ref,
+    () => {
+      return {
+        startShow: () => {},
+        startHide: (_onFinished?: () => void) => {},
+        startShowWithInit: (_initItems: InitMenuItemsType[], _?: any) => {},
+        startShowWithProps: (_props: ContextNameMenuProps) => {},
+        getData: () => {
+          return undefined;
+        },
+      };
+    },
+    []
+  );
+  ref;
+  return <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />;
+});
+
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function MyConversationDetailScreen(props: Props) {
+  const { route } = props;
+
+  return (
+    <SafeAreaViewFragment>
+      <ConversationDetail
+        MessageCustomLongPressMenu={MyMessageContextNameMenu}
+      />
+    </SafeAreaViewFragment>
+  );
+}
+```
+
+6. Customize the style of the message attachment menu when sending messages
+
+`messageInputBarStyle` supports two modes: 'bottom-sheet' | 'extension', the `bottom-sheet` mode pops up the menu at the bottom of the page component, and the `context` mode is implemented through the layout component.
+
+The menu style is determined globally by setting the property `Container.messageInputBarStyle`.
+
+```tsx
+export function App() {
+  return (
+    <UIKitContainer messageInputBarStyle={'extension'}>
+      {/* sub component */}
+    </UIKitContainer>
   );
 }
 ```
