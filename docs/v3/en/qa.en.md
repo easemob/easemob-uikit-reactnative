@@ -17,6 +17,7 @@
       - [Create expo project and integrate uikit problem](#create-expo-project-and-integrate-uikit-problem)
       - [flipper compile question](#flipper-compile-question)
       - [ScrollView from react-native-gesture-handler](#scrollview-from-react-native-gesture-handler)
+      - [yarn vs npm in react-native ?](#yarn-vs-npm-in-react-native-)
 
 # Question List
 
@@ -118,3 +119,12 @@ Reference: Debugging React Native apps with Flipper is deprecated in React Nativ
 #### ScrollView from react-native-gesture-handler
 
 ERROR Error: NativeViewGestureHandler must be used as a descendant of GestureHandlerRootView. Otherwise the gestures will not be recognized. See https://docs.swmansion.com/react-native-gesture-handler/docs/installation for more details.
+
+#### yarn vs npm in react-native ?
+
+For `react-native` developers, `yarn` tool is usually used for management. The main basis is as follows:
+
+1. Use the command recommended by the official website to create an application project. The project management configuration uses `yarn` by default. You can verify it by creating a project `npx @react-native-community/cli init xxx-app`
+2. Check the help document of the cli recommended by the official website to create an application `npx @react-native-community/cli init --help `
+3. Use the official recommended command to create a library project. The project management configuration uses `yarn` by default. You can verify it by creating a project `npx create-react-native-library@0.34.3 --react-native-version 0.72.17 react-native-xxx-lib`
+4. After creating a project, some scripts are completed through `yarn`, which may automatically execute actions or behaviors, while `npm` cannot trigger automatic execution.

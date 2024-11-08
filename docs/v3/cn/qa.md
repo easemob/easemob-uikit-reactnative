@@ -18,6 +18,7 @@
       - [创建 expo 项目 集成 uikit 问题](#创建-expo-项目-集成-uikit-问题)
       - [flipper compilation problem](#flipper-compilation-problem)
       - [ScrollView from react-native-gesture-handler](#scrollview-from-react-native-gesture-handler)
+      - [在 react-native 中 `yarn` 和 `npm` 的选择](#在-react-native-中-yarn-和-npm-的选择)
 
 # 问题列表
 
@@ -121,3 +122,12 @@ Reference: [Debugging React Native apps with Flipper is deprecated in React Nati
 #### ScrollView from react-native-gesture-handler
 
 ERROR Error: NativeViewGestureHandler must be used as a descendant of GestureHandlerRootView. Otherwise the gestures will not be recognized. See https://docs.swmansion.com/react-native-gesture-handler/docs/installation for more details.
+
+#### 在 react-native 中 `yarn` 和 `npm` 的选择
+
+对于 `react-native` 开发者们，通常采用 `yarn` 工具进行管理。主要依据如下：
+
+1. 使用官网推荐命令创建应用项目，项目管理配置默认使用 `yarn`。可以通过创建项目验证 `npx @react-native-community/cli init xxx-app`
+2. 查看官网推荐的创建应用的 cli 的帮助文档 `npx @react-native-community/cli init --help `
+3. 使用官方推荐命令创建库项目，项目管理配置默认使用 `yarn`。可以通过创建项目验证 `npx create-react-native-library@0.34.3 --react-native-version 0.72.17 react-native-xxx-lib`
+4. 创建项目之后，某些脚本通过 `yarn` 来完成，可能自动执行动作或者行为，而 `npm` 无法触发自动执行。
