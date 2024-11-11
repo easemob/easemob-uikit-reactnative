@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ChatContextProvider } from '../chat';
@@ -181,11 +180,7 @@ export function Container(props: ContainerProps) {
                   <SimpleToastContextProvider>
                     <ToastViewContextProvider>
                       <AlertContextProvider>
-                        <SafeAreaProvider>
-                          <GestureHandlerRootView>
-                            {children}
-                          </GestureHandlerRootView>
-                        </SafeAreaProvider>
+                        <SafeAreaProvider>{children}</SafeAreaProvider>
                       </AlertContextProvider>
                     </ToastViewContextProvider>
                   </SimpleToastContextProvider>

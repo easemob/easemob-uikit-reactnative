@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { usePermissions } from 'react-native-chat-uikit';
 
-// import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { default as Test } from './test_tab2';
 
 // if (
@@ -28,13 +27,6 @@ export function AppDev(): JSX.Element {
       <Test />
     </View>
   );
-  // return (
-  //   <View style={{ flex: 1 }}>
-  //     <GestureHandlerRootView>
-  //       <Test />
-  //     </GestureHandlerRootView>
-  //   </View>
-  // );
   // return (
   //   <React.StrictMode>
   //     <View style={{ flex: 1 }}>

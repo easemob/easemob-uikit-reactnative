@@ -46,7 +46,7 @@ export function MineInfo(props: MineInfoProps) {
     enablePresence,
     onCopyId,
     onClickedDestroyAccount,
-    enableAccount = false,
+    enableAccount = true,
   } = useMineInfo(props);
   const { cornerRadius } = useThemeContext();
   const { input } = cornerRadius;
