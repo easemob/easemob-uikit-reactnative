@@ -1,5 +1,10 @@
 # Release Note
 
+# 2.4.1
+
+修复bug：
+- 页面布局问题。详见 `GestureHandlerRootView` 相关内容。
+
 ## 2.4.0
 
 新增特性

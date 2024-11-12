@@ -1,5 +1,14 @@
 # Change Log
 
+## [2.4.1](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.0...uikit@2.4.1)(2024-11-12)
+
+- 099b41d8a5a598f8a566df28c42cdf9f2b17ff31 (HEAD -> dev-2.4, tag: uikit@2.4.1) v2.4.1
+- 9fbba2118c2af7aeb98f22f67cea682c05f477f8 (origin/dev-2.4, origin/dev, origin/HEAD, asterisk/dev-2.4, asterisk/dev, dev) fix: uikit: update container and example
+- 6f72a748b596186a9b3f9dcccbf0861108299cab docs: update
+- 17d75ef7a87bb810c36dcbc6478c77ed20ac01a0 docs: update
+- 63f7a5c403ba16b2957ef52cf16e937f04748fcb docs: update change log and release note
+- c0607e7f6e5f1cf5d26aea3ace52b8be64765a4b chore: update project config
+
 ## [2.4.0](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.3.0...uikit@2.4.0)(2024-11-08)
 
 - 379f64e2a89dd00cae7fe5dff81cefa62bd04642 (tag: uikit@2.4.0) v2.4.0
@@ -48,7 +57,7 @@
 
 - 1667136aff797f58db98325c038c9b9595845b5f (tag: uikit@2.3.0) tag: uikit@2.3.0
 - c817568f055076a09d874e45c8589f75b9455f45 fix: remove enablePinMessage prop
-- 6ab3984d34c47a29729514ff83ec0019b3045c44 chore: rename  message pin
+- 6ab3984d34c47a29729514ff83ec0019b3045c44 chore: rename message pin
 - 38d91888d5297571b72ca142a15f8e65075933f0 chore: update scripts
 - 92d445d4a66a6860624c43c0ca9c14dde26453c8 (tag: uikit@2.3.0-alpha.2) tag: uikit: 2.3.0-alpha.2
 - af0c8bbad350d3c0c690d1acef0922d4906f1aa5 chore: example: update navi theme
