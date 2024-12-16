@@ -48,16 +48,19 @@ elsif podfile_properties.key?('ios.flipper') then
   end
 end
 
-def __apply_Xcode_15_flipper_post_install_workaround(installer)
+def __apply_flipper_post_install_workaround(installer)
   # https://github.com/facebook/react-native/issues/43335#issuecomment-1982794252
   installer.pods_project.targets.each do |target|
     if target.name == 'Flipper'
       file_path = 'Pods/Flipper/xplat/Flipper/FlipperTransportTypes.h'
-      contents = File.read(file_path)
-      unless contents.include?('#include <functional>')
-        File.open(file_path, 'w') do |file|
-          file.puts('#include <functional>')
-          file.puts(contents)
+      if File.exist?(file_path)
+        File.chmod(0644, file_path)
+        contents = File.read(file_path)
+        unless contents.include?('#include <functional>')
+          File.open(file_path, 'w') do |file|
+            file.puts('#include <functional>')
+            file.puts(contents)
+          end
         end
       end
     end
@@ -68,8 +71,50 @@ def __apply_Xcode_15_cxx17_post_install_workaround(installer)
   # https://github.com/facebook/react-native/issues/43335#issuecomment-1982794252
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= []
-      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << '_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION=1'
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ''
+      if !config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'].include?('$(inherited)')
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << ' '
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << '$(inherited)'
+      end
+      if !config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'].include?('_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION')
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << ' '
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << '_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION'
+      end
+    end
+  end
+end
+
+def __apply_yoga_post_install_workaround(installer)
+  # https://github.com/facebook/react-native/issues/36758
+  # https://ruby-doc.org/3.3.6/String.html
+  installer.pods_project.targets.each do |target|
+    if target.name == 'Yoga'
+      file_path = File.join(__dir__, '../node_modules/react-native/ReactCommon/yoga/yoga/Yoga.cpp')
+      if File.exist?(file_path)
+        file_content = File.read(file_path)
+        if file_content.include?('node->getLayout().hadOverflow() |') && !file_content.include?('node->getLayout().hadOverflow() ||')
+          new_content = file_content.gsub('node->getLayout().hadOverflow() |', 'node->getLayout().hadOverflow() ||')
+          # File.write(file_path, new_content)
+          File.open(file_path, 'w') { |file| file.puts new_content }
+        end
+      end
+    end
+  end
+end
+
+#  boost/boost/container_hash/hash.hpp:131:33: No template named 'unary_function' in namespace 'std'; did you mean '__unary_function'?
+def __apply_boost_post_install_workaround(installer)
+  installer.pods_project.targets.each do |target|
+    if target.name == 'boost'
+      file_path = 'Pods/boost/boost/container_hash/hash.hpp'
+      if File.exist?(file_path)
+        file_content = File.read(file_path)
+        if file_content.include?('std::unary_function')
+          new_content = file_content.gsub('std::unary_function', 'std::__unary_function')
+          # File.write(file_path, new_content)
+          File.open(file_path, 'w') { |file| file.puts new_content }
+        end
+      end
     end
   end
 end
@@ -77,12 +122,13 @@ end
 # Force pods to match minimum iOS version for React Native
 # Fixes build issue on Xcode Cloud where some pods
 # Use iOS 12 calls despite being set as iOS 11
-def __apply_Xcode_14_3_RC_post_install_workaround(installer)
+def __apply_minimum_target_post_install_workaround(installer)
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       current_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
-      minimum_target = min_ios_version_supported
-      if current_target.to_f < minimum_target.to_f
+      minimum_target = defined?(min_ios_version_supported) ? min_ios_version_supported : 12.4
+      minimum_target = 12.4
+      if current_target.to_f < minimum_target
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = minimum_target
       end
     end
@@ -133,9 +179,11 @@ target 'ChatUikitFullExample' do
       :mac_catalyst_enabled => false
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
-    __apply_Xcode_15_flipper_post_install_workaround(installer)
+    __apply_flipper_post_install_workaround(installer)
     __apply_Xcode_15_cxx17_post_install_workaround(installer)
-    __apply_Xcode_14_3_RC_post_install_workaround(installer)
+    __apply_yoga_post_install_workaround(installer)
+    __apply_boost_post_install_workaround(installer)
+    __apply_minimum_target_post_install_workaround(installer)
 
     # This is necessary for Xcode 14, because it signs resource bundles by default
     # when building for devices.
