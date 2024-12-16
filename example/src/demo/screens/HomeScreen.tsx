@@ -336,7 +336,7 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
   const {} = props;
   const navi = useNativeStackRoute();
   const { emit } = useDispatchContext();
-  const {} = useContactListItemActions();
+  const { contactItems } = useContactListItemActions();
 
   const onChangeRequestCount = React.useCallback(
     (count: number) => {
@@ -378,10 +378,10 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
       // )}
       // isVisibleIndex={false}
       // isVisibleItemHeader={false}
-      // onInitListItemActions={(data) => {
-      //   data.push(...contactItems);
-      //   return data;
-      // }}
+      onInitListItemActions={(data) => {
+        data.push(...contactItems);
+        return data;
+      }}
     />
   );
 }
