@@ -243,19 +243,19 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             //   minIndexForVisible: 0,
             //   autoscrollToTopThreshold: 10,
             // }}
-            ListEmptyComponent={EmptyPlaceholder}
-            ListErrorComponent={
-              listState === 'error' ? (
-                <ErrorPlaceholder
-                  onClicked={() => {
-                    onInit?.();
-                  }}
-                />
-              ) : null
-            }
-            ListLoadingComponent={
-              listState === 'loading' ? <LoadingPlaceholder /> : null
-            }
+            // ListEmptyComponent={EmptyPlaceholder}
+            // ListErrorComponent={
+            //   listState === 'error' ? (
+            //     <ErrorPlaceholder
+            //       onClicked={() => {
+            //         onInit?.();
+            //       }}
+            //     />
+            //   ) : null
+            // }
+            // ListLoadingComponent={
+            //   listState === 'loading' ? <LoadingPlaceholder /> : null
+            // }
           />
         </Animated.View>
 
@@ -281,6 +281,15 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             // style={{
             //   height: msgPinCurrentHeight,
             // }}
+          />
+        ) : null}
+        {listState === 'empty' ? <EmptyPlaceholder /> : null}
+        {listState === 'loading' ? <LoadingPlaceholder /> : null}
+        {listState === 'error' ? (
+          <ErrorPlaceholder
+            onClicked={() => {
+              onInit?.();
+            }}
           />
         ) : null}
 
