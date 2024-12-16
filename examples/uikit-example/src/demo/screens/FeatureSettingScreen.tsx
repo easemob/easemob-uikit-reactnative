@@ -53,11 +53,16 @@ export function FeatureSettingScreen(props: Props) {
     onSetAppPresence,
     onSetAppTyping,
     onSetAppBlock,
+    updateParams,
   } = useGeneralSetting();
 
   const onBack = () => {
     navi.goBack();
   };
+
+  React.useEffect(() => {
+    updateParams();
+  }, [updateParams]);
 
   return (
     <SafeAreaViewFragment>

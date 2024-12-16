@@ -59,6 +59,7 @@ export function ColorSettingScreen(props: Props) {
     onSetAppSecondColor,
     onSetAppNeutralColor,
     onSetAppNeutralSColor,
+    updateParams,
   } = useGeneralSetting();
   const [changed, setChanged] = React.useState(false);
   const [priColor, setPriColor] = React.useState(appPrimaryColor);
@@ -110,20 +111,22 @@ export function ColorSettingScreen(props: Props) {
   };
 
   React.useEffect(() => {
-    setPriColor(appPrimaryColor);
-  }, [appPrimaryColor]);
-  React.useEffect(() => {
-    setErrorColor(appErrorColor);
-  }, [appErrorColor]);
-  React.useEffect(() => {
-    setSecondColor(appSecondColor);
-  }, [appSecondColor]);
-  React.useEffect(() => {
-    setNeutralColor(appNeutralColor);
-  }, [appNeutralColor]);
-  React.useEffect(() => {
-    setNeutralSColor(appNeutralSColor);
-  }, [appNeutralSColor]);
+    updateParams(
+      ({
+        appPrimaryColor,
+        appErrorColor,
+        appSecondColor,
+        appNeutralColor,
+        appNeutralSColor,
+      }) => {
+        setPriColor(appPrimaryColor);
+        setErrorColor(appErrorColor);
+        setSecondColor(appSecondColor);
+        setNeutralColor(appNeutralColor);
+        setNeutralSColor(appNeutralSColor);
+      }
+    );
+  }, [updateParams]);
 
   return (
     <SafeAreaViewFragment>

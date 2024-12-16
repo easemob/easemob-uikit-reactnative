@@ -40,11 +40,16 @@ export function NotificationSettingScreen(props: Props) {
       dark: colors.neutral[98],
     },
   });
-  const { appNotification, onSetAppNotification } = useGeneralSetting();
+  const { appNotification, onSetAppNotification, updateParams } =
+    useGeneralSetting();
 
   const onBack = () => {
     navi.goBack();
   };
+
+  React.useEffect(() => {
+    updateParams();
+  }, [updateParams]);
 
   return (
     <SafeAreaViewFragment>

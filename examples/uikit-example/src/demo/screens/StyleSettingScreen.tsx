@@ -45,7 +45,7 @@ export function StyleSettingScreen(props: Props) {
       dark: colors.neutral[6],
     },
   });
-  const { appStyle, onSetAppStyle } = useGeneralSetting();
+  const { appStyle, onSetAppStyle, updateParams } = useGeneralSetting();
   const [changed, setChanged] = React.useState(false);
   const [currentStyle, setCurrentStyle] = React.useState(appStyle);
 
@@ -62,8 +62,10 @@ export function StyleSettingScreen(props: Props) {
   };
 
   React.useEffect(() => {
-    setCurrentStyle(appStyle);
-  }, [appStyle]);
+    updateParams(({ appStyle }) => {
+      setCurrentStyle(appStyle);
+    });
+  }, [updateParams]);
 
   return (
     <SafeAreaViewFragment>

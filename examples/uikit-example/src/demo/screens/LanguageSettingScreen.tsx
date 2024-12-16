@@ -51,9 +51,12 @@ export function LanguageSettingScreen(props: Props) {
     onSetAppLanguage,
     appTranslateLanguage,
     onSetAppTranslateLanguage,
+    updateParams,
   } = useGeneralSetting();
   const [changed, setChanged] = React.useState(false);
-  const [currentLanguage, setCurrentLanguage] = React.useState(appLanguage);
+  const [currentLanguage, setCurrentLanguage] = React.useState(
+    name === 'LanguageSetting' ? appLanguage : appTranslateLanguage
+  );
 
   const onBack = () => {
     navi.goBack();
@@ -73,12 +76,14 @@ export function LanguageSettingScreen(props: Props) {
   };
 
   React.useEffect(() => {
-    if (name === 'LanguageSetting') {
-      setCurrentLanguage(appLanguage);
-    } else if (name === 'TranslationLanguageSetting') {
-      setCurrentLanguage(appTranslateLanguage);
-    }
-  }, [appLanguage, appTranslateLanguage, name]);
+    updateParams(({ appLanguage, appTranslateLanguage }) => {
+      if (name === 'LanguageSetting') {
+        setCurrentLanguage(appLanguage);
+      } else if (name === 'TranslationLanguageSetting') {
+        setCurrentLanguage(appTranslateLanguage);
+      }
+    });
+  }, [name, updateParams]);
 
   return (
     <SafeAreaViewFragment>
