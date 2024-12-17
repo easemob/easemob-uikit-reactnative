@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Animated, useWindowDimensions, View } from 'react-native';
-import { getCurTs } from 'react-native-chat-uikit';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import { getCurTs } from '../rename.uikit';
 
 type TabViewProps = {
   onLongPress?: (data?: any) => void;

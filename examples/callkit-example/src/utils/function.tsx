@@ -1,4 +1,4 @@
-import type { PromiseType, UnPromisify } from 'react-native-chat-uikit';
+import type { PromiseType, UnPromisify } from '../rename.uikit';
 
 export function promiseWrapper<T>(params: {
   f: PromiseType<T>;

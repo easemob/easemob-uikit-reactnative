@@ -2,13 +2,13 @@ import { CommonActions, StackActions } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
+
 import {
   ChatServiceListener,
   DisconnectReasonType,
   LoadingIcon,
   useChatContext,
-} from 'react-native-chat-uikit';
-
+} from '../rename.uikit';
 import type { RootParamsList } from '../routes';
 
 let gid: string = '';

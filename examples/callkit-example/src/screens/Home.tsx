@@ -10,6 +10,9 @@ import {
   ToastAndroid,
   View,
 } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+
+import { ContactList } from '../components/SelectList';
 import {
   CallError,
   CallListener,
@@ -19,15 +22,8 @@ import {
   MultiCall,
   SingleCall,
   useCallkitSdkContext,
-} from 'react-native-chat-callkit';
-import {
-  CheckButton,
-  Text1Button,
-  useChatContext,
-} from 'react-native-chat-uikit';
-import { FlatList } from 'react-native-gesture-handler';
-
-import { ContactList } from '../components/SelectList';
+} from '../rename.callkit';
+import { CheckButton, Text1Button, useChatContext } from '../rename.uikit';
 import type { RootParamsList } from '../routes';
 
 let gid: string = '';

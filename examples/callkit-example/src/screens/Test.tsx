@@ -1,8 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { Text1Button } from 'react-native-chat-uikit';
 
+import { Text1Button } from '../rename.uikit';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;

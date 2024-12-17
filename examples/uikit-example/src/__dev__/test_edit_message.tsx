@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ChatMessage } from 'react-native-chat-sdk';
 import {
   CmnButton,
   Container,
@@ -9,6 +8,8 @@ import {
   usePresetPalette,
 } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { ChatMessage } from '../rename.uikit';
 
 export function Test1() {
   const ref = React.useRef<MessageInputEditMessageRef>({} as any);

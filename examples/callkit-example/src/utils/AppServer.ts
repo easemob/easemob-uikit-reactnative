@@ -1,4 +1,4 @@
-import { ChatClient } from 'react-native-chat-sdk';
+import { ChatClient } from '../rename.uikit';
 
 export class AppServerClient {
   private static _rtcTokenUrl: string =

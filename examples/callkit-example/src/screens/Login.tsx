@@ -10,6 +10,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { login_icon_2x, loginFail_2x } from '../const';
+import { useStyleSheet } from '../hooks/useStyleSheet';
 import {
   ErrorCode,
   Icon,
@@ -17,11 +21,7 @@ import {
   TextInput,
   useChatContext,
   useI18nContext,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { login_icon_2x, loginFail_2x } from '../const';
-import { useStyleSheet } from '../hooks/useStyleSheet';
+} from '../rename.uikit';
 import type { RootScreenParamsList } from '../routes';
 import { sf } from '../utils/utils';
 

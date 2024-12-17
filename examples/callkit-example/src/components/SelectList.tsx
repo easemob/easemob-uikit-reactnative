@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { FlatList, type ListRenderItemInfo, Text, View } from 'react-native';
-import type { InviteeListProps } from 'react-native-chat-callkit';
+
+import type { InviteeListProps } from '../rename.callkit';
 import {
   CheckButton,
   Search,
   Text1Button,
   useChatContext,
   useDelayExecTask,
-} from 'react-native-chat-uikit';
+} from '../rename.uikit';
 
 type DataType = {
   userId: string;

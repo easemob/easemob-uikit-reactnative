@@ -1,9 +1,9 @@
 import type { CallManagerImpl } from 'packages/react-native-chat-callkit/src/call/CallManagerImpl';
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { useCallkitSdkContext } from 'react-native-chat-callkit';
-import { ChatClient } from 'react-native-chat-sdk';
-import { Text1Button } from 'react-native-chat-uikit';
+
+import { ChatClient, useCallkitSdkContext } from '../rename.callkit';
+import { Text1Button } from '../rename.uikit';
 
 let gid: string = '';
 let gps: string = '';

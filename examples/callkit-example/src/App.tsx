@@ -11,11 +11,16 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import { registerRootComponent } from 'expo';
 import * as React from 'react';
 import { DeviceEventEmitter, Linking, Platform, View } from 'react-native';
+
+import Dev from './__dev__';
+import { createStringSetCn } from './I18n/StringSet.cn';
+import { createStringSetEn } from './I18n/StringSet.en';
 import {
   CallUser,
+  ChatClient,
+  ChatPushConfig,
   GlobalContainer as CallkitContainer,
-} from 'react-native-chat-callkit';
-import { ChatClient, ChatPushConfig } from 'react-native-chat-sdk';
+} from './rename.callkit';
 import {
   Container as UikitContainer,
   createDefaultStringSet,
@@ -25,11 +30,7 @@ import {
   StringSet,
   useLightTheme,
   usePresetPalette,
-} from 'react-native-chat-uikit';
-
-import Dev from './__dev__';
-import { createStringSetCn } from './I18n/StringSet.cn';
-import { createStringSetEn } from './I18n/StringSet.en';
+} from './rename.uikit';
 import type { RootParamsList, RootParamsName } from './routes';
 import HomeScreen from './screens/Home';
 import LoginScreen from './screens/Login';
