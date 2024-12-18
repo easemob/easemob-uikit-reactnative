@@ -21,31 +21,31 @@
 添加 UIKit 需要的 依赖。执行命令添加。如下：
 
 ```sh
-yarn add @react-native-async-storage/async-storage@^1.17.11 \
-@react-native-camera-roll/camera-roll@^5.6.0 \
-@react-native-clipboard/clipboard@^1.11.2 \
-date-fns@^2.30.0 \
-pinyin-pro@^3.18.3 \
-pure-uuid@^1.6.3 \
-react-native-agora@^4.2.6 \
-react-native-chat-uikit@2.2.1 \
-react-native-chat-sdk@1.5.1 \
-react-native-audio-recorder-player@^3.5.3 \
-@easemob/react-native-create-thumbnail@^1.6.6 \
-react-native-device-info@^10.6.0 \
-react-native-document-picker@^9.0.1 \
-react-native-fast-image@^8.6.3 \
-react-native-file-access@^3.0.4 \
-react-native-gesture-handler@~2.9.0 \
-react-native-get-random-values@~1.8.0 \
-react-native-image-picker@^7.0.3 \
-react-native-permissions@^3.8.0 \
-react-native-safe-area-context@4.5.0 \
-react-native-screens@^3.20.0 \
-react-native-video@^5.2.1 \
-react-native-web@~0.19.6 \
-react-native-webview@13.2.2 \
-twemoji@14.0.2
+yarn add @react-native-async-storage/async-storage \
+@react-native-camera-roll/camera-roll \
+@react-native-clipboard/clipboard \
+date-fns \
+pinyin-pro \
+pure-uuid \
+react-native-agora \
+react-native-chat-uikit \
+react-native-chat-sdk \
+react-native-audio-recorder-player \
+@easemob/react-native-create-thumbnail \
+react-native-device-info \
+react-native-document-picker \
+react-native-fast-image \
+react-native-file-access \
+react-native-gesture-handler \
+react-native-get-random-values \
+react-native-image-picker \
+react-native-permissions \
+react-native-safe-area-context \
+react-native-screens \
+react-native-video \
+react-native-web \
+react-native-webview \
+twemoji
 ```
 
 对于 iOS 平台：
