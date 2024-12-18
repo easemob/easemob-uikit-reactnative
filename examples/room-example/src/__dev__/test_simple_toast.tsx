@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
@@ -7,7 +8,7 @@ import {
   createPresetPalette,
   SimpleToast,
   SimpleToastRef,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 let count = 1;
 

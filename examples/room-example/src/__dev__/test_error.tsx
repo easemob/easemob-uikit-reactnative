@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { ErrorCode, UIKitError } from 'react-native-chat-room';
+
+import { ErrorCode, UIKitError } from '../rename.room';
 
 function throwError() {
   const e = new UIKitError({ code: ErrorCode.existed });

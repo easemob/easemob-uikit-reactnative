@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FlatList, ListRenderItemInfo, View } from 'react-native';
+
 import {
   Avatar,
   createDarkTheme,
@@ -10,7 +11,7 @@ import {
   PaletteContextProvider,
   Text,
   ThemeContextProvider,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 type ParticipantListItemProps = { id: string };
 

@@ -1,11 +1,10 @@
+import type { UIKitError } from '../error';
 import type {
   ChatClient,
   ChatCursorResult,
   ChatMessage,
   ChatRoom,
-} from 'react-native-chat-sdk';
-
-import type { UIKitError } from '../error';
+} from '../rename.chat';
 import type { Keyof } from '../types';
 
 /**

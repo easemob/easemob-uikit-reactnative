@@ -1,6 +1,5 @@
-import type { ChatMessage } from 'react-native-chat-sdk';
-
 import type { IconNameType } from '../../assets';
+import type { ChatMessage } from '../../rename.chat';
 
 export type TextContent = {
   text: string;

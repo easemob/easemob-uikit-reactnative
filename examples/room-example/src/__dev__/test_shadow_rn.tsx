@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
@@ -7,7 +8,7 @@ import {
   IconButton,
   PaletteContextProvider,
   ThemeContextProvider,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestShadow(): JSX.Element {
   const getShadow = (): StyleProp<ViewStyle> => {

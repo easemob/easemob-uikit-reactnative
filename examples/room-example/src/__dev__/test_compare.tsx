@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
@@ -7,7 +8,7 @@ import {
   PaletteContextProvider,
   ThemeContextProvider,
   useCompare,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestComponent() {
   return (

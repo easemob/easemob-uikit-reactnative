@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+
 import {
   BottomSheetGift,
   BottomSheetGift2,
@@ -16,7 +17,7 @@ import {
   useDarkTheme,
   useLightTheme,
   usePresetPalette,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestGiftList() {
   const pal = createPresetPalette();

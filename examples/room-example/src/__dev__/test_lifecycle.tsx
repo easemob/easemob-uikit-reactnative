@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
@@ -7,7 +8,7 @@ import {
   createPresetPalette,
   useCompare,
   useLifecycle,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestComponent() {
   const cb = (state: any) => {

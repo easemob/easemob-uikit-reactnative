@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import { Animated, Button, View } from 'react-native';
-import { Queue } from 'react-native-chat-room';
+
+import { Queue } from '../rename.room';
 
 let count = 1;
 

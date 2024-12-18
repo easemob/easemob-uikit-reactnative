@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Alert, View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestAlertComponent(): JSX.Element {
   return (

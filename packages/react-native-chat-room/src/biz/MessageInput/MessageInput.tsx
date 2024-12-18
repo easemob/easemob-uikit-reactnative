@@ -6,12 +6,12 @@ import {
   TextInput as RNTextInput,
   View,
 } from 'react-native';
-import type { ChatMessage } from 'react-native-chat-sdk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { IconNameType } from '../../assets';
 import { useConfigContext } from '../../config';
 import { useColors, useKeyboardHeight } from '../../hook';
+import type { ChatMessage } from '../../rename.chat';
 import { usePaletteContext, useThemeContext } from '../../theme';
 import { IconButtonMemo } from '../../ui/Button';
 import { KeyboardAvoidingView } from '../../ui/Keyboard';

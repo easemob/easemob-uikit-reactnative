@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { ImageLoadEventData, NativeSyntheticEvent, View } from 'react-native';
+
 import {
   DefaultImage,
   DefaultImage2,
   Icon,
   ICON_ASSETS,
   Image,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export default function test_image() {
   return <ImageComponent3 />;

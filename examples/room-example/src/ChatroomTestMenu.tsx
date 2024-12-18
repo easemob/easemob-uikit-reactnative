@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   BottomSheetMenu,
   BottomSheetMenuItem,
@@ -7,7 +8,7 @@ import {
   BottomSheetMenuRef,
   useColors,
   usePaletteContext,
-} from 'react-native-chat-room';
+} from './rename.room';
 
 export type ChatroomTestMenuRef = BottomSheetMenuRef;
 export type ChatroomTestMenuProps = Omit<

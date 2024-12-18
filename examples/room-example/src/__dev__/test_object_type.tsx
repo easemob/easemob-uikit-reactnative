@@ -6,6 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
@@ -14,7 +15,7 @@ import {
   ThemeContextProvider,
   useCheckType,
   useGetStyleSize,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestComponent({
   containerStyle,

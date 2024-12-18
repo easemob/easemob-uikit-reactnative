@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import {
-  DispatchContextProvider,
-  useDispatchContext,
-} from 'react-native-chat-room';
+
+import { DispatchContextProvider, useDispatchContext } from '../rename.room';
 
 class ClassFunction {
   listener(...args: any[]) {

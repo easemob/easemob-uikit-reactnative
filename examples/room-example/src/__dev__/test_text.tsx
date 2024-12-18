@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
@@ -7,7 +8,7 @@ import {
   PaletteContextProvider,
   Text,
   ThemeContextProvider,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 function TextComponent(): JSX.Element {
   return (

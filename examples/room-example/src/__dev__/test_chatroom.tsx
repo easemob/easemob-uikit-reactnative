@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 import { View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
 import {
   Chatroom,
   Container,
@@ -14,8 +16,7 @@ import {
   ThemeContextProvider,
   usePaletteContext,
   useThemeContext,
-} from 'react-native-chat-room';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+} from '../rename.room';
 
 export function ChatroomFC() {
   const { colors } = usePaletteContext();

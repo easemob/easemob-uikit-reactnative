@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { NativeModules, Platform, View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 const getSystemLanguage = () => {
   if (Platform.OS === 'ios') {

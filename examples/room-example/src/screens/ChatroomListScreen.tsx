@@ -2,8 +2,8 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { useLifecycle, useRoomContext } from 'react-native-chat-room';
-import type { ChatRoom } from 'react-native-chat-sdk';
 
+import type { ChatRoom } from '../rename.room';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;

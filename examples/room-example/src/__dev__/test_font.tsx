@@ -1,13 +1,14 @@
 import { useFonts } from 'expo-font';
 import * as React from 'react';
 import { Text, View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   useConfigContext,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function MyFont(): JSX.Element {
   const { fontFamily } = useConfigContext();

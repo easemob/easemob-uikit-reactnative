@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
@@ -15,7 +16,7 @@ import {
   useDarkTheme,
   useForceUpdate,
   usePresetPalette,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestEmojiList() {
   console.log('test:TestEmojiList:');

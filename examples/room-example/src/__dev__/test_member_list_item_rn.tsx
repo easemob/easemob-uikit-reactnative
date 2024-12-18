@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   Avatar,
   Container,
@@ -9,7 +10,7 @@ import {
   Icon,
   IconButton,
   Text,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function ParticipantListItem(): JSX.Element {
   return (

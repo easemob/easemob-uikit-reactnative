@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { LoadingIcon } from 'react-native-chat-room';
+
+import { LoadingIcon } from '../rename.room';
 
 export default function Test(): JSX.Element {
   return (

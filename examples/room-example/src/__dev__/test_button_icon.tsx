@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
@@ -8,7 +9,7 @@ import {
   IconNameType,
   PaletteContextProvider,
   ThemeContextProvider,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function IconButtonComponent(): JSX.Element {
   const [iconName, setIconName] = React.useState<IconNameType>('link');

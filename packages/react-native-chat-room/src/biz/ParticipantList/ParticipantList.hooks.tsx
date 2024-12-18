@@ -5,10 +5,10 @@ import {
   PanResponder,
   ViewToken,
 } from 'react-native';
-import { ChatCustomMessageBody, ChatMessageType } from 'react-native-chat-sdk';
 
 import { useDispatchContext, useDispatchListener } from '../../dispatch';
 import { useDelayExecTask } from '../../hook';
+import { ChatCustomMessageBody, ChatMessageType } from '../../rename.chat';
 import {
   custom_msg_event_type_join,
   RoomService,

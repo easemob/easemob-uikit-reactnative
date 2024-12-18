@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Pressable, useWindowDimensions, View } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
@@ -8,7 +9,7 @@ import {
   SimulativeModal,
   SimulativeModalRef,
   ThemeContextProvider,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function ModalComponent() {
   const ref = React.useRef<SimulativeModalRef>({} as any);

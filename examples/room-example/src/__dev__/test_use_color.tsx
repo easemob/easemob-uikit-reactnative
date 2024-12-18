@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
@@ -8,7 +9,7 @@ import {
   ThemeContextProvider,
   useColors,
   usePaletteContext,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function UseColorComponent(): JSX.Element {
   const { colors } = usePaletteContext();

@@ -2,13 +2,14 @@
 
 import * as React from 'react';
 import { FlatList, PanResponder, ScrollView, Text, View } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   PaletteContextProvider,
   ThemeContextProvider,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function PanResponderComponent(): JSX.Element {
   const p = React.useRef(

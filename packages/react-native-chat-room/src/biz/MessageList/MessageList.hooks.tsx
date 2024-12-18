@@ -7,18 +7,18 @@ import {
   NativeSyntheticEvent,
   Platform,
 } from 'react-native';
-import {
-  ChatCustomMessageBody,
-  ChatMessage,
-  ChatMessageType,
-  ChatTextMessageBody,
-} from 'react-native-chat-sdk';
 
 import { useConfigContext } from '../../config';
 import { useDispatchContext } from '../../dispatch';
 import { ErrorCode, UIKitError } from '../../error';
 import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import {
+  ChatCustomMessageBody,
+  ChatMessage,
+  ChatMessageType,
+  ChatTextMessageBody,
+} from '../../rename.chat';
 import {
   chatroom_uikit_gift,
   custom_msg_event_type_gift,

@@ -2,13 +2,14 @@
 
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   emoji,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestEmojiConvert() {
   console.log('test:TestEmojiConvert:');

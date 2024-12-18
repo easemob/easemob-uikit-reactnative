@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
@@ -8,7 +9,7 @@ import {
   TabPage,
   TabPageBodyItem,
   ThemeContextProvider,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function BodyPages(): React.ReactNode[] {
   const list = [1, 2, 3, 4];

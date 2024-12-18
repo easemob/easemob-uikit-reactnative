@@ -1,11 +1,10 @@
-import { ChatTextMessageBody } from 'react-native-chat-sdk';
+import { ErrorCode, UIKitError } from '../../error';
 import {
   ChatCustomMessageBody,
   ChatMessage,
   ChatMessageType,
-} from 'react-native-chat-sdk';
-
-import { ErrorCode, UIKitError } from '../../error';
+  ChatTextMessageBody,
+} from '../../rename.chat';
 import {
   chatroom_uikit_gift,
   custom_msg_event_type_gift,

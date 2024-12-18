@@ -9,7 +9,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-chat-room';
+
+import { KeyboardAvoidingView } from '../rename.room';
 
 export function TestKeyboard() {
   const closeEmoji = React.useRef(false);

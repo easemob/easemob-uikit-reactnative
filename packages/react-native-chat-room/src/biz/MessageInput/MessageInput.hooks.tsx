@@ -1,8 +1,8 @@
 import * as React from 'react';
-import type { ChatMessage } from 'react-native-chat-sdk';
 import emoji from 'twemoji';
 
 import { ErrorCode, UIKitError } from '../../error';
+import type { ChatMessage } from '../../rename.chat';
 import { useRoomContext } from '../../room';
 import { emoji as convert, FACE_ASSETS_UTF16 } from '../EmojiList';
 

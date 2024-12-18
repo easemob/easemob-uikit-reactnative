@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   Alert,
   AlertRef,
@@ -7,7 +8,7 @@ import {
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestAlertComponent(): JSX.Element {
   const ref = React.useRef<AlertRef>({} as any);

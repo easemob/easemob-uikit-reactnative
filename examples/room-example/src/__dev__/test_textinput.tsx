@@ -2,8 +2,9 @@
 
 import * as React from 'react';
 import { Platform, useWindowDimensions, View } from 'react-native';
-import { TextInput } from 'react-native-chat-room';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+import { TextInput } from '../rename.room';
 
 export function TestChatroom() {
   const { width: winWidth } = useWindowDimensions();

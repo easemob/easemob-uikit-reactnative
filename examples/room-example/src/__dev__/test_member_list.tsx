@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Platform, Pressable, TouchableOpacity, View } from 'react-native';
+
 import {
   BottomSheetParticipantList,
   BottomSheetParticipantListRef,
@@ -8,7 +9,7 @@ import {
   createLightTheme,
   createPresetPalette,
   Text,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 /**
  * for test member list.

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Pressable, Text, useWindowDimensions, View } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
@@ -8,7 +9,7 @@ import {
   ModalRef,
   PaletteContextProvider,
   ThemeContextProvider,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 type MyModalRef = ModalRef;
 type MyModalProps = {

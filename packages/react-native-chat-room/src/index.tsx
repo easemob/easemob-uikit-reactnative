@@ -42,6 +42,7 @@ export * from './dispatch';
 export * from './error';
 export * from './hook';
 export * from './i18n';
+export * from './rename.chat';
 export * from './room';
 export * from './theme';
 export * from './ui/Alert';

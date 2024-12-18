@@ -7,11 +7,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import type { ChatMessage } from 'react-native-chat-sdk';
 
 import { useDispatchListener } from '../../dispatch';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
+import type { ChatMessage } from '../../rename.chat';
 import { usePaletteContext } from '../../theme';
 import { BorderButton } from '../../ui/Button';
 import { seqId } from '../../utils';

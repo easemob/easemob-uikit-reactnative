@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Pressable, Text, View } from 'react-native';
+
 import {
   BottomSheetMenu,
   BottomSheetMenuItem,
@@ -10,7 +11,7 @@ import {
   createPresetPalette,
   useColors,
   usePaletteContext,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestBottomSheetMenu() {
   const ref = React.useRef<BottomSheetMenuRef>({} as any);

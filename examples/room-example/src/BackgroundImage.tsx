@@ -5,9 +5,9 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { useThemeContext } from 'react-native-chat-room';
 
 import * as assert from './assets';
+import { useThemeContext } from './rename.room';
 export const BackgroundImage = () => {
   const { style } = useThemeContext();
   const { height: winHeight, width: winWidth } = useWindowDimensions();

@@ -1,3 +1,4 @@
+import { ErrorCode, UIKitError } from '../error';
 import {
   ChatClient,
   ChatConnectEventListener,
@@ -9,9 +10,7 @@ import {
   ChatOptions,
   ChatRoom,
   ChatRoomEventListener,
-} from 'react-native-chat-sdk';
-
-import { ErrorCode, UIKitError } from '../error';
+} from '../rename.chat';
 import type { Keyof } from '../types';
 import { asyncTask } from '../utils';
 import {

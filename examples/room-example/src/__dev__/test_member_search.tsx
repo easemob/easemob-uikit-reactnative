@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   SearchParticipant,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function SearchParticipantComponent(): JSX.Element {
   return (

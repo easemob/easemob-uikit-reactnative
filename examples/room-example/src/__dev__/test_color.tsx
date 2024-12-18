@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   changeOpacity,
   getOpacity,
@@ -15,7 +16,7 @@ import {
   RGBAToHSLA,
   RGBToHex,
   RGBToHSL,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 function test1() {
   // const v1 = 'rgba(51, 255, 51, 0.5)';

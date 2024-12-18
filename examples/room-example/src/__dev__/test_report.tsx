@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Platform, Pressable, TouchableOpacity, View } from 'react-native';
+
 import {
   BottomSheetMessageReport,
   BottomSheetParticipantListRef,
@@ -7,53 +8,52 @@ import {
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
-  seqId,
   SimulativeModalRef,
   Text,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
-const data = [
-  {
-    id: seqId('_rp').toString(),
-    title: 'Unwelcome commercial content',
-    checked: true,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Pornographic or explicit content',
-    checked: false,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Child abuse',
-    checked: false,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Child abuse 2',
-    checked: false,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Child abuse 3',
-    checked: false,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Hate speech or graphic violence',
-    checked: false,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Promote terrorism',
-    checked: false,
-  },
-  {
-    id: seqId('_rp').toString(),
-    title: 'Harassment or bullying',
-    checked: false,
-  },
-];
+// const data = [
+//   {
+//     id: seqId('_rp').toString(),
+//     title: 'Unwelcome commercial content',
+//     checked: true,
+//   },
+//   {
+//     id: seqId('_rp').toString(),
+//     title: 'Pornographic or explicit content',
+//     checked: false,
+//   },
+//   {
+//     id: seqId('_rp').toString(),
+//     title: 'Child abuse',
+//     checked: false,
+//   },
+//   {
+//     id: seqId('_rp').toString(),
+//     title: 'Child abuse 2',
+//     checked: false,
+//   },
+//   {
+//     id: seqId('_rp').toString(),
+//     title: 'Child abuse 3',
+//     checked: false,
+//   },
+//   {
+//     id: seqId('_rp').toString(),
+//     title: 'Hate speech or graphic violence',
+//     checked: false,
+//   },
+//   {
+//     id: seqId('_rp').toString(),
+//     title: 'Promote terrorism',
+//     checked: false,
+//   },
+//   {
+//     id: seqId('_rp').toString(),
+//     title: 'Harassment or bullying',
+//     checked: false,
+//   },
+// ];
 
 /**
  * for test report list.
@@ -62,7 +62,7 @@ export function TestReport() {
   const ref = React.useRef<SimulativeModalRef>({} as any);
   return (
     <View style={{ flex: 1 }}>
-      <BottomSheetMessageReport ref={ref} data={data} onReport={() => {}} />
+      <BottomSheetMessageReport ref={ref} data={[]} onReport={() => {}} />
       <View
         style={{
           position: 'absolute', // !!! must
@@ -104,10 +104,10 @@ export function TestReport2(): JSX.Element {
 
       {Platform.OS === 'ios' ? (
         <View style={{ position: 'absolute' }}>
-          <BottomSheetMessageReport ref={ref} data={data} onReport={() => {}} />
+          <BottomSheetMessageReport ref={ref} data={[]} onReport={() => {}} />
         </View>
       ) : (
-        <BottomSheetMessageReport ref={ref} data={data} onReport={() => {}} />
+        <BottomSheetMessageReport ref={ref} data={[]} onReport={() => {}} />
       )}
     </View>
   );

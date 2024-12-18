@@ -2,12 +2,13 @@
 
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+
 import {
   Container,
   // Icon,
   GlobalBroadcast,
   GlobalBroadcastRef,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 let count = 1;
 

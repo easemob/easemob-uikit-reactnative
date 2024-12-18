@@ -7,9 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { BackgroundImageMemo } from '../BackgroundImage';
+import { ChatroomTestMenu, ChatroomTestMenuRef } from '../ChatroomTestMenu';
 import {
   BottomSheetGift2,
   BottomSheetGiftSimuRef,
+  ChatRoom,
   Chatroom,
   GiftListModel,
   Icon,
@@ -20,12 +25,7 @@ import {
   usePaletteContext,
   useRoomContext,
   useRoomListener,
-} from 'react-native-chat-room';
-import type { ChatRoom } from 'react-native-chat-sdk';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-import { BackgroundImageMemo } from '../BackgroundImage';
-import { ChatroomTestMenu, ChatroomTestMenuRef } from '../ChatroomTestMenu';
+} from '../rename.room';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;

@@ -6,6 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
@@ -21,7 +22,7 @@ import {
   UIKitError,
   usePaletteContext,
   useThemeContext,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 type ButtonInitState = 'enabled' | 'disabled' | 'warned';
 type ButtonState = 'disabled' | 'enabled' | 'pressed' | 'warned';

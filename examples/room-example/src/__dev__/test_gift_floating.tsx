@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
@@ -10,7 +11,7 @@ import {
   GiftMessageList,
   GiftMessageListRef,
   seqId,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestGiftEffect() {
   const ref = React.useRef<GiftMessageListRef>({} as any);

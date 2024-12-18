@@ -7,13 +7,14 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   Switch,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function Switch1() {
   const [value, setValue] = React.useState(false);

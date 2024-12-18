@@ -8,14 +8,14 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
+
+import { AppDev } from './__dev__/AppDev';
 import {
   Container,
   useDarkTheme,
   useLightTheme,
   usePresetPalette,
-} from 'react-native-chat-room';
-
-import { AppDev } from './__dev__/AppDev';
+} from './rename.room';
 import type { RootParamsList, RootParamsName } from './routes';
 import {
   ChatroomHeaderRight,

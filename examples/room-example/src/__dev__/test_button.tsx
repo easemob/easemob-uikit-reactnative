@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   BorderIconButton,
   Button,
@@ -9,7 +10,7 @@ import {
   PaletteContextProvider,
   Text1IconButton,
   ThemeContextProvider,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function ButtonComponent(): JSX.Element {
   return (

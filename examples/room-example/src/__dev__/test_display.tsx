@@ -6,13 +6,14 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   PaletteContextProvider,
   ThemeContextProvider,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function DisplayComponent({ style }: { style?: StyleProp<ViewStyle> }) {
   React.useEffect(() => {

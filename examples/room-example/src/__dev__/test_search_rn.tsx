@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   createDarkTheme,
   createLightTheme,
@@ -11,7 +12,7 @@ import {
   ThemeContextProvider,
   usePaletteContext,
   useThemeContext,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function TestSearchComponent(): JSX.Element {
   const { style } = useThemeContext();

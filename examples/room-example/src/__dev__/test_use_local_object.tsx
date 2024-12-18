@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
   createLightTheme,
   createPresetPalette,
   useLifecycle,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 function useMyData() {
   const r = React.useRef(0);

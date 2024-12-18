@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Animated, Text, View } from 'react-native';
-import { PresetCalcTextWidth } from 'react-native-chat-room';
+
+import { PresetCalcTextWidth } from '../rename.room';
 
 export function CalcTextWidth() {
   console.log('test:CalcTextWidth:');

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
@@ -8,7 +9,7 @@ import {
   LanguageCode,
   StringSet,
   useI18nContext,
-} from 'react-native-chat-room';
+} from '../rename.room';
 
 export function I18nComponent(): JSX.Element {
   const { tr } = useI18nContext();
