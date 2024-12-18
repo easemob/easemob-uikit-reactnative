@@ -11,6 +11,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import { registerRootComponent } from 'expo';
 import * as React from 'react';
 import { DeviceEventEmitter, Linking, Platform, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import Dev from './__dev__';
 import { createStringSetCn } from './I18n/StringSet.cn';
@@ -37,12 +38,6 @@ import LoginScreen from './screens/Login';
 import { SplashScreen } from './screens/Splash';
 import { TestScreen } from './screens/Test';
 import { AppServerClient } from './utils/AppServer';
-import {
-  checkFCMPermission,
-  requestFCMPermission,
-  // requestFcmToken,
-  setBackgroundMessageHandler,
-} from './utils/fcm';
 import { requestAndroidVideo } from './utils/permission';
 
 if (Platform.OS === 'web') {
@@ -130,31 +125,10 @@ export default function App() {
       AppServerClient.mapUrl = 'http://a41.easemob.com/agora/channel/mapper';
     }
 
-    if ((await checkFCMPermission()) === false) {
-      const ret = await requestFCMPermission();
-      if (ret === false) {
-        console.warn('Firebase Cloud Message Permission request failed.');
-        return;
-      }
-    }
     if ((await requestAndroidVideo()) === false) {
       console.warn('Video and Audio Permission request failed.');
       return;
     }
-
-    setBackgroundMessageHandler();
-    // try {
-    //   const fcmToken = await requestFcmToken();
-    //   console.log('test:requestFcmToken:', fcmSenderId, fcmToken);
-    //   ChatClient.getInstance().updatePushConfig(
-    //     new ChatPushConfig({
-    //       deviceId: fcmSenderId,
-    //       deviceToken: fcmToken,
-    //     })
-    //   );
-    // } catch (error) {
-    //   console.warn('test:requestFcmToken:error', error);
-    // }
 
     DeviceEventEmitter.emit('on_initialized', {
       autoLogin: autoLogin.current,
@@ -313,75 +287,77 @@ export default function App() {
           {__TEST__ === true ? (
             Dev()
           ) : (
-            <NavigationContainer
-              ref={RootRef}
-              initialState={initialState}
-              theme={NDefaultTheme}
-              onStateChange={(state: NavigationState | undefined) => {
-                const rr: string[] & string[][] = [];
-                formatNavigationState(state, rr);
-                console.log(
-                  'test:onStateChange:',
-                  JSON.stringify(rr, undefined, '  ')
-                );
-                // console.log('test:onStateChange:o:', JSON.stringify(state));
-                Services.ls.setItem(__KEY__, JSON.stringify(state));
-              }}
-              onUnhandledAction={(action: NavigationAction) => {
-                console.log('test:onUnhandledAction:', action);
-              }}
-              onReady={() => {
-                console.log('test:NavigationContainer:onReady:');
-                isOnReady.current = true;
-                onInitApp();
-              }}
-              fallback={
-                <View
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flex: 1,
-                  }}
-                >
-                  <LoadingIcon style={{ height: 45, width: 45 }} />
-                </View>
-              }
-            >
-              <Root.Navigator initialRouteName={initialRouteName}>
-                <Root.Screen
-                  name="Splash"
-                  options={{
-                    headerShown: false,
-                  }}
-                  component={SplashScreen}
-                />
-                <Root.Screen
-                  name="Login"
-                  options={{
-                    headerShown: false,
-                  }}
-                  component={LoginScreen}
-                />
-                <Root.Screen
-                  name="Home"
-                  options={() => {
-                    return {
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <NavigationContainer
+                ref={RootRef}
+                initialState={initialState}
+                theme={NDefaultTheme}
+                onStateChange={(state: NavigationState | undefined) => {
+                  const rr: string[] & string[][] = [];
+                  formatNavigationState(state, rr);
+                  console.log(
+                    'test:onStateChange:',
+                    JSON.stringify(rr, undefined, '  ')
+                  );
+                  // console.log('test:onStateChange:o:', JSON.stringify(state));
+                  Services.ls.setItem(__KEY__, JSON.stringify(state));
+                }}
+                onUnhandledAction={(action: NavigationAction) => {
+                  console.log('test:onUnhandledAction:', action);
+                }}
+                onReady={() => {
+                  console.log('test:NavigationContainer:onReady:');
+                  isOnReady.current = true;
+                  onInitApp();
+                }}
+                fallback={
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flex: 1,
+                    }}
+                  >
+                    <LoadingIcon style={{ height: 45, width: 45 }} />
+                  </View>
+                }
+              >
+                <Root.Navigator initialRouteName={initialRouteName}>
+                  <Root.Screen
+                    name="Splash"
+                    options={{
                       headerShown: false,
-                    };
-                  }}
-                  component={HomeScreen}
-                />
-                <Root.Screen
-                  name="Test"
-                  options={() => {
-                    return {
-                      headerShown: true,
-                    };
-                  }}
-                  component={TestScreen}
-                />
-              </Root.Navigator>
-            </NavigationContainer>
+                    }}
+                    component={SplashScreen}
+                  />
+                  <Root.Screen
+                    name="Login"
+                    options={{
+                      headerShown: false,
+                    }}
+                    component={LoginScreen}
+                  />
+                  <Root.Screen
+                    name="Home"
+                    options={() => {
+                      return {
+                        headerShown: false,
+                      };
+                    }}
+                    component={HomeScreen}
+                  />
+                  <Root.Screen
+                    name="Test"
+                    options={() => {
+                      return {
+                        headerShown: true,
+                      };
+                    }}
+                    component={TestScreen}
+                  />
+                </Root.Navigator>
+              </NavigationContainer>
+            </GestureHandlerRootView>
           )}
         </CallkitContainer>
       </UikitContainer>
