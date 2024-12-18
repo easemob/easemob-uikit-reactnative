@@ -82,7 +82,9 @@
       "<rootDir>/packages/react-native-chat-uikit/lib/",
       "<rootDir>/packages/react-native-chat-uikit/node_modules/",
       "<rootDir>/packages/react-native-chat-callkit/lib/",
-      "<rootDir>/packages/react-native-chat-callkit/node_modules/"
+      "<rootDir>/packages/react-native-chat-callkit/node_modules/",
+      "<rootDir>/packages/react-native-chat-room/lib/",
+      "<rootDir>/packages/react-native-chat-room/node_modules/"
     ]
   },
   "engines": {
