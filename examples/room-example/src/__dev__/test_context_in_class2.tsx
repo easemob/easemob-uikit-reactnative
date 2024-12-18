@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
-type MyContextType = { value: string };
+type MyContextType = { value: string; children?: React.ReactNode };
 
 class MyProvider extends React.Component<MyContextType, {}> {
   static contextType = React.createContext<MyContextType>({

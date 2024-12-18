@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
-type MyContextType = { value: string };
+type MyContextType = { value: string; children?: React.ReactNode };
 
 class MyProvider extends React.Component<MyContextType, {}> {
   static contextType = React.createContext<MyContextType>({
@@ -22,7 +22,7 @@ class MyProvider extends React.Component<MyContextType, {}> {
   }
 }
 
-type MyContextType2 = { value2: string };
+type MyContextType2 = { value2: string; children?: React.ReactNode };
 
 class MyProvider2 extends React.Component<MyContextType2, {}> {
   static contextType = React.createContext<MyContextType2>({

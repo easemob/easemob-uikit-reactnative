@@ -1,4 +1,4 @@
-import type { CallManagerImpl } from 'packages/react-native-chat-callkit/src/call/CallManagerImpl';
+// import type { CallManagerImpl } from 'packages/react-native-chat-callkit/src/call/CallManagerImpl';
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
@@ -20,7 +20,7 @@ try {
 
 const channelId = 'magic';
 
-function rr(call: CallManagerImpl): void {
+function rr(call: any): void {
   ChatClient.getInstance()
     .isLoginBefore()
     .then((result) => {
@@ -63,7 +63,7 @@ function rr(call: CallManagerImpl): void {
       console.log(e);
     });
 }
-function rm(call: CallManagerImpl): void {
+function rm(call: any): void {
   ChatClient.getInstance()
     .isLoginBefore()
     .then((result) => {
@@ -115,7 +115,7 @@ export default function TestAppServer() {
       <Text1Button
         style={{ height: 40, margin: 10 }}
         onPress={() => {
-          rr(call as CallManagerImpl);
+          rr(call as any);
         }}
         sizesType={'small'}
         radiusType={'small'}
@@ -124,7 +124,7 @@ export default function TestAppServer() {
       <Text1Button
         style={{ height: 40, margin: 10 }}
         onPress={() => {
-          rm(call as CallManagerImpl);
+          rm(call as any);
         }}
         sizesType={'small'}
         radiusType={'small'}
