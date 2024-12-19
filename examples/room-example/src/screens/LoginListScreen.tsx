@@ -1,8 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { useRoomContext } from 'react-native-chat-room';
 
+import { useRoomContext } from '../rename.room';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;

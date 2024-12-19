@@ -49,7 +49,7 @@ export type GiftMessageListProps = {
 /**
  * The GiftMessageList component provides a floating gift animation.
  *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/3d538038480dda62e8046ceb1afe65c644a6e55f/example/src/__dev__/test_gift_floating.tsx}
+ * @test {@link example/src/__dev__/test_gift_floating.tsx}
  *
  * @param props {@link GiftMessageListProps}
  * @param ref {@link GiftMessageListRef}

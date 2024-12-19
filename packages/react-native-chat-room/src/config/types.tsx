@@ -83,4 +83,25 @@ export type RoomOption = {
      */
     isVisibleAvatar: boolean;
   };
+  /**
+   * Message pin option.
+   */
+  messagePin: {
+    /**
+     * Whether to load.
+     */
+    isVisible: boolean;
+    /**
+     * Whether to load for Tag.
+     */
+    isVisibleTag: boolean;
+    /**
+     * Whether to load for avatar.
+     */
+    isVisibleAvatar: boolean;
+    /**
+     * Whether to load for name.
+     */
+    isVisibleName: boolean;
+  };
 };

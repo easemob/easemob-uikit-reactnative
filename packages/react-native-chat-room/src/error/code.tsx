@@ -15,6 +15,9 @@ export enum ErrorCode {
   msg_recall_error,
   msg_translate_error,
   msg_report_error,
+  msg_pin_message_error,
+  msg_unpin_message_error,
+  msg_fetch_pinned_message_error,
 
   room_join_error = 1200,
   room_leave_error,

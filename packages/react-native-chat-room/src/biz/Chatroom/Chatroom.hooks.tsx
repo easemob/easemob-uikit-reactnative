@@ -79,6 +79,13 @@ export class Chatroom extends ChatroomBase {
           });
         }
       },
+      onMessagePinChanged: (params) => {
+        if (this.im?.roomState === 'joined') {
+          if (params.convId === this.im?.roomId) {
+            this._onPinMessage({ ...params });
+          }
+        }
+      },
       onUserBeKicked: (roomId) => {
         // Clean up resources. External notifications kicked. Typical: Re-entering the chat room, prompting that the room has been exited, etc.
         this.im?.resetRoom(roomId);
@@ -111,16 +118,19 @@ export class Chatroom extends ChatroomBase {
     const r = await this.im?.loginState();
     console.log('test:init:', r);
     if (r === 'logged') {
-      this.im
-        ?.joinRoom(this.props.roomId, { ownerId: this.props.ownerId })
-        .then(() => {
-          this.im?.sendFinished({ event: 'join' });
-        })
-        .catch((e) => {
-          this.im?.sendError({
-            error: e,
-          });
-        });
+      this?.joinRoom({
+        roomId: this.props.roomId,
+        ownerId: this.props.ownerId,
+        result: (params) => {
+          if (params.isOk) {
+            this.im?.sendFinished({ event: 'join' });
+          } else {
+            this.im?.sendError({
+              error: params.error!,
+            });
+          }
+        },
+      });
     } else {
       this.im?.sendError({
         error: new UIKitError({ code: ErrorCode.login_error }),
@@ -170,6 +180,7 @@ export class Chatroom extends ChatroomBase {
       ?.joinRoom(params.roomId, { ownerId: params.ownerId })
       .then(() => {
         params.result({ isOk: true });
+        this.messagePinRef?.current?.init();
       })
       .catch((e) => {
         params.result({
@@ -213,6 +224,38 @@ export class Chatroom extends ChatroomBase {
           content: this.i18n?.tr("Sent '@${0}'", gift.giftName) ?? '',
         },
       });
+    }
+  }
+
+  _onPinMessage(params: {
+    messageId: string;
+    pinOperation: number;
+    pinInfo: ChatMessagePinInfo;
+  }) {
+    const { messageId, pinOperation } = params;
+    if (pinOperation === 0) {
+      this.im?.fetchPinnedMessages({
+        convId: this.props.roomId,
+        onResult: (params) => {
+          if (params.isOk && params.msgs) {
+            params.msgs.forEach((msg) => {
+              if (msg.msgId === messageId) {
+                const user = this.im?.userInfoFromMessage(msg);
+                const nickname = user?.nickname ?? user?.userId ?? 'unknown';
+                this.messagePinRef?.current?.pushTask?.({
+                  id: msg.msgId,
+                  tag: 'pin2',
+                  msg: msg,
+                  avatar: user?.avatarURL,
+                  nickname: nickname,
+                });
+              }
+            });
+          }
+        },
+      });
+    } else if (pinOperation === 1) {
+      this.messagePinRef?.current?.popTask?.();
     }
   }
 }

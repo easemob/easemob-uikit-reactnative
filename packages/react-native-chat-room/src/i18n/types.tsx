@@ -57,7 +57,7 @@ export interface I18nTr {
    * @param key identifier.
    * @param args any.
    *
-   * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/40b04abcfc1bff432db1fb4db62ef81199c93461/example/src/__dev__/test_i18n.tsx}
+   * @test {@link example/src/__dev__/test_i18n.tsx}
    *
    * @example
    *

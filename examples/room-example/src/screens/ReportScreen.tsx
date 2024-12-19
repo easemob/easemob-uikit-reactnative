@@ -1,13 +1,13 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Platform, Pressable, Text, View } from 'react-native';
+
 import {
   BottomSheetMessageReport,
   ReportItemModel,
   seqId,
   SimulativeModalRef,
-} from 'react-native-chat-room';
-
+} from '../rename.room';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;

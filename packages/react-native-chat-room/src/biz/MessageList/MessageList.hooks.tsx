@@ -441,6 +441,34 @@ export function useMessageListApi(params: {
         });
     }
   };
+
+  const _pinMessage = (isPin: string, msg?: ChatMessage) => {
+    if (msg) {
+      if (isPin === 'unpin') {
+        im.unPinMessage(msg)
+          .then(() => {
+            im.sendFinished({ event: 'unpin_message' });
+          })
+          .catch((e) => {
+            im.sendError({
+              error: e,
+              from: useMessageListApi?.caller?.name,
+            });
+          });
+      } else if (isPin === 'pin') {
+        im.pinMessage(msg)
+          .then(() => {
+            im.sendFinished({ event: 'pin_message' });
+          })
+          .catch((e) => {
+            im.sendError({
+              error: e,
+              from: useMessageListApi?.caller?.name,
+            });
+          });
+      }
+    }
+  };
   const _deleteMessage = (msg?: ChatMessage) => {
     if (msg) {
       im.recallMessage(msg.msgId)
@@ -483,57 +511,79 @@ export function useMessageListApi(params: {
     }
   };
 
-  const onShowMenu = (item: MessageListItemModel) => {
+  const onShowMenu = async (item: MessageListItemModel) => {
     const from = item.msg?.from;
     let items: InitMenuItemsType[] = [];
+
+    if (roomOption.messagePin.isVisible === true) {
+      if (im.ownerId === im.userId) {
+        let msgPinInfo = await item.msg?.getPinInfo;
+        if (msgPinInfo) {
+          items.push({
+            name: 'Unpin',
+            isHigh: false,
+            onClicked: () => {
+              _pinMessage('unpin', item.msg);
+              menuRef?.current?.startHide?.();
+            },
+          });
+        } else {
+          items.push({
+            name: 'Pin',
+            isHigh: false,
+            onClicked: () => {
+              _pinMessage('pin', item.msg);
+              menuRef?.current?.startHide?.();
+            },
+          });
+        }
+      }
+    }
+
     if (from === im.userId) {
-      items = [
-        {
-          name: 'Translate',
-          isHigh: false,
-          onClicked: () => {
-            _translateMessage(item.msg);
-            menuRef?.current?.startHide?.();
-          },
+      items.push({
+        name: 'Translate',
+        isHigh: false,
+        onClicked: () => {
+          _translateMessage(item.msg);
+          menuRef?.current?.startHide?.();
         },
-        {
-          name: 'Delete',
-          isHigh: false,
-          onClicked: () => {
-            _deleteMessage(item.msg);
-            menuRef?.current?.startHide?.();
-          },
+      });
+      items.push({
+        name: 'Delete',
+        isHigh: false,
+        onClicked: () => {
+          _deleteMessage(item.msg);
+          menuRef?.current?.startHide?.();
         },
-        {
-          name: 'Report',
-          isHigh: true,
-          onClicked: () => {
-            menuRef?.current?.startHide?.(() => {
-              reportRef?.current?.startShow?.();
-            });
-          },
+      });
+      items.push({
+        name: 'Report',
+        isHigh: true,
+        onClicked: () => {
+          menuRef?.current?.startHide?.(() => {
+            reportRef?.current?.startShow?.();
+          });
         },
-      ] as InitMenuItemsType[];
+      });
     } else {
-      items = [
-        {
-          name: 'Translate',
-          isHigh: false,
-          onClicked: () => {
-            _translateMessage(item.msg);
-            menuRef?.current?.startHide?.();
-          },
+      items.push({
+        name: 'Translate',
+        isHigh: false,
+        onClicked: () => {
+          _translateMessage(item.msg);
+          menuRef?.current?.startHide?.();
         },
-        {
-          name: 'Report',
-          isHigh: true,
-          onClicked: () => {
-            menuRef?.current?.startHide?.(() => {
-              reportRef?.current?.startShow?.();
-            });
-          },
+      });
+      items.push({
+        name: 'Report',
+        isHigh: true,
+        onClicked: () => {
+          menuRef?.current?.startHide?.(() => {
+            reportRef?.current?.startShow?.();
+          });
         },
-      ] as InitMenuItemsType[];
+      });
     }
 
     if (messageMenuItems && messageMenuItems.length > 0) {

@@ -690,6 +690,105 @@ export abstract class RoomServiceImpl implements RoomService {
       });
     }
   }
+
+  async pinMessage(params: { msgId: string }): Promise<void> {
+    try {
+      await this.client.chatManager.pinMessage(params.msgId);
+      this._messageListener?.onMessagePinChanged?.({
+        messageId: params.msgId,
+        convId: this.roomId ?? '',
+        pinOperation: 0,
+        pinInfo: new ChatMessagePinInfo({
+          operatorId: this.userId ?? '',
+          pinTime: new Date().getTime(),
+        }),
+      });
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.msg_pin_message_error,
+        extra: `{chat: ${this._fromChatError(error)}, messageId: ${
+          params.msgId
+        }`,
+      });
+    }
+  }
+  async unPinMessage(params: { msgId: string }): Promise<void> {
+    try {
+      await this.client.chatManager.unpinMessage(params.msgId);
+      this._messageListener?.onMessagePinChanged?.({
+        messageId: params.msgId,
+        convId: this.roomId ?? '',
+        pinOperation: 1,
+        pinInfo: new ChatMessagePinInfo({
+          operatorId: this.userId ?? '',
+          pinTime: new Date().getTime(),
+        }),
+      });
+    } catch (error) {
+      throw new UIKitError({
+        code: ErrorCode.msg_unpin_message_error,
+        extra: `{chat: ${this._fromChatError(error)}, messageId: ${
+          params.msgId
+        }`,
+      });
+    }
+  }
+  async fetchPinnedMessages(params: {
+    convId: string;
+    forceRequest?: boolean;
+    onResult: (params: {
+      isOk: boolean;
+      msgs?: ChatMessage[];
+      error?: UIKitError;
+    }) => void;
+  }): Promise<void> {
+    const { forceRequest = false } = params;
+    if (forceRequest === false) {
+      return this.getPinnedMessages(params);
+    }
+    try {
+      const ret = await this.client.chatManager.fetchPinnedMessages(
+        params.convId,
+        ChatConversationType.RoomChat,
+        false
+      );
+      params.onResult({ isOk: true, msgs: ret });
+    } catch (error) {
+      params.onResult({
+        isOk: false,
+        error: new UIKitError({
+          code: ErrorCode.msg_send_error,
+          extra: JSON.stringify(error),
+        }),
+      });
+    }
+  }
+  async getPinnedMessages(params: {
+    convId: string;
+    onResult: (params: {
+      isOk: boolean;
+      msgs?: ChatMessage[];
+      error?: UIKitError;
+    }) => void;
+  }): Promise<void> {
+    try {
+      const ret = await this.client.chatManager.getPinnedMessages(
+        params.convId,
+        ChatConversationType.RoomChat,
+        false
+      );
+      params.onResult({ isOk: true, msgs: ret });
+    } catch (error) {
+      params.onResult({
+        isOk: false,
+        error: new UIKitError({
+          code: ErrorCode.msg_fetch_pinned_message_error,
+          extra: JSON.stringify(error),
+        }),
+      });
+    }
+  }
+
   sendError(params: { error: UIKitError; from?: string; extra?: any }): void {
     this._listeners.forEach((v) => {
       asyncTask(() => v.onError?.(params));
@@ -834,6 +933,16 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
               }
             }
           }
+        });
+      },
+      onMessagePinChanged: (params: {
+        messageId: string;
+        convId: string;
+        pinOperation: number;
+        pinInfo: ChatMessagePinInfo;
+      }) => {
+        this._listeners.forEach((v) => {
+          v.onMessagePinChanged?.(params);
         });
       },
     };

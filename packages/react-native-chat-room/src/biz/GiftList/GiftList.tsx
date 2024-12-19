@@ -41,7 +41,7 @@ export type GiftListProps = {
 /**
  * Gift list.
  *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/f7c2208fde9e294fa8e7247624da2bb1d0458e9d/example/src/__dev__/test_gift_list.tsx}
+ * @test {@link example/src/__dev__/test_gift_list.tsx}
  *
  * @param props {@link GiftListProps}
  * @returns JSX.Element

@@ -74,7 +74,7 @@ export type GlobalBroadcastProps = {
  * @param ref {@link GlobalBroadcastRef}
  * @returns JSX.Element
  *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/a9379f61a7b19be6b87b277f5669a6e7bcf3d45c/example/src/__dev__/test_globalBroadcast.tsx}
+ * @test {@link example/src/__dev__/test_globalBroadcast.tsx}
  *
  * @example
  *

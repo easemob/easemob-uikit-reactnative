@@ -119,7 +119,7 @@ export function App() {
         theme={theme}
         roomOption={{ globalBroadcast: { isVisible: true } }}
         language={'zh-Hans'}
-        fontFamily={fontFamily}
+        // fontFamily={fontFamily}
         onInitialized={() => {
           console.log('dev:onInitialized:');
           isContainerReadyRef.current = true;

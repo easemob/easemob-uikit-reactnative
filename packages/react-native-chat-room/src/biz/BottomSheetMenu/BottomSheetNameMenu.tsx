@@ -50,9 +50,9 @@ export type BottomSheetNameMenuProps = {
  *
  * Compared with `BottomSheetMenu`, it is simpler to use, you only need to enter a text array.
  *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/57b8f2ea9b24cd0e4fb8606dc3b246b3fd91d52f/src/biz/ParticipantList/ParticipantContextMenu.tsx}
+ * @test {@link src/biz/ParticipantList/ParticipantContextMenu.tsx}
  *
- * @test {@link https://github.com/AsteriskZuo/react-native-chat-room/blob/57b8f2ea9b24cd0e4fb8606dc3b246b3fd91d52f/src/biz/MessageList/MessageList.tsx}
+ * @test {@link src/biz/MessageList/MessageList.tsx}
  *
  * @example
  * ```tsx

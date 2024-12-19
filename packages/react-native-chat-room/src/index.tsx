@@ -32,6 +32,7 @@ export * from './biz/GiftMessageList';
 export * from './biz/GlobalBroadcast';
 export * from './biz/MessageInput';
 export * from './biz/MessageList';
+export * from './biz/MessagePin';
 export * from './biz/MessageReport';
 export * from './biz/ParticipantList';
 export * from './biz/Placeholder';

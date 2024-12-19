@@ -1,8 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { View } from 'react-native';
-import { ParticipantListType, SearchParticipant } from 'react-native-chat-room';
 
+import { ParticipantListType, SearchParticipant } from '../rename.room';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;

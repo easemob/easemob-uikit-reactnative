@@ -5,4 +5,5 @@ export * from './language';
 export * from './mergeObjects';
 export * from './Queue';
 export * from './Sequence';
+export * from './Stack';
 export * from './types';

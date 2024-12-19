@@ -61,6 +61,8 @@ export function createStringSetEn(): StringSet {
     'Suicide or self harm': 'Suicide or self harm',
     'False information': 'False information',
     'Others': 'Others',
+    'Pin': 'Pin this message',
+    'Unpin': 'Unpin this message',
 
     'participant_list_title': 'Participants',
     'participant_list_button_click_menu_privatechat': 'Private Chat',

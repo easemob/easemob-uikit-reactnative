@@ -14,6 +14,8 @@ import { ChatroomTestMenu, ChatroomTestMenuRef } from '../ChatroomTestMenu';
 import {
   BottomSheetGift2,
   BottomSheetGiftSimuRef,
+  ChatMessage,
+  ChatMessageChatType,
   ChatRoom,
   Chatroom,
   GiftListModel,
@@ -175,6 +177,30 @@ export function ChatroomScreen(props: Props) {
     ]);
   };
 
+  const testMessagePin = React.useCallback(() => {
+    // error: `hello, wor ldhello, wo rld,h ello, worldjs oeild + ${count.current++}s`,
+    //`hello, wor ldhello, wo rld,h ello, world333js oeild + ${count.current++}s`,
+    // 1line: ok: `hello, wo+ ${count.current++}s`,
+    // 4line: ok: `hello, wor ldhello, wo rld,h ello, worl sdkjfksdf sdkfjskdjfksd sdkfjskdfjskdf sdkfjskdfjskdfj  kjsdkfjs dfk sdkfj sdkfj sdkfj sdfksj dfksj dfksjdf ksdfj d333js oeild + ${count.current++}s`,
+    // 4line: ok: `hello, wor ldhello, wo rld,h ello, worl sdkjfksdf sdkfjskdjfksd sdkfjslskd sdlk sdlkf jsldkfj sldkfj sldfkj sdlfkjs dlfksj dflksjd flksdj flskdjf lskdjf lskdfj lskdfj sldkfj sldkfj sldkfj sldkfj sldkfj sdlkfj sdlkfjs dlfkjs dlfkjs dflksjd flksdjf lsdkjf kdfjskdf sdkfjskdfjskdfj  kjsdkfjs dfk sdkfj sdkfj sdkfj sdfksj dfksj dfksjdf ksdfj d333js oeild + ${count.current++}s`,
+    // 3line: ok: `hello, wor ldhello, wo rld,h ello, worl sdkfj  kjsdkfjs dfk sdkfj sdkfj sdkfj sdfksj dfksj dfksjdf ksdfj d333js oeild + ${count.current++}s`,
+    // 2line: ok: `hello, wor ldhello, wo rld,h ello, worl sdkfj  kjsdkffksjdf ksdfj d333js oeild + ${count.current++}s`,
+    const message = ChatMessage.createTextMessage(
+      'zhangsan',
+      count.current % 2 === 1
+        ? `hello, wor ldhello, wo rld,h ello, worl sdkfj  kjsdkffksjdf ksdfj d333js oeild + ${count.current++}s`
+        : `hello, wor ldhello, wo rld,h ello, worl sdkjfksdf sdkfjskdjfksd sdkfjslskd sdlk sdlkf jsldkfj sldkfj sldfkj sdlfkjs dlfksj dflksjd flksdj flskdjf lskdjf lskdfj lskdfj sldkfj sldkfj sldkfj sldkfj sldkfj sdlkfj sdlkfjs dlfkjs dlfkjs dflksjd flksdjf lsdkjf kdfjskdf sdkfjskdfjskdfj  kjsdkfjs dfk sdkfj sdkfj sdkfj sdfksj dfksj dfksjdf ksdfj d333js oeild + ${count.current++}s`,
+      ChatMessageChatType.ChatRoom
+    );
+    chatroomRef?.current?.getMessagePinRef()?.pushTask?.({
+      id: message.msgId,
+      avatar: 'http://avatar.png',
+      nickname: 'zhangsan',
+      //@ts-ignore tell me why???
+      msg: message,
+    });
+  }, []);
+
   return (
     <View
       ref={testRef}
@@ -212,18 +238,19 @@ export function ChatroomScreen(props: Props) {
       {/* <Chatroom ref={chatroomRef} roomId={room.roomId} ownerId={room.owner} /> */}
       <Chatroom
         ref={chatroomRef}
+        // position={'absolute'}
         // GlobalBroadcast={GlobalBroadcast}
         // containerStyle={{ transform: [{ translateY: -pageY }] }}
         messageList={{
           props: {
             visible: true,
-            containerStyle: {
-              position: 'absolute',
-              top: 100,
-              // height: 400,
-              // width: 150,
-              // backgroundColor: 'red',
-            },
+            // containerStyle: {
+            //   position: 'absolute',
+            //   top: 100,
+            //   // height: 400,
+            //   // width: 150,
+            //   // backgroundColor: 'red',
+            // },
             reportProps: {
               data: [] as ReportItemModel[],
             },
@@ -259,6 +286,9 @@ export function ChatroomScreen(props: Props) {
         //       top: 100,
         //     },
         //   },
+        // }}
+        // messagePin={{
+        //   props: {},
         // }}
         input={{
           props: {
@@ -377,6 +407,21 @@ export function ChatroomScreen(props: Props) {
             }}
           >
             <Text>{'test member menu'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              height: 30,
+              width: 150,
+              backgroundColor: '#fff8dc',
+              borderRadius: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              testMessagePin();
+            }}
+          >
+            <Text>{'test message pin'}</Text>
           </TouchableOpacity>
         </View>
       </Chatroom>

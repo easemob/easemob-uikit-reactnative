@@ -59,6 +59,8 @@ export function createStringSetCn(): StringSet {
     'Suicide or self harm': '自杀或自残',
     'False information': '虚假信息',
     'Others': '其他',
+    'Pin': '置顶消息',
+    'Unpin': '取消置顶',
 
     'participant_list_title': '参与人',
     'participant_list_button_click_menu_privatechat': '私信',

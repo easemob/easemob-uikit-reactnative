@@ -6,7 +6,7 @@ import { Text, TextProps } from './Text';
 export type PresetCalcTextWidthProps = {
   content: string;
   textProps: Omit<TextProps, 'children'>;
-  onWidth: (width: number) => void;
+  onWidth: (width: number, content?: string) => void;
 };
 /**
  * This component is used to calculate the width of the displayed string. No ellipses will be generated due to width. The component is not visible. But it is also recommended to put it at the bottom.
@@ -34,7 +34,11 @@ export function PresetCalcTextWidth(props: PresetCalcTextWidthProps) {
             onLayout?.(e);
           }}
           onTextLayout={(e) => {
-            onWidth(e.nativeEvent.lines[0]?.width ?? 0);
+            // e.nativeEvent.lines[0]?.text === content
+            onWidth(
+              e.nativeEvent.lines[0]?.width ?? 0,
+              e.nativeEvent.lines[0]?.text
+            );
             onTextLayout?.(e);
           }}
           {...others}
