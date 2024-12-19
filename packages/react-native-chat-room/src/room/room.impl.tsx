@@ -2,10 +2,12 @@ import { ErrorCode, UIKitError } from '../error';
 import {
   ChatClient,
   ChatConnectEventListener,
+  ChatConversationType,
   ChatCursorResult,
   ChatMessage,
   ChatMessageChatType,
   ChatMessageEventListener,
+  ChatMessagePinInfo,
   ChatMessageStatusCallback,
   ChatOptions,
   ChatRoom,
@@ -913,11 +915,11 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
   }
   _initMessageListener() {
     this._messageListener = {
-      onMessagesRecalled: (messages) => {
+      onMessagesRecalledInfo(infos) {
         this._listeners.forEach((v) => {
           if (this.roomId) {
-            for (const message of messages) {
-              v.onMessageRecalled?.(this.roomId, message);
+            for (const info of infos) {
+              v.onMessageRecalled?.(this.roomId, info.recalledMessage);
             }
           }
         });

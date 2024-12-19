@@ -2,6 +2,7 @@ import { ErrorCode, UIKitError } from '../../error';
 import {
   ChatCustomMessageBody,
   ChatMessage,
+  ChatMessagePinInfo,
   ChatMessageType,
   ChatTextMessageBody,
 } from '../../rename.chat';

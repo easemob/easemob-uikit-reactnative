@@ -3,6 +3,7 @@ import type {
   ChatClient,
   ChatCursorResult,
   ChatMessage,
+  ChatMessagePinInfo,
   ChatRoom,
 } from '../rename.chat';
 import type { Keyof } from '../types';
