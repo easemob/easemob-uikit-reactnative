@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { ChatOptions } from '../rename.chat';
 import { once2 } from '../utils';
 import { getRoomService as _getRoomService } from './room.impl';
 import type { RoomService, RoomServiceInit } from './types';
@@ -29,9 +30,9 @@ type RoomContextProps = React.PropsWithChildren<{
  * It can only be initialized once. Even if it is initialized multiple times, parameters modified in time will not take effect again. The reason is that `CHAT SDK` uses the native platform.
  */
 export function RoomContextProvider({ value, children }: RoomContextProps) {
-  const { appKey, debugMode, im, onInitialized } = value;
+  const { appKey, debugMode, opt, im, onInitialized } = value;
   const _im = im ?? _getRoomService();
-  initRoom(_im, appKey, debugMode, onInitialized);
+  initRoom(_im, appKey, opt, debugMode, onInitialized);
   // _im.init({
   //   appKey: appKey,
   //   debugMode: debugMode,
@@ -71,12 +72,13 @@ const initRoom = once2(
     im: RoomService,
     appKey: string,
     debugMode: boolean,
+    opt: ChatOptions,
     onInitialized?: () => void
   ) => {
-    im.init({
-      appKey: appKey,
-      debugMode: debugMode,
-      autoLogin: false,
+    appKey;
+    debugMode;
+    im.initWithOption({
+      options: opt,
       result: ({ isOk, error }) => {
         if (isOk === false) {
           if (error) im.sendError({ error: error });

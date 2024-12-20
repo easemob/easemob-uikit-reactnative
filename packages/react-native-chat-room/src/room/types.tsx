@@ -4,6 +4,7 @@ import type {
   ChatCursorResult,
   ChatMessage,
   ChatMessagePinInfo,
+  ChatOptions,
   ChatRoom,
 } from '../rename.chat';
 import type { Keyof } from '../types';
@@ -274,11 +275,29 @@ export interface RoomService {
    * - result: The result after performing the operation. If failed, an error object is returned.
    *
    * @noThrows {@link UIKitError}
+   *
+   * @deprecated please use with {@link initWithOption}
    */
   init(params: {
     appKey: string;
     debugMode?: boolean;
     autoLogin?: boolean;
+    result?: (params: { isOk: boolean; error?: UIKitError }) => void;
+  }): Promise<void>;
+
+  /**
+   * Initialize the IM service.
+   *
+   * The initialization operation is a necessary prerequisite for using `RoomService`. Usually it won't fail. Usually an error is reported because `appKey` is not set or `appKey` is empty.
+   *
+   * @params
+   * - opt: chat sdk option.
+   * - result: The result after performing the operation. If failed, an error object is returned.
+   *
+   * @noThrows {@link UIKitError}
+   */
+  initWithOption(params: {
+    options: ChatOptions;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
 
@@ -639,12 +658,20 @@ export interface RoomService {
 export type RoomServiceInit = {
   /**
    * Agora appKey.
+   *
+   * @deprecated Please use {@link ChatOptions} instead.
    */
   appKey: string;
   /**
    * Whether to enable debug mode.
+   *
+   * @deprecated Please use {@link ChatOptions} instead.
    */
   debugMode?: boolean;
+  /**
+   * IM initialization is completed.
+   */
+  opt: ChatOptions;
   /**
    * IM initialization is completed.
    */

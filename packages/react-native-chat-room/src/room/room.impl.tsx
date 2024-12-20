@@ -1,5 +1,6 @@
 import { ErrorCode, UIKitError } from '../error';
 import {
+  CHAT_VERSION,
   ChatClient,
   ChatConnectEventListener,
   ChatConversationType,
@@ -73,11 +74,29 @@ export abstract class RoomServiceImpl implements RoomService {
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     const { appKey, debugMode, autoLogin } = params;
-    const options = new ChatOptions({
+    const options = ChatOptions.withAppKey({
       appKey,
       debugModel: debugMode,
       autoLogin,
     });
+    try {
+      await this.client.init(options);
+      params.result?.({ isOk: true });
+    } catch (error) {
+      params.result?.({
+        isOk: false,
+        error: new UIKitError({
+          code: ErrorCode.init_error,
+          extra: JSON.stringify(error),
+        }),
+      });
+    }
+  }
+  async initWithOption(params: {
+    options: ChatOptions;
+    result?: (params: { isOk: boolean; error?: UIKitError }) => void;
+  }): Promise<void> {
+    const { options } = params;
     try {
       await this.client.init(options);
       params.result?.({ isOk: true });
@@ -152,8 +171,16 @@ export abstract class RoomServiceImpl implements RoomService {
       result,
     } = params;
     try {
-      if (userToken.startsWith('00')) {
-        await this.client.loginWithAgoraToken(userId, userToken);
+      const version = CHAT_VERSION;
+      const list = version.split('.');
+      const major = parseInt(list[0]!, 10);
+      const minor = parseInt(list[1]!, 10);
+      if (major <= 1 && minor < 3) {
+        if (userToken.startsWith('00')) {
+          await this.client.loginWithAgoraToken(userId, userToken);
+        } else {
+          await this.client.login(userId, userToken, false);
+        }
       } else {
         await this.client.login(userId, userToken, false);
       }

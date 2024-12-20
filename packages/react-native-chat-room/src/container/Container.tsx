@@ -5,6 +5,7 @@ import { ConfigContextProvider, RoomOption } from '../config';
 import { DispatchContextProvider } from '../dispatch';
 import { CreateStringSet, I18nContextProvider, LanguageCode } from '../i18n';
 import { createStringSet } from '../i18n/StringSet';
+import { ChatOptions } from '../rename.chat';
 import { RoomContextProvider } from '../room';
 import {
   CornerRadiusPaletteType,
@@ -27,12 +28,18 @@ type PartialRoomOption = PartialDeep<RoomOption>;
 export type ContainerProps = React.PropsWithChildren<{
   /**
    * The application key.
+   *
+   * @deprecated Please use {@link ContainerProps.opt} instead.
    */
-  appKey: string;
+  appKey?: string;
   /**
    * Whether to enable the development mode.
    */
   isDevMode?: boolean;
+  /**
+   * The chat sdk options.
+   */
+  opt: ChatOptions;
   /**
    * The language code.
    */
@@ -96,6 +103,7 @@ export function Container(props: ContainerProps) {
     languageBuiltInFactory,
     languageExtensionFactory,
     isDevMode = false,
+    opt,
     palette,
     theme,
     roomOption,
@@ -124,6 +132,7 @@ export function Container(props: ContainerProps) {
               value={{
                 appKey,
                 debugMode: isDevMode,
+                opt: opt,
                 onInitialized: onInitialized,
               }}
             >

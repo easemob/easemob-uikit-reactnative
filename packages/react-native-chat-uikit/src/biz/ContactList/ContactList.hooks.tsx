@@ -116,7 +116,7 @@ export function useContactList(props: ContactListProps) {
   });
   const dbRef = React.useRef(
     SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${im.client.options?.appKey}`,
+      appKey: `${im.id()}`,
     })
   );
 

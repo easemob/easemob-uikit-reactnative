@@ -12,9 +12,10 @@ const file = path.join(project_root, 'src', 'env.ts');
 console.log(`📝 Generate the ${pak.name}@${pak.version} env file: ${file}`);
 const content = `export const test = true;
 export const appKey = '';
+export const appId = '';
 export const id = '';
 export const ps = '';
-export const accountType = ''; // agora or easemob
+export const accountType = ''; // agora | easemob | shengwang // only with callkit
 export const agoraAppId = '';
 export const fcmSenderId = '';
 `;

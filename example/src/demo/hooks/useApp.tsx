@@ -58,7 +58,8 @@ import { createStringSetCn, createStringSetEn } from '../common';
 import { boloo_da_ttf, twemoji_ttf } from '../common/assets';
 import {
   accountType,
-  appKey as gAppKey,
+  appId,
+  appKey,
   boloo_da_ttf_name,
   enableDNSConfig,
   fcmSenderId,
@@ -127,7 +128,8 @@ export function useApp() {
   });
   const rootRef = useNavigationContainerRef<RootParamsList>();
   const serverConfigVisibleRef = React.useRef(false);
-  const appKeyRef = React.useRef(gAppKey);
+  const appKeyRef = React.useRef(appKey);
+  const appIdRef = React.useRef(appId);
   const imServerRef = React.useRef(imServer);
   const imPortRef = React.useRef(imPort);
   const enableDNSConfigRef = React.useRef(enableDNSConfig);
@@ -144,6 +146,7 @@ export function useApp() {
   const getOptions = React.useCallback(() => {
     return {
       appKey: appKeyRef.current,
+      appId: appIdRef.current,
       debugModel: isDevMode,
       autoLogin: autoLogin,
       autoAcceptGroupInvitation: true,
@@ -969,6 +972,7 @@ export function useApp() {
     rootRef,
     serverConfigVisibleRef,
     appKeyRef,
+    appIdRef,
     imServerRef,
     imPortRef,
     enableDNSConfigRef,

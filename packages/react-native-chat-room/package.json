@@ -79,7 +79,7 @@
     "react": "18.2.0",
     "react-native": "0.71.11",
     "react-native-builder-bob": "^0.20.4",
-    "react-native-chat-sdk": "1.7.0",
+    "react-native-chat-sdk": "/Users/asterisk/Output/npm/react-native-chat-sdk-1.8.0-alpha.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-safe-area-context": "^4.11.1",
     "release-it": "^15.0.0",

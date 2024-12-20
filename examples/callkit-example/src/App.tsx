@@ -49,6 +49,8 @@ const Root = createNativeStackNavigator<RootParamsList>();
 const __KEY__ = '__KEY__';
 let __TEST__ = true;
 let appKey = '';
+let appId = '';
+let gAppKey = '';
 let agoraAppId = '';
 let fcmSenderId: string | undefined;
 let accountType: 'easemob' | 'agora' | undefined;
@@ -57,6 +59,8 @@ try {
   const env = require('./env');
   __TEST__ = env.test ?? false;
   appKey = env.appKey;
+  appId = env.appId;
+  gAppKey = appKey && appKey.length > 0 ? appKey : appId;
   agoraAppId = env.agoraAppId;
   fcmSenderId = env.fcmSenderId;
   accountType = env.accountType;
@@ -166,6 +170,7 @@ export default function App() {
       <UikitContainer
         options={{
           appKey: appKey,
+          appId: appId,
           autoLogin: autoLogin.current,
           debugModel: true,
           pushConfig:
@@ -205,7 +210,7 @@ export default function App() {
       >
         <CallkitContainer
           option={{
-            appKey: appKey,
+            appKey: gAppKey,
             agoraAppId: agoraAppId,
           }}
           type={accountType}
@@ -222,7 +227,7 @@ export default function App() {
             AppServerClient.getRtcToken({
               userAccount: params.userId,
               channelId: params.channelId,
-              appKey,
+              appKey: gAppKey,
               userChannelId: params.userChannelId,
               type: params.type,
               onResult: (pp: { data?: any; error?: any }) => {
@@ -241,7 +246,7 @@ export default function App() {
             AppServerClient.getRtcMap({
               userAccount: params.userId,
               channelId: params.channelId,
-              appKey,
+              appKey: gAppKey,
               onResult: (pp: { data?: any; error?: any }) => {
                 console.log('requestUserMap:getRtcMap:', pp);
                 params.onResult(pp);

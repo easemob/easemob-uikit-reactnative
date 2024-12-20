@@ -17,7 +17,7 @@ import type {
  */
 export type ContainerProps = React.PropsWithChildren<{
   /**
-   * Initialization parameters, the parameters that must be filled in include `appKey`, `debugModel`, `autoLogin`.
+   * Initialization parameters, the parameters that must be filled in include `appKey` or `appId`.
    *
    * This parameter type is equivalent to the `ChatOptions` type. All parameters can be set.
    */

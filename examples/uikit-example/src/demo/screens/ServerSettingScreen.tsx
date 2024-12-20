@@ -23,7 +23,7 @@ import {
   useThemeContext,
 } from '../../rename.uikit';
 import { main_bg, main_bg_dark } from '../common/assets';
-import { appKey as gAppKey } from '../common/const';
+import { gAppKey } from '../common/const';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useServerConfig, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';

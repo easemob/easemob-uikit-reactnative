@@ -19,6 +19,7 @@
 const env = require('../../env');
 export const useSendBox = env.useSendBox ?? false;
 export const appKey = env.appKey as string;
+export const appId = env.appId as string;
 export const restServer = env.restServer as string;
 export const imServer = useSendBox ? '180.184.143.60' : undefined;
 export const imPort = useSendBox ? '6717' : undefined;
@@ -30,3 +31,4 @@ export const fcmSenderId = env.fcmSenderId as string;
 export const twemoji_ttf_name = 'Twemoji-Mozilla';
 export const boloo_da_ttf_name = 'Baloo-Da';
 export const demoType = env.demoType ?? 4;
+export const gAppKey = appKey && appKey.length > 0 ? appKey : appId;

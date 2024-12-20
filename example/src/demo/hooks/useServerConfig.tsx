@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { AsyncStorageBasic, SingletonObjects } from '../../rename.uikit';
 import {
-  appKey as gAppKey,
   enableDNSConfig,
+  gAppKey,
   imPort,
   imServer,
   restServer,

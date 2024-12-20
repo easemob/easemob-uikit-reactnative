@@ -9,7 +9,7 @@ import {
   SingletonObjects,
   useForceUpdate,
 } from '../../rename.uikit';
-import { accountType, appKey as gAppKey } from '../common/const';
+import { accountType, gAppKey } from '../common/const';
 
 export function useGeneralSetting() {
   const {} = useForceUpdate();

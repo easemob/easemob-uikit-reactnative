@@ -19,8 +19,10 @@ import { AVView } from './common/AVView';
 import {
   accountType,
   agoraAppId,
-  appKey as gAppKey,
+  appId,
+  appKey,
   boloo_da_ttf_name,
+  gAppKey,
   isDevMode,
   restServer,
 } from './common/const';
@@ -106,6 +108,7 @@ export function App() {
     rootRef,
     serverConfigVisibleRef,
     appKeyRef,
+    appIdRef,
     imServerRef,
     imPortRef,
     enableDNSConfigRef,
@@ -150,8 +153,14 @@ export function App() {
     }
     try {
       serverConfigVisibleRef.current = await getEnableDevMode();
-      appKeyRef.current =
-        serverConfigVisibleRef.current === true ? await getAppKey() : gAppKey;
+      if (appKey && appKey.length > 0) {
+        appKeyRef.current =
+          serverConfigVisibleRef.current === true ? await getAppKey() : appKey;
+      } else if (appId && appId.length > 0) {
+        appIdRef.current =
+          serverConfigVisibleRef.current === true ? await getAppKey() : appId;
+      }
+
       imPortRef.current =
         serverConfigVisibleRef.current === true ? await getImPort() : undefined;
       imServerRef.current =
@@ -203,6 +212,7 @@ export function App() {
     }
   }, [
     _initParams,
+    appIdRef,
     appKeyRef,
     enableAVMeetingRef,
     enableBlockRef,
@@ -385,7 +395,7 @@ export function App() {
       >
         <CallKitContainer
           option={{
-            appKey: appKeyRef.current,
+            appKey: gAppKey,
             agoraAppId: agoraAppId,
           }}
           type={accountType as any}

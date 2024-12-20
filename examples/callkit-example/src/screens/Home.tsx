@@ -299,7 +299,7 @@ export default function HomeScreen({
     }
     if (callType === CallType.Audio1v1 || callType === CallType.Video1v1) {
       return showSingleCall({
-        appKey: im.client.options?.appKey ?? '',
+        appKey: im.id(),
         agoraAppId: agoraAppId,
         inviterId: inviterId,
         currentId: currentId,
@@ -312,7 +312,7 @@ export default function HomeScreen({
       callType === CallType.VideoMulti
     ) {
       return showMultiCall({
-        appKey: im.client.options?.appKey ?? '',
+        appKey: im.id(),
         agoraAppId: agoraAppId,
         inviterId: inviterId,
         currentId: currentId,

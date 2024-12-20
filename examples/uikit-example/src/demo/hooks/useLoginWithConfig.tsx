@@ -10,7 +10,7 @@ import {
   useSimpleToastContext,
   useToastViewContext,
 } from '../../rename.uikit';
-import { accountType, appKey as gAppKey } from '../common/const';
+import { accountType, gAppKey } from '../common/const';
 
 export function useAutoLogin() {
   const getSelfInfo = React.useCallback(async () => {

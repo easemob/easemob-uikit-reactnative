@@ -11,6 +11,7 @@ import { DeviceEventEmitter, View } from 'react-native';
 
 import { AppDev } from './__dev__/AppDev';
 import {
+  ChatOptions,
   Container,
   useDarkTheme,
   useLightTheme,
@@ -34,6 +35,11 @@ const env = require('./env');
 const Root = createNativeStackNavigator<RootParamsList>();
 
 SplashScreen.preventAutoHideAsync();
+
+const opt =
+  env.accountType === 'easemob' || env.accountType === 'agora'
+    ? ChatOptions.withAppKey({ appKey: env.appKey })
+    : ChatOptions.withAppId({ appId: env.appKey });
 
 export function App() {
   const [initialRouteName] = React.useState('TopMenu' as RootParamsName);
@@ -113,7 +119,7 @@ export function App() {
   return (
     <React.StrictMode>
       <Container
-        appKey={env.appKey}
+        opt={opt}
         isDevMode={env.isDevMode}
         palette={palette}
         theme={theme}

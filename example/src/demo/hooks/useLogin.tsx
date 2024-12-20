@@ -10,7 +10,7 @@ import {
   useSimpleToastContext,
   useToastViewContext,
 } from '../../rename.uikit';
-import { accountType, appKey as gAppKey, fcmSenderId } from '../common/const';
+import { accountType, fcmSenderId, gAppKey } from '../common/const';
 import { requestFcmToken } from '../common/fcm';
 import {
   AgoraRequestLoginResult,

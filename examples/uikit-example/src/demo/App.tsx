@@ -16,7 +16,8 @@ import { ToastView } from './common';
 import { AvatarStatusRenderMemo } from './common/AvatarStatusRender';
 import {
   accountType,
-  appKey as gAppKey,
+  appId,
+  appKey,
   boloo_da_ttf_name,
   demoType,
   restServer,
@@ -106,6 +107,7 @@ export function App() {
     rootRef,
     serverConfigVisibleRef,
     appKeyRef,
+    appIdRef,
     imServerRef,
     imPortRef,
     enableDNSConfigRef,
@@ -154,8 +156,13 @@ export function App() {
         initialRouteNameRef.current = 'Login';
       }
       serverConfigVisibleRef.current = await getEnableDevMode();
-      appKeyRef.current =
-        serverConfigVisibleRef.current === true ? await getAppKey() : gAppKey;
+      if (appKey && appKey.length > 0) {
+        appKeyRef.current =
+          serverConfigVisibleRef.current === true ? await getAppKey() : appKey;
+      } else if (appId && appId.length > 0) {
+        appIdRef.current =
+          serverConfigVisibleRef.current === true ? await getAppKey() : appId;
+      }
       imPortRef.current =
         serverConfigVisibleRef.current === true ? await getImPort() : undefined;
       imServerRef.current =
@@ -207,6 +214,7 @@ export function App() {
     }
   }, [
     _initParams,
+    appIdRef,
     appKeyRef,
     enableAVMeetingRef,
     enableBlockRef,

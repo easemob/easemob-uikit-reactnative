@@ -12,6 +12,7 @@ import {
   ChatGroup,
   ChatGroupOptions,
   ChatGroupStyle,
+  chatlog,
   ChatMessage,
   ChatMessageReaction,
   type ChatMessageStatusCallback,
@@ -87,6 +88,7 @@ export class ChatServiceImpl
 
   constructor() {
     uilog.log('chat:constructor:');
+    chatlog.tag = '[chat]';
     super();
     this._userList = new Map();
     this._convList = new Map();
@@ -120,19 +122,55 @@ export class ChatServiceImpl
     this._pinMessageList.clear();
   }
 
+  id(): string {
+    return this.client.options?.appKey && this.client.options?.appKey.length > 0
+      ? this.client.options?.appKey
+      : this.client.options?.appId;
+  }
+
   async init(params: {
     options: ChatOptionsType;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
-    uilog.log('chat:init');
+    uilog.log('chat:init:', params.options);
     const { options } = params;
-    const { appKey } = options;
 
     try {
-      await this.client.init(new ChatOptions({ ...options }));
+      const isExistedAppKey = options.hasOwnProperty('appKey');
+      const isExistedAppId = options.hasOwnProperty('appId');
+      console.log('test:zuoyu:isExistedAppKey:', isExistedAppKey);
+      console.log('test:zuoyu:isExistedAppId:', isExistedAppId);
+      if (isExistedAppKey === false && isExistedAppId === false) {
+        params.result?.({
+          isOk: false,
+          error: new UIKitError({
+            code: ErrorCode.init_error,
+            desc: 'appKey or appId is required.',
+          }),
+        });
+        return;
+      }
+      const appKey = (options as any).appKey;
+      const appId = (options as any).appId;
+      if (isExistedAppKey === true && appKey && appKey.length > 0) {
+        await this.client.init(ChatOptions.withAppKey({ ...(options as any) }));
+      } else if (isExistedAppId === true && appId && appId.length > 0) {
+        await this.client.init(ChatOptions.withAppId({ ...(options as any) }));
+      } else {
+        params.result?.({
+          isOk: false,
+          error: new UIKitError({
+            code: ErrorCode.init_error,
+            desc: 'appKey or appId is required.',
+          }),
+        });
+        return;
+      }
       uilog.log('chat:opt:', this.client.options);
 
-      this._convStorage = new ConversationStorage({ appKey: appKey });
+      this._convStorage = new ConversationStorage({
+        appKey: this.id(),
+      });
       // !!! hot-reload no pass, into catch codes
       // this._request = new RequestListImpl(this);
       // this._messageManager = new MessageCacheManagerImpl(this);
@@ -253,9 +291,7 @@ export class ChatServiceImpl
         userId: userId,
       } as UserData;
 
-      Services.dcs.init(
-        `${this.client.options!.appKey.replace('#', '-')}/${userId}`
-      );
+      Services.dcs.init(`${this.id().replace('#', '-')}/${userId}`);
 
       await this._createUserDir();
 
@@ -278,9 +314,7 @@ export class ChatServiceImpl
           userId: userId,
         } as UserData;
 
-        Services.dcs.init(
-          `${this.client.options!.appKey.replace('#', '-')}/${userId}`
-        );
+        Services.dcs.init(`${this.id().replace('#', '-')}/${userId}`);
 
         await this._createUserDir();
 
@@ -346,9 +380,7 @@ export class ChatServiceImpl
             userId: userId,
           } as UserData;
 
-          Services.dcs.init(
-            `${this.client.options!.appKey.replace('#', '-')}/${userId}`
-          );
+          Services.dcs.init(`${this.id().replace('#', '-')}/${userId}`);
 
           await this._createUserDir();
           this.client.getCurrentUsername();
