@@ -12,6 +12,21 @@ To get started with the project, run `yarn` in the root directory to install the
 yarn
 ```
 
+Initialization repo:
+
+```sh
+yarn yarn-prepack
+```
+
+Set push config:
+
+**Note: This template file is for the basic operation of the project, if necessary, please use the real configuration.**
+
+```sh
+cp templates/google-services.json.template example/android/app/google-services.json
+cp templates/GoogleService-Info.plist.template example/ios/ChatUikitFullExample/GoogleService-Info.plist
+```
+
 > While it's possible to use [`npm`](https://github.com/npm/cli), the tooling is built around [`yarn`](https://classic.yarnpkg.com/), so you'll have an easier time if you use `yarn` for development.
 
 While developing, you can run the [example app](/example/) to test your changes. Any changes you make in your library's JavaScript code will be reflected in the example app without a rebuild. If you change any native code, then you'll need to rebuild the example app.
@@ -19,19 +34,19 @@ While developing, you can run the [example app](/example/) to test your changes.
 To start the packager:
 
 ```sh
-yarn example start
+yarn workspace chatuikitfullexample start
 ```
 
 To run the example app on Android:
 
 ```sh
-yarn example android
+yarn workspace chatuikitfullexample android
 ```
 
 To run the example app on iOS:
 
 ```sh
-yarn example ios
+yarn workspace chatuikitfullexample ios
 ```
 
 Make sure your code passes TypeScript and ESLint. Run the following to verify:

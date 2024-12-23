@@ -1,0 +1,283 @@
+{
+  "project_info": {
+    "project_number": "1068000000000",
+    "project_id": "test-push-6b4b6",
+    "storage_bucket": "test-push-6b4b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068000000000:android:9a46d9046eb68ba6191a0f",
+        "android_client_info": {
+          "package_name": "com.example.reactnativechatsdk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        },
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1068000000000-27ftkqed8983263rd082antfp75ptfl9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hyphenate.rnchatcallkit"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068000000000:android:416af02c19f17621191a0f",
+        "android_client_info": {
+          "package_name": "com.example.rnchatcallkit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        },
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1068000000000-27ftkqed8983263rd082antfp75ptfl9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hyphenate.rnchatcallkit"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068000000000:android:97e0ac3e3f4b252f191a0f",
+        "android_client_info": {
+          "package_name": "com.example.rnchatuikit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        },
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1068000000000-27ftkqed8983263rd082antfp75ptfl9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hyphenate.rnchatcallkit"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068000000000:android:aec440e090711f31191a0f",
+        "android_client_info": {
+          "package_name": "com.hyphenate.rn.ChatCallkitExample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        },
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1068000000000-27ftkqed8983263rd082antfp75ptfl9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hyphenate.rnchatcallkit"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068000000000:android:31922316cb9b0c46191a0f",
+        "android_client_info": {
+          "package_name": "com.hyphenate.rn.ChatUikitExample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        },
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1068000000000-27ftkqed8983263rd082antfp75ptfl9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hyphenate.rnchatcallkit"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068000000000:android:0bfc5c8b5be0b7a9191a0f",
+        "android_client_info": {
+          "package_name": "com.hyphenate.rn.ChatUikitFullExample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        },
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1068000000000-27ftkqed8983263rd082antfp75ptfl9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hyphenate.rnchatcallkit"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068000000000:android:a48fbebe998bf73b191a0f",
+        "android_client_info": {
+          "package_name": "com.rn_firebase_push_demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        },
+        {
+          "current_key": "YOUR_API_KEY_HERE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1068000000000-27ftkqed8983263rd082antfp75ptfl9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hyphenate.rnchatcallkit"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
