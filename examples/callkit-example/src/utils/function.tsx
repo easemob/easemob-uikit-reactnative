@@ -1,4 +1,5 @@
-import type { PromiseType, UnPromisify } from '../rename.uikit';
+export type PromiseType<T> = (...args: any[]) => Promise<T>;
+export type UnPromisify<T> = T extends PromiseType<infer U> ? U : never;
 
 export function promiseWrapper<T>(params: {
   f: PromiseType<T>;

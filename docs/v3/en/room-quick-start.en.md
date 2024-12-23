@@ -225,7 +225,7 @@ Take the following steps to implement message sending:
    function App(): React.JSX.Element {
      // initialize the chat room
      return (
-       <Container appKey={appKey}>
+       <Container opt={{appKey}}>
          <SendMessage />
        </Container>
      );

@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 
 import { SelectListMemo } from '../components/SelectList';
 import { CallState, InviteeListProps, MultiCall } from '../rename.callkit';
-import { Text1Button } from '../rename.uikit';
+import { Text1Button } from '../ui/Button';
 
 const ContactList = (props: InviteeListProps): JSX.Element => {
   console.log('test:contactList:');

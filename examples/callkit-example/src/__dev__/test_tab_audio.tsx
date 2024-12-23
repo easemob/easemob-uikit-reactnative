@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 import { type User } from '../rename.callkit';
-import { Text1Button } from '../rename.uikit';
+import { Text1Button } from '../ui/Button';
 
 let count = 0;
 export function Test() {

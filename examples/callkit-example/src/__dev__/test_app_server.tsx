@@ -1,9 +1,8 @@
-// import type { CallManagerImpl } from 'packages/react-native-chat-callkit/src/call/CallManagerImpl';
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
 import { ChatClient, useCallkitSdkContext } from '../rename.callkit';
-import { Text1Button } from '../rename.uikit';
+import { Text1Button } from '../ui/Button';
 
 let gid: string = '';
 let gps: string = '';
@@ -117,8 +116,6 @@ export default function TestAppServer() {
         onPress={() => {
           rr(call as any);
         }}
-        sizesType={'small'}
-        radiusType={'small'}
         text={'requestRTCToken'}
       />
       <Text1Button
@@ -126,8 +123,6 @@ export default function TestAppServer() {
         onPress={() => {
           rm(call as any);
         }}
-        sizesType={'small'}
-        radiusType={'small'}
         text={'requestUserMap'}
       />
     </View>

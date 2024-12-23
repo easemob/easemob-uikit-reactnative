@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Animated, useWindowDimensions, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import { getCurTs } from '../rename.uikit';
+import { timestamp } from '../rename.callkit';
 
 type TabViewProps = {
   onLongPress?: (data?: any) => void;
@@ -55,7 +55,7 @@ export function TabView(props: TabViewProps): JSX.Element {
     if (isEditable === true) {
       return;
     }
-    endTime.current = getCurTs();
+    endTime.current = timestamp();
     if (endTime.current - startTime.current < 1000) {
       props?.onPress?.();
     } else {
@@ -84,7 +84,7 @@ export function TabView(props: TabViewProps): JSX.Element {
         onTouchStart={(event) => {
           currentX.current = event.nativeEvent.locationX;
           currentY.current = event.nativeEvent.locationY;
-          startTime.current = getCurTs();
+          startTime.current = timestamp();
         }}
         onTouchEnd={(event) => {
           if (

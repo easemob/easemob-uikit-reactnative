@@ -18,13 +18,14 @@ import {
   CallListener,
   CallType,
   CallUser,
+  ChatClient,
   formatElapsed,
   MultiCall,
   SingleCall,
   useCallkitSdkContext,
 } from '../rename.callkit';
-import { CheckButton, Text1Button, useChatContext } from '../rename.uikit';
 import type { RootParamsList } from '../routes';
+import { CheckButton, Text1Button } from '../ui/Button';
 
 let gid: string = '';
 let gps: string = '';
@@ -92,7 +93,6 @@ type ContactListProps = {
 const ContactListMemo = React.memo((props: ContactListProps) => {
   console.log('test:ContactList:', props);
   const { propsRef } = props;
-  const im = useChatContext();
   const data = React.useMemo(() => [] as DataType[], []);
   const [_data, setData] = React.useState(data);
 
@@ -102,30 +102,30 @@ const ContactListMemo = React.memo((props: ContactListProps) => {
     };
   }
 
-  const init = React.useCallback(() => {
+  const init = React.useCallback(async () => {
     console.log('test:ContactList:init:');
-    im.getAllContacts({
-      onResult: (res) => {
-        if (res.isOk && res.value) {
-          console.log('test:ContactList:init:result:', res);
-          data.length = 0;
-          for (const i of res.value) {
-            const user = {
-              userId: i.userId,
-              userName: i.userName,
-              onChecked: (checked: boolean) => {
-                user.isSelected = checked;
-                setData([...data]);
-                return true;
-              },
-            } as DataType;
-            data.push(user);
-          }
-          setData([...data]);
+    try {
+      const ret =
+        await ChatClient.getInstance().contactManager.fetchAllContacts();
+      if (ret.length > 0) {
+        console.log('test:ContactList:init:result:', ret);
+        data.length = 0;
+        for (const i of ret) {
+          const user = {
+            userId: i.userId,
+            userName: i.remark ?? i.userId,
+            onChecked: (checked: boolean) => {
+              user.isSelected = checked;
+              setData([...data]);
+              return true;
+            },
+          } as DataType;
+          data.push(user);
         }
-      },
-    });
-  }, [data, im]);
+        setData([...data]);
+      }
+    } catch (e) {}
+  }, [data]);
   React.useEffect(() => {
     init();
     // initApi();
@@ -255,7 +255,6 @@ export default function HomeScreen({
   const contactListRef = React.useRef<ContactListRef>({} as any);
   const { call } = useCallkitSdkContext();
   const [enableLog, setEnableLog] = React.useState(false);
-  const im = useChatContext();
 
   const { showMultiCall, showSingleCall } = useCallApi();
   const [visible, setVisible] = React.useState(false);
@@ -299,7 +298,9 @@ export default function HomeScreen({
     }
     if (callType === CallType.Audio1v1 || callType === CallType.Video1v1) {
       return showSingleCall({
-        appKey: im.id(),
+        appKey:
+          ChatClient.getInstance().options.appKey ??
+          ChatClient.getInstance().options.appId,
         agoraAppId: agoraAppId,
         inviterId: inviterId,
         currentId: currentId,
@@ -312,7 +313,9 @@ export default function HomeScreen({
       callType === CallType.VideoMulti
     ) {
       return showMultiCall({
-        appKey: im.id(),
+        appKey:
+          ChatClient.getInstance().options.appKey ??
+          ChatClient.getInstance().options.appId,
         agoraAppId: agoraAppId,
         inviterId: inviterId,
         currentId: currentId,
@@ -352,7 +355,7 @@ export default function HomeScreen({
         console.log('onCallReceived:', params);
         showCall({
           callType: params.callType,
-          currentId: im.userId ?? '',
+          currentId: ChatClient.getInstance().currentUserName ?? '',
           inviterId: params.inviterId,
         });
       },
@@ -364,7 +367,7 @@ export default function HomeScreen({
     return () => {
       call.removeListener(listener);
     };
-  }, [call, im.userId, showCall]);
+  }, [call, showCall]);
 
   React.useEffect(() => {
     const sub = addListener();
@@ -377,22 +380,21 @@ export default function HomeScreen({
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View style={{ marginHorizontal: 20 }}>
-          <Text>{im.userId}</Text>
+          <Text>{ChatClient.getInstance().currentUserName}</Text>
         </View>
         <Text1Button
           style={{ height: 40, width: 100 }}
           onPress={() => {
-            im.logout({
-              result: (res) => {
-                if (res.isOk) {
-                  navigation.navigate('Login', {
-                    params: { id: gid, pass: gps, accountType: gt },
-                  });
-                } else {
-                  console.warn('test:error:', res.error);
-                }
-              },
-            });
+            ChatClient.getInstance()
+              .logout()
+              .then(() => {
+                navigation.navigate('Login', {
+                  params: { id: gid, pass: gps, accountType: gt },
+                });
+              })
+              .catch((e) => {
+                console.warn('test:error:', e);
+              });
           }}
           text={'logout'}
         />
@@ -415,8 +417,8 @@ export default function HomeScreen({
           onPress={() => {
             showCall({
               callType: CallType.Video1v1,
-              currentId: im.userId ?? '',
-              inviterId: im.userId ?? '',
+              currentId: ChatClient.getInstance().currentUserName ?? '',
+              inviterId: ChatClient.getInstance().currentUserName ?? '',
             });
           }}
           text={'singleV'}
@@ -426,8 +428,8 @@ export default function HomeScreen({
           onPress={() => {
             showCall({
               callType: CallType.Audio1v1,
-              currentId: im.userId ?? '',
-              inviterId: im.userId ?? '',
+              currentId: ChatClient.getInstance().currentUserName ?? '',
+              inviterId: ChatClient.getInstance().currentUserName ?? '',
             });
           }}
           text={'singleA'}
@@ -437,8 +439,8 @@ export default function HomeScreen({
           onPress={() => {
             showCall({
               callType: CallType.VideoMulti,
-              currentId: im.userId ?? '',
-              inviterId: im.userId ?? '',
+              currentId: ChatClient.getInstance().currentUserName ?? '',
+              inviterId: ChatClient.getInstance().currentUserName ?? '',
             });
           }}
           text={'multiV'}
@@ -448,8 +450,8 @@ export default function HomeScreen({
           onPress={() => {
             showCall({
               callType: CallType.AudioMulti,
-              currentId: im.userId ?? '',
-              inviterId: im.userId ?? '',
+              currentId: ChatClient.getInstance().currentUserName ?? '',
+              inviterId: ChatClient.getInstance().currentUserName ?? '',
             });
           }}
           text={'multiA'}

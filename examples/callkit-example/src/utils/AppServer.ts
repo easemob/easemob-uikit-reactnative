@@ -1,4 +1,4 @@
-import { ChatClient } from '../rename.uikit';
+import { ChatClient } from '../rename.callkit';
 
 export class AppServerClient {
   private static _rtcTokenUrl: string =

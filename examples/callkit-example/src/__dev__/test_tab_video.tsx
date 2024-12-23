@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 // import { VideoViewSetupMode } from 'react-native-agora';
 import type { User } from '../rename.callkit';
-import { Text1Button } from '../rename.uikit';
+import { Text1Button } from '../ui/Button';
 
 export function Test() {
   const [count, update] = React.useState(0);

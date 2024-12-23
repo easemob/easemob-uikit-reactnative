@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 
-import { Text1Button } from '../rename.uikit';
+import { Text1Button } from '../ui/Button';
 
 type Props = {};
 type State = {
