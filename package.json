@@ -39,7 +39,7 @@
     "uikit-prepack": "yarn sdk-version && yarn sdk-rename && yarn sdk-config && yarn example-env && yarn example-rename && yarn workspace react-native-chat-uikit prepack",
     "callkit-prepack": "yarn sdk-version && yarn sdk-rename && yarn sdk-config && yarn example-env && yarn example-rename && yarn workspace react-native-chat-callkit prepack",
     "room-prepack": "yarn sdk-version && yarn sdk-rename && yarn sdk-config && yarn example-env && yarn example-rename && yarn workspace react-native-chat-room prepack",
-    "lerna-prepack": "lerna run prepack --verbose",
+    "lerna-prepack": "lerna run sdk-version && lerna run sdk-rename && lerna run sdk-config && lerna run example-rename && lerna run example-env && lerna run prepack --verbose",
     "prepack": "yarn run lerna-prepack",
     "clean": "lerna run clean  --verbose",
     "clean-module": "lerna run clean-module  --verbose",
