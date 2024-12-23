@@ -942,6 +942,15 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
   }
   _initMessageListener() {
     this._messageListener = {
+      // onMessagesRecalled(messages) {
+      //   this._listeners.forEach((v) => {
+      //     if (this.roomId) {
+      //       for (const message of messages) {
+      //         v.onMessageRecalled?.(this.roomId, message);
+      //       }
+      //     }
+      //   });
+      // },
       onMessagesRecalledInfo(infos) {
         this._listeners.forEach((v) => {
           if (this.roomId) {
