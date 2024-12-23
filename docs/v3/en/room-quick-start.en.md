@@ -55,35 +55,10 @@ Take the following steps to implement message sending:
 3. Add dependencies.
 
    ```bash
-   yarn add react-native-async-storage/async-storage \
-     react-native-camera-roll/camera-roll \
-     react-native-clipboard/clipboard \
+   yarn add react-native-linear-gradient \
+     react-native-safe-area-context
      react-native-chat-room \
-     react-native-chat-sdk \
-     date-fns \
-     pinyin-pro \
-     pure-uuid \
-     react \
-     react-native \
-     react-native-agora \
-     react-native-chat-uikit \
-     react-native-chat-sdk \
-     react-native-audio-recorder-player \
-     easemob/react-native-create-thumbnail \
-     react-native-device-info \
-     react-native-document-picker \
-     react-native-fast-image \
-     react-native-file-access \
-     react-native-gesture-handler \
-     react-native-get-random-values \
-     react-native-image-picker \
-     react-native-permissions \
-     react-native-safe-area-context \
-     react-native-screens \
-     react-native-video \
-     react-native-web \
-     react-native-webview \
-     twemoji
+     react-native-chat-sdk
    ```
 
 4. Implement code.
