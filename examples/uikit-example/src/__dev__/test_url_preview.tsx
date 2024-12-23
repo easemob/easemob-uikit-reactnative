@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { Container, useUrlPreview } from 'react-native-chat-uikit';
+
+import { Container, useUrlPreview } from '../rename.uikit';
 
 export function Test1() {
   const { fetchUrlPreview } = useUrlPreview();

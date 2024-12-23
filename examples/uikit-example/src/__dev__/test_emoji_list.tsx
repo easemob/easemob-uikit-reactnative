@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
   BottomSheetMenuHeader,
   Container,
@@ -6,8 +8,7 @@ import {
   type IconNameType,
   useLightTheme,
   usePresetPalette,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from '../rename.uikit';
 
 export function Test1() {
   const emojiList: EmojiIconItem[] = [

@@ -3,14 +3,15 @@ import {
   // TextInput as RNTextInput,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
   Container,
   ImagePreview,
   ImagePreview2,
   useLightTheme,
   usePresetPalette,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from '../rename.uikit';
 
 export function TestMyImagePreview() {
   // const url =

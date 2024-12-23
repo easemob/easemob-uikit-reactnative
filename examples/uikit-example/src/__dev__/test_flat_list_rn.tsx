@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
   Container,
+  ConversationListItemMemo,
   type ConversationListItemProps,
   TabPage,
   TabPageTabBarHeader,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { ConversationListItemMemo } from '../../../../packages/react-native-chat-uikit/src/biz/ConversationList/ConversationList.item';
+} from '../rename.uikit';
 const array = Array.from({ length: 100 }, (_, index) => ({
   id: index.toString(),
 }));

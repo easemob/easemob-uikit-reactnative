@@ -7,12 +7,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
 import {
   ComponentArea2,
   ContextMenu,
   SlideModalRef,
   useContextMenu,
-} from 'react-native-chat-uikit';
+} from '../rename.uikit';
 
 export function TestContextMenu1() {
   const modalRef = React.useRef<SlideModalRef>({} as any);

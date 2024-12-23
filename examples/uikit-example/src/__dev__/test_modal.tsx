@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Pressable, Text, useWindowDimensions, View } from 'react-native';
+
 import {
   Container,
   createDarkTheme,
@@ -7,7 +8,7 @@ import {
   createPresetPalette,
   SlideModal,
   type SlideModalRef,
-} from 'react-native-chat-uikit';
+} from '../rename.uikit';
 
 type MySlideModalRef = SlideModalRef;
 type MySlideModalProps = {

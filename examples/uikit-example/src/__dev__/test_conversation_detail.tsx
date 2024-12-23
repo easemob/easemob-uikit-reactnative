@@ -7,17 +7,18 @@ import {
   View,
 } from 'react-native';
 import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+
+import {
   Container,
   ConversationDetail,
   Services,
   TextInput,
   useLightTheme,
   usePresetPalette,
-} from 'react-native-chat-uikit';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+} from '../rename.uikit';
 
 export function ConvDetail() {
   const { top, bottom } = useSafeAreaInsets();

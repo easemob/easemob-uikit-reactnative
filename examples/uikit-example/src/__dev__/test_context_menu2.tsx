@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SlideModal, SlideModalRef } from 'react-native-chat-uikit';
+
+import { SlideModal, SlideModalRef } from '../rename.uikit';
 
 const ContextMenu = (props: {
   modalRef: React.MutableRefObject<SlideModalRef>;

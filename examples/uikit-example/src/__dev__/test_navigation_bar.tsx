@@ -1,7 +1,8 @@
 /* eslint-disable react/no-unstable-nested-components */
 import * as React from 'react';
 import { type StyleProp, Text, View, type ViewStyle } from 'react-native';
-import { getElement, TopNavigationBar } from 'react-native-chat-uikit';
+
+import { getElement, TopNavigationBar } from '../rename.uikit';
 
 type MyNavigationBarProps = {
   Title?: React.ReactElement;

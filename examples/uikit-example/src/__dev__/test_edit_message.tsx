@@ -1,15 +1,15 @@
 import * as React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
+  ChatMessage,
   CmnButton,
   Container,
   MessageInputEditMessage,
   type MessageInputEditMessageRef,
   useLightTheme,
   usePresetPalette,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { ChatMessage } from '../rename.uikit';
+} from '../rename.uikit';
 
 export function Test1() {
   const ref = React.useRef<MessageInputEditMessageRef>({} as any);

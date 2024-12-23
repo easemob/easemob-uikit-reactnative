@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
   Alert,
   type AlertRef,
@@ -6,8 +8,7 @@ import {
   Container,
   useLightTheme,
   usePresetPalette,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from '../rename.uikit';
 
 export function Alert1() {
   const ref = React.useRef<AlertRef>({} as any);

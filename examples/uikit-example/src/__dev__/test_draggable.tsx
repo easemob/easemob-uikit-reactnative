@@ -7,12 +7,6 @@ import {
   View,
 } from 'react-native';
 import {
-  Container,
-  // ImagePreview,
-  useLightTheme,
-  usePresetPalette,
-} from 'react-native-chat-uikit';
-import {
   type HandlerStateChangeEvent,
   // PanGestureHandler,
   // PanGestureHandler,
@@ -22,6 +16,13 @@ import {
 } from 'react-native-gesture-handler';
 // import AnimatedThird from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import {
+  Container,
+  // ImagePreview,
+  useLightTheme,
+  usePresetPalette,
+} from '../rename.uikit';
 
 export function TestMyDraggable() {
   return (

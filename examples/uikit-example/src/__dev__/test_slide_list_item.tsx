@@ -8,7 +8,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { getCurTs, SlideListItem } from 'react-native-chat-uikit';
+
+import { getCurTs, SlideListItem } from '../rename.uikit';
 
 export function MySlideListItem() {
   const horizontal = true;

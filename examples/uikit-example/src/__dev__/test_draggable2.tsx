@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { Animated, Image, Pressable, StyleSheet, View } from 'react-native';
 import {
-  Container,
-  useLightTheme,
-  usePresetPalette,
-} from 'react-native-chat-uikit';
-import {
   PanGestureHandler,
   type PanGestureHandlerGestureEvent,
   type PanGestureHandlerStateChangeEvent,
@@ -18,6 +13,8 @@ import {
   State,
 } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Container, useLightTheme, usePresetPalette } from '../rename.uikit';
 
 const USE_NATIVE_DRIVER = true;
 
