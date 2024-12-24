@@ -32,7 +32,7 @@ type RoomContextProps = React.PropsWithChildren<{
 export function RoomContextProvider({ value, children }: RoomContextProps) {
   const { appKey, debugMode, opt, im, onInitialized } = value;
   const _im = im ?? _getRoomService();
-  initRoom(_im, appKey, opt, debugMode, onInitialized);
+  initRoom(_im, appKey, debugMode, opt, onInitialized);
   // _im.init({
   //   appKey: appKey,
   //   debugMode: debugMode,
