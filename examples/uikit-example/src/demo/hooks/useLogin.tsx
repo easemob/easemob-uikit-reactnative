@@ -257,6 +257,7 @@ export function useLogin() {
     getAlertRef,
     loginAction: accountType === 'agora' ? agoraLoginAction : loginAction,
     devLoginAction,
+    saveSelfInfo,
     getFcmToken,
   };
 }

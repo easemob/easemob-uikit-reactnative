@@ -18,7 +18,7 @@ import {
 } from '../../rename.uikit';
 import { RestApi } from '../common/rest.api';
 import { useAutoLogin } from '../hooks';
-import type { MineInfoProps, UserState } from './types';
+import type { CommonInfoProps, MineInfoProps, UserState } from './types';
 
 export function useMineInfo(props: MineInfoProps) {
   const {
@@ -220,5 +220,52 @@ export function useMineInfo(props: MineInfoProps) {
     enablePresence,
     onCopyId,
     onClickedDestroyAccount,
+  };
+}
+
+export function useCommonInfo(props: CommonInfoProps) {
+  const {} = props;
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
+  const alertRef = React.useRef<AlertRef>({} as any);
+  const toastRef = React.useRef<SimpleToastRef>({} as any);
+  const { style } = useThemeContext();
+  const { currentLanguage } = useI18nContext();
+  const [stateValue, onStateValueChange] = React.useState(false);
+  const [groupValue, onGroupValueChange] = React.useState(false);
+  const [themeValue, onThemeValueChange] = React.useState(
+    style === 'light' ? false : true
+  );
+  const [languageValue, onLanguageValueChange] = React.useState(
+    currentLanguage() === 'en' ? true : false
+  );
+  const onClickedInputState = React.useCallback(() => {}, []);
+  const onRequestCloseMenu = React.useCallback(() => {
+    menuRef.current?.startHide?.();
+  }, []);
+  const onClickedAutoAcceptGroupInvite = React.useCallback(() => {}, []);
+  const onClickedTheme = React.useCallback(() => {
+    // todo: change theme
+  }, []);
+
+  const onClickedLanguage = React.useCallback(() => {
+    // todo: change language
+  }, []);
+  return {
+    menuRef,
+    alertRef,
+    toastRef,
+    onClickedInputState,
+    stateValue,
+    onStateValueChange,
+    onRequestCloseMenu,
+    onClickedAutoAcceptGroupInvite,
+    groupValue,
+    onGroupValueChange,
+    onClickedTheme,
+    onClickedLanguage,
+    themeValue,
+    onThemeValueChange,
+    languageValue,
+    onLanguageValueChange,
   };
 }
