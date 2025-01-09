@@ -2,8 +2,9 @@ import * as React from 'react';
 
 import { AsyncStorageBasic, SingletonObjects } from '../../rename.uikit';
 import {
+  appId,
+  appKey,
   enableDNSConfig,
-  gAppKey,
   imPort,
   imServer,
   restServer,
@@ -37,7 +38,10 @@ export function useServerConfig() {
   }, []);
 
   const getAppKey = React.useCallback(async () => {
-    return (await getKey('appKey')) ?? gAppKey;
+    return (await getKey('appKey')) ?? appKey;
+  }, [getKey]);
+  const getAppId = React.useCallback(async () => {
+    return (await getKey('appId')) ?? appId;
   }, [getKey]);
   const getImServer = React.useCallback(async () => {
     return (await getKey('imServer')) ?? imServer;
@@ -60,6 +64,12 @@ export function useServerConfig() {
   const setAppKey = React.useCallback(
     async (value: string) => {
       setKey('appKey', value);
+    },
+    [setKey]
+  );
+  const setAppId = React.useCallback(
+    async (value: string) => {
+      setKey('appId', value);
     },
     [setKey]
   );
@@ -102,12 +112,14 @@ export function useServerConfig() {
 
   return {
     getAppKey,
+    getAppId,
     getImServer,
     getImPort,
     getEnableDNSConfig,
     getRestSever,
     getEnableDevMode,
     setAppKey,
+    setAppId,
     setImServer,
     setImPort,
     setEnableDNSConfig,

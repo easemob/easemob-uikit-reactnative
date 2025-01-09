@@ -78,12 +78,13 @@ import {
   TopMenuScreen,
   VideoMessagePreviewScreen,
 } from './screens';
+import { InitScreen } from './screens/InitScreen';
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
 // SplashScreen?.preventAutoHideAsync?.();
 
-export function App() {
+export function _App() {
   const {
     initialRouteNameRef,
     paletteRef,
@@ -132,6 +133,7 @@ export function App() {
   const {
     getEnableDevMode,
     getAppKey,
+    getAppId,
     getEnableDNSConfig,
     getImPort,
     getImServer,
@@ -156,23 +158,22 @@ export function App() {
         initialRouteNameRef.current = 'Login';
       }
       serverConfigVisibleRef.current = await getEnableDevMode();
-      if (appKey && appKey.length > 0) {
-        appKeyRef.current =
-          serverConfigVisibleRef.current === true ? await getAppKey() : appKey;
-      } else if (appId && appId.length > 0) {
-        appIdRef.current =
-          serverConfigVisibleRef.current === true ? await getAppKey() : appId;
+      if (serverConfigVisibleRef.current === true) {
+        const appKey = await getAppKey();
+        const appId = await getAppId();
+        appKeyRef.current = appKey;
+        appIdRef.current = appId;
+        imPortRef.current = await getImPort();
+        imServerRef.current = await getImServer();
+        enableDNSConfigRef.current = await getEnableDNSConfig();
+      } else {
+        appKeyRef.current = appKey;
+        appIdRef.current = appId;
+        imPortRef.current = undefined;
+        imServerRef.current = undefined;
+        enableDNSConfigRef.current = undefined;
       }
-      imPortRef.current =
-        serverConfigVisibleRef.current === true ? await getImPort() : undefined;
-      imServerRef.current =
-        serverConfigVisibleRef.current === true
-          ? await getImServer()
-          : undefined;
-      enableDNSConfigRef.current =
-        serverConfigVisibleRef.current === true
-          ? await getEnableDNSConfig()
-          : undefined;
+
       const ret = await initParams();
       isLightRef.current = !ret.appTheme;
       releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
@@ -226,6 +227,7 @@ export function App() {
     enableTranslateRef,
     enableTypingRef,
     getAppKey,
+    getAppId,
     getEnableDNSConfig,
     getEnableDevMode,
     getImPort,
@@ -798,4 +800,19 @@ export function TestListener() {
     }, [])
   );
   return <></>;
+}
+
+export function App() {
+  const [isReady, setReady] = React.useState(false);
+  if (isReady) {
+    return <_App />;
+  } else {
+    return (
+      <InitScreen
+        onSave={() => {
+          setReady(true);
+        }}
+      />
+    );
+  }
 }
