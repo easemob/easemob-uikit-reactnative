@@ -10,7 +10,7 @@ import {
   useSimpleToastContext,
   useToastViewContext,
 } from '../../rename.uikit';
-import { accountType, fcmSenderId, gAppKey } from '../common/const';
+import { accountType, fcmSenderId } from '../common/const';
 import { requestFcmToken } from '../common/fcm';
 import {
   AgoraRequestLoginResult,
@@ -18,11 +18,12 @@ import {
   RequestLoginResult,
   RestApi,
 } from '../common/rest.api';
+import { AppKey } from './useServerConfig';
 
 export function useAutoLogin() {
   const getSelfInfo = React.useCallback(async () => {
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     const res = await s.getData({ key: 'self' });
     if (res.value) {
@@ -131,7 +132,7 @@ export function useLogin() {
 
   const saveSelfInfo = React.useCallback((data: RequestLoginResult) => {
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     if (accountType === 'agora') {
       const d = data as AgoraRequestLoginResult;

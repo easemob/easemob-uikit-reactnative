@@ -17,7 +17,8 @@ import {
   useChatContext,
   useSimpleToastContext,
 } from '../../rename.uikit';
-import { agoraAppId, gAppKey } from './const';
+import { AppKey } from '../hooks';
+import { agoraAppId } from './const';
 
 export type AVViewProps = {};
 export function AVView(props: AVViewProps) {
@@ -240,7 +241,7 @@ export function useCallApi(props: AVViewProps) {
       const inviteeIds = members.map((item) => item.memberId);
       if (callType === CallType.Audio1v1 || callType === CallType.Video1v1) {
         showSingleCall({
-          appKey: gAppKey,
+          appKey: AppKey.gAppKey(),
           agoraAppId: agoraAppId,
           inviterId: im.userId,
           currentId: im.userId,
@@ -255,7 +256,7 @@ export function useCallApi(props: AVViewProps) {
         callType === CallType.VideoMulti
       ) {
         showMultiCall({
-          appKey: gAppKey,
+          appKey: AppKey.gAppKey(),
           agoraAppId: agoraAppId,
           inviterId: im.userId,
           currentId: im.userId,
@@ -287,7 +288,7 @@ export function useCallApi(props: AVViewProps) {
       }
       if (callType === CallType.Audio1v1 || callType === CallType.Video1v1) {
         showSingleCall({
-          appKey: gAppKey,
+          appKey: AppKey.gAppKey(),
           agoraAppId: agoraAppId,
           inviterId: inviterId,
           currentId: im.userId,
@@ -302,7 +303,7 @@ export function useCallApi(props: AVViewProps) {
         callType === CallType.VideoMulti
       ) {
         showMultiCall({
-          appKey: gAppKey,
+          appKey: AppKey.gAppKey(),
           agoraAppId: agoraAppId,
           inviterId: inviterId,
           currentId: im.userId,

@@ -29,10 +29,11 @@ import {
   useThemeContext,
 } from '../../rename.uikit';
 import { main_bg, main_bg_dark } from '../common/assets';
-import { accountType } from '../common/const';
+import { accountType, appId, appKey } from '../common/const';
 import { RestApi } from '../common/rest.api';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import {
+  AppKey,
   useLogin,
   useNavigationState,
   useServerConfig,
@@ -1048,6 +1049,8 @@ function useLoginV2Screen(props: Props) {
         });
     } else {
       setEnableDevMode(false).catch();
+      AppKey.setAppId(appId);
+      AppKey.setAppKey(appKey);
     }
   }, [
     getEnableDevMode,

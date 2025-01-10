@@ -81,13 +81,55 @@ import type { RootParamsList, RootParamsName } from '../routes';
 import { formatNavigationState } from '../utils/utils';
 import { useUserInfo } from './useUserInfo';
 
+export function useAppConfig() {
+  const appKeyRef = React.useRef(appKey);
+  const appIdRef = React.useRef(appId);
+  const autoLogin = React.useRef(false).current;
+  const imServerRef = React.useRef(imServer);
+  const imPortRef = React.useRef(imPort);
+  const enableDNSConfigRef = React.useRef(enableDNSConfig);
+
+  const getOptions = React.useCallback(() => {
+    return {
+      appKey: appKeyRef.current,
+      appId: appIdRef.current,
+      debugModel: isDevMode,
+      autoLogin: autoLogin,
+      autoAcceptGroupInvitation: true,
+      requireAck: true,
+      requireDeliveryAck: true,
+      restServer: useSendBox ? restServer : undefined,
+      imServer: useSendBox ? imServerRef.current : undefined,
+      imPort: useSendBox ? imPortRef.current : (undefined as any),
+      enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
+      pushConfig:
+        fcmSenderId && fcmSenderId.length > 0
+          ? new ChatPushConfig({
+              deviceId: fcmSenderId,
+              deviceToken: '',
+            })
+          : undefined,
+    } as ChatOptionsType;
+  }, [autoLogin]);
+
+  return {
+    appKeyRef,
+    appIdRef,
+    imServerRef,
+    imPortRef,
+    enableDNSConfigRef,
+    autoLogin,
+    getOptions,
+  };
+}
+
 export function useApp() {
   const im = getChatService();
   // const list = React.useRef<Map<string, DataModel>>(new Map());
   const permissionsRef = React.useRef(false);
   const { getPermission } = usePermissions();
   const initialRouteName = React.useRef('Splash' as RootParamsName).current;
-  const autoLogin = React.useRef(true).current;
+  // const autoLogin = React.useRef(true).current;
   const palette = usePresetPalette();
   const paletteRef = React.useRef(palette);
   const ra = getReleaseArea();
@@ -128,11 +170,11 @@ export function useApp() {
   });
   const rootRef = useNavigationContainerRef<RootParamsList>();
   const serverConfigVisibleRef = React.useRef(false);
-  const appKeyRef = React.useRef(appKey);
-  const appIdRef = React.useRef(appId);
-  const imServerRef = React.useRef(imServer);
-  const imPortRef = React.useRef(imPort);
-  const enableDNSConfigRef = React.useRef(enableDNSConfig);
+  // const appKeyRef = React.useRef(appKey);
+  // const appIdRef = React.useRef(appId);
+  // const imServerRef = React.useRef(imServer);
+  // const imPortRef = React.useRef(imPort);
+  // const enableDNSConfigRef = React.useRef(enableDNSConfig);
   const [_initParams, setInitParams] = React.useState(false);
   const {
     getDataFromStorage,
@@ -140,31 +182,39 @@ export function useApp() {
     // updateDataToStorage,
     // users,
   } = useUserInfo();
+  const {
+    appKeyRef,
+    appIdRef,
+    imServerRef,
+    imPortRef,
+    enableDNSConfigRef,
+    getOptions,
+  } = useAppConfig();
 
   const { updater } = useForceUpdate();
 
-  const getOptions = React.useCallback(() => {
-    return {
-      appKey: appKeyRef.current,
-      appId: appIdRef.current,
-      debugModel: isDevMode,
-      autoLogin: autoLogin,
-      autoAcceptGroupInvitation: true,
-      requireAck: true,
-      requireDeliveryAck: true,
-      restServer: useSendBox ? restServer : undefined,
-      imServer: useSendBox ? imServerRef.current : undefined,
-      imPort: useSendBox ? imPortRef.current : (undefined as any),
-      enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
-      pushConfig:
-        fcmSenderId && fcmSenderId.length > 0
-          ? new ChatPushConfig({
-              deviceId: fcmSenderId,
-              deviceToken: '',
-            })
-          : undefined,
-    } as ChatOptionsType;
-  }, [autoLogin]);
+  // const getOptions = React.useCallback(() => {
+  //   return {
+  //     appKey: appKeyRef.current,
+  //     appId: appIdRef.current,
+  //     debugModel: isDevMode,
+  //     autoLogin: autoLogin,
+  //     autoAcceptGroupInvitation: true,
+  //     requireAck: true,
+  //     requireDeliveryAck: true,
+  //     restServer: useSendBox ? restServer : undefined,
+  //     imServer: useSendBox ? imServerRef.current : undefined,
+  //     imPort: useSendBox ? imPortRef.current : (undefined as any),
+  //     enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
+  //     pushConfig:
+  //       fcmSenderId && fcmSenderId.length > 0
+  //         ? new ChatPushConfig({
+  //             deviceId: fcmSenderId,
+  //             deviceToken: '',
+  //           })
+  //         : undefined,
+  //   } as ChatOptionsType;
+  // }, [autoLogin]);
 
   // const onUsersProvider = React.useCallback(
   //   (params: {
@@ -343,6 +393,7 @@ export function useApp() {
 
         requestFcmToken()
           .then((fcmToken) => {
+            console.log('test:zuoyu:1111:', fcmToken);
             im.client
               .updatePushConfig(
                 new ChatPushConfig({

@@ -64,6 +64,8 @@ export function createStringSetCn(): StringSet {
     '_demo_server_setting_input_im_server_tip': '输入IM服务器地址',
     '_demo_server_setting_input_port_tip': '输入端口号',
     '_demo_server_setting_input_rest_server_tip': '输入Rest服务器地址',
+    '_demo_server_setting_navi_is_appkey': (isAppKey: boolean) =>
+      isAppKey ? 'Is AppKey' : 'Is AppId',
 
     '_demo_alert_server_setting_save_title': '重启客户端',
     '_demo_alert_server_setting_save_message':

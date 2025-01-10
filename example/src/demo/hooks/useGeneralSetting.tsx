@@ -9,7 +9,8 @@ import {
   SingletonObjects,
   useForceUpdate,
 } from '../../rename.uikit';
-import { accountType, gAppKey } from '../common/const';
+import { accountType } from '../common/const';
+import { AppKey } from '../hooks/useServerConfig';
 
 export function useGeneralSetting() {
   const {} = useForceUpdate();
@@ -106,7 +107,7 @@ export function useGeneralSetting() {
     appThemeRef.current = value;
     setAppTheme(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'theme', value: value ? 'dark' : 'light' });
     DeviceEventEmitter.emit('_demo_emit_app_theme', value ? 'dark' : 'light');
@@ -116,7 +117,7 @@ export function useGeneralSetting() {
     appTranslateRef.current = value;
     setAppTranslate(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'translate', value: value ? 'enable' : 'disable' });
     DeviceEventEmitter.emit(
@@ -129,7 +130,7 @@ export function useGeneralSetting() {
     appTranslateLanguageRef.current = value;
     setAppTranslateLanguage(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'translateLanguage', value });
     DeviceEventEmitter.emit('_demo_emit_app_translate_language', value);
@@ -139,7 +140,7 @@ export function useGeneralSetting() {
     appThreadRef.current = value;
     setAppThread(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'thread', value: value ? 'enable' : 'disable' });
     DeviceEventEmitter.emit(
@@ -152,7 +153,7 @@ export function useGeneralSetting() {
     appReactionRef.current = value;
     setAppReaction(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'reaction', value: value ? 'enable' : 'disable' });
     DeviceEventEmitter.emit(
@@ -165,7 +166,7 @@ export function useGeneralSetting() {
     appPresenceRef.current = value;
     setAppPresence(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'presence', value: value ? 'enable' : 'disable' });
     DeviceEventEmitter.emit(
@@ -178,7 +179,7 @@ export function useGeneralSetting() {
     appTypingRef.current = value;
     setAppTyping(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'typing', value: value ? 'enable' : 'disable' });
     DeviceEventEmitter.emit(
@@ -191,7 +192,7 @@ export function useGeneralSetting() {
     appBlockRef.current = value;
     setAppBlock(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'block', value: value ? 'enable' : 'disable' });
     DeviceEventEmitter.emit(
@@ -204,7 +205,7 @@ export function useGeneralSetting() {
     appAvRef.current = value;
     setAppAv(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'av', value: value ? 'enable' : 'disable' });
     DeviceEventEmitter.emit('_demo_emit_app_av', value ? 'enable' : 'disable');
@@ -214,7 +215,7 @@ export function useGeneralSetting() {
     appNotificationRef.current = value;
     setAppNotification(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({
       key: 'notification',
@@ -230,7 +231,7 @@ export function useGeneralSetting() {
     appStyleRef.current = value;
     setAppStyle(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'style', value });
     DeviceEventEmitter.emit('_demo_emit_app_style', value);
@@ -240,7 +241,7 @@ export function useGeneralSetting() {
     appPrimaryColorRef.current = value;
     setAppPrimaryColor(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'primaryColor', value: value.toString() });
     DeviceEventEmitter.emit('_demo_emit_app_primary_color', value);
@@ -250,7 +251,7 @@ export function useGeneralSetting() {
     appSecondColorRef.current = value;
     setAppSecondColor(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'secondColor', value: value.toString() });
     DeviceEventEmitter.emit('_demo_emit_app_second_color', value);
@@ -260,7 +261,7 @@ export function useGeneralSetting() {
     appErrorColorRef.current = value;
     setAppErrorColor(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'errorColor', value: value.toString() });
     DeviceEventEmitter.emit('_demo_emit_app_error_color', value);
@@ -270,7 +271,7 @@ export function useGeneralSetting() {
     appNeutralColorRef.current = value;
     setAppNeutralColor(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'neutralColor', value: value.toString() });
     DeviceEventEmitter.emit('_demo_emit_app_neutral_color', value);
@@ -280,7 +281,7 @@ export function useGeneralSetting() {
     appNeutralSColorRef.current = value;
     setAppNeutralSColor(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'neutralSColor', value: value.toString() });
     DeviceEventEmitter.emit('_demo_emit_app_neutral_s_color', value);
@@ -290,7 +291,7 @@ export function useGeneralSetting() {
     appLanguageRef.current = value;
     setAppLanguage(value);
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     s.setData({ key: 'language', value });
     DeviceEventEmitter.emit('_demo_emit_app_language', value);
@@ -301,7 +302,7 @@ export function useGeneralSetting() {
       appMessageContextMenuStyleRef.current = value;
       setAppMessageContextMenuStyle(value);
       const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-        appKey: `${gAppKey}/uikit/demo`,
+        appKey: `${AppKey.gAppKey()}/uikit/demo`,
       });
       s.setData({ key: 'messageContextMenuStyle', value });
       DeviceEventEmitter.emit(
@@ -317,7 +318,7 @@ export function useGeneralSetting() {
       appMessageInputBarExtensionStyleRef.current = value;
       setAppMessageInputBarExtensionStyle(value);
       const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-        appKey: `${gAppKey}/uikit/demo`,
+        appKey: `${AppKey.gAppKey()}/uikit/demo`,
       });
       s.setData({ key: 'messageInputBarExtensionStyle', value });
       DeviceEventEmitter.emit(
@@ -330,7 +331,7 @@ export function useGeneralSetting() {
 
   const initParams = React.useCallback(async () => {
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     const res = await s.getData({ key: 'theme' });
     const res2 = await s.getData({ key: 'style' });

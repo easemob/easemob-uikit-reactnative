@@ -70,6 +70,8 @@ export function createStringSetEn(): StringSet {
     '_demo_server_setting_input_im_server_tip': 'Input IM server address',
     '_demo_server_setting_input_port_tip': 'Input port number',
     '_demo_server_setting_input_rest_server_tip': 'Input Rest server address',
+    '_demo_server_setting_navi_is_appkey': (isAppKey: boolean) =>
+      isAppKey ? 'Is AppKey' : 'Is AppId',
 
     '_demo_info_logout': 'Log Out',
     '_demo_info_account_destroy': 'Delete Account',
