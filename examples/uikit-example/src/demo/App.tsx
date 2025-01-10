@@ -16,8 +16,6 @@ import { ToastView } from './common';
 import { AvatarStatusRenderMemo } from './common/AvatarStatusRender';
 import {
   accountType,
-  appId,
-  appKey,
   boloo_da_ttf_name,
   demoType,
   restServer,
@@ -26,7 +24,7 @@ import { RestApi } from './common/rest.api';
 import { useAutoLogin } from './hooks';
 import { useApp } from './hooks/useApp';
 import { useGeneralSetting } from './hooks/useGeneralSetting';
-import { useServerConfig } from './hooks/useServerConfig';
+import { AppKey, useServerConfig } from './hooks/useServerConfig';
 import type { RootParamsList } from './routes';
 import {
   AboutSettingScreen,
@@ -134,6 +132,7 @@ export function _App() {
     getEnableDevMode,
     getAppKey,
     getAppId,
+    getIsAppKey,
     getEnableDNSConfig,
     getImPort,
     getImServer,
@@ -159,20 +158,26 @@ export function _App() {
       }
       serverConfigVisibleRef.current = await getEnableDevMode();
       if (serverConfigVisibleRef.current === true) {
-        const appKey = await getAppKey();
-        const appId = await getAppId();
-        appKeyRef.current = appKey;
-        appIdRef.current = appId;
+        const isAppKey = await getIsAppKey();
+        if (isAppKey) {
+          AppKey.setAppId('');
+          AppKey.setAppKey(await getAppKey());
+        } else {
+          AppKey.setAppId(await getAppId());
+          AppKey.setAppKey('');
+        }
+
         imPortRef.current = await getImPort();
         imServerRef.current = await getImServer();
         enableDNSConfigRef.current = await getEnableDNSConfig();
       } else {
-        appKeyRef.current = appKey;
-        appIdRef.current = appId;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
         enableDNSConfigRef.current = undefined;
       }
+
+      appKeyRef.current = AppKey.appKey();
+      appIdRef.current = AppKey.appId();
 
       const ret = await initParams();
       isLightRef.current = !ret.appTheme;
@@ -226,12 +231,13 @@ export function _App() {
     enableThreadRef,
     enableTranslateRef,
     enableTypingRef,
-    getAppKey,
-    getAppId,
     getEnableDNSConfig,
     getEnableDevMode,
     getImPort,
     getImServer,
+    getAppKey,
+    getAppId,
+    getIsAppKey,
     imPortRef,
     imServerRef,
     initParams,

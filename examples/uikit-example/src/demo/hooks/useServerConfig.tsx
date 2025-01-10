@@ -43,6 +43,10 @@ export function useServerConfig() {
   const getAppId = React.useCallback(async () => {
     return (await getKey('appId')) ?? appId;
   }, [getKey]);
+  const getIsAppKey = React.useCallback(async () => {
+    const ret = (await getKey('isAppKey')) ?? (appKey && appKey.length > 0);
+    return ret === 'true' ? true : ret === 'false' ? false : false;
+  }, [getKey]);
   const getImServer = React.useCallback(async () => {
     return (await getKey('imServer')) ?? imServer;
   }, [getKey]);
@@ -70,6 +74,15 @@ export function useServerConfig() {
   const setAppId = React.useCallback(
     async (value: string) => {
       setKey('appId', value);
+    },
+    [setKey]
+  );
+  const setIsAppKey = React.useCallback(
+    async (value: boolean) => {
+      setKey(
+        'isAppKey',
+        value === true ? 'true' : value === false ? 'false' : 'false'
+      );
     },
     [setKey]
   );
@@ -113,6 +126,7 @@ export function useServerConfig() {
   return {
     getAppKey,
     getAppId,
+    getIsAppKey,
     getImServer,
     getImPort,
     getEnableDNSConfig,
@@ -120,10 +134,33 @@ export function useServerConfig() {
     getEnableDevMode,
     setAppKey,
     setAppId,
+    setIsAppKey,
     setImServer,
     setImPort,
     setEnableDNSConfig,
     setRestSever,
     setEnableDevMode,
   };
+}
+
+export class AppKey {
+  static _appKey = appKey;
+  static _appId = appId;
+  static appKey() {
+    return AppKey._appKey;
+  }
+  static appId() {
+    return AppKey._appId;
+  }
+  static setAppKey(appKey: string) {
+    AppKey._appKey = appKey;
+  }
+  static setAppId(appId: string) {
+    AppKey._appId = appId;
+  }
+  static gAppKey() {
+    return AppKey._appKey && AppKey._appKey.length > 0
+      ? AppKey._appKey
+      : AppKey._appId;
+  }
 }

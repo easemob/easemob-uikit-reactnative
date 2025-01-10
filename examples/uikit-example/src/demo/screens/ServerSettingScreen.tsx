@@ -23,9 +23,8 @@ import {
   useThemeContext,
 } from '../../rename.uikit';
 import { main_bg, main_bg_dark } from '../common/assets';
-import { gAppKey } from '../common/const';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
-import { useServerConfig, useStackScreenRoute } from '../hooks';
+import { AppKey, useServerConfig, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
@@ -40,11 +39,15 @@ export function ServerSettingScreen(props: Props) {
   const {
     getAlertRef,
     getAppKey,
+    getAppId,
+    getIsAppKey,
     getImPort,
     getEnableDNSConfig,
     getImServer,
     getRestSever,
     setAppKey: _setAppKey,
+    setAppId: _setAppId,
+    setIsAppKey: _setIsAppKey,
     setImServer: _setImServer,
     setEnableDNSConfig: _setEnableDNSConfig,
     setImPort: _setImPort,
@@ -74,7 +77,8 @@ export function ServerSettingScreen(props: Props) {
     },
   });
   const [disable] = React.useState<boolean>(false);
-  const [appKey, setAppKey] = React.useState<string>(gAppKey);
+  const [appKey, setAppKey] = React.useState<string>(AppKey.gAppKey());
+  const [isAppKey, setIsAppKey] = React.useState<boolean>(undefined);
   const [imServer, setImServer] = React.useState<string>('');
   const [imPort, setImPort] = React.useState<string>('');
   const [restServer, setRestServer] = React.useState<string>('');
@@ -82,6 +86,19 @@ export function ServerSettingScreen(props: Props) {
     boolean | undefined
   >(undefined);
   const initRef = React.useRef<boolean>(false);
+
+  const onIsAppKey = React.useCallback(
+    async (value: boolean) => {
+      console.log('test:zuoyu:', value);
+      setIsAppKey(value);
+      if (value === true) {
+        setAppKey(await getAppKey());
+      } else {
+        setAppKey(await getAppId());
+      }
+    },
+    [getAppId, getAppKey]
+  );
 
   const onBack = React.useCallback(() => {
     goBack({
@@ -93,7 +110,17 @@ export function ServerSettingScreen(props: Props) {
   const onSave = React.useCallback(async () => {
     // todo: 将变量保存到本地，之后重启时读取
     try {
-      await _setAppKey(appKey);
+      if (isAppKey) {
+        await _setAppKey(appKey);
+        AppKey.setAppKey(appKey);
+        AppKey.setAppId('');
+      } else {
+        await _setAppId(appKey);
+        AppKey.setAppId(appKey);
+        AppKey.setAppKey('');
+      }
+      await _setIsAppKey(isAppKey);
+
       await _setImPort(imPort);
       await _setEnableDNSConfig(enablePrivateServer);
       await _setImServer(imServer);
@@ -122,8 +149,9 @@ export function ServerSettingScreen(props: Props) {
       console.warn('save error:', error);
     }
   }, [
-    restServer,
+    _setAppId,
     _setAppKey,
+    _setIsAppKey,
     _setEnableDNSConfig,
     _setImPort,
     _setImServer,
@@ -133,18 +161,24 @@ export function ServerSettingScreen(props: Props) {
     getAlertRef,
     imPort,
     imServer,
+    isAppKey,
+    restServer,
     tr,
   ]);
 
   const getData = React.useCallback(async () => {
     try {
       const _appKey = await getAppKey();
+      const _appId = await getAppId();
+      const _isAppKey = await getIsAppKey();
       const _imServer = await getImServer();
       const _imPort = await getImPort();
       const _restServer = await getRestSever();
       const _enablePrivateServer = await getEnableDNSConfig();
       return {
         appKey: _appKey,
+        appId: _appId,
+        isAppKey: _isAppKey,
         imServer: _imServer,
         imPort: _imPort,
         restServer: _restServer,
@@ -154,21 +188,37 @@ export function ServerSettingScreen(props: Props) {
       console.warn('get error:', error);
       return undefined;
     }
-  }, [getAppKey, getEnableDNSConfig, getImPort, getImServer, getRestSever]);
+  }, [
+    getAppId,
+    getAppKey,
+    getIsAppKey,
+    getEnableDNSConfig,
+    getImPort,
+    getImServer,
+    getRestSever,
+  ]);
 
   React.useEffect(() => {
     if (initRef.current === false) {
       initRef.current = true;
-      getData().then((value) => {
-        if (value) {
-          setAppKey(value.appKey);
-          setImServer(value.imServer);
-          setImPort(value.imPort);
-          setRestServer(value.restServer);
-          setEnablePrivateServer(value.enablePrivateServer ?? false);
-        }
-      });
     }
+    getData().then((value) => {
+      if (value) {
+        console.log('test:zuoyu:', value);
+        if (value.isAppKey) {
+          setAppKey(value.appKey);
+          setIsAppKey(true);
+        } else {
+          setAppKey(value.appId);
+          setIsAppKey(false);
+        }
+
+        setImServer(value.imServer);
+        setImPort(value.imPort);
+        setRestServer(value.restServer);
+        setEnablePrivateServer(value.enablePrivateServer ?? false);
+      }
+    });
   }, [getAppKey, getData]);
 
   return (
@@ -212,6 +262,35 @@ export function ServerSettingScreen(props: Props) {
             </Pressable>
           }
         />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginHorizontal: 16,
+          }}
+        >
+          <SingleLineText
+            paletteType={'title'}
+            textType={'medium'}
+            style={{
+              color: getColor('t'),
+              marginHorizontal: 16,
+              marginTop: 12,
+              marginBottom: 12,
+            }}
+          >
+            {tr('_demo_server_setting_navi_is_appkey', isAppKey)}
+          </SingleLineText>
+          <View style={{ flexGrow: 1 }} />
+          {isAppKey !== undefined && (
+            <Switch
+              value={isAppKey}
+              onValueChange={onIsAppKey}
+              height={31}
+              width={51}
+            />
+          )}
+        </View>
         <TouchableWithoutFeedback
           style={{
             justifyContent: 'center', // !!!

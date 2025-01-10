@@ -1,12 +1,12 @@
 import * as React from 'react';
 
 import { SingletonObjects, UserData, UserStorage } from '../../rename.uikit';
-import { gAppKey } from '../common/const';
+import { AppKey } from './useServerConfig';
 
 export function useUserInfo() {
   const list = React.useRef<Map<string, UserData>>(new Map());
   const storage = SingletonObjects.getInstanceWithParams(UserStorage, {
-    appKey: gAppKey,
+    appKey: AppKey.gAppKey(),
   });
   const arrayToList = React.useCallback((users: UserData[]) => {
     const list = new Map<string, UserData>();

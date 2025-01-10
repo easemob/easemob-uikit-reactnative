@@ -31,4 +31,3 @@ export const fcmSenderId = env.fcmSenderId as string;
 export const twemoji_ttf_name = 'Twemoji-Mozilla';
 export const boloo_da_ttf_name = 'Baloo-Da';
 export const demoType = env.demoType ?? 4;
-export const gAppKey = appKey && appKey.length > 0 ? appKey : appId;

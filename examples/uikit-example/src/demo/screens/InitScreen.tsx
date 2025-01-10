@@ -18,16 +18,34 @@ type Props = {
 export function InitScreen(props: Props) {
   const { onSave } = props;
   const { getOptions } = useAppConfig();
-  const { setAppId, setAppKey, getAppKey, getAppId, setEnableDevMode } =
-    useServerConfig();
+  const {
+    setAppId,
+    setAppKey,
+    getAppKey,
+    getAppId,
+    getIsAppKey,
+    setIsAppKey,
+    setEnableDevMode,
+  } = useServerConfig();
 
-  const [id, setId] = React.useState(
+  const [id, _setId] = React.useState(
     appKey && appKey.length > 0 ? appKey : appId
   );
-  const [isAppKey, setIsAppKey] = React.useState(appKey && appKey.length > 0);
+  const [isAppKey, _setIsAppKey] = React.useState(appKey && appKey.length > 0);
 
   const onId = (t: string) => {
-    setId(t);
+    _setId(t);
+  };
+
+  const onIsAppKey = async (value: boolean) => {
+    _setIsAppKey(value);
+    if (value) {
+      const _id = await getAppKey();
+      _setId(_id ?? '');
+    } else {
+      const _id = await getAppId();
+      _setId(_id ?? '');
+    }
   };
 
   const onInit = () => {
@@ -57,21 +75,25 @@ export function InitScreen(props: Props) {
     } else {
       await setAppId(id);
     }
+    await setIsAppKey(isAppKey);
     await setEnableDevMode(true);
     onInit();
   };
 
   React.useEffect(() => {
     (async () => {
-      if (isAppKey) {
+      const _isAppKey = await getIsAppKey();
+      if (_isAppKey) {
         const _id = await getAppKey();
-        setId(_id ?? '');
+        _setId(_id ?? '');
+        _setIsAppKey(true);
       } else {
         const _id = await getAppId();
-        setId(_id ?? '');
+        _setId(_id ?? '');
+        _setIsAppKey(false);
       }
     })();
-  }, [getAppId, getAppKey, isAppKey]);
+  }, [getAppId, getAppKey, getIsAppKey, _setIsAppKey]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -82,9 +104,17 @@ export function InitScreen(props: Props) {
       </View>
 
       <View style={{ height: 10 }} />
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text>{isAppKey ? 'app key' : 'app id'}</Text>
-        <Switch onValueChange={setIsAppKey} value={isAppKey} />
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 16,
+        }}
+      >
+        <Text>{isAppKey ? 'is app key' : 'is app id'}</Text>
+        {isAppKey !== undefined && (
+          <Switch onValueChange={onIsAppKey} value={isAppKey} />
+        )}
       </View>
       <View style={{ height: 10 }} />
 
@@ -95,6 +125,7 @@ export function InitScreen(props: Props) {
           backgroundColor: '#fff8dc',
           color: 'black',
           borderRadius: 4,
+          marginHorizontal: 16,
         }}
         value={id}
         onChangeText={onId}
