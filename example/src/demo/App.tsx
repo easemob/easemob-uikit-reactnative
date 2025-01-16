@@ -130,6 +130,7 @@ export function App() {
     getNaviTheme,
     messageMenuStyleRef,
     messageInputBarExtensionStyleRef,
+    autoLoginRef,
   } = useApp();
 
   const {
@@ -153,6 +154,7 @@ export function App() {
     try {
       serverConfigVisibleRef.current = await getEnableDevMode();
       if (serverConfigVisibleRef.current === true) {
+        autoLoginRef.current = false;
         const isAppKey = await getIsAppKey();
         if (isAppKey) {
           AppKey.setAppId('');
@@ -166,6 +168,7 @@ export function App() {
         imServerRef.current = await getImServer();
         enableDNSConfigRef.current = await getEnableDNSConfig();
       } else {
+        autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
         enableDNSConfigRef.current = undefined;
@@ -217,6 +220,7 @@ export function App() {
     _initParams,
     appIdRef,
     appKeyRef,
+    autoLoginRef,
     enableAVMeetingRef,
     enableBlockRef,
     enableDNSConfigRef,
@@ -350,7 +354,7 @@ export function App() {
     // !!! `initParams` is not called in the `useEffect` hook.
     return null;
   }
-  console.log('dev:app:');
+  console.log('dev:app:', getOptions());
 
   return (
     <React.StrictMode>
