@@ -481,19 +481,29 @@ export function useMessageInput(
   };
 
   const onSelectSendImage = (props: SendImageProps) => {
-    propsOnClickedSend?.(props);
+    setTimeout(() => {
+      propsOnClickedSend?.(props);
+    }, 250);
   };
   const onSelectSendVoice = (props: SendVoiceProps) => {
-    propsOnClickedSend?.(props);
+    setTimeout(() => {
+      propsOnClickedSend?.(props);
+    }, 250);
   };
   const onSelectSendVideo = (props: SendVideoProps) => {
-    propsOnClickedSend?.(props);
+    setTimeout(() => {
+      propsOnClickedSend?.(props);
+    }, 250);
   };
   const onSelectSendFile = (props: SendFileProps) => {
-    propsOnClickedSend?.(props);
+    setTimeout(() => {
+      propsOnClickedSend?.(props);
+    }, 250);
   };
   const onSelectSendCard = () => {
-    propsOnClickedCardMenu?.();
+    setTimeout(() => {
+      propsOnClickedCardMenu?.();
+    }, 250);
   };
 
   const onBeforeShowMessageInputExtendActions = () => {
