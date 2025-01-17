@@ -486,6 +486,7 @@ export function useMessageInput(
     }, 250);
   };
   const onSelectSendVoice = (props: SendVoiceProps) => {
+    changeInputBarState('normal');
     setTimeout(() => {
       propsOnClickedSend?.(props);
     }, 250);
