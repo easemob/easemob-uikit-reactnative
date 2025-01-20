@@ -27,7 +27,7 @@ export function getSystemLanguage(): string {
   } else if (Platform.OS === 'android') {
     // console.log('dev:getSystemLanguage', NativeModules.I18nManager);
     // ["en_US", "zh_CN_#Hans"]
-    return NativeModules.I18nManager.localeIdentifier;
+    return NativeModules.I18nManager?.localeIdentifier;
   }
   return '';
 }
