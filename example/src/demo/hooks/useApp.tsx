@@ -278,7 +278,6 @@ export function useApp() {
 
         requestFcmToken()
           .then((fcmToken) => {
-            console.log('test:zuoyu:1111:', fcmToken);
             im.client
               .updatePushConfig(
                 new ChatPushConfig({

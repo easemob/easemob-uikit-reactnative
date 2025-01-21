@@ -39,7 +39,7 @@ react-native-agora \
 react-native-chat-uikit \
 react-native-chat-sdk \
 react-native-audio-recorder-player \
-@easemob/react-native-create-thumbnail \
+react-native-create-thumbnail \
 react-native-device-info \
 react-native-document-picker \
 react-native-fast-image \

@@ -266,9 +266,8 @@ export const MessageInput = React.forwardRef<
                       containerStyle={{
                         width: '100%',
                         minHeight: 36,
-                        // paddingHorizontal: 8,
-                        // paddingVertical: 7,
                         maxHeight: Platform.OS === 'ios' ? 96 : 96,
+                        justifyContent: 'center',
                       }}
                       onFocus={onFocus}
                       onBlur={onBlur}

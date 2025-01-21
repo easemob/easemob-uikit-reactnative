@@ -547,10 +547,9 @@ PODS:
     - HyphenateChat (~> 4.12.0)
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-chat-uikit (2.4.2-beta.0):
+  - react-native-chat-uikit (2.4.2):
     - React-Core
-  - react-native-create-thumbnail (1.6.6):
-    - RCT-Folly (= 2021.07.22.00)
+  - react-native-create-thumbnail (2.0.1):
     - React-Core
   - react-native-document-picker (9.0.1):
     - React-Core
@@ -817,7 +816,7 @@ DEPENDENCIES:
   - react-native-chat-room (from `../../packages/react-native-chat-room`)
   - react-native-chat-sdk (from `../../node_modules/react-native-chat-sdk`)
   - react-native-chat-uikit (from `../../packages/react-native-chat-uikit`)
-  - "react-native-create-thumbnail (from `../../node_modules/@easemob/react-native-create-thumbnail`)"
+  - react-native-create-thumbnail (from `../../node_modules/react-native-create-thumbnail`)
   - react-native-document-picker (from `../../node_modules/react-native-document-picker`)
   - react-native-get-random-values (from `../../node_modules/react-native-get-random-values`)
   - "react-native-image-editor (from `../../node_modules/@react-native-community/image-editor`)"
@@ -996,7 +995,7 @@ EXTERNAL SOURCES:
   react-native-chat-uikit:
     :path: "../../packages/react-native-chat-uikit"
   react-native-create-thumbnail:
-    :path: "../../node_modules/@easemob/react-native-create-thumbnail"
+    :path: "../../node_modules/react-native-create-thumbnail"
   react-native-document-picker:
     :path: "../../node_modules/react-native-document-picker"
   react-native-get-random-values:
@@ -1151,8 +1150,8 @@ SPEC CHECKSUMS:
   react-native-chat-callkit: a1b5e4885d58e4ac5153aade90b6f6fbb32d333b
   react-native-chat-room: 3367d4a6ad6694c749b199efc0627732bea70b41
   react-native-chat-sdk: 8d20d69bc799754deddae2af71401059b44a73f2
-  react-native-chat-uikit: 2811c7a907544ddba6fcad4d028b23e300b3ebed
-  react-native-create-thumbnail: e4fc6953a754bcfa3a03d74ec8687850134b1b93
+  react-native-chat-uikit: d8b7822361352151a3b6fd1de24bb06d4fc5e1f7
+  react-native-create-thumbnail: 4ffd51a6c02a9313edc74e2460cd07264221f554
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-image-editor: ad8248fc404d17b697b531d692b9b1ca2d1c0896

@@ -116,7 +116,6 @@ export function useNewRequests(props: NewRequestsProps) {
                 };
               });
               dataRef.current.sort(onSort);
-              console.log('test:zuoyu:data:', dataRef.current);
               setData([...dataRef.current]);
             }
           },

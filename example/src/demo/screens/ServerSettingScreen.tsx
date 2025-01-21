@@ -89,7 +89,6 @@ export function ServerSettingScreen(props: Props) {
 
   const onIsAppKey = React.useCallback(
     async (value: boolean) => {
-      console.log('test:zuoyu:', value);
       setIsAppKey(value);
       if (value === true) {
         setAppKey(await getAppKey());
@@ -204,7 +203,6 @@ export function ServerSettingScreen(props: Props) {
     }
     getData().then((value) => {
       if (value) {
-        console.log('test:zuoyu:', value);
         if (value.isAppKey) {
           setAppKey(value.appKey);
           setIsAppKey(true);

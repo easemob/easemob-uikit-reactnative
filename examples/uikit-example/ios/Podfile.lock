@@ -737,7 +737,7 @@ DEPENDENCIES:
   - react-native-chat-room (from `../../../packages/react-native-chat-room`)
   - react-native-chat-sdk (from `../../../node_modules/react-native-chat-sdk`)
   - react-native-chat-uikit (from `../../../packages/react-native-chat-uikit`)
-  - "react-native-create-thumbnail (from `../../../node_modules/@easemob/react-native-create-thumbnail`)"
+  - "react-native-create-thumbnail (from `../../../node_modules/react-native-create-thumbnail`)"
   - react-native-document-picker (from `../../../node_modules/react-native-document-picker`)
   - react-native-get-random-values (from `../../../node_modules/react-native-get-random-values`)
   - "react-native-image-editor (from `../../../node_modules/@react-native-community/image-editor`)"
@@ -904,7 +904,7 @@ EXTERNAL SOURCES:
   react-native-chat-uikit:
     :path: "../../../packages/react-native-chat-uikit"
   react-native-create-thumbnail:
-    :path: "../../../node_modules/@easemob/react-native-create-thumbnail"
+    :path: "../../../node_modules/react-native-create-thumbnail"
   react-native-document-picker:
     :path: "../../../node_modules/react-native-document-picker"
   react-native-get-random-values:

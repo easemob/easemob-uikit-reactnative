@@ -31,7 +31,7 @@ react-native-agora \
 react-native-chat-uikit \
 react-native-chat-sdk \
 react-native-audio-recorder-player \
-@easemob/react-native-create-thumbnail \
+react-native-create-thumbnail \
 react-native-device-info \
 react-native-document-picker \
 react-native-fast-image \
@@ -147,14 +147,12 @@ function SendMessage() {
         />
         <Pressable
           onPress={() => {
-            console.log('test:zuoyu:login', id, ps);
             im.login({
               userId: id,
               userToken: ps,
               usePassword: usePassword,
               result: (res) => {
                 console.log('login result', res);
-                console.log('test:zuoyu:error', res);
                 if (res.isOk === true) {
                   setPage(1);
                 }

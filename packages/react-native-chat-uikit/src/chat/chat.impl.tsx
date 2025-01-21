@@ -138,8 +138,8 @@ export class ChatServiceImpl
     try {
       const isExistedAppKey = options.hasOwnProperty('appKey');
       const isExistedAppId = options.hasOwnProperty('appId');
-      console.log('test:zuoyu:isExistedAppKey:', isExistedAppKey);
-      console.log('test:zuoyu:isExistedAppId:', isExistedAppId);
+      console.log('dev:isExistedAppKey:', isExistedAppKey);
+      console.log('dev:isExistedAppId:', isExistedAppId);
       if (isExistedAppKey === false && isExistedAppId === false) {
         params.result?.({
           isOk: false,

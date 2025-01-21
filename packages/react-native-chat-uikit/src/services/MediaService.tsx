@@ -1,4 +1,3 @@
-import { createThumbnail } from '@easemob/react-native-create-thumbnail';
 import React from 'react';
 import { Platform } from 'react-native';
 import type AudioRecorderPlayer from 'react-native-audio-recorder-player';
@@ -6,6 +5,7 @@ import type {
   PlayBackType,
   RecordBackType,
 } from 'react-native-audio-recorder-player';
+import { createThumbnail } from 'react-native-create-thumbnail';
 import { Dirs } from 'react-native-file-access';
 
 import { uilog } from '../const';
@@ -389,8 +389,8 @@ export class MediaServiceImplement implements MediaService {
     try {
       // const CreateThumbnail = this.option.videoThumbnail;
       const { path } = await createThumbnail({
-        videoUrl: options.url,
-        timestamp: 0,
+        url: options.url,
+        timeStamp: 0,
         cacheName: MediaServiceImplement._hash(options.url),
       });
       return path;
