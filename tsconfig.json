@@ -4,6 +4,7 @@
     "paths": {
       "react-native-chat-uikit": ["packages/react-native-chat-uikit/src"],
       "react-native-chat-callkit": ["packages/react-native-chat-callkit/src"],
+      "react-native-chat-room": ["packages/react-native-chat-room/src"],
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

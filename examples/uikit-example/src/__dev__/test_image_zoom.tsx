@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Dimensions, Image, View } from 'react-native';
-import { Container } from 'react-native-chat-uikit';
+import { View } from 'react-native';
 
-import { ImageZoom } from '../../../../packages/react-native-chat-uikit/src/ui/ImagePreview/__private__/image-zoom.component';
+// import { ImageZoom } from '../../../../packages/react-native-chat-uikit/src/ui/ImagePreview/__private__/image-zoom.component';
+import { Container } from '../rename.uikit';
 
 export function Test1() {
   return (
     <View>
-      <ImageZoom
+      {/* <ImageZoom
         cropWidth={Dimensions.get('window').width}
         cropHeight={Dimensions.get('window').height}
         imageWidth={200}
@@ -20,7 +20,7 @@ export function Test1() {
             uri: 'https://cdn2.iconfinder.com/data/icons/packyuuyake/Firefox.png',
           }}
         />
-      </ImageZoom>
+      </ImageZoom> */}
     </View>
   );
 }

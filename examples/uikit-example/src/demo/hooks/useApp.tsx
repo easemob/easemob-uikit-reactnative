@@ -49,7 +49,7 @@ import { createStringSetCn, createStringSetEn } from '../common';
 import { boloo_da_ttf, twemoji_ttf } from '../common/assets';
 import {
   accountType,
-  appKey as gAppKey,
+  appKey,
   boloo_da_ttf_name,
   demoType,
   enableDNSConfig,
@@ -64,13 +64,45 @@ import type { RootParamsList, RootParamsName } from '../routes';
 import { formatNavigationState } from '../utils/utils';
 import { useUserInfo } from './useUserInfo';
 
+export function useAppConfig() {
+  const appKeyRef = React.useRef(appKey);
+  const autoLogin = React.useRef(false).current;
+  const imServerRef = React.useRef(imServer);
+  const imPortRef = React.useRef(imPort);
+  const enableDNSConfigRef = React.useRef(enableDNSConfig);
+
+  const getOptions = React.useCallback(() => {
+    return {
+      appKey: appKeyRef.current,
+      debugModel: isDevMode,
+      autoLogin: autoLogin,
+      autoAcceptGroupInvitation: true,
+      requireAck: true,
+      requireDeliveryAck: true,
+      restServer: useSendBox ? restServer : undefined,
+      imServer: useSendBox ? imServerRef.current : undefined,
+      imPort: useSendBox ? imPortRef.current : (undefined as any),
+      enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
+    } as ChatOptionsType;
+  }, [autoLogin]);
+
+  return {
+    appKeyRef,
+    imServerRef,
+    imPortRef,
+    enableDNSConfigRef,
+    autoLogin,
+    getOptions,
+  };
+}
+
 export function useApp() {
   const im = getChatService();
   // const list = React.useRef<Map<string, DataModel>>(new Map());
   const permissionsRef = React.useRef(false);
   const { getPermission } = usePermissions();
   const initialRouteNameRef = React.useRef('Splash' as RootParamsName);
-  const autoLogin = React.useRef(false).current;
+  // const autoLogin = React.useRef(false).current;
   const palette = usePresetPalette();
   const paletteRef = React.useRef(palette);
   const ra = getReleaseArea();
@@ -111,10 +143,11 @@ export function useApp() {
   });
   const rootRef = useNavigationContainerRef<RootParamsList>();
   const serverConfigVisibleRef = React.useRef(false);
-  const appKeyRef = React.useRef(gAppKey);
-  const imServerRef = React.useRef(imServer);
-  const imPortRef = React.useRef(imPort);
-  const enableDNSConfigRef = React.useRef(enableDNSConfig);
+  // const appKeyRef = React.useRef(appKey);
+
+  // const imServerRef = React.useRef(imServer);
+  // const imPortRef = React.useRef(imPort);
+  // const enableDNSConfigRef = React.useRef(enableDNSConfig);
   const [_initParams, setInitParams] = React.useState(false);
   const {
     getDataFromStorage,
@@ -122,23 +155,26 @@ export function useApp() {
     // updateDataToStorage,
     // users,
   } = useUserInfo();
+  const { appKeyRef, imServerRef, imPortRef, enableDNSConfigRef, getOptions } =
+    useAppConfig();
 
   const { updater } = useForceUpdate();
 
-  const getOptions = React.useCallback(() => {
-    return {
-      appKey: appKeyRef.current,
-      debugModel: isDevMode,
-      autoLogin: autoLogin,
-      autoAcceptGroupInvitation: true,
-      requireAck: true,
-      requireDeliveryAck: true,
-      restServer: useSendBox ? restServer : undefined,
-      imServer: useSendBox ? imServerRef.current : undefined,
-      imPort: useSendBox ? imPortRef.current : (undefined as any),
-      enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
-    } as ChatOptionsType;
-  }, [autoLogin]);
+  // const getOptions = React.useCallback(() => {
+  //   return {
+  //     appKey: appKeyRef.current,
+
+  //     debugModel: isDevMode,
+  //     autoLogin: autoLogin,
+  //     autoAcceptGroupInvitation: true,
+  //     requireAck: true,
+  //     requireDeliveryAck: true,
+  //     restServer: useSendBox ? restServer : undefined,
+  //     imServer: useSendBox ? imServerRef.current : undefined,
+  //     imPort: useSendBox ? imPortRef.current : (undefined as any),
+  //     enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
+  //   } as ChatOptionsType;
+  // }, [autoLogin]);
 
   const onUsersHandler = React.useCallback(
     async (data: Map<string, DataModel>) => {

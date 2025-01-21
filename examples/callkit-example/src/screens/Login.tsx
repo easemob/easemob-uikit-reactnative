@@ -7,22 +7,18 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TextInput,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {
-  ErrorCode,
-  Icon,
-  Text1Button,
-  TextInput,
-  useChatContext,
-  useI18nContext,
-} from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { login_icon_2x, loginFail_2x } from '../const';
 import { useStyleSheet } from '../hooks/useStyleSheet';
+import { ChatClient } from '../rename.callkit';
 import type { RootScreenParamsList } from '../routes';
+import { Text1Button } from '../ui/Button';
+import { Icon } from '../ui/Image';
 import { sf } from '../utils/utils';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
@@ -35,17 +31,15 @@ export default function LoginScreen({ route, navigation }: Props): JSX.Element {
   const gid = params.id;
   const gps = params.pass;
   const enableKeyboardAvoid = true;
-  const { tr } = useI18nContext();
   const [id, setId] = React.useState(gid);
-  const [tip, setTip] = React.useState('');
+  const [tip] = React.useState('');
   const [password, setPassword] = React.useState(gps);
-  const [disabled, setDisabled] = React.useState(
+  const [, setDisabled] = React.useState(
     id.length > 0 && password.length > 0 ? false : true
   );
   const [buttonState, setButtonState] = React.useState<'loading' | 'stop'>(
     'stop'
   );
-  const im = useChatContext();
   console.log('test:LoginScreen:', params);
 
   React.useEffect(() => {
@@ -61,27 +55,18 @@ export default function LoginScreen({ route, navigation }: Props): JSX.Element {
       return;
     }
     setButtonState('loading');
-    im.login({
-      userId: id,
-      userToken: password,
-      usePassword: accountType === 'agora' ? false : true,
-      result: (res) => {
-        if (res.isOk) {
-          console.log('test:login:success');
-          setButtonState('stop');
-          navigation.dispatch(StackActions.push('Home', { params: {} }));
-        } else {
-          console.warn('test:login:fail:', res.error);
-          setButtonState('stop');
-          if (res.error?.code === ErrorCode.login_error) {
-            navigation.dispatch(StackActions.push('Home', { params: {} }));
-          } else {
-            setTip(res.error?.desc ?? '');
-            // toast.showToast('Login Failed');
-          }
-        }
-      },
-    });
+    ChatClient.getInstance()
+      .login(id, password, accountType === 'agora' ? false : true)
+      .then(() => {
+        console.log('test:login:success');
+        setButtonState('stop');
+        navigation.dispatch(StackActions.push('Home', { params: {} }));
+      })
+      .catch((e) => {
+        console.warn('test:login:fail:', e);
+        setButtonState('stop');
+        navigation.dispatch(StackActions.push('Home', { params: {} }));
+      });
   };
 
   const addListeners = React.useCallback(() => {
@@ -146,7 +131,7 @@ export default function LoginScreen({ route, navigation }: Props): JSX.Element {
             </View>
             <TextInput
               multiline={false}
-              placeholder={tr('id')}
+              placeholder={'id'}
               clearButtonMode="while-editing"
               onChangeText={(text) => setId(text)}
               style={styles.item}
@@ -155,7 +140,7 @@ export default function LoginScreen({ route, navigation }: Props): JSX.Element {
             <View style={{ height: sf(18) }} />
             <TextInput
               multiline={false}
-              placeholder={tr('pass')}
+              placeholder={'pass'}
               textContentType="password"
               visible-password={false}
               secureTextEntry
@@ -165,8 +150,7 @@ export default function LoginScreen({ route, navigation }: Props): JSX.Element {
             />
             <View style={{ height: sf(18) }} />
             <Text1Button
-              disabled={disabled}
-              text={tr('button')}
+              text={'button'}
               style={styles.button}
               onPress={() => {
                 if (buttonState === 'loading') {

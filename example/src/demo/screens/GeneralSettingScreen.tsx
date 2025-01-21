@@ -55,7 +55,6 @@ export function GeneralSettingScreen(props: Props) {
     onSetAppTheme,
     updateParams,
   } = useGeneralSetting();
-  console.log('test:zuoyu:123:', appMessageContextMenuStyle);
 
   const onBack = () => {
     navi.goBack();

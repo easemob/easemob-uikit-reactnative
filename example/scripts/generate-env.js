@@ -20,8 +20,8 @@ export const useSendBox = false;
 export const isDevMode = true;
 // The key of the application app. Obtain it through the console or official website.
 export const appKey = '';
-// Use 'agora' overseas and 'easemob' domestically. Domestic users can use password to log in.
-export const accountType = ''; // agora or easemob
+// The ID of the application app. Obtain it through the console or official website.
+export const accountType = ''; // agora | easemob | shengwang // only with callkit
 // agora's application key. Obtain it through the console or official website.
 export const agoraAppId = '';
 // The sender ID of the FCM.

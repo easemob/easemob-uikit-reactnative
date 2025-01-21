@@ -261,13 +261,13 @@ export const MessageInput = React.forwardRef<
                         // lineHeight: 22,
                         fontFamily: fontFamily,
                         flex: Platform.select({ ios: undefined, android: 1 }),
+                        paddingHorizontal: 8,
                       }}
                       containerStyle={{
                         width: '100%',
                         minHeight: 36,
-                        paddingHorizontal: 8,
-                        paddingVertical: 7,
                         maxHeight: Platform.OS === 'ios' ? 96 : 96,
+                        justifyContent: 'center',
                       }}
                       onFocus={onFocus}
                       onBlur={onBlur}

@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useChatContext } from 'react-native-chat-uikit';
 
+import { useChatContext } from '../../rename.uikit';
 import { useLoginWithConfig } from '../hooks/useLoginWithConfig';
 import type { RootScreenParamsList } from '../routes';
 

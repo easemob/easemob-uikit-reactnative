@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { Container } from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Container } from '../rename.uikit';
 
 let count = 0;
 export function Test1() {

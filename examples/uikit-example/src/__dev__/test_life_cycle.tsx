@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import {
-  Container,
-  useDispatchContext,
-  useLifecycle,
-} from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Container, useDispatchContext, useLifecycle } from '../rename.uikit';
 
 export function CL() {
   const [is, setIs] = React.useState(false);

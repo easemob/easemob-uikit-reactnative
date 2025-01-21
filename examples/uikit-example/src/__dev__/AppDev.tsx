@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { usePermissions } from 'react-native-chat-uikit';
 
+import { usePermissions } from '../rename.uikit';
 import { default as Test } from './test_tab2';
 
 // if (

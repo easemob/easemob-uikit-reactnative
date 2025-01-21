@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { Container } from 'react-native-chat-uikit';
+
+import { Container } from '../rename.uikit';
 
 type Point = {
   x: number;

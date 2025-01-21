@@ -22,6 +22,7 @@
         "rneui",
         "RNFS",
         "sendbird",
+        "shengwang",
         "tabbar",
         "uikit",
         "uilog",
@@ -32,5 +33,6 @@
     "yaml.schemas": {
         "https://raw.githubusercontent.com/estuary/flow/master/flow.schema.json": "untitled:Untitled-1"
     },
-    "CodeGPT.apiKey": "CodeGPT Plus Beta"
+    "CodeGPT.apiKey": "CodeGPT Plus Beta",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

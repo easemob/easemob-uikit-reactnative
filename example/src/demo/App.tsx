@@ -19,7 +19,6 @@ import { AVView } from './common/AVView';
 import {
   accountType,
   agoraAppId,
-  appKey as gAppKey,
   boloo_da_ttf_name,
   isDevMode,
   restServer,
@@ -28,7 +27,7 @@ import { RestApi } from './common/rest.api';
 import { useAutoLogin } from './hooks';
 import { useApp } from './hooks/useApp';
 import { useGeneralSetting } from './hooks/useGeneralSetting';
-import { useServerConfig } from './hooks/useServerConfig';
+import { AppKey, useServerConfig } from './hooks/useServerConfig';
 import type { RootParamsList } from './routes';
 import {
   AboutSettingScreen,
@@ -130,6 +129,7 @@ export function App() {
     getNaviTheme,
     messageMenuStyleRef,
     messageInputBarExtensionStyleRef,
+    autoLoginRef,
   } = useApp();
 
   const {
@@ -150,18 +150,22 @@ export function App() {
     }
     try {
       serverConfigVisibleRef.current = await getEnableDevMode();
-      appKeyRef.current =
-        serverConfigVisibleRef.current === true ? await getAppKey() : gAppKey;
-      imPortRef.current =
-        serverConfigVisibleRef.current === true ? await getImPort() : undefined;
-      imServerRef.current =
-        serverConfigVisibleRef.current === true
-          ? await getImServer()
-          : undefined;
-      enableDNSConfigRef.current =
-        serverConfigVisibleRef.current === true
-          ? await getEnableDNSConfig()
-          : undefined;
+      if (serverConfigVisibleRef.current === true) {
+        autoLoginRef.current = false;
+        AppKey.setAppKey(await getAppKey());
+
+        imPortRef.current = await getImPort();
+        imServerRef.current = await getImServer();
+        enableDNSConfigRef.current = await getEnableDNSConfig();
+      } else {
+        autoLoginRef.current = true;
+        imPortRef.current = undefined;
+        imServerRef.current = undefined;
+        enableDNSConfigRef.current = undefined;
+      }
+
+      appKeyRef.current = AppKey.appKey();
+
       const ret = await initParams();
       isLightRef.current = !ret.appTheme;
       releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
@@ -204,6 +208,7 @@ export function App() {
   }, [
     _initParams,
     appKeyRef,
+    autoLoginRef,
     enableAVMeetingRef,
     enableBlockRef,
     enableDNSConfigRef,
@@ -213,11 +218,11 @@ export function App() {
     enableThreadRef,
     enableTranslateRef,
     enableTypingRef,
-    getAppKey,
     getEnableDNSConfig,
     getEnableDevMode,
     getImPort,
     getImServer,
+    getAppKey,
     imPortRef,
     imServerRef,
     initParams,
@@ -335,7 +340,7 @@ export function App() {
     // !!! `initParams` is not called in the `useEffect` hook.
     return null;
   }
-  console.log('dev:app:');
+  console.log('dev:app:', getOptions());
 
   return (
     <React.StrictMode>

@@ -17,7 +17,7 @@ import type {
  */
 export type ContainerProps = React.PropsWithChildren<{
   /**
-   * Initialization parameters, the parameters that must be filled in include `appKey`, `debugModel`, `autoLogin`.
+   * Initialization parameters, the parameters that must be filled in include `appKey`.
    *
    * This parameter type is equivalent to the `ChatOptions` type. All parameters can be set.
    */
@@ -261,36 +261,50 @@ export type ContainerProps = React.PropsWithChildren<{
 
   /**
    * Whether to enable the message quote function.
+   *
+   * Default value is `true`.
    */
   enableMessageQuote?: boolean;
 
   /**
    * Whether to enable the message forward function.
+   *
+   * Default value is `true`.
    */
   enableMessageForward?: boolean;
 
   /**
    * Whether to enable the message multi-select function.
+   *
+   * Default value is `true`.
    */
   enableMessageMultiSelect?: boolean;
 
   /**
    * Whether to enable typing status.
+   *
+   * Default value is `true`.
    */
   enableTyping?: boolean;
 
   /**
    * Whether to enable the block list function.
+   *
+   * Default value is `true`.
    */
   enableBlock?: boolean;
 
   /**
    * Whether to enable the message pin function.
+   *
+   * Default value is `true`.
    */
   enableMessagePin?: boolean;
 
   /**
    * Whether to enable the URL preview function.
+   *
+   * Default value is `true`.
    */
   enableUrlPreview?: boolean;
 }>;

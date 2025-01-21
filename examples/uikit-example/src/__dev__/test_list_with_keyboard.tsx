@@ -7,17 +7,18 @@ import {
   // TextInput as RNTextInput,
   View,
 } from 'react-native';
-import {
-  Container,
-  TextInput,
-  useLightTheme,
-  usePresetPalette,
-} from 'react-native-chat-uikit';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+
+import {
+  Container,
+  TextInput,
+  useLightTheme,
+  usePresetPalette,
+} from '../rename.uikit';
 
 export function Test1() {
   const { top } = useSafeAreaInsets();

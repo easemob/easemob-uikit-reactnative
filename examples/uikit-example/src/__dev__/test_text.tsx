@@ -1,7 +1,8 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import * as React from 'react';
 import { Pressable, View } from 'react-native';
-import { Container, Text } from 'react-native-chat-uikit';
+
+import { Container, Text } from '../rename.uikit';
 
 export function Test1() {
   React.useEffect(() => {

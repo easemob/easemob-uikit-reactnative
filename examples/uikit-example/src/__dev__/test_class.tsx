@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Container } from 'react-native-chat-uikit';
+
+import { Container } from '../rename.uikit';
 
 interface TestBindListener {
   print: () => void;

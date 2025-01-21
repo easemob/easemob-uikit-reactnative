@@ -67,7 +67,7 @@ export function NewRequestsItem(props: NewRequestsItemProps) {
               color: getColor('fg'),
             }}
           >
-            {data.name ?? data.requestId}
+            {data.name && data.name.length > 1 ? data.name : data.requestId}
           </SingleLineText>
           <SingleLineText
             paletteType={'title'}

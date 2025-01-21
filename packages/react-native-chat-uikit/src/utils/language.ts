@@ -15,10 +15,10 @@ export function getSystemLanguage(): string {
     //   NativeModules.SettingsManager.settings
     // );
     // https://github.com/facebook/react-native/issues/26540
-    let locale = NativeModules.SettingsManager.settings.AppleLocale;
+    let locale = NativeModules.SettingsManager?.settings.AppleLocale;
     if (locale === undefined) {
       // iOS 13 workaround, take first of AppleLanguages array  ["en", "en-NZ"]
-      locale = NativeModules.SettingsManager.settings.AppleLanguages[0];
+      locale = NativeModules.SettingsManager?.settings.AppleLanguages[0];
       if (locale === undefined) {
         return 'en'; // default language
       }
@@ -27,7 +27,7 @@ export function getSystemLanguage(): string {
   } else if (Platform.OS === 'android') {
     // console.log('dev:getSystemLanguage', NativeModules.I18nManager);
     // ["en_US", "zh_CN_#Hans"]
-    return NativeModules.I18nManager.localeIdentifier;
+    return NativeModules.I18nManager?.localeIdentifier;
   }
   return '';
 }

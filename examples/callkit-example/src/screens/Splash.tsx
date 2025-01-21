@@ -2,14 +2,10 @@ import { CommonActions, StackActions } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
-import {
-  ChatServiceListener,
-  DisconnectReasonType,
-  LoadingIcon,
-  useChatContext,
-} from 'react-native-chat-uikit';
 
+import { ChatClient } from '../rename.callkit';
 import type { RootParamsList } from '../routes';
+import { Icon } from '../ui/Image';
 
 let gid: string = '';
 let gps: string = '';
@@ -28,8 +24,6 @@ export function SplashScreen({
   navigation,
 }: NativeStackScreenProps<RootParamsList, 'Splash'>): JSX.Element {
   console.log('test:SplashScreen:');
-  // const { autoLogin: autoLoginAction } = useAppChatSdkContext();
-  const im = useChatContext();
 
   const onDisconnected = React.useCallback(() => {
     console.warn('test:onDisconnected:');
@@ -51,32 +45,72 @@ export function SplashScreen({
 
   React.useEffect(() => {
     const listener = {
-      onConnected: () => {},
-      onDisconnected: (reason) => {
-        if (reason !== DisconnectReasonType.others) {
-          onDisconnected();
-        }
-      },
-      onTokenDidExpire: () => {
-        onTokenDidExpire();
-      },
-      onTokenWillExpire: () => {
+      onTokenWillExpire(): void {
         onTokenWillExpire();
       },
-    } as ChatServiceListener;
-    im.addListener(listener);
-    return () => {
-      im.removeListener(listener);
+      onTokenDidExpire(): void {
+        onTokenDidExpire();
+      },
+      onConnected(): void {
+        console.log('onConnected');
+      },
+      onDisconnected(): void {
+        console.log('onDisconnected');
+      },
+
+      onAppActiveNumberReachLimit(): void {
+        onDisconnected();
+      },
+
+      onUserDidLoginFromOtherDevice(_?: string): void {
+        onDisconnected();
+      },
+
+      onUserDidLoginFromOtherDeviceWithInfo(_params: {
+        deviceName?: string;
+        ext?: string;
+      }): void {
+        onDisconnected();
+      },
+
+      onUserDidRemoveFromServer(): void {
+        onDisconnected();
+      },
+
+      onUserDidForbidByServer(): void {
+        onDisconnected();
+      },
+
+      onUserDidChangePassword(): void {
+        onDisconnected();
+      },
+
+      onUserDidLoginTooManyDevice(): void {
+        onDisconnected();
+      },
+
+      onUserKickedByOtherDevice(): void {
+        onDisconnected();
+      },
+
+      onUserAuthenticationFailed(): void {
+        onDisconnected();
+      },
     };
-  }, [im, onDisconnected, onTokenDidExpire, onTokenWillExpire]);
+    ChatClient.getInstance().addConnectionListener(listener);
+    return () => {
+      ChatClient.getInstance().removeConnectionListener(listener);
+    };
+  }, [onDisconnected, onTokenDidExpire, onTokenWillExpire]);
 
   React.useEffect(() => {
     const sub = DeviceEventEmitter.addListener('on_initialized', (event) => {
       const { autoLogin, navigation } = event;
       if (autoLogin === true) {
-        im.autoLogin({
-          result: (res) => {
-            if (res.isOk) {
+        ChatClient.getInstance()
+          .isLoginBefore()
+          .then((isLogined) => {
+            if (isLogined) {
               navigation.dispatch(
                 StackActions.push('Home', {
                   params: { id: 'sdf', pass: 'xxx' },
@@ -89,8 +123,14 @@ export function SplashScreen({
                 })
               );
             }
-          },
-        });
+          })
+          .catch(() => {
+            navigation.dispatch(
+              CommonActions.navigate('Login', {
+                params: { id: gid, pass: gps, accountType: gt },
+              })
+            );
+          });
       } else {
         navigation.dispatch(
           CommonActions.navigate('Login', {
@@ -102,7 +142,7 @@ export function SplashScreen({
     return () => {
       return sub.remove();
     };
-  }, [im]);
+  }, []);
 
   return (
     <View
@@ -113,12 +153,13 @@ export function SplashScreen({
         // backgroundColor: 'red',
       }}
     >
-      <LoadingIcon
+      <Icon
         style={{
           tintColor: 'rgba(15, 70, 230, 1)',
           width: 45,
           height: 45,
         }}
+        name={0}
       />
     </View>
   );

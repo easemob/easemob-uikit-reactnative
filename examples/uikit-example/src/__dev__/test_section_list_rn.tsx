@@ -8,11 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  Container,
-  ListIndex,
-  useDelayExecTask,
-} from 'react-native-chat-uikit';
+
+import { Container, ListIndex, useDelayExecTask } from '../rename.uikit';
 
 const DATA = [
   {

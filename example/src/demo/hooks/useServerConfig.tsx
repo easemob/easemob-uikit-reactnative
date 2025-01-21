@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { AsyncStorageBasic, SingletonObjects } from '../../rename.uikit';
 import {
-  appKey as gAppKey,
+  appKey,
   enableDNSConfig,
   imPort,
   imServer,
@@ -37,7 +37,7 @@ export function useServerConfig() {
   }, []);
 
   const getAppKey = React.useCallback(async () => {
-    return (await getKey('appKey')) ?? gAppKey;
+    return (await getKey('appKey')) ?? appKey;
   }, [getKey]);
   const getImServer = React.useCallback(async () => {
     return (await getKey('imServer')) ?? imServer;
@@ -114,4 +114,17 @@ export function useServerConfig() {
     setRestSever,
     setEnableDevMode,
   };
+}
+
+export class AppKey {
+  static _appKey = appKey;
+  static appKey() {
+    return AppKey._appKey;
+  }
+  static setAppKey(appKey: string) {
+    AppKey._appKey = appKey;
+  }
+  static gAppKey() {
+    return AppKey._appKey;
+  }
 }

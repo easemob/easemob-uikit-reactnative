@@ -7,7 +7,8 @@ import {
   Pressable,
   View,
 } from 'react-native';
-import { Text1Button } from 'react-native-chat-uikit';
+
+import { Text1Button } from '../ui/Button';
 
 type Props = {};
 type State = {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
+
 import {
   // TabPageTabBarHeader,
   createDarkTheme,
@@ -9,7 +10,7 @@ import {
   TabPage,
   TabPageBodyItem,
   ThemeContextProvider,
-} from 'react-native-chat-uikit';
+} from '../rename.uikit';
 
 export function BodyPages(): React.ReactNode[] {
   const list = [1, 2, 3];

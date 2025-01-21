@@ -23,9 +23,8 @@ import {
   useThemeContext,
 } from '../../rename.uikit';
 import { main_bg, main_bg_dark } from '../common/assets';
-import { appKey as gAppKey } from '../common/const';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
-import { useServerConfig, useStackScreenRoute } from '../hooks';
+import { AppKey, useServerConfig, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
@@ -74,7 +73,7 @@ export function ServerSettingScreen(props: Props) {
     },
   });
   const [disable] = React.useState<boolean>(false);
-  const [appKey, setAppKey] = React.useState<string>(gAppKey);
+  const [appKey, setAppKey] = React.useState<string>(AppKey.gAppKey());
   const [imServer, setImServer] = React.useState<string>('');
   const [imPort, setImPort] = React.useState<string>('');
   const [restServer, setRestServer] = React.useState<string>('');
@@ -94,6 +93,8 @@ export function ServerSettingScreen(props: Props) {
     // todo: 将变量保存到本地，之后重启时读取
     try {
       await _setAppKey(appKey);
+      AppKey.setAppKey(appKey);
+
       await _setImPort(imPort);
       await _setEnableDNSConfig(enablePrivateServer);
       await _setImServer(imServer);
@@ -122,7 +123,6 @@ export function ServerSettingScreen(props: Props) {
       console.warn('save error:', error);
     }
   }, [
-    restServer,
     _setAppKey,
     _setEnableDNSConfig,
     _setImPort,
@@ -133,6 +133,7 @@ export function ServerSettingScreen(props: Props) {
     getAlertRef,
     imPort,
     imServer,
+    restServer,
     tr,
   ]);
 
@@ -159,16 +160,17 @@ export function ServerSettingScreen(props: Props) {
   React.useEffect(() => {
     if (initRef.current === false) {
       initRef.current = true;
-      getData().then((value) => {
-        if (value) {
-          setAppKey(value.appKey);
-          setImServer(value.imServer);
-          setImPort(value.imPort);
-          setRestServer(value.restServer);
-          setEnablePrivateServer(value.enablePrivateServer ?? false);
-        }
-      });
     }
+    getData().then((value) => {
+      if (value) {
+        setAppKey(value.appKey);
+
+        setImServer(value.imServer);
+        setImPort(value.imPort);
+        setRestServer(value.restServer);
+        setEnablePrivateServer(value.enablePrivateServer ?? false);
+      }
+    });
   }, [getAppKey, getData]);
 
   return (

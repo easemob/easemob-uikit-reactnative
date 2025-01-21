@@ -12,6 +12,7 @@ import {
   ChatMessageStatus,
   ChatMessageStatusCallback,
   ChatMessageType,
+  ChatRecalledMessageInfo,
   ChatSearchDirection,
   ChatTextMessageBody,
 } from '../rename.chat';
@@ -60,7 +61,8 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       onMessagesRead: this.bindOnMessagesRead.bind(this),
       onGroupMessageRead: this.bindOnGroupMessageRead.bind(this),
       onMessagesDelivered: this.bindOnMessagesDelivered.bind(this),
-      onMessagesRecalled: this.bindOnMessagesRecalled.bind(this),
+      // onMessagesRecalled: this.bindOnMessagesRecalled.bind(this),
+      onMessagesRecalledInfo: this.onMessagesRecalledInfo.bind(this),
       onMessageContentChanged: this.bindOnMessageContentChanged.bind(this),
       onMessagePinChanged: this.bindOnMessagePinChanged.bind(this),
     };
@@ -180,14 +182,27 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       });
     });
   }
-  bindOnMessagesRecalled(messages: Array<ChatMessage>): void {
-    messages.forEach((msg) => {
-      const tipMsg = this.createRecallMessageTip(msg);
+  // bindOnMessagesRecalled(messages: Array<ChatMessage>): void {
+  //   messages.forEach((msg) => {
+  //     const tipMsg = this.createRecallMessageTip(msg);
+  //     this._client.insertMessage({
+  //       message: tipMsg,
+  //       onResult: () => {
+  //         this._userListener.forEach((v) => {
+  //           v.onRecvRecallMessage?.(msg, tipMsg);
+  //         });
+  //       },
+  //     });
+  //   });
+  // }
+  onMessagesRecalledInfo(messages: Array<ChatRecalledMessageInfo>): void {
+    messages.forEach((info) => {
+      const tipMsg = this.createRecallMessageTip(info.recalledMessage);
       this._client.insertMessage({
         message: tipMsg,
         onResult: () => {
           this._userListener.forEach((v) => {
-            v.onRecvRecallMessage?.(msg, tipMsg);
+            v.onRecvRecallMessage?.(info.recalledMessage, tipMsg);
           });
         },
       });

@@ -5,6 +5,8 @@
 ```sh
 # Official Creation Method
 npx react-native@latest init AwesomeProject
+# 2025-01-15
+npx @react-native-community/cli@latest init --skip-install test_chatsdk_076
 
 # Expo Creation Method
 # This method is recommended by the official React Native website

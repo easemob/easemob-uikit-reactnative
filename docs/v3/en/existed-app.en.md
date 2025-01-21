@@ -32,41 +32,37 @@ Add dependencies for UIKit dependencies. As `react-native-chat-uikit` uses sever
 
 Add the following dependencies to `package.json`:
 
-```json
-{
-  "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.17.11",
-    "@react-native-camera-roll/camera-roll": "^5.6.0",
-    "@react-native-clipboard/clipboard": "^1.11.2",
-    "@react-native-firebase/app": "^18.0.0",
-    "@react-native-firebase/messaging": "^18.0.0",
-    "date-fns": "^3.6.0",
-    "pinyin-pro": "^3.19.7",
-    "react": "18.2.0",
-    "react-native": "0.72.7",
-    "react-native-agora": "^4.2.6",
-    "react-native-audio-recorder-player": "^3.5.3",
-    "react-native-chat-sdk": "1.3.1",
-    "react-native-chat-callkit": "1.0.4",
-    "react-native-chat-uikit": "2.1.0",
-    "react-native-create-thumbnail": "^1.6.4",
-    "react-native-device-info": "^10.6.0",
-    "react-native-document-picker": "^9.0.1",
-    "react-native-fast-image": "^8.6.3",
-    "react-native-file-access": "^3.0.4",
-    "react-native-gesture-handler": "^2.16.0",
-    "react-native-get-random-values": "~1.8.0",
-    "react-native-image-picker": "^7.0.3",
-    "react-native-permissions": "^3.8.0",
-    "react-native-safe-area-context": "4.5.0",
-    "react-native-screens": "^3.20.0",
-    "react-native-vector-icons": "^10.0.3",
-    "react-native-video": "^5.2.1",
-    "react-native-web": "~0.19.6",
-    "react-native-webview": "13.2.2",
-    "twemoji": "^14.0.2"
-  }
-}
+```bash
+yarn add @react-native-async-storage/async-storage \
+@react-native-camera-roll/camera-roll \
+@react-native-clipboard/clipboard \
+@react-native-firebase/app \
+@react-native-firebase/messaging \
+date-fns \
+pinyin-pro \
+react \
+react-native \
+react-native-agora \
+react-native-audio-recorder-player \
+react-native-chat-sdk \
+react-native-chat-callkit \
+react-native-chat-uikit \
+react-native-create-thumbnail \
+react-native-device-info \
+react-native-document-picker \
+react-native-fast-image \
+react-native-file-access \
+react-native-gesture-handler \
+react-native-get-random-values \
+react-native-image-picker \
+react-native-permissions \
+react-native-safe-area-context \
+react-native-screens \
+react-native-vector-icons \
+react-native-video \
+react-native-web \
+react-native-webview \
+twemoji
 ```
 
 ## Add Native Configurations

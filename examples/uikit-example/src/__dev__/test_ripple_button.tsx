@@ -7,13 +7,14 @@ import {
   // TextInput as RNTextInput,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
   Container,
   Ripple,
   useLightTheme,
   usePresetPalette,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from '../rename.uikit';
 
 export function Test() {
   const timestamp = React.useRef(1000).current;

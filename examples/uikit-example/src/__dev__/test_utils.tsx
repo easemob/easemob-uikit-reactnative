@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
   Container,
   containsChinese,
@@ -9,8 +11,7 @@ import {
   splitStringByUrl,
   splitStringWithDelimiter,
   useUrlPreview,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from '../rename.uikit';
 
 export function Split() {
   const keyword = '张三';

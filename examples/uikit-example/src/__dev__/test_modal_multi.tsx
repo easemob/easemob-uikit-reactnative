@@ -6,7 +6,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { Container, Text } from 'react-native-chat-uikit';
+
+import { Container, Text } from '../rename.uikit';
 
 function ShowAlert() {
   Alert.alert('Title', 'Message');

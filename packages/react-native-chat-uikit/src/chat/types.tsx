@@ -1153,6 +1153,11 @@ export interface ChatService
   get client(): ChatClient;
 
   /**
+   * Get the current services ID.
+   */
+  id(): string;
+
+  /**
    * Initialize the IM service.
    *
    * The initialization operation is a necessary prerequisite for using `ChatService`. Usually it won't fail. Usually an error is reported because `appKey` is not set or `appKey` is empty.
@@ -1351,6 +1356,12 @@ export interface ChatService
 }
 
 type _ChatOptionsType = PartialUndefinable<ChatOptions>;
+export type ChatAppKeyOptionsType = _ChatOptionsType & {
+  /**
+   * App key. (required)
+   */
+  appKey: string;
+};
 /**
  * ChatOptionsType is the initialization parameters of ChatService.
  *
@@ -1359,12 +1370,7 @@ type _ChatOptionsType = PartialUndefinable<ChatOptions>;
  * This parameter option is consistent with `Agora Chat SDK`.
  *
  */
-export type ChatOptionsType = _ChatOptionsType & {
-  /**
-   * App key. (required)
-   */
-  appKey: string;
-};
+export type ChatOptionsType = ChatAppKeyOptionsType;
 
 /**
  * ChatServiceInit is the initialization parameters of ChatService.

@@ -1,13 +1,8 @@
 import * as React from 'react';
 import { FlatList, type ListRenderItemInfo, Text, View } from 'react-native';
-import type { InviteeListProps } from 'react-native-chat-callkit';
-import {
-  CheckButton,
-  Search,
-  Text1Button,
-  useChatContext,
-  useDelayExecTask,
-} from 'react-native-chat-uikit';
+
+import { ChatClient, type InviteeListProps } from '../rename.callkit';
+import { CheckButton, Text1Button } from '../ui/Button';
 
 type DataType = {
   userId: string;
@@ -56,11 +51,8 @@ type SelectListProps = {
 };
 export function SelectList(props: SelectListProps): JSX.Element {
   const { selectedIds, maxCount, onChangeCount, onAddedIds } = props;
-  // const { client, currentId } = useAppChatSdkContext();
-  const im = useChatContext();
   const data = React.useMemo(() => [] as DataType[], []);
   const [_data, setData] = React.useState(data);
-  const [value, setValue] = React.useState('');
   const selectedCount = React.useRef(selectedIds.length);
 
   const onChangeSelected = React.useCallback(
@@ -85,97 +77,77 @@ export function SelectList(props: SelectListProps): JSX.Element {
     [data, onAddedIds]
   );
 
-  const init = React.useCallback(() => {
-    im.getAllContacts({
-      onResult: (res) => {
-        if (res.isOk && res.value && res.value.length > 0) {
-          data.length = 0;
-          for (const i of res.value) {
-            const user = {
-              userId: i.userId,
-              userName: i.userName,
-              onChecked: (checked: boolean) => {
-                if (checked === true) {
-                  // Note: to add.
-                  if (selectedCount.current < maxCount) {
-                    ++selectedCount.current;
-                    user.isSelected = checked;
-                    onChangeCount?.(selectedCount.current);
-                    onChangeSelected(selectedIds);
-                    return true;
-                  } else {
-                    return false;
-                  }
+  const init = React.useCallback(async () => {
+    try {
+      const ret =
+        await ChatClient.getInstance().contactManager.fetchAllContacts();
+      if (ret.length > 0) {
+        data.length = 0;
+        for (const i of ret) {
+          const user = {
+            userId: i.userId,
+            userName: i.remark ?? i.userId,
+            onChecked: (checked: boolean) => {
+              if (checked === true) {
+                // Note: to add.
+                if (selectedCount.current < maxCount) {
+                  ++selectedCount.current;
+                  user.isSelected = checked;
+                  onChangeCount?.(selectedCount.current);
+                  onChangeSelected(selectedIds);
+                  return true;
                 } else {
-                  // Note: to del.
-                  if (selectedCount.current > 0) {
-                    --selectedCount.current;
-                    user.isSelected = checked;
-                    onChangeCount?.(selectedCount.current);
-                    onChangeSelected(selectedIds);
-                    return true;
-                  } else {
-                    return false;
-                  }
+                  return false;
                 }
-              },
-            } as DataType;
-            data.push(user);
-          }
-
-          // add self
-          if (im.userId) {
-            data.push({
-              userId: im.userId,
-              userName: im.userId,
-              isSelected: true,
-              enable: false,
-            } as DataType);
-          }
-
-          for (const d of data) {
-            for (const id of selectedIds) {
-              if (d.userId === id) {
-                d.enable = false;
-                d.isSelected = true;
+              } else {
+                // Note: to del.
+                if (selectedCount.current > 0) {
+                  --selectedCount.current;
+                  user.isSelected = checked;
+                  onChangeCount?.(selectedCount.current);
+                  onChangeSelected(selectedIds);
+                  return true;
+                } else {
+                  return false;
+                }
               }
+            },
+          } as DataType;
+          data.push(user);
+        }
+
+        // add self
+        const userId = await ChatClient.getInstance().getCurrentUsername();
+        if (userId) {
+          data.push({
+            userId: userId,
+            userName: userId,
+            isSelected: true,
+            enable: false,
+          } as DataType);
+        }
+
+        for (const d of data) {
+          for (const id of selectedIds) {
+            if (d.userId === id) {
+              d.enable = false;
+              d.isSelected = true;
             }
           }
-          setData([...data]);
         }
-      },
-    });
-    return () => {};
-  }, [data, im, maxCount, onChangeCount, onChangeSelected, selectedIds]);
-
-  const execSearch = (keyword: string) => {
-    const r = [] as DataType[];
-    for (const d of data) {
-      if (d.userId.includes(keyword)) {
-        r.push(d);
+        setData([...data]);
       }
-    }
-    setData([...r]);
-  };
-
-  const { delayExecTask: execSearchTask } = useDelayExecTask(500, execSearch);
+    } catch (e) {}
+    return () => {};
+  }, [data, maxCount, onChangeCount, onChangeSelected, selectedIds]);
 
   React.useEffect(() => {
-    const ret = init();
-    return () => {
-      ret();
-    };
+    init();
+    return () => {};
   }, [init]);
 
   return (
     <View>
-      <Search
-        value={value}
-        onChangeText={(text) => {
-          setValue(text);
-          execSearchTask(text);
-        }}
-      />
       <FlatList
         data={_data}
         extraData={_data}

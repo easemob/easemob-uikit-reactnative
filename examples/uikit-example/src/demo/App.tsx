@@ -16,7 +16,6 @@ import { ToastView } from './common';
 import { AvatarStatusRenderMemo } from './common/AvatarStatusRender';
 import {
   accountType,
-  appKey as gAppKey,
   boloo_da_ttf_name,
   demoType,
   restServer,
@@ -25,7 +24,7 @@ import { RestApi } from './common/rest.api';
 import { useAutoLogin } from './hooks';
 import { useApp } from './hooks/useApp';
 import { useGeneralSetting } from './hooks/useGeneralSetting';
-import { useServerConfig } from './hooks/useServerConfig';
+import { AppKey, useServerConfig } from './hooks/useServerConfig';
 import type { RootParamsList } from './routes';
 import {
   AboutSettingScreen,
@@ -77,12 +76,13 @@ import {
   TopMenuScreen,
   VideoMessagePreviewScreen,
 } from './screens';
+import { InitScreen } from './screens/InitScreen';
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
 // SplashScreen?.preventAutoHideAsync?.();
 
-export function App() {
+export function _App() {
   const {
     initialRouteNameRef,
     paletteRef,
@@ -154,18 +154,20 @@ export function App() {
         initialRouteNameRef.current = 'Login';
       }
       serverConfigVisibleRef.current = await getEnableDevMode();
-      appKeyRef.current =
-        serverConfigVisibleRef.current === true ? await getAppKey() : gAppKey;
-      imPortRef.current =
-        serverConfigVisibleRef.current === true ? await getImPort() : undefined;
-      imServerRef.current =
-        serverConfigVisibleRef.current === true
-          ? await getImServer()
-          : undefined;
-      enableDNSConfigRef.current =
-        serverConfigVisibleRef.current === true
-          ? await getEnableDNSConfig()
-          : undefined;
+      if (serverConfigVisibleRef.current === true) {
+        AppKey.setAppKey(await getAppKey());
+
+        imPortRef.current = await getImPort();
+        imServerRef.current = await getImServer();
+        enableDNSConfigRef.current = await getEnableDNSConfig();
+      } else {
+        imPortRef.current = undefined;
+        imServerRef.current = undefined;
+        enableDNSConfigRef.current = undefined;
+      }
+
+      appKeyRef.current = AppKey.appKey();
+
       const ret = await initParams();
       isLightRef.current = !ret.appTheme;
       releaseAreaRef.current = ret.appStyle === 'classic' ? 'china' : 'global';
@@ -217,11 +219,11 @@ export function App() {
     enableThreadRef,
     enableTranslateRef,
     enableTypingRef,
-    getAppKey,
     getEnableDNSConfig,
     getEnableDevMode,
     getImPort,
     getImServer,
+    getAppKey,
     imPortRef,
     imServerRef,
     initParams,
@@ -790,4 +792,19 @@ export function TestListener() {
     }, [])
   );
   return <></>;
+}
+
+export function App() {
+  const [isReady, setReady] = React.useState(false);
+  if (isReady) {
+    return <_App />;
+  } else {
+    return (
+      <InitScreen
+        onSave={() => {
+          setReady(true);
+        }}
+      />
+    );
+  }
 }

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { Container, useForceUpdate } from 'react-native-chat-uikit';
+
+import { Container, useForceUpdate } from '../rename.uikit';
 
 export function Test1() {
   const count = React.useRef(0);

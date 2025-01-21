@@ -14,7 +14,7 @@ const content = `export const test = true;
 export const appKey = '';
 export const id = '';
 export const ps = '';
-export const accountType = ''; // agora or easemob
+export const accountType = ''; // agora | easemob | shengwang // only with callkit
 export const agoraAppId = '';
 export const fcmSenderId = '';
 `;

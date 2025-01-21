@@ -58,7 +58,7 @@ import { createStringSetCn, createStringSetEn } from '../common';
 import { boloo_da_ttf, twemoji_ttf } from '../common/assets';
 import {
   accountType,
-  appKey as gAppKey,
+  appKey,
   boloo_da_ttf_name,
   enableDNSConfig,
   fcmSenderId,
@@ -80,13 +80,50 @@ import type { RootParamsList, RootParamsName } from '../routes';
 import { formatNavigationState } from '../utils/utils';
 import { useUserInfo } from './useUserInfo';
 
+export function useAppConfig() {
+  const appKeyRef = React.useRef(appKey);
+  const autoLoginRef = React.useRef(false);
+  const imServerRef = React.useRef(imServer);
+  const imPortRef = React.useRef(imPort);
+  const enableDNSConfigRef = React.useRef(enableDNSConfig);
+
+  const getOptions = React.useCallback(() => {
+    return {
+      appKey: appKeyRef.current,
+      debugModel: isDevMode,
+      autoLogin: autoLoginRef.current,
+      autoAcceptGroupInvitation: true,
+      requireAck: true,
+      requireDeliveryAck: true,
+      restServer: useSendBox ? restServer : undefined,
+      imServer: useSendBox ? imServerRef.current : undefined,
+      imPort: useSendBox ? imPortRef.current : (undefined as any),
+      enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
+      pushConfig:
+        fcmSenderId && fcmSenderId.length > 0
+          ? new ChatPushConfig({
+              deviceId: fcmSenderId,
+              deviceToken: '',
+            })
+          : undefined,
+    } as ChatOptionsType;
+  }, []);
+
+  return {
+    appKeyRef,
+    imServerRef,
+    imPortRef,
+    enableDNSConfigRef,
+    autoLoginRef,
+    getOptions,
+  };
+}
+
 export function useApp() {
   const im = getChatService();
-  // const list = React.useRef<Map<string, DataModel>>(new Map());
   const permissionsRef = React.useRef(false);
   const { getPermission } = usePermissions();
   const initialRouteName = React.useRef('Splash' as RootParamsName).current;
-  const autoLogin = React.useRef(true).current;
   const palette = usePresetPalette();
   const paletteRef = React.useRef(palette);
   const ra = getReleaseArea();
@@ -127,122 +164,18 @@ export function useApp() {
   });
   const rootRef = useNavigationContainerRef<RootParamsList>();
   const serverConfigVisibleRef = React.useRef(false);
-  const appKeyRef = React.useRef(gAppKey);
-  const imServerRef = React.useRef(imServer);
-  const imPortRef = React.useRef(imPort);
-  const enableDNSConfigRef = React.useRef(enableDNSConfig);
   const [_initParams, setInitParams] = React.useState(false);
+  const { getDataFromStorage } = useUserInfo();
   const {
-    getDataFromStorage,
-    // updateDataFromServer,
-    // updateDataToStorage,
-    // users,
-  } = useUserInfo();
+    appKeyRef,
+    imServerRef,
+    imPortRef,
+    enableDNSConfigRef,
+    getOptions,
+    autoLoginRef,
+  } = useAppConfig();
 
   const { updater } = useForceUpdate();
-
-  const getOptions = React.useCallback(() => {
-    return {
-      appKey: appKeyRef.current,
-      debugModel: isDevMode,
-      autoLogin: autoLogin,
-      autoAcceptGroupInvitation: true,
-      requireAck: true,
-      requireDeliveryAck: true,
-      restServer: useSendBox ? restServer : undefined,
-      imServer: useSendBox ? imServerRef.current : undefined,
-      imPort: useSendBox ? imPortRef.current : (undefined as any),
-      enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
-      pushConfig:
-        fcmSenderId && fcmSenderId.length > 0
-          ? new ChatPushConfig({
-              deviceId: fcmSenderId,
-              deviceToken: '',
-            })
-          : undefined,
-    } as ChatOptionsType;
-  }, [autoLogin]);
-
-  // const onUsersProvider = React.useCallback(
-  //   (params: {
-  //     ids: string[];
-  //     result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-  //   }) => {
-  //     const userIds = params.ids;
-  //     const noExistedIds = [] as string[];
-  //     userIds.forEach((id) => {
-  //       const isExisted = users.current.get(id);
-  //       if (
-  //         isExisted &&
-  //         isExisted.avatarURL &&
-  //         isExisted.avatarURL.length > 0 &&
-  //         isExisted.userName &&
-  //         isExisted.userName.length > 0
-  //       )
-  //         return;
-  //       noExistedIds.push(id);
-  //     });
-  //     if (noExistedIds.length === 0) {
-  //       const finalUsers = userIds
-  //         .map<DataModel | undefined>((id) => {
-  //           const ret = users.current.get(id);
-  //           if (ret) {
-  //             return {
-  //               id: ret.userId,
-  //               name: ret.userName,
-  //               avatar: ret.avatarURL,
-  //               type: 'user',
-  //             } as DataModel;
-  //           }
-  //           return undefined;
-  //         })
-  //         .filter((item) => item !== undefined) as DataModel[];
-  //       params?.result({ data: finalUsers ?? [] });
-  //     } else {
-  //       if (userIds.length === 0) {
-  //         params?.result({ data: [] });
-  //         return;
-  //       }
-  //       im.getUsersInfo({
-  //         userIds: userIds,
-  //         onResult: (res) => {
-  //           if (res.isOk && res.value) {
-  //             const u = res.value;
-  //             updateDataFromServer(u);
-  //             const finalUsers = userIds
-  //               .map<DataModel | undefined>((id) => {
-  //                 const ret = users.current.get(id);
-  //                 if (ret) {
-  //                   return {
-  //                     id: ret.userId,
-  //                     name: ret.userName,
-  //                     avatar: ret.avatarURL,
-  //                     type: 'user',
-  //                   } as DataModel;
-  //                 }
-  //                 return undefined;
-  //               })
-  //               .filter((item) => item !== undefined) as DataModel[];
-  //             params?.result({ data: finalUsers ?? [] });
-  //             updateDataToStorage();
-  //           } else {
-  //             params?.result({ error: res.error });
-  //           }
-  //         },
-  //       });
-  //     }
-  //   },
-  //   [im, users, updateDataFromServer, updateDataToStorage]
-  // );
-  // const onGroupsProvider = React.useCallback(
-  //   (params: {
-  //     ids: string[];
-  //     result: (params: { data?: DataModel[]; error?: UIKitError }) => void;
-  //   }) => {
-  //     params.result({ data: [] });
-  //   },
-  //   []
-  // );
 
   const onUsersHandler = React.useCallback(
     async (data: Map<string, DataModel>) => {
@@ -996,5 +929,6 @@ export function useApp() {
     getNaviTheme,
     messageMenuStyleRef,
     messageInputBarExtensionStyleRef,
+    autoLoginRef,
   };
 }

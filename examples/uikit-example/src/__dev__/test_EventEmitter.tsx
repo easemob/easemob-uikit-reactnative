@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { DeviceEventEmitter, type EmitterSubscription } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
   CmnButton,
   Container,
   useLightTheme,
   usePresetPalette,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from '../rename.uikit';
 
 type Callback = (data: any) => void;
 

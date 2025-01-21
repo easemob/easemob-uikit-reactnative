@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { VideoViewSetupMode } from 'react-native-agora';
-import { Text1Button } from 'react-native-chat-uikit';
 
-import type { User } from '../../../../packages/react-native-chat-callkit/src/types';
-import { VideoTabs } from '../../../../packages/react-native-chat-callkit/src/view/components/VideoTabs';
+// import { VideoViewSetupMode } from 'react-native-agora';
+import type { User } from '../rename.callkit';
+import { Text1Button } from '../ui/Button';
 
 export function Test() {
   const [count, update] = React.useState(0);
-  const ref = React.useRef<VideoTabs>({} as any);
+  // const ref = React.useRef<VideoTabs>({} as any);
   const users = React.useMemo(() => [] as User[], []);
   // for (let index = 0; index < 6; index++) {
   //   users.push({
@@ -37,11 +36,11 @@ export function Test() {
         }}
         text={'update'}
       />
-      <VideoTabs
+      {/* <VideoTabs
         ref={ref}
         users={users}
         setupMode={VideoViewSetupMode.VideoViewSetupAdd}
-      />
+      /> */}
     </View>
   );
   // return <AudioTabs users={users} />;

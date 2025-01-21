@@ -249,10 +249,10 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
               backgroundColor: 'orange',
             }}
             onPress={() => {
-              console.log('test:zuoyu: onPress');
+              console.log('onPress');
             }}
             onLongPress={() => {
-              console.log('test:zuoyu: onLongPress');
+              console.log('onLongPress');
             }}
           >
             <View

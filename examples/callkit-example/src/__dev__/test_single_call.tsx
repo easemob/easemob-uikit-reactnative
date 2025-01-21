@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { CallState, SingleCall } from 'react-native-chat-callkit';
 
-// import { TestEnum } from '../../../../packages/react-native-chat-callkit/src/view/SingleCall';
+import { CallState, SingleCall } from '../rename.callkit';
 
 export function test_all() {
   const isMinimize = false; // for test

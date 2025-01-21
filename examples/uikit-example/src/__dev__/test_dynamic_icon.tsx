@@ -5,14 +5,15 @@ import {
   // TextInput as RNTextInput,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
   Container,
   DynamicIcon,
   type DynamicIconRef,
   useLightTheme,
   usePresetPalette,
-} from 'react-native-chat-uikit';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from '../rename.uikit';
 
 // export function Test11() {
 //   const ref = React.useRef<DynamicIconRef>({} as any);

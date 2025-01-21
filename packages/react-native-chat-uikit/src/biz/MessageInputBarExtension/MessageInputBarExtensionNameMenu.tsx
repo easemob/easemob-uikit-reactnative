@@ -71,11 +71,15 @@ export const MessageInputBarExtensionNameMenu = React.forwardRef<
     [updateItems, updateProps]
   );
 
+  if (isShow === false) {
+    return null;
+  }
+
   return (
     <View
       style={{
         backgroundColor: getColor('bg'),
-        display: isShow === true ? 'flex' : 'none',
+        // display: isShow === true ? 'flex' : 'none',
       }}
     >
       {pageCount <= 1 ? (

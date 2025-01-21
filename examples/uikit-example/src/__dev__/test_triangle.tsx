@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import {
-  Container,
-  useLightTheme,
-  usePresetPalette,
-} from 'react-native-chat-uikit';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Container, useLightTheme, usePresetPalette } from '../rename.uikit';
 
 export function MyTriangle() {
   return (

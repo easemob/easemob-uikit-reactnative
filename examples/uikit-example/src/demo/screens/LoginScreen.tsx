@@ -7,12 +7,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  TextInput,
-  useChatContext,
-  useChatListener,
-} from 'react-native-chat-uikit';
 
+import { TextInput, useChatContext, useChatListener } from '../../rename.uikit';
 import { useLoginWithConfig } from '../hooks/useLoginWithConfig';
 import type { RootScreenParamsList } from '../routes';
 
@@ -99,7 +95,7 @@ export function LoginScreen(props: Props) {
       />
       <View style={{ height: 10 }} />
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text>{'Whether to use a password to log in.'}</Text>
+        <Text>{isPass ? 'password to log in.' : 'token to log in.'}</Text>
         <Switch value={isPass} onValueChange={onIsPass} />
       </View>
       <View style={{ height: 10 }} />

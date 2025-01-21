@@ -10,12 +10,13 @@ import {
   useSimpleToastContext,
   useToastViewContext,
 } from '../../rename.uikit';
-import { accountType, appKey as gAppKey } from '../common/const';
+import { accountType } from '../common/const';
+import { AppKey } from './useServerConfig';
 
 export function useAutoLogin() {
   const getSelfInfo = React.useCallback(async () => {
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${gAppKey}/uikit/demo`,
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
     });
     const res = await s.getData({ key: 'self' });
     if (res.value) {

@@ -1,4 +1,3 @@
-// import CreateThumbnail from '@easemob/react-native-create-thumbnail';
 import { CameraRoll as MediaLibrary } from '@react-native-camera-roll/camera-roll';
 import Clipboard from '@react-native-clipboard/clipboard';
 import * as Audio from 'react-native-audio-recorder-player';
