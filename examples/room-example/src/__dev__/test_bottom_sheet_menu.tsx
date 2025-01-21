@@ -109,7 +109,7 @@ export default function test_bottom_sheet_menu() {
   const light = createLightTheme(pal);
   return (
     <Container
-      appKey="sdf"
+      opt={{ appKey: 'sdf' } as any}
       isDevMode={true}
       palette={pal}
       theme={light ? light : dark}

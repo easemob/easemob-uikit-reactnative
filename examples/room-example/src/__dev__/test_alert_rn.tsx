@@ -47,7 +47,12 @@ export default function test_alert_rn() {
   const dark = createDarkTheme(palette);
   const theme = light ? light : dark;
   return (
-    <Container appKey="sdf" isDevMode={true} palette={palette} theme={theme}>
+    <Container
+      opt={{ appKey: 'sdf' } as any}
+      isDevMode={true}
+      palette={palette}
+      theme={theme}
+    >
       <TestAlertComponent />
     </Container>
   );

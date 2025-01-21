@@ -65,7 +65,7 @@ export default function test_use_lifecycle() {
   const dark = createDarkTheme(palette);
   const theme = light ? light : dark;
   return (
-    <Container appKey={'sdf'} palette={palette} theme={theme}>
+    <Container opt={{ appKey: 'sdf' } as any} palette={palette} theme={theme}>
       <TestUseLifecycle />
     </Container>
   );

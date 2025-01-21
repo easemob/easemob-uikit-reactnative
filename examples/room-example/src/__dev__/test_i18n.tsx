@@ -54,7 +54,7 @@ export default function test_i18n() {
 
   return (
     <Container
-      appKey={'sdf'}
+      opt={{ appKey: 'sdf' } as any}
       palette={pal}
       theme={light ? light : dark}
       language={'fr'}

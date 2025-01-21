@@ -42,7 +42,7 @@ export default function TestFont() {
   console.log('test:zuoyu:font:', error);
   return (
     <Container
-      appKey="sdf"
+      opt={{ appKey: 'sdf' } as any}
       isDevMode={true}
       palette={palette}
       theme={theme}

@@ -279,7 +279,12 @@ export default function TestSwitch() {
   const dark = createDarkTheme(palette);
   const theme = light ? light : dark;
   return (
-    <Container appKey="sdf" isDevMode={true} palette={palette} theme={theme}>
+    <Container
+      opt={{ appKey: 'sdf' } as any}
+      isDevMode={true}
+      palette={palette}
+      theme={theme}
+    >
       <View
         style={{
           flex: 1,

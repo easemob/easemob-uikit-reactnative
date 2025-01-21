@@ -27,7 +27,11 @@ export function TestEmojiList() {
   const light = createLightTheme(pal);
 
   return (
-    <Container appKey={'sdf'} palette={pal} theme={light ? light : dark}>
+    <Container
+      opt={{ appKey: 'sdf' } as any}
+      palette={pal}
+      theme={light ? light : dark}
+    >
       <View
         style={{
           flex: 1,
@@ -101,7 +105,11 @@ export function TestEmojiList2() {
   useCompare(light);
 
   return (
-    <Container appKey={'sdf'} palette={pal} theme={light ? light : dark}>
+    <Container
+      opt={{ appKey: 'sdf' } as any}
+      palette={pal}
+      theme={light ? light : dark}
+    >
       <TestEmojiList22 />
     </Container>
   );
@@ -223,7 +231,11 @@ export function TestEmojiList3() {
   useCompare(light);
 
   return (
-    <Container appKey={'sdf'} palette={pal} theme={light ? light : dark}>
+    <Container
+      opt={{ appKey: 'sdf' } as any}
+      palette={pal}
+      theme={light ? light : dark}
+    >
       <View
         style={{ top: 100, backgroundColor: 'red', height: 50 }}
         onTouchEnd={() => {

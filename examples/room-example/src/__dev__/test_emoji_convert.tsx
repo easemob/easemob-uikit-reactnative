@@ -19,7 +19,11 @@ export function TestEmojiConvert() {
   const light = createLightTheme(pal);
 
   return (
-    <Container appKey={'sdf'} palette={pal} theme={light ? light : dark}>
+    <Container
+      opt={{ appKey: 'sdf' } as any}
+      palette={pal}
+      theme={light ? light : dark}
+    >
       <View
         style={{
           flex: 1,
