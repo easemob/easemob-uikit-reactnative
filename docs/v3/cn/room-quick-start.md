@@ -83,7 +83,7 @@ Take the following steps to implement message sending:
      useRoomContext,
    } from "react-native-chat-room";
 
-   const appKey = "<your app key>";
+   const appKey = '<your app key>';
    const userNickname = "<your nick name>";
    const userAvatarURL = "<your avatar url>";
    const userName = "";
@@ -96,7 +96,7 @@ Take the following steps to implement message sending:
 
    function SendMessage() {
      const [page, setPage] = React.useState(0);
-     const [appkey, setAppkey] = React.useState(appKey);
+     const [appKey, setAppKey] = React.useState(appKey);
      const [id, setId] = React.useState(userId);
      const [ps, setPs] = React.useState(userToken);
      const im = useRoomContext();
@@ -108,8 +108,8 @@ Take the following steps to implement message sending:
          <SafeAreaView style={styles.common}>
            <TextInput
              placeholder="Please App Key."
-             value={appkey}
-             onChangeText={setAppkey}
+             value={appKey}
+             onChangeText={setAppKey}
            />
            <TextInput
              placeholder="Please Login ID."

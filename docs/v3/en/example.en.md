@@ -72,12 +72,12 @@ export function App() {
   return (
     <UIKitContainer
       options={{
-        appKey: gAppKey,
+        appKey: '<your app key>',
       }}
     >
       <CallKitContainer
         option={{
-          appKey: gAppKey,
+          appKey: '<your app key>',
           agoraAppId: agoraAppId,
         }}
         type={accountType as any}
@@ -532,7 +532,7 @@ export function App() {
   return (
     <UIKitContainer
       options={{
-        appKey: gAppKey,
+        appKey: '<your app key>',
       }}
       onGroupsHandler={onGroupsHandler}
       onUsersHandler={onUsersHandler}
@@ -612,7 +612,7 @@ export function App() {
   return (
     <UIKitContainer
       options={{
-        appKey: gAppKey,
+        appKey: '<your app key>',
       }}
     >
       {/* Other settings */}

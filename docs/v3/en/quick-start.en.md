@@ -115,7 +115,7 @@ const peerId = '<chat peer id>';
 
 function SendMessage() {
   const [page, setPage] = React.useState(0);
-  const [appkey, setAppkey] = React.useState(appKey);
+  const [appKey, setAppKey] = React.useState(appKey);
   const [id, setId] = React.useState(userId);
   const [ps, setPs] = React.useState(userPassword);
   const [peer, setPeer] = React.useState(peerId);
@@ -127,8 +127,8 @@ function SendMessage() {
       <SafeAreaView style={{ flex: 1 }}>
         <TextInput
           placeholder="Please enter App Key."
-          value={appkey}
-          onChangeText={setAppkey}
+          value={appKey}
+          onChangeText={setAppKey}
         />
         <TextInput
           placeholder="Please enter Login ID."

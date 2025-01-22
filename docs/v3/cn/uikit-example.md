@@ -60,7 +60,7 @@ export function App() {
   return (
     <UIKitContainer
       options={{
-        appKey: gAppKey,
+        appKey: '<your app key>',
       }}
     >
       <NavigationContainer>
@@ -477,7 +477,7 @@ export function App() {
   return (
     <UIKitContainer
       options={{
-        appKey: gAppKey,
+        appKey: '<your app key>',
       }}
       onGroupsHandler={onGroupsHandler}
       onUsersHandler={onUsersHandler}
@@ -557,7 +557,7 @@ export function App() {
   return (
     <UIKitContainer
       options={{
-        appKey: gAppKey,
+        appKey: '<your app key>',
       }}
     >
       {/* 其它设置 */}
