@@ -64,7 +64,7 @@ twemoji
 import { Container } from 'react-native-chat-uikit';
 function App(): React.JSX.Element {
   return (
-    <Container options={{ appKey: appKey, autoLogin: false }}>
+    <Container options={{ appKey: '<your app key>' }}>
       {/** sub component */}
     </Container>
   );
