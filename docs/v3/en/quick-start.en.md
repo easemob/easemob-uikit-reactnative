@@ -27,7 +27,6 @@ yarn add @react-native-async-storage/async-storage \
 date-fns \
 pinyin-pro \
 pure-uuid \
-react-native-agora \
 react-native-chat-uikit \
 react-native-chat-sdk \
 react-native-audio-recorder-player \

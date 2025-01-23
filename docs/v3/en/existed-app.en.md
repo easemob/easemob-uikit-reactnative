@@ -42,7 +42,6 @@ date-fns \
 pinyin-pro \
 react \
 react-native \
-react-native-agora \
 react-native-audio-recorder-player \
 react-native-chat-sdk \
 react-native-chat-callkit \
