@@ -328,6 +328,18 @@ function HomeTabConversationListScreen(
       onClickedNewConversation={() => {
         navi.navigate({ to: 'NewConversation' });
       }}
+      // onInitNavigationBarMenu={(list) => {
+      //   list.push({
+      //     name: 'test',
+      //     icon: 'person_double_fill',
+      //     isHigh: true,
+      //     onClicked: () => {
+      //       console.log('test');
+      //       convRef.current.closeMenu();
+      //     },
+      //   });
+      //   return list;
+      // }}
     />
   );
 }
