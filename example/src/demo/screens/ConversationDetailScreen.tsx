@@ -1,6 +1,12 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { DeviceEventEmitter, View } from 'react-native';
+import {
+  DeviceEventEmitter,
+  Dimensions,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CallConstKey } from '../../rename.callkit';
@@ -13,9 +19,13 @@ import {
   ChatMessageType,
   ContextNameMenuProps,
   ContextNameMenuRef,
+  Icon,
   InitMenuItemsType,
   MessageView,
   MessageViewProps,
+  useColors,
+  usePaletteContext,
+  useThemeContext,
 } from '../../rename.uikit';
 import {
   ConversationDetail,
@@ -37,6 +47,12 @@ import {
   useSimpleToastContext,
   uuid,
 } from '../../rename.uikit';
+import {
+  tip_close_icon_dark,
+  tip_close_icon_light,
+  tip_icon_dark,
+  tip_icon_light,
+} from '../common/assets';
 import { useCallApi } from '../common/AVView';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useOnce, useStackScreenRoute } from '../hooks';
@@ -134,6 +150,7 @@ export function ConversationDetailScreen(props: Props) {
   const { getSimpleToastRef } = useSimpleToastContext();
   const { tr } = useI18nContext();
   const { showCall } = useCallApi({});
+  const [tipVisible, setTipVisible] = React.useState(true);
 
   const getSelectedMembers = React.useCallback(() => {
     return selectedMembers;
@@ -591,6 +608,102 @@ export function ConversationDetailScreen(props: Props) {
         // enableNavigationBar={true}
         // MessageCustomLongPressMenu={MyMessageContextNameMenu}
       />
+      {tipVisible && (
+        <TipView
+          onClose={() => {
+            setTipVisible(false);
+          }}
+        />
+      )}
     </SafeAreaViewFragment>
+  );
+}
+
+function TipView(props: { onClose: () => void }) {
+  const { getSimpleToastRef } = useSimpleToastContext();
+  const { onClose } = props;
+  const { tr } = useI18nContext();
+  const screenWidth = Dimensions.get('window').width;
+  const { style: themeStyle } = useThemeContext();
+  const { top } = useSafeAreaInsets();
+  const naviHeight = React.useRef(44).current;
+  const { colors } = usePaletteContext();
+  const { getColor } = useColors({
+    tip_bg: {
+      light: colors.neutralSpecial[9],
+      dark: colors.neutralSpecial[2],
+    },
+    tip_fg: {
+      light: colors.neutral[3],
+      dark: colors.neutral[9],
+    },
+    tip_h_fg: {
+      light: colors.primary[5],
+      dark: colors.primary[5],
+    },
+  });
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        top: top + naviHeight,
+        backgroundColor: getColor('tip_bg'),
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        flex: 1,
+        maxWidth: screenWidth - 18,
+        alignSelf: 'center',
+        borderRadius: 8,
+        padding: 12,
+      }}
+    >
+      <Icon
+        name={themeStyle === 'light' ? tip_icon_light : tip_icon_dark}
+        style={{ width: 16, height: 16 }}
+      />
+
+      <Text
+        style={{
+          color: getColor('tip_fg'),
+          flexWrap: 'wrap',
+          textAlign: 'justify',
+          fontSize: 12,
+          fontWeight: '400',
+          paddingHorizontal: 8,
+          lineHeight: 18,
+          fontStyle: 'normal',
+          flex: 1,
+        }}
+      >
+        {tr('_demo_conv_fz_tip_1')}
+        <Text
+          style={{
+            color: getColor('tip_h_fg'),
+            flexWrap: 'wrap',
+            textAlign: 'justify',
+            fontSize: 12,
+            fontWeight: '400',
+            lineHeight: 18,
+            fontStyle: 'normal',
+          }}
+          onPress={() => {
+            getSimpleToastRef().show({
+              message: tr('_demo_conv_fz_tip_2_result'),
+              timeout: 1000,
+            });
+          }}
+        >
+          {tr('_demo_conv_fz_tip_2')}
+        </Text>
+      </Text>
+      <Pressable onPress={onClose}>
+        <Icon
+          name={
+            themeStyle === 'light' ? tip_close_icon_light : tip_close_icon_dark
+          }
+          style={{ width: 16, height: 16 }}
+        />
+      </Pressable>
+    </View>
   );
 }

@@ -198,6 +198,12 @@ export function createStringSetEn(): StringSet {
     '_demo_videoSaved': 'Saved',
     '_demo_fetchPinnedMessagesResult': 'No pinned messages',
 
+    '_demo_conv_fz_tip_1':
+      "Don't trust remittance or prize info. Stay alert for calls from unknown numbers and report anything suspicious.",
+    '_demo_conv_fz_tip_2': 'Report',
+    '_demo_conv_fz_tip_2_result':
+      'Thank you for your report, we will handle it as soon as possible.',
+
     'save': 'Save',
     'done': 'Done',
     'en': 'English',

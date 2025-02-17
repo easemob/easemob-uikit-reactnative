@@ -184,6 +184,11 @@ export function createStringSetCn(): StringSet {
     '_demo_videoSaved': '已保存',
     '_demo_fetchPinnedMessagesResult': '没有置顶消息',
 
+    '_demo_conv_fz_tip_1':
+      '请勿轻信任何关于汇款、中奖等信息，务必提高警惕，谨慎对待来自陌生号码的电话。如遇可疑情况，请及时向相关部门反馈并采取必要的防范措施。',
+    '_demo_conv_fz_tip_2': '点我举报',
+    '_demo_conv_fz_tip_2_result': '感谢您的举报，我们将尽快处理',
+
     'save': '保存',
     'done': '完成',
     'en': 'English',

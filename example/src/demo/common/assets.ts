@@ -29,3 +29,8 @@ export const msg_menu_style1_ondark = require('../assets/msgmenu_style1/ondark_3
 export const msg_menu_style1_onlight = require('../assets/msgmenu_style1/onlight_3x.png');
 export const msg_menu_style2_ondark = require('../assets/msgmenu_style2/ondark_3x.png');
 export const msg_menu_style2_onlight = require('../assets/msgmenu_style2/onlight_3x.png');
+
+export const tip_icon_light = require('../assets/tip_icon/exclamation_mark_in_circle_fill_light.png');
+export const tip_icon_dark = require('../assets/tip_icon/exclamation_mark_in_circle_fill_dark.png');
+export const tip_close_icon_light = require('../assets/tip_icon/xmark_thick_light.png');
+export const tip_close_icon_dark = require('../assets/tip_icon/xmark_thick_dark.png');
