@@ -441,6 +441,36 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 }
 ```
 
+自定义会话列表页面的导航栏菜单。
+
+例如：添加一个自定义菜单项。
+
+```tsx
+type MyConversationListScreenProps = {};
+function MyConversationListScreen(props: MyConversationListScreenProps) {
+  const {} = props;
+  const convRef = React.useRef<ConversationListRef>({} as any);
+
+  return (
+    <ConversationList
+      propsRef={convRef}
+      onInitNavigationBarMenu={(list) => {
+        list.push({
+          name: 'test',
+          icon: 'person_double_fill',
+          isHigh: true,
+          onClicked: () => {
+            console.log('test');
+            convRef.current.closeMenu();
+          },
+        });
+        return list;
+      }}
+    />
+  );
+}
+```
+
 ### 消息列表（ConversationDetail）
 
 该组件从布局角度包括 导航栏、中部消息列表、底部功能栏以及可以隐藏的菜单。

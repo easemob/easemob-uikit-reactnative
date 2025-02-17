@@ -287,6 +287,36 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 }
 ```
 
+Customize the menu of the conversation list page.
+
+For example: Add a custom menu item.
+
+```tsx
+type MyConversationListScreenProps = {};
+function MyConversationListScreen(props: MyConversationListScreenProps) {
+  const {} = props;
+  const convRef = React.useRef<ConversationListRef>({} as any);
+
+  return (
+    <ConversationList
+      propsRef={convRef}
+      onInitNavigationBarMenu={(list) => {
+        list.push({
+          name: 'test',
+          icon: 'person_double_fill',
+          isHigh: true,
+          onClicked: () => {
+            console.log('test');
+            convRef.current.closeMenu();
+          },
+        });
+        return list;
+      }}
+    />
+  );
+}
+```
+
 ### Message List (ConversationDetail)
 
 From the perspective of layout, this component includes a navigation bar, a message list in the middle, a function bar at the bottom, and a menu that can be hidden.
