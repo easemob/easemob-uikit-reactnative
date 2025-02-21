@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { StatusBar } from 'react-native';
 
 import { ErrorCode, UIKitError } from '../../error';
 import { ComponentArea, ComponentArea1, ComponentArea2 } from './types';
 
 export function useContextMenu() {
+  const statusBarHeight = StatusBar?.currentHeight ?? 0;
   const convertComponentCoordinate = React.useCallback(
     (params: ComponentArea): ComponentArea1 => {
       if (params.hasOwnProperty('x')) {
@@ -95,7 +97,7 @@ export function useContextMenu() {
           }
         } else if (policy === 'side') {
           if (top >= componentHeight) {
-            position.bottom = screenHeight - top;
+            position.bottom = screenHeight - top - statusBarHeight;
             position.top = undefined;
           } else if (screenHeight - bottom >= componentHeight) {
             position.top = bottom;
@@ -116,7 +118,7 @@ export function useContextMenu() {
       }
       return position;
     },
-    [convertComponentCoordinate]
+    [convertComponentCoordinate, statusBarHeight]
   );
 
   // Calculate the position of the component.
