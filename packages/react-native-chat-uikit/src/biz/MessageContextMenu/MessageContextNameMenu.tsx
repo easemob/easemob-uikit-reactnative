@@ -265,7 +265,7 @@ export const MessageContextNameMenu = React.forwardRef<
 const ItemsRender = (props: ContextNameMenuProps) => {
   const { initItems, maxRowCount, unitCountPerRow = 5, header } = props;
   const { getColor } = useColors();
-  const itemWidth = 66;
+  const itemWidth = MESSAGE_CONTEXT_NAME_MENU_MAX_WIDTH / 5;
   const itemHeight = 58;
   const currentRowCount = Math.ceil(initItems.length / unitCountPerRow);
 
