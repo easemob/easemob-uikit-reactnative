@@ -1,1 +1,1 @@
-export * from './ShadowView';
+export * from './ModelShadowView';

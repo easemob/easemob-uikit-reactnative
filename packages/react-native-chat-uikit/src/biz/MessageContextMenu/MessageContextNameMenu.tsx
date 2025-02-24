@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Dimensions, LayoutChangeEvent, View } from 'react-native';
 
 import { getElement, useColors } from '../../hook';
-import { useThemeContext } from '../../theme';
 import {
   ComponentArea,
   ContextMenu,
@@ -11,6 +10,7 @@ import {
 import { Icon } from '../../ui/Image';
 import { SlideModalRef } from '../../ui/Modal';
 import { PressableHighlight } from '../../ui/Pressable';
+import { ModelShadowView } from '../../ui/ShadowView';
 import { SingleLineText } from '../../ui/Text';
 import { TriangleView } from '../../ui/TriangleView';
 import { useMessageNameMenu } from '../hooks';
@@ -31,7 +31,6 @@ export const MessageContextNameMenu = React.forwardRef<
 ) {
   const { onRequestModalClose } = props;
   const { getColor } = useColors();
-  const { shadow } = useThemeContext();
   const modalRef = React.useRef<SlideModalRef>({} as any);
   const isShowRef = React.useRef<boolean>(false);
   const stateProps = useMessageNameMenu(props);
@@ -148,116 +147,96 @@ export const MessageContextNameMenu = React.forwardRef<
         [noCoverageArea, onLayout]
       )}
     >
-      <View
-        style={[
-          shadow.style.middle[0],
-          {
-            backgroundColor: 'transparent',
-            borderRadius: 4,
-            flex: 1,
-          },
-        ]}
-      >
-        <View
-          ref={viewRef}
-          style={[
-            shadow.style.middle[1],
-            {
-              backgroundColor: 'transparent',
-              borderRadius: 4,
-              flex: 1,
-            },
-          ]}
-        >
-          {trianglePosition.spatialOrientation === 'down' ||
-          trianglePosition.spatialOrientation === 'center-down' ? (
-            <View
-              style={{
-                alignItems:
-                  trianglePosition.messageLayoutType === 'left' &&
-                  trianglePosition.x
-                    ? 'flex-start'
-                    : trianglePosition.messageLayoutType === 'right' &&
-                      trianglePosition.x
-                    ? 'flex-end'
-                    : 'center',
-                paddingRight:
-                  trianglePosition.messageLayoutType === 'left'
-                    ? undefined
-                    : trianglePosition.x,
-                paddingLeft:
-                  trianglePosition.messageLayoutType === 'right'
-                    ? undefined
-                    : trianglePosition.x,
-              }}
-            >
-              <TriangleView />
-            </View>
-          ) : null}
-
-          <View style={{ backgroundColor: getColor('bg'), borderRadius: 4 }}>
-            {header && emojiListPosition === 'top' ? (
-              <>
-                <View style={{ marginVertical: 12 }}>
-                  {getElement(header, headerProps)}
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 0.5,
-                    borderBottomColor: getColor('divider'),
-                    marginHorizontal: 21,
-                  }}
-                />
-              </>
-            ) : null}
-            <ItemsRender {...props} initItems={items} header={header} />
-            {header && emojiListPosition === 'bottom' ? (
-              <>
-                <View
-                  style={{
-                    borderBottomWidth: 0.5,
-                    borderBottomColor: getColor('divider'),
-                    marginHorizontal: 21,
-                  }}
-                />
-                <View style={{ marginVertical: 12 }}>
-                  {getElement(header, headerProps)}
-                </View>
-              </>
-            ) : null}
+      <ModelShadowView viewRef={viewRef}>
+        {trianglePosition.spatialOrientation === 'down' ||
+        trianglePosition.spatialOrientation === 'center-down' ? (
+          <View
+            style={{
+              alignItems:
+                trianglePosition.messageLayoutType === 'left' &&
+                trianglePosition.x
+                  ? 'flex-start'
+                  : trianglePosition.messageLayoutType === 'right' &&
+                    trianglePosition.x
+                  ? 'flex-end'
+                  : 'center',
+              right:
+                trianglePosition.messageLayoutType === 'left'
+                  ? undefined
+                  : trianglePosition.x,
+              left:
+                trianglePosition.messageLayoutType === 'right'
+                  ? undefined
+                  : trianglePosition.x,
+            }}
+          >
+            <TriangleView />
           </View>
+        ) : null}
 
-          {trianglePosition.spatialOrientation === 'up' ||
-          trianglePosition.spatialOrientation === 'center-up' ? (
-            <View
-              style={{
-                alignItems:
-                  trianglePosition.messageLayoutType === 'left' &&
-                  trianglePosition.x
-                    ? 'flex-start'
-                    : trianglePosition.messageLayoutType === 'right' &&
-                      trianglePosition.x
-                    ? 'flex-end'
-                    : 'center',
-                paddingRight:
-                  trianglePosition.messageLayoutType === 'left'
-                    ? undefined
-                    : trianglePosition.messageLayoutType === 'right'
-                    ? trianglePosition.x
-                    : undefined,
-                paddingLeft:
-                  trianglePosition.messageLayoutType === 'left'
-                    ? trianglePosition.x
-                    : trianglePosition.messageLayoutType === 'right'
-                    ? undefined
-                    : undefined,
-              }}
-            >
-              <TriangleView rotate={'180deg'} />
-            </View>
+        <View style={{ backgroundColor: getColor('bg'), borderRadius: 4 }}>
+          {header && emojiListPosition === 'top' ? (
+            <>
+              <View style={{ marginVertical: 12 }}>
+                {getElement(header, headerProps)}
+              </View>
+              <View
+                style={{
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: getColor('divider'),
+                  marginHorizontal: 21,
+                }}
+              />
+            </>
+          ) : null}
+          <ItemsRender {...props} initItems={items} header={header} />
+          {header && emojiListPosition === 'bottom' ? (
+            <>
+              <View
+                style={{
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: getColor('divider'),
+                  marginHorizontal: 21,
+                  height: 0.5,
+                }}
+              />
+              <View style={{ marginVertical: 12 }}>
+                {getElement(header, headerProps)}
+              </View>
+            </>
           ) : null}
         </View>
-      </View>
+
+        {trianglePosition.spatialOrientation === 'up' ||
+        trianglePosition.spatialOrientation === 'center-up' ? (
+          <View
+            style={{
+              alignItems:
+                trianglePosition.messageLayoutType === 'left' &&
+                trianglePosition.x
+                  ? 'flex-start'
+                  : trianglePosition.messageLayoutType === 'right' &&
+                    trianglePosition.x
+                  ? 'flex-end'
+                  : 'center',
+              marginRight:
+                trianglePosition.messageLayoutType === 'left'
+                  ? undefined
+                  : trianglePosition.messageLayoutType === 'right'
+                  ? trianglePosition.x
+                  : undefined,
+              marginLeft:
+                trianglePosition.messageLayoutType === 'left'
+                  ? trianglePosition.x
+                  : trianglePosition.messageLayoutType === 'right'
+                  ? undefined
+                  : undefined,
+            }}
+          >
+            <TriangleView rotate={'180deg'} />
+          </View>
+        ) : null}
+      </ModelShadowView>
     </ContextMenu>
   );
 });
@@ -265,7 +244,9 @@ export const MessageContextNameMenu = React.forwardRef<
 const ItemsRender = (props: ContextNameMenuProps) => {
   const { initItems, maxRowCount, unitCountPerRow = 5, header } = props;
   const { getColor } = useColors();
-  const itemWidth = MESSAGE_CONTEXT_NAME_MENU_MAX_WIDTH / 5;
+  const itemWidth = Math.ceil(
+    MESSAGE_CONTEXT_NAME_MENU_MAX_WIDTH / unitCountPerRow - 1
+  );
   const itemHeight = 58;
   const currentRowCount = Math.ceil(initItems.length / unitCountPerRow);
 
@@ -302,9 +283,6 @@ const ItemsRender = (props: ContextNameMenuProps) => {
           flexWrap: 'wrap',
           maxWidth: MESSAGE_CONTEXT_NAME_MENU_MAX_WIDTH,
           marginVertical: 12,
-          // alignItems: 'center',
-          // alignSelf: 'flex-end',
-          // alignContent: 'flex-end',
           justifyContent: 'space-evenly',
         }}
       >
@@ -332,11 +310,6 @@ const ItemsRender = (props: ContextNameMenuProps) => {
                     height: itemHeight,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    // marginHorizontal: header
-                    //   ? (screenWidth -
-                    //       itemWidth * Math.floor(screenWidth / itemWidth)) /
-                    //     (Math.floor(screenWidth / itemWidth) * 2)
-                    //   : undefined,
                     marginBottom: getMarginBottom(index),
                   }}
                   onPress={() => item.onClicked?.(item.name)}

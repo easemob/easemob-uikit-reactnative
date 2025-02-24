@@ -1081,6 +1081,15 @@ export const ICON_ASSETS = {
       return require('./icons/magnifier_2x.png');
     }
   },
+  'message_arrow': (size: string) => {
+    if (size === '3x') {
+      return require('./icons/message_arrow.png');
+    } else if (size === '2x') {
+      return require('./icons/message_arrow.png');
+    } else {
+      return require('./icons/message_arrow.png');
+    }
+  },
   'message_arrow_lft': (size: string) => {
     if (size === '3x') {
       return require('./icons/message_arrow_lft_3x.png');

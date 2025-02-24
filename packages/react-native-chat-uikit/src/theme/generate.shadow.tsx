@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 import { ErrorCode, UIKitError } from '../error';
 import type { Palette, Shadow, ShadowStyle, ThemeType } from './types';
 
@@ -30,37 +32,49 @@ function generateLightShadow(params: { palette: Palette }): {
   ret.style = {
     small: [
       {
-        shadowColor: 'hsla(203, 8%, 30%, 1)',
-        shadowOpacity: 0.15,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(203, 8%, 30%, 1)', shadowOpacity: 0.15 },
+          android: {},
+        }),
         ...s.style.small1,
       },
       {
-        shadowColor: 'hsla(204, 10%, 10%, 1)',
-        shadowOpacity: 0.1,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(204, 10%, 10%, 1)', shadowOpacity: 0.1 },
+          android: {},
+        }),
         ...s.style.small2,
       },
     ],
     middle: [
       {
-        shadowColor: 'hsla(203, 8%, 30%, 1)',
-        shadowOpacity: 0.15,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(203, 8%, 30%, 1)', shadowOpacity: 0.15 },
+          android: {},
+        }),
         ...s.style.middle1,
       },
       {
-        shadowColor: 'hsla(204, 10%, 10%, 1)',
-        shadowOpacity: 0.1,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(204, 10%, 10%, 1)', shadowOpacity: 0.1 },
+          android: {},
+        }),
         ...s.style.middle2,
       },
     ],
     large: [
       {
-        shadowColor: 'hsla(203, 8%, 30%, 1)',
-        shadowOpacity: 0.15,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(203, 8%, 30%, 1)', shadowOpacity: 0.15 },
+          android: {},
+        }),
         ...s.style.large1,
       },
       {
-        shadowColor: 'hsla(204, 10%, 10%, 1)',
-        shadowOpacity: 0.08,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(204, 10%, 10%, 1)', shadowOpacity: 0.08 },
+          android: {},
+        }),
         ...s.style.large2,
       },
     ],
@@ -78,37 +92,49 @@ function generateDarkShadow(params: { palette: Palette }): {
   ret.style = {
     small: [
       {
-        shadowColor: 'hsla(203, 8%, 30%, 1)',
-        shadowOpacity: 0.3,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(203, 8%, 30%, 1)', shadowOpacity: 0.3 },
+          android: {},
+        }),
         ...s.style.small1,
       },
       {
-        shadowColor: 'hsla(204, 10%, 10%, 1)',
-        shadowOpacity: 0.2,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(204, 10%, 10%, 1)', shadowOpacity: 0.2 },
+          android: {},
+        }),
         ...s.style.small2,
       },
     ],
     middle: [
       {
-        shadowColor: 'hsla(203, 8%, 30%, 1)',
-        shadowOpacity: 0.3,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(203, 8%, 30%, 1)', shadowOpacity: 0.3 },
+          android: {},
+        }),
         ...s.style.middle1,
       },
       {
-        shadowColor: 'hsla(204, 10%, 10%, 1)',
-        shadowOpacity: 0.2,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(204, 10%, 10%, 1)', shadowOpacity: 0.2 },
+          android: {},
+        }),
         ...s.style.middle2,
       },
     ],
     large: [
       {
-        shadowColor: 'hsla(203, 8%, 30%, 1)',
-        shadowOpacity: 0.3,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(203, 8%, 30%, 1)', shadowOpacity: 0.3 },
+          android: {},
+        }),
         ...s.style.large1,
       },
       {
-        shadowColor: 'hsla(204, 10%, 10%, 1)',
-        shadowOpacity: 0.16,
+        ...Platform.select({
+          ios: { shadowColor: 'hsla(204, 10%, 10%, 1)', shadowOpacity: 0.16 },
+          android: {},
+        }),
         ...s.style.large2,
       },
     ],
@@ -130,34 +156,40 @@ function generateShadowSize(): {
   const ret = {} as ReturnType<typeof generateShadowSize>;
   ret.style = {
     small1: {
-      elevation: 6,
-      shadowRadius: 3,
-      shadowOffset: { width: 0, height: 1 },
+      ...Platform.select({
+        ios: { shadowRadius: 3, shadowOffset: { width: 0, height: 1 } },
+        android: { elevation: 6 },
+      }),
     },
     small2: {
-      elevation: 4,
-      shadowRadius: 2,
-      shadowOffset: { width: 0, height: 1 },
+      ...Platform.select({
+        ios: { shadowRadius: 2, shadowOffset: { width: 0, height: 1 } },
+        android: { elevation: 4 },
+      }),
     },
     middle1: {
-      elevation: 6,
-      shadowRadius: 3,
-      shadowOffset: { width: 0, height: 1 },
+      ...Platform.select({
+        ios: { shadowRadius: 3, shadowOffset: { width: 0, height: 1 } },
+        android: { elevation: 6 },
+      }),
     },
     middle2: {
-      elevation: 16,
-      shadowRadius: 8,
-      shadowOffset: { width: 0, height: 4 },
+      ...Platform.select({
+        ios: { shadowRadius: 8, shadowOffset: { width: 0, height: 4 } },
+        android: { elevation: 16 },
+      }),
     },
     large1: {
-      elevation: 72,
-      shadowRadius: 36,
-      shadowOffset: { width: 0, height: 24 },
+      ...Platform.select({
+        ios: { shadowRadius: 36, shadowOffset: { width: 0, height: 24 } },
+        android: { elevation: 72 },
+      }),
     },
     large2: {
-      elevation: 48,
-      shadowRadius: 24,
-      shadowOffset: { width: 8, height: 0 },
+      ...Platform.select({
+        ios: { shadowRadius: 24, shadowOffset: { width: 8, height: 0 } },
+        android: { elevation: 48 },
+      }),
     },
   };
   return ret;
