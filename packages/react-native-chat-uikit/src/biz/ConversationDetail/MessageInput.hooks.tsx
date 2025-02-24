@@ -600,6 +600,7 @@ export function useMessageInput(
   React.useImperativeHandle(ref, () => {
     return {
       close: () => {
+        onRequestCloseMenu();
         if (selectType === 'common') {
           changeInputBarState('normal');
         }
