@@ -21,6 +21,8 @@ import {
   ContextNameMenuRef,
   Icon,
   InitMenuItemsType,
+  // MessageContent,
+  // MessageContentProps,
   MessageView,
   MessageViewProps,
   useColors,
@@ -33,12 +35,9 @@ import {
   ConversationDetailRef,
   gCustomMessageCardEventType,
   GroupParticipantModel,
-  MessageContent,
-  MessageContentProps,
   MessageInputRef,
   MessageListRef,
   MessageModel,
-  MessageText,
   SendCustomProps,
   SystemMessageModel,
   TimeMessageModel,
@@ -58,23 +57,20 @@ import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useOnce, useStackScreenRoute } from '../hooks';
 import type { RootParamsName, RootScreenParamsList } from '../routes';
 
-export function MyMessageContent(props: MessageContentProps) {
-  const { msg, layoutType, isSupport, contentMaxWidth } = props;
-  if (
-    msg.body.type === ChatMessageType.TXT &&
-    msg.attributes?.[CallConstKey.KeyAction] === CallConstKey.KeyInviteAction
-  ) {
-    return (
-      <MessageText
-        msg={msg}
-        layoutType={layoutType}
-        isSupport={isSupport}
-        maxWidth={contentMaxWidth}
-      />
-    );
-  }
-  return <MessageContent {...props} />;
-}
+// export function MyMessageContent(props: MessageContentProps) {
+//   const { msg } = props;
+//   if (msg.body.type === ChatMessageType.CUSTOM) {
+//     const body = msg.body as ChatCustomMessageBody;
+//     if (body.event === 'test') {
+//       return (
+//         <View style={{ width: 100, height: 100, backgroundColor: 'red' }}>
+//           <Text>{body.event}</Text>
+//         </View>
+//       );
+//     }
+//   }
+//   return <MessageContent {...props} />;
+// }
 // const MyMessageContentMemo = React.memo(MyMessageContent);
 
 export function MyMessageView(props: MessageViewProps) {
@@ -341,13 +337,13 @@ export function ConversationDetailScreen(props: Props) {
             //       isHigh: false,
             //       icon: 'bell',
             //       onClicked: () => {
-            //         console.log('test');
             //         listRef.current?.addSendMessage({
             //           type: 'custom',
-            //           msg: ChatMessage.createCustomMessage(convId, 'test', 1, {
+            //           msg: ChatMessage.createCustomMessage(convId, 'test', 0, {
             //             params: { test: '111' },
             //           }),
             //         });
+            //         inputRef.current?.close();
             //       },
             //     },
             //   ];
@@ -464,7 +460,7 @@ export function ConversationDetailScreen(props: Props) {
             },
             // reportMessageCustomList: [{ key: '1', value: 'test' }],
             listItemRenderProps: {
-              MessageContent: MyMessageContent,
+              // MessageContent: MyMessageContent,
               // MessageView: MyMessageView,
             },
             // messageLayoutType: 'left',

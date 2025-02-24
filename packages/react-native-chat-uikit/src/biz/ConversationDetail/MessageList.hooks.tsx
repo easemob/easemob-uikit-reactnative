@@ -734,7 +734,7 @@ export function useMessageList(
         if (body.event === gCustomMessageCardEventType) {
           modelType = 'message';
         } else {
-          modelType = 'system';
+          modelType = 'message';
         }
       }
       if (modelType === 'system') {
@@ -1857,6 +1857,8 @@ export function useMessageList(
                     : getDataMessage('last')?.msg.msgId ?? '';
               }
             }
+
+            console.log('test:zuoyu:loadHistoryMessage:', msgs.length);
 
             const list = await onAddMessageListToUI(msgs, 'top');
             list.map((v) => {
