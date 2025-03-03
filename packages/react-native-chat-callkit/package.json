@@ -1,6 +1,6 @@
 {
   "name": "react-native-chat-callkit",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "test",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -77,8 +77,8 @@
     "prettier": "^2.0.5",
     "react": "18.2.0",
     "react-native": "0.71.11",
-    "react-native-builder-bob": "^0.20.4",
     "react-native-agora": "~4.2.0",
+    "react-native-builder-bob": "^0.20.4",
     "react-native-device-info": "^10.12.0",
     "react-native-fast-image": "^8.6.3",
     "react-native-pager-view": "6.1.2",
