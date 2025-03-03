@@ -1,6 +1,6 @@
 {
   "name": "react-native-chat-uikit",
-  "version": "2.4.3-beta.0",
+  "version": "2.4.3-beta.1",
   "description": "test",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
