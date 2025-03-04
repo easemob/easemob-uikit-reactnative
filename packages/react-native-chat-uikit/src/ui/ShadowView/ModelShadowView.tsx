@@ -47,7 +47,6 @@ function ModelShadowStyleIos(props: ModelShadowViewProps) {
 function ModelShadowStyleAndroid(props: ModelShadowViewProps) {
   const { children, viewRef } = props;
   const { shadow } = useThemeContext();
-  console.log('test:zuoyu:ModelShadowStyleAndroid', shadow.style.middle[0]);
   return (
     <View
       ref={viewRef}

@@ -1858,8 +1858,6 @@ export function useMessageList(
               }
             }
 
-            console.log('test:zuoyu:loadHistoryMessage:', msgs.length);
-
             const list = await onAddMessageListToUI(msgs, 'top');
             list.map((v) => {
               if (v.model.modelType === 'message') {
