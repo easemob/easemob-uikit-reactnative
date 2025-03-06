@@ -82,7 +82,7 @@
     "del-cli": "^5.0.0",
     "expo-doctor": "^1.1.1",
     "metro-react-native-babel-preset": "0.73.9",
-    "typescript": "^4.5.2"
+    "typescript": "4.9.5"
   },
   "resolutions": {
     "@expo/cli": "*"
