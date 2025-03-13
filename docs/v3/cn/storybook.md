@@ -8,6 +8,11 @@
 
 还有更多插件提供更多功能。
 
+**<span style="color: red">初步想法</span>**
+
+    storybook 添加到 example 中。
+    尝试 添加 storybook 示例 文档和样式，同时，可以更加准确评估工作量、以及可能涉及的 uikit 改动。
+
 ## 竞品调研现状
 
 国内厂商融云、网易、腾讯，国外 `sendbird`、`getstream`。
