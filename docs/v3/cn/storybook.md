@@ -61,6 +61,16 @@
 
 react 的 storybook 文档插件使用量是 react-native 30 倍左右。
 
+## 版本兼容性
+
+官方介绍:
+
+storybook 最新版本 8.6.x，最低要求 react-native 0.72 版本。
+
+实际:
+
+react-native 0.72 版本适配 storybook 6.5.x 版本。
+
 ## references
 
 [auto_docs](https://storybook.org.cn/docs/writing-docs/autodocs)
