@@ -21,16 +21,24 @@ _中文 | [English](./README.md)_
 ## 安装到项目中
 
 ```sh
-npm install react-native-chat-room
+npm install react-native-chat-callkit
 # or
-yarn add react-native-chat-room
+yarn add react-native-chat-callkit
 ```
 
 ## 依赖项
 
 ```sh
-yarn add react-native-linear-gradient \
-react-native-safe-area-context
+yarn add react-native-agora \
+react-native-device-info \
+react-native-fast-image \
+react-native-pager-view \
+react-native-chat-sdk \
+react-native-paper \
+react-native-permissions \
+react-native-safe-area-context \
+react-native-tab-view \
+react-native-screens
 ```
 
 ## 快速开始
@@ -38,27 +46,17 @@ react-native-safe-area-context
 初始化
 
 ```typescript
-import { Container } from 'react-native-chat-room';
+import { GlobalContainer } from 'react-native-chat-callkit';
 export function App() {
   return (
-    <Container opt={{ appKey: '<your app key>' }}>
+    <GlobalContainer opt={{ appKey: '<your app key>' }}>
       {/** sub component */}
-    </Container>
+    </GlobalContainer>
   );
 }
 ```
 
-加入房间
-
-```typescript
-export function ChatroomScreen() {
-  return (
-    <Chatroom roomId={'<room ID>'} ownerId={'<room owner ID>'}>
-      {/** sub component */}
-    </Chatroom>
-  );
-}
-```
+加入音频或者视频聊天。
 
 ## 贡献
 

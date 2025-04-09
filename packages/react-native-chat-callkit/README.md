@@ -29,8 +29,16 @@ yarn add react-native-chat-callkit
 ## Dependencies
 
 ```sh
-yarn add react-native-linear-gradient \
-react-native-safe-area-context
+yarn add react-native-agora \
+react-native-device-info \
+react-native-fast-image \
+react-native-pager-view \
+react-native-chat-sdk \
+react-native-paper \
+react-native-permissions \
+react-native-safe-area-context \
+react-native-tab-view \
+react-native-screens
 ```
 
 ## Quick Start
@@ -38,27 +46,18 @@ react-native-safe-area-context
 Initialization
 
 ```typescript
-import { Container } from 'react-native-chat-room';
+import { GlobalContainer } from 'react-native-chat-callkit';
 export function App() {
   return (
-    <Container opt={{ appKey: '<your app key>' }}>
+    <GlobalContainer opt={{ appKey: '<your app key>' }}>
       {/** sub component */}
-    </Container>
+    </GlobalContainer>
   );
 }
 ```
 
-Join a room
+Join a audio or video chat.
 
-```typescript
-export function ChatroomScreen() {
-  return (
-    <Chatroom roomId={'<room ID>'} ownerId={'<room owner ID>'}>
-      {/** sub component */}
-    </Chatroom>
-  );
-}
-```
 
 ## Contributing
 
