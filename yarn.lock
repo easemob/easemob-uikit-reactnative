@@ -15185,12 +15185,12 @@ __metadata:
     "@react-native-community/blur": "*"
     react: "*"
     react-native: ">=0.71.0"
-    react-native-agora: ~4.2.0
+    react-native-agora: ^4.3.2
     react-native-chat-sdk: ^1.8.0
     react-native-fast-image: "*"
-    react-native-safe-area-context: ^4.12.0
-    react-native-screens: ~4.4.0
-    react-native-vector-icons: ^10.2.0
+    react-native-safe-area-context: "*"
+    react-native-screens: "*"
+    react-native-vector-icons: "*"
   dependenciesMeta:
     react-native-fast-image:
       optional: true
@@ -15260,8 +15260,8 @@ __metadata:
     react: "*"
     react-native: ">=0.71.0"
     react-native-chat-sdk: ^1.8.0
-    react-native-linear-gradient: ^2.8.3
-    react-native-safe-area-context: ^4.12.0
+    react-native-linear-gradient: "*"
+    react-native-safe-area-context: "*"
   languageName: unknown
   linkType: soft
 
@@ -15317,21 +15317,21 @@ __metadata:
     twemoji: "npm:^14.0.2"
     typescript: "npm:^5.2.2"
   peerDependencies:
-    "@react-native-async-storage/async-storage": ^1.23.1
-    "@react-native-camera-roll/camera-roll": ^7.10.0
-    "@react-native-clipboard/clipboard": ^1.16.2
+    "@react-native-async-storage/async-storage": "*"
+    "@react-native-camera-roll/camera-roll": "*"
+    "@react-native-clipboard/clipboard": "*"
     "@react-native-documents/picker": "*"
     react: "*"
     react-native: ">=0.71.0"
-    react-native-audio-recorder-player: ^3.6.12
+    react-native-audio-recorder-player: "*"
     react-native-chat-sdk: ^1.8.0
-    react-native-create-thumbnail: ^2.1.1
-    react-native-device-info: ^14.0.4
-    react-native-file-access: ^3.1.1
-    react-native-gesture-handler: ^2.16.0
-    react-native-image-picker: ^7.0.0
-    react-native-safe-area-context: ^4.12.0
-    react-native-video: ^6.1.0
+    react-native-create-thumbnail: "*"
+    react-native-device-info: "*"
+    react-native-file-access: "*"
+    react-native-gesture-handler: "*"
+    react-native-image-picker: "*"
+    react-native-safe-area-context: "*"
+    react-native-video: "*"
   languageName: unknown
   linkType: soft
 
