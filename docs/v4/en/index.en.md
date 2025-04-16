@@ -15,7 +15,7 @@ This document presents the repository structure, package description, examples, 
 
 ## Repository Structure
 
-This repository is a multi-package repository that includes `uikit`, `callkit`, and corresponding example projects.
+This repository is a multi-package repository that includes `uikit`, `callkit`, `roomkit`, and corresponding example projects.
 
 Currently, mainstream projects adopt this repository structure, for example, `react-navigation`, `sendbird-uikit-react-native`, and `stream-chat-react-native`. If you are interested, you can click the links in the reference section for further details.
 
@@ -25,8 +25,10 @@ Currently, mainstream projects adopt this repository structure, for example, `re
 .
 ├── LICENSE
 ├── docs
+│   └── v4
 ├── examples
 │   ├── room-example
+│   ├── product-room-demo
 │   ├── product-uikit-demo
 │   ├── callkit-example
 │   └── uikit-example
@@ -51,6 +53,8 @@ Currently, mainstream projects adopt this repository structure, for example, `re
 - example: complete sample project, dependent on local npm packages. Currently, `callkit` and `uikit` are used.
 - examples:
   - room-example: sample project of the `room` package.
+  - product-room-demo: Sample demonstration project of the `product-room` SDK.
+  - product-uikit-demo: Sample demonstration project of the `product-uikit` SDK.
   - callkit-example: sample project of the `callkit` package.
   - uikit-example: sample project of the `uikit` package.
 - node_modules: list of project dependencies managed by the `yarn` tool.
@@ -70,6 +74,7 @@ Currently, mainstream projects adopt this repository structure, for example, `re
 
 The `packages` folder include `react-native-chat-callkit` and `react-native-chat-uikit` packages. There may be additional packages in the future according to requirements.
 
+- `react-native-chat-room`: Primarily assists users in integrating chatroom functionalities.
 - `react-native-chat-callkit`: Primarily assists users in integrating audio and video call functionalities.
 - `react-native-chat-uikit`: Primarily assists users in integrating `react-native-chat-sdk` functionalities. If you are interested, you can click the links in the reference section for further details.
 
@@ -79,14 +84,17 @@ The `packages` folder include `react-native-chat-callkit` and `react-native-chat
 
 ## Examples
 
-The `examples` directory contains the sample projects for `callkit` and `uikit`.
+The `examples` folder mainly includes a list of sample projects.
 
-- `callkit-example`: Demonstrates the usage of `callkit`.
-- `uikit-example`: Demonstrates the usage of `uikit`.
+`callkit-example`: Mainly demonstrates the usage of the `callkit` SDK.
+`uikit-example`: Mainly demonstrates the usage of the `uikit` SDK.
+`room-example`: Mainly demonstrates the usage of the `room` SDK.
+`product-uikit-demo`: Comprehensively demonstrates the usage of `uikit` + `callkit` SDKs.
+`product-room-demo`: Comprehensively demonstrates the usage of the `room` SDK.
 
-[callkit-example Documentation Entry](./callkit-example.en.md)  
-[uikit-example Documentation Entry](./uikit-example.en.md)
-[room-example Documentation Entry](./room-quick-start.en.md)
+[Room Quick Start Guide](./room-quick-start.en.md)
+[UIKit Quick Start Guide](./uikit-quick-start.en.md)
+[CallKit Quick Start Guide](./callkit-quick-start.en.md)
 
 ## Build a Repository
 

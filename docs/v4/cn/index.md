@@ -15,7 +15,7 @@
 
 ## 仓库结构
 
-该仓库为多包仓库,主要包括 `uikit`, `callkit` 以及对应示例项目。
+该仓库为多包仓库,主要包括 `uikit`, `callkit`，`roomkit` 以及对应示例项目。
 
 目前主流项目都会采用该仓库架构。例如：`react-navigation`，`sendbird-uikit-react-native`, `stream-chat-react-native`。如果感兴趣可以在参考引用部分点击对应链接查看。
 
@@ -25,8 +25,10 @@
 .
 ├── LICENSE
 ├── docs
+│   └── v4
 ├── examples
 │   ├── room-example
+│   ├── product-room-demo
 │   ├── product-uikit-demo
 │   ├── callkit-example
 │   └── uikit-example
@@ -50,7 +52,8 @@
 - docs: 文档合集，目前最新 V3 版本。
 - examples:
   - room-example: `room` 包的示例项目。
-  - product-uikit-demo: `product-uikit` SDK 的示例项目。
+  - product-room-demo: `product-room` SDK 的示例演示项目。
+  - product-uikit-demo: `product-uikit` SDK 的示例演示项目。
   - callkit-example: `callkit` 包的示例项目。
   - uikit-example: `uikit` 包的示例项目。
 - node_modules: 项目依赖的包列表。有 `yarn` 工具管理。
@@ -80,15 +83,17 @@
 
 ## 示例介绍
 
-在 `examples` 文件夹下，主要包括 `callkit` 和 `uikit` 的示例项目。
+在 `examples` 文件夹下，主要包括示例项目列表。
 
 `callkit-example`: 主要演示 `callkit` SDK 的使用。
 `uikit-example`: 主要演示 `uikit` SDK 的使用。
 `room-example`: 主要演示 `room` SDK 的使用。
+`product-uikit-demo`: 主要完整演示 `uikit` + `callkit` SDK 的使用。
+`product-room-demo`: 主要完整演示 `room` SDK 的使用。
 
-[callkit-example 说明入口](./uikit-example.md)  
-[uikit-example 说明入口](./uikit-example.md)
-[room-example 说明入口](./room-quick-start.md)
+[room 快速开始 说明入口](./room-quick-start.md)
+[uikit 快速开始 说明入口](./uikit-quick-start.md)
+[callkit 快速开始 说明入口](./callkit-quick-start.md)
 
 ## 仓库构建说明
 
