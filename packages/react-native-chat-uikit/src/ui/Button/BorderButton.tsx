@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { Button, type ButtonProps } from './Button';
 
 export type BorderButtonProps = Omit<ButtonProps, 'buttonStyle'>;

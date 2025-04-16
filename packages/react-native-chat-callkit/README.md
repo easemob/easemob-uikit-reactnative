@@ -7,16 +7,16 @@ AgoraChatCallKit is an open-source audio and video UI library developed based on
 ## Development environment requirements
 
 - MacOS 12 or higher
-- React-Native 0.66 or higher
-- NodeJs 16.18 or higher
+- React-Native 0.71 or higher
+- NodeJs 20.18 or higher
 
 For iOS app:
 
-- Xcode 13 or higher and its related dependency tool.
+- Xcode 15 or higher and its related dependency tool.
 
 For the Android app:
 
-- Android Studio 2021 or higher and its related dependency tool.
+- Android Studio 2022 or higher and its related dependency tool.
 
 ## Installation
 
@@ -29,16 +29,13 @@ yarn add react-native-chat-callkit
 ## Dependencies
 
 ```sh
-yarn add react-native-agora \
-react-native-device-info \
-react-native-fast-image \
-react-native-pager-view \
+yarn add @react-native-community/blur \
+react-native-agora \
 react-native-chat-sdk \
-react-native-paper \
-react-native-permissions \
+react-native-fast-image \
 react-native-safe-area-context \
-react-native-tab-view \
-react-native-screens
+react-native-screens \
+react-native-vector-icons
 ```
 
 ## Quick Start
@@ -46,18 +43,27 @@ react-native-screens
 Initialization
 
 ```typescript
-import { GlobalContainer } from 'react-native-chat-callkit';
+import { Container } from 'react-native-chat-room';
 export function App() {
   return (
-    <GlobalContainer opt={{ appKey: '<your app key>' }}>
+    <Container opt={{ appKey: '<your app key>' }}>
       {/** sub component */}
-    </GlobalContainer>
+    </Container>
   );
 }
 ```
 
-Join a audio or video chat.
+Enter AV page
 
+```typescript
+export function ChatroomScreen() {
+  return (
+    <Chatroom roomId={'<room ID>'} ownerId={'<room owner ID>'}>
+      {/** sub component */}
+    </Chatroom>
+  );
+}
+```
 
 ## Contributing
 

@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ListSearch } from '../ListSearch';
 import { useSearchConversation } from './SearchConversation.hooks';
 import type { ConversationSearchModel, SearchConversationProps } from './types';

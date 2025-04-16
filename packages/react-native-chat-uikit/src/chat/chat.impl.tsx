@@ -125,7 +125,7 @@ export class ChatServiceImpl
   id(): string {
     return this.client.options?.appKey && this.client.options?.appKey.length > 0
       ? this.client.options?.appKey
-      : this.client.options?.appId;
+      : (this.client.options?.appId ?? '');
   }
 
   async init(params: {
@@ -590,8 +590,8 @@ export class ChatServiceImpl
   async toUIConversation(conv: ChatConversation): Promise<ConversationModel> {
     const name =
       conv.convType === ChatConversationType.PeerChat
-        ? this._getRemarkFromCache(conv.convId) ??
-          this._getNameFromCache(conv.convId)
+        ? (this._getRemarkFromCache(conv.convId) ??
+          this._getNameFromCache(conv.convId))
         : this._getNameFromCache(conv.convId);
     return {
       convId: conv.convId,
@@ -2626,14 +2626,14 @@ export class ChatServiceImpl
     const { convId, convType, startMsgId, direction, loadCount, isChatThread } =
       params;
     return this.tryCatchSync({
-      promise: this.client.chatManager.getMessages(
+      promise: this.client.chatManager.getMsgs({
         convId,
         convType,
         startMsgId,
         direction,
         loadCount,
-        isChatThread
-      ),
+        isChatThread,
+      }),
       event: 'getHistoryMessage',
     });
   }
@@ -2646,11 +2646,20 @@ export class ChatServiceImpl
   }): Promise<ChatCursorResult<ChatMessage>> {
     const { convId, convType, startMsgId, direction, pageSize } = params;
     return this.tryCatchSync({
-      promise: this.client.chatManager.fetchHistoryMessages(convId, convType, {
-        startMsgId,
-        direction,
-        pageSize,
-      }),
+      promise: this.client.chatManager.fetchHistoryMessagesByOptions(
+        convId,
+        convType,
+        {
+          options: {
+            direction,
+            startTs: -1,
+            endTs: -1,
+            needSave: false,
+          },
+          cursor: startMsgId,
+          pageSize: pageSize,
+        }
+      ),
       event: 'fetchHistoryMessages',
     });
   }
@@ -2743,14 +2752,14 @@ export class ChatServiceImpl
     onResult: ResultCallback<ChatMessage[]>;
   }): void {
     this.tryCatch({
-      promise: this.client.chatManager.getMessagesWithKeyword(
-        params.convId,
-        params.convType,
-        params.keyword,
-        params.direction,
-        params.timestamp,
-        params.maxCount ?? 200
-      ),
+      promise: this.client.chatManager.getConvMsgsWithKeyword({
+        convId: params.convId,
+        convType: params.convType,
+        keywords: params.keyword,
+        direction: params.direction,
+        timestamp: params.timestamp,
+        count: params.maxCount ?? 200,
+      }),
       event: 'getMessagesByKeyword',
       onFinished: (value) => {
         params.onResult({ isOk: true, value: value });

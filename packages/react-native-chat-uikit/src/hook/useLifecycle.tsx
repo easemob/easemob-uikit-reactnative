@@ -8,7 +8,7 @@ export function useLifecycle(
   callerName?: string,
   enableLog?: boolean
 ) {
-  const cn = callerName ?? useLifecycle?.caller?.name;
+  const cn = callerName ?? 'useLifecycle?.caller?.name';
   React.useEffect(() => {
     if (enableLog === true) {
       console.log(`{

@@ -7,16 +7,16 @@ React Native Chat UI Kit 是一个用于构建即时通讯聊天应用的用户�
 ## 开发环境要求
 
 - MacOS 12 或以上版本
-- React-Native 0.66 或以上版本
-- NodeJs 16.18 或以上版本
+- React-Native 0.71 或以上版本
+- NodeJs 20.18 或以上版本
 
 对于 `iOS` 应用：
 
-- Xcode 13 或以上版本，以及它的相关依赖工具。
+- Xcode 15 或以上版本，以及它的相关依赖工具。
 
 对于 `Android` 应用：
 
-- Android Studio 2021 或以上版本，以及它的相关依赖工具。
+- Android Studio 2022 或以上版本，以及它的相关依赖工具。
 
 ## 安装到项目中
 
@@ -32,28 +32,17 @@ yarn add react-native-chat-uikit
 yarn add @react-native-async-storage/async-storage \
 @react-native-camera-roll/camera-roll \
 @react-native-clipboard/clipboard \
-date-fns \
-pinyin-pro \
-pure-uuid \
-react-native-agora \
-react-native-chat-uikit \
-react-native-chat-sdk \
 react-native-audio-recorder-player \
+react-native-chat-sdk \
 react-native-create-thumbnail \
 react-native-device-info \
-react-native-document-picker \
+@react-native-documents/picker \
 react-native-fast-image \
 react-native-file-access \
 react-native-gesture-handler \
-react-native-get-random-values \
 react-native-image-picker \
-react-native-permissions \
 react-native-safe-area-context \
-react-native-screens \
-react-native-video \
-react-native-web \
-react-native-webview \
-twemoji
+react-native-video
 ```
 
 ## 快速开始
@@ -71,7 +60,7 @@ function App(): React.JSX.Element {
 }
 ```
 
-加入房间
+进入聊天页面
 
 ```typescript
 export function ConversationDetailScreen() {

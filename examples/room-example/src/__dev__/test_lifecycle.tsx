@@ -24,7 +24,7 @@ export function TestComponent() {
 }
 
 export function TestComponent2() {
-  const cb = React.useCallback((state) => {
+  const cb = React.useCallback((state: 'load' | 'unload') => {
     console.log('test:TestComponent2:useLifecycle:', state);
   }, []);
   useLifecycle(cb);

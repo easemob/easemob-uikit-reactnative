@@ -1,4 +1,4 @@
-import format from 'date-fns/format';
+import { format, Locale } from 'date-fns';
 
 export function getDateMeta() {
   const now = new Date();
@@ -42,8 +42,8 @@ export function formatTs2(
     anchor === undefined
       ? new Date().getTime()
       : typeof anchor === 'number'
-      ? anchor
-      : anchor.getTime();
+        ? anchor
+        : anchor.getTime();
   const oneDayBefore = n - 24 * 60 * 60 * 1000;
   const todayYear = new Date(n).getFullYear();
   const oneYearBefore = new Date(todayYear, 0).getTime();
@@ -66,8 +66,8 @@ export function formatTsForConvList(
     anchor === undefined
       ? new Date().getTime()
       : typeof anchor === 'number'
-      ? anchor
-      : anchor.getTime();
+        ? anchor
+        : anchor.getTime();
   const oneDayBefore = n - 24 * 60 * 60 * 1000;
   if (d < oneDayBefore) {
     return format(date, 'MMM dd', { locale });
@@ -85,8 +85,8 @@ export function formatTsForConvDetail(
     anchor === undefined
       ? new Date().getTime()
       : typeof anchor === 'number'
-      ? anchor
-      : anchor.getTime();
+        ? anchor
+        : anchor.getTime();
   const oneDayBefore = n - 24 * 60 * 60 * 1000;
   if (d < oneDayBefore) {
     return format(date, 'MMM dd HH:mm', { locale });

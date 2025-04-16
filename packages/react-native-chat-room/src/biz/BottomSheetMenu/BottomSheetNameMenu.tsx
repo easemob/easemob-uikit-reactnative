@@ -102,27 +102,23 @@ export const BottomSheetNameMenu = React.forwardRef<
     return menuRef?.current?.getData?.();
   });
   const menuRef = React.useRef<BottomSheetMenuRef>({} as any);
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startShow: () => {
-          menuRef?.current?.startShow?.();
-        },
-        startHide: (onFinished?: () => void) => {
-          menuRef?.current?.startHide?.(onFinished);
-        },
-        startShowWithInit: (initItems: InitMenuItemsType[], others?: any) => {
-          const items = getItems({ initItems, onRequestModalClose });
-          menuRef?.current?.startShowWithInit?.(items, others);
-        },
-        getData: () => {
-          return menuRef?.current?.getData?.();
-        },
-      };
-    },
-    [getItems, onRequestModalClose]
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      startShow: () => {
+        menuRef?.current?.startShow?.();
+      },
+      startHide: (onFinished?: () => void) => {
+        menuRef?.current?.startHide?.(onFinished);
+      },
+      startShowWithInit: (initItems: InitMenuItemsType[], others?: any) => {
+        const items = getItems({ initItems, onRequestModalClose });
+        menuRef?.current?.startShowWithInit?.(items, others);
+      },
+      getData: () => {
+        return menuRef?.current?.getData?.();
+      },
+    };
+  }, [getItems, onRequestModalClose]);
   return (
     <BottomSheetMenu
       ref={menuRef}

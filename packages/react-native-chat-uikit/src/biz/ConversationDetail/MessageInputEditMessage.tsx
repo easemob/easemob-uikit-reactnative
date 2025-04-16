@@ -128,33 +128,29 @@ export const MessageInputEditMessage = React.forwardRef<
     onEditMessageFinished,
   });
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startHide: (onFinished?: () => void) => {
-          isShow.current = false;
-          modalRef?.current?.startHide?.(onFinished);
-        },
-        startShow: () => {
-          isShow.current = true;
-          modalRef?.current?.startShow?.();
-        },
-        startShowWithInit: (msg: ChatMessage) => {
-          isShow.current = true;
-          updateMsg(msg);
-          // if (updatedMsg !== msg) {
-          //   isShow.current = true;
-          //   updateMsg(msg);
-          // } else {
-          //   isShow.current = true;
-          //   modalRef?.current?.startShow?.();
-          // }
-        },
-      };
-    },
-    [updateMsg]
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      startHide: (onFinished?: () => void) => {
+        isShow.current = false;
+        modalRef?.current?.startHide?.(onFinished);
+      },
+      startShow: () => {
+        isShow.current = true;
+        modalRef?.current?.startShow?.();
+      },
+      startShowWithInit: (msg: ChatMessage) => {
+        isShow.current = true;
+        updateMsg(msg);
+        // if (updatedMsg !== msg) {
+        //   isShow.current = true;
+        //   updateMsg(msg);
+        // } else {
+        //   isShow.current = true;
+        //   modalRef?.current?.startShow?.();
+        // }
+      },
+    };
+  }, [updateMsg]);
 
   React.useEffect(() => {
     if (isShow.current === true) {

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import type { ImageStyle, StyleProp } from 'react-native';
 
 import { ICON_ASSETS } from '../../assets';

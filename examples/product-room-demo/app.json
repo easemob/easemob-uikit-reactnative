@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "ChatRoomFullExample",
+    "slug": "ChatRoomFullExample",
+    "scheme": "expodemowithdevclient",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/94befb2c-e471-4262-94a7-1e39480a676c"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hyphenate.rn.ChatRoomFullExample",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Use camera for taking photos and videos in chat.",
+        "NSMicrophoneUsageDescription": "Use microphone for recording voice messages in chat.",
+        "NSPhotoLibraryUsageDescription": "Use picture gallery for sharing images in chat.",
+        "NSAppleMusicUsageDescription": "Use the media library for sharing media files in chat.",
+        "UIBackgroundModes": [
+          "remote-notification",
+          "remote-notification"
+        ]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.hyphenate.rn.ChatRoomFullExample",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "94befb2c-e471-4262-94a7-1e39480a676c"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "plugins": [
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
+        }
+      ]
+    ],
+    "newArchEnabled": true,
+    "jsEngine": "hermes"
+  }
+}

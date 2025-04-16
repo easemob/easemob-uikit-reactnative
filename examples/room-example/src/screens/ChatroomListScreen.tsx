@@ -30,7 +30,10 @@ export function ChatroomListScreen(props: Props) {
             setData([...dataRef.current]);
             finished?.();
           })
-          .catch(finished);
+          .catch((error) => {
+            console.error('Error fetching chatroom list:', error);
+            finished?.();
+          });
       } else {
         finished?.();
       }
@@ -48,10 +51,11 @@ export function ChatroomListScreen(props: Props) {
 
   useLifecycle(
     React.useCallback(
-      async (state) => {
+      async (state: 'load' | 'unload') => {
         if (state === 'load') {
           request();
         } else {
+          // 处理 unload 状态的情况，如需要
         }
       },
       [request]

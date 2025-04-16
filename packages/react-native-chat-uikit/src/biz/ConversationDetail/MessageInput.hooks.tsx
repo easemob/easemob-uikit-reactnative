@@ -88,7 +88,7 @@ export function useMessageInput(
   const [inputBarState, setInputBarState] =
     React.useState<MessageInputState>('normal');
   const { messageInputBarStyle } = useConfigContext();
-  const MessageInputBarMenu = React.useMemo(() => {
+  const MessageInputBarMenu: React.ElementType | null = React.useMemo(() => {
     if (messageInputBarStyle === 'bottom-sheet') {
       return BottomSheetNameMenu;
     } else if (messageInputBarStyle === 'extension') {

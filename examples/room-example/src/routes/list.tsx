@@ -36,7 +36,7 @@ export type RootParamsName = Extract<keyof RootParamsList, string>;
 export type RootParamsNameList = RootParamsName[];
 export type RootScreenParamsList<
   T extends {} = RootParamsList,
-  U extends string = 'option'
+  U extends string = 'option',
 > = {
   [K in keyof T]: Omit<T[K], U>;
 };

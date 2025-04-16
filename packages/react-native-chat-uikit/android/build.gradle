@@ -1,43 +1,101 @@
 buildscript {
+  ext.getExtOrDefault = {name ->
+    return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['ChatUikit_' + name]
+  }
+
   repositories {
     google()
     mavenCentral()
   }
 
   dependencies {
-    classpath "com.android.tools.build:gradle:7.2.1"
+    classpath "com.android.tools.build:gradle:8.7.2"
+    // noinspection DifferentKotlinGradleVersion
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${getExtOrDefault('kotlinVersion')}"
   }
 }
+
 
 def isNewArchitectureEnabled() {
   return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
 }
 
 apply plugin: "com.android.library"
-
-
-def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
+apply plugin: "kotlin-android"
 
 if (isNewArchitectureEnabled()) {
   apply plugin: "com.facebook.react"
-}
-
-def getExtOrDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["ChatUikit_" + name]
 }
 
 def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["ChatUikit_" + name]).toInteger()
 }
 
+def supportsNamespace() {
+  def parsed = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')
+  def major = parsed[0].toInteger()
+  def minor = parsed[1].toInteger()
+
+  // Namespace support was added in 7.3.0
+  return (major == 7 && minor >= 3) || major >= 8
+}
+
+def getRNVersion() {
+    def rnPackageJsonPath = null
+    try {
+        rnPackageJsonPath = ["node", "--print", "require.resolve('react-native/package.json')"]
+            .execute(null, rootDir)
+            .text
+            .trim()
+
+        def packageJson = new groovy.json.JsonSlurper().parseText(new File(rnPackageJsonPath).text)
+        def version = packageJson.version
+
+        println("React Native version found: ${version}")
+        return version
+    } catch (Exception e) {
+        println("Error determining React Native version: ${e.message}")
+        return null
+    }
+}
+
+def isReactNative076OrHigher() {
+    def rnVersion = getRNVersion()
+    if (rnVersion != null) {
+        def versionParts = rnVersion.split("\\.")
+        if (versionParts.size() >= 2) {
+            def major = versionParts[0].toInteger()
+            def minor = versionParts[1].toInteger()
+            return (major > 0 || (major == 0 && minor >= 76))
+        }
+    }
+    return false
+}
+
 android {
+  if (supportsNamespace()) {
+    namespace "com.chatuikit"
+
+    sourceSets {
+      main {
+        manifest.srcFile "src/main/AndroidManifestNew.xml"
+      }
+    }
+  }
+
   compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
 
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+    buildConfigField "boolean", "IS_REACT_NATIVE_076_OR_HIGHER", "${isReactNative076OrHigher()}"
   }
+
+  buildFeatures {
+    buildConfig true
+  }
+
   buildTypes {
     release {
       minifyEnabled false
@@ -53,6 +111,27 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
+  sourceSets {
+    main {
+      if (isNewArchitectureEnabled()) {
+          java.srcDirs += [
+            "src/newarch",
+            "generated/java",
+            "generated/jni"
+          ]
+      } else {
+          java.srcDirs += [
+            "src/oldarch"
+          ]
+      }
+
+      if (isReactNative076OrHigher()) {
+          java.srcDirs += ["src/rn076"]
+      } else {
+          java.srcDirs += ["src/rn072"]
+      }
+    }
+  }
 }
 
 repositories {
@@ -60,12 +139,11 @@ repositories {
   google()
 }
 
+def kotlin_version = getExtOrDefault("kotlinVersion")
 
 dependencies {
-  // For < 0.71, this will be from the local maven repo
-  // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
-  //noinspection GradleDynamicVersion
-  implementation "com.facebook.react:react-native:+"
+  implementation "com.facebook.react:react-android"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 if (isNewArchitectureEnabled()) {

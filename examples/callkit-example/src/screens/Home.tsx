@@ -3,6 +3,7 @@ import * as React from 'react';
 import {
   Alert,
   DeviceEventEmitter,
+  FlatList,
   ListRenderItemInfo,
   Platform,
   StyleSheet,
@@ -10,7 +11,6 @@ import {
   ToastAndroid,
   View,
 } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
 
 import { ContactList } from '../components/SelectList';
 import {
@@ -299,8 +299,9 @@ export default function HomeScreen({
     if (callType === CallType.Audio1v1 || callType === CallType.Video1v1) {
       return showSingleCall({
         appKey:
-          ChatClient.getInstance().options.appKey ??
-          ChatClient.getInstance().options.appId,
+          ChatClient.getInstance().options?.appKey ??
+          ChatClient.getInstance().options?.appId ??
+          '',
         agoraAppId: agoraAppId,
         inviterId: inviterId,
         currentId: currentId,
@@ -314,8 +315,9 @@ export default function HomeScreen({
     ) {
       return showMultiCall({
         appKey:
-          ChatClient.getInstance().options.appKey ??
-          ChatClient.getInstance().options.appId,
+          ChatClient.getInstance().options?.appKey ??
+          ChatClient.getInstance().options?.appId ??
+          '',
         agoraAppId: agoraAppId,
         inviterId: inviterId,
         currentId: currentId,

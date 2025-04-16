@@ -8,9 +8,9 @@ import {
   ErrorCodeType,
   IRtcEngine,
   IRtcEngineEventHandler,
-  LocalAudioStreamError,
+  LocalAudioStreamReason,
   LocalAudioStreamState,
-  LocalVideoStreamError,
+  LocalVideoStreamReason,
   LocalVideoStreamState,
   RemoteAudioStats,
   RtcConnection,
@@ -70,7 +70,7 @@ export class CallManagerImpl
   private _device: CallDevice;
   private _userListener?: CallListener;
   private _elapsed: number;
-  private _intervalId?: NodeJS.Timer;
+  private _intervalId?: NodeJS.Timeout;
   private _requestRTCToken?: (params: {
     appKey: string;
     channelId: string;
@@ -2113,13 +2113,13 @@ export class CallManagerImpl
   public onLocalVideoStateChanged(
     source: VideoSourceType,
     state: LocalVideoStreamState,
-    error: LocalVideoStreamError
+    reason: LocalVideoStreamReason
   ) {
     calllog.log(
       'CallManagerImpl:onLocalVideoStateChanged:',
       source,
       state,
-      error
+      reason
     );
     const call = this.ship.currentCall;
     if (call) {
@@ -2152,13 +2152,13 @@ export class CallManagerImpl
   public onLocalAudioStateChanged(
     connection: RtcConnection,
     state: LocalAudioStreamState,
-    error: LocalAudioStreamError
+    reason: LocalAudioStreamReason
   ) {
     calllog.log(
       'CallManagerImpl:onLocalAudioStateChanged:',
       connection,
       state,
-      error
+      reason
     );
     const call = this.ship.currentCall;
     if (call) {

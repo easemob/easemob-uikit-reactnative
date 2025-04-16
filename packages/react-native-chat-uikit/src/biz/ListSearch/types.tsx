@@ -21,14 +21,14 @@ export type DefaultComponentModel = DataModel;
  * List Search Item Component.
  */
 export type ListSearchItemComponent<
-  ComponentModel extends DefaultComponentModel = DefaultComponentModel
+  ComponentModel extends DefaultComponentModel = DefaultComponentModel,
 > = React.FC<ListSearchItemProps<ComponentModel>>;
 
 /**
  * List Search Item Component properties.
  */
 export type ListSearchItemProps<
-  ComponentModel extends DefaultComponentModel = DefaultComponentModel
+  ComponentModel extends DefaultComponentModel = DefaultComponentModel,
 > = ListItemProps &
   ListItemRequestProps<DataModel> &
   Omit<
@@ -53,7 +53,7 @@ export type ListSearchItemProps<
  * List Search Component properties.
  */
 export type ListSearchProps<
-  ComponentModel extends DefaultComponentModel = DefaultComponentModel
+  ComponentModel extends DefaultComponentModel = DefaultComponentModel,
 > = ListRequestProps<DataModel> &
   PropsWithTest &
   PropsWithError &
@@ -95,5 +95,5 @@ export type ListSearchProps<
  * List Search Component.
  */
 export type UseListSearchProps<
-  ComponentModel extends DefaultComponentModel = DefaultComponentModel
+  ComponentModel extends DefaultComponentModel = DefaultComponentModel,
 > = ListSearchProps<ComponentModel>;

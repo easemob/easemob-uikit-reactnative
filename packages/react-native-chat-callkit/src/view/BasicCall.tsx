@@ -179,7 +179,7 @@ export type BasicCallState = {
  */
 export abstract class BasicCall<
     Props extends BasicCallProps,
-    State extends BasicCallState
+    State extends BasicCallState,
   >
   extends React.Component<Props, State>
   implements CallViewListener
@@ -575,8 +575,8 @@ function RenderBottomMenu(props: RenderBottomMenuProps): JSX.Element {
     return muteVideo ? 'mute-video' : 'video';
   };
   // eslint-disable-next-line react/no-unstable-nested-components
-  const Container = (props: React.PropsWithChildren<{}>) => {
-    const { children } = props;
+  const Container = (containerProps: React.PropsWithChildren<{}>) => {
+    const { children } = containerProps;
     return (
       <View
         style={{

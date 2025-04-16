@@ -133,11 +133,11 @@ const ButtonContent = (props: ButtonProps): JSX.Element => {
           <Icon
             style={[
               {
-                width: buttonSize.icon.size,
-                height: buttonSize.icon.size,
+                width: buttonSize.icon.size ?? 0,
+                height: buttonSize.icon.size ?? 0,
                 tintColor: buttonState.color,
                 // backgroundColor: buttonState.backgroundColor,
-              },
+              } as any, // TODO: fix type !!!
               iconStyle,
             ]}
             name={icon ?? 'star_fill'}
@@ -155,11 +155,11 @@ const ButtonContent = (props: ButtonProps): JSX.Element => {
         <Icon
           style={[
             {
-              width: buttonSize.icon.size,
-              height: buttonSize.icon.size,
+              width: buttonSize.icon.size ?? 0,
+              height: buttonSize.icon.size ?? 0,
               tintColor: buttonState.color,
               // backgroundColor: buttonState.backgroundColor,
-            },
+            } as any, // TODO: fix type !!!
             iconStyle,
           ]}
           name={icon ?? 'star_fill'}
@@ -184,11 +184,11 @@ const ButtonContent = (props: ButtonProps): JSX.Element => {
           <Icon
             style={[
               {
-                width: buttonSize.icon.size,
-                height: buttonSize.icon.size,
+                width: buttonSize.icon.size ?? 0,
+                height: buttonSize.icon.size ?? 0,
                 tintColor: buttonState.color,
                 // backgroundColor: buttonState.backgroundColor,
-              },
+              } as any, // TODO: fix type !!!
               iconStyle,
             ]}
             name={icon ?? 'star_fill'}

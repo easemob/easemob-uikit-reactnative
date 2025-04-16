@@ -83,7 +83,7 @@ export function SimulativeModal(props: SimulativeModalProps) {
               backgroundColor:
                 backgroundTransparent === true
                   ? undefined
-                  : backgroundColor ?? g_mask_color,
+                  : (backgroundColor ?? g_mask_color),
               opacity: backgroundTransparent === true ? 0 : backgroundOpacity,
             },
           ]}

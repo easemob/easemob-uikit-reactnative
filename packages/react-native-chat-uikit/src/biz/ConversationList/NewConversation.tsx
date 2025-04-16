@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ContactList, ContactListProps } from '../ContactList';
 
 export type NewConversationProps = Pick<

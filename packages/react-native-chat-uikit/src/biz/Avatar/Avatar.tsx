@@ -118,10 +118,10 @@ export function StatusAvatar(props: StatusAvatarProps) {
     parentSize >= 100
       ? 100 / 26
       : parentSize >= 50
-      ? 50 / 16
-      : parentSize >= 40
-      ? 40 / 12
-      : 32 / 11.68;
+        ? 50 / 16
+        : parentSize >= 40
+          ? 40 / 12
+          : 32 / 11.68;
   const urlRef = React.useRef<string | undefined>(url);
   const [status, setStatus] = React.useState<string>('');
   const { AvatarStatusRender, enablePresence } = useConfigContext();

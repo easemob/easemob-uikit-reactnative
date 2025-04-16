@@ -78,7 +78,9 @@ export function ServerSettingScreen(props: Props) {
   });
   const [disable] = React.useState<boolean>(false);
   const [appKey, setAppKey] = React.useState<string>(AppKey.gAppKey());
-  const [isAppKey, setIsAppKey] = React.useState<boolean>(undefined);
+  const [isAppKey, setIsAppKey] = React.useState<boolean>(
+    appKey && appKey.length > 0 ? true : false
+  );
   const [imServer, setImServer] = React.useState<string>('');
   const [imPort, setImPort] = React.useState<string>('');
   const [restServer, setRestServer] = React.useState<string>('');
@@ -121,7 +123,7 @@ export function ServerSettingScreen(props: Props) {
       await _setIsAppKey(isAppKey);
 
       await _setImPort(imPort);
-      await _setEnableDNSConfig(enablePrivateServer);
+      await _setEnableDNSConfig(enablePrivateServer ?? false);
       await _setImServer(imServer);
       await _setRestServer(restServer);
 
@@ -211,9 +213,9 @@ export function ServerSettingScreen(props: Props) {
           setIsAppKey(false);
         }
 
-        setImServer(value.imServer);
-        setImPort(value.imPort);
-        setRestServer(value.restServer);
+        setImServer(value.imServer ?? '');
+        setImPort(value.imPort ?? '');
+        setRestServer(value.restServer ?? '');
         setEnablePrivateServer(value.enablePrivateServer ?? false);
       }
     });

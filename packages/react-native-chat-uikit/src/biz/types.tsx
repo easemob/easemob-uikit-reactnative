@@ -101,7 +101,7 @@ export type PropsWithFlatList<ListItemProps> = {
  */
 export type PropsWithSectionList<
   ListItemProps,
-  SectionT extends DefaultSectionT = DefaultSectionT
+  SectionT extends DefaultSectionT = DefaultSectionT,
 > = {
   /**
    * Properties of the list component. Currently, direct setting of ref, data, renderItem is not supported.
@@ -353,7 +353,7 @@ export type UseFlatListReturn<ItemT> = UseListBasicReturn<ItemT> & {
 export type UseSectionListReturn<
   ItemT,
   SectionT extends DefaultSectionT,
-  ListIndexPropsT extends DefaultListIndexPropsT
+  ListIndexPropsT extends DefaultListIndexPropsT,
 > = UseListBasicReturn<ItemT> & {
   /**
    * @description The data source of the list.
@@ -533,7 +533,7 @@ export type FlatListRefType<DataModel, ListItemProps> =
 export type SectionListRefType<
   DataModel,
   ListItemProps,
-  SectionT extends DefaultSectionT = DefaultSectionT
+  SectionT extends DefaultSectionT = DefaultSectionT,
 > = BasicListRefType<DataModel> & {
   /**
    * Get the section list component reference.

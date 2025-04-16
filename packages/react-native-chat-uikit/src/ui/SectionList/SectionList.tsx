@@ -57,7 +57,7 @@ export const _SectionList = <ItemT, SectionT>(
  */
 export function SectionListFactory<
   ItemT = any,
-  SectionT extends DefaultSectionT = DefaultSectionT
+  SectionT extends DefaultSectionT = DefaultSectionT,
 >() {
   return React.forwardRef<
     SectionListRef<ItemT, SectionT>,
@@ -67,5 +67,5 @@ export function SectionListFactory<
 
 export type SectionListFactoryReturn<
   ItemT,
-  SectionT extends DefaultSectionT = DefaultSectionT
+  SectionT extends DefaultSectionT = DefaultSectionT,
 > = ReturnType<typeof SectionListFactory<ItemT, SectionT>>;

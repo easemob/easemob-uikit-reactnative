@@ -1,0 +1,514 @@
+[返回父文档](./index.md)
+
+# 快速开始介绍
+
+## 目标：创建音视频聊天
+
+创建应用，配置项目，填写必要 callkit 代码，实现1v1音视频通话。
+
+## 步骤
+
+### 1. 创建项目
+
+[参考相关章节](./create-app.md)
+
+**注意** 如果使用`expo`创建项目，需要创建 `native` 相关文件。详见创建项目说明的常见问题。
+
+### 2. 初始化项目
+
+执行命令 `yarn` 初始化项目。 [参考初始化说明](./create-app.md)
+
+添加 callkit 以及依赖。执行命令：
+
+```sh
+yarn add @react-native-community/blur \
+react-native-agora \
+react-native-chat-callkit \
+react-native-chat-sdk \
+react-native-fast-image \
+react-native-safe-area-context \
+react-native-screens \
+react-native-vector-icons
+```
+
+对于 iOS 平台：
+
+更新 `Info.plist` 文件内容，增加需要的权限。
+
+```xml
+<dict>
+	<key>NSCameraUsageDescription</key>
+	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string></string>
+</dict>
+```
+
+安装 iOS 需要的依赖。 执行命令，如下：
+
+```sh
+# 在项目目录 `ios` 文件夹下 安装 iOS依赖
+# 注意: expo 创建的项目没有ios文件夹，需要使用命令创建一下。详见 `创建项目说明` 章节。
+pod install
+```
+
+对于 Android studio 平台：
+
+更新 `AndroidManifest.xml` 文件内容，增加需要的权限。
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+</manifest>
+```
+
+安装 Android studio 需要的以来。 打开 Android studio 应用，打开 android 项目，自动运行 sync 或者手动执行。
+
+### 3. 编写代码
+
+```tsx
+/* eslint-disable react-native/no-inline-styles */
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ */
+
+import * as React from 'react';
+import {Pressable, SafeAreaView, Text, TextInput} from 'react-native';
+import {Alert, Button, Platform, ToastAndroid, View} from 'react-native';
+import {
+  GlobalContainer as Container,
+  CallError,
+  CallListener,
+  CallType,
+  CallUser,
+  ChatClient,
+  formatElapsed,
+  SingleCall,
+  useCallkitSdkContext,
+} from 'react-native-chat-callkit';
+
+const appKey = '<your app key>';
+const agoraId = '<your agora id>';
+const accountType: 'easemob' | 'agora' | undefined = 'easemob';
+const userId = '<current login id>';
+const userPassword = '<current login password or token>';
+const usePassword = true; // or false;
+const peerId = '<chat peer id>';
+
+function LoginScreen() {
+  const [page, setPage] = React.useState(0);
+  const [_appKey, setAppKey] = React.useState(appKey);
+  const [id, setId] = React.useState(userId);
+  const [ps, setPs] = React.useState(userPassword);
+  const [peer, setPeer] = React.useState(peerId);
+
+  if (page === 0) {
+    // login screen
+    return (
+      <SafeAreaView style={{flex: 1}}>
+        <TextInput
+          placeholder="Please App Key."
+          value={_appKey}
+          onChangeText={setAppKey}
+        />
+        <TextInput
+          placeholder="Please Login ID."
+          value={id}
+          onChangeText={setId}
+        />
+        <TextInput
+          placeholder="Please Login token or password."
+          value={ps}
+          onChangeText={setPs}
+        />
+        <TextInput
+          placeholder="Please peer ID."
+          value={peer}
+          onChangeText={setPeer}
+        />
+        <Pressable
+          onPress={() => {
+            ChatClient.getInstance()
+              .login(id, ps, usePassword)
+              .then(() => {
+                setPage(1);
+              })
+              .catch();
+          }}>
+          <Text>{'Login'}</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            ChatClient.getInstance()
+              .logout()
+              .then(() => {
+                setPage(0);
+              })
+              .catch();
+          }}>
+          <Text>{'Logout'}</Text>
+        </Pressable>
+      </SafeAreaView>
+    );
+  } else if (page === 1) {
+    // audio and video handler screen.
+    return (
+      <SafeAreaView style={{flex: 1}}>
+        <AVScreen
+          inviterId={userId}
+          currentId={userId}
+          inviteeId={peerId}
+          agoraAppId={agoraId}
+        />
+      </SafeAreaView>
+    );
+  } else {
+    return <View />;
+  }
+}
+
+function AVScreen({
+  inviterId,
+  currentId,
+  inviteeId,
+  agoraAppId,
+}: {
+  inviterId: string;
+  currentId: string;
+  inviteeId: string;
+  agoraAppId: string;
+}) {
+  const {call} = useCallkitSdkContext();
+
+  const {showSingleCall} = useCallApi();
+  const [visible, setVisible] = React.useState(false);
+  const [callType, setCallType] = React.useState<CallType>(CallType.Audio1v1);
+
+  const onRequestClose = React.useCallback(() => {
+    setVisible(false);
+  }, []);
+
+  const _Call = (props: {
+    callType: CallType;
+    currentId: string;
+    inviterId: string;
+    visible: boolean;
+    onRequestClose: () => void;
+  }) => {
+    const {callType, currentId, inviterId, visible, onRequestClose} = props;
+    const inviteeIds = [inviteeId] as string[];
+    if (visible !== true) {
+      return null;
+    }
+    if (callType === CallType.Audio1v1 || callType === CallType.Video1v1) {
+      return showSingleCall({
+        appKey:
+          ChatClient.getInstance().options?.appKey ??
+          ChatClient.getInstance().options?.appId ??
+          '',
+        agoraAppId: agoraAppId,
+        inviterId: inviterId,
+        currentId: currentId,
+        inviteeIds: inviterId === currentId ? inviteeIds : [currentId],
+        callType: callType,
+        onRequestClose: onRequestClose,
+      });
+    } else {
+      return null;
+    }
+  };
+
+  const showCall = React.useCallback(
+    (params: {callType: CallType; currentId: string; inviterId: string}) => {
+      const {callType} = params;
+      setCallType(callType);
+      setVisible(true);
+    },
+    [],
+  );
+
+  const addListener = React.useCallback(() => {
+    const listener = {
+      onCallReceived: (params: {
+        channelId: string;
+        inviterId: string;
+        callType: CallType;
+        extension?: any;
+      }) => {
+        showCall({
+          callType: params.callType,
+          currentId: ChatClient.getInstance().currentUserName ?? '',
+          inviterId: params.inviterId,
+        });
+      },
+      onCallOccurError: (params: {channelId: string; error: CallError}) => {
+        console.warn('onCallOccurError:', params);
+      },
+    } as CallListener;
+    call.addListener(listener);
+    return () => {
+      call.removeListener(listener);
+    };
+  }, [call, showCall]);
+
+  React.useEffect(() => {
+    const sub = addListener();
+    return () => {
+      sub();
+    };
+  }, [addListener]);
+
+  const tools = () => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-start',
+          marginVertical: 20,
+          flexWrap: 'wrap',
+        }}>
+        <Button
+          onPress={() => {
+            showCall({
+              callType: CallType.Video1v1,
+              currentId: ChatClient.getInstance().currentUserName ?? '',
+              inviterId: ChatClient.getInstance().currentUserName ?? '',
+            });
+          }}
+          title={'singleV'}
+        />
+        <Button
+          onPress={() => {
+            showCall({
+              callType: CallType.Audio1v1,
+              currentId: ChatClient.getInstance().currentUserName ?? '',
+              inviterId: ChatClient.getInstance().currentUserName ?? '',
+            });
+          }}
+          title={'singleA'}
+        />
+      </View>
+    );
+  };
+  return (
+    <>
+      <View style={{top: 44, flex: 1}}>{tools()}</View>
+      <_Call
+        callType={callType}
+        currentId={currentId}
+        inviterId={inviterId}
+        visible={visible}
+        onRequestClose={onRequestClose}
+      />
+    </>
+  );
+}
+
+function useCallApi() {
+  const showSingleCall = React.useCallback(
+    (params: {
+      appKey: string;
+      agoraAppId: string;
+      inviterId: string;
+      currentId: string;
+      inviteeIds: string[];
+      callType: CallType;
+      inviterName?: string;
+      inviterAvatar?: string;
+      invitees?: CallUser[];
+      onRequestClose: () => void;
+    }) => {
+      const {
+        inviteeIds,
+        currentId,
+        inviterId,
+        callType,
+        invitees,
+        inviterAvatar,
+        inviterName,
+        onRequestClose,
+      } = params;
+      return (
+        <SingleCall
+          inviterId={inviterId}
+          inviterName={inviterName}
+          inviterAvatar={inviterAvatar}
+          currentId={currentId}
+          inviteeId={inviteeIds[0] ?? ''}
+          inviteeName={invitees?.[0]?.userName}
+          inviteeAvatar={invitees?.[0]?.userAvatarUrl}
+          callType={callType === CallType.Audio1v1 ? 'audio' : 'video'}
+          onClose={(elapsed, reason) => {
+            onRequestClose();
+            if (Platform.OS === 'android') {
+              if (reason) {
+                ToastAndroid.show(
+                  `tip: reason: ${JSON.stringify(reason)}`,
+                  ToastAndroid.SHORT,
+                );
+              } else {
+                ToastAndroid.show(
+                  `tip: Call End: ${formatElapsed(elapsed)}`,
+                  ToastAndroid.SHORT,
+                );
+              }
+            } else {
+              if (reason) {
+                Alert.alert(`tip: reason: ${JSON.stringify(reason)}`);
+              } else {
+                Alert.alert(`tip: Call End: ${formatElapsed(elapsed)}`);
+              }
+            }
+          }}
+          onHangUp={() => {
+            onRequestClose();
+          }}
+          onCancel={() => {
+            onRequestClose();
+          }}
+          onRefuse={() => {
+            onRequestClose();
+          }}
+          onError={error => {
+            onRequestClose();
+            if (Platform.OS === 'android') {
+              ToastAndroid.show(`error: ${JSON.stringify(error)}`, 3);
+            } else {
+              Alert.alert(`error: ${JSON.stringify(error)}`);
+            }
+          }}
+        />
+      );
+    },
+    [],
+  );
+
+  return {
+    showSingleCall,
+  };
+}
+
+const App = () => {
+  // initialize callkit
+  return (
+    <Container
+      option={{
+        appKey: appKey,
+        agoraAppId: agoraId,
+      }}
+      type={accountType}
+      requestRTCToken={(params: {
+        appKey: string;
+        channelId: string;
+        userId: string;
+        userChannelId?: number | undefined;
+        type?: 'easemob' | 'agora' | undefined;
+        onResult: (params: {data?: any; error?: any}) => void;
+      }) => {
+        // todo: config app server implement get user rtc token.
+        // call params.onResult to return user rtc token.
+        params.onResult({
+          data: {
+            userId: params.userId,
+            userChannelId: 1000,
+          },
+        });
+      }}
+      requestUserMap={(params: {
+        appKey: string;
+        channelId: string;
+        userId: string;
+        onResult: (params: {data?: any; error?: any}) => void;
+      }) => {
+        // todo: config app server implement get user map.
+        // call params.onResult to return user map.
+        params.onResult({
+          data: {
+            userId: params.userId,
+            userChannelId: 1000,
+          },
+        });
+      }}
+      requestCurrentUser={(params: {
+        onResult: (params: {user: CallUser; error?: any}) => void;
+      }) => {
+        // call params.onResult to return current user.
+        ChatClient.getInstance()
+          .getCurrentUsername()
+          .then(result => {
+            params.onResult({
+              user: {
+                userId: result,
+                userName: result,
+              },
+            });
+          })
+          .catch(error => {
+            console.warn('test:getCurrentUsername:error:', error);
+          });
+      }}>
+      <LoginScreen />
+    </Container>
+  );
+}
+
+export default App;
+```
+
+### 4. 构建和编译
+
+编译运行方法主要有两种：命令行编译运行和 native 编译运行。 命令行运行比较简单，但是无法发现一些 native 问题。native 编译运行稍微麻烦，但是可以在创建项目中找到运行出错的原因。笔者推荐初次使用第二种，后续使用第一种。
+
+#### 命令行方式介绍
+
+在 `package.json` 配置文件中，可以找到 `scripts` 节点，这里面都是命令，在创建 `react-native` 项目后，会自动提供编译运行命令。
+
+运行 iOS 应用，在终端执行命令 `yarn run ios`。
+运行 Android 应用，在终端执行命令 `yarn run android`。
+
+#### native 方式介绍
+
+在 `package.json` 配置文件中，可以找到 `scripts` 节点，这里面都是命令。
+
+运行开发服务命令 `yarn run start`。
+
+对于 iOS 应用，打开 xcode 工具，打开 `ios` 文件夹下 `.xcworkspace` 工程文件，执行编译运行即可。关于 xcode 操作请详见官网。
+对于 Android 应用，打开 Android studio 工具，打开 `android` 文件夹工程，自动执行 sync，如果失败请看报错信息，否则完成项目初始胡啊，执行编译运行。
+
+### 5. 发送消息
+
+在运行之前，编写好预置的必要参数；
+
+```tsx
+const appKey = '<your app key>';
+const agoraId = '<your agora id>';
+const accountType: 'easemob' | 'agora' | undefined;
+const userId = '<current login id>';
+const userPassword = '<current login password or token>';
+const usePassword = true; // or false;
+const peerId = '<chat peer id>';
+```
+
+**如果修改了 appKey，则需要重启应用才会生效。**
+
+运行之后，点击`登录`按钮进入音视频页面，点击音频或者视频按钮，请求1v1通话，另外一端的设备接听请求，开始通话。
+
+具体实现可以参考 `callkit-example` 示例项目。
+
+## 常见问题
+
+1. 可能由于使用 `react-native-agora` 导致 编译错误: `2 files found with path 'lib/arm64-v8a/libaosl.so'`
+   解决办法1:
+   android平台 修改 `android/app` 的 `build.gradle` 文件 [详见](../../../examples/callkit-example/android/app/aosl-fix.gradle)
+   ios平台 修改 `Podfile` 文件。[详见](../../../examples/callkit-example/ios/fix_aosl_conflicting.rb)
+   解决办法2:
+   升级最新版本 `react-native-agora`

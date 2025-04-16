@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { View } from 'react-native';
 
 import { useI18nContext } from '../../i18n';

@@ -410,17 +410,13 @@ export function useContactInfo(
     };
   }, [im, userId]);
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        setContactRemark: (userId, remark) => {
-          if (remark) im.setContactRemark({ userId, remark });
-        },
-      };
-    },
-    [im]
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      setContactRemark: (userId, remark) => {
+        if (remark) im.setContactRemark({ userId, remark });
+      },
+    };
+  }, [im]);
 
   return {
     ...props,

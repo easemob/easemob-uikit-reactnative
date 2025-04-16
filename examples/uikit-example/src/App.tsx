@@ -1,18 +1,34 @@
-import { AppDev } from './__dev__/AppDev';
+import * as React from 'react';
+
+import { AppDev } from './__dev__/index';
 import { App } from './demo/App';
 
 const env = require('./env');
+const reactStrictMode = env.reactStrictMode ?? false;
+const isDev = env.test ?? false;
 
-let AppWrapper;
-try {
-  const isDev = env.test;
-  if (isDev === true) {
-    AppWrapper = AppDev;
+const AppWrapper = () => {
+  if (reactStrictMode) {
+    if (isDev) {
+      return (
+        <React.StrictMode>
+          <AppDev />
+        </React.StrictMode>
+      );
+    } else {
+      return (
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    }
   } else {
-    AppWrapper = App;
+    if (isDev) {
+      return <AppDev />;
+    } else {
+      return <App />;
+    }
   }
-} catch (error) {
-  console.warn(error);
-}
+};
 
 export default AppWrapper;

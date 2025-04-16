@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { Text, TextProps } from './Text';

@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { Text, TextProps } from './Text';
 
 export function SingleLineText(props: TextProps) {

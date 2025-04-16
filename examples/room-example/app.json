@@ -2,31 +2,58 @@
   "expo": {
     "name": "ChatRoomExample",
     "slug": "ChatRoomExample",
+    "scheme": "expodemowithdevclient",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/b8f25234-fc8b-42ae-9c1e-c4c019899181"
+    },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.example.ChatRoomExample"
+      "bundleIdentifier": "com.hyphenate.rn.ChatRoomExample",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Use camera for taking photos and videos in chat.",
+        "NSMicrophoneUsageDescription": "Use microphone for recording voice messages in chat.",
+        "NSPhotoLibraryUsageDescription": "Use picture gallery for sharing images in chat.",
+        "NSAppleMusicUsageDescription": "Use the media library for sharing media files in chat."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FFFFFF"
       },
-      "package": "com.example.ChatRoomExample"
+      "package": "com.hyphenate.rn.ChatRoomExample",
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_PHONE_STATE",
+        "android.permission.READ_PHONE_NUMBERS"
+      ]
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+    "extra": {
+      "eas": {
+        "projectId": "b8f25234-fc8b-42ae-9c1e-c4c019899181"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "plugins": [
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
+        }
+      ]
+    ],
+    "newArchEnabled": true,
+    "jsEngine": "hermes"
   }
 }

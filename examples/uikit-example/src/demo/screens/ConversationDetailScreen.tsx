@@ -69,21 +69,17 @@ export const MyMessageContextNameMenu = React.forwardRef<
   ref?: React.ForwardedRef<ContextNameMenuRef>
 ) {
   const {} = props;
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startShow: () => {},
-        startHide: (_onFinished?: () => void) => {},
-        startShowWithInit: (_initItems: InitMenuItemsType[], _?: any) => {},
-        startShowWithProps: (_props: ContextNameMenuProps) => {},
-        getData: () => {
-          return undefined;
-        },
-      };
-    },
-    []
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      startShow: () => {},
+      startHide: (_onFinished?: () => void) => {},
+      startShowWithInit: (_initItems: InitMenuItemsType[], _?: any) => {},
+      startShowWithProps: (_props: ContextNameMenuProps) => {},
+      getData: () => {
+        return undefined;
+      },
+    };
+  }, []);
   ref;
   return <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />;
 });
@@ -117,10 +113,10 @@ export function ConversationDetailScreen(props: Props) {
     name === 'ConversationDetail'
       ? 'chat'
       : name === 'MessageThreadDetail'
-      ? 'thread'
-      : name === 'MessageHistory'
-      ? 'search'
-      : 'create_thread'
+        ? 'thread'
+        : name === 'MessageHistory'
+          ? 'search'
+          : 'create_thread'
   ).current;
   const avTypeRef = React.useRef<'video' | 'voice'>('video');
   const { getSimpleToastRef } = useSimpleToastContext();

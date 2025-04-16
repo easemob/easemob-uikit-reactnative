@@ -59,20 +59,16 @@ export const BottomSheetMessageReport = React.forwardRef<
     },
   });
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startHide: (onFinished?: () => void) => {
-          modalRef.current?.startHide?.(onFinished);
-        },
-        startShow: () => {
-          modalRef.current?.startShow?.();
-        },
-      };
-    },
-    []
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      startHide: (onFinished?: () => void) => {
+        modalRef.current?.startHide?.(onFinished);
+      },
+      startShow: () => {
+        modalRef.current?.startShow?.();
+      },
+    };
+  }, []);
 
   return (
     <SlideModal

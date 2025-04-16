@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Animated, useWindowDimensions, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { Animated, ScrollView, useWindowDimensions, View } from 'react-native';
 
 import { timestamp } from '../rename.callkit';
 

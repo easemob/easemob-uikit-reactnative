@@ -16,11 +16,4 @@ export function AppDev(): JSX.Element {
       <Test />
     </View>
   );
-  // return (
-  //   <React.StrictMode>
-  //     <View style={{ flex: 1 }}>
-  //       <Test />
-  //     </View>
-  //   </React.StrictMode>
-  // );
 }

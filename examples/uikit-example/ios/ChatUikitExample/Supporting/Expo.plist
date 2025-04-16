@@ -8,9 +8,9 @@
     <true/>
     <key>EXUpdatesLaunchWaitMs</key>
     <integer>0</integer>
-    <key>EXUpdatesSDKVersion</key>
-    <string>48.0.0</string>
+    <key>EXUpdatesRuntimeVersion</key>
+    <string>1.0.0</string>
     <key>EXUpdatesURL</key>
-    <string>https://exp.host/@anonymous/ChatUikitExample</string>
+    <string>https://u.expo.dev/a0a89c08-ad6f-4d18-8c61-3c2385c981e6</string>
   </dict>
 </plist>

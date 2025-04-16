@@ -1836,7 +1836,7 @@ export function useMessageList(
             afterMsgIdRef.current =
               dataRef.current.length === 0
                 ? msgs[msgs.length - 1]!.msgId
-                : getDataMessage('last')?.msg.msgId ?? '';
+                : (getDataMessage('last')?.msg.msgId ?? '');
             // uilog.log(
             //   'test:zuoyu:ba:',
             //   dataRef.current.length,
@@ -1854,7 +1854,7 @@ export function useMessageList(
                 afterMsgIdRef.current =
                   dataRef.current.length === 0
                     ? startId
-                    : getDataMessage('last')?.msg.msgId ?? '';
+                    : (getDataMessage('last')?.msg.msgId ?? '');
               }
             }
 
@@ -1927,7 +1927,7 @@ export function useMessageList(
             beforeMsgIdRef.current =
               dataRef.current.length === 0
                 ? msgs[0]!.msgId
-                : getDataMessage('first')?.msg.msgId ?? '';
+                : (getDataMessage('first')?.msg.msgId ?? '');
             afterMsgIdRef.current = msgs[msgs.length - 1]!.msgId;
             // uilog.log(
             //   'test:zuoyu:ba:2',
@@ -2355,7 +2355,7 @@ export function useMessageList(
             beforeMsgIdRef.current =
               dataRef.current.length === 0
                 ? msgs[0]!.msgId
-                : getDataMessage('first')?.msg.msgId ?? '';
+                : (getDataMessage('first')?.msg.msgId ?? '');
             afterMsgIdRef.current = msgs[msgs.length - 1]!.msgId;
             // uilog.log(
             //   'test:zuoyu:ba:2',
@@ -2686,188 +2686,184 @@ export function useMessageList(
     setIsTop,
   ]);
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        addSendMessage: (value: SendMessageProps) => {
-          if (comType === 'create_thread') {
-            createThread((res) => {
-              if (res.isOk === true && res.value) {
-                onCreateThreadResult?.(res.value, value);
-              } else {
-                onCreateThreadResult?.();
-              }
-            });
-            return;
+  React.useImperativeHandle(ref, () => {
+    return {
+      addSendMessage: (value: SendMessageProps) => {
+        if (comType === 'create_thread') {
+          createThread((res) => {
+            if (res.isOk === true && res.value) {
+              onCreateThreadResult?.(res.value, value);
+            } else {
+              onCreateThreadResult?.();
+            }
+          });
+          return;
+        }
+        addSendMessageToUI({
+          value,
+          onFinished: (item) => {
+            if (item.model.modelType === 'message') {
+              const msgModel = item.model as MessageModel;
+              sendMessageToServer(msgModel.msg);
+            }
+          },
+          // onBeforeCallback: async () => {
+          //   if (comType === 'chat' || comType === 'search') {
+          //     return loadAllLatestMessage();
+          //   }
+          // },
+        });
+      },
+      addSendMessageToUI: (params: {
+        value: SendMessageProps;
+
+        onFinished?: (item: MessageListItemProps) => void;
+        onBeforeCallback?: () => void | Promise<void>;
+      }): Promise<void> => {
+        return addSendMessageToUI(params);
+      },
+      sendMessageToServer: (msg: ChatMessage) => {
+        return sendMessageToServer(msg);
+      },
+      saveMessage: (msg: ChatMessage) => {
+        saveMessage(msg);
+      },
+      removeMessage: (msg: ChatMessage) => {
+        deleteMessage(msg);
+      },
+      recallMessage: (msg: ChatMessage) => {
+        recallMessage(msg);
+      },
+      updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => {
+        onUpdateMessageToUI(updatedMsg, fromType);
+      },
+      loadHistoryMessage: async (
+        msgs: ChatMessage[],
+        pos: MessageAddPosition
+      ) => {
+        if (pos === 'top') {
+          if (msgs.length > 0) {
+            if (startMsgIdRef.current === msgs[0]?.msgId) {
+              return;
+            }
+            startMsgIdRef.current = msgs[0]!.msgId.toString();
           }
-          addSendMessageToUI({
-            value,
-            onFinished: (item) => {
-              if (item.model.modelType === 'message') {
-                const msgModel = item.model as MessageModel;
-                sendMessageToServer(msgModel.msg);
+        }
+        const list = await onAddMessageListToUI(msgs, pos);
+        list.map((v) => {
+          if (v.model.modelType === 'message') {
+            const msgModel = v.model as MessageModel;
+            sendRecvMessageReadAck(msgModel.msg);
+          }
+        });
+      },
+      onInputHeightChange: (height: number) => {
+        if (inverted === false) {
+          if (height > 0) {
+            if (comType === 'thread' && inverted === false) {
+              // scrollToBottom();
+            }
+          }
+        }
+      },
+      editMessageFinished: (model) => {
+        editMessage(model.msg);
+      },
+      scrollToBottom: async () => {
+        await loadAllLatestMessage();
+        scrollToBottom();
+      },
+      startShowThreadMoreMenu: () => {
+        if (thread && thread.parentId) {
+          im.getGroupInfo({
+            groupId: thread.parentId,
+            onResult: (res) => {
+              if (res.isOk && res.value) {
+                const isOwner = res.value.owner === im.userId;
+                onShowMessageThreadListMoreActions({
+                  thread,
+                  onClickedEditThreadName: _onClickedEditThreadName,
+                  onClickedLeaveThread: _onClickedLeaveThread,
+                  onClickedDestroyThread: _onClickedDestroyThread,
+                  onClickedOpenThreadMemberList,
+                  isOwner: isOwner,
+                });
               }
             },
-            // onBeforeCallback: async () => {
-            //   if (comType === 'chat' || comType === 'search') {
-            //     return loadAllLatestMessage();
-            //   }
-            // },
           });
-        },
-        addSendMessageToUI: (params: {
-          value: SendMessageProps;
-
-          onFinished?: (item: MessageListItemProps) => void;
-          onBeforeCallback?: () => void | Promise<void>;
-        }): Promise<void> => {
-          return addSendMessageToUI(params);
-        },
-        sendMessageToServer: (msg: ChatMessage) => {
-          return sendMessageToServer(msg);
-        },
-        saveMessage: (msg: ChatMessage) => {
-          saveMessage(msg);
-        },
-        removeMessage: (msg: ChatMessage) => {
-          deleteMessage(msg);
-        },
-        recallMessage: (msg: ChatMessage) => {
-          recallMessage(msg);
-        },
-        updateMessage: (updatedMsg: ChatMessage, fromType: 'send' | 'recv') => {
-          onUpdateMessageToUI(updatedMsg, fromType);
-        },
-        loadHistoryMessage: async (
-          msgs: ChatMessage[],
-          pos: MessageAddPosition
-        ) => {
-          if (pos === 'top') {
-            if (msgs.length > 0) {
-              if (startMsgIdRef.current === msgs[0]?.msgId) {
-                return;
-              }
-              startMsgIdRef.current = msgs[0]!.msgId.toString();
-            }
-          }
-          const list = await onAddMessageListToUI(msgs, pos);
-          list.map((v) => {
-            if (v.model.modelType === 'message') {
-              const msgModel = v.model as MessageModel;
-              sendRecvMessageReadAck(msgModel.msg);
-            }
-          });
-        },
-        onInputHeightChange: (height: number) => {
-          if (inverted === false) {
-            if (height > 0) {
-              if (comType === 'thread' && inverted === false) {
-                // scrollToBottom();
-              }
-            }
-          }
-        },
-        editMessageFinished: (model) => {
-          editMessage(model.msg);
-        },
-        scrollToBottom: async () => {
-          await loadAllLatestMessage();
-          scrollToBottom();
-        },
-        startShowThreadMoreMenu: () => {
-          if (thread && thread.parentId) {
-            im.getGroupInfo({
-              groupId: thread.parentId,
-              onResult: (res) => {
-                if (res.isOk && res.value) {
-                  const isOwner = res.value.owner === im.userId;
-                  onShowMessageThreadListMoreActions({
-                    thread,
-                    onClickedEditThreadName: _onClickedEditThreadName,
-                    onClickedLeaveThread: _onClickedLeaveThread,
-                    onClickedDestroyThread: _onClickedDestroyThread,
-                    onClickedOpenThreadMemberList,
-                    isOwner: isOwner,
-                  });
-                }
+        } else {
+          // uilog.log('dev:startShowThreadMoreMenu');
+        }
+      },
+      cancelMultiSelected: () => {
+        cancelMultiSelected();
+      },
+      removeMultiSelected: (onResult: (confirmed: boolean) => void) => {
+        alertRef.current?.alertWithInit({
+          message: tr('_uikit_alert_remove_message'),
+          buttons: [
+            {
+              text: tr('cancel'),
+              onPress: () => {
+                alertRef.current?.close?.();
+                onResult(false);
               },
-            });
-          } else {
-            // uilog.log('dev:startShowThreadMoreMenu');
-          }
-        },
-        cancelMultiSelected: () => {
-          cancelMultiSelected();
-        },
-        removeMultiSelected: (onResult: (confirmed: boolean) => void) => {
-          alertRef.current?.alertWithInit({
-            message: tr('_uikit_alert_remove_message'),
-            buttons: [
-              {
-                text: tr('cancel'),
-                onPress: () => {
-                  alertRef.current?.close?.();
-                  onResult(false);
-                },
+            },
+            {
+              text: tr('confirm'),
+              isPreferred: true,
+              onPress: () => {
+                alertRef.current?.close?.();
+                deleteMessages(tmpMessageListRef.current.map((d) => d.msg));
+                onResult(true);
               },
-              {
-                text: tr('confirm'),
-                isPreferred: true,
-                onPress: () => {
-                  alertRef.current?.close?.();
-                  deleteMessages(tmpMessageListRef.current.map((d) => d.msg));
-                  onResult(true);
-                },
-              },
-            ],
-          });
-        },
-        getMultiSelectedMessages: () => {
-          return tmpMessageListRef.current.map((d) => d.msg);
-        },
-        showPinMessageComponent: () => {
-          showPinMessage();
-        },
-        hidePinMessageComponent: () => {
-          hidePinMessage();
-        },
-        requestShowPinMessageComponent: (onResult: (count: number) => void) => {
-          requestShowPinMessage(onResult);
-        },
-      };
-    },
-    [
-      _onClickedDestroyThread,
-      _onClickedEditThreadName,
-      _onClickedLeaveThread,
-      addSendMessageToUI,
-      cancelMultiSelected,
-      comType,
-      createThread,
-      deleteMessage,
-      deleteMessages,
-      editMessage,
-      hidePinMessage,
-      im,
-      inverted,
-      loadAllLatestMessage,
-      onAddMessageListToUI,
-      onClickedOpenThreadMemberList,
-      onCreateThreadResult,
-      onShowMessageThreadListMoreActions,
-      onUpdateMessageToUI,
-      recallMessage,
-      requestShowPinMessage,
-      saveMessage,
-      scrollToBottom,
-      sendMessageToServer,
-      sendRecvMessageReadAck,
-      showPinMessage,
-      thread,
-      tr,
-    ]
-  );
+            },
+          ],
+        });
+      },
+      getMultiSelectedMessages: () => {
+        return tmpMessageListRef.current.map((d) => d.msg);
+      },
+      showPinMessageComponent: () => {
+        showPinMessage();
+      },
+      hidePinMessageComponent: () => {
+        hidePinMessage();
+      },
+      requestShowPinMessageComponent: (onResult: (count: number) => void) => {
+        requestShowPinMessage(onResult);
+      },
+    };
+  }, [
+    _onClickedDestroyThread,
+    _onClickedEditThreadName,
+    _onClickedLeaveThread,
+    addSendMessageToUI,
+    cancelMultiSelected,
+    comType,
+    createThread,
+    deleteMessage,
+    deleteMessages,
+    editMessage,
+    hidePinMessage,
+    im,
+    inverted,
+    loadAllLatestMessage,
+    onAddMessageListToUI,
+    onClickedOpenThreadMemberList,
+    onCreateThreadResult,
+    onShowMessageThreadListMoreActions,
+    onUpdateMessageToUI,
+    recallMessage,
+    requestShowPinMessage,
+    saveMessage,
+    scrollToBottom,
+    sendMessageToServer,
+    sendRecvMessageReadAck,
+    showPinMessage,
+    thread,
+    tr,
+  ]);
 
   React.useEffect(() => {
     const listener = () => {};

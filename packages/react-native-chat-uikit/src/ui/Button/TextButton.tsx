@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import type { IconNameType } from '../../assets';
 import { Button, type ButtonProps } from './Button';
 

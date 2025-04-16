@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { useCheckType, useGetStyleProps } from '../../hook';
+import { useGetStyleProps } from '../../hook';
 import { Image } from '../../ui/Image';
 import { ImageZoom } from './__private__/image-zoom.component';
 import { Draggable2 } from './Draggable';
@@ -106,9 +106,6 @@ export function ImagePreview2(props: ImagePreviewProps) {
   if (height === undefined || width === undefined) {
     throw new Error('ImagePreview2: height or width is undefined');
   }
-  const { checkType } = useCheckType();
-  checkType(height, 'number');
-  checkType(width, 'number');
 
   return (
     <View style={{}}>

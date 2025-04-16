@@ -43,26 +43,22 @@ export const ChatroomTestMenu = React.forwardRef<
   });
   const menuRef = React.useRef<BottomSheetMenuRef>({} as any);
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startShow: () => {
-          menuRef?.current?.startShow?.();
-        },
-        startHide: (onFinished?) => {
-          menuRef?.current?.startHide?.(onFinished);
-        },
-        startShowWithInit: (initItems?) => {
-          menuRef?.current?.startShowWithInit?.(initItems);
-        },
-        getData: () => {
-          return menuRef?.current?.getData?.();
-        },
-      };
-    },
-    []
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      startShow: () => {
+        menuRef?.current?.startShow?.();
+      },
+      startHide: (onFinished?) => {
+        menuRef?.current?.startHide?.(onFinished);
+      },
+      startShowWithInit: (initItems?: any) => {
+        menuRef?.current?.startShowWithInit?.(initItems);
+      },
+      getData: () => {
+        return menuRef?.current?.getData?.();
+      },
+    };
+  }, []);
 
   const data = React.useMemo(
     () => [

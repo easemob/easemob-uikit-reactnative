@@ -263,7 +263,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
         convType === ChatConversationType.GroupChat &&
         comType === 'chat' ? (
           <AnimatedMessagePin
-            ref={pinMsgListRef}
+            ref={pinMsgListRef as any} // TODO: fix type !!!
             convId={convId}
             convType={convType}
             msgPinHeightRef={msgPinHeightRef}
@@ -293,10 +293,13 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           />
         ) : null}
 
-        <MessageLongPressMenu
-          ref={menuRef}
-          onRequestModalClose={onRequestCloseMenu}
-        />
+        {MessageLongPressMenu ? (
+          <MessageLongPressMenu
+            ref={menuRef}
+            onRequestModalClose={onRequestCloseMenu}
+          />
+        ) : null}
+
         <BottomSheetEmojiList
           ref={emojiRef}
           emojiList={emojiList}

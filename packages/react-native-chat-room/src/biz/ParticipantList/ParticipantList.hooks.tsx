@@ -388,7 +388,7 @@ export function useParticipantListAPI(
             onFinished?.();
             im.sendError({
               error: e,
-              from: useParticipantListAPI?.caller?.name,
+              from: 'useParticipantListAPI',
             });
             _onPageState('error');
           });
@@ -414,7 +414,7 @@ export function useParticipantListAPI(
             onFinished?.();
             im.sendError({
               error: e,
-              from: useParticipantListAPI?.caller?.name,
+              from: 'useParticipantListAPI',
             });
             _onPageState('error');
           });
@@ -442,7 +442,7 @@ export function useParticipantListAPI(
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useParticipantListAPI?.caller?.name,
+            from: 'useParticipantListAPI',
           });
         });
     }
@@ -458,7 +458,7 @@ export function useParticipantListAPI(
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useParticipantListAPI?.caller?.name,
+            from: 'useParticipantListAPI',
           });
         });
     }
@@ -483,7 +483,7 @@ export function useParticipantListAPI(
   //             code: ErrorCode.room_fetch_mute_member_list_error,
   //             extra: e.toString(),
   //           }),
-  //           from: useParticipantListAPI?.caller?.name,
+  //           from: 'useParticipantListAPI',
   //         });
   //       });
   //   } else {
@@ -530,7 +530,7 @@ export function useParticipantListAPI(
           .catch((e) => {
             im.sendError({
               error: e,
-              from: useParticipantListAPI?.caller?.name,
+              from: 'useParticipantListAPI',
             });
           });
       }
@@ -548,7 +548,7 @@ export function useParticipantListAPI(
           .catch((e) => {
             im.sendError({
               error: e,
-              from: useParticipantListAPI?.caller?.name,
+              from: 'useParticipantListAPI',
             });
           });
       }
@@ -573,7 +573,7 @@ export function useParticipantListAPI(
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useParticipantListAPI?.caller?.name,
+            from: 'useParticipantListAPI',
           });
         });
     }
@@ -759,7 +759,7 @@ export function useSearchParticipantListAPI(props: {
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useParticipantListAPI?.caller?.name,
+            from: 'useParticipantListAPI',
           });
         });
     }
@@ -782,7 +782,7 @@ export function useSearchParticipantListAPI(props: {
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useParticipantListAPI?.caller?.name,
+            from: 'useParticipantListAPI',
           });
         });
     }

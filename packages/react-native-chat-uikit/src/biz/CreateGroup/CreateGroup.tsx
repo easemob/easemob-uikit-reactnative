@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ContactList } from '../ContactList';
 import { useCreateGroup } from './CreateGroup.hooks';
 import type { CreateGroupProps } from './types';

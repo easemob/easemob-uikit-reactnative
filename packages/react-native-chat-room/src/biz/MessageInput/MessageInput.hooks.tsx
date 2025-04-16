@@ -114,7 +114,7 @@ export function useInputBarApi(params: {
             onSended?.(message!);
             im.sendFinished({ event: 'send_text' });
           } else {
-            im.sendError({ error: error!, from: useInputBarApi?.caller?.name });
+            im.sendError({ error: error!, from: 'useInputBarApi' });
           }
         },
       });

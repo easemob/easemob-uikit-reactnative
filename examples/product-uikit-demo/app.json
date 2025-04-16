@@ -1,0 +1,82 @@
+{
+  "expo": {
+    "name": "ChatUikitFullExample",
+    "slug": "ChatUikitFullExample",
+    "scheme": "expodemowithdevclient",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/56c9c5f8-c2e2-4002-989b-3beb9f0c2e52"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "googleServicesFile": "./ios/ChatUikitFullExample/GoogleService-Info.plist",
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hyphenate.rn.ChatUikitFullExample",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Use camera for taking photos and videos in chat.",
+        "NSMicrophoneUsageDescription": "Use microphone for recording voice messages in chat.",
+        "NSPhotoLibraryUsageDescription": "Use picture gallery for sharing images in chat.",
+        "NSAppleMusicUsageDescription": "Use the media library for sharing media files in chat.",
+        "UIBackgroundModes": ["remote-notification"]
+      }
+    },
+    "android": {
+      "googleServicesFile": "./android/app/google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.hyphenate.rn.ChatUikitFullExample",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "56c9c5f8-c2e2-4002-989b-3beb9f0c2e52"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "plugins": [
+      [
+        "expo-dev-client",
+        {
+          "launchMode": "most-recent"
+        }
+      ],
+      [
+        "react-native-permissions",
+        {
+          "iosPermissions": [
+            "Camera",
+            "PhotoLibrary",
+            "Microphone",
+            "MediaLibrary"
+          ],
+          "androidPermissions": [
+            "android.permission.CAMERA",
+            "android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE",
+            "android.permission.RECORD_AUDIO"
+          ]
+        }
+      ],
+      "react-native-video",
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging"
+    ],
+    "newArchEnabled": true,
+    "jsEngine": "hermes"
+  }
+}

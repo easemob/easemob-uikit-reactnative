@@ -123,7 +123,7 @@ export function _App() {
     onUsersHandler,
     fontFamily,
     onSystemTip,
-    getNaviTheme,
+    // getNaviTheme,
     messageMenuStyleRef,
     messageInputBarExtensionStyleRef,
   } = useApp();
@@ -364,431 +364,427 @@ export function _App() {
   console.log('dev:app:');
 
   return (
-    <React.StrictMode>
-      <UIKitContainer
-        options={getOptions()}
-        palette={paletteRef.current}
-        theme={isLightRef.current ? light : dark}
-        language={languageRef.current}
-        translateLanguage={
-          accountType === 'agora' ? 'en' : translateLanguageRef.current
-        }
-        releaseArea={releaseAreaRef.current}
-        enablePresence={enablePresenceRef.current}
-        enableReaction={enableReactionRef.current}
-        enableThread={enableThreadRef.current}
-        enableTranslate={enableTranslateRef.current}
-        enableAVMeeting={enableAVMeetingRef.current}
-        enableTyping={enableTypingRef.current}
-        enableBlock={enableBlockRef.current}
-        enableMessageForward={true}
-        enableMessageMultiSelect={true}
-        enableMessageQuote={true}
-        fontFamily={fontFamily}
-        // formatTime={{
-        //   locale: enAU,
-        //   conversationDetailCallback(timestamp, enAU) {
-        //     return format(timestamp, 'yyyy-MM-dd HH:mm:ss', { locale: enAU });
-        //   },
-        // }}
-        // avatar={{
-        //   personAvatar: defaultAvatars[2],
-        //   groupAvatar: defaultAvatars[0],
-        // }}
-        headerFontFamily={boloo_da_ttf_name}
-        // languageExtensionFactory={languageExtensionFactory}
-        onInitialized={onContainerInitialized}
-        onInitLanguageSet={onInitLanguageSet}
-        onGroupsHandler={onGroupsHandler}
-        onUsersHandler={onUsersHandler}
-        AvatarStatusRender={AvatarStatusRenderMemo}
-        messageMenuStyle={messageMenuStyleRef.current}
-        messageInputBarStyle={messageInputBarExtensionStyleRef.current}
-        // formatTime={formatTime}
-        // recallTimeout={1200}
-        // group={{ createGroupMemberLimit: 2 }}
-        onSystemTip={onSystemTip}
-      >
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <NavigationContainer
-            ref={rootRef}
-            theme={getNaviTheme(isLightRef.current ? 'light' : 'dark')}
-            onStateChange={onStateChange}
-            onUnhandledAction={onUnhandledAction}
-            onReady={onNavigationInitialized}
-            fallback={
-              <View
-                style={{ height: 100, width: 100, backgroundColor: 'red' }}
-              />
-            }
-          >
-            <Root.Navigator initialRouteName={initialRouteNameRef.current}>
-              <Root.Screen
-                name={'Home'}
-                options={{
-                  headerShown: false,
-                  gestureEnabled: false,
-                }}
-                component={HomeScreen}
-              />
-              <Root.Screen
-                name={'SearchConversation'}
-                options={{
-                  headerShown: false,
-                }}
-                component={SearchConversationScreen}
-              />
-              <Root.Screen
-                name={'SearchContact'}
-                options={{
-                  headerShown: false,
-                }}
-                component={SearchContactScreen}
-              />
-              <Root.Screen
-                name={'GroupList'}
-                options={{
-                  headerShown: false,
-                }}
-                component={GroupListScreen}
-              />
-              <Root.Screen
-                name={'SearchGroup'}
-                options={{
-                  headerShown: false,
-                }}
-                component={SearchGroupScreen}
-              />
-              <Root.Screen
-                name={'GroupParticipantList'}
-                options={{
-                  headerShown: false,
-                }}
-                component={GroupParticipantListScreen}
-              />
-              <Root.Screen
-                name={'NewConversation'}
-                options={{
-                  headerShown: false,
-                }}
-                component={NewConversationScreen}
-              />
-              <Root.Screen
-                name={'NewRequests'}
-                options={{
-                  headerShown: false,
-                }}
-                component={NewRequestScreen}
-              />
-              <Root.Screen
-                name={'CreateGroup'}
-                options={{
-                  headerShown: false,
-                }}
-                component={CreateGroupScreen}
-              />
-              <Root.Screen
-                name={'ContactInfo'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ContactInfoScreen}
-              />
-              <Root.Screen
-                name={'GroupInfo'}
-                options={{
-                  headerShown: false,
-                }}
-                component={GroupInfoScreen}
-              />
-              <Root.Screen
-                name={'GroupParticipantInfo'}
-                options={{
-                  headerShown: false,
-                }}
-                component={GroupParticipantInfoScreen}
-              />
-              <Root.Screen
-                name={'AddGroupParticipant'}
-                options={{
-                  headerShown: false,
-                }}
-                component={AddGroupParticipantScreen}
-              />
-              <Root.Screen
-                name={'DelGroupParticipant'}
-                options={{
-                  headerShown: false,
-                }}
-                component={DelGroupParticipantScreen}
-              />
-              <Root.Screen
-                name={'ChangeGroupOwner'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ChangeGroupOwnerScreen}
-              />
-              <Root.Screen
-                name={'ConversationDetail'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ConversationDetailScreen}
-              />
-              <Root.Screen
-                name={'SelectSingleParticipant'}
-                options={{
-                  headerShown: false,
-                }}
-                component={SelectSingleParticipantScreen}
-              />
-              <Root.Screen
-                name={'FileMessagePreview'}
-                options={{
-                  headerShown: false,
-                }}
-                component={FileMessagePreviewScreen}
-              />
-              <Root.Screen
-                name={'ImageMessagePreview'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ImageMessagePreviewScreen}
-              />
-              <Root.Screen
-                name={'VideoMessagePreview'}
-                options={{
-                  headerShown: false,
-                }}
-                component={VideoMessagePreviewScreen}
-              />
-              <Root.Screen
-                name={'ShareContact'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ShareContactScreen}
-              />
-              <Root.Screen
-                name={'EditInfo'}
-                options={{
-                  headerShown: false,
-                }}
-                component={EditInfoScreen}
-              />
-              <Root.Screen
-                name={'CreateThread'}
-                options={{
-                  headerShown: false,
-                }}
-                component={CreateThreadScreen}
-              />
-              <Root.Screen
-                name={'MessageThreadDetail'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ConversationDetailScreen}
-              />
-              <Root.Screen
-                name={'MessageThreadList'}
-                options={{
-                  headerShown: false,
-                }}
-                component={MessageThreadListScreen}
-              />
-              <Root.Screen
-                name={'MessageThreadMemberList'}
-                options={{
-                  headerShown: false,
-                }}
-                component={MessageThreadMemberListScreen}
-              />
-              <Root.Screen
-                name={'MessageForwardSelector'}
-                options={{
-                  headerShown: false,
-                }}
-                component={MessageForwardSelectorScreen}
-              />
-              <Root.Screen
-                name={'MessageHistoryList'}
-                options={{
-                  headerShown: false,
-                }}
-                component={MessageHistoryListScreen}
-              />
-              <Root.Screen
-                name={'MessageSearch'}
-                options={{
-                  headerShown: false,
-                }}
-                component={MessageSearchScreen}
-              />
-              <Root.Screen
-                name={'MessageHistory'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ConversationDetailScreen}
-              />
-              <Root.Screen
-                name={'Splash'}
-                options={{
-                  headerShown: false,
-                }}
-                component={SplashScreen}
-              />
-              <Root.Screen
-                name={'LoginV2Setting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ServerSettingScreen}
-              />
-              <Root.Screen
-                name={'AVSelectGroupParticipant'}
-                options={{
-                  headerShown: false,
-                }}
-                component={AVSelectGroupParticipantScreen}
-              />
-              <Root.Screen
-                name={'PersonInfo'}
-                options={{
-                  headerShown: false,
-                }}
-                component={PersonInfoScreen}
-              />
-              <Root.Screen
-                name={'CommonSetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={GeneralSettingScreen}
-              />
-              <Root.Screen
-                name={'LanguageSetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={LanguageSettingScreen}
-              />
-              <Root.Screen
-                name={'TranslationLanguageSetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={LanguageSettingScreen}
-              />
-              <Root.Screen
-                name={'ColorSetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ColorSettingScreen}
-              />
-              <Root.Screen
-                name={'StyleSetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={StyleSettingScreen}
-              />
-              <Root.Screen
-                name={'AboutSetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={AboutSettingScreen}
-              />
-              <Root.Screen
-                name={'FeatureSetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={FeatureSettingScreen}
-              />
-              <Root.Screen
-                name={'NotificationSetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={NotificationSettingScreen}
-              />
-              <Root.Screen
-                name={'SearchBlock'}
-                options={{
-                  headerShown: false,
-                }}
-                component={SearchBlockScreen}
-              />
-              <Root.Screen
-                name={'BlockList'}
-                options={{
-                  headerShown: false,
-                }}
-                component={BlockListScreen}
-              />
-              <Root.Screen
-                name={'PrivacySetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={PrivacySettingScreen}
-              />
-              <Root.Screen
-                name={'MessageContextMenuSetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={MessageContextMenuSettingScreen}
-              />
-              <Root.Screen
-                name={'MessageInputBarMenuSetting'}
-                options={{
-                  headerShown: false,
-                }}
-                component={MessageInputBarMenuSettingScreen}
-              />
-              <Root.Screen
-                name={'Login'}
-                options={{
-                  headerShown: false,
-                }}
-                component={LoginScreen}
-              />
-              <Root.Screen
-                name={'LoginList'}
-                options={{
-                  headerShown: false,
-                }}
-                component={LoginListScreen}
-              />
-              <Root.Screen
-                name={'TopMenu'}
-                options={{
-                  headerShown: false,
-                }}
-                component={TopMenuScreen}
-              />
-              <Root.Screen
-                name={'Config'}
-                options={{
-                  headerShown: false,
-                }}
-                component={ConfigScreen}
-              />
-            </Root.Navigator>
-          </NavigationContainer>
+    <UIKitContainer
+      options={getOptions()}
+      palette={paletteRef.current}
+      theme={isLightRef.current ? light : dark}
+      language={languageRef.current}
+      translateLanguage={
+        accountType === 'agora' ? 'en' : translateLanguageRef.current
+      }
+      releaseArea={releaseAreaRef.current}
+      enablePresence={enablePresenceRef.current}
+      enableReaction={enableReactionRef.current}
+      enableThread={enableThreadRef.current}
+      enableTranslate={enableTranslateRef.current}
+      enableAVMeeting={enableAVMeetingRef.current}
+      enableTyping={enableTypingRef.current}
+      enableBlock={enableBlockRef.current}
+      enableMessageForward={true}
+      enableMessageMultiSelect={true}
+      enableMessageQuote={true}
+      fontFamily={fontFamily}
+      // formatTime={{
+      //   locale: enAU,
+      //   conversationDetailCallback(timestamp, enAU) {
+      //     return format(timestamp, 'yyyy-MM-dd HH:mm:ss', { locale: enAU });
+      //   },
+      // }}
+      // avatar={{
+      //   personAvatar: defaultAvatars[2],
+      //   groupAvatar: defaultAvatars[0],
+      // }}
+      headerFontFamily={boloo_da_ttf_name}
+      // languageExtensionFactory={languageExtensionFactory}
+      onInitialized={onContainerInitialized}
+      onInitLanguageSet={onInitLanguageSet}
+      onGroupsHandler={onGroupsHandler}
+      onUsersHandler={onUsersHandler}
+      AvatarStatusRender={AvatarStatusRenderMemo}
+      messageMenuStyle={messageMenuStyleRef.current}
+      messageInputBarStyle={messageInputBarExtensionStyleRef.current}
+      // formatTime={formatTime}
+      // recallTimeout={1200}
+      // group={{ createGroupMemberLimit: 2 }}
+      onSystemTip={onSystemTip}
+    >
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <NavigationContainer
+          ref={rootRef}
+          // theme={getNaviTheme(isLightRef.current ? 'light' : 'dark')}
+          onStateChange={onStateChange}
+          onUnhandledAction={onUnhandledAction}
+          onReady={onNavigationInitialized}
+          fallback={
+            <View style={{ height: 100, width: 100, backgroundColor: 'red' }} />
+          }
+        >
+          <Root.Navigator initialRouteName={initialRouteNameRef.current}>
+            <Root.Screen
+              name={'Home'}
+              options={{
+                headerShown: false,
+                gestureEnabled: false,
+              }}
+              component={HomeScreen}
+            />
+            <Root.Screen
+              name={'SearchConversation'}
+              options={{
+                headerShown: false,
+              }}
+              component={SearchConversationScreen}
+            />
+            <Root.Screen
+              name={'SearchContact'}
+              options={{
+                headerShown: false,
+              }}
+              component={SearchContactScreen}
+            />
+            <Root.Screen
+              name={'GroupList'}
+              options={{
+                headerShown: false,
+              }}
+              component={GroupListScreen}
+            />
+            <Root.Screen
+              name={'SearchGroup'}
+              options={{
+                headerShown: false,
+              }}
+              component={SearchGroupScreen}
+            />
+            <Root.Screen
+              name={'GroupParticipantList'}
+              options={{
+                headerShown: false,
+              }}
+              component={GroupParticipantListScreen}
+            />
+            <Root.Screen
+              name={'NewConversation'}
+              options={{
+                headerShown: false,
+              }}
+              component={NewConversationScreen}
+            />
+            <Root.Screen
+              name={'NewRequests'}
+              options={{
+                headerShown: false,
+              }}
+              component={NewRequestScreen}
+            />
+            <Root.Screen
+              name={'CreateGroup'}
+              options={{
+                headerShown: false,
+              }}
+              component={CreateGroupScreen}
+            />
+            <Root.Screen
+              name={'ContactInfo'}
+              options={{
+                headerShown: false,
+              }}
+              component={ContactInfoScreen}
+            />
+            <Root.Screen
+              name={'GroupInfo'}
+              options={{
+                headerShown: false,
+              }}
+              component={GroupInfoScreen}
+            />
+            <Root.Screen
+              name={'GroupParticipantInfo'}
+              options={{
+                headerShown: false,
+              }}
+              component={GroupParticipantInfoScreen}
+            />
+            <Root.Screen
+              name={'AddGroupParticipant'}
+              options={{
+                headerShown: false,
+              }}
+              component={AddGroupParticipantScreen}
+            />
+            <Root.Screen
+              name={'DelGroupParticipant'}
+              options={{
+                headerShown: false,
+              }}
+              component={DelGroupParticipantScreen}
+            />
+            <Root.Screen
+              name={'ChangeGroupOwner'}
+              options={{
+                headerShown: false,
+              }}
+              component={ChangeGroupOwnerScreen}
+            />
+            <Root.Screen
+              name={'ConversationDetail'}
+              options={{
+                headerShown: false,
+              }}
+              component={ConversationDetailScreen}
+            />
+            <Root.Screen
+              name={'SelectSingleParticipant'}
+              options={{
+                headerShown: false,
+              }}
+              component={SelectSingleParticipantScreen}
+            />
+            <Root.Screen
+              name={'FileMessagePreview'}
+              options={{
+                headerShown: false,
+              }}
+              component={FileMessagePreviewScreen}
+            />
+            <Root.Screen
+              name={'ImageMessagePreview'}
+              options={{
+                headerShown: false,
+              }}
+              component={ImageMessagePreviewScreen}
+            />
+            <Root.Screen
+              name={'VideoMessagePreview'}
+              options={{
+                headerShown: false,
+              }}
+              component={VideoMessagePreviewScreen}
+            />
+            <Root.Screen
+              name={'ShareContact'}
+              options={{
+                headerShown: false,
+              }}
+              component={ShareContactScreen}
+            />
+            <Root.Screen
+              name={'EditInfo'}
+              options={{
+                headerShown: false,
+              }}
+              component={EditInfoScreen}
+            />
+            <Root.Screen
+              name={'CreateThread'}
+              options={{
+                headerShown: false,
+              }}
+              component={CreateThreadScreen}
+            />
+            <Root.Screen
+              name={'MessageThreadDetail'}
+              options={{
+                headerShown: false,
+              }}
+              component={ConversationDetailScreen}
+            />
+            <Root.Screen
+              name={'MessageThreadList'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageThreadListScreen}
+            />
+            <Root.Screen
+              name={'MessageThreadMemberList'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageThreadMemberListScreen}
+            />
+            <Root.Screen
+              name={'MessageForwardSelector'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageForwardSelectorScreen}
+            />
+            <Root.Screen
+              name={'MessageHistoryList'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageHistoryListScreen}
+            />
+            <Root.Screen
+              name={'MessageSearch'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageSearchScreen}
+            />
+            <Root.Screen
+              name={'MessageHistory'}
+              options={{
+                headerShown: false,
+              }}
+              component={ConversationDetailScreen}
+            />
+            <Root.Screen
+              name={'Splash'}
+              options={{
+                headerShown: false,
+              }}
+              component={SplashScreen}
+            />
+            <Root.Screen
+              name={'LoginV2Setting'}
+              options={{
+                headerShown: false,
+              }}
+              component={ServerSettingScreen}
+            />
+            <Root.Screen
+              name={'AVSelectGroupParticipant'}
+              options={{
+                headerShown: false,
+              }}
+              component={AVSelectGroupParticipantScreen}
+            />
+            <Root.Screen
+              name={'PersonInfo'}
+              options={{
+                headerShown: false,
+              }}
+              component={PersonInfoScreen}
+            />
+            <Root.Screen
+              name={'CommonSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={GeneralSettingScreen}
+            />
+            <Root.Screen
+              name={'LanguageSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={LanguageSettingScreen}
+            />
+            <Root.Screen
+              name={'TranslationLanguageSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={LanguageSettingScreen}
+            />
+            <Root.Screen
+              name={'ColorSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={ColorSettingScreen}
+            />
+            <Root.Screen
+              name={'StyleSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={StyleSettingScreen}
+            />
+            <Root.Screen
+              name={'AboutSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={AboutSettingScreen}
+            />
+            <Root.Screen
+              name={'FeatureSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={FeatureSettingScreen}
+            />
+            <Root.Screen
+              name={'NotificationSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={NotificationSettingScreen}
+            />
+            <Root.Screen
+              name={'SearchBlock'}
+              options={{
+                headerShown: false,
+              }}
+              component={SearchBlockScreen}
+            />
+            <Root.Screen
+              name={'BlockList'}
+              options={{
+                headerShown: false,
+              }}
+              component={BlockListScreen}
+            />
+            <Root.Screen
+              name={'PrivacySetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={PrivacySettingScreen}
+            />
+            <Root.Screen
+              name={'MessageContextMenuSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageContextMenuSettingScreen}
+            />
+            <Root.Screen
+              name={'MessageInputBarMenuSetting'}
+              options={{
+                headerShown: false,
+              }}
+              component={MessageInputBarMenuSettingScreen}
+            />
+            <Root.Screen
+              name={'Login'}
+              options={{
+                headerShown: false,
+              }}
+              component={LoginScreen}
+            />
+            <Root.Screen
+              name={'LoginList'}
+              options={{
+                headerShown: false,
+              }}
+              component={LoginListScreen}
+            />
+            <Root.Screen
+              name={'TopMenu'}
+              options={{
+                headerShown: false,
+              }}
+              component={TopMenuScreen}
+            />
+            <Root.Screen
+              name={'Config'}
+              options={{
+                headerShown: false,
+              }}
+              component={ConfigScreen}
+            />
+          </Root.Navigator>
+        </NavigationContainer>
 
-          {/* <TestListener /> */}
-          <ToastView />
-        </GestureHandlerRootView>
-      </UIKitContainer>
-    </React.StrictMode>
+        {/* <TestListener /> */}
+        <ToastView />
+      </GestureHandlerRootView>
+    </UIKitContainer>
   );
 }
 

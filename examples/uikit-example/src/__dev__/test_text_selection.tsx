@@ -22,7 +22,7 @@ export function LongPressTextSelection({
     start: 0,
     end: 0,
   });
-  const textRef = React.useRef(null);
+  const textRef = React.useRef<View>(null);
 
   const handleLongPress = (event: GestureResponderEvent) => {
     const { locationX } = event.nativeEvent;
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
 
 function Split(props: { style: ViewStyle | undefined; dotSize?: number }) {
   const { style, dotSize = 16 } = props;
-  const { backgroundColor } = style;
+  const { backgroundColor } = style ?? {};
   return (
     <View style={style}>
       <View
@@ -104,9 +104,11 @@ function Split(props: { style: ViewStyle | undefined; dotSize?: number }) {
 
 export function LongPressTextSelection2(props: { text: string }) {
   const { text } = props;
-  const [bg, setBg] = React.useState<string>(undefined);
-  const [bg2, setBg2] = React.useState<string>(undefined);
-  const [splitHeight, setSplitHeight] = React.useState<number>(undefined);
+  const [bg, setBg] = React.useState<string | undefined>(undefined);
+  const [bg2, setBg2] = React.useState<string | undefined>(undefined);
+  const [splitHeight, setSplitHeight] = React.useState<number | undefined>(
+    undefined
+  );
 
   const _onLongPress = React.useCallback((event: GestureResponderEvent) => {
     console.log(
@@ -126,7 +128,7 @@ export function LongPressTextSelection2(props: { text: string }) {
         'test:LongPressTextSelection2:_onTextLayout',
         event.nativeEvent
       );
-      setSplitHeight(event.nativeEvent.lines[0].height);
+      setSplitHeight(event.nativeEvent.lines[0]?.height ?? undefined);
     },
     []
   );

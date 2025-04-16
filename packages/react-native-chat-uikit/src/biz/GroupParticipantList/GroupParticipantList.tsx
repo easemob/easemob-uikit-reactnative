@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ListRenderItemInfo, View } from 'react-native';
 
 import { useColors } from '../../hook';

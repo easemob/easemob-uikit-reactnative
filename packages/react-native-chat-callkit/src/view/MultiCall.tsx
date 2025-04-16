@@ -188,8 +188,8 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
             ? 'inviter-audio'
             : 'inviter-video'
           : props.callType === 'audio'
-          ? 'invitee-audio-init'
-          : 'invitee-video-init'),
+            ? 'invitee-audio-init'
+            : 'invitee-video-init'),
       muteVideo: props.muteVideo ?? false,
       joinChannelSuccess: false,
       elapsed: 0,

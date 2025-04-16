@@ -1,10 +1,6 @@
 {
-  "extends": "../../tsconfig",
-  "references": [
-    { "path": "../../packages/react-native-chat-uikit" },
-    { "path": "../../packages/react-native-chat-callkit" },
-  ],
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    // Avoid expo-cli auto-generating a tsconfig
+    "noUnusedLocals": false
   }
 }

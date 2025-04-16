@@ -11,7 +11,7 @@ import type {
 } from './types';
 
 export function useListSearch<
-  ComponentModel extends DefaultComponentModel = DefaultComponentModel
+  ComponentModel extends DefaultComponentModel = DefaultComponentModel,
 >(
   props: UseListSearchProps<ComponentModel>
 ): UseFlatListReturn<ListSearchItemProps<ComponentModel>> &

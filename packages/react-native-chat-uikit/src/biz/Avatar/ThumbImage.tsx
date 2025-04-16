@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ICON_ASSETS } from '../../assets';
 import { useGetStyleProps } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';

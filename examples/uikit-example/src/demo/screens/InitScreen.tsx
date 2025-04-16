@@ -31,7 +31,9 @@ export function InitScreen(props: Props) {
   const [id, _setId] = React.useState(
     appKey && appKey.length > 0 ? appKey : appId
   );
-  const [isAppKey, _setIsAppKey] = React.useState(appKey && appKey.length > 0);
+  const [isAppKey, _setIsAppKey] = React.useState(
+    appKey && appKey.length > 0 ? true : false
+  );
 
   const onId = (t: string) => {
     _setId(t);

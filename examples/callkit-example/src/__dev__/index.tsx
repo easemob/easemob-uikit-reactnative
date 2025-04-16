@@ -1,11 +1,19 @@
 import * as React from 'react';
+import { View } from 'react-native';
 
-import DevApp from './test_blur';
+import { default as Test } from './test_app_server';
 
-export default function dev(): JSX.Element {
+// if (
+//   Platform.OS === 'android' &&
+//   UIManager.setLayoutAnimationEnabledExperimental
+// ) {
+//   UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
+
+export function AppDev(): JSX.Element {
   return (
-    <React.StrictMode>
-      <DevApp />
-    </React.StrictMode>
+    <View style={{ flex: 1 }}>
+      <Test />
+    </View>
   );
 }

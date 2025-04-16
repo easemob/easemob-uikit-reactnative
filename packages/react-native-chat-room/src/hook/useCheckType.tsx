@@ -46,7 +46,7 @@ export function useCheckType(params?: { enabled?: boolean }) {
         }
         const log = `{
           toolName: '${useCheckType.name}',
-          callerName: '${others?.callerName ?? useCheckType?.caller?.name}',
+          callerName: '${others?.callerName ?? 'useCheckType'}',
           objectName: '${others?.objectName ?? getObjectName(object)}',
           expectedType: '${expectedType}',
           equalResult: '${typeof object === expectedType}',

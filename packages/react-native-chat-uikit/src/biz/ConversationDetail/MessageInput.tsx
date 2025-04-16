@@ -347,7 +347,8 @@ export const MessageInput = React.forwardRef<
               onSend={onClickedEmojiSend}
               emojiList={emojiList}
             />
-            {messageInputBarStyle === 'extension' ? (
+            {messageInputBarStyle === 'extension' &&
+            MessageInputBarMenu !== null ? (
               <MessageInputBarMenu
                 ref={menuRef}
                 onRequestModalClose={onRequestCloseMenu}
@@ -364,7 +365,8 @@ export const MessageInput = React.forwardRef<
         onState={onVoiceStateChange}
         onFailed={onVoiceFailed}
       />
-      {messageInputBarStyle === 'bottom-sheet' ? (
+      {messageInputBarStyle === 'bottom-sheet' &&
+      MessageInputBarMenu !== null ? (
         <MessageInputBarMenu
           ref={menuRef}
           onRequestModalClose={onRequestCloseMenu}

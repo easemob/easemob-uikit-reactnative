@@ -144,8 +144,8 @@ export function MessagePinListItem(props: MessagePinListItemProps) {
               textType={'small'}
             >
               {pinInfo?.operatorId
-                ? getContactInfo(pinInfo?.operatorId).name ??
-                  pinInfo?.operatorId
+                ? (getContactInfo(pinInfo?.operatorId).name ??
+                  pinInfo?.operatorId)
                 : pinInfo?.operatorId}
             </SingleLineText>
             <SingleLineText

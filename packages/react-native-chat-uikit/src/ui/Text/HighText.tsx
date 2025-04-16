@@ -1,4 +1,3 @@
-import * as React from 'react';
 import type { ColorValue, StyleProp, TextStyle } from 'react-native';
 
 import { useColors } from '../../hook';

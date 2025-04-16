@@ -15,62 +15,8 @@ yarn
 Initialization repo:
 
 ```sh
-yarn yarn-prepack
+yarn prepare
 ```
-
-Set push config:
-
-**Note: This template file is for the basic operation of the project, if necessary, please use the real configuration.**
-
-```sh
-cp templates/google-services.json.template example/android/app/google-services.json
-cp templates/GoogleService-Info.plist.template example/ios/ChatUikitFullExample/GoogleService-Info.plist
-```
-
-> While it's possible to use [`npm`](https://github.com/npm/cli), the tooling is built around [`yarn`](https://classic.yarnpkg.com/), so you'll have an easier time if you use `yarn` for development.
-
-While developing, you can run the [example app](/example/) to test your changes. Any changes you make in your library's JavaScript code will be reflected in the example app without a rebuild. If you change any native code, then you'll need to rebuild the example app.
-
-To start the packager:
-
-```sh
-yarn workspace chatuikitfullexample start
-```
-
-To run the example app on Android:
-
-```sh
-yarn workspace chatuikitfullexample android
-```
-
-To run the example app on iOS:
-
-```sh
-yarn workspace chatuikitfullexample ios
-```
-
-Make sure your code passes TypeScript and ESLint. Run the following to verify:
-
-```sh
-yarn typescript
-yarn lint
-```
-
-To fix formatting errors, run the following:
-
-```sh
-yarn lint --fix
-```
-
-Remember to add tests for your change if possible. Run the unit tests by:
-
-```sh
-yarn test
-```
-
-To edit the Objective-C or Swift files, open `example/ios/ChatUikitExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-chat-uikit`.
-
-To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `react-native-chat-uikit` under `Android`.
 
 ### Commit message convention
 

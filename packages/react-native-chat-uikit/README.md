@@ -6,17 +6,17 @@ React Native Chat UI Kit is a user interface toolkit for building instant messag
 
 ## Development Environment Requirements
 
-- MacOS 12 or above
-- React-Native 0.66 or above
-- NodeJs 16.18 or above
+- MacOS 12 or higher
+- React-Native 0.71 or higher
+- NodeJs 20.18 or higher
 
 For `iOS` applications:
 
-- Xcode 13 or above, along with its related dependency tools.
+- Xcode 15 or above, along with its related dependency tools.
 
 For `Android` applications:
 
-- Android Studio 2021 or above, along with its related dependency tools.
+- Android Studio 2022 or above, along with its related dependency tools.
 
 ## Installation in the Project
 
@@ -32,28 +32,17 @@ yarn add react-native-chat-uikit
 yarn add @react-native-async-storage/async-storage \
 @react-native-camera-roll/camera-roll \
 @react-native-clipboard/clipboard \
-date-fns \
-pinyin-pro \
-pure-uuid \
-react-native-agora \
-react-native-chat-uikit \
-react-native-chat-sdk \
 react-native-audio-recorder-player \
+react-native-chat-sdk \
 react-native-create-thumbnail \
 react-native-device-info \
-react-native-document-picker \
+@react-native-documents/picker \
 react-native-fast-image \
 react-native-file-access \
 react-native-gesture-handler \
-react-native-get-random-values \
 react-native-image-picker \
-react-native-permissions \
 react-native-safe-area-context \
-react-native-screens \
-react-native-video \
-react-native-web \
-react-native-webview \
-twemoji
+react-native-video
 ```
 
 ## Quick Start
@@ -71,7 +60,7 @@ function App(): React.JSX.Element {
 }
 ```
 
-Join Room
+Enter chat page.
 
 ```typescript
 export function ConversationDetailScreen() {

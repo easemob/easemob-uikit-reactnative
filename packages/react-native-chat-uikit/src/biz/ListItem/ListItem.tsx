@@ -65,7 +65,7 @@ type ListItemProps<LeftNameProps, RightTextProps, RightIconProps> = {
 export function ListItem<
   LeftNameProps = any,
   RightTextProps = any,
-  RightIconProps = any
+  RightIconProps = any,
 >(props: ListItemProps<LeftNameProps, RightTextProps, RightIconProps>) {
   const {
     containerStyle,

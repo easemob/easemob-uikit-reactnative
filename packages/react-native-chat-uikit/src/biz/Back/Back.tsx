@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { useColors } from '../../hook';
 import { Icon } from '../../ui/Image';
 

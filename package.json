@@ -1,6 +1,7 @@
 {
+  "packageManager": "yarn@4.7.0",
   "name": "react-native-chat-library",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "react native multi package workspaces.",
   "repository": "https://github.com/easemob/easemob-uikit-reactnative",
   "author": "asteriskzuo@hotmail.com",
@@ -10,47 +11,65 @@
     "packages/react-native-chat-uikit",
     "packages/react-native-chat-callkit",
     "packages/react-native-chat-room",
-    "example",
     "examples/callkit-example",
     "examples/uikit-example",
-    "examples/room-example"
+    "examples/room-example",
+    "examples/product-uikit-demo",
+    "examples/product-room-demo"
   ],
   "devDependencies": {
+    "@babel/core": "^7.25.2",
     "@commitlint/config-conventional": "^17.0.2",
-    "@evilmartians/lefthook": "^1.2.2",
+    "@evilmartians/lefthook": "^1.5.0",
+    "@react-native-community/cli": "15.0.1",
+    "@react-native/babel-preset": "0.76.7",
+    "@react-native/eslint-config": "0.76.7",
+    "@react-native/metro-config": "0.76.7",
+    "@react-native/typescript-config": "0.76.7",
     "commitlint": "^17.0.2",
-    "del-cli": "^5.0.0",
-    "eslint": "^8.4.1",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-simple-import-sort": "^10.0.0",
-    "jest": "^28.1.1",
-    "lerna": "^7.0.1",
-    "patch-package": "^7.0.1",
-    "pod-install": "^0.1.0",
-    "prettier": "^2.0.5",
-    "typescript": "4.9.5"
+    "del-cli": "^5.1.0",
+    "eas-cli": "^15.0.15",
+    "eslint": "^8.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.2.5",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "prettier": "^3.5.3",
+    "turbo": "^1.10.7",
+    "typescript": "^5.2.2"
   },
   "scripts": {
-    "yarn-lint": "yarn workspace react-native-chat-uikit lint && yarn workspace react-native-chat-callkit lint && yarn workspace react-native-chat-room lint",
-    "lerna-lint": "lerna run lint",
-    "lint": "yarn run lerna-lint",
-    "yarn-prepack": "yarn sdk-version && yarn sdk-rename && yarn sdk-config && yarn example-env && yarn example-rename && yarn workspace react-native-chat-uikit prepack && yarn workspace react-native-chat-callkit prepack && yarn workspace react-native-chat-room prepack",
-    "uikit-prepack": "yarn sdk-version && yarn sdk-rename && yarn sdk-config && yarn example-env && yarn example-rename && yarn workspace react-native-chat-uikit prepack",
-    "callkit-prepack": "yarn sdk-version && yarn sdk-rename && yarn sdk-config && yarn example-env && yarn example-rename && yarn workspace react-native-chat-callkit prepack",
-    "room-prepack": "yarn sdk-version && yarn sdk-rename && yarn sdk-config && yarn example-env && yarn example-rename && yarn workspace react-native-chat-room prepack",
-    "lerna-prepack": "lerna run sdk-version && lerna run sdk-rename && lerna run sdk-config && lerna run example-rename && lerna run example-env && lerna run prepack --verbose",
-    "prepack": "yarn run lerna-prepack",
-    "clean": "lerna run clean  --verbose",
-    "clean-module": "lerna run clean-module  --verbose",
-    "bootstrap": "lerna run bootstrap --verbose",
-    "sdk-version": "node scripts/generate-version.js",
-    "sdk-rename": "node scripts/generate-rename.js",
-    "sdk-config": "yarn workspace react-native-chat-uikit gen-config && yarn workspace react-native-chat-room gen-config",
-    "example-env": "lerna run gen-env --verbose",
-    "example-rename": "lerna run gen-rename --verbose",
-    "doctor": "lerna run doctor --verbose",
-    "postinstall": "patch-package"
+    "postinstall": "echo 'postinstall'",
+    "doctor": "echo 'doctor'",
+    "test": "echo 'test'",
+    "lint": "yarn echo:start 'lint' && yarn uikit lint && yarn callkit lint && yarn room lint && yarn product-uikit-demo lint && yarn product-room-demo lint && yarn uikit-example lint && yarn room-example lint && yarn callkit-example lint && yarn echo:end 'lint'",
+    "typecheck": "yarn echo:start 'typecheck' && yarn uikit typecheck && yarn callkit typecheck && yarn room typecheck && yarn product-uikit-demo typecheck && yarn product-room-demo typecheck && yarn uikit-example typecheck && yarn room-example typecheck && yarn callkit-example typecheck && yarn echo:end 'typecheck'",
+    "prepack": "yarn clean && yarn prepare",
+    "prepare": "yarn echo:start 'prepare' && yarn uikit prepare && yarn callkit prepare && yarn room prepare && yarn product-uikit-demo prepare && yarn product-room-demo prepare && yarn uikit-example prepare && yarn room-example prepare && yarn callkit-example prepare && yarn echo:end 'prepare'",
+    "format": "yarn echo:start 'format' && prettier --write . && yarn echo:end 'format'",
+    "format:check": "yarn echo:start 'format:check' && prettier --check . && yarn echo:end 'format:check'",
+    "build": "echo 'build'",
+    "clean": "yarn echo:start 'clean' && yarn uikit clean && yarn callkit clean && yarn room clean && yarn product-uikit-demo clean && yarn product-room-demo clean && yarn uikit-example clean && yarn room-example clean && yarn callkit-example clean && yarn echo:end 'clean'",
+    "clean:node_modules": "yarn echo:start 'clean:node_modules' && yarn uikit clean:node_modules && yarn callkit clean:node_modules && yarn room clean:node_modules && yarn product-uikit-demo clean:node_modules && yarn product-room-demo clean:node_modules && yarn uikit-example clean:node_modules && yarn room-example clean:node_modules && yarn callkit-example clean:node_modules && yarn echo:end 'clean:node_modules'",
+    "uikit": "yarn workspace react-native-chat-uikit",
+    "callkit": "yarn workspace react-native-chat-callkit",
+    "room": "yarn workspace react-native-chat-room",
+    "uikit-example": "yarn workspace ChatUikitExample",
+    "room-example": "yarn workspace ChatRoomExample",
+    "product-uikit-demo": "yarn workspace ChatUikitFullExample",
+    "callkit-example": "yarn workspace ChatCallkitExample",
+    "product-room-demo": "yarn workspace ChatRoomFullExample",
+    "turbo:build:callkit:android": "turbo run build:callkit:android",
+    "turbo:build:callkit:ios": "turbo run build:callkit:ios",
+    "turbo:build:room:android": "turbo run build:room:android",
+    "turbo:build:room:ios": "turbo run build:room:ios",
+    "turbo:build:uikit:android": "turbo run build:uikit:android",
+    "turbo:build:uikit:ios": "turbo run build:uikit:ios",
+    "turbo:build:room-demo:android": "turbo run build:room-demo:android",
+    "turbo:build:room-demo:ios": "turbo run build:room-demo:ios",
+    "turbo:build:uikit-demo:android": "turbo run build:uikit-demo:android",
+    "turbo:build:uikit-demo:ios": "turbo run build:uikit-demo:ios",
+    "echo:start": "echo $* 'start...'",
+    "echo:end": "echo $* 'end...'"
   },
   "prettier": {
     "quoteProps": "consistent",
@@ -59,38 +78,9 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "eslintIgnore": [
-    "node_modules/",
-    "scripts/",
-    "babel.config.js"
-  ],
-  "jest": {
-    "testEnvironment": "node",
-    "preset": "react-native",
-    "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|jsx|ts|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/node_modules/"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/packages/react-native-chat-uikit/lib/",
-      "<rootDir>/packages/react-native-chat-uikit/node_modules/",
-      "<rootDir>/packages/react-native-chat-callkit/lib/",
-      "<rootDir>/packages/react-native-chat-callkit/node_modules/",
-      "<rootDir>/packages/react-native-chat-room/lib/",
-      "<rootDir>/packages/react-native-chat-room/node_modules/"
-    ]
-  },
   "engines": {
-    "node": ">=18.16.0"
+    "node": ">=20.18.0"
   },
-  "packageManager": "yarn@1.22.19",
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -117,5 +107,43 @@
         ]
       ]
     }
-  }
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@react-native-community",
+      "prettier"
+    ],
+    "plugins": [
+      "simple-import-sort"
+    ],
+    "rules": {
+      "jest/*": 0,
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+      "react-native/no-inline-styles": 0,
+      "@typescript-eslint/no-shadow": "off",
+      "prettier/prettier": [
+        "error",
+        {
+          "quoteProps": "consistent",
+          "singleQuote": true,
+          "tabWidth": 2,
+          "trailingComma": "es5",
+          "useTabs": false
+        }
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "babel.config.js",
+    "index.js",
+    "jest.config.js",
+    "metro.config.js",
+    "react-native.config.js",
+    "scripts/",
+    "packages/scripts",
+    "examples/scripts"
+  ]
 }

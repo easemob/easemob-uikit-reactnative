@@ -1,26 +1,4 @@
-import { NativeModules, Platform } from 'react-native';
-
-const LINKING_ERROR =
-  `The package 'react-native-chat-room' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
-
-const ChatRoom = NativeModules.ChatRoom
-  ? NativeModules.ChatRoom
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
-
-export function multiply(a: number, b: number): Promise<number> {
-  return ChatRoom.multiply(a, b);
-}
-
+// export { multiply } from './__native__/index';
 export * from './assets';
 export * from './biz/Avatar';
 export * from './biz/BottomSheetMenu';
@@ -46,6 +24,7 @@ export * from './i18n';
 export * from './rename.chat';
 export * from './room';
 export * from './theme';
+export * from './types';
 export * from './ui/Alert';
 export * from './ui/Button';
 export * from './ui/FlatList';
@@ -58,3 +37,4 @@ export * from './ui/Text';
 export * from './ui/TextInput';
 export * from './ui/Toast';
 export * from './utils';
+export { default as UIKIT_VERSION } from './version';

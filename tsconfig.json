@@ -1,32 +1,39 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "rootDir": ".",
     "paths": {
-      "react-native-chat-uikit": ["packages/react-native-chat-uikit/src"],
-      "react-native-chat-callkit": ["packages/react-native-chat-callkit/src"],
-      "react-native-chat-room": ["packages/react-native-chat-room/src"],
+      "react-native-chat-uikit": ["./packages/react-native-chat-uikit/src"],
+      "react-native-chat-callkit": ["./packages/react-native-chat-callkit/src"],
+      "react-native-chat-room": ["./packages/react-native-chat-room/src"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "jsx": "react",
-    "lib": ["esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noImplicitUseStrict": false,
     "noStrictGenericChecks": false,
     "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "resolveJsonModule": true,
+    "resolvePackageJsonImports": false,
     "skipLibCheck": true,
-    "strict": false,
-    "target": "esnext",
-    "composite": true,
-    "noImplicitAny": false
+    "strict": true,
+    "target": "ESNext",
+    "verbatimModuleSyntax": false
   },
-  "exclude": ["packages/*/lib", "babel.config.js", "scripts/*"]
+  "exclude": [
+    "scripts",
+    "templates",
+    "node_modules",
+    "patches",
+    "docs",
+    ".yarn"
+  ]
 }

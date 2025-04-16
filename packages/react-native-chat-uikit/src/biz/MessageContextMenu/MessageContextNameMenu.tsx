@@ -98,33 +98,29 @@ export const MessageContextNameMenu = React.forwardRef<
     triangleViewWidth,
   ]);
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startShow: () => {
-          isShowRef.current = true;
-          modalRef?.current?.startShow?.();
-        },
-        startHide: (onFinished?: () => void) => {
-          modalRef?.current?.startHide?.(onFinished);
-          isShowRef.current = false;
-        },
-        startShowWithInit: (initItems: InitMenuItemsType[], _?: any) => {
-          isShowRef.current = true;
-          updateItems(initItems);
-        },
-        startShowWithProps: (props: ContextNameMenuProps) => {
-          isShowRef.current = true;
-          updateProps(props);
-        },
-        getData: () => {
-          return undefined;
-        },
-      };
-    },
-    [updateItems, updateProps]
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      startShow: () => {
+        isShowRef.current = true;
+        modalRef?.current?.startShow?.();
+      },
+      startHide: (onFinished?: () => void) => {
+        modalRef?.current?.startHide?.(onFinished);
+        isShowRef.current = false;
+      },
+      startShowWithInit: (initItems: InitMenuItemsType[], _?: any) => {
+        isShowRef.current = true;
+        updateItems(initItems);
+      },
+      startShowWithProps: (props: ContextNameMenuProps) => {
+        isShowRef.current = true;
+        updateProps(props);
+      },
+      getData: () => {
+        return undefined;
+      },
+    };
+  }, [updateItems, updateProps]);
 
   React.useEffect(() => {
     if (isShowRef.current) {
@@ -135,7 +131,7 @@ export const MessageContextNameMenu = React.forwardRef<
   return (
     <ContextMenu
       propsRef={modalRef}
-      position={suggestedPosition}
+      position={suggestedPosition ?? { x: 0, y: 0 }}
       onRequestModalClose={onRequestModalClose}
       noCoverageArea={noCoverageArea}
       policy={policy}
@@ -157,9 +153,9 @@ export const MessageContextNameMenu = React.forwardRef<
                 trianglePosition.x
                   ? 'flex-start'
                   : trianglePosition.messageLayoutType === 'right' &&
-                    trianglePosition.x
-                  ? 'flex-end'
-                  : 'center',
+                      trianglePosition.x
+                    ? 'flex-end'
+                    : 'center',
               right:
                 trianglePosition.messageLayoutType === 'left'
                   ? undefined
@@ -216,21 +212,21 @@ export const MessageContextNameMenu = React.forwardRef<
                 trianglePosition.x
                   ? 'flex-start'
                   : trianglePosition.messageLayoutType === 'right' &&
-                    trianglePosition.x
-                  ? 'flex-end'
-                  : 'center',
+                      trianglePosition.x
+                    ? 'flex-end'
+                    : 'center',
               marginRight:
                 trianglePosition.messageLayoutType === 'left'
                   ? undefined
                   : trianglePosition.messageLayoutType === 'right'
-                  ? trianglePosition.x
-                  : undefined,
+                    ? trianglePosition.x
+                    : undefined,
               marginLeft:
                 trianglePosition.messageLayoutType === 'left'
                   ? trianglePosition.x
                   : trianglePosition.messageLayoutType === 'right'
-                  ? undefined
-                  : undefined,
+                    ? undefined
+                    : undefined,
             }}
           >
             <TriangleView rotate={'180deg'} />
@@ -242,31 +238,37 @@ export const MessageContextNameMenu = React.forwardRef<
 });
 
 const ItemsRender = (props: ContextNameMenuProps) => {
-  const { initItems, maxRowCount, unitCountPerRow = 5, header } = props;
+  const {
+    initItems = [],
+    maxRowCount = 5,
+    unitCountPerRow = 5,
+    header,
+  } = props;
   const { getColor } = useColors();
   const itemWidth = Math.ceil(
     MESSAGE_CONTEXT_NAME_MENU_MAX_WIDTH / unitCountPerRow - 1
   );
   const itemHeight = 58;
-  const currentRowCount = Math.ceil(initItems.length / unitCountPerRow);
+  const initItemsLength = initItems?.length ?? 0;
+  const currentRowCount = Math.ceil(initItemsLength / unitCountPerRow);
 
   const items = React.useMemo(() => {
-    return initItems.length < unitCountPerRow && header === undefined
+    return initItemsLength < unitCountPerRow && header === undefined
       ? initItems
-      : initItems.concat(
-          Array(unitCountPerRow * currentRowCount - initItems.length).fill(
+      : initItems?.concat(
+          Array(unitCountPerRow * currentRowCount - initItemsLength).fill(
             {} as InitMenuItemsType
           )
         );
-  }, [currentRowCount, header, initItems, unitCountPerRow]);
+  }, [currentRowCount, header, initItems, initItemsLength, unitCountPerRow]);
 
   const getMarginBottom = React.useCallback(
     (index: number) => {
       return items.length < unitCountPerRow
         ? undefined
         : index < items.length - 1 - unitCountPerRow
-        ? 8
-        : undefined;
+          ? 8
+          : undefined;
     },
     [items.length, unitCountPerRow]
   );

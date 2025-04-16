@@ -7,8 +7,8 @@ _中文 | [English](./README.md)_
 ## 开发环境要求
 
 - MacOS 12 或以上版本
-- React-Native 0.66 或以上版本
-- NodeJs 16.18 或以上版本
+- React-Native 0.71 或以上版本
+- NodeJs 20.18 或以上版本
 
 对于 `iOS` 应用：
 
@@ -29,7 +29,8 @@ yarn add react-native-chat-room
 ## 依赖项
 
 ```sh
-yarn add react-native-linear-gradient \
+yarn add react-native-chat-sdk \
+react-native-linear-gradient \
 react-native-safe-area-context
 ```
 

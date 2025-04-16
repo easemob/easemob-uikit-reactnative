@@ -1,4 +1,3 @@
-import React from 'react';
 import { Platform } from 'react-native';
 import type AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import type {
@@ -273,19 +272,16 @@ export class MediaServiceImplement implements MediaService {
   ): Promise<Nullable<FileType>> {
     try {
       // !!! mode: 'open' Failed to send file in open mode. Native problem.
-      const { uri, size, name, type } =
-        await this.option.documentPickerModule.pickSingle({
-          mode: 'open',
-          // type: ['public.folder'],
-        });
+      // const { uri, size, name, type } =
+      const result = await this.option.documentPickerModule.pick({
+        mode: 'open',
+        // type: ['public.folder'],
+      });
+      if (result.length === 0) return null;
+      const { uri, size, name, type } = result[0];
       return this.resultReduction({ uri, size, name, type });
     } catch (e) {
-      if (
-        !this.option.documentPickerModule.isCancel(e) &&
-        this.option.documentPickerModule.isInProgress(e)
-      ) {
-        options?.onFailed?.(new Error('Failed to obtain permission.'));
-      }
+      options?.onFailed?.(new Error('Failed to obtain permission.'));
       return null;
     }
   }
@@ -376,7 +372,7 @@ export class MediaServiceImplement implements MediaService {
     return (
       <VideoComponent
         {...props}
-        source={source}
+        source={source as any} // TODO: fix type !!!
         resizeMode={resizeMode}
         onLoad={onLoad}
         controls

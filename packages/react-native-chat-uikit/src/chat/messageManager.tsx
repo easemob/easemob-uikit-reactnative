@@ -197,12 +197,12 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   // }
   onMessagesRecalledInfo(messages: Array<ChatRecalledMessageInfo>): void {
     messages.forEach((info) => {
-      const tipMsg = this.createRecallMessageTip(info.recalledMessage);
+      const tipMsg = this.createRecallMessageTip(info.recalledMessage!);
       this._client.insertMessage({
         message: tipMsg,
         onResult: () => {
           this._userListener.forEach((v) => {
-            v.onRecvRecallMessage?.(info.recalledMessage, tipMsg);
+            v.onRecvRecallMessage?.(info.recalledMessage!, tipMsg);
           });
         },
       });

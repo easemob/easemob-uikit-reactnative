@@ -64,45 +64,41 @@ export const BottomSheetMenu = React.forwardRef<
   });
   const isShow = React.useRef(false);
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startHide: (onFinished?: () => void) => {
-          isShow.current = false;
-          modalRef?.current?.startHide?.(onFinished);
-        },
-        startShow: () => {
+  React.useImperativeHandle(ref, () => {
+    return {
+      startHide: (onFinished?: () => void) => {
+        isShow.current = false;
+        modalRef?.current?.startHide?.(onFinished);
+      },
+      startShow: () => {
+        isShow.current = true;
+        modalRef?.current?.startShow?.();
+      },
+      startShowWithInit: (initItems: React.ReactElement[], others?: any) => {
+        othersRef.current = others;
+        if (initItems !== items) {
+          isShow.current = true;
+          updateItems(initItems);
+        } else {
           isShow.current = true;
           modalRef?.current?.startShow?.();
-        },
-        startShowWithInit: (initItems: React.ReactElement[], others?: any) => {
-          othersRef.current = others;
-          if (initItems !== items) {
-            isShow.current = true;
-            updateItems(initItems);
-          } else {
-            isShow.current = true;
-            modalRef?.current?.startShow?.();
-          }
-        },
-        startShowWithProps: (props: BizContextMenuProps) => {
-          const { initItems } = props;
-          if (initItems !== items && initItems) {
-            isShow.current = true;
-            updateProps(props);
-          } else {
-            isShow.current = true;
-            modalRef?.current?.startShow?.();
-          }
-        },
-        getData: () => {
-          return othersRef.current;
-        },
-      };
-    },
-    [items, updateProps, updateItems]
-  );
+        }
+      },
+      startShowWithProps: (props: BizContextMenuProps) => {
+        const { initItems } = props;
+        if (initItems !== items && initItems) {
+          isShow.current = true;
+          updateProps(props);
+        } else {
+          isShow.current = true;
+          modalRef?.current?.startShow?.();
+        }
+      },
+      getData: () => {
+        return othersRef.current;
+      },
+    };
+  }, [items, updateProps, updateItems]);
 
   React.useEffect(() => {
     if (isShow.current === true) {

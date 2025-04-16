@@ -124,10 +124,10 @@ const ContextMenu = (props: {
           styles.menuContainer,
           {
             position: 'absolute',
-            top: position.y,
-            left: position.x,
-            bottom: undefined,
-            right: undefined,
+            // top: position.y,
+            // left: position.x,
+            // bottom: undefined,
+            // right: undefined,
             height: componentHeight,
             width: componentWidth,
             ...calculateResult,
@@ -151,7 +151,7 @@ const ContextMenu = (props: {
 
 export function TestContextMenu1() {
   const modalRef = React.useRef<SlideModalRef>({} as any);
-  const touchRef = React.useRef<TouchableOpacity>(null);
+  const touchRef = React.useRef<View>(null);
   const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
   const screenWidth = React.useRef(Dimensions.get('window').width).current;
   const screenHeight = React.useRef(Dimensions.get('window').height).current;

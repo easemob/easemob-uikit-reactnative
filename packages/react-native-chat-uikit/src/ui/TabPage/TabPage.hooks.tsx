@@ -65,18 +65,14 @@ export function useTabPageAPI(
     initIndex
   );
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        changeIndex: (index: number, animated?: boolean) => {
-          bodyRef.current?.scrollTo(index, animated);
-          headerStartScrolling(width, width * index);
-        },
-      };
-    },
-    [headerStartScrolling, width]
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      changeIndex: (index: number, animated?: boolean) => {
+        bodyRef.current?.scrollTo(index, animated);
+        headerStartScrolling(width, width * index);
+      },
+    };
+  }, [headerStartScrolling, width]);
 
   return {
     headerRef,

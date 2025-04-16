@@ -54,8 +54,14 @@ export function useMessageNameMenu(props: ContextNameMenuProps) {
   const [_headerProps, setHeaderProps] = React.useState(headerProps);
   const [_suggestedPosition, setSuggestedPosition] =
     React.useState(suggestedPosition);
-  const [_noCoverageArea, setNoCoverageArea] =
-    React.useState<ComponentArea>(noCoverageArea);
+  const [_noCoverageArea, setNoCoverageArea] = React.useState<ComponentArea>(
+    noCoverageArea ?? {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    }
+  );
   const [_maxRowCount, setMaxRowCount] = React.useState(maxRowCount);
   const [_maxHeight, setMaxHeight] = React.useState(
     maxHeight ?? Dimensions.get('window').height / 2
@@ -99,13 +105,20 @@ export function useMessageNameMenu(props: ContextNameMenuProps) {
     setHeader(header);
     setMaxHeight(maxHeight ?? Dimensions.get('window').height / 2);
     setMaxRowCount(
-      calculateMaxRowCount(initItems.length, unitCountPerRow, maxRowCount)
+      calculateMaxRowCount(initItems?.length ?? 0, unitCountPerRow, maxRowCount)
     );
     setSuggestedPosition(suggestedPosition);
-    setNoCoverageArea(noCoverageArea);
+    setNoCoverageArea(
+      noCoverageArea ?? {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      }
+    );
     setEmojiListPosition(emojiListPosition);
     setPolicy(
-      initItems.length >= unitCountPerRow || header ? 'side' : 'center'
+      (initItems?.length ?? 0) >= unitCountPerRow || header ? 'side' : 'center'
     );
   };
   return {
@@ -142,8 +155,14 @@ export function useMessageInputBarNameMenu(props: ContextNameMenuProps) {
   const [_headerProps, setHeaderProps] = React.useState(headerProps);
   const [_suggestedPosition, setSuggestedPosition] =
     React.useState(suggestedPosition);
-  const [_noCoverageArea, setNoCoverageArea] =
-    React.useState<ComponentArea>(noCoverageArea);
+  const [_noCoverageArea, setNoCoverageArea] = React.useState<ComponentArea>(
+    noCoverageArea ?? {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    }
+  );
   const [_maxRowCount, setMaxRowCount] = React.useState(maxRowCount);
   const [_unitCountPerRow, setUnitCountPerRow] =
     React.useState(unitCountPerRow);
@@ -183,11 +202,18 @@ export function useMessageInputBarNameMenu(props: ContextNameMenuProps) {
     setHeader(header);
     setMaxHeight(maxHeight ?? Dimensions.get('window').height / 2);
     setMaxRowCount(
-      calculateMaxRowCount(initItems.length, unitCountPerRow, maxRowCount)
+      calculateMaxRowCount(initItems?.length ?? 0, unitCountPerRow, maxRowCount)
     );
     setUnitCountPerRow(unitCountPerRow);
     setSuggestedPosition(suggestedPosition);
-    setNoCoverageArea(noCoverageArea);
+    setNoCoverageArea(
+      noCoverageArea ?? {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      }
+    );
   };
   return {
     items: _items,

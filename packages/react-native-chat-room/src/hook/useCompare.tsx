@@ -27,7 +27,7 @@ export function useCompare(
 
   const log = `{
     toolName: '${useCompare.name}',
-    callerName: '${others?.callerName ?? useCompare?.caller?.name}',
+    callerName: '${others?.callerName ?? 'useCompare'}',
     objectName: '${others?.objectName ?? getObjectName(object)}',
     equalResult: '${ref.current === object}',
   }`;

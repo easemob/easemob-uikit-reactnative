@@ -92,27 +92,23 @@ export const BottomSheetReactionDetail = React.forwardRef<
     onRemoveReaction,
   } = useGetProps(props);
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startHide: (onFinished?: () => void) => {
-          isShow.current = false;
-          modalRef?.current?.startHide?.(onFinished);
-        },
-        startShow: () => {
-          isShow.current = true;
-          modalRef?.current?.startShow?.();
-        },
-        startShowWithProps: (props: BottomSheetReactionDetailProps) => {
-          isShow.current = true;
-          updateProps(props);
-          modalRef?.current?.startShow?.();
-        },
-      };
-    },
-    [updateProps]
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      startHide: (onFinished?: () => void) => {
+        isShow.current = false;
+        modalRef?.current?.startHide?.(onFinished);
+      },
+      startShow: () => {
+        isShow.current = true;
+        modalRef?.current?.startShow?.();
+      },
+      startShowWithProps: (props: BottomSheetReactionDetailProps) => {
+        isShow.current = true;
+        updateProps(props);
+        modalRef?.current?.startShow?.();
+      },
+    };
+  }, [updateProps]);
 
   React.useEffect(() => {
     if (isShow.current === true) {

@@ -35,7 +35,7 @@ export class Chatroom extends ChatroomBase {
       error: new UIKitError({
         code: ErrorCode.common,
         desc: JSON.stringify(e),
-        extra: info.componentStack,
+        extra: info.componentStack ?? undefined,
       }),
     });
   }

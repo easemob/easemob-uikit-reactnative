@@ -26,7 +26,7 @@ export function ListSearchItem<ComponentModel extends DataModel = DataModel>(
   return <DefaultListSearchItem {...props} />;
 }
 export function DefaultListSearchItem<
-  ComponentModel extends DataModel = DataModel
+  ComponentModel extends DataModel = DataModel,
 >(props: ListSearchItemProps<ComponentModel>) {
   const { data, keyword, onClicked } = props;
   const { colors } = usePaletteContext();

@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import type { IconNameType } from '../../assets';
 import { Image, type ImageProps } from './Image';
 import { getIconSource } from './Image.hooks';

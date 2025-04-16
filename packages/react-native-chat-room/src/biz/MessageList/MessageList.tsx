@@ -156,29 +156,31 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
     const { tr } = useI18nContext();
     const defaultData = useGetReportDefaultData(tr);
 
-    React.useImperativeHandle(
-      ref,
-      () => {
-        return {
-          addSendedMessage: (message) => {
-            addSendedMessage(message);
-          },
-          scrollToEnd: () => {
-            scrollToEnd();
-          },
-          closeMenu: (onFinished?: () => void) => {
-            menuRef?.current?.startHide?.(onFinished);
-          },
-          translateMessage: (msg) => {
-            translateMessage(msg);
-          },
-          deleteMessage: (msg) => {
-            deleteMessage(msg);
-          },
-        };
-      },
-      [addSendedMessage, deleteMessage, menuRef, scrollToEnd, translateMessage]
-    );
+    React.useImperativeHandle(ref, () => {
+      return {
+        addSendedMessage: (message) => {
+          addSendedMessage(message);
+        },
+        scrollToEnd: () => {
+          scrollToEnd();
+        },
+        closeMenu: (onFinished?: () => void) => {
+          menuRef?.current?.startHide?.(onFinished);
+        },
+        translateMessage: (msg) => {
+          translateMessage(msg);
+        },
+        deleteMessage: (msg) => {
+          deleteMessage(msg);
+        },
+      };
+    }, [
+      addSendedMessage,
+      deleteMessage,
+      menuRef,
+      scrollToEnd,
+      translateMessage,
+    ]);
 
     const getReportData = React.useMemo(() => {
       if (reportProps?.data) {

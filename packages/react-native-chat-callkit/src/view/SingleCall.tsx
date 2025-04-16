@@ -92,8 +92,8 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
             ? 'inviter-audio'
             : 'inviter-video'
           : props.callType === 'audio'
-          ? 'invitee-audio-init'
-          : 'invitee-video-init'),
+            ? 'invitee-audio-init'
+            : 'invitee-video-init'),
       muteVideo: props.muteVideo ?? false,
       joinChannelSuccess: false,
       peerJoinChannelSuccess: false,
@@ -662,8 +662,8 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
             {this.isInviter === true
               ? 'Calling'
               : callType === 'audio'
-              ? 'Audio Call'
-              : 'Video Call'}
+                ? 'Audio Call'
+                : 'Video Call'}
           </Text>
         )}
       </View>

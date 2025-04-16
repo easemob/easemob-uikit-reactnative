@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Video, { LoadError } from 'react-native-video';
+import Video, { VideoRef } from 'react-native-video';
 
 import { useChatContext } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
@@ -114,7 +114,7 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
         }}
       >
         <Video
-          ref={videoRef}
+          ref={videoRef as any} // TODO: fix type !!!
           source={{
             uri: url,
           }}
@@ -187,7 +187,7 @@ type ImageSize = {
 export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
   const { msgId: propsMsgId, msg: propsMsg, onShowBottomSheet } = props;
   const im = useChatContext();
-  const videoRef = React.useRef<Video>(null);
+  const videoRef = React.useRef<VideoRef>(null);
   const [url, setUrl] = React.useState<string | undefined>(undefined);
   const [size, setSize] = React.useState<ImageSize>({
     width: 300,
@@ -248,9 +248,8 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
 
   const showThumb = React.useCallback(
     async (thumbnailLocalPath: string) => {
-      const thumbIsExisted = await Services.dcs.isExistedFile(
-        thumbnailLocalPath
-      );
+      const thumbIsExisted =
+        await Services.dcs.isExistedFile(thumbnailLocalPath);
       if (thumbIsExisted === true) {
         setThumbSize(thumbnailLocalPath);
         setThumbnailUrl(LocalPath.showImage(thumbnailLocalPath));
@@ -299,7 +298,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
     [download, im]
   );
 
-  const onVideoError = React.useCallback((error: LoadError) => {
+  const onVideoError = React.useCallback((error: any) => {
     uilog.warn('dev:video:error: ', error);
   }, []);
 

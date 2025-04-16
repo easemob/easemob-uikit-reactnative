@@ -145,8 +145,8 @@ export function useNewRequests(props: NewRequestsProps) {
       return prevTimestamp === nextTimestamp
         ? 0
         : prevTimestamp < nextTimestamp
-        ? 1
-        : -1;
+          ? 1
+          : -1;
     } else {
       return 0;
     }

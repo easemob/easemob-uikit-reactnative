@@ -72,7 +72,7 @@ export function ContextMenu(props: ContextMenuProps) {
       propsRef={propsRef}
       modalAnimationType="fade"
       backgroundTransparent={true}
-      onRequestModalClose={onRequestModalClose}
+      onRequestModalClose={onRequestModalClose ?? (() => {})}
       enableSlideComponent={false}
     >
       <View

@@ -2,4 +2,37 @@ _English | [中文](./README.zh.md)_
 
 ---
 
-[new entry](../../docs/v3/en/callkit-example.en.md)
+# Download Code
+
+Method 1:
+
+    Download the code from the repository: `https://github.com/easemob/easemob-uikit-reactnative`
+
+Method 2:
+
+    Download the zip file from `https://github.com/easemob/easemob-uikit-reactnative`.
+
+# Project Initialization
+
+Make sure the environment is configured properly. If not, please [refer to this guide](../../docs/v4/cn/env.md)
+
+Go to the root directory and execute:
+
+```sh
+yarn && yarn prepare
+```
+
+# Required Information
+
+Go to the `examples/callkit-example` directory.
+Find the `env.ts` file and fill in the `appKey` and other required information.
+
+# Running the Project
+
+Go to the `examples/callkit-example` directory and execute:
+
+```sh
+yarn run android
+# or
+yarn run ios
+```

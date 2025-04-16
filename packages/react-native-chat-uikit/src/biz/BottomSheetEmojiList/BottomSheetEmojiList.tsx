@@ -67,32 +67,28 @@ export const BottomSheetEmojiList = React.forwardRef<
   const { getColor } = useColors();
   const isShow = React.useRef(false);
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startHide: (onFinished?: () => void) => {
-          isShow.current = false;
-          modalRef?.current?.startHide?.(onFinished);
-        },
-        startShow: () => {
+  React.useImperativeHandle(ref, () => {
+    return {
+      startHide: (onFinished?: () => void) => {
+        isShow.current = false;
+        modalRef?.current?.startHide?.(onFinished);
+      },
+      startShow: () => {
+        isShow.current = true;
+        modalRef?.current?.startShow?.();
+      },
+      startShowWithProps: (props: BottomSheetEmojiListProps) => {
+        const { emojiList: emoji } = props;
+        if (emoji !== emojiList) {
+          isShow.current = true;
+          updateProps(props);
+        } else {
           isShow.current = true;
           modalRef?.current?.startShow?.();
-        },
-        startShowWithProps: (props: BottomSheetEmojiListProps) => {
-          const { emojiList: emoji } = props;
-          if (emoji !== emojiList) {
-            isShow.current = true;
-            updateProps(props);
-          } else {
-            isShow.current = true;
-            modalRef?.current?.startShow?.();
-          }
-        },
-      };
-    },
-    [emojiList, updateProps]
-  );
+        }
+      },
+    };
+  }, [emojiList, updateProps]);
 
   React.useEffect(() => {
     if (isShow.current === true) {

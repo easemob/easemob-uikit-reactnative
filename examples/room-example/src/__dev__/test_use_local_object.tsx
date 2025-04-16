@@ -28,15 +28,11 @@ export const Component1 = React.forwardRef<Component1Ref, {}>(
   (props: {}, ref?: React.ForwardedRef<Component1Ref>) => {
     const {} = props;
     const { r, selfIncreasing } = useMyData();
-    React.useImperativeHandle(
-      ref,
-      () => {
-        return {
-          getR: () => r,
-        };
-      },
-      [r]
-    );
+    React.useImperativeHandle(ref, () => {
+      return {
+        getR: () => r,
+      };
+    }, [r]);
     return (
       <View
         style={{ width: 100, height: 50, backgroundColor: 'blue', margin: 1 }}

@@ -243,8 +243,8 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
                 }}
               >
                 {comType === 'chat' || comType === 'search'
-                  ? convName ?? convId
-                  : newThreadName ?? convId}
+                  ? (convName ?? convId)
+                  : (newThreadName ?? convId)}
               </SingleLineText>
               {(comType === 'chat' || comType === 'search') &&
               doNotDisturb === true ? (

@@ -1,9 +1,6 @@
 {
-  "extends": "../../tsconfig",
-  "references": [
-    { "path": "../../packages/react-native-chat-room" },
-  ],
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    // Avoid expo-cli auto-generating a tsconfig
+    "noUnusedLocals": false
   }
 }

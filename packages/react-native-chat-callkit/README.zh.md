@@ -7,16 +7,16 @@ _中文 | [English](./README.md)_
 ## 开发环境要求
 
 - MacOS 12 或以上版本
-- React-Native 0.66 或以上版本
-- NodeJs 16.18 或以上版本
+- React-Native 0.71 或以上版本
+- NodeJs 20.18 或以上版本
 
 对于 `iOS` 应用：
 
-- Xcode 13 或以上版本，以及它的相关依赖工具。
+- Xcode 15 或以上版本，以及它的相关依赖工具。
 
 对于 `Android` 应用：
 
-- Android Studio 2021 或以上版本，以及它的相关依赖工具。
+- Android Studio 2022 或以上版本，以及它的相关依赖工具。
 
 ## 安装到项目中
 
@@ -29,16 +29,13 @@ yarn add react-native-chat-callkit
 ## 依赖项
 
 ```sh
-yarn add react-native-agora \
-react-native-device-info \
-react-native-fast-image \
-react-native-pager-view \
+yarn add @react-native-community/blur \
+react-native-agora \
 react-native-chat-sdk \
-react-native-paper \
-react-native-permissions \
+react-native-fast-image \
 react-native-safe-area-context \
-react-native-tab-view \
-react-native-screens
+react-native-screens \
+react-native-vector-icons
 ```
 
 ## 快速开始
@@ -46,17 +43,27 @@ react-native-screens
 初始化
 
 ```typescript
-import { GlobalContainer } from 'react-native-chat-callkit';
+import { Container } from 'react-native-chat-room';
 export function App() {
   return (
-    <GlobalContainer opt={{ appKey: '<your app key>' }}>
+    <Container opt={{ appKey: '<your app key>' }}>
       {/** sub component */}
-    </GlobalContainer>
+    </Container>
   );
 }
 ```
 
-加入音频或者视频聊天。
+进入音视频页面
+
+```typescript
+export function ChatroomScreen() {
+  return (
+    <Chatroom roomId={'<room ID>'} ownerId={'<room owner ID>'}>
+      {/** sub component */}
+    </Chatroom>
+  );
+}
+```
 
 ## 贡献
 

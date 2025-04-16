@@ -53,36 +53,32 @@ export const BottomSheetGift = React.forwardRef<
   });
   const isShow = React.useRef(false);
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startHide: (onFinished?: () => void) => {
-          isShow.current = false;
-          modalRef.current?.startHide(onFinished);
-        },
-        startShow: () => {
+  React.useImperativeHandle(ref, () => {
+    return {
+      startHide: (onFinished?: () => void) => {
+        isShow.current = false;
+        modalRef.current?.startHide(onFinished);
+      },
+      startShow: () => {
+        isShow.current = true;
+        modalRef.current?.startShow();
+      },
+      startShowWithInit: (
+        giftsParams: {
+          title: string;
+          gifts: GiftListModel[];
+        }[]
+      ) => {
+        if (JSON.stringify(giftsParams) !== JSON.stringify(gifts)) {
+          isShow.current = true;
+          setGift([...giftsParams]);
+        } else {
           isShow.current = true;
           modalRef.current?.startShow();
-        },
-        startShowWithInit: (
-          giftsParams: {
-            title: string;
-            gifts: GiftListModel[];
-          }[]
-        ) => {
-          if (JSON.stringify(giftsParams) !== JSON.stringify(gifts)) {
-            isShow.current = true;
-            setGift([...giftsParams]);
-          } else {
-            isShow.current = true;
-            modalRef.current?.startShow();
-          }
-        },
-      };
-    },
-    [gifts]
-  );
+        }
+      },
+    };
+  }, [gifts]);
 
   React.useEffect(() => {
     if (isShow.current === true) {

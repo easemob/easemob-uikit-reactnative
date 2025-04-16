@@ -1,11 +1,30 @@
 import * as React from 'react';
+import { View } from 'react-native';
 
-import DevApp from './test_slide_list_item';
+import { usePermissions } from '../rename.uikit';
+import { default as Test } from './test_animated5_in_modal';
 
-export default function dev(): JSX.Element {
+// if (
+//   Platform.OS === 'android' &&
+//   UIManager.setLayoutAnimationEnabledExperimental
+// ) {
+//   UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
+
+export function AppDev(): JSX.Element {
+  const permissionsRef = React.useRef(false);
+  const { getPermission } = usePermissions();
+  React.useEffect(() => {
+    getPermission({
+      onResult: (isSuccess: boolean) => {
+        console.log('dev:permissions:', isSuccess);
+        permissionsRef.current = isSuccess;
+      },
+    });
+  }, [getPermission]);
   return (
-    <React.StrictMode>
-      <DevApp />
-    </React.StrictMode>
+    <View style={{ flex: 1 }}>
+      <Test />
+    </View>
   );
 }

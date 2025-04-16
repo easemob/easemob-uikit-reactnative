@@ -12,9 +12,9 @@ import emoji from 'twemoji';
 import { FACE_ASSETS, IconNameType } from '../../assets';
 import { useConfigContext } from '../../config';
 import {
-  useCheckType,
+  // useCheckType,
   useColors,
-  useCompare,
+  // useCompare,
   useGetStyleProps,
 } from '../../hook';
 import { usePaletteContext, useThemeContext } from '../../theme';
@@ -98,12 +98,12 @@ export function EmojiList(props: EmojiListProps) {
   } = props;
   const { getStyleSize, getBorderRadius } = useGetStyleProps();
   const { width: propsWidth } = getStyleSize(containerStyle);
-  const { checkType } = useCheckType();
+  // const { checkType } = useCheckType();
   const { fontFamily } = useConfigContext();
   const { cornerRadius: corner } = useThemeContext();
   const { cornerRadius } = usePaletteContext();
   if (propsWidth) {
-    checkType(propsWidth, 'number');
+    // checkType(propsWidth, 'number');
   }
   const getUnitSize = () => {
     if (propsWidth) {
@@ -111,8 +111,8 @@ export function EmojiList(props: EmojiListProps) {
     }
     return winWidth / countPerRow - 1;
   };
-  const { enableCompare } = useConfigContext();
-  useCompare(getColor, { enabled: enableCompare });
+  // const { enableCompare } = useConfigContext();
+  // useCompare(getColor, { enabled: enableCompare });
 
   const _emojiList =
     emojiList ??

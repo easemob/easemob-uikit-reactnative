@@ -15,20 +15,20 @@ export function useDataPriority(props: useDataPriorityProps) {
         r1?.userName && r1.userName.length > 0
           ? r1.userName
           : r2?.name && r2.name.length > 0
-          ? r2.name
-          : undefined;
+            ? r2.name
+            : undefined;
       const remark =
         r1?.remark && r1.remark.length > 0
           ? r1.remark
           : r2?.remark && r2.remark.length > 0
-          ? r2.remark
-          : undefined;
+            ? r2.remark
+            : undefined;
       const avatar =
         r1?.avatarURL && r1.avatarURL.length > 0
           ? r1.avatarURL
           : r2?.avatar && r2.avatar.length > 0
-          ? r2.avatar
-          : undefined;
+            ? r2.avatar
+            : undefined;
       return {
         id: id,
         name: name,
@@ -80,20 +80,20 @@ export function useDataPriority(props: useDataPriorityProps) {
         r2?.name && r2.name.length > 0
           ? r2.name
           : r1?.userName && r1.userName.length > 0
-          ? r1.userName
-          : undefined;
+            ? r1.userName
+            : undefined;
       const remark =
         r2?.remark && r2.remark.length > 0
           ? r2.remark
           : r1?.remark && r1.remark.length > 0
-          ? r1.remark
-          : undefined;
+            ? r1.remark
+            : undefined;
       const avatar =
         r2?.avatar && r2.avatar.length > 0
           ? r2.avatar
           : r1?.avatarURL && r1.avatarURL.length > 0
-          ? r1.avatarURL
-          : undefined;
+            ? r1.avatarURL
+            : undefined;
       return {
         id: msg.from,
         name: name,

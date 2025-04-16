@@ -130,7 +130,7 @@ export function Container(props: ContainerProps) {
           >
             <RoomContextProvider
               value={{
-                appKey,
+                appKey: appKey ?? '',
                 debugMode: isDevMode,
                 opt: opt,
                 onInitialized: onInitialized,

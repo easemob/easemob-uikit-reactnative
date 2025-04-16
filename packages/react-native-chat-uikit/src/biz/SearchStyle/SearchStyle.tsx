@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Pressable, View } from 'react-native';
 
 import { useColors, useGetStyleProps } from '../../hook';

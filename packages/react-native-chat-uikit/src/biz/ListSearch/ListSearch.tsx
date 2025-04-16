@@ -13,7 +13,7 @@ import type {
 } from './types';
 
 export function ListSearch<
-  ComponentModel extends DefaultComponentModel = DefaultComponentModel
+  ComponentModel extends DefaultComponentModel = DefaultComponentModel,
 >(props: ListSearchProps<ComponentModel>) {
   const { onCancel, containerStyle, ItemRender, searchType } = props;
   const FlatList = React.useMemo(

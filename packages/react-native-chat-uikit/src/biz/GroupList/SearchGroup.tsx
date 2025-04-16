@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ListSearch } from '../ListSearch';
 import type { GroupSearchModel, SearchGroupProps } from './types';
 

@@ -14,8 +14,8 @@ export function TestChatroom() {
     return Platform.OS === 'ios'
       ? 91
       : _maxHeight === 0
-      ? gMaxHeight
-      : _maxHeight;
+        ? gMaxHeight
+        : _maxHeight;
   };
   return (
     <SafeAreaProvider style={{ flex: 1, backgroundColor: 'green', top: 100 }}>

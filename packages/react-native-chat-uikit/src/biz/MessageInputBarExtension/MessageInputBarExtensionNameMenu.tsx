@@ -44,32 +44,28 @@ export const MessageInputBarExtensionNameMenu = React.forwardRef<
     [pageCount]
   );
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startShow: () => {
-          setIsShow(true);
-        },
-        startHide: (onFinished?: () => void) => {
-          setIsShow(false);
-          onFinished?.();
-        },
-        startShowWithInit: (initItems: InitMenuItemsType[], _?: any) => {
-          setIsShow(true);
-          updateItems(initItems);
-        },
-        startShowWithProps: (props: ContextNameMenuProps) => {
-          setIsShow(true);
-          updateProps(props);
-        },
-        getData: () => {
-          return undefined;
-        },
-      };
-    },
-    [updateItems, updateProps]
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      startShow: () => {
+        setIsShow(true);
+      },
+      startHide: (onFinished?: () => void) => {
+        setIsShow(false);
+        onFinished?.();
+      },
+      startShowWithInit: (initItems: InitMenuItemsType[], _?: any) => {
+        setIsShow(true);
+        updateItems(initItems);
+      },
+      startShowWithProps: (props: ContextNameMenuProps) => {
+        setIsShow(true);
+        updateProps(props);
+      },
+      getData: () => {
+        return undefined;
+      },
+    };
+  }, [updateItems, updateProps]);
 
   if (isShow === false) {
     return null;
@@ -105,7 +101,7 @@ export const MessageInputBarExtensionNameMenu = React.forwardRef<
           body={{
             type: 'TabPageBodyT',
             BodyProps: {
-              RenderChildren: BodyPagesT,
+              RenderChildren: BodyPagesT as any, // TODO: fix type !!!
               RenderChildrenProps: {
                 ...props,
                 initItems: items,
@@ -220,12 +216,12 @@ export function useMessageInputBarExtensionNameMenu(
 ) {
   const { initItems } = props;
   const getMenuHeight = React.useCallback(() => {
-    if (initItems.length <= 4) {
+    if ((initItems?.length ?? 0) <= 4) {
       return MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT_HALF;
     } else {
       return MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT;
     }
-  }, [initItems.length]);
+  }, [initItems?.length]);
   return {
     getMenuHeight,
   };

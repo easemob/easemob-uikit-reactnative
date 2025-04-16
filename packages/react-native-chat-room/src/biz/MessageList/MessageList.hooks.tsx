@@ -436,7 +436,7 @@ export function useMessageListApi(params: {
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useMessageListApi?.caller?.name,
+            from: 'useMessageListApi',
           });
         });
     }
@@ -452,7 +452,7 @@ export function useMessageListApi(params: {
           .catch((e) => {
             im.sendError({
               error: e,
-              from: useMessageListApi?.caller?.name,
+              from: 'useMessageListApi',
             });
           });
       } else if (isPin === 'pin') {
@@ -463,7 +463,7 @@ export function useMessageListApi(params: {
           .catch((e) => {
             im.sendError({
               error: e,
-              from: useMessageListApi?.caller?.name,
+              from: 'useMessageListApi',
             });
           });
       }
@@ -486,7 +486,7 @@ export function useMessageListApi(params: {
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useMessageListApi?.caller?.name,
+            from: 'useMessageListApi',
           });
         });
     }
@@ -505,7 +505,7 @@ export function useMessageListApi(params: {
         .catch((e) => {
           im.sendError({
             error: e,
-            from: useMessageListApi?.caller?.name,
+            from: 'useMessageListApi',
           });
         });
     }

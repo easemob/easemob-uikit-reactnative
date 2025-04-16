@@ -10,7 +10,7 @@ build/
 local.properties
 *.iml
 *.hprof
+.cxx/
 
 # Bundle artifacts
 *.jsbundle
-google-services.json

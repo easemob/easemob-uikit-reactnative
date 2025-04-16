@@ -1,23 +1,30 @@
 {
   "name": "react-native-chat-uikit",
-  "version": "2.4.3",
-  "description": "test",
+  "version": "2.4.3-beta.1",
+  "description": "react native chat uikit.",
+  "source": "src/index.tsx",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
-  "types": "lib/typescript/src/index.d.ts",
-  "react-native": "src/index",
-  "source": "src/index",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/typescript/module/src/index.d.ts",
+        "default": "./lib/module/index.js"
+      },
+      "require": {
+        "types": "./lib/typescript/commonjs/src/index.d.ts",
+        "default": "./lib/commonjs/index.js"
+      }
+    }
+  },
   "files": [
-    "assets",
     "src",
-    "src/version.ts",
-    "src/config.local.ts",
-    "src/rename.chat.ts",
     "lib",
     "android",
     "ios",
     "cpp",
     "*.podspec",
+    "react-native.config.js",
     "!ios/build",
     "!android/build",
     "!android/gradle",
@@ -32,18 +39,22 @@
   "scripts": {
     "test": "jest",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
-    "prepack": "bob build",
-    "release": "release-it",
-    "bootstrap": "yarn install",
-    "clean": "del-cli android/build",
-    "clean-product": "del-cli lib",
-    "clean-module": "del-cli node_modules",
+    "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
+    "clean": "yarn clean:generated && yarn clean:build && yarn clean:lib",
+    "clean:generated": "del-cli ios/generated android/generated",
+    "clean:build": "del-cli android/build",
+    "clean:lib": "del-cli lib",
+    "clean:node_modules": "del-cli node_modules",
+    "prepare": "yarn gen && yarn lib",
+    "lib": "bob build",
+    "gen": "yarn gen:config && yarn gen:rename && yarn gen:version",
+    "gen:config": "node ./scripts/generate-config.js",
+    "gen:rename": "node ./scripts/generate-rename.js",
+    "gen:version": "node ./scripts/generate-version.js",
     "generate-bundle": "node scripts/bundle-icons.js",
     "change-icon-name": "node scripts/change-icons-name.js",
     "generate-face-name": "node scripts/generate-faces-name.js",
-    "gen-config": "node ./scripts/generate-config.js",
-    "doctor": "yarn expo-doctor"
+    "release": "release-it"
   },
   "keywords": [
     "react-native",
@@ -51,7 +62,7 @@
     "android"
   ],
   "repository": "https://github.com/easemob/easemob-uikit-reactnative",
-  "author": "Asterisk <zuoyu@agora.io> (https://github.com/asteriskzuo)",
+  "author": "Asterisk <zuoyu@easemob.com> (https://github.com/asteriskzuo)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/easemob/easemob-uikit-reactnative/issues"
@@ -62,94 +73,64 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
-    "@evilmartians/lefthook": "^1.2.2",
-    "@react-native-community/eslint-config": "^3.0.2",
-    "@release-it/conventional-changelog": "^5.0.0",
-    "@types/jest": "^28.1.2",
-    "@types/react": "~18.0.27",
-    "@types/react-native": "~0.71.0",
-    "@types/react-native-video": "^5.0.14",
+    "@evilmartians/lefthook": "^1.5.0",
+    "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-camera-roll/camera-roll": "^7.10.0",
+    "@react-native-clipboard/clipboard": "^1.16.2",
+    "@react-native-community/cli": "15.0.1",
+    "@react-native-documents/picker": "^10.1.2",
+    "@react-native/eslint-config": "^0.73.1",
+    "@release-it/conventional-changelog": "^9.0.2",
+    "@types/jest": "^29.5.5",
+    "@types/react": "^18.2.44",
     "commitlint": "^17.0.2",
-    "date-fns": "^2.30.0",
-    "del-cli": "^5.0.0",
-    "eslint": "^8.4.1",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "expo-doctor": "^1.1.1",
-    "jest": "^29.2.1",
-    "pinyin-pro": "^3.18.3",
-    "pod-install": "^0.1.0",
-    "prettier": "^2.0.5",
-    "pure-uuid": "^1.6.3",
-    "react": "18.2.0",
-    "react-native": "0.71.11",
-    "react-native-audio-recorder-player": "^3.5.3",
-    "react-native-builder-bob": "^0.20.4",
-    "react-native-device-info": "^10.12.0",
-    "react-native-document-picker": "^9.0.1",
-    "react-native-fast-image": "^8.6.3",
-    "react-native-file-access": "^3.0.4",
-    "react-native-fs": "^2.20.0",
-    "react-native-gesture-handler": "^2.20.0",
-    "react-native-get-random-values": "~1.8.0",
-    "react-native-image-picker": "https://github.com/AsteriskZuo/react-native-image-picker.git#dc2ed7b89a9da54fb3d29d0b8c9134a99eb84223",
-    "react-native-linear-gradient": "^2.8.3",
-    "react-native-pager-view": "6.1.2",
-    "react-native-paper": "^5.8.0",
-    "react-native-permissions": "^3.8.0",
-    "react-native-safe-area-context": "^4.11.1",
-    "react-native-screens": "^3.20.0",
-    "react-native-tab-view": "^3.5.1",
-    "react-native-video": "^5.2.1",
-    "release-it": "^15.0.0",
-    "twemoji": "^14.0.2",
-    "typescript": "4.9.5"
+    "del-cli": "^5.1.0",
+    "eslint": "^8.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "jest": "^29.7.0",
+    "prettier": "~3.5.3",
+    "react": "18.3.1",
+    "react-native": "0.76.7",
+    "react-native-audio-recorder-player": "^3.6.12",
+    "react-native-builder-bob": "^0.36.0",
+    "react-native-chat-sdk": "^1.8.0",
+    "react-native-create-thumbnail": "^2.1.1",
+    "react-native-device-info": "^14.0.4",
+    "react-native-file-access": "^3.1.1",
+    "react-native-gesture-handler": "^2.20.2",
+    "react-native-image-picker": "^8.2.0",
+    "react-native-safe-area-context": "~4.12.0",
+    "react-native-video": "^6.11.0",
+    "release-it": "^17.10.0",
+    "typescript": "^5.2.2"
   },
   "resolutions": {
-    "@types/react": "~18.0.27",
-    "@types/react-native": "~0.71.0"
+    "@types/react": "^18.2.44"
   },
   "peerDependencies": {
-    "@react-native-async-storage/async-storage": ">=1.17.11",
-    "@react-native-camera-roll/camera-roll": ">=5.6.0",
-    "@react-native-clipboard/clipboard": ">=1.11.2",
-    "pinyin-pro": ">=3.18.3",
-    "pure-uuid": ">=1.6.3",
+    "@react-native-async-storage/async-storage": "*",
+    "@react-native-camera-roll/camera-roll": "*",
+    "@react-native-clipboard/clipboard": "*",
+    "@react-native-documents/picker": "*",
     "react": "*",
-    "react-native": "*",
-    "react-native-audio-recorder-player": ">=3.5.3",
-    "react-native-chat-sdk": ">=1.3.1",
-    "react-native-create-thumbnail": ">=1.6.6",
-    "react-native-device-info": ">=10.12.0",
-    "react-native-document-picker": ">=9.0.1",
-    "react-native-fast-image": ">=8.6.3",
-    "react-native-file-access": ">=3.0.4",
-    "react-native-fs": ">=2.20.0",
-    "react-native-gesture-handler": ">=2.9.0",
-    "react-native-get-random-values": ">=1.8.0",
-    "react-native-image-picker": ">=5.4.2",
-    "react-native-linear-gradient": ">=2.8.3",
-    "react-native-pager-view": "6.1.2",
-    "react-native-paper": ">=5.8.0",
-    "react-native-permissions": ">=3.8.0",
-    "react-native-safe-area-context": ">=4.11.1",
-    "react-native-screens": ">=3.20.0",
-    "react-native-tab-view": ">=3.5.1",
-    "react-native-video": ">=5.2.1",
-    "twemoji": ">=14.0.2"
+    "react-native": ">=0.71.0",
+    "react-native-audio-recorder-player": "*",
+    "react-native-chat-sdk": "^1.8.0",
+    "react-native-create-thumbnail": "*",
+    "react-native-device-info": "*",
+    "react-native-file-access": "*",
+    "react-native-gesture-handler": "*",
+    "react-native-image-picker": "*",
+    "react-native-safe-area-context": "*",
+    "react-native-video": "*"
   },
-  "peerDependenciesMeta": {
-    "react-native-fast-image": {
-      "optional": true
-    }
-  },
-  "engines": {
-    "node": ">= 18.16.0"
-  },
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "yarn@4.7.0",
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
     ]
   },
@@ -178,17 +159,20 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@react-native-community",
+      "@react-native",
       "prettier"
     ],
     "plugins": [
       "simple-import-sort"
     ],
+    "parserOptions": {
+      "requireConfigFile": false
+    },
     "rules": {
-      "jest/*": 0,
+      "react/react-in-jsx-scope": "off",
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
-      "react-native/no-inline-styles": 0,
+      "react-native/no-inline-styles": "off",
       "@typescript-eslint/no-shadow": "off",
       "prettier/prettier": [
         "error",
@@ -204,7 +188,10 @@
   },
   "eslintIgnore": [
     "node_modules/",
-    "lib/"
+    "lib/",
+    "scripts/",
+    "babel.config.js",
+    "react-native.config.js"
   ],
   "prettier": {
     "quoteProps": "consistent",
@@ -217,14 +204,50 @@
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      "codegen",
+      [
+        "commonjs",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
       [
         "typescript",
         {
-          "project": "tsconfig.build.json"
+          "project": "tsconfig.build.json",
+          "esm": true
         }
       ]
     ]
+  },
+  "codegenConfig": {
+    "name": "RNChatUikitSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "outputDir": {
+      "ios": "ios/generated",
+      "android": "android/generated"
+    },
+    "android": {
+      "javaPackageName": "com.chatuikit"
+    },
+    "includesGeneratedCode": true
+  },
+  "create-react-native-library": {
+    "type": "turbo-module",
+    "languages": "kotlin-objc",
+    "version": "0.48.3"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0",
+    "pinyin-pro": "^3.26.0",
+    "pure-uuid": "^1.8.1",
+    "twemoji": "^14.0.2"
   }
 }

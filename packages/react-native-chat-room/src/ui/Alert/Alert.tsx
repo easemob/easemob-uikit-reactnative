@@ -116,20 +116,16 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
     const onRequestModalClose = React.useCallback(() => {
       modalRef?.current?.startHide?.();
     }, []);
-    React.useImperativeHandle(
-      ref,
-      () => {
-        return {
-          alert: () => {
-            modalRef?.current?.startShow?.();
-          },
-          close: (onFinished) => {
-            modalRef?.current?.startHide?.(onFinished);
-          },
-        };
-      },
-      []
-    );
+    React.useImperativeHandle(ref, () => {
+      return {
+        alert: () => {
+          modalRef?.current?.startShow?.();
+        },
+        close: (onFinished) => {
+          modalRef?.current?.startHide?.(onFinished);
+        },
+      };
+    }, []);
     return (
       <Modal
         propsRef={modalRef}

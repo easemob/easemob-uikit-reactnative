@@ -100,30 +100,26 @@ export const BottomSheetParticipantList = React.forwardRef<
   const { isOwnerState } = useIsOwner();
   const { tr } = useI18nContext();
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startShow: () => {
-          modalRef.current.startShow();
-        },
-        startHide: (onFinished?: () => void) => {
-          modalRef.current.startHide(onFinished);
-        },
-        startShowWithInit: () => {
-          modalRef.current.startShow();
-        },
-        getParticipantListRef: (memberType: ParticipantListType) => {
-          if (memberType === 'member') {
-            return participantListRef.current;
-          } else {
-            return muterListRef.current;
-          }
-        },
-      };
-    },
-    []
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      startShow: () => {
+        modalRef.current.startShow();
+      },
+      startHide: (onFinished?: () => void) => {
+        modalRef.current.startHide(onFinished);
+      },
+      startShowWithInit: () => {
+        modalRef.current.startShow();
+      },
+      getParticipantListRef: (memberType: ParticipantListType) => {
+        if (memberType === 'member') {
+          return participantListRef.current;
+        } else {
+          return muterListRef.current;
+        }
+      },
+    };
+  }, []);
 
   const getTabItemBodies = ({
     isOwner,

@@ -202,7 +202,7 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
                   checked:
                     im.userId === item.memberId
                       ? true
-                      : modelState?.checked ?? false,
+                      : (modelState?.checked ?? false),
                   disable: im.userId === item.memberId ? true : undefined,
                 },
               } as GroupParticipantListItemProps;

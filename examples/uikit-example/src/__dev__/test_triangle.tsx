@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const ChatBubble = ({ text }) => {
+export const ChatBubble = ({ text }: { text: string }) => {
   return (
     <View style={styles2.container}>
       <View style={styles2.bubbleWrapper}>

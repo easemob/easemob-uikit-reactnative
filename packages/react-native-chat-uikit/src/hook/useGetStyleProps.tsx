@@ -120,8 +120,8 @@ export function useGetStyleProps() {
           layoutType === 'left'
             ? cornerRadiusStyle.bubble[2]!
             : hasTopNeighbor === true
-            ? cornerRadiusStyle.bubble[0]!
-            : cornerRadiusStyle.bubble[1]!,
+              ? cornerRadiusStyle.bubble[0]!
+              : cornerRadiusStyle.bubble[1]!,
         BottomStart:
           layoutType === 'left'
             ? hasBottomNeighbor === false && messageBubbleType !== 'content'
@@ -132,8 +132,8 @@ export function useGetStyleProps() {
           layoutType === 'left'
             ? cornerRadiusStyle.bubble[2]!
             : hasBottomNeighbor === false && messageBubbleType !== 'content'
-            ? cornerRadiusStyle.bubble[1]!
-            : cornerRadiusStyle.bubble[0]!,
+              ? cornerRadiusStyle.bubble[1]!
+              : cornerRadiusStyle.bubble[0]!,
       };
       if (releaseArea === 'china') {
         return {

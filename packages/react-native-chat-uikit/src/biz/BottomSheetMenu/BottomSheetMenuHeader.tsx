@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Dimensions, Platform, Pressable, View } from 'react-native';
 import emoji from 'twemoji';
 

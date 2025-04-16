@@ -1,6 +1,6 @@
 name: 🐛 Bug Report
 description: Report a reproducible bug or regression in React Native Chat SDK.
-labels: ["Needs: Triage :mag:"]
+labels: ['Needs: Triage :mag:']
 body:
   - type: markdown
     attributes:

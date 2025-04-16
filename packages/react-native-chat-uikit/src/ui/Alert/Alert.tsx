@@ -63,29 +63,25 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
       });
     }
 
-    React.useImperativeHandle(
-      ref,
-      () => {
-        return {
-          alert: () => {
-            isShow.current = true;
-            modalRef?.current?.startShow?.();
-          },
-          alertWithInit: (props: AlertProps) => {
-            isShow.current = true;
-            onUpdate(props);
-          },
-          close: (onFinished) => {
-            isShow.current = false;
-            if (isSaveInput === false) {
-              onChangeText?.('');
-            }
-            modalRef?.current?.startHide?.(onFinished);
-          },
-        };
-      },
-      [isSaveInput, onChangeText, onUpdate]
-    );
+    React.useImperativeHandle(ref, () => {
+      return {
+        alert: () => {
+          isShow.current = true;
+          modalRef?.current?.startShow?.();
+        },
+        alertWithInit: (props: AlertProps) => {
+          isShow.current = true;
+          onUpdate(props);
+        },
+        close: (onFinished) => {
+          isShow.current = false;
+          if (isSaveInput === false) {
+            onChangeText?.('');
+          }
+          modalRef?.current?.startHide?.(onFinished);
+        },
+      };
+    }, [isSaveInput, onChangeText, onUpdate]);
 
     React.useEffect(() => {
       if (isShow.current === true) {

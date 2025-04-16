@@ -7,8 +7,8 @@ ChatroomUIKit is designed to address most users' chat room requirements specific
 ## Development environment requirements
 
 - MacOS 12 or higher
-- React-Native 0.66 or higher
-- NodeJs 16.18 or higher
+- React-Native 0.71 or higher
+- NodeJs 20.18 or higher
 
 For iOS app:
 
@@ -29,7 +29,8 @@ yarn add react-native-chat-room
 ## Dependencies
 
 ```sh
-yarn add react-native-linear-gradient \
+yarn add react-native-chat-sdk \
+react-native-linear-gradient \
 react-native-safe-area-context
 ```
 

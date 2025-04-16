@@ -1,3 +1,4 @@
+import { Locale } from 'date-fns';
 import { StyleProp, ViewStyle } from 'react-native';
 
 import type { StatusType } from '../biz/types';

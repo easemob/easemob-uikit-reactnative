@@ -20,23 +20,19 @@ export const MessagePin = React.forwardRef<MessagePinRef, MessagePinProps>(
       init,
     } = useMessagePin(props);
 
-    React.useImperativeHandle(
-      ref,
-      () => {
-        return {
-          init: () => {
-            init();
-          },
-          pushTask: (task) => {
-            pushTask(task);
-          },
-          popTask: () => {
-            popTask();
-          },
-        };
-      },
-      [init, popTask, pushTask]
-    );
+    React.useImperativeHandle(ref, () => {
+      return {
+        init: () => {
+          init();
+        },
+        pushTask: (task) => {
+          pushTask(task);
+        },
+        popTask: () => {
+          popTask();
+        },
+      };
+    }, [init, popTask, pushTask]);
 
     return (
       <View

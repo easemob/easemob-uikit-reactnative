@@ -180,16 +180,12 @@ export const Switch = React.forwardRef<SwitchRef, SwitchProps>(function (
     throw new Error('trueColor must be number');
   }
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        toLeft,
-        toRight,
-      };
-    },
-    [toLeft, toRight]
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      toLeft,
+      toRight,
+    };
+  }, [toLeft, toRight]);
 
   return (
     <Animated.View

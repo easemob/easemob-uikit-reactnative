@@ -33,8 +33,8 @@ const parseIcons = (_iconDir, relativeDir) => {
       const extType = filename.match(matchBigger)
         ? '_2x'
         : filename.match(matchMax)
-        ? '_3x'
-        : '';
+          ? '_3x'
+          : '';
       const ext = path.extname(filename);
       const key = filename.replace(ext, '').replace(/_2x|_3x/g, '');
 
@@ -82,14 +82,13 @@ arr.forEach((obj) => {
   } else {
     throw new Error('impossible');
   }
+  console.log('test:', key, rel, ext, d1, d2, d3);
   if (rel === '') {
-    icons[
-      key
-    ] = `$$start(size: string) => { if (size === '3x') { return require('./icons/${key}${d3}${ext}'); } else if (size === '2x') { return require('./icons/${key}${d2}${ext}'); } else { return require('./icons/${key}${d1}${ext}'); }}$$end`;
+    icons[key] =
+      `$$start(size: string) => { if (size === '3x') { return require('./icons/${key}${d3}${ext}'); } else if (size === '2x') { return require('./icons/${key}${d2}${ext}'); } else { return require('./icons/${key}${d1}${ext}'); }}$$end`;
   } else {
-    icons[
-      key
-    ] = `$$start(size: string) => { if (size === '3x') { return require('./icons/${rel}/${key}${d3}${ext}'); } else if (size === '2x') { return require('./icons/${rel}/${key}${d2}${ext}'); } else { return require('./icons/${rel}/${key}${d1}${ext}'); }}$$end`;
+    icons[key] =
+      `$$start(size: string) => { if (size === '3x') { return require('./icons/${rel}/${key}${d3}${ext}'); } else if (size === '2x') { return require('./icons/${rel}/${key}${d2}${ext}'); } else { return require('./icons/${rel}/${key}${d1}${ext}'); }}$$end`;
   }
 });
 

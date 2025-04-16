@@ -1,48 +1,53 @@
-const path = require('path');
+const path = require('node:path');
 const escape = require('escape-string-regexp');
-const { getDefaultConfig } = require('@expo/metro-config');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
-const utils = require('./scripts/utils.config');
-const defaultConfig = getDefaultConfig(__dirname);
-const root = utils.root;
 
-module.exports = {
-  ...defaultConfig,
+// const { getDefaultConfig } = require('@react-native/metro-config');
+const { getDefaultConfig } = require('expo/metro-config');
+// const { mergeConfig } = require('@react-native/metro-config');
+const { getConfig } = require('react-native-builder-bob/metro-config');
 
-  projectRoot: __dirname,
-  watchFolders: [root],
+const {
+  callkit_package,
+  root_dir,
+  callkit_dir,
+  current_dir,
+} = require('./scripts/utils');
 
-  // We need to make sure that only one version is loaded for peerDependencies
-  // So we block them at the root, and alias them to the versions in example's node_modules
-  resolver: {
-    ...defaultConfig.resolver,
+/**
+ * Metro configuration
+ * https://facebook.github.io/metro/docs/configuration
+ *
+ * @type {import('metro-config').MetroConfig}
+ */
+let config = getConfig(
+  { ...getDefaultConfig(__dirname) },
+  {
+    root: root_dir,
+    pkg: callkit_package,
+    project: __dirname,
+  }
+);
 
-    // We need to exclude the peerDependencies we've collected in packages' node_modules
-    blacklistRE: exclusionList(
-      [].concat(
-        ...utils.workspaces.map((it) =>
-          utils.modules.map(
-            (m) =>
-              new RegExp(`^${escape(path.join(it, 'node_modules', m))}\\/.*$`)
-          )
-        )
-      )
-    ),
+// 添加 node_modules 路径
+config.resolver.nodeModulesPaths = [
+  path.join(current_dir, 'node_modules'),
+  path.join(callkit_dir, 'node_modules'),
+];
 
-    // When we import a package from the monorepo, metro won't be able to find their deps
-    // We need to specify them in `extraNodeModules` to tell metro where to find them
-    extraNodeModules: utils.modules.reduce((acc, name) => {
-      acc[name] = path.join(root, 'node_modules', name);
-      return acc;
-    }, {}),
-  },
+// 添加 blockList
+const blockList = [];
+Object.keys(config.resolver.extraNodeModules).forEach((moduleName) => {
+  blockList.push(
+    new RegExp(
+      `^${escape(path.join(callkit_dir, 'node_modules', moduleName))}\\/.*$`
+    )
+  );
+});
+config.resolver.blockList = blockList;
 
-  transformer: {
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: true,
-      },
-    }),
-  },
-};
+// 如果使用了 yarn@1.22.19, react、react-native 会在 父目录的 node_modules 中
+// 当前目录下 没有 react、react-native 的依赖，所以，需要删除
+// 另外，如果设置了 blacklistRE ，blockList 的设置会失效
+delete config.resolver.blacklistRE;
+
+module.exports = config;

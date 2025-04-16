@@ -17,7 +17,7 @@ import {
 
 export function TestContextMenu1() {
   const modalRef = React.useRef<SlideModalRef>({} as any);
-  const touchRef = React.useRef<TouchableOpacity>(null);
+  const touchRef = React.useRef<View>(null);
   const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
   const screenWidth = React.useRef(Dimensions.get('window').width).current;
   const screenHeight = React.useRef(Dimensions.get('window').height).current;
@@ -119,7 +119,7 @@ export function TestContextMenu1() {
 
 export function TestContextMenu2() {
   const modalRef = React.useRef<SlideModalRef>({} as any);
-  const touchRef = React.useRef<TouchableOpacity>(null);
+  const touchRef = React.useRef<View>(null);
   const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
   const screenWidth = React.useRef(Dimensions.get('window').width).current;
   const screenHeight = React.useRef(Dimensions.get('window').height).current;
@@ -231,7 +231,7 @@ export function TestContextMenu2() {
 
 export function TestContextMenu3() {
   const modalRef = React.useRef<SlideModalRef>({} as any);
-  const touchRef = React.useRef<TouchableOpacity>(null);
+  const touchRef = React.useRef<View>(null);
   const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
   const [noCoverageArea, setNoCoverageArea] = useState<ComponentArea2>();
   const screenWidth = React.useRef(Dimensions.get('window').width).current;

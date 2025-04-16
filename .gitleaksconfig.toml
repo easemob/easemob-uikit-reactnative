@@ -12,7 +12,9 @@ regexes = [
 paths = [
     '''gitleaks.toml''',
     '''(.*?)(jpg|gif|doc|pdf|bin|svg|socket)$''',
-    '''(go.mod|go.sum)$'''
+    '''(go.mod|go.sum)$''',
+    '''(.*/)?\.yarn/releases/.*\.cjs$''',
+    '''yarn-.*\.cjs$'''
 ]
 
 
@@ -251,4 +253,3 @@ id = "twilio-api-key"
 description = "Twilio API Key"
 regex = '''SK[0-9a-fA-F]{32}'''
 # ----- END Twilio -----
-

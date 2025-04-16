@@ -526,10 +526,10 @@ export function useContactList(props: ContactListProps) {
                               checked:
                                 isExisted !== undefined
                                   ? true
-                                  : im.getModelState({
+                                  : (im.getModelState({
                                       tag: groupId,
                                       id: item.userId,
-                                    })?.checked ?? false,
+                                    })?.checked ?? false),
                               disable: isExisted !== undefined,
                             },
                             contactType: contactType,
@@ -568,15 +568,15 @@ export function useContactList(props: ContactListProps) {
                                 })?.checked ?? false,
                             }
                           : contactType === 'forward-message'
-                          ? {
-                              ...item,
-                              forwarded:
-                                im.getModelState({
-                                  tag: contactType,
-                                  id: item.userId,
-                                })?.forwarded ?? false,
-                            }
-                          : item,
+                            ? {
+                                ...item,
+                                forwarded:
+                                  im.getModelState({
+                                    tag: contactType,
+                                    id: item.userId,
+                                  })?.forwarded ?? false,
+                              }
+                            : item,
                       contactType: contactType,
                     } as ContactListItemProps;
                   });

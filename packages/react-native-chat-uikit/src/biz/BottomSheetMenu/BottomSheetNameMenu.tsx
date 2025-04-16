@@ -65,40 +65,36 @@ export const BottomSheetNameMenu = React.forwardRef<
     return menuRef?.current?.getData?.();
   });
   const menuRef = React.useRef<BizContextMenuRef>({} as any);
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startShow: () => {
-          menuRef?.current?.startShow?.();
-        },
-        startHide: (onFinished?: () => void) => {
-          menuRef?.current?.startHide?.(onFinished);
-        },
-        startShowWithInit: (initItems: InitMenuItemsType[], others?: any) => {
-          const items = getItems({ initItems, onRequestModalClose });
-          menuRef?.current?.startShowWithInit?.(items, others);
-        },
-        startShowWithProps: (props: ContextNameMenuProps) => {
-          const { initItems: _, ...others } = props;
-          _;
-          const items = getItems({
-            ...props,
-            onRequestModalClose,
-          });
-          menuRef?.current?.startShowWithProps?.({
-            initItems: items,
-            ...others,
-            onRequestModalClose,
-          });
-        },
-        getData: () => {
-          return menuRef?.current?.getData?.();
-        },
-      };
-    },
-    [getItems, onRequestModalClose]
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      startShow: () => {
+        menuRef?.current?.startShow?.();
+      },
+      startHide: (onFinished?: () => void) => {
+        menuRef?.current?.startHide?.(onFinished);
+      },
+      startShowWithInit: (initItems: InitMenuItemsType[], others?: any) => {
+        const items = getItems({ initItems, onRequestModalClose });
+        menuRef?.current?.startShowWithInit?.(items, others);
+      },
+      startShowWithProps: (props: ContextNameMenuProps) => {
+        const { initItems: _, ...others } = props;
+        _;
+        const items = getItems({
+          ...props,
+          onRequestModalClose,
+        });
+        menuRef?.current?.startShowWithProps?.({
+          initItems: items,
+          ...others,
+          onRequestModalClose,
+        });
+      },
+      getData: () => {
+        return menuRef?.current?.getData?.();
+      },
+    };
+  }, [getItems, onRequestModalClose]);
   return (
     <BottomSheetMenu
       ref={menuRef}

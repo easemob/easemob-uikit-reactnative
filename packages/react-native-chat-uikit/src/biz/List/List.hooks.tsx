@@ -137,7 +137,7 @@ export function useFlatList<ItemT>(
 export function useSectionList<
   ItemT,
   SectionT extends DefaultSectionT,
-  ListIndexPropsT extends DefaultListIndexPropsT
+  ListIndexPropsT extends DefaultListIndexPropsT,
 >(props: Omit<UseListBasicProps<ItemT>, 'listType'>) {
   const basics = useListBasic({ ...props, listType: 'FlatList' });
   const sectionsRef = React.useRef<SectionListData<ItemT, SectionT>[]>([]);

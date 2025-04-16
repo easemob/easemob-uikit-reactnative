@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { ListSearch } from '../ListSearch';
 import { useSearchBlock } from './SearchBlock.hooks';
 import type { BlockSearchModel, SearchBlockProps } from './types';

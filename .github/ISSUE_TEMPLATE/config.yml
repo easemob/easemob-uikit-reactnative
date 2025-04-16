@@ -1,14 +1,14 @@
 blank_issues_enabled: false
 contact_links:
-    - name: 📃 Documentation
-      url: https://docs.agora.io/en/api-reference?platform=react-native
-      about: Usage documentation of the interface.
-    - name: 📃 Documentation in china
-      url: https://docs.agora.io/
-      about: Usage documentation of the interface.
-    - name: 🤔 Questions and Help
-      url: https://docs.agora.io/en/help
-      about: Please report documentation issues in the website repository.
-    - name: 🚀 Discussions and Proposals
-      url: https://github.com/AgoraIO-Usecase/AgoraChat-rn/discussions-and-proposals
-      about: Discuss the future of React Native Chat SDK in the React Native community's discussions and proposals repository.
+  - name: 📃 Documentation
+    url: https://docs.agora.io/en/api-reference?platform=react-native
+    about: Usage documentation of the interface.
+  - name: 📃 Documentation in china
+    url: https://docs.agora.io/
+    about: Usage documentation of the interface.
+  - name: 🤔 Questions and Help
+    url: https://docs.agora.io/en/help
+    about: Please report documentation issues in the website repository.
+  - name: 🚀 Discussions and Proposals
+    url: https://github.com/AgoraIO-Usecase/AgoraChat-rn/discussions-and-proposals
+    about: Discuss the future of React Native Chat SDK in the React Native community's discussions and proposals repository.

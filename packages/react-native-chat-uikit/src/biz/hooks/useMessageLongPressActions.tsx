@@ -425,17 +425,17 @@ export function useMessageLongPressActions(
       suggestedPosition:
         messageMenuStyle === 'context'
           ? {
-              x: event?.pressedX,
-              y: event?.pressedY,
+              x: event?.pressedX ?? 0,
+              y: event?.pressedY ?? 0,
             }
           : undefined,
       noCoverageArea:
         messageMenuStyle === 'context'
           ? {
-              x: event?.componentX,
-              y: event?.componentY,
-              width: event?.componentWidth,
-              height: event?.componentHeight,
+              x: event?.componentX ?? 0,
+              y: event?.componentY ?? 0,
+              width: event?.componentWidth ?? 0,
+              height: event?.componentHeight ?? 0,
             }
           : undefined,
     });

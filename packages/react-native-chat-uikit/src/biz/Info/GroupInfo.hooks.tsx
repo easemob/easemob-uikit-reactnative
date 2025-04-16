@@ -491,42 +491,38 @@ export function useGroupInfo(
     };
   }, [groupId, im, onGroupQuit]);
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        setGroupName: (groupId: string, groupNewName?: string) => {
-          if (groupNewName === undefined || groupName === groupNewName) {
-            return;
-          }
-          im.setGroupName({
-            groupId,
-            groupNewName: groupNewName,
-          });
-        },
-        setGroupDescription: (groupId: string, desc?: string) => {
-          if (desc === undefined || desc === groupDescription) {
-            return;
-          }
-          im.setGroupDescription({
-            groupId,
-            groupDescription: desc,
-          });
-        },
-        setGroupMyRemark: (groupId: string, remark?: string) => {
-          if (remark === undefined || remark === groupMyRemark) {
-            return;
-          }
-          im.setGroupMyRemark({
-            groupId,
-            memberId: im.userId ?? '',
-            groupMyRemark: remark,
-          });
-        },
-      };
-    },
-    [groupDescription, groupMyRemark, groupName, im]
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      setGroupName: (groupId: string, groupNewName?: string) => {
+        if (groupNewName === undefined || groupName === groupNewName) {
+          return;
+        }
+        im.setGroupName({
+          groupId,
+          groupNewName: groupNewName,
+        });
+      },
+      setGroupDescription: (groupId: string, desc?: string) => {
+        if (desc === undefined || desc === groupDescription) {
+          return;
+        }
+        im.setGroupDescription({
+          groupId,
+          groupDescription: desc,
+        });
+      },
+      setGroupMyRemark: (groupId: string, remark?: string) => {
+        if (remark === undefined || remark === groupMyRemark) {
+          return;
+        }
+        im.setGroupMyRemark({
+          groupId,
+          memberId: im.userId ?? '',
+          groupMyRemark: remark,
+        });
+      },
+    };
+  }, [groupDescription, groupMyRemark, groupName, im]);
 
   return {
     ...props,

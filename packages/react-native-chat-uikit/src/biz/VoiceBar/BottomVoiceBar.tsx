@@ -17,20 +17,16 @@ export const BottomVoiceBar = React.forwardRef<
   const modalRef = React.useRef<SlideModalRef>({} as any);
   const { getColor } = useColors();
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        startHide: (onFinished?: () => void) => {
-          modalRef?.current?.startHide?.(onFinished);
-        },
-        startShow: () => {
-          modalRef?.current?.startShow?.();
-        },
-      };
-    },
-    []
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      startHide: (onFinished?: () => void) => {
+        modalRef?.current?.startHide?.(onFinished);
+      },
+      startShow: () => {
+        modalRef?.current?.startShow?.();
+      },
+    };
+  }, []);
 
   return (
     <SlideModal

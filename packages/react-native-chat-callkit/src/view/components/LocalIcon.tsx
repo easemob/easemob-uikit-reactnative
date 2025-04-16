@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { ICON_ASSETS } from '../../../assets/icons';
+import { ICON_ASSETS } from '../../assets/icons';
 import Image from './Image';
 
 export enum IconSize {
@@ -66,8 +66,8 @@ export function LocalIcon({
           size < 24
             ? localLocalIcon(name)
             : size < 96
-            ? localLocalIcon(name, IconSize.ICON_BIGGER)
-            : localLocalIcon(name, IconSize.ICON_MAX)
+              ? localLocalIcon(name, IconSize.ICON_BIGGER)
+              : localLocalIcon(name, IconSize.ICON_MAX)
         }
         style={[
           color ? { tintColor: color ?? 'white' } : undefined,

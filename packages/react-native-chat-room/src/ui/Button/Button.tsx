@@ -136,7 +136,7 @@ const ButtonContent = (props: ButtonProps): JSX.Element => {
                 height: buttonSize.icon.size,
                 tintColor: buttonState.color,
                 // backgroundColor: buttonState.backgroundColor,
-              },
+              } as any, // TODO: fix type !!!
               iconStyle,
             ]}
             name={icon ?? 'star_fill'}
@@ -158,7 +158,7 @@ const ButtonContent = (props: ButtonProps): JSX.Element => {
               height: buttonSize.icon.size,
               tintColor: buttonState.color,
               // backgroundColor: buttonState.backgroundColor,
-            },
+            } as any, // TODO: fix type !!!
             iconStyle,
           ]}
           name={icon ?? 'star_fill'}
@@ -187,7 +187,7 @@ const ButtonContent = (props: ButtonProps): JSX.Element => {
                 height: buttonSize.icon.size,
                 tintColor: buttonState.color,
                 // backgroundColor: buttonState.backgroundColor,
-              },
+              } as any, // TODO: fix type !!!
               iconStyle,
             ]}
             name={icon ?? 'star_fill'}
