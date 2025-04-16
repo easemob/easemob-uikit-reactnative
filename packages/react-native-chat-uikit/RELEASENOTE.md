@@ -1,5 +1,9 @@
 # Release Note
 
+# 2.4.4
+
+- Upgraded react-native version to 0.76
+
 # 2.4.1
 
 Bug Fixes:
