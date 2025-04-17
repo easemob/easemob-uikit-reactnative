@@ -75,10 +75,10 @@ Take the following steps to implement message sending:
    } from 'react-native-chat-room';
 
    const appKey = '<your app key>';
-   const userId = '';
-   const userName = '';
-   const userToken = '';
-   const userAvatar = '';
+   const userId = '<current login id>';
+   const userName = '<current login name>';
+   const userToken = '<current login token or password>';
+   const userAvatar = '<current login avatar url>';
    const roomId = '<chat room ID>';
    const room = {
      roomId: roomId,
