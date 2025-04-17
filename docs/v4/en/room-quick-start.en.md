@@ -57,7 +57,7 @@ Take the following steps to implement message sending:
    The main code added includes logging in, logging out, and into chat room:
 
    ```typescript
-   import * as React from "react";
+   import * as React from 'react';
    import {
      Platform,
      Pressable,
@@ -65,21 +65,21 @@ Take the following steps to implement message sending:
      StyleSheet,
      Text,
      View,
-   } from "react-native";
-   import { useSafeAreaInsets } from "react-native-safe-area-context";
+   } from 'react-native';
+   import {useSafeAreaInsets} from 'react-native-safe-area-context';
    import {
      Chatroom,
      Container,
      TextInput,
      useRoomContext,
-   } from "react-native-chat-room";
+   } from 'react-native-chat-room';
 
    const appKey = '<your app key>';
-   const userNickname = "<your nick name>";
-   const userAvatarURL = "<your avatar url>";
-   const userName = "";
-   const userAvatar = "";
-   const roomId = "<chat room ID>";
+   const userId = '';
+   const userName = '';
+   const userToken = '';
+   const userAvatar = '';
+   const roomId = '<chat room ID>';
    const room = {
      roomId: roomId,
      owner: userId,
@@ -87,11 +87,11 @@ Take the following steps to implement message sending:
 
    function SendMessage() {
      const [page, setPage] = React.useState(0);
-     const [appKey, setAppKey] = React.useState(appKey);
+     const [_appKey, setAppKey] = React.useState(appKey);
      const [id, setId] = React.useState(userId);
      const [ps, setPs] = React.useState(userToken);
      const im = useRoomContext();
-     const { top } = useSafeAreaInsets();
+     const {top} = useSafeAreaInsets();
 
      if (page === 0) {
        return (
@@ -99,7 +99,7 @@ Take the following steps to implement message sending:
          <SafeAreaView style={styles.common}>
            <TextInput
              placeholder="Please App Key."
-             value={appKey}
+             value={_appKey}
              onChangeText={setAppKey}
            />
            <TextInput
@@ -119,18 +119,17 @@ Take the following steps to implement message sending:
                im.login({
                  userId: id,
                  userToken: ps,
-                 userNickname: userNickname
-                 userAvatarURL: userAvatarURL,
-                 result: (res) => {
-                   console.log("login result", res);
+                 userNickname: userName,
+                 userAvatarURL: userAvatar,
+                 result: res => {
+                   console.log('login result', res);
                    if (res.isOk === true) {
                      setPage(1);
                    }
                  },
                });
-             }}
-           >
-             <Text>{"Login"}</Text>
+             }}>
+             <Text>{'Login'}</Text>
            </Pressable>
            <Pressable
              style={styles.login}
@@ -138,9 +137,8 @@ Take the following steps to implement message sending:
                im.logout({
                  result: () => {},
                });
-             }}
-           >
-             <Text>{"Logout"}</Text>
+             }}>
+             <Text>{'Logout'}</Text>
            </Pressable>
          </SafeAreaView>
        );
@@ -159,16 +157,15 @@ Take the following steps to implement message sending:
              }}
              input={{
                props: {
-                 keyboardVerticalOffset: Platform.OS === "ios" ? top : 0,
+                 keyboardVerticalOffset: Platform.OS === 'ios' ? top : 0,
                  after: [],
                },
              }}
              roomId={room.roomId}
              ownerId={room.owner}
-             onError={(e) => {
-               console.log("ChatroomScreen:onError:", e.toString());
-             }}
-           >
+             onError={e => {
+               console.log('ChatroomScreen:onError:', e.toString());
+             }}>
              <Pressable
                style={[styles.logout, styles.login]}
                onPress={() => {
@@ -176,9 +173,8 @@ Take the following steps to implement message sending:
                  im.logout({
                    result: () => {},
                  });
-               }}
-             >
-               <Text>{"log out"}</Text>
+               }}>
+               <Text>{'log out'}</Text>
              </Pressable>
            </Chatroom>
          </SafeAreaView>
@@ -191,7 +187,8 @@ Take the following steps to implement message sending:
    function App(): React.JSX.Element {
      // initialize the chat room
      return (
-       <Container opt={{appKey}}>
+       <Container
+         opt={{appKey: appKey, autoLogin: false, debugModel: true} as any}>
          <SendMessage />
        </Container>
      );
@@ -202,14 +199,14 @@ Take the following steps to implement message sending:
        flex: 1,
      },
      logout: {
-       position: "absolute",
+       position: 'absolute',
        top: 0,
        right: 0,
      },
      login: {
        height: 40,
-       backgroundColor: "darkseagreen",
-       borderColor: "floralwhite",
+       backgroundColor: 'darkseagreen',
+       borderColor: 'floralwhite',
        borderWidth: 1,
      },
    });
