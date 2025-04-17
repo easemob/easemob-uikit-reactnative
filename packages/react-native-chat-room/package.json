@@ -1,6 +1,6 @@
 {
   "name": "react-native-chat-room",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "react native chat room.",
   "source": "src/index.tsx",
   "main": "lib/commonjs/index",
