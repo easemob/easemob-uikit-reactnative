@@ -105,7 +105,7 @@ const peerId = '<chat peer id>';
 
 function SendMessage() {
   const [page, setPage] = React.useState(0);
-  const [appKey, setAppKey] = React.useState(appKey);
+  const [_appKey, setAppKey] = React.useState(appKey);
   const [id, setId] = React.useState(userId);
   const [ps, setPs] = React.useState(userPassword);
   const [peer, setPeer] = React.useState(peerId);
@@ -113,31 +113,30 @@ function SendMessage() {
 
   if (page === 0) {
     return (
-      // Login Page
+      // 登录页面
       <SafeAreaView style={{ flex: 1 }}>
         <TextInput
-          placeholder="Please enter App Key."
-          value={appKey}
+          placeholder="Please App Key."
+          value={_appKey}
           onChangeText={setAppKey}
         />
         <TextInput
-          placeholder="Please enter Login ID."
+          placeholder="Please Login ID."
           value={id}
           onChangeText={setId}
         />
         <TextInput
-          placeholder="Please enter Login token or password."
+          placeholder="Please Login token or password."
           value={ps}
           onChangeText={setPs}
         />
         <TextInput
-          placeholder="Please enter peer ID."
+          placeholder="Please peer ID."
           value={peer}
           onChangeText={setPeer}
         />
         <Pressable
           onPress={() => {
-            console.log('login', id, ps);
             im.login({
               userId: id,
               userToken: ps,
@@ -165,7 +164,7 @@ function SendMessage() {
       </SafeAreaView>
     );
   } else if (page === 1) {
-    // Chat Page
+    // 聊天页面
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <ConversationDetail
@@ -186,16 +185,14 @@ function SendMessage() {
   }
 }
 
-function App(): React.JSX.Element {
-  // Initialize UIKit
+export default function App(): React.JSX.Element {
+  // 初始化 UIKit
   return (
     <Container options={{ appKey: appKey, autoLogin: false }}>
       <SendMessage />
     </Container>
   );
 }
-
-export default App;
 ```
 
 ### 4. Build and compile

@@ -105,7 +105,7 @@ const peerId = '<chat peer id>';
 
 function SendMessage() {
   const [page, setPage] = React.useState(0);
-  const [appKey, setAppKey] = React.useState(appKey);
+  const [_appKey, setAppKey] = React.useState(appKey);
   const [id, setId] = React.useState(userId);
   const [ps, setPs] = React.useState(userPassword);
   const [peer, setPeer] = React.useState(peerId);
@@ -117,7 +117,7 @@ function SendMessage() {
       <SafeAreaView style={{ flex: 1 }}>
         <TextInput
           placeholder="Please App Key."
-          value={appKey}
+          value={_appKey}
           onChangeText={setAppKey}
         />
         <TextInput
@@ -185,7 +185,7 @@ function SendMessage() {
   }
 }
 
-function App(): React.JSX.Element {
+export default function App(): React.JSX.Element {
   // 初始化 UIKit
   return (
     <Container options={{ appKey: appKey, autoLogin: false }}>
@@ -193,8 +193,6 @@ function App(): React.JSX.Element {
     </Container>
   );
 }
-
-export default App;
 ```
 
 ### 4. 构建和编译
