@@ -154,7 +154,7 @@ export function App() {
     try {
       serverConfigVisibleRef.current = await getEnableDevMode();
       if (serverConfigVisibleRef.current === true) {
-        autoLoginRef.current = false;
+        autoLoginRef.current = true;
         const isAppKey = await getIsAppKey();
         if (isAppKey) {
           AppKey.setAppId('');
@@ -166,7 +166,7 @@ export function App() {
 
         imPortRef.current = await getImPort();
         imServerRef.current = await getImServer();
-        enableDNSConfigRef.current = await getEnableDNSConfig();
+        enableDNSConfigRef.current = !(await getEnableDNSConfig());
       } else {
         autoLoginRef.current = true;
         imPortRef.current = undefined;
