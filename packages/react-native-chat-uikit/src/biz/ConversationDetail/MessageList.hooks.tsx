@@ -11,8 +11,10 @@ import emoji from 'twemoji';
 import { FACE_ASSETS } from '../../assets';
 import {
   DataModel,
+  gCustomMessageAddedContactTip,
   gCustomMessageCardEventType,
   gCustomMessageCreateThreadTip,
+  gCustomMessageRecallEventType,
   gMessageAttributeQuote,
   gMessageAttributeTranslate,
   gMessageAttributeVoiceReadFlag,
@@ -733,6 +735,12 @@ export function useMessageList(
         const body = msg.body as ChatCustomMessageBody;
         if (body.event === gCustomMessageCardEventType) {
           modelType = 'message';
+        } else if (body.event === gCustomMessageRecallEventType) {
+          modelType = 'system';
+        } else if (body.event === gCustomMessageCreateThreadTip) {
+          modelType = 'system';
+        } else if (body.event === gCustomMessageAddedContactTip) {
+          modelType = 'system';
         } else {
           modelType = 'message';
         }
