@@ -38,11 +38,12 @@ export function MessageForwardSelectorScreen(props: Props) {
       <MessageForwardSelector
         propsRef={ref}
         onBack={() => {
-          navi.goBack({
-            props: {
-              selectType: 'common',
-            },
-          });
+          navi.goBack();
+          // navi.goBack({
+          //   props: {
+          //     selectType: 'common',
+          //   },
+          // });
         }}
         onClickedSearch={(data) => {
           navi.navigate({
