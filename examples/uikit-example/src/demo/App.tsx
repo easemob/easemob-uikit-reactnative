@@ -126,6 +126,7 @@ export function _App() {
     // getNaviTheme,
     messageMenuStyleRef,
     messageInputBarExtensionStyleRef,
+    autoLoginRef,
   } = useApp();
 
   const {
@@ -158,6 +159,7 @@ export function _App() {
       }
       serverConfigVisibleRef.current = await getEnableDevMode();
       if (serverConfigVisibleRef.current === true) {
+        autoLoginRef.current = true;
         const isAppKey = await getIsAppKey();
         if (isAppKey) {
           AppKey.setAppId('');
@@ -169,8 +171,9 @@ export function _App() {
 
         imPortRef.current = await getImPort();
         imServerRef.current = await getImServer();
-        enableDNSConfigRef.current = await getEnableDNSConfig();
+        enableDNSConfigRef.current = !(await getEnableDNSConfig());
       } else {
+        autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
         enableDNSConfigRef.current = undefined;
@@ -222,6 +225,7 @@ export function _App() {
     _initParams,
     appIdRef,
     appKeyRef,
+    autoLoginRef,
     enableAVMeetingRef,
     enableBlockRef,
     enableDNSConfigRef,

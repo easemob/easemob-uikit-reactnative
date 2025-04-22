@@ -78,12 +78,12 @@ export function ServerSettingScreen(props: Props) {
   });
   const [disable] = React.useState<boolean>(false);
   const [appKey, setAppKey] = React.useState<string>(AppKey.gAppKey());
-  const [isAppKey, setIsAppKey] = React.useState<boolean>(
-    appKey && appKey.length > 0 ? true : false
+  const [isAppKey, setIsAppKey] = React.useState<boolean | undefined>(
+    undefined
   );
-  const [imServer, setImServer] = React.useState<string>('');
-  const [imPort, setImPort] = React.useState<string>('');
-  const [restServer, setRestServer] = React.useState<string>('');
+  const [imServer, setImServer] = React.useState<string | undefined>('');
+  const [imPort, setImPort] = React.useState<string | undefined>('');
+  const [restServer, setRestServer] = React.useState<string | undefined>('');
   const [enablePrivateServer, setEnablePrivateServer] = React.useState<
     boolean | undefined
   >(undefined);
@@ -120,12 +120,20 @@ export function ServerSettingScreen(props: Props) {
         AppKey.setAppId(appKey);
         AppKey.setAppKey('');
       }
-      await _setIsAppKey(isAppKey);
+      await _setIsAppKey(isAppKey ?? false);
 
-      await _setImPort(imPort);
-      await _setEnableDNSConfig(enablePrivateServer ?? false);
-      await _setImServer(imServer);
-      await _setRestServer(restServer);
+      if (imPort) {
+        await _setImPort(imPort);
+      }
+      if (enablePrivateServer !== undefined) {
+        await _setEnableDNSConfig(enablePrivateServer ?? false);
+      }
+      if (imServer) {
+        await _setImServer(imServer);
+      }
+      if (restServer) {
+        await _setRestServer(restServer);
+      }
 
       getAlertRef().alertWithInit({
         title: tr('_demo_alert_server_setting_save_title'),
@@ -213,9 +221,9 @@ export function ServerSettingScreen(props: Props) {
           setIsAppKey(false);
         }
 
-        setImServer(value.imServer ?? '');
-        setImPort(value.imPort ?? '');
-        setRestServer(value.restServer ?? '');
+        setImServer(value.imServer);
+        setImPort(value.imPort);
+        setRestServer(value.restServer);
         setEnablePrivateServer(value.enablePrivateServer ?? false);
       }
     });

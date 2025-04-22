@@ -68,7 +68,7 @@ import { useUserInfo } from './useUserInfo';
 export function useAppConfig() {
   const appKeyRef = React.useRef(appKey);
   const appIdRef = React.useRef(appId);
-  const autoLogin = React.useRef(false).current;
+  const autoLoginRef = React.useRef(false);
   const imServerRef = React.useRef(imServer);
   const imPortRef = React.useRef(imPort);
   const enableDNSConfigRef = React.useRef(enableDNSConfig);
@@ -78,7 +78,7 @@ export function useAppConfig() {
       appKey: appKeyRef.current,
       appId: appIdRef.current,
       debugModel: isDevMode,
-      autoLogin: autoLogin,
+      autoLogin: autoLoginRef.current,
       autoAcceptGroupInvitation: true,
       requireAck: true,
       requireDeliveryAck: true,
@@ -87,7 +87,7 @@ export function useAppConfig() {
       imPort: useSendBox ? imPortRef.current : (undefined as any),
       enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
     } as ChatOptionsType;
-  }, [autoLogin]);
+  }, []);
 
   return {
     appKeyRef,
@@ -95,7 +95,7 @@ export function useAppConfig() {
     imServerRef,
     imPortRef,
     enableDNSConfigRef,
-    autoLogin,
+    autoLoginRef,
     getOptions,
   };
 }
@@ -166,6 +166,7 @@ export function useApp() {
     imPortRef,
     enableDNSConfigRef,
     getOptions,
+    autoLoginRef,
   } = useAppConfig();
 
   const { updater } = useForceUpdate();
@@ -726,5 +727,6 @@ export function useApp() {
     getNaviTheme,
     messageMenuStyleRef,
     messageInputBarExtensionStyleRef,
+    autoLoginRef,
   };
 }
