@@ -78,7 +78,9 @@ export function ServerSettingScreen(props: Props) {
   });
   const [disable] = React.useState<boolean>(false);
   const [appKey, setAppKey] = React.useState<string>(AppKey.gAppKey());
-  const [isAppKey, setIsAppKey] = React.useState<boolean>(false);
+  const [isAppKey, setIsAppKey] = React.useState<boolean | undefined>(
+    undefined
+  );
   const [imServer, setImServer] = React.useState<string | undefined>('');
   const [imPort, setImPort] = React.useState<string | undefined>('');
   const [restServer, setRestServer] = React.useState<string | undefined>('');
@@ -118,7 +120,7 @@ export function ServerSettingScreen(props: Props) {
         AppKey.setAppId(appKey);
         AppKey.setAppKey('');
       }
-      await _setIsAppKey(isAppKey);
+      await _setIsAppKey(isAppKey ?? false);
 
       if (imPort) {
         await _setImPort(imPort);

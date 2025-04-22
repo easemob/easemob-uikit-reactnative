@@ -60,7 +60,7 @@ export type RequestGetUserByPhoneResult = {
 };
 
 export class RestApi {
-  private static _protocol: string = 'http://';
+  private static _protocol: string = 'https://';
   private static _server: string = 'localhost:8096';
   private static _basicUrl: string =
     accountType === 'agora' ? '/app/chat' : '/inside/app';
@@ -97,14 +97,23 @@ export class RestApi {
     this._basicUrl = basicUrl;
   }
   public static getBasicUrl() {
+    if (this._server.startsWith('http')) {
+      return this._server + this._basicUrl;
+    }
     return this._protocol + this._server + this._basicUrl;
   }
 
   public static getRtcTokenUrl() {
+    if (this._server.startsWith('http')) {
+      return this._server + this._rtcTokenUrl;
+    }
     return this._protocol + this._server + this._rtcTokenUrl;
   }
 
   public static getRtcMapUrl() {
+    if (this._server.startsWith('http')) {
+      return this._server + this._rtcMapUrl;
+    }
     return this._protocol + this._server + this._rtcMapUrl;
   }
 
