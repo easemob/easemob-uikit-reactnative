@@ -53,7 +53,7 @@ export function useServerConfig() {
   const getImPort = React.useCallback(async () => {
     return (await getKey('imPort')) ?? imPort;
   }, [getKey]);
-  const getEnableDNSConfig = React.useCallback(async () => {
+  const getEnablePrivateServer = React.useCallback(async () => {
     const ret = await getKey(`enablePrivateServer`);
     return ret === 'true' ? true : ret === 'false' ? false : enableDNSConfig;
   }, [getKey]);
@@ -98,7 +98,7 @@ export function useServerConfig() {
     },
     [setKey]
   );
-  const setEnableDNSConfig = React.useCallback(
+  const setEnablePrivateServer = React.useCallback(
     async (value: boolean) => {
       setKey(
         'enablePrivateServer',
@@ -129,7 +129,7 @@ export function useServerConfig() {
     getIsAppKey,
     getImServer,
     getImPort,
-    getEnableDNSConfig,
+    getEnablePrivateServer,
     getRestSever,
     getEnableDevMode,
     setAppKey,
@@ -137,7 +137,7 @@ export function useServerConfig() {
     setIsAppKey,
     setImServer,
     setImPort,
-    setEnableDNSConfig,
+    setEnablePrivateServer,
     setRestSever,
     setEnableDevMode,
   };

@@ -3,7 +3,7 @@
     "name": "ChatCallkitExample",
     "slug": "ChatCallkitExample",
     "scheme": "expodemowithdevclient",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -53,7 +53,7 @@
         }
       ]
     ],
-    "runtimeVersion": "1.0.0",
+    "runtimeVersion": "1.0.1",
     "newArchEnabled": true,
     "jsEngine": "hermes"
   }

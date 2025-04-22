@@ -109,6 +109,7 @@ export function _App() {
     appIdRef,
     imServerRef,
     imPortRef,
+    restServerRef,
     enableDNSConfigRef,
     _initParams,
     setInitParams,
@@ -134,9 +135,10 @@ export function _App() {
     getAppKey,
     getAppId,
     getIsAppKey,
-    getEnableDNSConfig,
+    getEnablePrivateServer,
     getImPort,
     getImServer,
+    getRestSever,
   } = useServerConfig();
 
   const { initParams } = useGeneralSetting();
@@ -171,11 +173,13 @@ export function _App() {
 
         imPortRef.current = await getImPort();
         imServerRef.current = await getImServer();
-        enableDNSConfigRef.current = !(await getEnableDNSConfig());
+        restServerRef.current = await getRestSever();
+        enableDNSConfigRef.current = !(await getEnablePrivateServer());
       } else {
         autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
+        restServerRef.current = restServer;
         enableDNSConfigRef.current = undefined;
       }
 
@@ -200,60 +204,70 @@ export function _App() {
         ret.appMessageContextMenuStyle as MessageContextMenuStyle;
       messageInputBarExtensionStyleRef.current =
         ret.appMessageInputBarExtensionStyle as MessageInputBarExtensionStyle;
-      console.log(
-        'dev:init:params:',
-        isLightRef.current,
-        releaseAreaRef.current,
-        languageRef.current,
-        translateLanguageRef.current,
-        enablePresenceRef.current,
-        enableReactionRef.current,
-        enableThreadRef.current,
-        enableTranslateRef.current,
-        enableAVMeetingRef.current,
-        enableOfflinePushRef.current,
-        enableTypingRef.current,
-        enableBlockRef.current,
-        messageInputBarExtensionStyleRef.current,
-        messageMenuStyleRef.current
-      );
+      console.log('dev:init:params:', {
+        isLightRef: isLightRef.current,
+        releaseAreaRef: releaseAreaRef.current,
+        languageRef: languageRef.current,
+        translateLanguageRef: translateLanguageRef.current,
+        enablePresenceRef: enablePresenceRef.current,
+        enableReactionRef: enableReactionRef.current,
+        enableThreadRef: enableThreadRef.current,
+        enableTranslateRef: enableTranslateRef.current,
+        enableAVMeetingRef: enableAVMeetingRef.current,
+        enableOfflinePushRef: enableOfflinePushRef.current,
+        enableTypingRef: enableTypingRef.current,
+        enableBlockRef: enableBlockRef.current,
+        messageInputBarExtensionStyleRef:
+          messageInputBarExtensionStyleRef.current,
+        messageMenuStyleRef: messageMenuStyleRef.current,
+        enableDNSConfigRef: enableDNSConfigRef.current,
+        serverConfigVisibleRef: serverConfigVisibleRef.current,
+        restServerRef: restServerRef.current,
+        imPortRef: imPortRef.current,
+        imServerRef: imServerRef.current,
+        appKeyRef: appKeyRef.current,
+        appIdRef: appIdRef.current,
+        autoLoginRef: autoLoginRef.current,
+      });
       setInitParams(true);
     } catch (error) {
       setInitParams(true);
     }
   }, [
     _initParams,
-    appIdRef,
+    serverConfigVisibleRef,
+    getEnableDevMode,
     appKeyRef,
-    autoLoginRef,
-    enableAVMeetingRef,
-    enableBlockRef,
-    enableDNSConfigRef,
-    enableOfflinePushRef,
+    appIdRef,
+    initParams,
+    isLightRef,
+    releaseAreaRef,
+    languageRef,
+    translateLanguageRef,
     enablePresenceRef,
     enableReactionRef,
     enableThreadRef,
     enableTranslateRef,
+    enableAVMeetingRef,
+    enableOfflinePushRef,
     enableTypingRef,
-    getEnableDNSConfig,
-    getEnableDevMode,
-    getImPort,
-    getImServer,
-    getAppKey,
-    getAppId,
-    getIsAppKey,
+    enableBlockRef,
+    messageMenuStyleRef,
+    messageInputBarExtensionStyleRef,
+    enableDNSConfigRef,
+    restServerRef,
     imPortRef,
     imServerRef,
-    initParams,
-    initialRouteNameRef,
-    isLightRef,
-    languageRef,
-    messageInputBarExtensionStyleRef,
-    messageMenuStyleRef,
-    releaseAreaRef,
-    serverConfigVisibleRef,
+    autoLoginRef,
     setInitParams,
-    translateLanguageRef,
+    initialRouteNameRef,
+    getIsAppKey,
+    getImPort,
+    getImServer,
+    getRestSever,
+    getEnablePrivateServer,
+    getAppKey,
+    getAppId,
   ]);
 
   const onReady = React.useCallback(
@@ -270,7 +284,7 @@ export function _App() {
         return;
       }
       isReadyRef.current = true;
-      RestApi.setServer(restServer);
+      RestApi.setServer(restServerRef.current);
 
       await initPush();
 
@@ -307,7 +321,14 @@ export function _App() {
         }
       }, 1000);
     },
-    [isReadyRef, initPush, autoLoginAction, rootRef, serverConfigVisibleRef]
+    [
+      isReadyRef,
+      restServerRef,
+      initPush,
+      autoLoginAction,
+      rootRef,
+      serverConfigVisibleRef,
+    ]
   );
 
   const onContainerInitialized = React.useCallback(
@@ -365,7 +386,7 @@ export function _App() {
     // !!! `initParams` is not called in the `useEffect` hook.
     return null;
   }
-  console.log('dev:app:');
+  console.log('dev:app:', getOptions());
 
   return (
     <UIKitContainer

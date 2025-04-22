@@ -42,14 +42,14 @@ export function ServerSettingScreen(props: Props) {
     getAppId,
     getIsAppKey,
     getImPort,
-    getEnableDNSConfig,
+    getEnablePrivateServer,
     getImServer,
     getRestSever,
     setAppKey: _setAppKey,
     setAppId: _setAppId,
     setIsAppKey: _setIsAppKey,
     setImServer: _setImServer,
-    setEnableDNSConfig: _setEnableDNSConfig,
+    setEnablePrivateServer: _setEnablePrivateServer,
     setImPort: _setImPort,
     setRestSever: _setRestServer,
   } = useServerSettingScreen();
@@ -126,7 +126,7 @@ export function ServerSettingScreen(props: Props) {
         await _setImPort(imPort);
       }
       if (enablePrivateServer !== undefined) {
-        await _setEnableDNSConfig(enablePrivateServer ?? false);
+        await _setEnablePrivateServer(enablePrivateServer);
       }
       if (imServer) {
         await _setImServer(imServer);
@@ -158,21 +158,21 @@ export function ServerSettingScreen(props: Props) {
       console.warn('save error:', error);
     }
   }, [
-    _setAppId,
-    _setAppKey,
+    isAppKey,
     _setIsAppKey,
-    _setEnableDNSConfig,
+    imPort,
+    enablePrivateServer,
+    imServer,
+    restServer,
+    getAlertRef,
+    tr,
+    _setAppKey,
+    appKey,
+    _setAppId,
     _setImPort,
+    _setEnablePrivateServer,
     _setImServer,
     _setRestServer,
-    appKey,
-    enablePrivateServer,
-    getAlertRef,
-    imPort,
-    imServer,
-    isAppKey,
-    restServer,
-    tr,
   ]);
 
   const getData = React.useCallback(async () => {
@@ -183,7 +183,7 @@ export function ServerSettingScreen(props: Props) {
       const _imServer = await getImServer();
       const _imPort = await getImPort();
       const _restServer = await getRestSever();
-      const _enablePrivateServer = await getEnableDNSConfig();
+      const _enablePrivateServer = await getEnablePrivateServer();
       return {
         appKey: _appKey,
         appId: _appId,
@@ -201,7 +201,7 @@ export function ServerSettingScreen(props: Props) {
     getAppId,
     getAppKey,
     getIsAppKey,
-    getEnableDNSConfig,
+    getEnablePrivateServer,
     getImPort,
     getImServer,
     getRestSever,

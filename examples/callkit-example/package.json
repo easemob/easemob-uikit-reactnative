@@ -7,6 +7,7 @@
     "ios": "expo run:ios",
     "start": "expo start --dev-client",
     "startr": "expo start --dev-client --clear",
+    "startr8888": "expo start --dev-client --clear --port 8888",
     "prepare": "yarn update:arch && yarn gen",
     "update:arch": "node scripts/update-arch-config.js",
     "clean": "yarn clean:build",

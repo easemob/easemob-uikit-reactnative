@@ -59,7 +59,6 @@ import {
   isDevMode,
   restServer,
   twemoji_ttf_name,
-  useSendBox,
 } from '../common/const';
 import type { RootParamsList, RootParamsName } from '../routes';
 import { formatNavigationState } from '../utils/utils';
@@ -69,9 +68,11 @@ export function useAppConfig() {
   const appKeyRef = React.useRef(appKey);
   const appIdRef = React.useRef(appId);
   const autoLoginRef = React.useRef(false);
+  const restServerRef = React.useRef(restServer);
   const imServerRef = React.useRef(imServer);
   const imPortRef = React.useRef(imPort);
-  const enableDNSConfigRef = React.useRef(enableDNSConfig);
+  const enableDNSConfigRef = React.useRef<boolean | undefined>(enableDNSConfig);
+  const enableDevModeRef = React.useRef<boolean | undefined>(isDevMode);
 
   const getOptions = React.useCallback(() => {
     return {
@@ -82,10 +83,13 @@ export function useAppConfig() {
       autoAcceptGroupInvitation: true,
       requireAck: true,
       requireDeliveryAck: true,
-      restServer: useSendBox ? restServer : undefined,
-      imServer: useSendBox ? imServerRef.current : undefined,
-      imPort: useSendBox ? imPortRef.current : (undefined as any),
-      enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
+      restServer: enableDevModeRef.current ? restServerRef.current : undefined,
+      imServer: enableDevModeRef.current ? imServerRef.current : undefined,
+      imPort: enableDevModeRef.current ? imPortRef.current : (undefined as any),
+      enableDNSConfig: enableDevModeRef.current
+        ? enableDNSConfigRef.current
+        : undefined,
+      pushConfig: undefined,
     } as ChatOptionsType;
   }, []);
 
@@ -94,6 +98,7 @@ export function useAppConfig() {
     appIdRef,
     imServerRef,
     imPortRef,
+    restServerRef,
     enableDNSConfigRef,
     autoLoginRef,
     getOptions,
@@ -167,6 +172,7 @@ export function useApp() {
     enableDNSConfigRef,
     getOptions,
     autoLoginRef,
+    restServerRef,
   } = useAppConfig();
 
   const { updater } = useForceUpdate();
@@ -707,6 +713,7 @@ export function useApp() {
     appIdRef,
     imServerRef,
     imPortRef,
+    restServerRef,
     enableDNSConfigRef,
     _initParams,
     setInitParams,
