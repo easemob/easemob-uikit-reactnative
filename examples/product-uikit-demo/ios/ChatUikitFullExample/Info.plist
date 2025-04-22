@@ -19,7 +19,7 @@
     <key>CFBundlePackageType</key>
     <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.0</string>
+    <string>2.0.0</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleURLTypes</key>
@@ -29,6 +29,12 @@
         <array>
           <string>expodemowithdevclient</string>
           <string>com.hyphenate.rn.ChatUikitFullExample</string>
+        </array>
+      </dict>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>exp+chatuikitfullexample</string>
         </array>
       </dict>
     </array>
@@ -45,6 +51,18 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>Use the media library for sharing media files in chat.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Use camera for taking photos and videos in chat.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Use microphone for recording voice messages in chat.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Use picture gallery for sharing images in chat.</string>
+    <key>UIBackgroundModes</key>
+    <array>
+      <string>remote-notification</string>
+    </array>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>
