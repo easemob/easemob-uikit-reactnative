@@ -505,7 +505,6 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
             uid: 0,
             setupMode,
           }}
-          zOrderMediaOverlay={true}
           key={selfUid}
         />
       );
