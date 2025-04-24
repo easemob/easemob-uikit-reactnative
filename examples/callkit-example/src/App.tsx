@@ -39,6 +39,7 @@ let appId = '';
 let gAppKey = '';
 let agoraAppId = '';
 let accountType: 'easemob' | 'agora' | undefined;
+let appServerDomain = '';
 
 try {
   const env = require('./env');
@@ -54,6 +55,7 @@ try {
   gAppKey = appKey && appKey.length > 0 ? appKey : appId;
   agoraAppId = env.agoraAppId;
   accountType = env.accountType;
+  appServerDomain = env.appServerDomain;
 } catch (e) {
   console.error('dev:config_error:', e);
 }
@@ -87,9 +89,8 @@ export function App() {
 
     try {
       if (accountType !== 'easemob') {
-        AppServerClient.rtcTokenUrl =
-          'http://a41.easemob.com/token/rtc/channel';
-        AppServerClient.mapUrl = 'http://a41.easemob.com/agora/channel/mapper';
+        AppServerClient.rtcTokenUrl = `${appServerDomain}/token/rtc/channel`;
+        AppServerClient.mapUrl = `${appServerDomain}/agora/channel/mapper`;
       }
 
       const hasPermission = await requestAndroidVideo();
