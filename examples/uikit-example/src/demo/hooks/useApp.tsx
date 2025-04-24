@@ -51,13 +51,13 @@ import {
   accountType,
   appId,
   appKey,
+  appServerDomain,
   boloo_da_ttf_name,
   demoType,
   enableDNSConfig,
   imPort,
   imServer,
   isDevMode,
-  restServer,
   twemoji_ttf_name,
 } from '../common/const';
 import type { RootParamsList, RootParamsName } from '../routes';
@@ -68,7 +68,7 @@ export function useAppConfig() {
   const appKeyRef = React.useRef(appKey);
   const appIdRef = React.useRef(appId);
   const autoLoginRef = React.useRef(false);
-  const restServerRef = React.useRef(restServer);
+  const appServerDomainRef = React.useRef(appServerDomain);
   const imServerRef = React.useRef(imServer);
   const imPortRef = React.useRef(imPort);
   const enableDNSConfigRef = React.useRef<boolean | undefined>(enableDNSConfig);
@@ -83,7 +83,9 @@ export function useAppConfig() {
       autoAcceptGroupInvitation: true,
       requireAck: true,
       requireDeliveryAck: true,
-      restServer: enableDevModeRef.current ? restServerRef.current : undefined,
+      appServerDomain: enableDevModeRef.current
+        ? appServerDomainRef.current
+        : undefined,
       imServer: enableDevModeRef.current ? imServerRef.current : undefined,
       imPort: enableDevModeRef.current ? imPortRef.current : (undefined as any),
       enableDNSConfig: enableDevModeRef.current
@@ -98,7 +100,7 @@ export function useAppConfig() {
     appIdRef,
     imServerRef,
     imPortRef,
-    restServerRef,
+    appServerDomainRef,
     enableDNSConfigRef,
     autoLoginRef,
     getOptions,
@@ -172,7 +174,7 @@ export function useApp() {
     enableDNSConfigRef,
     getOptions,
     autoLoginRef,
-    restServerRef,
+    appServerDomainRef,
   } = useAppConfig();
 
   const { updater } = useForceUpdate();
@@ -186,7 +188,7 @@ export function useApp() {
   //     autoAcceptGroupInvitation: true,
   //     requireAck: true,
   //     requireDeliveryAck: true,
-  //     restServer: useSendBox ? restServer : undefined,
+  //     appServerDomain: useSendBox ? appServerDomain : undefined,
   //     imServer: useSendBox ? imServerRef.current : undefined,
   //     imPort: useSendBox ? imPortRef.current : (undefined as any),
   //     enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
@@ -713,7 +715,7 @@ export function useApp() {
     appIdRef,
     imServerRef,
     imPortRef,
-    restServerRef,
+    appServerDomainRef,
     enableDNSConfigRef,
     _initParams,
     setInitParams,

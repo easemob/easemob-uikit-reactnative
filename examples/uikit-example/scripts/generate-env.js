@@ -20,6 +20,7 @@ export const agoraAppId = '';
 export const fcmSenderId = '';
 export const demoType = 1; // 1. ui-dev 2. dev 3. prod
 export const reactStrictMode = false;
+export const appServerDomain = '';
 export const account = [{ id: '', token: '' }];
 `;
 if (fs.existsSync(out_file) === false) {

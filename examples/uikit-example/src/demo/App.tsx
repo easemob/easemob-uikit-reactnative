@@ -16,9 +16,9 @@ import { ToastView } from './common';
 import { AvatarStatusRenderMemo } from './common/AvatarStatusRender';
 import {
   accountType,
+  appServerDomain,
   boloo_da_ttf_name,
   demoType,
-  restServer,
 } from './common/const';
 import { RestApi } from './common/rest.api';
 import { useAutoLogin } from './hooks';
@@ -109,7 +109,7 @@ export function _App() {
     appIdRef,
     imServerRef,
     imPortRef,
-    restServerRef,
+    appServerDomainRef,
     enableDNSConfigRef,
     _initParams,
     setInitParams,
@@ -138,7 +138,7 @@ export function _App() {
     getEnablePrivateServer,
     getImPort,
     getImServer,
-    getRestSever,
+    getAppServerDomain,
   } = useServerConfig();
 
   const { initParams } = useGeneralSetting();
@@ -173,13 +173,13 @@ export function _App() {
 
         imPortRef.current = await getImPort();
         imServerRef.current = await getImServer();
-        restServerRef.current = await getRestSever();
+        appServerDomainRef.current = await getAppServerDomain();
         enableDNSConfigRef.current = !(await getEnablePrivateServer());
       } else {
         autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
-        restServerRef.current = restServer;
+        appServerDomainRef.current = appServerDomain;
         enableDNSConfigRef.current = undefined;
       }
 
@@ -222,7 +222,7 @@ export function _App() {
         messageMenuStyleRef: messageMenuStyleRef.current,
         enableDNSConfigRef: enableDNSConfigRef.current,
         serverConfigVisibleRef: serverConfigVisibleRef.current,
-        restServerRef: restServerRef.current,
+        appServerDomainRef: appServerDomainRef.current,
         imPortRef: imPortRef.current,
         imServerRef: imServerRef.current,
         appKeyRef: appKeyRef.current,
@@ -255,7 +255,7 @@ export function _App() {
     messageMenuStyleRef,
     messageInputBarExtensionStyleRef,
     enableDNSConfigRef,
-    restServerRef,
+    appServerDomainRef,
     imPortRef,
     imServerRef,
     autoLoginRef,
@@ -264,7 +264,7 @@ export function _App() {
     getIsAppKey,
     getImPort,
     getImServer,
-    getRestSever,
+    getAppServerDomain,
     getEnablePrivateServer,
     getAppKey,
     getAppId,
@@ -284,7 +284,7 @@ export function _App() {
         return;
       }
       isReadyRef.current = true;
-      RestApi.setServer(restServerRef.current);
+      RestApi.setServer(appServerDomainRef.current);
 
       await initPush();
 
@@ -323,7 +323,7 @@ export function _App() {
     },
     [
       isReadyRef,
-      restServerRef,
+      appServerDomainRef,
       initPush,
       autoLoginAction,
       rootRef,

@@ -18,6 +18,7 @@ export const ps = '';
 export const accountType = ''; // agora | easemob | shengwang // only with callkit
 export const agoraAppId = '';
 export const fcmSenderId = '';
+export const appServerDomain = '';
 export const reactStrictMode = false;
 `;
 if (fs.existsSync(out_file) === false) {

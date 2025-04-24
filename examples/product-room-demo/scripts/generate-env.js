@@ -19,6 +19,7 @@ export const gRegisterUserUrl = '';
 export const gCreateRoomUrl = '';
 export const gGetRoomListUrl = '';
 export const reactStrictMode = false;
+export const appServerDomain = '';
 export const account = [{ id: '', token: '' }];
 `;
 if (fs.existsSync(out_file) === false) {

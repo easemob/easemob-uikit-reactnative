@@ -19,9 +19,9 @@ import { AVView } from './common/AVView';
 import {
   accountType,
   agoraAppId,
+  appServerDomain,
   boloo_da_ttf_name,
   isDevMode,
-  restServer,
 } from './common/const';
 import { RestApi } from './common/rest.api';
 import { useAutoLogin } from './hooks';
@@ -108,7 +108,7 @@ export function App() {
     appIdRef,
     imServerRef,
     imPortRef,
-    restServerRef,
+    appServerDomainRef,
     enableDNSConfigRef,
     _initParams,
     setInitParams,
@@ -142,7 +142,7 @@ export function App() {
     getEnablePrivateServer,
     getImPort,
     getImServer,
-    getRestSever,
+    getAppServerDomain,
   } = useServerConfig();
 
   const { initParams } = useGeneralSetting();
@@ -168,13 +168,13 @@ export function App() {
 
         imPortRef.current = await getImPort();
         imServerRef.current = await getImServer();
-        restServerRef.current = await getRestSever();
+        appServerDomainRef.current = await getAppServerDomain();
         enableDNSConfigRef.current = !(await getEnablePrivateServer());
       } else {
         autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
-        restServerRef.current = restServer;
+        appServerDomainRef.current = appServerDomain;
         enableDNSConfigRef.current = undefined;
       }
 
@@ -217,7 +217,7 @@ export function App() {
         messageMenuStyleRef: messageMenuStyleRef.current,
         enableDNSConfigRef: enableDNSConfigRef.current,
         serverConfigVisibleRef: serverConfigVisibleRef.current,
-        restServerRef: restServerRef.current,
+        appServerDomainRef: appServerDomainRef.current,
         imPortRef: imPortRef.current,
         imServerRef: imServerRef.current,
         appKeyRef: appKeyRef.current,
@@ -257,8 +257,8 @@ export function App() {
     getImPort,
     imServerRef,
     getImServer,
-    restServerRef,
-    getRestSever,
+    appServerDomainRef,
+    getAppServerDomain,
     getEnablePrivateServer,
     getAppKey,
     getAppId,
@@ -278,7 +278,7 @@ export function App() {
         return;
       }
       isReadyRef.current = true;
-      RestApi.setServer(restServerRef.current);
+      RestApi.setServer(appServerDomainRef.current);
 
       await initPush();
 
@@ -312,7 +312,7 @@ export function App() {
     },
     [
       isReadyRef,
-      restServerRef,
+      appServerDomainRef,
       initPush,
       autoLoginAction,
       rootRef,

@@ -44,14 +44,14 @@ export function ServerSettingScreen(props: Props) {
     getImPort,
     getEnablePrivateServer,
     getImServer,
-    getRestSever,
+    getAppServerDomain,
     setAppKey: _setAppKey,
     setAppId: _setAppId,
     setIsAppKey: _setIsAppKey,
     setImServer: _setImServer,
     setEnablePrivateServer: _setEnablePrivateServer,
     setImPort: _setImPort,
-    setRestSever: _setRestServer,
+    setAppServerDomain: _setappServerDomain,
   } = useServerSettingScreen();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -83,7 +83,9 @@ export function ServerSettingScreen(props: Props) {
   );
   const [imServer, setImServer] = React.useState<string | undefined>('');
   const [imPort, setImPort] = React.useState<string | undefined>('');
-  const [restServer, setRestServer] = React.useState<string | undefined>('');
+  const [appServerDomain, setappServerDomain] = React.useState<
+    string | undefined
+  >('');
   const [enablePrivateServer, setEnablePrivateServer] = React.useState<
     boolean | undefined
   >(undefined);
@@ -131,8 +133,8 @@ export function ServerSettingScreen(props: Props) {
       if (imServer) {
         await _setImServer(imServer);
       }
-      if (restServer) {
-        await _setRestServer(restServer);
+      if (appServerDomain) {
+        await _setappServerDomain(appServerDomain);
       }
 
       getAlertRef().alertWithInit({
@@ -163,7 +165,7 @@ export function ServerSettingScreen(props: Props) {
     imPort,
     enablePrivateServer,
     imServer,
-    restServer,
+    appServerDomain,
     getAlertRef,
     tr,
     _setAppKey,
@@ -172,7 +174,7 @@ export function ServerSettingScreen(props: Props) {
     _setImPort,
     _setEnablePrivateServer,
     _setImServer,
-    _setRestServer,
+    _setappServerDomain,
   ]);
 
   const getData = React.useCallback(async () => {
@@ -182,7 +184,7 @@ export function ServerSettingScreen(props: Props) {
       const _isAppKey = await getIsAppKey();
       const _imServer = await getImServer();
       const _imPort = await getImPort();
-      const _restServer = await getRestSever();
+      const _appServerDomain = await getAppServerDomain();
       const _enablePrivateServer = await getEnablePrivateServer();
       return {
         appKey: _appKey,
@@ -190,7 +192,7 @@ export function ServerSettingScreen(props: Props) {
         isAppKey: _isAppKey,
         imServer: _imServer,
         imPort: _imPort,
-        restServer: _restServer,
+        appServerDomain: _appServerDomain,
         enablePrivateServer: _enablePrivateServer,
       };
     } catch (error) {
@@ -204,7 +206,7 @@ export function ServerSettingScreen(props: Props) {
     getEnablePrivateServer,
     getImPort,
     getImServer,
-    getRestSever,
+    getAppServerDomain,
   ]);
 
   React.useEffect(() => {
@@ -223,7 +225,7 @@ export function ServerSettingScreen(props: Props) {
 
         setImServer(value.imServer);
         setImPort(value.imPort);
-        setRestServer(value.restServer);
+        setappServerDomain(value.appServerDomain);
         setEnablePrivateServer(value.enablePrivateServer ?? false);
       }
     });
@@ -445,8 +447,8 @@ export function ServerSettingScreen(props: Props) {
                 style={{
                   paddingLeft: 24,
                 }}
-                onChangeText={setRestServer}
-                value={restServer}
+                onChangeText={setappServerDomain}
+                value={appServerDomain}
                 keyboardAppearance={style === 'light' ? 'light' : 'dark'}
                 autoFocus={true}
                 cursorColor={getColor('p')}

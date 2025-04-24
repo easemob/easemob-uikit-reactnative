@@ -1,13 +1,12 @@
 import { ChatClient } from '../rename.callkit';
 
+const appServerDomain = require('../env').appServerDomain;
+
 export class AppServerClient {
-  private static _rtcTokenUrl: string =
-    'https://a1.easemob.com/token/rtcToken/v1';
-  private static _mapUrl: string = 'https://a1.easemob.com/channel/mapper';
-  private static _regUrl: string =
-    'https://a41.easemob.com/app/chat/user/register';
-  private static _tokenUrl: string =
-    'https://a41.easemob.com/app/chat/user/login';
+  private static _rtcTokenUrl: string = `https://${appServerDomain}/token/rtcToken/v1`;
+  private static _mapUrl: string = `https://${appServerDomain}/channel/mapper`;
+  private static _regUrl: string = `https://${appServerDomain}/app/chat/user/register`;
+  private static _tokenUrl: string = `https://${appServerDomain}/app/chat/user/login`;
 
   protected _(): void {}
   private static async req(params: {

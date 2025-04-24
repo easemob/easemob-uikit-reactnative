@@ -1,26 +1,26 @@
 // export const gAvatarUrlBasic =
-//   'https://a1.easemob.com/easemob/chatroom-uikit/chatfiles/';
+//   'https://${appServerDomain}/easemob/chatroom-uikit/chatfiles/';
 
 // export const gRegisterUserUrl =
-//   'https://a1.easemob.com/internal/appserver/liverooms/user/login';
+//   'https://${appServerDomain}/internal/appserver/liverooms/user/login';
 
 // export const gCreateRoomUrl =
-//   'https://a1.easemob.com/internal/appserver/liverooms/';
+//   'https://${appServerDomain}/internal/appserver/liverooms/';
 
 // export const gGetRoomListUrl =
-//   'https://a1.easemob.com/internal/appserver/liverooms';
+//   'https://${appServerDomain}/internal/appserver/liverooms';
 
 // export const gSendBroadcastUrl =
-//   'https://a1.easemob.com/internal/appserver/liverooms/broadcast';
+//   'https://${appServerDomain}/internal/appserver/liverooms/broadcast';
 
 // export const gRemoveRoomUrl =
-//   'https://a1.easemob.com/internal/appserver/liverooms/';
+//   'https://${appServerDomain}/internal/appserver/liverooms/';
 
 const env = require('../../env');
 export const useSendBox = env.useSendBox ?? false;
 export const appKey = env.appKey as string;
 export const appId = env.appId as string;
-export const restServer = env.restServer as string;
+export const appServerDomain = env.appServerDomain as string;
 export const imServer = useSendBox ? '180.184.143.60' : undefined;
 export const imPort = useSendBox ? '6717' : undefined;
 export const enableDNSConfig = useSendBox ? false : undefined;

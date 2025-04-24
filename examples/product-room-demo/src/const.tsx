@@ -328,23 +328,19 @@ export const gUserAvatars: string[] = [
   '298c9240-79f9-11ee-b8b6-f16f0b5f700a',
 ];
 
-export const gAvatarUrlBasic =
-  'https://a1.easemob.com/easemob/chatroom-uikit/chatfiles/';
+const appServerDomain = require('./env').appServerDomain;
 
-export const gRegisterUserUrl =
-  'https://a1.easemob.com/internal/appserver/liverooms/user/login';
+export const gAvatarUrlBasic = `https://${appServerDomain}/easemob/chatroom-uikit/chatfiles/`;
 
-export const gCreateRoomUrl =
-  'https://a1.easemob.com/internal/appserver/liverooms/';
+export const gRegisterUserUrl = `https://${appServerDomain}/internal/appserver/liverooms/user/login`;
 
-export const gGetRoomListUrl =
-  'https://a1.easemob.com/internal/appserver/liverooms';
+export const gCreateRoomUrl = `https://${appServerDomain}/internal/appserver/liverooms/`;
 
-export const gSendBroadcastUrl =
-  'https://a1.easemob.com/internal/appserver/liverooms/broadcast';
+export const gGetRoomListUrl = `https://${appServerDomain}/internal/appserver/liverooms`;
 
-export const gRemoveRoomUrl =
-  'https://a1.easemob.com/internal/appserver/liverooms/';
+export const gSendBroadcastUrl = `https://${appServerDomain}/internal/appserver/liverooms/broadcast`;
+
+export const gRemoveRoomUrl = `https://${appServerDomain}/internal/appserver/liverooms/`;
 
 export const gGifts: GiftListModel[] = [
   {
