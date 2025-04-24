@@ -1977,33 +1977,30 @@ export class CallManagerImpl
           appKey: this.option.appKey,
           channelId: call.channelId,
           userId: this.userId,
-          onResult: (p: { data?: any; error?: any }) => {
+          onResult: (p: {
+            data?: { result: { [key: string]: string } };
+            error?: any;
+          }) => {
             calllog.log('CallManagerImpl:onUserJoined:requestUserMap:', p);
-            if (p.error === undefined) {
+            if (p.error === undefined && p.data?.result) {
               let remoteUserId;
               Object.entries(p.data.result).forEach((value: [string, any]) => {
                 if (call.inviter.userId === value[1]) {
-                  if (remoteUid === parseInt(value[0], 10)) {
-                    call.inviter.userChannelId = remoteUid;
-                    call.inviter.userHadJoined = true;
-                  }
+                  call.inviter.userChannelId = Number(value[0]);
+                  call.inviter.userHadJoined = true;
                 } else {
                   const invitee = call.invitees.get(value[1]);
                   if (invitee) {
-                    if (remoteUid === parseInt(value[0], 10)) {
-                      invitee.userChannelId = remoteUid;
-                      invitee.userHadJoined = true;
-                    }
+                    invitee.userChannelId = Number(value[0]);
+                    invitee.userHadJoined = true;
                   } else {
-                    if (remoteUid === parseInt(value[0], 10)) {
-                      this._addInvitee(call.callId, [
-                        {
-                          userId: value[1],
-                          userChannelId: remoteUid,
-                          userHadJoined: true,
-                        } as CallInvitee,
-                      ]);
-                    }
+                    this._addInvitee(call.callId, [
+                      {
+                        userId: value[1],
+                        userChannelId: Number(value[0]),
+                        userHadJoined: true,
+                      } as CallInvitee,
+                    ]);
                   }
                 }
               });
@@ -2025,11 +2022,38 @@ export class CallManagerImpl
                 }
               }
 
-              this.listener?.onRemoteUserJoined?.({
-                channelId: call.channelId,
-                userChannelId: remoteUid,
-                userId: remoteUserId ?? '',
-              });
+              calllog.log(
+                'CallManagerImpl:onUserJoined:requestUserMap:',
+                remoteUserId,
+                this.userId
+              );
+
+              if (remoteUserId) {
+                if (remoteUserId === this.userId) {
+                  // this.listener?.onSelfJoined?.({
+                  //   channelId: call.channelId,
+                  //   userChannelId: remoteUid,
+                  //   userId: remoteUserId,
+                  //   elapsed: elapsed,
+                  // });
+                } else {
+                  this.listener?.onRemoteUserJoined?.({
+                    channelId: call.channelId,
+                    userChannelId: remoteUid,
+                    userId: remoteUserId,
+                  });
+                }
+              } else {
+                if (
+                  call.callType === CallType.VideoMulti ||
+                  call.callType === CallType.AudioMulti
+                ) {
+                  calllog.error(
+                    'CallManagerImpl:onUserJoined:requestUserMap:error:',
+                    'remoteUid is undefined'
+                  );
+                }
+              }
             } else {
               this._onCallEnded({
                 channelId: call.channelId,

@@ -15,6 +15,7 @@ import {
   BasicCall,
   BasicCallProps,
   BasicCallState,
+  BasicLocalData,
   BottomButtonType,
   StateBarHeight,
 } from './BasicCall';
@@ -76,12 +77,21 @@ export type SingleCallState = BasicCallState & {
   peerInfo?: CallUser;
 };
 
+export type SingleCallLocalData = BasicLocalData & {
+  peerJoinChannelSuccess: boolean;
+};
+
 /**
  * Single call UI component. The common part is detailed here. {@link BasicCall}
  */
 export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
+  private localData: SingleCallLocalData;
   constructor(props: SingleCallProps) {
     super(props);
+    this.localData = {
+      peerJoinChannelSuccess: false,
+      joinChannelSuccess: false,
+    };
     this.state = {
       isMinimize: props.isMinimize ?? false,
       callState: props.callState ?? CallState.Connecting,
@@ -100,7 +110,7 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
       elapsed: 0,
       selfUid: 0,
       peerUid: 1,
-      setupMode: VideoViewSetupMode.VideoViewSetupAdd,
+      setupMode: VideoViewSetupMode.VideoViewSetupReplace,
       isSwitchVideo: false,
       muteMicrophone: false,
       isInSpeaker: true,
@@ -221,8 +231,11 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
     }
   }
 
-  private updateBottomButtons(): void {
-    const { peerJoinChannelSuccess, joinChannelSuccess } = this.state;
+  private updateBottomButtons(params: {
+    peerJoinChannelSuccess: boolean;
+    joinChannelSuccess: boolean;
+  }): void {
+    const { peerJoinChannelSuccess, joinChannelSuccess } = params;
     if (peerJoinChannelSuccess && joinChannelSuccess) {
       if (this.isInviter === false) {
         let s;
@@ -355,12 +368,16 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
     userChannelId: number;
     userId: string;
   }): void {
-    calllog.log('SingleCall:onRemoteUserJoined:', params);
+    this.localData.peerJoinChannelSuccess = true;
+    calllog.log('SingleCall:onRemoteUserJoined:', params, this.localData);
     this.setState({
-      peerJoinChannelSuccess: true,
+      peerJoinChannelSuccess: this.localData.peerJoinChannelSuccess,
       peerUid: params.userChannelId,
     });
-    this.updateBottomButtons();
+    this.updateBottomButtons({
+      peerJoinChannelSuccess: this.localData.peerJoinChannelSuccess,
+      joinChannelSuccess: this.localData.joinChannelSuccess,
+    });
     this.props.onPeerJoined?.();
   }
 
@@ -370,14 +387,18 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
     userId: string;
     elapsed: number;
   }): void {
-    calllog.log('SingleCall:onSelfJoined:', params);
+    this.localData.joinChannelSuccess = true;
+    calllog.log('SingleCall:onSelfJoined:', params, this.localData);
     this.setState({
-      joinChannelSuccess: true,
+      joinChannelSuccess: this.localData.joinChannelSuccess,
       elapsed: params.elapsed,
       selfUid: params.userChannelId,
     });
     this.setState({ callState: CallState.Calling });
-    this.updateBottomButtons();
+    this.updateBottomButtons({
+      peerJoinChannelSuccess: this.localData.peerJoinChannelSuccess,
+      joinChannelSuccess: this.localData.joinChannelSuccess,
+    });
     this.props?.onSelfJoined?.();
   }
 
@@ -441,7 +462,15 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
       selfUid,
       muteVideo,
     } = this.state;
-    calllog.log('SingleCall:renderSelfVideo:', selfUid);
+    calllog.log(
+      'SingleCall:renderSelfVideo:',
+      selfUid,
+      callState,
+      joinChannelSuccess,
+      muteVideo,
+      isMinimize,
+      this._startPreview
+    );
     if (isMinimize === true) {
       return null;
     }
@@ -476,6 +505,7 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
             uid: 0,
             setupMode,
           }}
+          zOrderMediaOverlay={true}
           key={selfUid}
         />
       );
@@ -490,7 +520,13 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
       peerJoinChannelSuccess,
       callState,
     } = this.state;
-    calllog.log('SingleCall:renderPeerVideo:', peerUid);
+    calllog.log(
+      'SingleCall:renderPeerVideo:',
+      peerUid,
+      callState,
+      peerJoinChannelSuccess,
+      peerMuteVideo
+    );
     if (this.props.callType === 'audio') {
       return null;
     }

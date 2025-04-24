@@ -174,6 +174,10 @@ export type BasicCallState = {
   error?: CallError;
 };
 
+export type BasicLocalData = {
+  joinChannelSuccess: boolean;
+};
+
 /**
  * Basic object for calling UI components.
  */

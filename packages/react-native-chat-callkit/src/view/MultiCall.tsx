@@ -11,6 +11,7 @@ import {
   BasicCall,
   BasicCallProps,
   BasicCallState,
+  BasicLocalData,
   BottomButtonType,
   StateBarHeight,
 } from './BasicCall';
@@ -127,16 +128,25 @@ export type MultiCallState = BasicCallState & {
   fullChannelId?: number;
 };
 
+export type MultiCallLocalData = BasicLocalData & {
+  users: Map<string, boolean>;
+};
+
 /**
  * Multi call UI component. The common part is detailed here. {@link BasicCall}
  */
 export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
   private _videoTabRef?: React.RefObject<VideoTabs>;
   private _cache: Map<number, User>;
+  private localData: MultiCallLocalData;
   constructor(props: MultiCallProps) {
     super(props);
     this._videoTabRef = React.createRef<VideoTabs>();
     this._cache = new Map();
+    this.localData = {
+      users: new Map(),
+      joinChannelSuccess: false,
+    };
     let users = [] as User[];
     users.push({
       userId: props.inviterId,
@@ -194,7 +204,7 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
       joinChannelSuccess: false,
       elapsed: 0,
       selfUid: 0,
-      setupMode: VideoViewSetupMode.VideoViewSetupAdd,
+      setupMode: VideoViewSetupMode.VideoViewSetupReplace,
       muteMicrophone: false,
       isInSpeaker: true,
       inviteeIds: props.inviteeIds,
@@ -387,8 +397,8 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
     }
   }
 
-  private updateBottomButtons(): void {
-    const { joinChannelSuccess } = this.state;
+  private updateBottomButtons(params: MultiCallLocalData): void {
+    const { joinChannelSuccess } = params;
     if (joinChannelSuccess) {
       if (this.isInviter === false) {
         let s;
@@ -559,6 +569,9 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
         isExisted = true;
         break;
       }
+      if (user?.userId) {
+        this.localData.users.delete(user.userId);
+      }
     }
     calllog.log('MultiCall:removeUser:users:', users, isExisted);
     if (isExisted) {
@@ -640,7 +653,11 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
     userId: string;
   }): void {
     calllog.log('MultiCall:onRemoteUserJoined:', params);
-    this.updateBottomButtons();
+    this.localData.users.set(params.userId, true);
+    this.updateBottomButtons({
+      users: this.localData.users,
+      joinChannelSuccess: this.localData.joinChannelSuccess,
+    });
     this.updateUser({ ...params, isSelf: false });
   }
 
@@ -651,13 +668,17 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
     elapsed: number;
   }): void {
     calllog.log('MultiCall:onSelfJoined:', params);
+    this.localData.joinChannelSuccess = true;
     this.setState({
-      joinChannelSuccess: true,
+      joinChannelSuccess: this.localData.joinChannelSuccess,
       elapsed: params.elapsed,
       selfUid: params.userChannelId,
     });
     this.setState({ callState: CallState.Calling });
-    this.updateBottomButtons();
+    this.updateBottomButtons({
+      users: this.localData.users,
+      joinChannelSuccess: this.localData.joinChannelSuccess,
+    });
     this.updateUser({ ...params, isSelf: true });
     this.props?.onSelfJoined?.();
   }
