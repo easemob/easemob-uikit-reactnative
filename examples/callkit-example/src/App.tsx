@@ -117,6 +117,10 @@ export function App() {
           appKey: appKey,
           debugModel: true,
           autoLogin: false,
+          // enableDNSConfig: false,
+          // imPort: 6717,
+          // imServer: '180.184.143.60',
+          // restServer: 'https://a1-hsb.easemob.com',
         })
       )
       .then(() => {
