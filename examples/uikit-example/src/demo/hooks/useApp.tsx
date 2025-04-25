@@ -83,7 +83,7 @@ export function useAppConfig() {
       autoAcceptGroupInvitation: true,
       requireAck: true,
       requireDeliveryAck: true,
-      appServerDomain: enableDevModeRef.current
+      restServer: enableDevModeRef.current
         ? appServerDomainRef.current
         : undefined,
       imServer: enableDevModeRef.current ? imServerRef.current : undefined,
