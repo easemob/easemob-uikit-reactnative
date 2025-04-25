@@ -224,7 +224,7 @@ export function ServerSettingScreen(props: Props) {
         }
 
         setImServer(value.imServer);
-        setImPort(value.imPort);
+        setImPort(value.imPort.toString());
         setappServerDomain(value.appServerDomain);
         setEnablePrivateServer(value.enablePrivateServer ?? false);
       }

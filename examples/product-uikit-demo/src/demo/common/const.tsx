@@ -17,13 +17,14 @@
 //   'https://${appServerDomain}/internal/appserver/liverooms/';
 
 const env = require('../../env');
-export const useSendBox = env.useSendBox as boolean;
+export const useSandbox =
+  env.appServerDomain.length > 0 && env.imServer.length > 0; // from android source code
 export const appKey = env.appKey as string;
 export const appId = env.appId as string;
-export const appServerDomain = env.appServerDomain as string;
-export const imServer = useSendBox ? '180.184.143.60' : undefined;
-export const imPort = useSendBox ? '6717' : undefined;
-export const enableDNSConfig = useSendBox ? false : undefined;
+export const appServerDomain: string = env.appServerDomain;
+export const imServer: string = env.imServer;
+export const imPort: number = env.imPort;
+export const enableDNSConfig: boolean = !useSandbox;
 export const agoraAppId = env.agoraAppId as string;
 export const isDevMode = env.isDevMode as boolean;
 export const accountType = env.accountType as string;

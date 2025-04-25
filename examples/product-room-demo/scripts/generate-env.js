@@ -20,6 +20,10 @@ export const gCreateRoomUrl = '';
 export const gGetRoomListUrl = '';
 export const reactStrictMode = false;
 export const appServerDomain = '';
+export const enableDNSConfig = true;
+export const useSandbox = false;
+export const imPort = 0;
+export const imServer = '';
 export const account = [{ id: '', token: '' }];
 `;
 if (fs.existsSync(out_file) === false) {

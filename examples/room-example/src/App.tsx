@@ -31,6 +31,15 @@ import {
 } from './screens';
 
 const env = require('./env');
+const useSandbox = env.appServerDomain.length > 0 && env.imServer.length > 0;
+const sandBoxConfig = useSandbox
+  ? {
+      restServer: env.appServerDomain,
+      enableDNSConfig: false,
+      imPort: env.imPort,
+      imServer: env.imServer,
+    }
+  : {};
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
@@ -38,8 +47,8 @@ SplashScreen.preventAutoHideAsync();
 
 const opt =
   env.accountType === 'easemob' || env.accountType === 'agora'
-    ? ChatOptions.withAppKey({ appKey: env.appKey })
-    : ChatOptions.withAppId({ appId: env.appKey });
+    ? ChatOptions.withAppKey({ appKey: env.appKey, ...sandBoxConfig })
+    : ChatOptions.withAppId({ appId: env.appKey, ...sandBoxConfig });
 
 export function App() {
   const [initialRouteName] = React.useState('TopMenu' as RootParamsName);
