@@ -60,12 +60,13 @@ export default function LoginScreen({ route, navigation }: Props): JSX.Element {
       .then(() => {
         console.log('test:login:success');
         setButtonState('stop');
-        navigation.dispatch(StackActions.push('Home', { params: {} }));
+        navigation.dispatch(
+          StackActions.push('Home', { params: { token: password } })
+        );
       })
       .catch((e) => {
         console.warn('test:login:fail:', e);
         setButtonState('stop');
-        navigation.dispatch(StackActions.push('Home', { params: {} }));
       });
   };
 

@@ -220,7 +220,6 @@ function LogList(props: LogListProps): JSX.Element {
   );
   React.useEffect(() => {
     const sub = DeviceEventEmitter.addListener('log', () => {
-      console.log('test:234:');
       setData([..._data]);
     });
     init(true);
@@ -249,14 +248,16 @@ function LogList(props: LogListProps): JSX.Element {
 }
 
 export default function HomeScreen({
+  route,
   navigation,
 }: NativeStackScreenProps<RootParamsList, 'Home'>): JSX.Element {
-  console.log('test:HomeScreen:');
+  console.log('test:HomeScreen:', route.params);
   const contactListRef = React.useRef<ContactListRef>({} as any);
   const { call } = useCallkitSdkContext();
   const [enableLog, setEnableLog] = React.useState(false);
+  const { token } = route.params?.params as any;
 
-  const { showMultiCall, showSingleCall } = useCallApi();
+  const { showMultiCall, showSingleCall } = useCallApi({ token });
   const [visible, setVisible] = React.useState(false);
   const [inviterId, setInviterId] = React.useState('');
   const [currentId, setCurrentId] = React.useState('');
@@ -530,7 +531,7 @@ const style = StyleSheet.create({
   },
 });
 
-function useCallApi() {
+function useCallApi({ token }: { token: string }) {
   const showSingleCall = React.useCallback(
     (params: {
       appKey: string;
@@ -556,6 +557,7 @@ function useCallApi() {
       } = params;
       return (
         <SingleCall
+          rtcToken={token}
           inviterId={inviterId}
           inviterName={inviterName}
           inviterAvatar={inviterAvatar}
@@ -611,7 +613,7 @@ function useCallApi() {
         />
       );
     },
-    []
+    [token]
   );
   const showMultiCall = React.useCallback(
     (params: {
@@ -638,6 +640,7 @@ function useCallApi() {
       } = params;
       return (
         <MultiCall
+          rtcToken={token}
           inviterId={inviterId}
           inviterName={inviterName}
           inviterAvatar={inviterAvatar}
@@ -693,7 +696,7 @@ function useCallApi() {
         />
       );
     },
-    []
+    [token]
   );
 
   return {

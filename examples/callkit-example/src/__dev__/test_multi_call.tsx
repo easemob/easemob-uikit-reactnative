@@ -64,6 +64,7 @@ export function test_all() {
   // const inviteeIds = ['1'];
   return (
     <MultiCall
+      rtcToken="sdf"
       isMinimize={isMinimize}
       callState={callState}
       callType={callType}

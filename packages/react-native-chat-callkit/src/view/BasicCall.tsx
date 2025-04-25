@@ -38,6 +38,10 @@ export type BottomButtonType =
  */
 export type BasicCallProps = {
   /**
+   * RTC token.
+   */
+  rtcToken: string;
+  /**
    * Inviter ID.
    */
   inviterId: string;
@@ -345,6 +349,9 @@ export abstract class BasicCall<
       this.callId = callId;
       this.manager?.acceptCall({
         callId: callId,
+        extension: {
+          userRTCToken: this.props.rtcToken,
+        },
         onResult: (params: {
           callId?: string | undefined;
           error?: CallError | undefined;

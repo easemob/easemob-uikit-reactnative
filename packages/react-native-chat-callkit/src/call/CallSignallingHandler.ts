@@ -366,7 +366,7 @@ export class CallSignallingHandler implements ChatMessageEventListener {
     this.send(params.callId, msg, params.onResult);
   }
   /**
-   * The invitee sends a confirmation of the invitation. The inviter receives the notification through {@link CallSignallingListener.onInviteReply}.
+   * The invitee sends a confirmation of the invitation. The inviter receives the notification through {@link CallSignallingListener.onInviteReplyConfirm}.
    */
   public sendInviteReply(params: {
     callId: string;

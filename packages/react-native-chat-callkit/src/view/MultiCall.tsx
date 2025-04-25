@@ -365,6 +365,9 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
           this.manager.startMultiAudioCall({
             inviteeIds: inviteeIds,
             channelId: channelId,
+            extension: {
+              userRTCToken: this.props.rtcToken,
+            },
             onResult: (params) => {
               calllog.log('MultiCall:startMultiAudioCall:', params);
               if (params.error) {
@@ -380,6 +383,9 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
           this.manager.startMultiVideoCall({
             inviteeIds: inviteeIds,
             channelId: channelId,
+            extension: {
+              userRTCToken: this.props.rtcToken,
+            },
             onResult: (params) => {
               calllog.log('MultiCall:startMultiVideoCall:', params);
               if (params.error) {
@@ -644,7 +650,8 @@ export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
     userRTCToken: string;
   }): void {
     calllog.log('MultiCall:onRequestJoin:', params);
-    this.manager?.joinChannel(params);
+    // this.manager?.joinChannel(params);
+    this.manager?.joinChannelWithUserAccount(params);
   }
 
   onRemoteUserJoined(params: {

@@ -199,6 +199,9 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
           this.manager.startSingleAudioCall({
             inviteeId: this.props.inviteeId,
             channelId: channelId,
+            extension: {
+              userRTCToken: this.props.rtcToken,
+            },
             onResult: (params) => {
               calllog.log('SingleCall:startSingleAudioCall:', params);
               if (params.error) {
@@ -214,6 +217,9 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
           this.manager.startSingleVideoCall({
             inviteeId: this.props.inviteeId,
             channelId: channelId,
+            extension: {
+              userRTCToken: this.props.rtcToken,
+            },
             onResult: (params) => {
               calllog.log('SingleCall:startSingleVideoCall:', params);
               if (params.error) {
@@ -360,7 +366,8 @@ export class SingleCall extends BasicCall<SingleCallProps, SingleCallState> {
     userRTCToken: string;
   }): void {
     calllog.log('SingleCall:onRequestJoin:', params);
-    this.manager?.joinChannel(params);
+    // this.manager?.joinChannel(params);
+    this.manager?.joinChannelWithUserAccount(params);
   }
 
   onRemoteUserJoined(params: {

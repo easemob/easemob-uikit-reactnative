@@ -69,6 +69,7 @@ export function useCallApi(props: AVViewProps) {
       getAbsoluteViewRef().showWithProps({
         children: (
           <SingleCall
+            rtcToken="sdf"
             inviterId={inviterId}
             inviterName={inviterName}
             inviterAvatar={inviterAvatar}
@@ -143,6 +144,7 @@ export function useCallApi(props: AVViewProps) {
       getAbsoluteViewRef().showWithProps({
         children: (
           <MultiCall
+            rtcToken="sdf"
             inviterId={inviterId}
             inviterName={inviterName}
             inviterAvatar={inviterAvatar}

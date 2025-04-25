@@ -14,6 +14,7 @@ export function test_all() {
   const isTest = true;
   return (
     <SingleCall
+      rtcToken="sdf"
       isMinimize={isMinimize}
       callState={callState}
       callType={callType}
