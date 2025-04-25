@@ -284,7 +284,7 @@ export function _App() {
         return;
       }
       isReadyRef.current = true;
-      RestApi.setServer(appServerDomainRef.current);
+      RestApi.setServer(appServerDomainRef.current ?? '');
 
       await initPush();
 

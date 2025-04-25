@@ -29,13 +29,22 @@ import {
 } from './screens';
 
 const env = require('./env');
+const useSandbox = env.appServerDomain.length > 0 && env.imServer.length > 0; // from android source code
+const sandboxConfig = useSandbox
+  ? {
+      restServer: env.appServerDomain,
+      enableDNSConfig: false,
+      imPort: env.imPort,
+      imServer: env.imServer,
+    }
+  : {};
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
 const opt =
   env.accountType === 'easemob' || env.accountType === 'agora'
-    ? ChatOptions.withAppKey({ appKey: env.appKey })
-    : ChatOptions.withAppId({ appId: env.appKey });
+    ? ChatOptions.withAppKey({ appKey: env.appKey, ...sandboxConfig })
+    : ChatOptions.withAppId({ appId: env.appKey, ...sandboxConfig });
 
 export function App() {
   const [initialRouteName] = React.useState('Login' as RootParamsName);

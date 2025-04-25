@@ -84,9 +84,9 @@ export function useAppConfig() {
   const appKeyRef = React.useRef(appKey);
   const appIdRef = React.useRef(appId);
   const autoLoginRef = React.useRef(false);
-  const appServerDomainRef = React.useRef(appServerDomain);
-  const imServerRef = React.useRef(imServer);
-  const imPortRef = React.useRef(imPort);
+  const appServerDomainRef = React.useRef<string | undefined>(appServerDomain);
+  const imServerRef = React.useRef<string | undefined>(imServer);
+  const imPortRef = React.useRef<any>(imPort);
   const enableDNSConfigRef = React.useRef<boolean | undefined>(enableDNSConfig);
   const enableDevModeRef = React.useRef<boolean | undefined>(isDevMode);
 

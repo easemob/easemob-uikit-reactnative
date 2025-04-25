@@ -40,6 +40,8 @@ let gAppKey = '';
 let agoraAppId = '';
 let accountType: 'easemob' | 'agora' | undefined;
 let appServerDomain = '';
+let useSandbox = false;
+let sandBoxConfig = {};
 
 try {
   const env = require('./env');
@@ -56,6 +58,15 @@ try {
   agoraAppId = env.agoraAppId;
   accountType = env.accountType;
   appServerDomain = env.appServerDomain;
+  useSandbox = env.appServerDomain.length > 0 && env.imServer.length > 0; // from android source code
+  sandBoxConfig = useSandbox
+    ? {
+        restServer: env.appServerDomain,
+        enableDNSConfig: false,
+        imPort: env.imPort,
+        imServer: env.imServer,
+      }
+    : {};
 } catch (e) {
   console.error('dev:config_error:', e);
 }
@@ -117,10 +128,7 @@ export function App() {
           appKey: appKey,
           debugModel: true,
           autoLogin: false,
-          // enableDNSConfig: false,
-          // imPort: 6717,
-          // imServer: '180.184.143.60',
-          // restServer: 'https://a1-hsb.easemob.com',
+          ...sandBoxConfig,
         })
       )
       .then(() => {

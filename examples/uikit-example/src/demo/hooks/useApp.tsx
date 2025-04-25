@@ -68,9 +68,9 @@ export function useAppConfig() {
   const appKeyRef = React.useRef(appKey);
   const appIdRef = React.useRef(appId);
   const autoLoginRef = React.useRef(false);
-  const appServerDomainRef = React.useRef(appServerDomain);
-  const imServerRef = React.useRef(imServer);
-  const imPortRef = React.useRef(imPort);
+  const appServerDomainRef = React.useRef<string | undefined>(appServerDomain);
+  const imServerRef = React.useRef<string | undefined>(imServer);
+  const imPortRef = React.useRef<any>(imPort);
   const enableDNSConfigRef = React.useRef<boolean | undefined>(enableDNSConfig);
   const enableDevModeRef = React.useRef<boolean | undefined>(isDevMode);
 
@@ -188,10 +188,10 @@ export function useApp() {
   //     autoAcceptGroupInvitation: true,
   //     requireAck: true,
   //     requireDeliveryAck: true,
-  //     appServerDomain: useSendBox ? appServerDomain : undefined,
-  //     imServer: useSendBox ? imServerRef.current : undefined,
-  //     imPort: useSendBox ? imPortRef.current : (undefined as any),
-  //     enableDNSConfig: useSendBox ? enableDNSConfigRef.current : undefined,
+  //     appServerDomain: useSandbox ? appServerDomain : undefined,
+  //     imServer: useSandbox ? imServerRef.current : undefined,
+  //     imPort: useSandbox ? imPortRef.current : (undefined as any),
+  //     enableDNSConfig: useSandbox ? enableDNSConfigRef.current : undefined,
   //   } as ChatOptionsType;
   // }, [autoLogin]);
 
