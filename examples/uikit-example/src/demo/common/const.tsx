@@ -18,10 +18,11 @@
 
 const env = require('../../env');
 export const useSandbox =
-  env.appServerDomain.length > 0 && env.imServer.length > 0; // from android source code
+  env.restServerDomain.length > 0 && env.imServer.length > 0; // from android source code
 export const appKey = env.appKey as string;
 export const appId = env.appId as string;
 export const appServerDomain: string = env.appServerDomain;
+export const restServerDomain: string = env.restServerDomain;
 export const imServer: string = env.imServer;
 export const imPort: number = env.imPort;
 export const enableDNSConfig: boolean = !useSandbox;

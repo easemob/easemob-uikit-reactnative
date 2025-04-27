@@ -4,9 +4,9 @@ import { AsyncStorageBasic, SingletonObjects } from '../../rename.uikit';
 import {
   appId,
   appKey,
-  appServerDomain,
   imPort,
   imServer,
+  restServerDomain,
   useSandbox,
 } from '../common/const';
 
@@ -61,8 +61,8 @@ export function useServerConfig() {
     const ret = await getKey(`enablePrivateServer`);
     return ret === 'true' ? true : ret === 'false' ? false : useSandbox;
   }, [getKey]);
-  const getAppServerDomain = React.useCallback(async () => {
-    return (await getKey('appServerDomain')) ?? appServerDomain;
+  const getRestServerDomain = React.useCallback(async () => {
+    return (await getKey('restServerDomain')) ?? restServerDomain;
   }, [getKey]);
   const getEnableDevMode = React.useCallback(async () => {
     const ret = await getKey(`enableDevMode`);
@@ -111,9 +111,9 @@ export function useServerConfig() {
     },
     [setKey]
   );
-  const setAppServerDomain = React.useCallback(
+  const setRestServerDomain = React.useCallback(
     async (value: string) => {
-      setKey('appServerDomain', value);
+      setKey('restServerDomain', value);
     },
     [setKey]
   );
@@ -134,7 +134,7 @@ export function useServerConfig() {
     getImServer,
     getImPort,
     getEnablePrivateServer,
-    getAppServerDomain,
+    getRestServerDomain,
     getEnableDevMode,
     setAppKey,
     setAppId,
@@ -142,7 +142,7 @@ export function useServerConfig() {
     setImServer,
     setImPort,
     setEnablePrivateServer,
-    setAppServerDomain,
+    setRestServerDomain,
     setEnableDevMode,
   };
 }

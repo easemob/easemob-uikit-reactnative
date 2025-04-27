@@ -4,6 +4,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { appServerDomain } from '../env';
 import {
   type ChatService,
   type ChatServiceListener,
@@ -104,7 +105,7 @@ export function _App() {
     appIdRef,
     imServerRef,
     imPortRef,
-    appServerDomainRef,
+    restServerDomainRef,
     enableDNSConfigRef,
     _initParams,
     setInitParams,
@@ -133,7 +134,7 @@ export function _App() {
     getEnablePrivateServer,
     getImPort,
     getImServer,
-    getAppServerDomain,
+    getRestServerDomain,
   } = useServerConfig();
 
   const { initParams } = useGeneralSetting();
@@ -171,19 +172,19 @@ export function _App() {
         if (enablePrivateServer === true) {
           imPortRef.current = await getImPort();
           imServerRef.current = await getImServer();
-          appServerDomainRef.current = await getAppServerDomain();
+          restServerDomainRef.current = await getRestServerDomain();
           enableDNSConfigRef.current = false;
         } else {
           imPortRef.current = undefined;
           imServerRef.current = undefined;
-          appServerDomainRef.current = undefined;
+          restServerDomainRef.current = undefined;
           enableDNSConfigRef.current = true;
         }
       } else {
         autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
-        appServerDomainRef.current = undefined;
+        restServerDomainRef.current = undefined;
         enableDNSConfigRef.current = true;
       }
 
@@ -226,7 +227,7 @@ export function _App() {
         messageMenuStyleRef: messageMenuStyleRef.current,
         enableDNSConfigRef: enableDNSConfigRef.current,
         serverConfigVisibleRef: serverConfigVisibleRef.current,
-        appServerDomainRef: appServerDomainRef.current,
+        restServerDomainRef: restServerDomainRef.current,
         imPortRef: imPortRef.current,
         imServerRef: imServerRef.current,
         appKeyRef: appKeyRef.current,
@@ -241,7 +242,6 @@ export function _App() {
     _initParams,
     appIdRef,
     appKeyRef,
-    appServerDomainRef,
     autoLoginRef,
     enableAVMeetingRef,
     enableBlockRef,
@@ -254,12 +254,12 @@ export function _App() {
     enableTypingRef,
     getAppId,
     getAppKey,
-    getAppServerDomain,
     getEnableDevMode,
     getEnablePrivateServer,
     getImPort,
     getImServer,
     getIsAppKey,
+    getRestServerDomain,
     imPortRef,
     imServerRef,
     initParams,
@@ -269,6 +269,7 @@ export function _App() {
     messageInputBarExtensionStyleRef,
     messageMenuStyleRef,
     releaseAreaRef,
+    restServerDomainRef,
     serverConfigVisibleRef,
     setInitParams,
     translateLanguageRef,
@@ -288,7 +289,7 @@ export function _App() {
         return;
       }
       isReadyRef.current = true;
-      RestApi.setServer(appServerDomainRef.current ?? '');
+      RestApi.setServer(appServerDomain);
 
       await initPush();
 
@@ -325,14 +326,7 @@ export function _App() {
         }
       }, 1000);
     },
-    [
-      isReadyRef,
-      appServerDomainRef,
-      initPush,
-      autoLoginAction,
-      rootRef,
-      serverConfigVisibleRef,
-    ]
+    [autoLoginAction, initPush, isReadyRef, rootRef, serverConfigVisibleRef]
   );
 
   const onContainerInitialized = React.useCallback(
