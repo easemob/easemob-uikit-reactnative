@@ -44,7 +44,6 @@ import {
   usePermissions,
   usePresetPalette,
 } from '../../rename.uikit';
-// import { getDeviceName, getSystemName, getSystemVersion, getModel, getVersion } from 'react-native-device-info';
 import { createStringSetCn, createStringSetEn } from '../common';
 import { boloo_da_ttf, twemoji_ttf } from '../common/assets';
 import {
@@ -72,7 +71,6 @@ export function useAppConfig() {
   const imServerRef = React.useRef<string | undefined>(imServer);
   const imPortRef = React.useRef<any>(imPort);
   const enableDNSConfigRef = React.useRef<boolean | undefined>(enableDNSConfig);
-  const enableDevModeRef = React.useRef<boolean | undefined>(isDevMode);
 
   const getOptions = React.useCallback(() => {
     return {
@@ -83,14 +81,10 @@ export function useAppConfig() {
       autoAcceptGroupInvitation: true,
       requireAck: true,
       requireDeliveryAck: true,
-      restServer: enableDevModeRef.current
-        ? appServerDomainRef.current
-        : undefined,
-      imServer: enableDevModeRef.current ? imServerRef.current : undefined,
-      imPort: enableDevModeRef.current ? imPortRef.current : (undefined as any),
-      enableDNSConfig: enableDevModeRef.current
-        ? enableDNSConfigRef.current
-        : undefined,
+      restServer: appServerDomainRef.current,
+      imServer: imServerRef.current,
+      imPort: imPortRef.current,
+      enableDNSConfig: enableDNSConfigRef.current,
       pushConfig: undefined,
     } as ChatOptionsType;
   }, []);
@@ -109,11 +103,9 @@ export function useAppConfig() {
 
 export function useApp() {
   const im = getChatService();
-  // const list = React.useRef<Map<string, DataModel>>(new Map());
   const permissionsRef = React.useRef(false);
   const { getPermission } = usePermissions();
   const initialRouteNameRef = React.useRef('Splash' as RootParamsName);
-  // const autoLogin = React.useRef(false).current;
   const palette = usePresetPalette();
   const paletteRef = React.useRef(palette);
   const ra = getReleaseArea();
@@ -154,18 +146,8 @@ export function useApp() {
   });
   const rootRef = useNavigationContainerRef<RootParamsList>();
   const serverConfigVisibleRef = React.useRef(false);
-  // const appKeyRef = React.useRef(appKey);
-  // const appIdRef = React.useRef(appId);
-  // const imServerRef = React.useRef(imServer);
-  // const imPortRef = React.useRef(imPort);
-  // const enableDNSConfigRef = React.useRef(enableDNSConfig);
   const [_initParams, setInitParams] = React.useState(false);
-  const {
-    getDataFromStorage,
-    // updateDataFromServer,
-    // updateDataToStorage,
-    // users,
-  } = useUserInfo();
+  const { getDataFromStorage } = useUserInfo();
   const {
     appKeyRef,
     appIdRef,
@@ -178,22 +160,6 @@ export function useApp() {
   } = useAppConfig();
 
   const { updater } = useForceUpdate();
-
-  // const getOptions = React.useCallback(() => {
-  //   return {
-  //     appKey: appKeyRef.current,
-  //     appId: appIdRef.current,
-  //     debugModel: isDevMode,
-  //     autoLogin: autoLogin,
-  //     autoAcceptGroupInvitation: true,
-  //     requireAck: true,
-  //     requireDeliveryAck: true,
-  //     appServerDomain: useSandbox ? appServerDomain : undefined,
-  //     imServer: useSandbox ? imServerRef.current : undefined,
-  //     imPort: useSandbox ? imPortRef.current : (undefined as any),
-  //     enableDNSConfig: useSandbox ? enableDNSConfigRef.current : undefined,
-  //   } as ChatOptionsType;
-  // }, [autoLogin]);
 
   const onUsersHandler = React.useCallback(
     async (data: Map<string, DataModel>) => {

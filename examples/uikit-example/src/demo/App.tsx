@@ -14,12 +14,7 @@ import {
 } from '../rename.uikit';
 import { ToastView } from './common';
 import { AvatarStatusRenderMemo } from './common/AvatarStatusRender';
-import {
-  accountType,
-  appServerDomain,
-  boloo_da_ttf_name,
-  demoType,
-} from './common/const';
+import { accountType, boloo_da_ttf_name, demoType } from './common/const';
 import { RestApi } from './common/rest.api';
 import { useAutoLogin } from './hooks';
 import { useApp } from './hooks/useApp';
@@ -161,6 +156,7 @@ export function _App() {
       }
       serverConfigVisibleRef.current = await getEnableDevMode();
       if (serverConfigVisibleRef.current === true) {
+        const enablePrivateServer = await getEnablePrivateServer();
         autoLoginRef.current = true;
         const isAppKey = await getIsAppKey();
         if (isAppKey) {
@@ -171,16 +167,24 @@ export function _App() {
           AppKey.setAppKey('');
         }
 
-        imPortRef.current = await getImPort();
-        imServerRef.current = await getImServer();
-        appServerDomainRef.current = await getAppServerDomain();
-        enableDNSConfigRef.current = !(await getEnablePrivateServer());
+        console.log('dev:init:enablePrivateServer:', enablePrivateServer);
+        if (enablePrivateServer === true) {
+          imPortRef.current = await getImPort();
+          imServerRef.current = await getImServer();
+          appServerDomainRef.current = await getAppServerDomain();
+          enableDNSConfigRef.current = false;
+        } else {
+          imPortRef.current = undefined;
+          imServerRef.current = undefined;
+          appServerDomainRef.current = undefined;
+          enableDNSConfigRef.current = true;
+        }
       } else {
         autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
-        appServerDomainRef.current = appServerDomain;
-        enableDNSConfigRef.current = undefined;
+        appServerDomainRef.current = undefined;
+        enableDNSConfigRef.current = true;
       }
 
       appKeyRef.current = AppKey.appKey();
@@ -235,39 +239,39 @@ export function _App() {
     }
   }, [
     _initParams,
-    serverConfigVisibleRef,
-    getEnableDevMode,
-    appKeyRef,
     appIdRef,
-    initParams,
-    isLightRef,
-    releaseAreaRef,
-    languageRef,
-    translateLanguageRef,
+    appKeyRef,
+    appServerDomainRef,
+    autoLoginRef,
+    enableAVMeetingRef,
+    enableBlockRef,
+    enableDNSConfigRef,
+    enableOfflinePushRef,
     enablePresenceRef,
     enableReactionRef,
     enableThreadRef,
     enableTranslateRef,
-    enableAVMeetingRef,
-    enableOfflinePushRef,
     enableTypingRef,
-    enableBlockRef,
-    messageMenuStyleRef,
-    messageInputBarExtensionStyleRef,
-    enableDNSConfigRef,
-    appServerDomainRef,
-    imPortRef,
-    imServerRef,
-    autoLoginRef,
-    setInitParams,
-    initialRouteNameRef,
-    getIsAppKey,
+    getAppId,
+    getAppKey,
+    getAppServerDomain,
+    getEnableDevMode,
+    getEnablePrivateServer,
     getImPort,
     getImServer,
-    getAppServerDomain,
-    getEnablePrivateServer,
-    getAppKey,
-    getAppId,
+    getIsAppKey,
+    imPortRef,
+    imServerRef,
+    initParams,
+    initialRouteNameRef,
+    isLightRef,
+    languageRef,
+    messageInputBarExtensionStyleRef,
+    messageMenuStyleRef,
+    releaseAreaRef,
+    serverConfigVisibleRef,
+    setInitParams,
+    translateLanguageRef,
   ]);
 
   const onReady = React.useCallback(

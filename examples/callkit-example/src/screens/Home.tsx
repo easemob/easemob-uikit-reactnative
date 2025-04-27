@@ -124,7 +124,9 @@ const ContactListMemo = React.memo((props: ContactListProps) => {
         }
         setData([...data]);
       }
-    } catch (e) {}
+    } catch (e) {
+      console.warn('test:ContactList:init:error:', e);
+    }
   }, [data]);
   React.useEffect(() => {
     init();
