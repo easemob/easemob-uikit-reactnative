@@ -1,10 +1,17 @@
 import { ChatClient } from '../rename.callkit';
 
 const appServerDomain = require('../env').appServerDomain;
+const accountType = require('../env').accountType;
 
 export class AppServerClient {
-  private static _rtcTokenUrl: string = `https://${appServerDomain}/token/rtcToken/v1`;
-  private static _mapUrl: string = `https://${appServerDomain}/channel/mapper`;
+  private static _rtcTokenUrl: string =
+    accountType === 'easemob'
+      ? `https://${appServerDomain}/token/rtcToken/v1`
+      : `https://${appServerDomain}/token/rtc/channel`;
+  private static _mapUrl: string =
+    accountType === 'easemob'
+      ? `https://${appServerDomain}/channel/mapper`
+      : `https://${appServerDomain}/agora/channel/mapper`;
   private static _regUrl: string = `https://${appServerDomain}/app/chat/user/register`;
   private static _tokenUrl: string = `https://${appServerDomain}/app/chat/user/login`;
 

@@ -39,7 +39,6 @@ let appId = '';
 let gAppKey = '';
 let agoraAppId = '';
 let accountType: 'easemob' | 'agora' | undefined;
-let appServerDomain = '';
 let useSandbox = false;
 let sandBoxConfig = {};
 
@@ -57,11 +56,10 @@ try {
   gAppKey = appKey && appKey.length > 0 ? appKey : appId;
   agoraAppId = env.agoraAppId;
   accountType = env.accountType;
-  appServerDomain = env.appServerDomain;
-  useSandbox = env.appServerDomain.length > 0 && env.imServer.length > 0; // from android source code
+  useSandbox = env.restServerDomain.length > 0 && env.imServer.length > 0; // from android source code
   sandBoxConfig = useSandbox
     ? {
-        restServer: env.appServerDomain,
+        restServer: env.restServerDomain,
         enableDNSConfig: false,
         imPort: env.imPort,
         imServer: env.imServer,
@@ -99,11 +97,6 @@ export function App() {
     }
 
     try {
-      if (accountType !== 'easemob') {
-        AppServerClient.rtcTokenUrl = `${appServerDomain}/token/rtc/channel`;
-        AppServerClient.mapUrl = `${appServerDomain}/agora/channel/mapper`;
-      }
-
       const hasPermission = await requestAndroidVideo();
       if (!hasPermission) {
         console.warn('Video and Audio Permission request failed.');

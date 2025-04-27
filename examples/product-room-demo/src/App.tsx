@@ -29,10 +29,10 @@ import {
 } from './screens';
 
 const env = require('./env');
-const useSandbox = env.appServerDomain.length > 0 && env.imServer.length > 0; // from android source code
+const useSandbox = env.restServerDomain.length > 0 && env.imServer.length > 0; // from android source code
 const sandboxConfig = useSandbox
   ? {
-      restServer: env.appServerDomain,
+      restServer: env.restServerDomain,
       enableDNSConfig: false,
       imPort: env.imPort,
       imServer: env.imServer,

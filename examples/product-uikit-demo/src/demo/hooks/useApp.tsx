@@ -60,13 +60,13 @@ import {
   accountType,
   appId,
   appKey,
-  appServerDomain,
   boloo_da_ttf_name,
   enableDNSConfig,
   fcmSenderId,
   imPort,
   imServer,
   isDevMode,
+  restServerDomain,
   twemoji_ttf_name,
 } from '../common/const';
 import {
@@ -84,7 +84,9 @@ export function useAppConfig() {
   const appKeyRef = React.useRef(appKey);
   const appIdRef = React.useRef(appId);
   const autoLoginRef = React.useRef(false);
-  const appServerDomainRef = React.useRef<string | undefined>(appServerDomain);
+  const restServerDomainRef = React.useRef<string | undefined>(
+    restServerDomain
+  );
   const imServerRef = React.useRef<string | undefined>(imServer);
   const imPortRef = React.useRef<any>(imPort);
   const enableDNSConfigRef = React.useRef<boolean | undefined>(enableDNSConfig);
@@ -98,7 +100,7 @@ export function useAppConfig() {
       autoAcceptGroupInvitation: true,
       requireAck: true,
       requireDeliveryAck: true,
-      restServer: appServerDomainRef.current,
+      restServer: restServerDomainRef.current,
       imServer: imServerRef.current,
       imPort: imPortRef.current,
       enableDNSConfig: enableDNSConfigRef.current,
@@ -117,7 +119,7 @@ export function useAppConfig() {
     appIdRef,
     imServerRef,
     imPortRef,
-    appServerDomainRef,
+    restServerDomainRef,
     enableDNSConfigRef,
     autoLoginRef,
     getOptions,
@@ -176,7 +178,7 @@ export function useApp() {
     appIdRef,
     imServerRef,
     imPortRef,
-    appServerDomainRef,
+    restServerDomainRef,
     enableDNSConfigRef,
     getOptions,
     autoLoginRef,
@@ -912,7 +914,7 @@ export function useApp() {
     appIdRef,
     imServerRef,
     imPortRef,
-    appServerDomainRef,
+    restServerDomainRef,
     enableDNSConfigRef,
     _initParams,
     setInitParams,

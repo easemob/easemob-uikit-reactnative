@@ -19,8 +19,10 @@ import { AVView } from './common/AVView';
 import {
   accountType,
   agoraAppId,
+  appServerDomain,
   boloo_da_ttf_name,
   isDevMode,
+  restServerDomain,
 } from './common/const';
 import { RestApi } from './common/rest.api';
 import { useAutoLogin } from './hooks';
@@ -107,7 +109,7 @@ export function App() {
     appIdRef,
     imServerRef,
     imPortRef,
-    appServerDomainRef,
+    restServerDomainRef,
     enableDNSConfigRef,
     _initParams,
     setInitParams,
@@ -141,7 +143,7 @@ export function App() {
     getEnablePrivateServer,
     getImPort,
     getImServer,
-    getAppServerDomain,
+    getRestServerDomain,
   } = useServerConfig();
 
   const { initParams } = useGeneralSetting();
@@ -170,19 +172,19 @@ export function App() {
         if (enablePrivateServer === true) {
           imPortRef.current = await getImPort();
           imServerRef.current = await getImServer();
-          appServerDomainRef.current = await getAppServerDomain();
+          restServerDomainRef.current = await getRestServerDomain();
           enableDNSConfigRef.current = false;
         } else {
           imPortRef.current = undefined;
           imServerRef.current = undefined;
-          appServerDomainRef.current = undefined;
+          restServerDomainRef.current = undefined;
           enableDNSConfigRef.current = true;
         }
       } else {
         autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
-        appServerDomainRef.current = undefined;
+        restServerDomainRef.current = restServerDomain;
         enableDNSConfigRef.current = true;
       }
 
@@ -225,7 +227,7 @@ export function App() {
         messageMenuStyleRef: messageMenuStyleRef.current,
         enableDNSConfigRef: enableDNSConfigRef.current,
         serverConfigVisibleRef: serverConfigVisibleRef.current,
-        appServerDomainRef: appServerDomainRef.current,
+        restServerDomainRef: restServerDomainRef.current,
         imPortRef: imPortRef.current,
         imServerRef: imServerRef.current,
         appKeyRef: appKeyRef.current,
@@ -265,8 +267,8 @@ export function App() {
     getImPort,
     imServerRef,
     getImServer,
-    appServerDomainRef,
-    getAppServerDomain,
+    restServerDomainRef,
+    getRestServerDomain,
     getEnablePrivateServer,
     getAppKey,
     getAppId,
@@ -286,7 +288,7 @@ export function App() {
         return;
       }
       isReadyRef.current = true;
-      RestApi.setServer(appServerDomainRef.current ?? '');
+      RestApi.setServer(appServerDomain);
 
       await initPush();
 
@@ -318,14 +320,7 @@ export function App() {
         }
       }, 1000);
     },
-    [
-      isReadyRef,
-      appServerDomainRef,
-      initPush,
-      autoLoginAction,
-      rootRef,
-      serverConfigVisibleRef,
-    ]
+    [autoLoginAction, initPush, isReadyRef, rootRef, serverConfigVisibleRef]
   );
 
   const onContainerInitialized = React.useCallback(
