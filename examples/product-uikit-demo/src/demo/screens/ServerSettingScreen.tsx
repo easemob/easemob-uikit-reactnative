@@ -81,14 +81,12 @@ export function ServerSettingScreen(props: Props) {
   const [isAppKey, setIsAppKey] = React.useState<boolean | undefined>(
     undefined
   );
-  const [imServer, setImServer] = React.useState<string | undefined>('');
-  const [imPort, setImPort] = React.useState<string | undefined>('');
-  const [appServerDomain, setAppServerDomain] = React.useState<
-    string | undefined
-  >('');
-  const [enablePrivateServer, setEnablePrivateServer] = React.useState<
-    boolean | undefined
-  >(undefined);
+
+  const [imServer, setImServer] = React.useState<string>('');
+  const [imPort, setImPort] = React.useState<string>('');
+  const [appServerDomain, setAppServerDomain] = React.useState<string>('');
+  const [enablePrivateServer, setEnablePrivateServer] =
+    React.useState<boolean>(false);
   const initRef = React.useRef<boolean>(false);
 
   const onIsAppKey = React.useCallback(
@@ -123,19 +121,10 @@ export function ServerSettingScreen(props: Props) {
         AppKey.setAppKey('');
       }
       await _setIsAppKey(isAppKey ?? false);
-
-      if (imPort) {
-        await _setImPort(imPort);
-      }
-      if (enablePrivateServer !== undefined) {
-        await _setEnablePrivateServer(enablePrivateServer);
-      }
-      if (imServer) {
-        await _setImServer(imServer);
-      }
-      if (appServerDomain) {
-        await _setAppServerDomain(appServerDomain);
-      }
+      await _setImPort(imPort);
+      await _setEnablePrivateServer(enablePrivateServer);
+      await _setImServer(imServer);
+      await _setAppServerDomain(appServerDomain);
 
       getAlertRef().alertWithInit({
         title: tr('_demo_alert_server_setting_save_title'),
@@ -226,7 +215,7 @@ export function ServerSettingScreen(props: Props) {
         setImServer(value.imServer);
         setImPort(value.imPort.toString());
         setAppServerDomain(value.appServerDomain);
-        setEnablePrivateServer(value.enablePrivateServer ?? false);
+        setEnablePrivateServer(value.enablePrivateServer);
       }
     });
   }, [getAppKey, getData]);

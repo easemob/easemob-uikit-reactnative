@@ -5,9 +5,9 @@ import {
   appId,
   appKey,
   appServerDomain,
-  enableDNSConfig,
   imPort,
   imServer,
+  useSandbox,
 } from '../common/const';
 
 export function useServerConfig() {
@@ -44,8 +44,12 @@ export function useServerConfig() {
     return (await getKey('appId')) ?? appId;
   }, [getKey]);
   const getIsAppKey = React.useCallback(async () => {
-    const ret = (await getKey('isAppKey')) ?? (appKey && appKey.length > 0);
-    return ret === 'true' ? true : ret === 'false' ? false : false;
+    const isAppKey = await getKey('isAppKey');
+    if (isAppKey === undefined) {
+      return appKey && appKey.length > 0;
+    } else {
+      return isAppKey === 'true' ? true : isAppKey === 'false' ? false : false;
+    }
   }, [getKey]);
   const getImServer = React.useCallback(async () => {
     return (await getKey('imServer')) ?? imServer;
@@ -55,7 +59,7 @@ export function useServerConfig() {
   }, [getKey]);
   const getEnablePrivateServer = React.useCallback(async () => {
     const ret = await getKey(`enablePrivateServer`);
-    return ret === 'true' ? true : ret === 'false' ? false : enableDNSConfig;
+    return ret === 'true' ? true : ret === 'false' ? false : useSandbox;
   }, [getKey]);
   const getAppServerDomain = React.useCallback(async () => {
     return (await getKey('appServerDomain')) ?? appServerDomain;

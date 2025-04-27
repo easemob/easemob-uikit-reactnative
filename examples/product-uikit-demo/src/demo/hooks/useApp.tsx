@@ -88,7 +88,6 @@ export function useAppConfig() {
   const imServerRef = React.useRef<string | undefined>(imServer);
   const imPortRef = React.useRef<any>(imPort);
   const enableDNSConfigRef = React.useRef<boolean | undefined>(enableDNSConfig);
-  const enableDevModeRef = React.useRef<boolean | undefined>(isDevMode);
 
   const getOptions = React.useCallback(() => {
     return {
@@ -99,14 +98,10 @@ export function useAppConfig() {
       autoAcceptGroupInvitation: true,
       requireAck: true,
       requireDeliveryAck: true,
-      restServer: enableDevModeRef.current
-        ? appServerDomainRef.current
-        : undefined,
-      imServer: enableDevModeRef.current ? imServerRef.current : undefined,
-      imPort: enableDevModeRef.current ? imPortRef.current : (undefined as any),
-      enableDNSConfig: enableDevModeRef.current
-        ? enableDNSConfigRef.current
-        : undefined,
+      restServer: appServerDomainRef.current,
+      imServer: imServerRef.current,
+      imPort: imPortRef.current,
+      enableDNSConfig: enableDNSConfigRef.current,
       pushConfig:
         fcmSenderId && fcmSenderId.length > 0
           ? new ChatPushConfig({

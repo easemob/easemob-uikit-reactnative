@@ -19,7 +19,6 @@ import { AVView } from './common/AVView';
 import {
   accountType,
   agoraAppId,
-  appServerDomain,
   boloo_da_ttf_name,
   isDevMode,
 } from './common/const';
@@ -156,6 +155,7 @@ export function App() {
     try {
       serverConfigVisibleRef.current = await getEnableDevMode();
       if (serverConfigVisibleRef.current === true) {
+        const enablePrivateServer = await getEnablePrivateServer();
         autoLoginRef.current = true;
         const isAppKey = await getIsAppKey();
         if (isAppKey) {
@@ -166,16 +166,24 @@ export function App() {
           AppKey.setAppKey('');
         }
 
-        imPortRef.current = await getImPort();
-        imServerRef.current = await getImServer();
-        appServerDomainRef.current = await getAppServerDomain();
-        enableDNSConfigRef.current = !(await getEnablePrivateServer());
+        console.log('dev:init:enablePrivateServer:', enablePrivateServer);
+        if (enablePrivateServer === true) {
+          imPortRef.current = await getImPort();
+          imServerRef.current = await getImServer();
+          appServerDomainRef.current = await getAppServerDomain();
+          enableDNSConfigRef.current = false;
+        } else {
+          imPortRef.current = undefined;
+          imServerRef.current = undefined;
+          appServerDomainRef.current = undefined;
+          enableDNSConfigRef.current = true;
+        }
       } else {
         autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
-        appServerDomainRef.current = appServerDomain;
-        enableDNSConfigRef.current = undefined;
+        appServerDomainRef.current = undefined;
+        enableDNSConfigRef.current = true;
       }
 
       appKeyRef.current = AppKey.appKey();
