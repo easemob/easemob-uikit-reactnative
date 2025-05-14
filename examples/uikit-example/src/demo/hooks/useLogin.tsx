@@ -10,7 +10,7 @@ import {
   useSimpleToastContext,
   useToastViewContext,
 } from '../../rename.uikit';
-import { accountType } from '../common/const';
+import { accountType, useAppServerDomain } from '../common/const';
 import {
   AgoraRequestLoginResult,
   EasemobRequestLoginResult,
@@ -153,6 +153,28 @@ export function useLogin() {
     [im]
   );
 
+  const loginWithPassword = React.useCallback(
+    async (params: {
+      id: string;
+      pass: string;
+      onResult: (params: { isOk: boolean; reason?: string }) => void;
+    }) => {
+      const { id, pass, onResult } = params;
+      im.login({
+        userId: id,
+        userToken: pass,
+        usePassword: true,
+        userAvatarURL: '',
+        result: (r) => {
+          onResult({
+            isOk: r.isOk,
+            reason: r.error?.desc,
+          });
+        },
+      });
+    },
+    [im]
+  );
   const loginAction = React.useCallback(
     async (params: {
       id: string;
@@ -256,7 +278,12 @@ export function useLogin() {
     getToastRef: getSimpleToastRef,
     getToastViewRef,
     getAlertRef,
-    loginAction: accountType === 'agora' ? agoraLoginAction : loginAction,
+    requestUpdatePushToken,
+    loginAction: useAppServerDomain
+      ? accountType === 'agora'
+        ? agoraLoginAction
+        : loginAction
+      : loginWithPassword,
     devLoginAction,
     saveSelfInfo,
     getFcmToken,

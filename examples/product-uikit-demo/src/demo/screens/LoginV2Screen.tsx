@@ -29,7 +29,12 @@ import {
   useThemeContext,
 } from '../../rename.uikit';
 import { main_bg, main_bg_dark } from '../common/assets';
-import { accountType, appId, appKey } from '../common/const';
+import {
+  accountType,
+  appId,
+  appKey,
+  useAppServerDomain,
+} from '../common/const';
 import { RestApi } from '../common/rest.api';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import {
@@ -937,8 +942,9 @@ function AgoraLoginV2Screen(props: Props) {
 
 function useLoginV2Screen(props: Props) {
   const { route } = props;
-  const _serverConfigVisible: boolean =
-    (route.params as any).params?.serverConfigVisible ?? false;
+  const _serverConfigVisible: boolean = useAppServerDomain
+    ? ((route.params as any).params?.serverConfigVisible ?? false)
+    : true;
   const navi = useStackScreenRoute(props);
   const { push } = navi;
   const [id, setId] = React.useState('');
@@ -1006,8 +1012,11 @@ function useLoginV2Screen(props: Props) {
       if (countRef.current >= 4) {
         countRef.current = 0;
         SetServerSettingVisible((pre) => {
-          requestNavigationRef.current = !pre;
-          return !pre;
+          if (useAppServerDomain) {
+            requestNavigationRef.current = !pre;
+            return !pre;
+          }
+          return pre;
         });
         return;
       }

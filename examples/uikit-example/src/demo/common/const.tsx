@@ -22,6 +22,7 @@ export const useSandbox =
 export const appKey = env.appKey as string;
 export const appId = env.appId as string;
 export const appServerDomain: string = env.appServerDomain;
+export const useAppServerDomain = env.useAppServerDomain as boolean;
 export const restServerDomain: string = env.restServerDomain;
 export const imServer: string = env.imServer;
 export const imPort: number = env.imPort;
