@@ -27,6 +27,19 @@ yarn && yarn prepare
 Go to the `examples/product-uikit-demo` directory.
 Find the `env.ts` file and fill in the `appKey` and other required information.
 
+In this file, set `useAppServerDomain` to `false` to disable the `app server` related functionality.
+
+# Configure Push Notification Environment
+
+Since the example project uses the FCM push notification plugin, it is necessary to add the required FCM configuration files.
+
+If you don't have them, you can use the preset template placeholders:
+
+```sh
+cp templates/google-services.json.template examples/product-uikit-demo/android/app/google-services.json
+cp templates/GoogleService-Info.plist.template examples/product-uikit-demo/ios/ChatUikitFullExample/GoogleService-Info.plist
+```
+
 # Running the Project
 
 Go to the `examples/product-uikit-demo` directory and execute:
