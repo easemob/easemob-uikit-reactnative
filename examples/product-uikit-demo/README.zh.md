@@ -56,3 +56,7 @@ yarn run start
 ```
 
 选择对应的设备：包括 ios设备、模拟器，android设备、模拟器。
+
+# 注意事项
+
+1. 构建android应用时，如果找不到 `debug.store`文件，可以进入目录 `examples/product-uikit-demo/android/app`，再使用 `keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"` 生成一个。
