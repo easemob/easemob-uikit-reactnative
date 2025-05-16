@@ -21,6 +21,7 @@ export const demoType = 1; // 1. ui-dev 2. dev 3. prod
 export const reactStrictMode = false;
 export const useSandbox = false;
 export const appServerDomain = ''; // for app demo
+export const useAppServerDomain = false;
 export const restServerDomain = ''; // for chat sdk
 export const enableDNSConfig = true;
 export const imPort = 0;

@@ -23,6 +23,7 @@ import {
   boloo_da_ttf_name,
   isDevMode,
   restServerDomain,
+  useAppServerDomain,
 } from './common/const';
 import { RestApi } from './common/rest.api';
 import { useAutoLogin } from './hooks';
@@ -288,7 +289,9 @@ export function App() {
         return;
       }
       isReadyRef.current = true;
-      RestApi.setServer(appServerDomain);
+      if (useAppServerDomain) {
+        RestApi.setServer(appServerDomain);
+      }
 
       await initPush();
 
