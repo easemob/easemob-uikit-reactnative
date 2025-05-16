@@ -34,3 +34,11 @@ yarn run android
 # or
 yarn run ios
 ```
+
+By default, iOS can automatically run the debug service. If the debug service is not running, you can run it manually:
+
+```sh
+yarn run start
+```
+
+Select the corresponding device: including iOS devices, simulators, Android devices, simulators.
