@@ -49,3 +49,15 @@ yarn run android
 # or
 yarn run ios
 ```
+
+By default, iOS can automatically run the debug service. If the debug service is not running, you can run it manually:
+
+```sh
+yarn run start
+```
+
+Select the corresponding device: including iOS devices, simulators, Android devices, simulators.
+
+# Notes
+
+1. When building an Android application, if the `debug.keystore` file is not found, you can go to the `examples/product-uikit-demo/android/app` directory and use `keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"` to generate one.
