@@ -61,3 +61,4 @@ Select the corresponding device: including iOS devices, simulators, Android devi
 # Notes
 
 1. When building an Android application, if the `debug.keystore` file is not found, you can go to the `examples/product-uikit-demo/android/app` directory and use `keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"` to generate one.
+2. The login page of the example project actually has two modes: normal mode for logging in with a phone number and verification code, and developer mode for logging in with a user ID and password. The normal mode previously used SMS verification, but now uses Aliyun Captcha 2.0 verification.

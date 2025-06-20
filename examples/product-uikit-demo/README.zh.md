@@ -60,3 +60,4 @@ yarn run start
 # 注意事项
 
 1. 构建android应用时，如果找不到 `debug.store`文件，可以进入目录 `examples/product-uikit-demo/android/app`，再使用 `keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"` 生成一个。
+2. 示例项目登录页面实际上有两种模式，正常模式通过手机号和验证码的方式登录，另外一种是开发者模式，使用用户ID和密码登录。 正常模式原来是短信验证，现在使用阿里云验证码2.0验证。
