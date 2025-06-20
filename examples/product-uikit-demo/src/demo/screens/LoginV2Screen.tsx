@@ -9,6 +9,7 @@ import {
   Pressable,
   StyleSheet,
   TouchableWithoutFeedback,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
@@ -35,7 +36,6 @@ import {
   appKey,
   useAppServerDomain,
 } from '../common/const';
-import { RestApi } from '../common/rest.api';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import {
   AppKey,
@@ -45,8 +45,9 @@ import {
   useStackScreenRoute,
 } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
+import { Captcha } from '../ui/Captcha';
 
-type CaptchaState = 'init' | 'sending' | 'sent' | 'resend' | 'error';
+type CaptchaState = 'init' | 'sending' | 'sent' | 'resend' | 'error' | 'cancel';
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 function EasemobLoginV2Screen(props: Props) {
   const {
@@ -74,8 +75,9 @@ function EasemobLoginV2Screen(props: Props) {
     onClickedEnableDev,
   } = useLoginV2Screen(props);
   const [captchaState, setCaptchaState] = React.useState<CaptchaState>('init');
-  const [second, setSecond] = React.useState(60);
+  const [second] = React.useState(60);
   const [check, setCheck] = React.useState(false);
+  const { width: winWidth } = useWindowDimensions();
 
   const getCaptchaText = () => {
     if (captchaState === 'init') {
@@ -104,23 +106,32 @@ function EasemobLoginV2Screen(props: Props) {
     }
   };
 
-  const startCaptcha = () => {
+  // sms captcha deprecated by 2025-06-19
+  // const startCaptcha = () => {
+  //   if (captchaState === 'sending') {
+  //     return;
+  //   }
+  //   setCaptchaState('sending');
+  //   setSecond(60);
+  //   RestApi.requestSmsCode({ phone: id });
+  //   const interval = setInterval(() => {
+  //     setSecond((prev) => {
+  //       if (prev <= 0) {
+  //         clearInterval(interval);
+  //         setCaptchaState('resend');
+  //         return 0;
+  //       }
+  //       return prev - 1;
+  //     });
+  //   }, 1000);
+  // };
+
+  // sms captcha v2 with aliyun captcha sdk 2.0
+  const startCaptchaV2 = () => {
     if (captchaState === 'sending') {
       return;
     }
     setCaptchaState('sending');
-    setSecond(60);
-    RestApi.requestSmsCode({ phone: id });
-    const interval = setInterval(() => {
-      setSecond((prev) => {
-        if (prev <= 0) {
-          clearInterval(interval);
-          setCaptchaState('resend');
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
   };
 
   const onClickedServices = () => {
@@ -128,6 +139,11 @@ function EasemobLoginV2Screen(props: Props) {
   };
   const onClickedProtocol = () => {
     Linking.openURL('https://www.easemob.com/protocol');
+  };
+
+  const onClickedBlank = () => {
+    Keyboard.dismiss();
+    setCaptchaState('cancel');
   };
 
   const validPhone = (phone: string) => {
@@ -216,7 +232,7 @@ function EasemobLoginV2Screen(props: Props) {
       source={style === 'light' ? main_bg : main_bg_dark}
     >
       <SafeAreaViewFragment backgroundColor={null} visibleStatusBar={false}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback onPress={onClickedBlank}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{
@@ -377,7 +393,7 @@ function EasemobLoginV2Screen(props: Props) {
                       right: 30 + 22,
                     },
                   ]}
-                  onPress={startCaptcha}
+                  onPress={startCaptchaV2}
                 >
                   <SingleLineText
                     style={{
@@ -571,6 +587,27 @@ function EasemobLoginV2Screen(props: Props) {
             ) : null}
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
+
+        {accountType === 'easemob' &&
+        serverSettingVisible === false &&
+        captchaState === 'sending' ? (
+          <Captcha
+            phone={id}
+            containerStyle={{
+              position: 'absolute',
+              height: 200,
+              width: winWidth,
+              top: '50%',
+              transform: [{ translateY: -100 }],
+            }}
+            onSuccess={() => {
+              setCaptchaState('sent');
+            }}
+            onFail={() => {
+              setCaptchaState('error');
+            }}
+          />
+        ) : null}
       </SafeAreaViewFragment>
     </ImageBackground>
   );

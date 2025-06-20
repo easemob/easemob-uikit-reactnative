@@ -27,6 +27,7 @@ export const useSandbox = false;
 export const enableDNSConfig = true;
 export const imPort = 0;
 export const imServer = '';
+export const aliyunSecretKey = '';
 `;
 if (fs.existsSync(out_file) === false) {
   fs.writeFileSync(out_file, content, 'utf-8');

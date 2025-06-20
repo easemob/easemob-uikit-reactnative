@@ -1,4 +1,5 @@
 import type { NavigationState } from '@react-navigation/native';
+import * as base64js from 'base64-js';
 
 export function getHashCode(s?: string): number {
   let hash = 0;
@@ -111,3 +112,46 @@ export function formatNavigationState(
     result.push(ret);
   }
 }
+
+/**
+ * Base64编解码工具函数
+ */
+export const base64Utils = {
+  /**
+   * Base64解码为Uint8Array
+   * @param base64 Base64编码的字符串
+   * @returns Uint8Array 解码后的二进制数据
+   */
+  decode: (base64: string): Uint8Array => {
+    return base64js.toByteArray(base64);
+  },
+
+  /**
+   * Uint8Array编码为Base64
+   * @param bytes 二进制数据
+   * @returns string Base64编码的字符串
+   */
+  encode: (bytes: Uint8Array): string => {
+    return base64js.fromByteArray(bytes);
+  },
+
+  /**
+   * UTF-8字符串编码为Base64
+   * @param str UTF-8字符串
+   * @returns string Base64编码的字符串
+   */
+  encodeString: (str: string): string => {
+    const bytes = new TextEncoder().encode(str);
+    return base64js.fromByteArray(bytes);
+  },
+
+  /**
+   * Base64解码为UTF-8字符串
+   * @param base64 Base64编码的字符串
+   * @returns string UTF-8字符串
+   */
+  decodeString: (base64: string): string => {
+    const bytes = base64js.toByteArray(base64);
+    return new TextDecoder().decode(bytes);
+  },
+};
