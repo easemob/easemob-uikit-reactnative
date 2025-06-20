@@ -55,6 +55,7 @@ export function createStringSetCn(): StringSet {
     '_demo_login_tip_reason_1': '请输入正确的手机号',
     '_demo_login_tip_reason_2': '请先同意《环信条款》与《环信协议》',
     '_demo_login_tip_reason_3': '请输入验证码',
+    '_demo_login_tip_reason_x': (errorInfo: string) => errorInfo,
     '_demo_login_loading_tip': '登录中...',
 
     '_demo_server_setting_navi_title': '服务器设置',

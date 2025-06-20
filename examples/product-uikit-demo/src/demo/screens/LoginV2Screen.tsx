@@ -75,9 +75,10 @@ function EasemobLoginV2Screen(props: Props) {
     onClickedEnableDev,
   } = useLoginV2Screen(props);
   const [captchaState, setCaptchaState] = React.useState<CaptchaState>('init');
-  const [second] = React.useState(60);
+  const [second, setSecond] = React.useState(60);
   const [check, setCheck] = React.useState(false);
   const { width: winWidth } = useWindowDimensions();
+  const intervalRef = React.useRef<NodeJS.Timeout>();
 
   const getCaptchaText = () => {
     if (captchaState === 'init') {
@@ -132,6 +133,17 @@ function EasemobLoginV2Screen(props: Props) {
       return;
     }
     setCaptchaState('sending');
+    setSecond(60);
+    intervalRef.current = setInterval(() => {
+      setSecond((prev) => {
+        if (prev <= 0) {
+          clearInterval(intervalRef.current);
+          setCaptchaState('resend');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   };
 
   const onClickedServices = () => {
@@ -144,6 +156,7 @@ function EasemobLoginV2Screen(props: Props) {
   const onClickedBlank = () => {
     Keyboard.dismiss();
     setCaptchaState('cancel');
+    clearInterval(intervalRef.current);
   };
 
   const validPhone = (phone: string) => {
@@ -595,16 +608,21 @@ function EasemobLoginV2Screen(props: Props) {
             phone={id}
             containerStyle={{
               position: 'absolute',
-              height: 200,
+              height: 136,
               width: winWidth,
               top: '50%',
               transform: [{ translateY: -100 }],
+              borderRadius: 8,
             }}
             onSuccess={() => {
               setCaptchaState('sent');
             }}
-            onFail={() => {
+            onFail={(_code, errorInfo) => {
               setCaptchaState('error');
+              getToastRef().show({
+                message: tr('_demo_login_tip_reason_x', errorInfo),
+                showPosition: 'center',
+              });
             }}
           />
         ) : null}

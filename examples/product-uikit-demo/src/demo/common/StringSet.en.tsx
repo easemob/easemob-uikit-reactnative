@@ -61,6 +61,7 @@ export function createStringSetEn(): StringSet {
     '_demo_login_tip_reason_2':
       'Please agree to the "Easemob Agreement" and "Easemob Agreement" first',
     '_demo_login_tip_reason_3': 'Please enter the captcha',
+    '_demo_login_tip_reason_x': (errorInfo: string) => errorInfo,
     '_demo_login_loading_tip': 'Logging',
 
     '_demo_server_setting_navi_title': 'Server Setting',

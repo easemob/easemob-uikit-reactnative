@@ -12,7 +12,7 @@ export type CaptchaProps = {
   containerStyle?: StyleProp<ViewStyle>;
   phone: string;
   onSuccess: () => void;
-  onFail: () => void;
+  onFail: (code: number, errorInfo?: string) => void;
 };
 
 export function Captcha(props: CaptchaProps) {
@@ -84,7 +84,7 @@ export function Captcha(props: CaptchaProps) {
   const handleError = useCallback(
     (code: number, errorInfo?: string) => {
       console.log('handleError', code, errorInfo);
-      onFail();
+      onFail(code, errorInfo);
     },
     [onFail]
   );
@@ -178,54 +178,41 @@ export function Captcha(props: CaptchaProps) {
   `;
 
   return (
-    <View style={containerStyle}>
+    <View
+      style={[
+        containerStyle,
+        {
+          // backgroundColor: 'red',
+          // margin: 16,
+          padding: 16,
+          borderRadius: 8,
+        },
+      ]}
+    >
+      {/* <View
+        style={{
+          backgroundColor: 'blue',
+          height: 26,
+          width: '90%',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Text style={{ color: 'white', textAlign: 'center' }}>123</Text>
+      </View> */}
+
       <WebView
-        /**
-         * This HTML is a copy of the hosted multi-frame JS injection test.
-         * I have found that Android doesn't support beforeContentLoaded for a hosted HTML webpage, yet does for a static source.
-         * The cause of this is unresolved.
-         */
-        // source={{ html: html }}
         source={{
           uri: `https://downloadsdk.easemob.com/downloads/IMDemo/sms/index.html?telephone=${phone}`,
         }}
         // source={{ uri: "https://birchlabs.co.uk/linguabrowse/infopages/obsol/rnw_iframe_test.html" }}
         automaticallyAdjustContentInsets={false}
-        style={{ backgroundColor: '#00000000' }}
+        // style={[containerStyle]}
         ref={webViewRef}
         onMessage={handleMessage}
         injectedJavaScriptBeforeContentLoadedForMainFrameOnly={false}
         injectedJavaScriptForMainFrameOnly={false}
-        injectedJavaScriptObject={{ hello: 'world' }}
-        /* We set this property in each frame */
         injectedJavaScriptBeforeContentLoaded={bridgeInjection}
-        /* We read the colourToUse property in each frame to recolour each frame */
-        injectedJavaScript={`
-              console.log("executing injectedJavaScript... " + (new Date()).toString());
-              if(typeof window.top.injectedIframesAfterContentLoaded === "undefined"){
-                window.top.injectedIframesAfterContentLoaded = [];
-              }
-
-              if(window.self.colourToUse){
-                window.self.document.body.style.backgroundColor = window.self.colourToUse;
-              } else {
-                window.self.document.body.style.backgroundColor = "white";
-              }
-
-              // Example usage of injectedJavaScriptObject({hello: 'world'}), see above
-              const injectedObjectJson = window.ReactNativeWebView.injectedObjectJson();
-              
-              if (injectedObjectJson) {
-                const injectedObject = JSON.parse(injectedObjectJson);
-                console.log("injectedJavaScriptObject: ", injectedObject); 
-                // injectedJavaScriptObject: { hello: 'world' }
-
-                var injectedJavaScriptObjectEle = document.createElement('p');
-                injectedJavaScriptObjectEle.textContent = "injectedJavaScriptObject: " + injectedObjectJson;
-                injectedJavaScriptObjectEle.id = "injectedJavaScriptObjectEle";
-                document.body.appendChild(injectedJavaScriptObjectEle);
-              }
-              `}
       />
     </View>
   );
