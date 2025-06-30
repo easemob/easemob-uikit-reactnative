@@ -85,8 +85,9 @@ export function ServerSettingScreen(props: Props) {
   const [imServer, setImServer] = React.useState<string>('');
   const [imPort, setImPort] = React.useState<string>('');
   const [restServerDomain, setRestServerDomain] = React.useState<string>('');
-  const [enablePrivateServer, setEnablePrivateServer] =
-    React.useState<boolean>(false);
+  const [enablePrivateServer, setEnablePrivateServer] = React.useState<
+    boolean | undefined
+  >(undefined);
   const initRef = React.useRef<boolean>(false);
 
   const onIsAppKey = React.useCallback(
@@ -122,7 +123,7 @@ export function ServerSettingScreen(props: Props) {
       }
       await _setIsAppKey(isAppKey ?? false);
       await _setImPort(imPort);
-      await _setEnablePrivateServer(enablePrivateServer);
+      await _setEnablePrivateServer(enablePrivateServer ?? false);
       await _setImServer(imServer);
       await _setRestServerDomain(restServerDomain);
 
