@@ -55,7 +55,6 @@ Take the following steps to implement message sending:
 
    ```bash
    yarn add react-native-linear-gradient \
-     react-native-chat-room \
      react-native-chat-sdk \
      react-native-safe-area-context
    ```
