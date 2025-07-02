@@ -313,18 +313,6 @@ PODS:
   - hermes-engine/Pre-built (0.76.9)
   - HyphenateChat (4.12.0):
     - AgoraInfra_iOS (= 1.2.13)
-  - libwebp (1.5.0):
-    - libwebp/demux (= 1.5.0)
-    - libwebp/mux (= 1.5.0)
-    - libwebp/sharpyuv (= 1.5.0)
-    - libwebp/webp (= 1.5.0)
-  - libwebp/demux (1.5.0):
-    - libwebp/webp
-  - libwebp/mux (1.5.0):
-    - libwebp/demux
-  - libwebp/sharpyuv (1.5.0)
-  - libwebp/webp (1.5.0):
-    - libwebp/sharpyuv
   - RCT-Folly (2024.10.14.00):
     - boost
     - DoubleConversion
@@ -1646,7 +1634,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-chat-sdk (1.8.0):
+  - react-native-chat-sdk (1.8.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2291,10 +2279,6 @@ PODS:
     - Yoga
   - RNDeviceInfo (14.0.4):
     - React-Core
-  - RNFastImage (8.6.3):
-    - React-Core
-    - SDWebImage (~> 5.11.1)
-    - SDWebImageWebPCoder (~> 0.8.4)
   - RNFileViewer (2.1.5):
     - React-Core
   - RNFS (2.20.0):
@@ -2416,12 +2400,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - SDWebImage (5.11.1):
-    - SDWebImage/Core (= 5.11.1)
-  - SDWebImage/Core (5.11.1)
-  - SDWebImageWebPCoder (0.8.5):
-    - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.7.1)
   - TOCropViewController (2.7.4)
   - Yoga (0.0.0)
@@ -2529,7 +2507,6 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
-  - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNFileViewer (from `../node_modules/react-native-file-viewer`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -2543,10 +2520,7 @@ SPEC REPOS:
   trunk:
     - AgoraInfra_iOS
     - HyphenateChat
-    - libwebp
     - ReachabilitySwift
-    - SDWebImage
-    - SDWebImageWebPCoder
     - SocketRocket
     - TOCropViewController
     - ZIPFoundation
@@ -2751,8 +2725,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
-  RNFastImage:
-    :path: "../node_modules/react-native-fast-image"
   RNFileViewer:
     :path: "../node_modules/react-native-file-viewer"
   RNFS:
@@ -2800,7 +2772,6 @@ SPEC CHECKSUMS:
   glog: 08b301085f15bcbb6ff8632a8ebaf239aae04e6a
   hermes-engine: 9e868dc7be781364296d6ee2f56d0c1a9ef0bb11
   HyphenateChat: e3869321ba4e1b7e61f320a037935f3f4751e74a
-  libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   RCT-Folly: ea9d9256ba7f9322ef911169a9f696e5857b9e17
   RCTDeprecation: ebe712bb05077934b16c6bf25228bdec34b64f83
   RCTRequired: ca91e5dd26b64f577b528044c962baf171c6b716
@@ -2833,7 +2804,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: d80ff86c8902872d397d9622f1a97aadcc12cead
   react-native-blur: 535f5810fceb751b25db90c925ffa42ed007def7
   react-native-cameraroll: 438f60637bc444e62001412450d8459d678a8044
-  react-native-chat-sdk: de7abdf2e2c47be923eb09d617524acd076b4713
+  react-native-chat-sdk: bc03d2635d67b3a1875b6cb6093d6c050135c085
   react-native-create-thumbnail: 733160dca9a548262e1030e7fcdae90a93d203ca
   react-native-document-picker: 25348aa13bf4224ee7a14934fc2aa6c3394273f8
   react-native-image-editor: 4926d1e0cca2ad1a809d1c45fe29c7a441f29207
@@ -2874,7 +2845,6 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 66991bb6672ed988a8c56289a08bf4fc3a29d4b3
   RNCClipboard: 4f9491b66f39922cb60f8a648a99559c8b0f11e7
   RNDeviceInfo: d863506092aef7e7af3a1c350c913d867d795047
-  RNFastImage: 462a183c4b0b6b26fdfd639e1ed6ba37536c3b87
   RNFileViewer: 4b5d83358214347e4ab2d4ca8d5c1c90d869e251
   RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
   RNGestureHandler: fffddeb8af59709c6d8de11b6461a6af63cad532
@@ -2882,8 +2852,6 @@ SPEC CHECKSUMS:
   RNPermissions: e9e0f71afa2acb2d93c7efeb0191a3d714102b81
   RNScreens: 362f4c861dd155f898908d5035d97b07a3f1a9d1
   RNVectorIcons: 3bf5f38dcb1aaf587c4101e9f3fcad5c8f5a88b2
-  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
-  SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   Yoga: feb4910aba9742cfedc059e2b2902e22ffe9954a

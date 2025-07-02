@@ -4,4 +4,4 @@
 
 The workspace management tools mainly include `lerna` and `yarn`.
 
-Yarn version has been upgraded from 1.22.19 to 4.7.0, and the lerna tool is no longer used.
+Yarn version has been upgraded from 1.22.19 to 4.9.1, and the lerna tool is no longer used.

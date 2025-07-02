@@ -33,7 +33,7 @@ pod install --project-directory=ios
 Setting up project management tools is a good practice that helps users avoid unnecessary issues.
 
 ```sh
-yarn set version 4.7.0
+yarn set version 4.9.1
 ```
 
 React Native officially recommends using `yarn`. There are many versions of `yarn`. Version `1.x.x` is deprecated, but many existing projects still use it.

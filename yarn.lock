@@ -5387,8 +5387,7 @@ __metadata:
     react-native: "npm:0.76.9"
     react-native-agora: "npm:~4.3.2"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.8.0"
-    react-native-fast-image: "npm:^8.6.3"
+    react-native-chat-sdk: "npm:^1.8.2"
     react-native-safe-area-context: "npm:4.12.0"
     react-native-screens: "npm:~4.4.0"
     react-native-vector-icons: "npm:^10.2.0"
@@ -5429,7 +5428,7 @@ __metadata:
     react: "npm:18.3.1"
     react-native: "npm:0.76.9"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.8.0"
+    react-native-chat-sdk: "npm:^1.8.2"
     react-native-gesture-handler: "npm:~2.20.2"
     react-native-linear-gradient: "npm:^2.8.3"
     react-native-safe-area-context: "npm:4.12.0"
@@ -5476,7 +5475,7 @@ __metadata:
     react: "npm:18.3.1"
     react-native: "npm:0.76.9"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.8.0"
+    react-native-chat-sdk: "npm:^1.8.2"
     react-native-linear-gradient: "npm:^2.8.3"
     react-native-safe-area-context: "npm:4.12.0"
     react-native-screens: "npm:~4.4.0"
@@ -5530,10 +5529,9 @@ __metadata:
     react-native: "npm:0.76.9"
     react-native-audio-recorder-player: "npm:^3.6.12"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.8.0"
+    react-native-chat-sdk: "npm:^1.8.2"
     react-native-create-thumbnail: "npm:^2.1.1"
     react-native-device-info: "npm:^14.0.4"
-    react-native-fast-image: "npm:^8.6.3"
     react-native-file-access: "npm:^3.1.1"
     react-native-file-viewer: "npm:^2.1.5"
     react-native-fs: "npm:^2.20.0"
@@ -5601,10 +5599,9 @@ __metadata:
     react-native-agora: "npm:~4.3.2"
     react-native-audio-recorder-player: "npm:^3.6.12"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.8.0"
+    react-native-chat-sdk: "npm:^1.8.2"
     react-native-create-thumbnail: "npm:^2.1.1"
     react-native-device-info: "npm:^14.0.4"
-    react-native-fast-image: "npm:^8.6.3"
     react-native-file-access: "npm:^3.1.1"
     react-native-file-viewer: "npm:^2.1.5"
     react-native-gesture-handler: "npm:~2.20.2"
@@ -15222,8 +15219,7 @@ __metadata:
     react-native: "npm:0.76.9"
     react-native-agora: "npm:~4.3.2"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.8.0"
-    react-native-fast-image: "npm:^8.6.3"
+    react-native-chat-sdk: "npm:^1.8.2"
     react-native-safe-area-context: "npm:~4.12.0"
     react-native-screens: "npm:~4.4.0"
     react-native-vector-icons: "npm:^10.2.0"
@@ -15235,16 +15231,9 @@ __metadata:
     react-native: ">=0.71.0"
     react-native-agora: ^4.3.2
     react-native-chat-sdk: ^1.8.0
-    react-native-fast-image: "*"
     react-native-safe-area-context: "*"
     react-native-screens: "*"
     react-native-vector-icons: "*"
-  dependenciesMeta:
-    react-native-fast-image:
-      optional: true
-  peerDependenciesMeta:
-    react-native-fast-image:
-      optional: true
   languageName: unknown
   linkType: soft
 
@@ -15298,7 +15287,7 @@ __metadata:
     react: "npm:18.3.1"
     react-native: "npm:0.76.9"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.8.0"
+    react-native-chat-sdk: "npm:^1.8.2"
     react-native-linear-gradient: "npm:^2.8.3"
     react-native-safe-area-context: "npm:~4.12.0"
     release-it: "npm:^17.10.0"
@@ -15313,13 +15302,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-chat-sdk@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "react-native-chat-sdk@npm:1.8.0"
+"react-native-chat-sdk@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "react-native-chat-sdk@npm:1.8.2"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/15e6a3369afe090c222e2ce739f7eb8b63c8ed04b14eb188c41b787ee69e50344806a8dc7352238096c1d75589d9f282d760d57770a6c501cd48c00f616beea6
+  checksum: 10c0/05833a160eb5e72b440e132822c49cd41c8a9847992fbb1485d6566c90f6ecf277fabf6ab368dad1ae06ac33b0216a8bed58b2f6046301608c349e62a0fa826f
   languageName: node
   linkType: hard
 
@@ -15353,7 +15342,7 @@ __metadata:
     react-native: "npm:0.76.9"
     react-native-audio-recorder-player: "npm:^3.6.12"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.8.0"
+    react-native-chat-sdk: "npm:^1.8.2"
     react-native-create-thumbnail: "npm:^2.1.1"
     react-native-device-info: "npm:^14.0.4"
     react-native-file-access: "npm:^3.1.1"
@@ -15398,16 +15387,6 @@ __metadata:
   peerDependencies:
     react-native: "*"
   checksum: 10c0/3d89519b4e9f9f130b352f5243282f8b807aba0f55ccc0e1dc9f15b285215949751491ef2f11f1984a55f0f5e0ae76cd16620d2cdfcc118e2ca5f39d300d5524
-  languageName: node
-  linkType: hard
-
-"react-native-fast-image@npm:^8.6.3":
-  version: 8.6.3
-  resolution: "react-native-fast-image@npm:8.6.3"
-  peerDependencies:
-    react: ^17 || ^18
-    react-native: ">=0.60.0"
-  checksum: 10c0/4ebeae53ffeadf1e7e5e133c1cfda81f9efe978f9ece10c732a0338149fe9104681bfdabc8427dad7c934b02bfcbd0e205bb6ca43e2844abc6054630ebe34454
   languageName: node
   linkType: hard
 

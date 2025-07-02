@@ -6,7 +6,6 @@
   "build": {
     "base": {
       "node": "20.18.0",
-      "yarn": "4.7.0",
       "channel": "base"
     },
     "development": {

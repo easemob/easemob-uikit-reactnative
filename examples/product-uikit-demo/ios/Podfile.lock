@@ -438,18 +438,6 @@ PODS:
   - hermes-engine/Pre-built (0.76.9)
   - HyphenateChat (4.12.0):
     - AgoraInfra_iOS (= 1.2.13)
-  - libwebp (1.5.0):
-    - libwebp/demux (= 1.5.0)
-    - libwebp/mux (= 1.5.0)
-    - libwebp/sharpyuv (= 1.5.0)
-    - libwebp/webp (= 1.5.0)
-  - libwebp/demux (1.5.0):
-    - libwebp/webp
-  - libwebp/mux (1.5.0):
-    - libwebp/demux
-  - libwebp/sharpyuv (1.5.0)
-  - libwebp/webp (1.5.0):
-    - libwebp/sharpyuv
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
     - nanopb/encode (= 3.30910.0)
@@ -1801,7 +1789,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-chat-sdk (1.8.0):
+  - react-native-chat-sdk (1.8.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2447,10 +2435,6 @@ PODS:
     - Yoga
   - RNDeviceInfo (14.0.4):
     - React-Core
-  - RNFastImage (8.6.3):
-    - React-Core
-    - SDWebImage (~> 5.11.1)
-    - SDWebImageWebPCoder (~> 0.8.4)
   - RNFBApp (21.13.0):
     - Firebase/CoreOnly (= 11.10.0)
     - React-Core
@@ -2578,12 +2562,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - SDWebImage (5.11.1):
-    - SDWebImage/Core (= 5.11.1)
-  - SDWebImage/Core (5.11.1)
-  - SDWebImageWebPCoder (0.8.5):
-    - libwebp (~> 1.0)
-    - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.7.1)
   - TOCropViewController (2.7.4)
   - Yoga (0.0.0)
@@ -2695,7 +2673,6 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
-  - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFileViewer (from `../node_modules/react-native-file-viewer`)
@@ -2720,13 +2697,10 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleUtilities
     - HyphenateChat
-    - libwebp
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
     - ReachabilitySwift
-    - SDWebImage
-    - SDWebImageWebPCoder
     - SocketRocket
     - TOCropViewController
     - ZIPFoundation
@@ -2935,8 +2909,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
-  RNFastImage:
-    :path: "../node_modules/react-native-fast-image"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
@@ -2996,7 +2968,6 @@ SPEC CHECKSUMS:
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   hermes-engine: 9e868dc7be781364296d6ee2f56d0c1a9ef0bb11
   HyphenateChat: e3869321ba4e1b7e61f320a037935f3f4751e74a
-  libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   OpenSSL-Universal: 6082b0bf950e5636fe0d78def171184e2b3899c2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
@@ -3033,7 +3004,7 @@ SPEC CHECKSUMS:
   react-native-agora: 60d652c9680afb27bbd8f621b8cb7bbaaeaa8a99
   react-native-blur: 535f5810fceb751b25db90c925ffa42ed007def7
   react-native-cameraroll: 438f60637bc444e62001412450d8459d678a8044
-  react-native-chat-sdk: de7abdf2e2c47be923eb09d617524acd076b4713
+  react-native-chat-sdk: bc03d2635d67b3a1875b6cb6093d6c050135c085
   react-native-create-thumbnail: 733160dca9a548262e1030e7fcdae90a93d203ca
   react-native-document-picker: 25348aa13bf4224ee7a14934fc2aa6c3394273f8
   react-native-image-editor: 4926d1e0cca2ad1a809d1c45fe29c7a441f29207
@@ -3075,7 +3046,6 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 66991bb6672ed988a8c56289a08bf4fc3a29d4b3
   RNCClipboard: 4f9491b66f39922cb60f8a648a99559c8b0f11e7
   RNDeviceInfo: d863506092aef7e7af3a1c350c913d867d795047
-  RNFastImage: 462a183c4b0b6b26fdfd639e1ed6ba37536c3b87
   RNFBApp: a438a9444c965b4b1053330f8e54217de2075823
   RNFBMessaging: c1dc973d87a82fd9e58bd8c3a8c269dcca337669
   RNFileViewer: 4b5d83358214347e4ab2d4ca8d5c1c90d869e251
@@ -3084,8 +3054,6 @@ SPEC CHECKSUMS:
   RNPermissions: e9e0f71afa2acb2d93c7efeb0191a3d714102b81
   RNScreens: 362f4c861dd155f898908d5035d97b07a3f1a9d1
   RNVectorIcons: 3bf5f38dcb1aaf587c4101e9f3fcad5c8f5a88b2
-  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
-  SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   Yoga: feb4910aba9742cfedc059e2b2902e22ffe9954a

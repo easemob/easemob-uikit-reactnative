@@ -7,7 +7,7 @@
 ```sh
 yarn set version 1.22.19
 # 2025-04-06
-yarn set version 4.7.0
+yarn set version 4.9.1
 ```
 
 ## 在项目配置中指定 yarn 版本
@@ -15,7 +15,7 @@ yarn set version 4.7.0
 ```json
 {
   "name": "xxx",
-  "packageManager": "yarn@4.7.0"
+  "packageManager": "yarn@4.9.1"
 }
 ```
 

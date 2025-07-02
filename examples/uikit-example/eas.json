@@ -1,12 +1,11 @@
 {
   "cli": {
-    "version": ">= 15.0.15",
+    "version": "~15.0.15",
     "appVersionSource": "remote"
   },
   "build": {
     "base": {
-      "node": "20.18.0",
-      "yarn": "4.7.0"
+      "node": "20.18.0"
     },
     "development": {
       "extends": "base",

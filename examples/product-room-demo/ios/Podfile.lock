@@ -1595,7 +1595,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-chat-sdk (1.8.0):
+  - react-native-chat-sdk (1.8.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2366,7 +2366,7 @@ SPEC CHECKSUMS:
   React-logger: c4052eb941cca9a097ef01b59543a656dc088559
   React-Mapbuffer: 33546a3ebefbccb8770c33a1f8a5554fa96a54de
   React-microtasksnativemodule: d80ff86c8902872d397d9622f1a97aadcc12cead
-  react-native-chat-sdk: de7abdf2e2c47be923eb09d617524acd076b4713
+  react-native-chat-sdk: bc03d2635d67b3a1875b6cb6093d6c050135c085
   react-native-safe-area-context: cd916088cac5300c3266876218377518987b995e
   React-nativeconfig: 8efdb1ef1e9158c77098a93085438f7e7b463678
   React-NativeModulesApple: cebca2e5320a3d66e123cade23bd90a167ffce5e

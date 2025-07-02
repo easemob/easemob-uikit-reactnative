@@ -37,7 +37,6 @@ react-native-chat-sdk \
 react-native-create-thumbnail \
 react-native-device-info \
 @react-native-documents/picker \
-react-native-fast-image \
 react-native-file-access \
 react-native-gesture-handler \
 react-native-image-picker \

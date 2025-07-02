@@ -25,7 +25,6 @@ yarn add @react-native-community/blur \
 react-native-agora \
 react-native-chat-callkit \
 react-native-chat-sdk \
-react-native-fast-image \
 react-native-safe-area-context \
 react-native-screens \
 react-native-vector-icons

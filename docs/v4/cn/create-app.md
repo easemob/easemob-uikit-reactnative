@@ -33,7 +33,7 @@ pod install --project-directory=ios
 在项目设置管理工具是非常好的习惯，避免用户遇到不必要的问题。
 
 ```sh
-yarn set version 4.7.0
+yarn set version 4.9.1
 ```
 
 `react-native` 官方推荐使用 `yarn` 。 `yarn` 的版本非常多 `1.x.x` 版本已经作废，但是还有大量现存项目在使用。
