@@ -116,8 +116,8 @@ android {
       if (isNewArchitectureEnabled()) {
           java.srcDirs += [
             "src/newarch",
-            "generated/java",
-            "generated/jni"
+            "${project.buildDir}/generated/source/codegen/java",
+            "${project.buildDir}/generated/source/codegen/jni"
           ]
       } else {
           java.srcDirs += [

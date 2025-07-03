@@ -232,7 +232,7 @@
     "jsSrcsDir": "src",
     "outputDir": {
       "ios": "ios/generated",
-      "android": "android/generated"
+      "android": "android/build/generated/source/codegen"
     },
     "android": {
       "javaPackageName": "com.chatuikit"
