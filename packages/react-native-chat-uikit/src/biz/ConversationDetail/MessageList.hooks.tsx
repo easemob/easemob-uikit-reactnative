@@ -525,7 +525,6 @@ export function useMessageList(
       }
 
       currentVoicePlayingRef.current = msgModel;
-      const tmp = currentVoicePlayingRef.current;
       updateMessageVoiceUIState(msgModel);
       const body = msgModel.msg.body as ChatVoiceMessageBody;
       const localPath = body.localPath;
@@ -550,15 +549,16 @@ export function useMessageList(
         await Services.ms.playAudio({
           url: LocalPath.playVoice(localPath),
           onPlay({ currentPosition, duration }) {
-            if (currentPosition === duration) {
-              tmp.isVoicePlaying = true;
+            if (
+              Math.abs(currentPosition - duration) < 0.1 &&
+              currentVoicePlayingRef.current !== undefined
+            ) {
               currentVoicePlayingRef.current = undefined;
               updateMessageVoiceUIState(msgModel);
             }
           },
         });
       } catch (error) {
-        tmp.isVoicePlaying = true;
         currentVoicePlayingRef.current = undefined;
         updateMessageVoiceUIState(msgModel);
       }
