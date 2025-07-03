@@ -20,7 +20,11 @@ export const BackgroundVideo = () => {
         source={a_video}
         resizeMode={ResizeMode.COVER}
         isLooping={true}
+        shouldPlay={true}
         style={{ width: '100%', height: winHeight }}
+        onError={(e) => {
+          console.warn('play video error:', e);
+        }}
       />
     </View>
   );
