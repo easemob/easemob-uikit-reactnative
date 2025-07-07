@@ -2,9 +2,11 @@
   "name": "react-native-chat-callkit",
   "version": "1.0.6",
   "description": "react native chat callkit",
-  "source": "src/index.tsx",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
+  "types": "lib/typescript/src/index.d.ts",
+  "react-native": "src/index",
+  "source": "src/index",
   "exports": {
     ".": {
       "import": {
@@ -187,24 +189,12 @@
     "source": "src",
     "output": "lib",
     "targets": [
-      "codegen",
-      [
-        "commonjs",
-        {
-          "esm": true
-        }
-      ],
-      [
-        "module",
-        {
-          "esm": true
-        }
-      ],
+      "commonjs",
+      "module",
       [
         "typescript",
         {
-          "project": "tsconfig.build.json",
-          "esm": true
+          "project": "tsconfig.build.json"
         }
       ]
     ]
@@ -212,15 +202,10 @@
   "codegenConfig": {
     "name": "RNChatCallkitSpec",
     "type": "modules",
-    "jsSrcsDir": "src",
-    "outputDir": {
-      "ios": "ios/generated",
-      "android": "android/build/generated/source/codegen"
-    },
+    "jsSrcsDir": "src/__native__",
     "android": {
       "javaPackageName": "com.chatcallkit"
-    },
-    "includesGeneratedCode": true
+    }
   },
   "create-react-native-library": {
     "type": "turbo-module",

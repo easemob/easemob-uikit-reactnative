@@ -3,7 +3,7 @@
 
 #ifdef RCT_NEW_ARCH_ENABLED
 
-#import "generated/RNChatRoomSpec/RNChatRoomSpec.h"
+#import "RNChatRoomSpec.h"
 
 @interface ChatRoom : RCTEventEmitter <NativeChatRoomSpec>
 

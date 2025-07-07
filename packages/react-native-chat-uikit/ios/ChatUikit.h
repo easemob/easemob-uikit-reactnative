@@ -3,7 +3,7 @@
 
 #ifdef RCT_NEW_ARCH_ENABLED
 
-#import "generated/RNChatUikitSpec/RNChatUikitSpec.h"
+#import "RNChatUikitSpec.h"
 
 @interface ChatUikit : NSObject <NativeChatUikitSpec>
 

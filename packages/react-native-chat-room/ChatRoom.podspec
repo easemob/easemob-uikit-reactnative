@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 
   if ENV['RCT_NEW_ARCH_ENABLED'] == '1' then
     s.source_files = "ios/**/*.{h,m,mm,cpp}"
-    s.private_header_files = "ios/generated/**/*.h"
+    # s.private_header_files = "ios/generated/**/*.h"
   else
     s.source_files = "ios/*.{h,m,mm,cpp}"
   end

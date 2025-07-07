@@ -3,7 +3,7 @@
 
 #ifdef RCT_NEW_ARCH_ENABLED
 
-#import "generated/RNChatCallkitSpec/RNChatCallkitSpec.h"
+#import "RNChatCallkitSpec.h"
 
 @interface ChatCallkit : NSObject <NativeChatCallkitSpec>
 
