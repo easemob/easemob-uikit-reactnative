@@ -1,5 +1,121 @@
 # Change Log
 
+## [2.4.6](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.5...uikit@2.4.6)(2025-07-08)
+
+- 244f9980 tag: uikit@2.4.6
+- d7055ffb tag: uikit@2.4.6-beta.0 && callkit@1.0.7 && room@1.0.3
+- 68f67872 feat: uikit callkit roomkit not need include generated code
+- 928d578c fix: 76 or above version bug
+- 01f31370 chore: update ignore file
+- c183301b chore: example: update room
+- 0e93d3f0 fix: example: room bug
+- 2fcc83e1 chore: update new arch
+- ef37e84b fix: uikit: play voice bug
+- 02ae2df1 chore: remove fast image depend and upgrade chat sdk depend
+- c30f1cac example: update uikit example
+- 8b500e1a example: update uikit demo
+- 94d464bd docs: update
+- 600249a4 chore: example: udpate
+- a23a0d07 feat: example: uikit produce demo add aliyun captcha 2.0
+- ed97b827 fix: callkit new arch bug
+- 6267b1b1 docs: update wiki
+- 3716519e chore: example: update template
+- 21ea4817 fix: example: android compile bug
+- 03774476 chore: example: update readme
+- fe951a47 chore: update example: login with password for dev mode
+- 579aafea build: upgrade react-native to 0.76.9
+- b5fb0bf2 chore: example: update appserverdomain and restserverdomain
+- 1f93175a chore: example: update
+- f8670f62 chore: example: update
+- 5a0405ba fix: example: bug
+- d565f1b0 chore: rename app server domain
+- 9b909681 chore: callkit: update
+- 8f6d4dc9 fix: callkit: bug
+- d2760c2c fix: example: debug
+- 855c99b9 chore: example: sync update
+- 88fe965f fix: example: bug
+- 563a6573 chore: update config for expo
+- 3cf6e6ee fix: example: bug
+
+## [2.4.5](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.4...uikit@2.4.5)(2025-04-21)
+
+- c352b021 tag: uikit@2.4.5
+- b6447e02 fix: example: config sandbox test env
+- 8bbab8e4 fix: uikit: bug
+- e6c084bc chore: update wiki
+- 99c10826 fix: room: compile bug
+- 4647f30b fix: room: compile bug
+
+## [2.4.4](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.3...uikit@2.4.4)(2025-04-16)
+
+- 90bedcf4 tag: uikit@2.4.4
+- cc53d897 tag: room@1.0.1
+- 0847b100 tag: callkit@1.0.6
+- 56cd59aa chore: add monorepo releasenote
+- ef548955 chore: update wiki
+- 92b0e4b8 build: upgrade react-native to 0.76
+
+## [2.4.3](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.2...uikit@2.4.3)(2025-04-07)
+
+- 6ee666c9 tag: uikit@2.4.3
+- 9d6b4854 chore: remove storybook
+- 17494235 chore: remove react-native-reanimated
+- 31eacc8b build: update
+- 25aae157 v1.0.5
+- ca8821a1 v2.4.3-beta.1
+- ccdd5d1a fix: uikit: support custom message bug
+- 61d5394b fix: uikit: input component bug
+- bd582fd0 fix: uikit: message context menu component
+- 94133034 fix: uikit: menu position bug
+- fe48ee02 fix: message context name menu component for android old devices
+- 21af8ca3 chore: example: add warning ui
+- 240b1c1b docs: upate v3
+- 6970d595 docs: update v3
+- ddbf30ee v2.4.3-beta.0
+- 0b7e7b67 docs: update
+- 472f46a4 docs: update
+- c6405766 docs: update
+- df5f5e14 chore: update example
+- 1bf844e9 chore: update create thumb library
+- 6ecd7089 fix: uikit: update
+- e262308b fix: update getSystemLanguage function
+
+## [2.4.2](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.1...uikit@2.4.2)(2025-01-17)
+
+- 24f3a144 tag: uikit@2.4.2
+- 54dc630b fix: uikit: fix bugs
+- ff2fa9ee fix: uikit: fix bugs
+- 348f6106 fix: example: auto login
+- 4405818e docs: update
+- 5c4c39ad fix: example compile bug
+- 87b3e28c feat: update example appkey
+- e9d713d4 feat: example appkey update
+- 7d246f74 example: update
+- 1a729de0 example: update
+- d7b2bed2 build: update
+- 4bbea14e docs: update
+- d7ba51f5 chore: rename uikit example
+- ca109327 chore: update contributing.md
+- d67113a3 chore: update message callback and npm package config
+- 76654336 feat: add appid
+- cfc28811 fix: room: update
+- 11e3a5fb feat: room: add pin message
+- 73aa386f chore: update example
+- b4049e00 chore: update example
+- 306daed3 docs: update
+- 92d96594 chore: remove fcm for room uikit and example
+- 1f913b4c docs: update
+- a35ab7a9 docs: update room
+- f2e3c5b0 chore: room: rename
+- 20c901fa build: add chat room repo
+- a60e1686 example: update
+- a169270f v2.4.2-beta.0
+- 13d46de7 chore: uikit: update message list empty state
+- f41f1da6 fix: update example for block list
+- 28b54a30 fix: example update ui bug
+- 7d216fde example: update
+- 82d54d9b chore: update changelog and releasenote
+
 ## [2.4.1](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.0...uikit@2.4.1)(2024-11-12)
 
 - 099b41d8a5a598f8a566df28c42cdf9f2b17ff31 (HEAD -> dev-2.4, tag: uikit@2.4.1) v2.4.1
