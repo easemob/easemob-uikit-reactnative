@@ -1,5 +1,15 @@
 # Release Note
 
+# 2.4.6
+
+- Optimized variable naming in the example project for better readability
+- Updated the login method for the UIKit product project to use Alibaba Cloud verification code login
+- Fixed integration issues with React Native versions 0.77, 0.78, 0.79, and 0.80
+
+# 2.4.5
+
+- Fixed an issue where the example project incorrectly configured the specified server settings during login in development mode.
+
 # 2.4.4
 
 - Upgraded react-native version to 0.76
