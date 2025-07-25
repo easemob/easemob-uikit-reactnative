@@ -405,11 +405,7 @@ export function MyConversationDetailScreen(props: Props) {
         type={comType}
         convId={convId}
         convType={convType}
-        list={{
-          props: {
-            backgroundImage: '<chat background image url>',
-          },
-        }}
+        backgroundImage={'<chat background image url or local image>'}
       />
     </SafeAreaViewFragment>
   );
@@ -476,31 +472,7 @@ export function ConversationDetailScreen(props: Props) {
 }
 ```
 
-2. Set a background image for the message list
-
-```tsx
-type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function ConversationDetailScreen(props: Props) {
-  const { route } = props;
-  const convId = ((route.params as any)?.params as any)?.convId;
-  const convType = ((route.params as any)?.params as any)?.convType;
-
-  return (
-    <ConversationDetail
-      type={'chat'}
-      convId={convId}
-      convType={convType}
-      list={{
-        props: {
-          backgroundImage: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        },
-      }}
-    />
-  );
-}
-```
-
-3. Customize the message timestamp
+2. Customize the message timestamp
 
 Set the timestamp below the message bubble, which needs to be done during initialization. Example code:
 
@@ -524,7 +496,7 @@ export function App() {
 }
 ```
 
-4. Customize the message styles
+3. Customize the message styles
 
 Customize the text message style. Example code:
 
@@ -604,7 +576,7 @@ export function ConversationDetailScreen(props: Props) {
 }
 ```
 
-5. Customize the message context menu style.
+4. Customize the message context menu style.
 
 `messageMenuStyle` supports three modes: 'bottom-sheet' | 'context' | 'custom', `bottom-sheet` mode pops up the menu through the bottom of the page component, `context` mode pops up the menu through the message position and click position, and `custom` mode is implemented by user-defined components and needs to comply with the `MessageCustomLongPressMenu` constraint.
 
@@ -662,7 +634,7 @@ export function MyConversationDetailScreen(props: Props) {
 }
 ```
 
-6. Customize the style of the message attachment menu when sending messages
+5. Customize the style of the message attachment menu when sending messages
 
 `messageInputBarStyle` supports two modes: 'bottom-sheet' | 'extension', the `bottom-sheet` mode pops up the menu at the bottom of the page component, and the `context` mode is implemented through the layout component.
 

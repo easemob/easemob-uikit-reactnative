@@ -1,13 +1,6 @@
 import * as React from 'react';
-import {
-  Animated,
-  ImageBackground,
-  ListRenderItemInfo,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Animated, ListRenderItemInfo, View } from 'react-native';
 
-import { useColors } from '../../hook';
 import { ChatConversationType } from '../../rename.chat';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
@@ -45,8 +38,6 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
     const {
       containerStyle,
       onClicked,
-      backgroundImage,
-      backgroundImageComponent,
       convId,
       convType,
       onChangePinMaskHeight,
@@ -116,13 +107,13 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       msgPinBackgroundCurrentOpacity,
       msgPinBackgroundOpacityAnimate,
     } = useMessagePin({});
-    const { getColor } = useColors();
+    // const { getColor } = useColors();
 
     return (
       <View
         style={[
           {
-            backgroundColor: getColor('bg'),
+            // backgroundColor: getColor('bg'),
             // flexGrow: 1,
             // flexShrink: 1,
             flex: 1,
@@ -136,14 +127,14 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           setMaxListHeight(e.nativeEvent.layout.height);
         }}
       >
-        {backgroundImageComponent ? (
+        {/* {backgroundImageComponent ? (
           backgroundImageComponent
         ) : backgroundImage ? (
           <ImageBackground
             style={[StyleSheet.absoluteFill, {}]}
             source={{ uri: backgroundImage }}
           />
-        ) : null}
+        ) : null} */}
 
         {convType === ChatConversationType.GroupChat && comType === 'chat' ? (
           <AnimatedMessagePinPlaceholder

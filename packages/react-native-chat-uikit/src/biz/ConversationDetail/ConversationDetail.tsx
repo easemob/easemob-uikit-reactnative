@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { ImageBackground } from 'react-native';
 
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
 import { MessageContextProvider } from '../Context';
@@ -23,6 +23,8 @@ export function ConversationDetail(props: ConversationDetailProps) {
     onClickedThread,
     onClickedVideo,
     onClickedVoice,
+    backgroundImageStyle,
+    backgroundImage,
   } = props;
 
   const {
@@ -64,7 +66,11 @@ export function ConversationDetail(props: ConversationDetailProps) {
   } = useConversationDetail(props);
 
   const getContent = () => (
-    <View style={[{ flexGrow: 1 }, containerStyle]}>
+    <ImageBackground
+      style={[{ flexGrow: 1 }, containerStyle]}
+      imageStyle={backgroundImageStyle}
+      source={backgroundImage}
+    >
       {enableNavigationBar === true ? (
         <ConversationDetailNavigationBar
           convId={convId}
@@ -125,7 +131,7 @@ export function ConversationDetail(props: ConversationDetailProps) {
         ref={menuRef}
         onRequestModalClose={onRequestCloseMenu}
       />
-    </View>
+    </ImageBackground>
   );
 
   return (

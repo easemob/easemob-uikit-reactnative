@@ -1,4 +1,9 @@
-import type { StyleProp, ViewStyle } from 'react-native';
+import type {
+  ImageSourcePropType,
+  ImageStyle,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 
 import type { DataModel } from '../../chat';
 import type {
@@ -299,6 +304,16 @@ export type ConversationDetailProps = PropsWithError &
      * The name of the new thread. this parameter is required in create thread mode.
      */
     newThreadName?: string;
+
+    /**
+     * The background image source (either a remote URL or a local file resource).
+     */
+    backgroundImage?: ImageSourcePropType;
+
+    /**
+     * The background image style of the conversation details component.
+     */
+    backgroundImageStyle?: StyleProp<ImageStyle>;
 
     /**
      * A collection of properties for the input component. As an internal component of conversation details, settings are provided directly through collections.
@@ -961,18 +976,6 @@ export type MessageListProps = PropsWithError &
      * The first message to be sent. This parameter is required in thread mode.
      */
     firstMessage?: SendMessageProps;
-
-    /**
-     * Background image.
-     */
-    backgroundImage?: string;
-
-    /**
-     * Background image component.
-     *
-     * If set, the background image will be replaced by the component. backgroundImage will be ignored.
-     */
-    backgroundImageComponent?: React.ReactNode;
 
     /**
      * The callback notification for clicking the list is not the callback notification for clicking the list item.

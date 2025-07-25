@@ -559,11 +559,7 @@ export function MyConversationDetailScreen(props: Props) {
         type={comType}
         convId={convId}
         convType={convType}
-        list={{
-          props: {
-            backgroundImage: '<chat background image url>',
-          },
-        }}
+        backgroundImage={'<chat background image url or local image>'}
       />
     </SafeAreaViewFragment>
   );
@@ -630,31 +626,7 @@ export function MyConversationDetailScreen(props: Props) {
 }
 ```
 
-2. 设置消息列表的背景图片
-
-```tsx
-type Props = NativeStackScreenProps<RootScreenParamsList>;
-export function MyConversationDetailScreen(props: Props) {
-  const { route } = props;
-  const convId = ((route.params as any)?.params as any)?.convId;
-  const convType = ((route.params as any)?.params as any)?.convType;
-
-  return (
-    <ConversationDetail
-      type={'chat'}
-      convId={convId}
-      convType={convType}
-      list={{
-        props: {
-          backgroundImage: 'https://img.yzcdn.cn/vant/cat.jpeg',
-        },
-      }}
-    />
-  );
-}
-```
-
-3. 自定义消息时间戳
+2. 自定义消息时间戳
 
 设置消息气泡下面的时间戳，需要在初始化部分进行。 示例代码如下：
 
@@ -678,7 +650,7 @@ export function App() {
 }
 ```
 
-4. 自定义消息样式
+3. 自定义消息样式
 
 自定文本消息样式。示例代码如下：
 
@@ -757,7 +729,7 @@ export function MyConversationDetailScreen(props: Props) {
 }
 ```
 
-5. 自定义消息上下文菜单样式。
+4. 自定义消息上下文菜单样式。
 
 `messageMenuStyle` 支持三种模式: 'bottom-sheet' | 'context' | 'custom', `bottom-sheet` 模式通过页面组件底部弹出菜单， `context` 模式通过消息位置和点击位置弹出菜单，`custom` 模式通过用户自定组件实现，需要遵守 `MessageCustomLongPressMenu` 约束。
 
@@ -815,7 +787,7 @@ export function MyConversationDetailScreen(props: Props) {
 }
 ```
 
-6. 自定义发送消息附件菜单样式
+5. 自定义发送消息附件菜单样式
 
 `messageInputBarStyle` 支持两种模式: 'bottom-sheet' | 'extension', `bottom-sheet` 模式通过页面组件底部弹出菜单， `context` 模式通过布局组件实现。
 

@@ -3,9 +3,7 @@ import * as React from 'react';
 import {
   DeviceEventEmitter,
   Dimensions,
-  ImageBackground,
   Pressable,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -357,6 +355,7 @@ export function ConversationDetailScreen(props: Props) {
     <SafeAreaViewFragment>
       <ConversationDetail
         propsRef={convRef}
+        backgroundImage={themeStyle === 'light' ? chat_bg_light : chat_bg_dark}
         type={comType}
         convId={convId}
         convType={convType}
@@ -417,12 +416,12 @@ export function ConversationDetailScreen(props: Props) {
           props: {
             // containerStyle: { backgroundColor: 'red' },
             // backgroundImage: 'https://img.yzcdn.cn/vant/cat.jpeg',
-            backgroundImageComponent: (
-              <ImageBackground
-                style={[StyleSheet.absoluteFill, {}]}
-                source={themeStyle === 'light' ? chat_bg_light : chat_bg_dark}
-              />
-            ),
+            // backgroundImageComponent: (
+            //   <ImageBackground
+            //     style={[StyleSheet.absoluteFill, {}]}
+            //     source={themeStyle === 'light' ? chat_bg_light : chat_bg_dark}
+            //   />
+            // ),
             // onInitMenu: (menu) => {
             //   return [
             //     ...menu,
