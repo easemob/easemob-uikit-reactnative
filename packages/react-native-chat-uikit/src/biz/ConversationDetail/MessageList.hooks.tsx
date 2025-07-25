@@ -2916,7 +2916,6 @@ export function useMessageList(
   React.useEffect(() => {
     const listener = {
       onSendMessageChanged: (msg: ChatMessage) => {
-        console.log('test:zuoyu:onSendMessageChanged:', msg);
         onUpdateMessageToUI(msg, 'send');
         if (canAddNewMessageToUI()) {
           if (

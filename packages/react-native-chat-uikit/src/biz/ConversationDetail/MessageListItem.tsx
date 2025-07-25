@@ -1411,7 +1411,6 @@ export function StateView(props: StateViewProps) {
   const isStop = React.useMemo(() => {
     return state !== 'loading-attachment' && state !== 'sending';
   }, [state]);
-  console.log('test:zuoyu:isStop:', isStop, state);
   const iconName = React.useMemo(() => getStateIcon(state), [state]);
   const iconColor = React.useMemo(() => getStateIconColor(state), [state]);
   return (
@@ -2309,7 +2308,6 @@ export function MessageView(props: MessageViewProps) {
   const { layoutType, reactions, thread, isHighBackground } = model;
   const { enableThread, enableReaction, releaseArea } = useConfigContext();
   const state = getMessageState(model.msg);
-  console.log('test:zuoyu:state:', state);
   const maxWidth = Dimensions.get('window').width * 0.6;
   const time = model.msg.localTime ?? model.msg.serverTime;
   const bubblePadding = 12;
