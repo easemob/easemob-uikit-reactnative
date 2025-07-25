@@ -205,6 +205,9 @@ export function createStringSetEn(): StringSet {
     '_demo_conv_fz_tip_2_result':
       'Thank you for your report, we will handle it as soon as possible.',
 
+    '_demo_msg_tip_safe_tip':
+      'Do not disclose sensitive information to others. Verify the identity of the other party.',
+
     'save': 'Save',
     'done': 'Done',
     'en': 'English',

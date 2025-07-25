@@ -968,6 +968,13 @@ export type MessageListProps = PropsWithError &
     backgroundImage?: string;
 
     /**
+     * Background image component.
+     *
+     * If set, the background image will be replaced by the component. backgroundImage will be ignored.
+     */
+    backgroundImageComponent?: React.ReactNode;
+
+    /**
      * The callback notification for clicking the list is not the callback notification for clicking the list item.
      *
      * **Note** This interface is mainly used between internal components. Users do not need to pay attention to it.

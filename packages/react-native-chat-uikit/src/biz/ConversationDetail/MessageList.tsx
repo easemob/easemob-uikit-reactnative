@@ -46,6 +46,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       containerStyle,
       onClicked,
       backgroundImage,
+      backgroundImageComponent,
       convId,
       convType,
       onChangePinMaskHeight,
@@ -135,7 +136,9 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           setMaxListHeight(e.nativeEvent.layout.height);
         }}
       >
-        {backgroundImage ? (
+        {backgroundImageComponent ? (
+          backgroundImageComponent
+        ) : backgroundImage ? (
           <ImageBackground
             style={[StyleSheet.absoluteFill, {}]}
             source={{ uri: backgroundImage }}

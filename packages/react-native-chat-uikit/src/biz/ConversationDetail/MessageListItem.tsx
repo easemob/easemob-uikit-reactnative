@@ -59,10 +59,10 @@ import {
   getPaddingWidth,
   getStateIcon,
   getStateIconColor,
-  getSystemTip,
   getVideoThumbUrl,
   isQuoteMessage,
   isSupportMessage,
+  useSystemTip,
 } from './MessageListItem.hooks';
 import type {
   AvatarViewProps,
@@ -1411,6 +1411,7 @@ export function StateView(props: StateViewProps) {
   const isStop = React.useMemo(() => {
     return state !== 'loading-attachment' && state !== 'sending';
   }, [state]);
+  console.log('test:zuoyu:isStop:', isStop, state);
   const iconName = React.useMemo(() => getStateIcon(state), [state]);
   const iconColor = React.useMemo(() => getStateIconColor(state), [state]);
   return (
@@ -2308,6 +2309,7 @@ export function MessageView(props: MessageViewProps) {
   const { layoutType, reactions, thread, isHighBackground } = model;
   const { enableThread, enableReaction, releaseArea } = useConfigContext();
   const state = getMessageState(model.msg);
+  console.log('test:zuoyu:state:', state);
   const maxWidth = Dimensions.get('window').width * 0.6;
   const time = model.msg.localTime ?? model.msg.serverTime;
   const bubblePadding = 12;
@@ -2491,7 +2493,7 @@ export function MessageView(props: MessageViewProps) {
 export function SystemTipView(props: SystemTipViewProps) {
   const { isVisible = true, model } = props;
   const { msg } = model;
-  const { onSystemTip } = useConfigContext();
+  const { systemTip } = useSystemTip();
   const { tr } = useI18nContext();
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
@@ -2500,13 +2502,6 @@ export function SystemTipView(props: SystemTipViewProps) {
       dark: colors.neutral[6],
     },
   });
-
-  const systemTip = React.useCallback(
-    (msg: ChatMessage, tr: (key: string, ...args: any[]) => string) => {
-      return onSystemTip?.(msg, tr) ?? getSystemTip(msg, tr);
-    },
-    [onSystemTip]
-  );
 
   return (
     <View

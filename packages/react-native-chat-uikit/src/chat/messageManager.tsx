@@ -346,7 +346,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
 
   createRecallMessageTip(msg: ChatMessage): ChatMessage {
     const userInfo = userInfoFromMessage(msg);
-    const tip = ChatMessage.createCustomMessage(
+    const tipMsg = ChatMessage.createCustomMessage(
       msg.conversationId,
       gCustomMessageRecallEventType,
       msg.chatType,
@@ -356,12 +356,12 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
           self: this._client.userId ?? '',
           from: msg.from,
           fromName: userInfo?.remark ?? userInfo?.userName ?? msg.from,
+          type: 'system',
         },
       }
     );
-    // tip.localTime = msg.localTime;
-    // tip.serverTime = msg.serverTime;
-    return tip;
+    tipMsg.status = ChatMessageStatus.SUCCESS;
+    return tipMsg;
   }
 
   async recallMessage(msg: ChatMessage): Promise<void> {
@@ -581,8 +581,15 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       params.convId,
       params.tipType,
       params.convType,
-      { params: params.kvs, isChatThread: params.isChatThread }
+      {
+        params: {
+          ...params.kvs,
+          type: 'system',
+        },
+        isChatThread: params.isChatThread,
+      }
     );
+    tipMsg.status = ChatMessageStatus.SUCCESS;
     this._client.insertMessage({
       message: tipMsg,
       onResult: (result) => {

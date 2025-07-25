@@ -190,6 +190,8 @@ export function createStringSetCn(): StringSet {
     '_demo_conv_fz_tip_2': '点我举报',
     '_demo_conv_fz_tip_2_result': '感谢您的举报，我们将尽快处理',
 
+    '_demo_msg_tip_safe_tip': '请勿将敏感信息告知他人，注意核实对方身份。',
+
     'save': '保存',
     'done': '完成',
     'en': 'English',

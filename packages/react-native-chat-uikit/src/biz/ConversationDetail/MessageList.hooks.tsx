@@ -298,9 +298,12 @@ export function useMessageList(
     }): ChatMessage => {
       const { convId, convType, event } = params;
       const tipMsg = ChatMessage.createCustomMessage(convId, event, convType, {
-        params: {},
+        params: {
+          type: 'system',
+        },
         isChatThread: comType === 'thread',
       });
+      tipMsg.status = ChatMessageStatus.SUCCESS;
       const s = im.user(im.userId);
       setUserInfoToMessage({ msg: tipMsg, user: s });
       return tipMsg;
@@ -743,6 +746,9 @@ export function useMessageList(
           modelType = 'system';
         } else {
           modelType = 'message';
+        }
+        if (body.params?.type === 'system') {
+          modelType = 'system';
         }
       }
       if (modelType === 'system') {
@@ -2910,6 +2916,7 @@ export function useMessageList(
   React.useEffect(() => {
     const listener = {
       onSendMessageChanged: (msg: ChatMessage) => {
+        console.log('test:zuoyu:onSendMessageChanged:', msg);
         onUpdateMessageToUI(msg, 'send');
         if (canAddNewMessageToUI()) {
           if (

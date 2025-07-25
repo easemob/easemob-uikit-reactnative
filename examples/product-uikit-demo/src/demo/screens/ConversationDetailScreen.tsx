@@ -3,7 +3,9 @@ import * as React from 'react';
 import {
   DeviceEventEmitter,
   Dimensions,
+  ImageBackground,
   Pressable,
+  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -21,8 +23,7 @@ import {
   ContextNameMenuRef,
   Icon,
   InitMenuItemsType,
-  // MessageContent,
-  // MessageContentProps,
+  MessageManagerListener,
   MessageView,
   MessageViewProps,
   useColors,
@@ -47,13 +48,15 @@ import {
   uuid,
 } from '../../rename.uikit';
 import {
+  chat_bg_dark,
+  chat_bg_light,
   tip_close_icon_dark,
   tip_close_icon_light,
   tip_icon_dark,
   tip_icon_light,
 } from '../common/assets';
 import { useCallApi } from '../common/AVView';
-import { useAppServerDomain } from '../common/const';
+import { gCustomMessageSafeTip, useAppServerDomain } from '../common/const';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useOnce, useStackScreenRoute } from '../hooks';
 import type { RootParamsName, RootScreenParamsList } from '../routes';
@@ -62,7 +65,7 @@ import type { RootParamsName, RootScreenParamsList } from '../routes';
 //   const { msg } = props;
 //   if (msg.body.type === ChatMessageType.CUSTOM) {
 //     const body = msg.body as ChatCustomMessageBody;
-//     if (body.event === 'test') {
+//     if (body.event === gCustomMessageSafeTip) {
 //       return (
 //         <View style={{ width: 100, height: 100, backgroundColor: 'red' }}>
 //           <Text>{body.event}</Text>
@@ -141,6 +144,7 @@ export function ConversationDetailScreen(props: Props) {
   ).current;
   const avTypeRef = React.useRef<'video' | 'voice'>('video');
   const { getSimpleToastRef } = useSimpleToastContext();
+  const { style: themeStyle } = useThemeContext();
   const { tr } = useI18nContext();
   const { showCall } = useCallApi({});
   const [tipVisible, setTipVisible] = React.useState(true);
@@ -288,6 +292,67 @@ export function ConversationDetailScreen(props: Props) {
     };
   }, [comType, convId]);
 
+  React.useEffect(() => {
+    const listener = {
+      onSendMessageChanged: (msg: ChatMessage) => {
+        console.log('dev:onSendMessageChanged:', msg);
+        if (msg.conversationId !== convId) {
+          return;
+        }
+        if (msg.body.type === ChatMessageType.CMD) {
+          return;
+        }
+        const tipMsg = ChatMessage.createCustomMessage(
+          convId,
+          gCustomMessageSafeTip,
+          convType,
+          {
+            params: {
+              type: 'system',
+              tip: tr('_demo_msg_tip_safe_tip'),
+            },
+          }
+        );
+        tipMsg.status = ChatMessageStatus.SUCCESS;
+        listRef.current?.saveMessage(tipMsg);
+        listRef.current?.addSendMessageToUI({
+          value: { type: 'system', msg: tipMsg },
+        });
+      },
+      onRecvMessage: async (msg: ChatMessage) => {
+        console.log('dev:onRecvMessage:', msg);
+        setTimeout(() => {
+          if (msg.conversationId !== convId) {
+            return;
+          }
+          if (msg.body.type === ChatMessageType.CMD) {
+            return;
+          }
+          const tipMsg = ChatMessage.createCustomMessage(
+            convId,
+            gCustomMessageSafeTip,
+            convType,
+            {
+              params: {
+                type: 'system',
+                tip: tr('_demo_msg_tip_safe_tip'),
+              },
+            }
+          );
+          tipMsg.status = ChatMessageStatus.SUCCESS;
+          listRef.current?.saveMessage(tipMsg);
+          listRef.current?.addSendMessageToUI({
+            value: { type: 'system', msg: tipMsg },
+          });
+        }, 500);
+      },
+    } as MessageManagerListener;
+    im.messageManager.addListener(convId + 'demo', listener);
+    return () => {
+      im.messageManager.removeListener(convId + 'demo');
+    };
+  }, [convId, convType, im.messageManager, tr]);
+
   return (
     <SafeAreaViewFragment>
       <ConversationDetail
@@ -352,6 +417,12 @@ export function ConversationDetailScreen(props: Props) {
           props: {
             // containerStyle: { backgroundColor: 'red' },
             // backgroundImage: 'https://img.yzcdn.cn/vant/cat.jpeg',
+            backgroundImageComponent: (
+              <ImageBackground
+                style={[StyleSheet.absoluteFill, {}]}
+                source={themeStyle === 'light' ? chat_bg_light : chat_bg_dark}
+              />
+            ),
             // onInitMenu: (menu) => {
             //   return [
             //     ...menu,

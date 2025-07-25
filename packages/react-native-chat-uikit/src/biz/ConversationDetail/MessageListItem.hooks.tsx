@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Dimensions, Image } from 'react-native';
 
 import type { IconNameType } from '../../assets';
@@ -10,6 +11,7 @@ import {
   gMessageAttributeVoiceReadFlag,
   userInfoFromMessage,
 } from '../../chat';
+import { useConfigContext } from '../../config';
 import { uilog } from '../../const';
 import {
   ChatCustomMessageBody,
@@ -373,4 +375,25 @@ export function getSystemTip(
     }
   }
   return '';
+}
+
+export function useSystemTip() {
+  const { onSystemTip } = useConfigContext();
+  const systemTip = React.useCallback(
+    (msg: ChatMessage, tr: (key: string, ...args: any[]) => string) => {
+      return onSystemTip?.(msg, tr) ?? getSystemTip(msg, tr);
+    },
+    [onSystemTip]
+  );
+  const systemTipType = React.useCallback((msg: ChatMessage) => {
+    if (msg.body.type !== ChatMessageType.CUSTOM) {
+      return 'none';
+    }
+    const body = msg.body as ChatCustomMessageBody;
+    return body.event;
+  }, []);
+  return {
+    systemTip,
+    systemTipType,
+  };
 }

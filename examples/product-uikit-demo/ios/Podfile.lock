@@ -37,7 +37,7 @@ PODS:
   - AgoraRtcEngine_iOS/VirtualBackground (4.3.2)
   - AgoraRtcEngine_iOS/VQA (4.3.2)
   - boost (1.84.0)
-  - ChatCallkit (1.0.6):
+  - ChatCallkit (1.0.7):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -58,7 +58,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - ChatUikit (2.4.5-beta.1):
+  - ChatUikit (2.4.6):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2933,8 +2933,8 @@ SPEC CHECKSUMS:
   AgoraIrisRTC_iOS: 3cb15344a503a1a35ab6d60481732a8beeda98fe
   AgoraRtcEngine_iOS: eaa97751fcfe1b50d9b067e0df92752a6a5f899f
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
-  ChatCallkit: d0490eb3357cb5d032bbccfa0931c84255fbcf3c
-  ChatUikit: a3d6f7585f96470d643a8fe11e1de78cca42cfb1
+  ChatCallkit: 44e3b1f38f07409cd1321e6870d1b562737e4b51
+  ChatUikit: f69a12ffd919064c204ca95b0cceab312f6cd442
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
   EASClient: 88b5fd19d0787186a0c7e6ba76deb2d4f96395ce
   EXConstants: fcfc75800824ac2d5c592b5bc74130bad17b146b

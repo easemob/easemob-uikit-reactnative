@@ -34,3 +34,5 @@ export const fcmSenderId = env.fcmSenderId as string;
 export const twemoji_ttf_name = 'Twemoji-Mozilla';
 export const boloo_da_ttf_name = 'Baloo-Da';
 export const aliyunSecretKey = env.aliyunSecretKey as string;
+
+export const gCustomMessageSafeTip = '_$uikit_safe_tip';

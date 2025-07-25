@@ -69,6 +69,7 @@ import {
   restServerDomain,
   twemoji_ttf_name,
 } from '../common/const';
+import { gCustomMessageSafeTip } from '../common/const';
 import {
   checkFCMPermission,
   requestFCMPermission,
@@ -546,6 +547,9 @@ export function useApp() {
         } catch (error) {
           return tr('_uikit_msg_tip_added_contact');
         }
+      }
+      if (body.event === gCustomMessageSafeTip) {
+        return body.params?.tip;
       }
       return undefined;
     },

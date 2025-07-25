@@ -34,3 +34,6 @@ export const tip_icon_light = require('../assets/tip_icon/exclamation_mark_in_ci
 export const tip_icon_dark = require('../assets/tip_icon/exclamation_mark_in_circle_fill_dark.png');
 export const tip_close_icon_light = require('../assets/tip_icon/xmark_thick_light.png');
 export const tip_close_icon_dark = require('../assets/tip_icon/xmark_thick_dark.png');
+
+export const chat_bg_light = require('../assets/chat_bg_light.png');
+export const chat_bg_dark = require('../assets/chat_bg_dark.png');

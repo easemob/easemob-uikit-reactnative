@@ -10,7 +10,11 @@ import { setUserInfoToMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
 import { ErrorCode, UIKitError } from '../../error';
 import { useI18nContext } from '../../i18n';
-import { ChatMessage, ChatMessageChatType } from '../../rename.chat';
+import {
+  ChatMessage,
+  ChatMessageChatType,
+  ChatMessageStatus,
+} from '../../rename.chat';
 import type { CreateGroupProps } from './types';
 
 export function useCreateGroup(props: CreateGroupProps) {
@@ -40,9 +44,11 @@ export function useCreateGroup(props: CreateGroupProps) {
           params: {
             text: '_uikit_msg_tip_create_group_success_with_params',
             name: groupName ?? groupId,
+            type: 'system',
           },
         }
       );
+      tipMsg.status = ChatMessageStatus.SUCCESS;
       const s = im.user(im.userId);
       setUserInfoToMessage({ msg: tipMsg, user: s });
       return tipMsg;
