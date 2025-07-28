@@ -47,7 +47,14 @@ import {
 import type { RootScreenParamsList } from '../routes';
 import { Captcha } from '../ui/Captcha';
 
-type CaptchaState = 'init' | 'sending' | 'sent' | 'resend' | 'error' | 'cancel';
+type CaptchaState =
+  | 'init'
+  | 'showCaptcha'
+  | 'sending'
+  | 'sent'
+  | 'resend'
+  | 'error'
+  | 'cancel';
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 function EasemobLoginV2Screen(props: Props) {
   const {
@@ -80,8 +87,10 @@ function EasemobLoginV2Screen(props: Props) {
   const { width: winWidth } = useWindowDimensions();
   const intervalRef = React.useRef<NodeJS.Timeout>();
 
-  const getCaptchaText = () => {
+  const getCaptchaText = (second: number, captchaState: CaptchaState) => {
     if (captchaState === 'init') {
+      return tr('_demo_login_input_phone_number_captcha_button_1');
+    } else if (captchaState === 'showCaptcha') {
       return tr('_demo_login_input_phone_number_captcha_button_1');
     } else if (captchaState === 'sending') {
       return tr('_demo_login_input_phone_number_captcha_button_2', second);
@@ -95,6 +104,8 @@ function EasemobLoginV2Screen(props: Props) {
   };
   const getCaptchaColor = () => {
     if (captchaState === 'init') {
+      return getColor('p');
+    } else if (captchaState === 'showCaptcha') {
       return getColor('p');
     } else if (captchaState === 'sending') {
       return getColor('clear');
@@ -128,22 +139,24 @@ function EasemobLoginV2Screen(props: Props) {
   // };
 
   // sms captcha v2 with aliyun captcha sdk 2.0
-  const startCaptchaV2 = () => {
-    if (captchaState === 'sending') {
-      return;
-    }
-    setCaptchaState('sending');
+  const startTimeout = () => {
     setSecond(60);
     intervalRef.current = setInterval(() => {
       setSecond((prev) => {
         if (prev <= 0) {
-          clearInterval(intervalRef.current);
           setCaptchaState('resend');
+          clearInterval(intervalRef.current);
+          intervalRef.current = undefined;
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
+  };
+  const showCaptcha = () => {
+    if (captchaState !== 'showCaptcha' && (second === 0 || second === 60)) {
+      setCaptchaState('showCaptcha');
+    }
   };
 
   const onClickedServices = () => {
@@ -155,8 +168,6 @@ function EasemobLoginV2Screen(props: Props) {
 
   const onClickedBlank = () => {
     Keyboard.dismiss();
-    setCaptchaState('cancel');
-    clearInterval(intervalRef.current);
   };
 
   const validPhone = (phone: string) => {
@@ -406,7 +417,7 @@ function EasemobLoginV2Screen(props: Props) {
                       right: 30 + 22,
                     },
                   ]}
-                  onPress={startCaptchaV2}
+                  onPress={showCaptcha}
                 >
                   <SingleLineText
                     style={{
@@ -417,7 +428,7 @@ function EasemobLoginV2Screen(props: Props) {
                       color: getCaptchaColor(),
                     }}
                   >
-                    {getCaptchaText()}
+                    {getCaptchaText(second, captchaState)}
                   </SingleLineText>
                 </Pressable>
               ) : null}
@@ -603,7 +614,7 @@ function EasemobLoginV2Screen(props: Props) {
 
         {accountType === 'easemob' &&
         serverSettingVisible === false &&
-        captchaState === 'sending' ? (
+        captchaState === 'showCaptcha' ? (
           <Captcha
             phone={id}
             containerStyle={{
@@ -615,7 +626,8 @@ function EasemobLoginV2Screen(props: Props) {
               borderRadius: 8,
             }}
             onSuccess={() => {
-              setCaptchaState('sent');
+              setCaptchaState('sending');
+              startTimeout();
             }}
             onFail={(_code, errorInfo) => {
               setCaptchaState('error');
