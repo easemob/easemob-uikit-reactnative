@@ -1,5 +1,15 @@
 # Change Log
 
+## [2.4.7](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.6...uikit@2.4.7)(2025-07-28)
+
+- d85d64b1 chore: update uikit demo
+- ac022c85 chore: uikit: remove log
+- 8f6bf7b4 chore: uikit: update uikit and docs
+- 41365c60 chore: update uikit and update uikit produce demo
+- 42574b9d docs: update uikit release note
+- ed75ef17 docs: update developer md
+- ae97218f docs: update change log
+
 ## [2.4.6](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.5...uikit@2.4.6)(2025-07-08)
 
 - 244f9980 tag: uikit@2.4.6
