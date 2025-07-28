@@ -1,5 +1,10 @@
 # Release Note
 
+# 2.4.7
+
+- Move the conversation detail background image from the message list to the message list parent component.
+- Fix the UI for saving and loading local tip messages.
+
 # 2.4.6
 
 - Optimized variable naming in the example project for better readability

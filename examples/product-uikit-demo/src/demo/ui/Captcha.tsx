@@ -203,7 +203,7 @@ export function Captcha(props: CaptchaProps) {
 
       <WebView
         source={{
-          uri: `https://downloadsdk.easemob.com/downloads/IMDemo/sms/index.html?telephone=${phone}`,
+          uri: `https://downloadsdk.easesdk.com/downloads/IMDemo/sms/index.html?telephone=${phone}`,
         }}
         // source={{ uri: "https://birchlabs.co.uk/linguabrowse/infopages/obsol/rnw_iframe_test.html" }}
         automaticallyAdjustContentInsets={false}
