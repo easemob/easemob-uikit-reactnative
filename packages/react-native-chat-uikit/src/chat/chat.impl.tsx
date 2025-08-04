@@ -2557,14 +2557,14 @@ export class ChatServiceImpl
     onResult: ResultCallback<ChatMessage[]>;
   }): void {
     this.tryCatch({
-      promise: this.client.chatManager.getMessagesWithMsgType(
-        params.convId,
-        params.convType,
-        ChatMessageType.CUSTOM,
-        params.direction,
-        params.timestamp,
-        params.pageSize
-      ),
+      promise: this.client.chatManager.getMsgsWithMsgType({
+        convId: params.convId,
+        convType: params.convType,
+        msgType: ChatMessageType.CUSTOM,
+        direction: params.direction,
+        timestamp: params.timestamp,
+        count: params.pageSize,
+      }),
       event: 'getNewRequestList',
       onFinished: async (value) => {
         params.onResult({
