@@ -37,7 +37,7 @@ PODS:
   - AgoraRtcEngine_iOS/VirtualBackground (4.3.2)
   - AgoraRtcEngine_iOS/VQA (4.3.2)
   - boost (1.84.0)
-  - ChatCallkit (1.0.7):
+  - ChatCallkit (1.0.8):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -58,7 +58,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - ChatUikit (2.4.6):
+  - ChatUikit (2.4.7):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -436,7 +436,7 @@ PODS:
   - hermes-engine (0.76.9):
     - hermes-engine/Pre-built (= 0.76.9)
   - hermes-engine/Pre-built (0.76.9)
-  - HyphenateChat (4.12.0):
+  - HyphenateChat (4.15.2):
     - AgoraInfra_iOS (= 1.2.13)
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
@@ -1789,11 +1789,11 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-chat-sdk (1.8.2):
+  - react-native-chat-sdk (1.11.0):
     - DoubleConversion
     - glog
     - hermes-engine
-    - HyphenateChat (~> 4.12.0)
+    - HyphenateChat (~> 4.15.1)
     - RCT-Folly (= 2024.10.14.00)
     - RCTRequired
     - RCTTypeSafety
@@ -2933,8 +2933,8 @@ SPEC CHECKSUMS:
   AgoraIrisRTC_iOS: 3cb15344a503a1a35ab6d60481732a8beeda98fe
   AgoraRtcEngine_iOS: eaa97751fcfe1b50d9b067e0df92752a6a5f899f
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
-  ChatCallkit: 44e3b1f38f07409cd1321e6870d1b562737e4b51
-  ChatUikit: f69a12ffd919064c204ca95b0cceab312f6cd442
+  ChatCallkit: a11d9bba81fe04c2c8d62154910d0a5c2adb5308
+  ChatUikit: 6cb5445a593c3fe9fdc336d98b101073cc330b3d
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
   EASClient: 88b5fd19d0787186a0c7e6ba76deb2d4f96395ce
   EXConstants: fcfc75800824ac2d5c592b5bc74130bad17b146b
@@ -2967,7 +2967,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   hermes-engine: 9e868dc7be781364296d6ee2f56d0c1a9ef0bb11
-  HyphenateChat: e3869321ba4e1b7e61f320a037935f3f4751e74a
+  HyphenateChat: 64c4175f4a1f722fd091e4446146a477db1b1ec7
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   OpenSSL-Universal: 6082b0bf950e5636fe0d78def171184e2b3899c2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
@@ -3004,7 +3004,7 @@ SPEC CHECKSUMS:
   react-native-agora: 60d652c9680afb27bbd8f621b8cb7bbaaeaa8a99
   react-native-blur: 535f5810fceb751b25db90c925ffa42ed007def7
   react-native-cameraroll: 438f60637bc444e62001412450d8459d678a8044
-  react-native-chat-sdk: bc03d2635d67b3a1875b6cb6093d6c050135c085
+  react-native-chat-sdk: 7055dc4385ca98e0694a2539fe1069762d0c5230
   react-native-create-thumbnail: 733160dca9a548262e1030e7fcdae90a93d203ca
   react-native-document-picker: 25348aa13bf4224ee7a14934fc2aa6c3394273f8
   react-native-image-editor: 4926d1e0cca2ad1a809d1c45fe29c7a441f29207

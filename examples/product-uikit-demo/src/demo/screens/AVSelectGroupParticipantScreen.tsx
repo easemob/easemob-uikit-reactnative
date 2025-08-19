@@ -17,10 +17,10 @@ export function AVSelectGroupParticipantScreen(props: Props) {
       <AVSelectGroupParticipant
         groupId={groupId}
         onBack={() => {
-          navi.goBack();
+          navi.pop();
         }}
         onSelectResult={(data) => {
-          navi.goBack({
+          navi.popTo({
             props: {
               selectedMembers: data,
             },
