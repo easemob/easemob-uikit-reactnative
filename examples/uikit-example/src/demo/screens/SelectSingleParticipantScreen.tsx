@@ -19,7 +19,7 @@ export function SelectSingleParticipantScreen(props: Props) {
           navi.goBack();
         }}
         onClickedItem={(data) => {
-          navi.goBack({
+          navi.popTo({
             props: {
               selectedParticipants: data,
               operateType: 'mention',

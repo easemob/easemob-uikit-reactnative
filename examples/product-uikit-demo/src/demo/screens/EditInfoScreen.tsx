@@ -27,7 +27,7 @@ export function EditInfoScreen(props: Props) {
         }}
         onSave={(data) => {
           // testRef.current?.(data);
-          navi.goBack({
+          navi.popTo({
             props: {
               editedData: data,
               editType,

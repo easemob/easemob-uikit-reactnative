@@ -33,7 +33,7 @@ export function ServerSettingScreen(props: Props) {
   const _serverConfigVisible: boolean =
     (route.params as any).params?.serverConfigVisible ?? false;
   const navi = useStackScreenRoute(props);
-  const { goBack } = navi;
+  const { popTo } = navi;
   const { style } = useThemeContext();
   const { tr } = useI18nContext();
   const {
@@ -103,12 +103,12 @@ export function ServerSettingScreen(props: Props) {
   );
 
   const onBack = React.useCallback(() => {
-    goBack({
+    popTo({
       props: {
         serverConfigVisible: _serverConfigVisible,
       },
     });
-  }, [_serverConfigVisible, goBack]);
+  }, [_serverConfigVisible, popTo]);
   const onSave = React.useCallback(async () => {
     // todo: 将变量保存到本地，之后重启时读取
     try {

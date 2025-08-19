@@ -201,7 +201,7 @@ export function AVSelectGroupParticipantScreen(props: Props) {
       }}
       onSelectResult={(data) => {
         // 带参数返回
-        navi.goBack({
+        navi.popTo({
           props: {
             selectedMembers: data,
           },

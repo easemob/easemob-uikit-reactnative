@@ -39,7 +39,7 @@ export function MessageForwardSelectorScreen(props: Props) {
         propsRef={ref}
         onBack={() => {
           navi.goBack();
-          // navi.goBack({
+          // navi.popTo({
           //   props: {
           //     selectType: 'common',
           //   },

@@ -54,7 +54,7 @@ export function ShareContactScreen(props: Props) {
                 isPreferred: true,
                 onPress: () => {
                   getAlertRef().close();
-                  navi.goBack({
+                  navi.popTo({
                     props: {
                       selectedContacts: data,
                     },
