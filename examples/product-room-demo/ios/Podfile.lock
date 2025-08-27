@@ -3,7 +3,7 @@ PODS:
   - boost (1.84.0)
   - BVLinearGradient (2.8.3):
     - React-Core
-  - ChatRoom (1.0.2):
+  - ChatRoom (1.0.3):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -314,7 +314,7 @@ PODS:
   - hermes-engine (0.76.9):
     - hermes-engine/Pre-built (= 0.76.9)
   - hermes-engine/Pre-built (0.76.9)
-  - HyphenateChat (4.12.0):
+  - HyphenateChat (4.15.2):
     - AgoraInfra_iOS (= 1.2.13)
   - RCT-Folly (2024.10.14.00):
     - boost
@@ -1595,11 +1595,11 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-chat-sdk (1.8.2):
+  - react-native-chat-sdk (1.11.1):
     - DoubleConversion
     - glog
     - hermes-engine
-    - HyphenateChat (~> 4.12.0)
+    - HyphenateChat (~> 4.15.1)
     - RCT-Folly (= 2024.10.14.00)
     - RCTRequired
     - RCTTypeSafety
@@ -2309,7 +2309,7 @@ SPEC CHECKSUMS:
   AgoraInfra_iOS: 65e11a2183ab7836258768868d06058c22701b13
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
-  ChatRoom: a71fbc20157b2104e8c41a63d2e61689cf0ff24e
+  ChatRoom: 7f0cd35f8ae953e5286ea8cc879c0df6f8f6edd2
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
   EASClient: 88b5fd19d0787186a0c7e6ba76deb2d4f96395ce
   EXAV: 4c41f0a6ae54a0b96597abc90e37962ab2ee0d85
@@ -2335,7 +2335,7 @@ SPEC CHECKSUMS:
   fmt: 01b82d4ca6470831d1cc0852a1af644be019e8f6
   glog: 08b301085f15bcbb6ff8632a8ebaf239aae04e6a
   hermes-engine: 9e868dc7be781364296d6ee2f56d0c1a9ef0bb11
-  HyphenateChat: e3869321ba4e1b7e61f320a037935f3f4751e74a
+  HyphenateChat: 64c4175f4a1f722fd091e4446146a477db1b1ec7
   RCT-Folly: ea9d9256ba7f9322ef911169a9f696e5857b9e17
   RCTDeprecation: ebe712bb05077934b16c6bf25228bdec34b64f83
   RCTRequired: ca91e5dd26b64f577b528044c962baf171c6b716
@@ -2366,7 +2366,7 @@ SPEC CHECKSUMS:
   React-logger: c4052eb941cca9a097ef01b59543a656dc088559
   React-Mapbuffer: 33546a3ebefbccb8770c33a1f8a5554fa96a54de
   React-microtasksnativemodule: d80ff86c8902872d397d9622f1a97aadcc12cead
-  react-native-chat-sdk: bc03d2635d67b3a1875b6cb6093d6c050135c085
+  react-native-chat-sdk: 8b5d5d6e6f828d8fd39b2aad8d386fc836888898
   react-native-safe-area-context: cd916088cac5300c3266876218377518987b995e
   React-nativeconfig: 8efdb1ef1e9158c77098a93085438f7e7b463678
   React-NativeModulesApple: cebca2e5320a3d66e123cade23bd90a167ffce5e

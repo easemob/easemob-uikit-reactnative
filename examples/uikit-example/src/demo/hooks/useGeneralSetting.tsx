@@ -55,6 +55,10 @@ export function useGeneralSetting() {
     undefined
   );
   const appTranslateRef = React.useRef<boolean | undefined>(undefined);
+  const [appRoamMessage, setAppRoamMessage] = React.useState<
+    boolean | undefined
+  >(undefined);
+  const appRoamMessageRef = React.useRef<boolean | undefined>(undefined);
   const appTranslateLanguageRef = React.useRef<string>(
     accountType === 'agora' ? 'en' : 'zh-Hans'
   );
@@ -122,6 +126,19 @@ export function useGeneralSetting() {
     s.setData({ key: 'translate', value: value ? 'enable' : 'disable' });
     DeviceEventEmitter.emit(
       '_demo_emit_app_translate',
+      value ? 'enable' : 'disable'
+    );
+  }, []);
+
+  const onSetAppRoamMessage = React.useCallback((value: boolean) => {
+    appRoamMessageRef.current = value;
+    setAppRoamMessage(value);
+    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+      appKey: `${AppKey.gAppKey()}/uikit/demo`,
+    });
+    s.setData({ key: 'roamMessage', value: value ? 'enable' : 'disable' });
+    DeviceEventEmitter.emit(
+      '_demo_emit_app_roam_message',
       value ? 'enable' : 'disable'
     );
   }, []);
@@ -352,6 +369,7 @@ export function useGeneralSetting() {
     const res18 = await s.getData({ key: 'block' });
     const res19 = await s.getData({ key: 'messageContextMenuStyle' });
     const res20 = await s.getData({ key: 'messageInputBarExtensionStyle' });
+    const res21 = await s.getData({ key: 'roamMessage' });
     return {
       appTheme: res.value ? res.value !== 'light' : false,
       appTranslate: res10.value ? res10.value === 'enable' : true,
@@ -377,6 +395,7 @@ export function useGeneralSetting() {
         res19.value ?? (accountType === 'agora' ? 'bottom-sheet' : 'context'),
       appMessageInputBarExtensionStyle:
         res20.value ?? (accountType === 'agora' ? 'bottom-sheet' : 'extension'),
+      appRoamMessage: res21.value ? res21.value === 'enable' : false,
     };
   }, []);
 
@@ -392,6 +411,7 @@ export function useGeneralSetting() {
         appNeutralColor: number;
         appNeutralSColor: number;
         appTranslate: boolean;
+        appRoamMessage: boolean;
         appTranslateLanguage: string;
         appThread: boolean;
         appReaction: boolean;
@@ -424,6 +444,8 @@ export function useGeneralSetting() {
           appNeutralSColorRef.current = res.appNeutralSColor;
           setAppTranslate(res.appTranslate);
           appTranslateRef.current = res.appTranslate;
+          setAppRoamMessage(res.appRoamMessage);
+          appRoamMessageRef.current = res.appRoamMessage;
           setAppTranslateLanguage(res.appTranslateLanguage);
           appTranslateLanguageRef.current = res.appTranslateLanguage;
           setAppThread(res.appThread);
@@ -462,6 +484,7 @@ export function useGeneralSetting() {
             appNeutralColor: res.appNeutralColor,
             appNeutralSColor: res.appNeutralSColor,
             appTranslate: res.appTranslate,
+            appRoamMessage: res.appRoamMessage,
             appTranslateLanguage: res.appTranslateLanguage,
             appThread: res.appThread,
             appReaction: res.appReaction,
@@ -525,5 +548,7 @@ export function useGeneralSetting() {
     onSetAppMessageContextMenuStyle,
     appMessageInputBarExtensionStyle,
     onSetAppMessageInputBarExtensionStyle,
+    appRoamMessage,
+    onSetAppRoamMessage,
   };
 }

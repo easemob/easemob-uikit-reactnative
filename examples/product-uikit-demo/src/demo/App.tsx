@@ -100,6 +100,7 @@ export function App() {
     enableReactionRef,
     enableThreadRef,
     enableTranslateRef,
+    enableRoamMessageRef,
     enableAVMeetingRef,
     enableTypingRef,
     enableBlockRef,
@@ -202,6 +203,7 @@ export function App() {
       enableReactionRef.current = ret.appReaction;
       enableThreadRef.current = ret.appThread;
       enableTranslateRef.current = ret.appTranslate;
+      enableRoamMessageRef.current = ret.appRoamMessage;
       enableAVMeetingRef.current = ret.appAv;
       enableOfflinePushRef.current = ret.appNotification;
       enableTypingRef.current = ret.appTyping;
@@ -254,6 +256,7 @@ export function App() {
     enableReactionRef,
     enableThreadRef,
     enableTranslateRef,
+    enableRoamMessageRef,
     enableAVMeetingRef,
     enableOfflinePushRef,
     enableTypingRef,
@@ -397,6 +400,7 @@ export function App() {
       enableReaction={enableReactionRef.current}
       enableThread={enableThreadRef.current}
       enableTranslate={enableTranslateRef.current}
+      enableRoamMessage={enableRoamMessageRef.current}
       enableAVMeeting={enableAVMeetingRef.current}
       enableTyping={enableTypingRef.current}
       enableBlock={enableBlockRef.current}

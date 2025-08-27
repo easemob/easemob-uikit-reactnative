@@ -85,6 +85,13 @@ export type Config = {
   messageInputBarStyle?: MessageInputBarExtensionStyle;
 
   /**
+   * Whether to enable message roaming.
+   *
+   * Default is `false`.
+   */
+  enableRoamMessage?: boolean;
+
+  /**
    * The group config.
    */
   group: {

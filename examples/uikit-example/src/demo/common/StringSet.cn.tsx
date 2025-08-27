@@ -55,6 +55,7 @@ export function createStringSetCn(): StringSet {
     '_demo_login_tip_reason_1': '请输入正确的手机号',
     '_demo_login_tip_reason_2': '请先同意《环信条款》与《环信协议》',
     '_demo_login_tip_reason_3': '请输入验证码',
+    '_demo_login_tip_reason_x': (errorInfo: string) => errorInfo,
     '_demo_login_loading_tip': '登录中...',
 
     '_demo_server_setting_navi_title': '服务器设置',
@@ -64,6 +65,8 @@ export function createStringSetCn(): StringSet {
     '_demo_server_setting_input_im_server_tip': '输入IM服务器地址',
     '_demo_server_setting_input_port_tip': '输入端口号',
     '_demo_server_setting_input_rest_server_tip': '输入Rest服务器地址',
+    '_demo_server_setting_navi_is_appkey': (isAppKey: boolean) =>
+      isAppKey ? 'Is AppKey' : 'Is AppId',
 
     '_demo_alert_server_setting_save_title': '重启客户端',
     '_demo_alert_server_setting_save_message':
@@ -150,6 +153,8 @@ export function createStringSetCn(): StringSet {
     '_demo_feature_setting_navi_title': '特性开关',
     '_demo_feature_setting_translate': '消息翻译',
     '_demo_feature_setting_translate_tip': '长按消息将其翻译为手机系统语言',
+    '_demo_feature_setting_roam_message': '消息漫游',
+    '_demo_feature_setting_roam_message_tip': '开启后，将从服务器拉取历史消息',
     '_demo_feature_setting_thread': '群组话题',
     '_demo_feature_setting_thread_tip': '长按消息创建话题',
     '_demo_feature_setting_reaction': '表情回复',
@@ -181,6 +186,13 @@ export function createStringSetCn(): StringSet {
     '_demo_imageSaved': '已保存',
     '_demo_videoSaved': '已保存',
     '_demo_fetchPinnedMessagesResult': '没有置顶消息',
+
+    '_demo_conv_fz_tip_1':
+      '请勿轻信任何关于汇款、中奖等信息，务必提高警惕，谨慎对待来自陌生号码的电话。如遇可疑情况，请及时向相关部门反馈并采取必要的防范措施。',
+    '_demo_conv_fz_tip_2': '点我举报',
+    '_demo_conv_fz_tip_2_result': '感谢您的举报，我们将尽快处理',
+
+    '_demo_msg_tip_safe_tip': '请勿将敏感信息告知他人，注意核实对方身份。',
 
     'save': '保存',
     'done': '完成',

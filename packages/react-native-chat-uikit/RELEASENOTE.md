@@ -1,5 +1,10 @@
 # Release Note
 
+# 2.4.8
+
+- Fixed the issue where modal windows fail to display properly, including problems with modal pop-up menus and bottom pop-up menus.
+- Added support for message roaming, along with a global switch to enable or disable the message roaming feature.
+
 # 2.4.7
 
 - Move the conversation detail background image from the message list to the message list parent component.

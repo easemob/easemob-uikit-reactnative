@@ -42,6 +42,12 @@ export type ContainerProps = React.PropsWithChildren<{
    */
   enableTranslate?: boolean;
   /**
+   * Whether to enable roam message.
+   *
+   * Default value is `false`.
+   */
+  enableRoamMessage?: boolean;
+  /**
    * The palette.
    */
   palette?: Palette;

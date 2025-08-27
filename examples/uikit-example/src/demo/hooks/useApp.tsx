@@ -125,6 +125,7 @@ export function useApp() {
   const enableReactionRef = React.useRef(false);
   const enableThreadRef = React.useRef(false);
   const enableTranslateRef = React.useRef(false);
+  const enableRoamMessageRef = React.useRef(false);
   const enableAVMeetingRef = React.useRef(false);
   const enableOfflinePushRef = React.useRef(false);
   const enableTypingRef = React.useRef(false);
@@ -155,10 +156,10 @@ export function useApp() {
     appIdRef,
     imServerRef,
     imPortRef,
+    restServerDomainRef,
     enableDNSConfigRef,
     getOptions,
     autoLoginRef,
-    restServerDomainRef,
   } = useAppConfig();
 
   const { updater } = useForceUpdate();
@@ -587,6 +588,14 @@ export function useApp() {
         updater();
       }
     );
+    const ret20 = DeviceEventEmitter.addListener(
+      '_demo_emit_app_roam_message',
+      (e) => {
+        console.log('dev:emit:app:roam_message:', e);
+        enableRoamMessageRef.current = e === 'enable';
+        updater();
+      }
+    );
     return () => {
       ret.remove();
       ret2.remove();
@@ -607,6 +616,7 @@ export function useApp() {
       ret17.remove();
       ret18.remove();
       ret19.remove();
+      ret20.remove();
     };
   }, [dark, light, updatePush, updater]);
 
@@ -673,6 +683,7 @@ export function useApp() {
     enableThreadRef,
     enableTranslateRef,
     enableAVMeetingRef,
+    enableRoamMessageRef,
     enableOfflinePushRef,
     enableTypingRef,
     enableBlockRef,

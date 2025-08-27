@@ -1789,7 +1789,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-chat-sdk (1.11.0):
+  - react-native-chat-sdk (1.11.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -3004,7 +3004,7 @@ SPEC CHECKSUMS:
   react-native-agora: 60d652c9680afb27bbd8f621b8cb7bbaaeaa8a99
   react-native-blur: 535f5810fceb751b25db90c925ffa42ed007def7
   react-native-cameraroll: 438f60637bc444e62001412450d8459d678a8044
-  react-native-chat-sdk: 7055dc4385ca98e0694a2539fe1069762d0c5230
+  react-native-chat-sdk: ff9ea84f974866c7884cbf8d434ebb94f2e25b46
   react-native-create-thumbnail: 733160dca9a548262e1030e7fcdae90a93d203ca
   react-native-document-picker: 25348aa13bf4224ee7a14934fc2aa6c3394273f8
   react-native-image-editor: 4926d1e0cca2ad1a809d1c45fe29c7a441f29207

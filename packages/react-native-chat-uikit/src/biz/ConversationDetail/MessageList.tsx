@@ -37,7 +37,6 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
     );
     const {
       containerStyle,
-      onClicked,
       convId,
       convType,
       onChangePinMaskHeight,
@@ -91,6 +90,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       maxListHeightRef,
       enableMessagePin,
       MessageLongPressMenu,
+      onClickMessageList,
     } = useMessageList(props, ref);
     const {
       msgPinPlaceHolderCurrentHeight,
@@ -121,7 +121,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           },
           containerStyle,
         ]}
-        onTouchEnd={onClicked}
+        onTouchStart={onClickMessageList}
         onLayout={(e) => {
           maxListHeightRef.current = e.nativeEvent.layout.height;
           setMaxListHeight(e.nativeEvent.layout.height);

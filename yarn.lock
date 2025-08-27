@@ -5387,7 +5387,7 @@ __metadata:
     react-native: "npm:0.76.9"
     react-native-agora: "npm:~4.3.2"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.11.0"
+    react-native-chat-sdk: "npm:^1.11.2"
     react-native-safe-area-context: "npm:4.12.0"
     react-native-screens: "npm:~4.4.0"
     react-native-vector-icons: "npm:^10.2.0"
@@ -5428,7 +5428,7 @@ __metadata:
     react: "npm:18.3.1"
     react-native: "npm:0.76.9"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.11.0"
+    react-native-chat-sdk: "npm:^1.11.2"
     react-native-gesture-handler: "npm:~2.20.2"
     react-native-linear-gradient: "npm:^2.8.3"
     react-native-safe-area-context: "npm:4.12.0"
@@ -5475,7 +5475,7 @@ __metadata:
     react: "npm:18.3.1"
     react-native: "npm:0.76.9"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.11.0"
+    react-native-chat-sdk: "npm:^1.11.2"
     react-native-linear-gradient: "npm:^2.8.3"
     react-native-safe-area-context: "npm:4.12.0"
     react-native-screens: "npm:~4.4.0"
@@ -5529,7 +5529,7 @@ __metadata:
     react-native: "npm:0.76.9"
     react-native-audio-recorder-player: "npm:^3.6.12"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.11.0"
+    react-native-chat-sdk: "npm:^1.11.2"
     react-native-create-thumbnail: "npm:^2.1.1"
     react-native-device-info: "npm:^14.0.4"
     react-native-file-access: "npm:^3.1.1"
@@ -5599,7 +5599,7 @@ __metadata:
     react-native-agora: "npm:~4.3.2"
     react-native-audio-recorder-player: "npm:^3.6.12"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.11.0"
+    react-native-chat-sdk: "npm:^1.11.2"
     react-native-create-thumbnail: "npm:^2.1.1"
     react-native-device-info: "npm:^14.0.4"
     react-native-file-access: "npm:^3.1.1"
@@ -15219,7 +15219,7 @@ __metadata:
     react-native: "npm:0.76.9"
     react-native-agora: "npm:~4.3.2"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.11.0"
+    react-native-chat-sdk: "npm:^1.11.2"
     react-native-safe-area-context: "npm:~4.12.0"
     react-native-screens: "npm:~4.4.0"
     react-native-vector-icons: "npm:^10.2.0"
@@ -15287,7 +15287,7 @@ __metadata:
     react: "npm:18.3.1"
     react-native: "npm:0.76.9"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.11.0"
+    react-native-chat-sdk: "npm:^1.11.2"
     react-native-linear-gradient: "npm:^2.8.3"
     react-native-safe-area-context: "npm:~4.12.0"
     release-it: "npm:^17.10.0"
@@ -15302,13 +15302,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-chat-sdk@npm:^1.11.0":
-  version: 1.11.0
-  resolution: "react-native-chat-sdk@npm:1.11.0"
+"react-native-chat-sdk@npm:^1.11.2":
+  version: 1.11.2
+  resolution: "react-native-chat-sdk@npm:1.11.2"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/d2581092fbf954db12cabb62b568c6c94e1defd90177841f55c299f711756bbd5c186c723d47726eb7c9173cb6d9038c580262c85f3d37356b5db18746fdd944
+  checksum: 10c0/26983acb6486f045157febef44fc4e8d151fb9d23e49fae2f0bdf2a4a2ee60a00bde482bf6dd3a578fb9ff795d0cea41c8548ebcbb50ab3786b2650fe0f73cac
   languageName: node
   linkType: hard
 
@@ -15342,7 +15342,7 @@ __metadata:
     react-native: "npm:0.76.9"
     react-native-audio-recorder-player: "npm:^3.6.12"
     react-native-builder-bob: "npm:^0.36.0"
-    react-native-chat-sdk: "npm:^1.11.0"
+    react-native-chat-sdk: "npm:^1.11.2"
     react-native-create-thumbnail: "npm:^2.1.1"
     react-native-device-info: "npm:^14.0.4"
     react-native-file-access: "npm:^3.1.1"

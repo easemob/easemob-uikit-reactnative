@@ -153,6 +153,8 @@ export function createStringSetCn(): StringSet {
     '_demo_feature_setting_navi_title': '特性开关',
     '_demo_feature_setting_translate': '消息翻译',
     '_demo_feature_setting_translate_tip': '长按消息将其翻译为手机系统语言',
+    '_demo_feature_setting_roam_message': '消息漫游',
+    '_demo_feature_setting_roam_message_tip': '开启后，将从服务器拉取历史消息',
     '_demo_feature_setting_thread': '群组话题',
     '_demo_feature_setting_thread_tip': '长按消息创建话题',
     '_demo_feature_setting_reaction': '表情回复',

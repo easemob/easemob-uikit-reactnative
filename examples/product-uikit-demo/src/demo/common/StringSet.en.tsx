@@ -162,6 +162,9 @@ export function createStringSetEn(): StringSet {
     '_demo_feature_setting_translate': 'Translation',
     '_demo_feature_setting_translate_tip':
       'Long press a message to translate it to the mobile system language',
+    '_demo_feature_setting_roam_message': 'Message Roaming',
+    '_demo_feature_setting_roam_message_tip':
+      'After enabling, historical messages will be pulled from the server',
     '_demo_feature_setting_thread': 'Thread',
     '_demo_feature_setting_thread_tip':
       'Create a thread from a message within the group',

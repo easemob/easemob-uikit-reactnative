@@ -61,6 +61,7 @@ export function createStringSetEn(): StringSet {
     '_demo_login_tip_reason_2':
       'Please agree to the "Easemob Agreement" and "Easemob Agreement" first',
     '_demo_login_tip_reason_3': 'Please enter the captcha',
+    '_demo_login_tip_reason_x': (errorInfo: string) => errorInfo,
     '_demo_login_loading_tip': 'Logging',
 
     '_demo_server_setting_navi_title': 'Server Setting',
@@ -70,6 +71,8 @@ export function createStringSetEn(): StringSet {
     '_demo_server_setting_input_im_server_tip': 'Input IM server address',
     '_demo_server_setting_input_port_tip': 'Input port number',
     '_demo_server_setting_input_rest_server_tip': 'Input Rest server address',
+    '_demo_server_setting_navi_is_appkey': (isAppKey: boolean) =>
+      isAppKey ? 'Is AppKey' : 'Is AppId',
 
     '_demo_info_logout': 'Log Out',
     '_demo_info_account_destroy': 'Delete Account',
@@ -159,6 +162,9 @@ export function createStringSetEn(): StringSet {
     '_demo_feature_setting_translate': 'Translation',
     '_demo_feature_setting_translate_tip':
       'Long press a message to translate it to the mobile system language',
+    '_demo_feature_setting_roam_message': 'Message Roaming',
+    '_demo_feature_setting_roam_message_tip':
+      'After enabling, historical messages will be pulled from the server',
     '_demo_feature_setting_thread': 'Thread',
     '_demo_feature_setting_thread_tip':
       'Create a thread from a message within the group',
@@ -195,6 +201,15 @@ export function createStringSetEn(): StringSet {
     '_demo_imageSaved': 'Saved',
     '_demo_videoSaved': 'Saved',
     '_demo_fetchPinnedMessagesResult': 'No pinned messages',
+
+    '_demo_conv_fz_tip_1':
+      "Don't trust remittance or prize info. Stay alert for calls from unknown numbers and report anything suspicious.",
+    '_demo_conv_fz_tip_2': 'Report',
+    '_demo_conv_fz_tip_2_result':
+      'Thank you for your report, we will handle it as soon as possible.',
+
+    '_demo_msg_tip_safe_tip':
+      'Do not disclose sensitive information to others. Verify the identity of the other party.',
 
     'save': 'Save',
     'done': 'Done',

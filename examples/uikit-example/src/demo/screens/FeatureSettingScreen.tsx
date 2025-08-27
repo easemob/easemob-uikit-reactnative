@@ -42,12 +42,14 @@ export function FeatureSettingScreen(props: Props) {
   });
   const {
     appTranslate,
+    appRoamMessage,
     appThread,
     appReaction,
     appPresence,
     appTyping,
     appBlock,
     onSetAppTranslate,
+    onSetAppRoamMessage,
     onSetAppReaction,
     onSetAppThread,
     onSetAppPresence,
@@ -117,6 +119,51 @@ export function FeatureSettingScreen(props: Props) {
               style={{ color: getColor('t1') }}
             >
               {tr('_demo_feature_setting_translate_tip')}
+            </SingleLineText>
+          </View>
+        }
+      />
+
+      <ListItem
+        containerStyle={{ paddingHorizontal: 16 }}
+        LeftName={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <SingleLineText
+              textType={'medium'}
+              paletteType={'title'}
+              style={{ color: getColor('fg') }}
+            >
+              {tr('_demo_feature_setting_roam_message')}
+            </SingleLineText>
+          </View>
+        }
+        RightIcon={
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {appRoamMessage !== undefined ? (
+              <Switch
+                value={appRoamMessage}
+                onValueChange={onSetAppRoamMessage}
+                height={31}
+                width={51}
+              />
+            ) : null}
+          </View>
+        }
+        tail={
+          <View
+            style={{
+              height: 26,
+              paddingHorizontal: 16,
+              backgroundColor: getColor('bg2'),
+              justifyContent: 'center',
+            }}
+          >
+            <SingleLineText
+              textType={'small'}
+              paletteType={'body'}
+              style={{ color: getColor('t1') }}
+            >
+              {tr('_demo_feature_setting_roam_message_tip')}
             </SingleLineText>
           </View>
         }
