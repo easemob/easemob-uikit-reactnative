@@ -49,6 +49,32 @@ export function SlideModal(props: SlideModalProps) {
   if (propsRef.current) {
     propsRef.current.startShow = (onf?: () => void, timeout?: number) => {
       setVisible(true);
+      setTimeout(() => {
+        if (timeout !== undefined) {
+          startShow(() => {
+            timeoutTask(timeout, () => {
+              onf?.();
+            });
+          });
+        } else {
+          startShow(() => {
+            onf?.();
+          });
+        }
+      }, 16); // one frame's delay
+      // InteractionManager.runAfterInteractions(() => {
+      //   if (timeout !== undefined) {
+      //     startShow(() => {
+      //       timeoutTask(timeout, () => {
+      //         onf?.();
+      //       });
+      //     });
+      //   } else {
+      //     startShow(() => {
+      //       onf?.();
+      //     });
+      //   }
+      // });
       if (timeout !== undefined) {
         startShow(() => {
           timeoutTask(timeout, () => {
@@ -62,6 +88,51 @@ export function SlideModal(props: SlideModalProps) {
       }
     };
     propsRef.current.startHide = (onf?: () => void, timeout?: number) => {
+      // 使用 InteractionManager 确保动画在主线程执行
+      // InteractionManager.runAfterInteractions(() => {
+      //   if (timeout !== undefined) {
+      //     startHide(() => {
+      //       // 确保在下一个渲染周期隐藏 Modal
+      //       setImmediate(() => {
+      //         setVisible(false);
+      //         timeoutTask(timeout, () => {
+      //           onf?.();
+      //           onFinished?.();
+      //         });
+      //       });
+      //     });
+      //   } else {
+      //     startHide(() => {
+      //       setImmediate(() => {
+      //         setVisible(false);
+      //         onf?.();
+      //         onFinished?.();
+      //       });
+      //     });
+      //   }
+      // });
+      // 先执行动画，不立即隐藏 Modal
+      // if (timeout !== undefined) {
+      //   startHide(() => {
+      //     // 动画完成后再隐藏 Modal
+      //     setTimeout(() => {
+      //       setVisible(false);
+      //       timeoutTask(timeout, () => {
+      //         onf?.();
+      //         onFinished?.();
+      //       });
+      //     }, 50); // 给一点缓冲时间
+      //   });
+      // } else {
+      //   startHide(() => {
+      //     // 动画完成后再隐藏 Modal
+      //     setTimeout(() => {
+      //       setVisible(false);
+      //       onf?.();
+      //       onFinished?.();
+      //     }, 50);
+      //   });
+      // }
       if (timeout !== undefined) {
         startHide(() => {
           setVisible(false);
@@ -80,11 +151,60 @@ export function SlideModal(props: SlideModalProps) {
     };
   }
 
+  // return (
+  //   <Animated.View
+  //     style={[
+  //       {
+  //         flex: 1,
+  //         justifyContent: 'flex-end',
+  //         opacity: modalAnimationType === 'fade' ? backgroundOpacity : 1,
+  //         transform: [{ translateY: translateY }],
+  //       },
+  //       modalStyle,
+  //     ]}
+  //     pointerEvents={'box-none'}
+  //   >
+  //     {children}
+  //   </Animated.View>
+  // );
+
+  // return (
+  //   <RNModal
+  //     transparent={true}
+  //     visible={visible}
+  //     // animationType="none"
+  //     onRequestClose={onRequestModalClose}
+  //     supportedOrientations={[
+  //       'portrait',
+  //       'portrait-upside-down',
+  //       'landscape',
+  //       'landscape-left',
+  //       'landscape-right',
+  //     ]}
+  //     {...others}
+  //   >
+  //     <Animated.View
+  //       style={[
+  //         {
+  //           flex: 1,
+  //           justifyContent: 'flex-end',
+  //           opacity: modalAnimationType === 'fade' ? backgroundOpacity : 1,
+  //           transform: [{ translateY: translateY }],
+  //         },
+  //         modalStyle,
+  //       ]}
+  //       pointerEvents={'box-none'}
+  //     >
+  //       {children}
+  //     </Animated.View>
+  //   </RNModal>
+  // );
+
   return (
     <RNModal
       transparent={true}
       visible={visible}
-      animationType="none"
+      // animationType="none"
       onRequestClose={onRequestModalClose}
       supportedOrientations={[
         'portrait',
@@ -121,6 +241,8 @@ export function SlideModal(props: SlideModalProps) {
         pointerEvents={'box-none'}
         enabled={enabledKeyboardAdjust}
         style={{ flex: 1 }}
+        // Add this attribute to avoid transform conflicts
+        // contentContainerStyle={{ flex: 1 }}
       >
         <Animated.View
           style={[

@@ -12,27 +12,55 @@ import type { ModalAnimationType } from './types';
 
 export const useModalAnimation = (type: ModalAnimationType) => {
   const { height } = useWindowDimensions();
-  const initialY = type === 'slide' ? height : 0;
+  const initialY = React.useRef(type === 'slide' ? height : 0).current;
   const backgroundOpacity = React.useRef(new Animated.Value(0)).current;
   const translateYRef = React.useRef(new Animated.Value(initialY));
   // translateY.setValue(initialY);
+  // console.log('test:zuoyu:initialY:', type, height, initialY);
 
-  const createAnimated = (toValue: 0 | 1) => {
-    const config = { duration: 250, useNativeDriver: false };
-    return Animated.parallel([
-      Animated.timing(backgroundOpacity, { toValue, ...config }),
-      Animated.timing(translateYRef.current, {
-        toValue: toValue === 0 ? initialY : 0,
-        ...config,
-      }),
-    ]).start;
-  };
+  // translateYRef.current.addListener(({ value }) => {
+  //   console.log('test:zuoyu:translateY:', value);
+  // });
+
+  // React.useEffect(() => {
+  //   console.log('test:zuoyu:initialY changed:', initialY);
+  //   translateYRef.current.setValue(initialY);
+  // }, [initialY]);
+
+  const createAnimated = React.useCallback(
+    (toValue: 0 | 1) => {
+      const config = { duration: 250, useNativeDriver: false };
+      return Animated.parallel([
+        Animated.timing(backgroundOpacity, { toValue, ...config }),
+        Animated.timing(translateYRef.current, {
+          toValue: toValue === 0 ? initialY : 0,
+          ...config,
+        }),
+      ]);
+    },
+    [backgroundOpacity, initialY]
+  );
+
+  const startShow = React.useCallback(
+    (callback?: Animated.EndCallback) => {
+      createAnimated(1).start(callback);
+    },
+    [createAnimated]
+  );
+
+  const startHide = React.useCallback(
+    (callback?: Animated.EndCallback) => {
+      console.log('test:zuoyu:startHide:2');
+      createAnimated(0).start(callback);
+    },
+    [createAnimated]
+  );
 
   return {
     translateY: translateYRef.current,
     backgroundOpacity,
-    startShow: createAnimated(1),
-    startHide: createAnimated(0),
+    startShow,
+    startHide,
   };
 };
 
