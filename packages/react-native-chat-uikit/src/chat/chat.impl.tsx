@@ -809,6 +809,8 @@ export class ChatServiceImpl
           ) {
             break;
           }
+
+          cursor = list.cursor;
         }
 
         if (map.size > 0) {
@@ -1676,13 +1678,12 @@ export class ChatServiceImpl
       });
       return;
     }
-    let cursor = '';
     const pageSize = 200;
     this.tryCatch({
       promise: this.client.groupManager.fetchMemberListFromServer(
         params.groupId,
         pageSize,
-        cursor
+        ''
       ),
       event: 'getGroupAllMembers',
       onFinished: async (value) => {
@@ -1691,7 +1692,7 @@ export class ChatServiceImpl
           memberList.set(v, { memberId: v });
         });
 
-        cursor = value.cursor;
+        let cursor = value.cursor;
         if (
           cursor.length === 0 ||
           (value.list && value.list.length < pageSize) ||
@@ -1709,14 +1710,15 @@ export class ChatServiceImpl
               memberList.set(v, { memberId: v });
             });
 
-            cursor = value.cursor;
             if (
-              cursor.length === 0 ||
-              (value.list && value.list.length < pageSize) ||
-              value.list === undefined
+              list.cursor.length === 0 ||
+              (list.list && list.list.length < pageSize) ||
+              list.list === undefined
             ) {
               break;
             }
+
+            cursor = list.cursor;
           }
         }
 
