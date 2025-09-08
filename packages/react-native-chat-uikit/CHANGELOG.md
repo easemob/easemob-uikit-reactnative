@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.4.8](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.7...uikit@2.4.8)(2025-07-28)
+
+c8977774 fix: uikit: bug
+16ec6892 chore: update example and update uikit for add roam message
+bd67d48f fix: uikit: bottom sheet menu bug
+c332d615 fix: example: route bug
+
 ## [2.4.7](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.6...uikit@2.4.7)(2025-07-28)
 
 - d85d64b1 chore: update uikit demo
