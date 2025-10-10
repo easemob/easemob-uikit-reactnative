@@ -37,33 +37,6 @@ react-native-screens \
 react-native-vector-icons
 ```
 
-## 快速开始
-
-初始化
-
-```typescript
-import { Container } from 'react-native-chat-room';
-export function App() {
-  return (
-    <Container opt={{ appKey: '<your app key>' }}>
-      {/** sub component */}
-    </Container>
-  );
-}
-```
-
-进入音视频页面
-
-```typescript
-export function ChatroomScreen() {
-  return (
-    <Chatroom roomId={'<room ID>'} ownerId={'<room owner ID>'}>
-      {/** sub component */}
-    </Chatroom>
-  );
-}
-```
-
 ## 贡献
 
 See the [contributing guide](../../CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
