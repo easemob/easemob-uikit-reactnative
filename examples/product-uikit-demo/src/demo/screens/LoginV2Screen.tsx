@@ -255,7 +255,7 @@ function EasemobLoginV2Screen(props: Props) {
       }}
       source={style === 'light' ? main_bg : main_bg_dark}
     >
-      <SafeAreaViewFragment backgroundColor={null} visibleStatusBar={false}>
+      <SafeAreaViewFragment backgroundColor={null}>
         <TouchableWithoutFeedback onPress={onClickedBlank}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -729,7 +729,7 @@ function AgoraLoginV2Screen(props: Props) {
       }}
       source={style === 'light' ? main_bg : main_bg_dark}
     >
-      <SafeAreaViewFragment backgroundColor={null} visibleStatusBar={false}>
+      <SafeAreaViewFragment backgroundColor={null}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
