@@ -35,10 +35,9 @@
     "react": "18.3.1",
     "react-native": "0.76.9",
     "react-native-agora": "~4.3.2",
-    "react-native-chat-sdk": "^1.11.2",
+    "react-native-chat-sdk": "^1.11.5",
     "react-native-safe-area-context": "4.12.0",
-    "react-native-screens": "~4.4.0",
-    "react-native-vector-icons": "^10.2.0"
+    "react-native-screens": "~4.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

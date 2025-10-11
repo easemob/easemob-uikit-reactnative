@@ -2,6 +2,8 @@
 
 ---
 
+This is a multi-project workspace that contains corresponding example applications and package projects under the examples and packages directories, each with their own project documentation.
+
 [new entry](./docs/v4/en/index.en.md)
 
 ## Architecture

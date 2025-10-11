@@ -45,7 +45,7 @@
     "react": "18.3.1",
     "react-native": "0.76.9",
     "react-native-audio-recorder-player": "^3.6.12",
-    "react-native-chat-sdk": "^1.11.2",
+    "react-native-chat-sdk": "^1.11.5",
     "react-native-create-thumbnail": "^2.1.1",
     "react-native-device-info": "^14.0.4",
     "react-native-file-access": "^3.1.1",
@@ -61,7 +61,6 @@
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "~4.4.0",
     "react-native-tab-view": "^4.0.6",
-    "react-native-vector-icons": "^10.2.0",
     "react-native-video": "^6.11.0",
     "twemoji": "^14.0.2"
   },

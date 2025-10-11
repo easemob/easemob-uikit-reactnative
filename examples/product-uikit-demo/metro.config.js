@@ -49,7 +49,6 @@ const extraNodeModulesKeys = [
   'react-native-permissions',
   'react-native-safe-area-context',
   'react-native-screens',
-  'react-native-vector-icons',
   'react-native-video',
 ];
 

@@ -33,8 +33,7 @@ yarn add @react-native-community/blur \
 react-native-agora \
 react-native-chat-sdk \
 react-native-safe-area-context \
-react-native-screens \
-react-native-vector-icons
+react-native-screens 
 ```
 
 ## Contributing
