@@ -15,7 +15,12 @@ import {
 } from '../rename.uikit';
 import { ToastView } from './common';
 import { AvatarStatusRenderMemo } from './common/AvatarStatusRender';
-import { accountType, boloo_da_ttf_name, demoType } from './common/const';
+import {
+  accountType,
+  boloo_da_ttf_name,
+  demoType,
+  restServerDomain,
+} from './common/const';
 import { RestApi } from './common/rest.api';
 import { useAutoLogin } from './hooks';
 import { useApp } from './hooks/useApp';
@@ -185,7 +190,7 @@ export function _App() {
         autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
-        restServerDomainRef.current = undefined;
+        restServerDomainRef.current = restServerDomain;
         enableDNSConfigRef.current = true;
       }
 
