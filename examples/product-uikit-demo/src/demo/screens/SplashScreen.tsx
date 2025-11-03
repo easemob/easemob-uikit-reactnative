@@ -1,6 +1,7 @@
+import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ImageBackground, View } from 'react-native';
+import { AppState, ImageBackground, View } from 'react-native';
 
 import {
   Icon,
@@ -18,6 +19,8 @@ import type { RootScreenParamsList } from '../routes';
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function SplashScreen(props: Props) {
   const {} = props;
+  const [isStop, setIsStop] = React.useState(true);
+  const [isFocused, setIsFocused] = React.useState(false);
   const { tr } = useI18nContext();
   const { style } = useThemeContext();
   const { colors } = usePaletteContext();
@@ -35,6 +38,28 @@ export function SplashScreen(props: Props) {
       dark: colors.neutral[6],
     },
   });
+  React.useEffect(() => {
+    const listener = AppState.addEventListener('change', (status) => {
+      if (status === 'active' && isFocused === true) {
+        setIsStop(false);
+      } else if (status === 'background') {
+        setIsStop(true);
+      }
+    });
+    return () => {
+      listener.remove();
+    };
+  }, [isFocused]);
+  useFocusEffect(
+    React.useCallback(() => {
+      setIsFocused(true);
+      setIsStop(false);
+      return () => {
+        setIsFocused(false);
+        setIsStop(true);
+      };
+    }, [])
+  );
   return (
     <ImageBackground
       style={{
@@ -81,6 +106,7 @@ export function SplashScreen(props: Props) {
       <View style={{ position: 'absolute', bottom: 140 }}>
         <LoadingIcon
           name={'spinner'}
+          isStop={isStop}
           style={{ width: 36, height: 36, tintColor: getColor('n') }}
         />
       </View>
