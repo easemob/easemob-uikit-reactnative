@@ -1410,4 +1410,8 @@ export type ChatServiceInit = {
    * IM initialization is completed callback notification.
    */
   onInitialized?: (im: ChatService) => void;
+  /**
+   * Get the IM service.
+   */
+  onGetChatService?: () => ChatService;
 };

@@ -80,6 +80,7 @@ export function Container(props: ContainerProps) {
     onConversationListLastMessageSnapshotParams,
     messageMenuStyle = 'bottom-sheet',
     messageInputBarStyle = 'bottom-sheet',
+    onGetChatService,
   } = props;
   useInitServices(props);
   const _palette = usePresetPalette();
@@ -121,6 +122,7 @@ export function Container(props: ContainerProps) {
           >
             <ChatContextProvider
               value={{
+                onGetChatService: onGetChatService,
                 options: options,
                 onInitialized: onInitialized,
                 onGroupsHandler: onGroupsHandler,

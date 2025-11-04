@@ -177,6 +177,12 @@ export type ContainerProps = React.PropsWithChildren<{
   onInitialized?: (im: ChatService) => void;
 
   /**
+   * Get the IM service.
+   * @returns The IM service.
+   */
+  onGetChatService?: () => ChatService;
+
+  /**
    * @description Registered user information callback. The avatar and nickname of the contact, group member and group are obtained through the callback of this registration. If not provided, the default value will be used.
    *
    * @param data The user information list. The default value is provided by UIKit. Their values can be customized.

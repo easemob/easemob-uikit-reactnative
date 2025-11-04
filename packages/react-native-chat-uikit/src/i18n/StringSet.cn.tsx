@@ -25,7 +25,7 @@ export function createStringSetCn(): StringSet {
     '_uikit_contact_menu_add_contact': '添加联系人',
     '_uikit_contact_menu_create_group': '创建群组',
     '_uikit_contact_alert_title': '添加联系人',
-    '_uikit_contact_alert_content': '通过用户ID添加联系人',
+    '_uikit_contact_alert_content': '通过手机号或用户ID添加联系人',
     '_uikit_contact_alert_input_tip': '用户ID',
     '_uikit_contact_alert_button_add': '添加',
     '_uikit_contact_search_placeholder': '搜索联系人',

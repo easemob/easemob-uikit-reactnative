@@ -2,6 +2,7 @@
 
 - [UIKit Introduction](#uikit-introduction)
   - [Initialization](#initialization)
+    - [Custom chatsdk class](#custom-chatsdk-class)
   - [Themes](#themes)
   - [Internationalization](#internationalization)
   - [Business Components](#business-components)
@@ -93,6 +94,47 @@ export function App() {
 ```
 
 For sample code, see [example/src/demo/App.tsx](../../../example/src/demo/App.tsx).
+
+### Custom chatsdk class
+
+By customizing the ChatSDK class, you can achieve greater flexibility.
+
+For example: In the demo, the method for adding contacts is overridden by customizing the ChatSDK class.
+
+```tsx
+class ChatServiceDemo extends ChatServiceImpl {
+  constructor() {
+    super();
+  }
+
+  override addNewContact(params: {
+    userId: string;
+    reason?: string;
+    onResult?: ResultCallback<void>;
+  }): void {
+    const processAsync = async () => {
+      const chatUserName = await this.client.getCurrentUsername();
+      const userToken = await this.client.getAccessToken();
+      RestApi.requestGetUserByPhone({
+        phone: params.userId,
+        chatUserName: chatUserName ?? '',
+        userToken: userToken ?? '',
+      })
+        .then((result) => {
+          if (result.isOk) {
+            super.addNewContact(params);
+          } else {
+            params.onResult?.({ isOk: false, error: result.error });
+          }
+        })
+        .catch((error) => {
+          params.onResult?.({ isOk: false, error });
+        });
+    };
+    processAsync();
+  }
+}
+```
 
 ## Themes
 

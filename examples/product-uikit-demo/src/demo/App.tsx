@@ -16,6 +16,7 @@ import {
 import { ToastView } from './common';
 import { AvatarStatusRenderMemo } from './common/AvatarStatusRender';
 import { AVView } from './common/AVView';
+import { getChatServiceDemo } from './common/chat';
 import {
   accountType,
   agoraAppId,
@@ -431,6 +432,7 @@ export function App() {
       // recallTimeout={1200}
       // group={{ createGroupMemberLimit: 2 }}
       onSystemTip={onSystemTip}
+      onGetChatService={getChatServiceDemo}
     >
       <CallKitContainer
         option={{

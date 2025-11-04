@@ -2,6 +2,7 @@
 
 - [UIKit 介绍](#uikit-介绍)
   - [初始化](#初始化)
+    - [自定义chatsdk](#自定义chatsdk)
   - [主题](#主题)
     - [主题和调色板](#主题和调色板)
     - [自定义颜色](#自定义颜色)
@@ -89,6 +90,7 @@ export function App() {
       onInitLanguageSet={onInitLanguageSet}
       onGroupsHandler={onGroupsHandler}
       onUsersHandler={onUsersHandler}
+      onGetChatService={getChatServiceDemo}
     >
       {/* sub component */}
     </UIKitContainer>
@@ -97,6 +99,48 @@ export function App() {
 ```
 
 详见 `example/src/demo/App.tsx` 示例[源码](../../../example/src/demo/App.tsx)。
+
+
+### 自定义chatsdk
+
+通过自定义chatsdk类，可以实现更多的灵活性。
+
+例如：在demo中通过自定义 chatsdk 类，实现了 重载添加好友的方法。
+
+```tsx
+class ChatServiceDemo extends ChatServiceImpl {
+  constructor() {
+    super();
+  }
+
+  override addNewContact(params: {
+    userId: string;
+    reason?: string;
+    onResult?: ResultCallback<void>;
+  }): void {
+    const processAsync = async () => {
+      const chatUserName = await this.client.getCurrentUsername();
+      const userToken = await this.client.getAccessToken();
+      RestApi.requestGetUserByPhone({
+        phone: params.userId,
+        chatUserName: chatUserName ?? '',
+        userToken: userToken ?? '',
+      })
+        .then((result) => {
+          if (result.isOk) {
+            super.addNewContact(params);
+          } else {
+            params.onResult?.({ isOk: false, error: result.error });
+          }
+        })
+        .catch((error) => {
+          params.onResult?.({ isOk: false, error });
+        });
+    };
+    processAsync();
+  }
+}
+```
 
 ## 主题
 
