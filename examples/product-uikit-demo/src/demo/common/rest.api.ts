@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 
 import { getFileExtension } from '../../rename.uikit';
-import { accountType } from './const';
+import { accountType, useAppServerDomain } from './const';
 
 export type RequestResult<Value, Error = any> = {
   isOk: boolean;
@@ -149,6 +149,9 @@ export class RestApi {
    * Request a SMS code.
    */
   public static async requestSmsCode(params: { phone: string }): Promise<any> {
+    if (!useAppServerDomain) {
+      return { isOk: false, error: 'useAppServerDomain is false' };
+    }
     const { phone } = params;
     const url = this.getBasicUrl() + `/sms/send/${phone}`;
     try {
@@ -172,6 +175,9 @@ export class RestApi {
     phone: string;
     code: string;
   }): Promise<RequestResult<RequestLoginResult>> {
+    if (!useAppServerDomain) {
+      return { isOk: false, error: 'useAppServerDomain is false' };
+    }
     const { phone, code } = params;
     const url = this.getBasicUrl() + `/user/login/V2`;
     try {
@@ -199,6 +205,9 @@ export class RestApi {
     userId: string;
     password: string;
   }): Promise<RequestResult<RequestLoginResult>> {
+    if (!useAppServerDomain) {
+      return { isOk: false, error: 'useAppServerDomain is false' };
+    }
     const { userId, password } = params;
     const url = this.getBasicUrl() + `/user/login`;
     try {
@@ -234,6 +243,9 @@ export class RestApi {
     localAvatarFile: string;
     fileType?: string;
   }): Promise<RequestResult<RequestUploadAvatarResult>> {
+    if (!useAppServerDomain) {
+      return { isOk: false, error: 'useAppServerDomain is false' };
+    }
     const { userId, localAvatarFile, fileType } = params;
     const url = this.getBasicUrl() + `/user/${userId}/avatar/upload`;
     console.log('RestApi:requestUploadAvatar:', userId, localAvatarFile, url);
@@ -290,6 +302,9 @@ export class RestApi {
     userId: string;
     channelId: string;
   }): Promise<RequestResult<RequestRtcTokenResult>> {
+    if (!useAppServerDomain) {
+      return { isOk: false, error: 'useAppServerDomain is false' };
+    }
     const { userId, channelId } = params;
     const url =
       accountType === 'agora'
@@ -325,6 +340,9 @@ export class RestApi {
   public static async requestRtcMap(params: {
     channelId: string;
   }): Promise<RequestResult<RequestRtcMapResult>> {
+    if (!useAppServerDomain) {
+      return { isOk: false, error: 'useAppServerDomain is false' };
+    }
     const { channelId } = params;
     const url = this.getRtcMapUrl() + `?channelName=${channelId}`;
     try {
@@ -354,6 +372,9 @@ export class RestApi {
   public static async requestGroupAvatar(params: {
     groupId: string;
   }): Promise<RequestResult<RequestGroupAvatarResult>> {
+    if (!useAppServerDomain) {
+      return { isOk: false, error: 'useAppServerDomain is false' };
+    }
     const { groupId } = params;
     const url = this.getBasicUrl() + `/group/${groupId}/avatarurl`;
     try {
@@ -389,6 +410,9 @@ export class RestApi {
     phone: string;
     userToken: string;
   }): Promise<RequestResult<RequestDestroyAccountResult>> {
+    if (!useAppServerDomain) {
+      return { isOk: false, error: 'useAppServerDomain is false' };
+    }
     const { phone, userToken } = params;
     const url = this.getBasicUrl() + `/user/${phone}`;
     try {
@@ -421,6 +445,9 @@ export class RestApi {
     chatUserName: string;
     userToken: string;
   }): Promise<RequestResult<RequestGetUserByPhoneResult>> {
+    if (!useAppServerDomain) {
+      return { isOk: false, error: 'useAppServerDomain is false' };
+    }
     const { phone, chatUserName, userToken } = params;
     const url = this.getBasicUrl() + `/user/${phone}?operator=${chatUserName}`;
     try {
