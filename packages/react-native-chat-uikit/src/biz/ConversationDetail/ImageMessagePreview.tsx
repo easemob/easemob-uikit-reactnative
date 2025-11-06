@@ -19,7 +19,7 @@ import {
   ChatMessageType,
 } from '../../rename.chat';
 import { Services } from '../../services';
-import { ImagePreview2 } from '../../ui/ImagePreview';
+import { ImagePreview2, ImagePreviewProps } from '../../ui/ImagePreview';
 import { LocalPath } from '../../utils';
 import { BackButton } from '../Back';
 import { BottomSheetNameMenu } from '../BottomSheetMenu';
@@ -54,6 +54,10 @@ export type ImageMessagePreviewProps = PropsWithBack &
      */
     containerStyle?: StyleProp<ViewStyle>;
     /**
+     * Image preview component.
+     */
+    imagePreviewComponent?: React.ComponentType<ImagePreviewProps>;
+    /**
      * Callback function for showing the bottom sheet.
      */
     onShowBottomSheet?: (menuRef: React.RefObject<ContextNameMenuRef>) => void;
@@ -63,7 +67,8 @@ export type ImageMessagePreviewProps = PropsWithBack &
  * Image Message Preview Component.
  */
 export function ImageMessagePreview(props: ImageMessagePreviewProps) {
-  const { containerStyle, onBack } = props;
+  const { containerStyle, onBack, imagePreviewComponent } = props;
+  const ImagePreview = imagePreviewComponent || ImagePreview2;
   const { url, size, menuRef, onRequestCloseMenu, showBottomSheet } =
     useImageMessagePreview(props);
   const { top } = useSafeAreaInsets();
@@ -96,7 +101,7 @@ export function ImageMessagePreview(props: ImageMessagePreviewProps) {
         containerStyle,
       ]}
     >
-      <ImagePreview2
+      <ImagePreview
         onLongPress={showBottomSheet}
         source={{
           // uri: localUrlEscape(

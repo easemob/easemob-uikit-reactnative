@@ -6,6 +6,7 @@ import {
   ChatMessage,
   ChatMessageType,
   ImageMessagePreview,
+  // ImagePreview,
   Services,
   useChatContext,
   useI18nContext,
@@ -13,6 +14,7 @@ import {
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useSaveFileToAlbum, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
+import { ImagePreview } from '../ui/ImagePreview';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ImageMessagePreviewScreen(props: Props) {
@@ -55,6 +57,7 @@ export function ImageMessagePreviewScreen(props: Props) {
         msgId={msgId}
         msg={msg}
         localMsgId={localMsgId}
+        imagePreviewComponent={ImagePreview}
         onBack={() => {
           navi.goBack();
         }}
