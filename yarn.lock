@@ -15751,7 +15751,6 @@ __metadata:
     react-native-gesture-handler: "npm:^2.20.2"
     react-native-image-picker: "npm:^8.2.0"
     react-native-safe-area-context: "npm:~4.12.0"
-    react-native-video: "npm:^6.17.0"
     release-it: "npm:^17.10.0"
     twemoji: "npm:^14.0.2"
     typescript: "npm:^5.2.2"
@@ -15770,7 +15769,6 @@ __metadata:
     react-native-gesture-handler: "*"
     react-native-image-picker: "*"
     react-native-safe-area-context: "*"
-    react-native-video: "*"
   languageName: unknown
   linkType: soft
 

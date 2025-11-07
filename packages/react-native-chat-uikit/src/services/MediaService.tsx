@@ -368,16 +368,11 @@ export class MediaServiceImplement implements MediaService {
     onLoad,
     ...props
   }: VideoProps & Props): JSX.Element {
-    const VideoComponent = this.option.videoModule;
-    return (
-      <VideoComponent
-        {...props}
-        source={source as any} // TODO: fix type !!!
-        resizeMode={resizeMode}
-        onLoad={onLoad}
-        controls
-      />
-    );
+    source;
+    resizeMode;
+    onLoad;
+    props;
+    return <></>;
   }
   async getVideoThumbnail(
     options: VideoThumbnailOptions

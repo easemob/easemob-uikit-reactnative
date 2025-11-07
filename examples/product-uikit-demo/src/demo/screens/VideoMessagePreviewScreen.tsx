@@ -13,6 +13,7 @@ import {
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useSaveFileToAlbum, useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';
+import { VideoPreview } from '../ui/VideoPreview';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function VideoMessagePreviewScreen(props: Props) {
@@ -55,6 +56,7 @@ export function VideoMessagePreviewScreen(props: Props) {
       <VideoMessagePreview
         msgId={msgId}
         localMsgId={localMsgId}
+        videoPreviewComponent={VideoPreview}
         onBack={() => {
           navi.goBack();
         }}
