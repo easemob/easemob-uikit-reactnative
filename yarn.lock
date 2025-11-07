@@ -5961,7 +5961,7 @@ __metadata:
     react-native-safe-area-context: "npm:4.12.0"
     react-native-screens: "npm:~4.4.0"
     react-native-tab-view: "npm:^4.0.6"
-    react-native-video: "npm:^6.11.0"
+    react-native-video: "npm:^6.17.0"
     twemoji: "npm:^14.0.2"
     typescript: "npm:^5.2.2"
   languageName: unknown
@@ -6027,7 +6027,7 @@ __metadata:
     react-native-reanimated: "npm:~3.18.0"
     react-native-safe-area-context: "npm:4.12.0"
     react-native-screens: "npm:~4.4.0"
-    react-native-video: "npm:^6.11.0"
+    react-native-video: "npm:^6.17.0"
     react-native-webview: "npm:^13.15.0"
     react-test-renderer: "npm:18.3.1"
     typescript: "npm:^5.2.2"
@@ -15751,7 +15751,7 @@ __metadata:
     react-native-gesture-handler: "npm:^2.20.2"
     react-native-image-picker: "npm:^8.2.0"
     react-native-safe-area-context: "npm:~4.12.0"
-    react-native-video: "npm:^6.11.0"
+    react-native-video: "npm:^6.17.0"
     release-it: "npm:^17.10.0"
     twemoji: "npm:^14.0.2"
     typescript: "npm:^5.2.2"
@@ -16039,13 +16039,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-video@npm:^6.11.0":
-  version: 6.11.0
-  resolution: "react-native-video@npm:6.11.0"
+"react-native-video@npm:^6.17.0":
+  version: 6.17.0
+  resolution: "react-native-video@npm:6.17.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/4df26bc5f43f7ccaa5b5407e87b927c2a2f156ee42ee4eb6623f744e3c9f6b975f588145fd09771efdd2889cd6e5f1862ad098657535ea9930937442e7976f3d
+  checksum: 10c0/a366943327d0186656fca1fe514c1d1270c93e78ba42c45450de6d859b682b1a5afd7e55cb0cf57411987a52ec8765bf8ff113cbb5f1968fedcb0288f0934ec5
   languageName: node
   linkType: hard
 

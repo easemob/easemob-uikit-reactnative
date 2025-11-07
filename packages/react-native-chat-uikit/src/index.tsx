@@ -59,6 +59,7 @@ export * from './ui/Text';
 export * from './ui/TextInput';
 export * from './ui/Toast';
 export * from './ui/TriangleView';
+export * from './ui/VideoPreview';
 export * from './ui/View';
 export * from './utils';
 export { default as UIKIT_VERSION } from './version';

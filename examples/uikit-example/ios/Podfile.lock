@@ -1874,7 +1874,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-video (6.11.0):
+  - react-native-video (6.17.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1887,7 +1887,7 @@ PODS:
     - React-featureflags
     - React-graphics
     - React-ImageManager
-    - react-native-video/Video (= 6.11.0)
+    - react-native-video/Video (= 6.17.0)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -1896,7 +1896,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-video/Fabric (6.11.0):
+  - react-native-video/Fabric (6.17.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1917,7 +1917,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-video/Video (6.11.0):
+  - react-native-video/Video (6.17.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2788,7 +2788,7 @@ SPEC CHECKSUMS:
   react-native-pager-view: 9517b214fb7321493339fbcf53a30abd54fea07b
   react-native-safe-area-context: cd916088cac5300c3266876218377518987b995e
   react-native-slider: d8c35cc0162af73c9448f4b18c34d09e841cc1ab
-  react-native-video: 876b6224251e82a235aeb3e0409586399a590117
+  react-native-video: 90483ce166f52fae2985315106e38fce01065145
   React-nativeconfig: 8efdb1ef1e9158c77098a93085438f7e7b463678
   React-NativeModulesApple: cebca2e5320a3d66e123cade23bd90a167ffce5e
   React-perflogger: 72e653eb3aba9122f9e57cf012d22d2486f33358

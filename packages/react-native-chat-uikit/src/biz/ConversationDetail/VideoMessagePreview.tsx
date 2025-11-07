@@ -9,7 +9,6 @@ import {
   ViewStyle,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Video, { VideoRef } from 'react-native-video';
 
 import { useChatContext } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
@@ -24,7 +23,12 @@ import {
   ChatVideoMessageBody,
 } from '../../rename.chat';
 import { Services } from '../../services';
-import { Image, LoadingIcon } from '../../ui/Image';
+import { LoadingIcon } from '../../ui/Image';
+import {
+  VideoPreview,
+  type VideoPreviewProps,
+  type VideoPreviewRef,
+} from '../../ui/VideoPreview';
 import {
   getFileDirectory,
   getFileExtension,
@@ -41,7 +45,10 @@ import { getImageSizeFromUrl } from './MessageListItem.hooks';
 /**
  * Video Message Preview Component properties.
  */
-export type VideoMessagePreviewProps = PropsWithBack & {
+export type VideoMessagePreviewProps<
+  TVideoProps extends VideoPreviewProps = VideoPreviewProps,
+  TVideoRef extends VideoPreviewRef = VideoPreviewRef,
+> = PropsWithBack & {
   /**
    * Message id.
    */
@@ -58,6 +65,50 @@ export type VideoMessagePreviewProps = PropsWithBack & {
    * Container style for the file preview component.
    */
   containerStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Custom video preview component.
+   */
+  videoPreviewComponent?: React.ForwardRefExoticComponent<
+    TVideoProps & React.RefAttributes<TVideoRef>
+  >;
+
+  /**
+   * Additional props to pass to the video preview component.
+   * These props will be merged with (and can override) the base VideoPreviewProps.
+   */
+  videoPreviewProps?: Partial<TVideoProps>;
+
+  /**
+   * Custom video preview component ref.
+   *
+   * Use this to access the video preview component's methods from the parent component.
+   *
+   * @example
+   * ```tsx
+   * function MyScreen() {
+   *   const videoRef = useRef<CustomVideoPreviewRef>(null);
+   *
+   *   const handleSpeedChange = () => {
+   *     videoRef.current?.setPlaybackSpeed(2.0);
+   *   };
+   *
+   *   return (
+   *     <VideoMessagePreview<CustomVideoPreviewProps, CustomVideoPreviewRef>
+   *       msgId="message-id"
+   *       localMsgId="local-message-id"
+   *       videoPreviewComponent={CustomVideoPreview}
+   *       videoPreviewRef={videoRef}  // Pass your ref here
+   *       videoPreviewProps={{
+   *         showWatermark: true,
+   *       }}
+   *     />
+   *   );
+   * }
+   * ```
+   */
+  videoPreviewRef?: React.RefObject<TVideoRef>;
+
   /**
    * Callback function for showing the bottom sheet.
    */
@@ -67,22 +118,25 @@ export type VideoMessagePreviewProps = PropsWithBack & {
 /**
  * Video Message Preview Component.
  */
-export function VideoMessagePreview(props: VideoMessagePreviewProps) {
-  const { containerStyle, onBack } = props;
+export function VideoMessagePreview<
+  TVideoProps extends VideoPreviewProps = VideoPreviewProps,
+  TVideoRef extends VideoPreviewRef = VideoPreviewRef,
+>(props: VideoMessagePreviewProps<TVideoProps, TVideoRef>) {
+  const { containerStyle, onBack, videoPreviewComponent, videoPreviewProps } =
+    props;
   const {
     url,
     size,
     videoRef,
-    onVideoError,
     onClickedVideo,
-    onEnd,
-    pause,
-    thumbnailUrl,
     showLoading,
+    thumbnailUrl,
     menuRef,
     onRequestCloseMenu,
     showBottomSheet,
-  } = useVideoMessagePreview(props);
+  } = useVideoMessagePreview<TVideoProps, TVideoRef>(props);
+
+  const _VideoPreview = videoPreviewComponent || VideoPreview;
   // const u =
   //   '/var/mobile/Containers/Data/Application/F4EF9F0C-7EAB-44BE-8109-B98E5C8FFD9A/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/4c847d40-b526-11ee-94cd-1b34468849ce?em-redirect=true&share-secret=TITLYLUmEe6-5M0HikC84neFGaGOFglbHbtYyO6mFDW8pnhN.mov'; // error
   // const u2 =
@@ -92,6 +146,22 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
 
   const { top } = useSafeAreaInsets();
   const { getColor } = useColors();
+
+  // Prepare base props that satisfy VideoPreviewProps
+  const baseVideoProps: VideoPreviewProps = {
+    source: { uri: url ?? '' },
+    thumbnailUrl: thumbnailUrl,
+    onClicked: onClickedVideo,
+    onLongPress: showBottomSheet,
+    videoStyle: { ...size },
+    thumbnailStyle: { ...size },
+  };
+
+  // Merge base props with custom props
+  const finalVideoProps = {
+    ...baseVideoProps,
+    ...(videoPreviewProps as any),
+  } as TVideoProps;
 
   return (
     <View
@@ -113,31 +183,7 @@ export function VideoMessagePreview(props: VideoMessagePreviewProps) {
           alignItems: 'center',
         }}
       >
-        <Video
-          ref={videoRef as any} // TODO: fix type !!!
-          source={{
-            uri: url,
-          }}
-          paused={pause}
-          onEnd={onEnd}
-          // fullscreen={true}
-          onError={onVideoError}
-          resizeMode={'contain'}
-          // posterResizeMode={'contain'}
-          style={{
-            ...size,
-          }}
-        />
-        {thumbnailUrl ? (
-          <Image
-            source={{ uri: thumbnailUrl }}
-            style={{
-              position: 'absolute',
-              // backgroundColor: 'red',
-              ...size,
-            }}
-          />
-        ) : null}
+        <_VideoPreview ref={videoRef} {...finalVideoProps} />
         {showLoading ? (
           <View
             style={[
@@ -184,10 +230,19 @@ type ImageSize = {
   height: number;
 };
 
-export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
-  const { msgId: propsMsgId, msg: propsMsg, onShowBottomSheet } = props;
+export function useVideoMessagePreview<
+  TVideoProps extends VideoPreviewProps = VideoPreviewProps,
+  TVideoRef extends VideoPreviewRef = VideoPreviewRef,
+>(props: VideoMessagePreviewProps<TVideoProps, TVideoRef>) {
+  const {
+    msgId: propsMsgId,
+    msg: propsMsg,
+    onShowBottomSheet,
+    videoPreviewRef: externalVideoRef,
+  } = props;
   const im = useChatContext();
-  const videoRef = React.useRef<VideoRef>(null);
+  const internalVideoRef = React.useRef<TVideoRef>(null);
+  const videoRef = externalVideoRef ?? internalVideoRef;
   const [url, setUrl] = React.useState<string | undefined>(undefined);
   const [size, setSize] = React.useState<ImageSize>({
     width: 300,
@@ -199,7 +254,7 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
     undefined
   );
   const [pause, setPause] = React.useState(false);
-  const { getImageSize } = useImageSize({});
+  const { getImageSizeCover } = useImageSize({});
   const menuRef = React.useRef<ContextNameMenuRef>(null);
   const { closeMenu } = useCloseMenu({ menuRef });
 
@@ -238,12 +293,14 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
         LocalPath.showImage(url),
         ({ isOk, width, height }) => {
           if (isOk === true) {
-            setSize(getImageSize(height!, width!, winHeight, winWidth));
+            setSize(
+              getImageSizeCover(width ?? 0, height ?? 0, winWidth, winHeight)
+            );
           }
         }
       );
     },
-    [getImageSize, winHeight, winWidth]
+    [getImageSizeCover, winHeight, winWidth]
   );
 
   const showThumb = React.useCallback(
@@ -306,13 +363,13 @@ export function useVideoMessagePreview(props: VideoMessagePreviewProps) {
     if (Platform.OS === 'ios') {
       videoRef.current?.seek(0);
       setPause((v) => !v);
-      videoRef.current?.presentFullscreenPlayer();
+      videoRef.current?.presentFullscreenPlayer?.();
     } else {
       videoRef.current?.seek(0);
       setPause((v) => !v);
-      videoRef.current?.presentFullscreenPlayer();
+      videoRef.current?.presentFullscreenPlayer?.();
     }
-  }, []);
+  }, [videoRef]);
 
   const onGenerateThumbnail = React.useCallback(
     async (msg: ChatMessage) => {
