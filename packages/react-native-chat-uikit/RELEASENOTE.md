@@ -1,5 +1,14 @@
 # Release Note
 
+# 2.4.9
+
+- Fixed the issue with abnormal status display on the login page.
+- Optimized the issue where the welcome page loading animation doesn't close when switching pages.
+- Optimized UIKit: Improved performance of simple icon animation components, significantly reducing CPU usage.
+- Added support for custom data layer, allowing flexible business handling. For example: the app's phone number friend search feature uses this interface.
+- Optimized image message preview in the app: Added support for custom image preview components.
+- Optimized video message preview in the app: Added support for custom video preview components.
+
 # 2.4.8
 
 - Fixed the issue where modal windows fail to display properly, including problems with modal pop-up menus and bottom pop-up menus.
