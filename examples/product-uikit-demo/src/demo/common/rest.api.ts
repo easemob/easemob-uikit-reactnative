@@ -74,11 +74,11 @@ export class RestApi {
       : '/inside/agora/channel/mapper';
 
   private static isOk(value: any) {
-    return value.code === 200 || value.code === 'RES_OK' ? true : false;
+    return value?.code === 200 || value?.code === 'RES_OK' ? true : false;
   }
 
   private static code(value: any) {
-    return typeof value.code === 'string'
+    return typeof value?.code === 'string'
       ? value.code === 'RES_OK'
         ? 200
         : 999
@@ -461,7 +461,10 @@ export class RestApi {
       });
       const value = await response.json();
       console.log('RestApi:requestGetUserByPhone:', value, url);
-      return value;
+      return {
+        isOk: RestApi.isOk(value),
+        value: { ...value, code: RestApi.code(value) },
+      };
     } catch (error) {
       console.warn('RestApi:requestGetUserByPhone:error:', error);
       return { isOk: false, error };
