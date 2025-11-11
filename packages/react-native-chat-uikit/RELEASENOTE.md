@@ -8,6 +8,7 @@
 - Added support for custom data layer, allowing flexible business handling. For example: the app's phone number friend search feature uses this interface.
 - Optimized image message preview in the app: Added support for custom image preview components.
 - Optimized video message preview in the app: Added support for custom video preview components.
+- Optimized Animation: Add voice image animation component.
 
 # 2.4.8
 

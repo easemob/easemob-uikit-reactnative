@@ -66,10 +66,12 @@ export interface PlayAudioOptions extends OpenResult {
   opt?: Record<string, string>;
   onPlay?: ({
     isMuted,
+    isFinished,
     currentPosition,
     duration,
   }: {
     isMuted?: boolean;
+    isFinished: boolean;
     currentPosition: number;
     duration: number;
   }) => void;

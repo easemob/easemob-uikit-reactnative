@@ -551,14 +551,22 @@ export function useMessageList(
         }
 
         await Services.ms.playAudio({
-          url: LocalPath.playVoice(localPath),
-          onPlay({ currentPosition, duration }) {
-            if (
-              Math.abs(currentPosition - duration) < 0.1 &&
-              currentVoicePlayingRef.current !== undefined
-            ) {
+          url: LocalPath.getFilePath(localPath),
+          onPlay({ currentPosition, duration, isFinished }) {
+            if (currentVoicePlayingRef.current === undefined) {
+              return;
+            }
+            if (isFinished === true) {
               currentVoicePlayingRef.current = undefined;
               updateMessageVoiceUIState(msgModel);
+            } else {
+              if (
+                Math.abs(currentPosition - duration) < 0.1 &&
+                currentVoicePlayingRef.current !== undefined
+              ) {
+                currentVoicePlayingRef.current = undefined;
+                updateMessageVoiceUIState(msgModel);
+              }
             }
           },
         });

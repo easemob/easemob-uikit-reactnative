@@ -36,13 +36,8 @@ import {
   ChatVoiceMessageBody,
 } from '../../rename.chat';
 import { usePaletteContext, useThemeContext } from '../../theme';
-import {
-  DefaultImage,
-  DynamicIcon,
-  DynamicIconRef,
-  Icon,
-  LoadingIcon,
-} from '../../ui/Image';
+import { VoiceImageAnimation } from '../../ui/Animated';
+import { DefaultImage, Icon, LoadingIcon } from '../../ui/Image';
 import { HighUrl, SingleLineText, Text } from '../../ui/Text';
 import { formatTsForConvDetail } from '../../utils';
 import { Avatar } from '../Avatar';
@@ -628,9 +623,6 @@ export function MessageVoice(props: MessageVoiceProps) {
   const width =
     Math.floor(((maxWidth - minWidth) * duration) / gMaxVoiceDuration) +
     minWidth;
-  const loopCount = -1;
-  const ref = React.useRef<DynamicIconRef>({} as any);
-  // const isPlayRef = React.useRef(false);
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     left_voice: {
@@ -650,30 +642,7 @@ export function MessageVoice(props: MessageVoiceProps) {
       dark: colors.neutral[1],
     },
   });
-  const voiceIcons = React.useMemo((): IconNameType[] => {
-    if (layoutType === 'left') {
-      return [
-        '1st_frame_lft_lgt_sdy',
-        '2nd_frame_lft_lgt_sdy',
-        '3th_frame_lft_lgt_sdy',
-      ];
-    } else {
-      return [
-        '1st_frame_rgt_lgt_sdy',
-        '2nd_frame_rgt_lgt_sdy',
-        '3th_frame_rgt_lgt_sdy',
-      ];
-    }
-  }, [layoutType]);
   const seconds = safeDuration;
-
-  React.useEffect(() => {
-    if (propsIsPlay === true) {
-      ref.current?.startPlay?.();
-    } else {
-      ref.current?.stopPlay?.();
-    }
-  }, [propsIsPlay]);
 
   return (
     <View
@@ -684,21 +653,11 @@ export function MessageVoice(props: MessageVoiceProps) {
         alignItems: 'center',
       }}
     >
-      <DynamicIcon
-        propsRef={ref}
-        names={voiceIcons}
-        loopCount={loopCount}
-        resolution={'3x'}
-        // onPlayStart={onPlayStart}
-        // onPlayFinished={onPlayFinished}
-        initialIndex={2}
-        style={{
-          width: 20,
-          height: 20,
-          tintColor: getColor(
-            layoutType === 'left' ? 'left_voice' : 'right_voice'
-          ),
-        }}
+      <VoiceImageAnimation
+        playing={propsIsPlay}
+        color={getColor(layoutType === 'left' ? 'left_voice' : 'right_voice')}
+        size={20}
+        direction={layoutType === 'left' ? 'right' : 'left'}
       />
       <View style={{ flexGrow: 1 }} />
       <Text

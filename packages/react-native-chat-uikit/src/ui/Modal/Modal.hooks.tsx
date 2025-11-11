@@ -50,7 +50,6 @@ export const useModalAnimation = (type: ModalAnimationType) => {
 
   const startHide = React.useCallback(
     (callback?: Animated.EndCallback) => {
-      console.log('test:zuoyu:startHide:2');
       createAnimated(0).start(callback);
     },
     [createAnimated]

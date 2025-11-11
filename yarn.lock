@@ -5943,7 +5943,7 @@ __metadata:
     pure-uuid: "npm:^1.8.1"
     react: "npm:18.3.1"
     react-native: "npm:0.76.9"
-    react-native-audio-recorder-player: "npm:^3.6.12"
+    react-native-audio-recorder-player: "npm:~3.6.12"
     react-native-builder-bob: "npm:^0.36.0"
     react-native-chat-sdk: "npm:^1.11.5"
     react-native-create-thumbnail: "npm:^2.1.1"
@@ -6012,7 +6012,7 @@ __metadata:
     react: "npm:18.3.1"
     react-native: "npm:0.76.9"
     react-native-agora: "npm:~4.3.2"
-    react-native-audio-recorder-player: "npm:^3.6.12"
+    react-native-audio-recorder-player: "npm:~3.6.12"
     react-native-builder-bob: "npm:^0.36.0"
     react-native-chat-sdk: "npm:^1.11.5"
     react-native-create-thumbnail: "npm:^2.1.1"
@@ -15552,15 +15552,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-audio-recorder-player@npm:^3.6.12":
-  version: 3.6.12
-  resolution: "react-native-audio-recorder-player@npm:3.6.12"
+"react-native-audio-recorder-player@npm:~3.6.12":
+  version: 3.6.14
+  resolution: "react-native-audio-recorder-player@npm:3.6.14"
   dependencies:
     hyochan-welcome: "npm:^1.0.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/9e740463a43457bb1518361c79b691e803ad55c7f0fe8d7c49a97aecf31bdc87b03c0ba28a8f2a05b35bb83d08b5e2cc15af749903817f542406cfe9602abf32
+  checksum: 10c0/e6c262d1d79c368fb24498fd7f251cdbb108d9d74208eaf0b519dcd0f1ff7b13b51422ef8120ecc12a673f5042d5fd4a8e94c076fd12d95e2cbec07030d2486e
   languageName: node
   linkType: hard
 
@@ -15742,7 +15742,7 @@ __metadata:
     pure-uuid: "npm:^1.8.1"
     react: "npm:18.3.1"
     react-native: "npm:0.76.9"
-    react-native-audio-recorder-player: "npm:^3.6.12"
+    react-native-audio-recorder-player: "npm:~3.6.12"
     react-native-builder-bob: "npm:^0.36.0"
     react-native-chat-sdk: "npm:^1.11.5"
     react-native-create-thumbnail: "npm:^2.1.1"

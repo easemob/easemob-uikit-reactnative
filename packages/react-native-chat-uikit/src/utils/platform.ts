@@ -200,4 +200,33 @@ export class LocalPath {
   // static recvVoice(localPath: string): string {
   //   return LocalPath.encode(localPath);
   // }
+
+  static getFilePath(localPath: string): string {
+    if (
+      !localPath.startsWith('http://') &&
+      !localPath.startsWith('https://') &&
+      !localPath.startsWith('content://') &&
+      !localPath.startsWith('file://')
+    ) {
+      // This is an absolute path
+      // !!! Due to historical legacy issues, the path may contain # symbols from appkey concatenation
+      // 1. Encode  2. Add file:// prefix
+      const tmp = encodeURI(localPath);
+      const tmp2 = tmp.replace(/#/g, '%23');
+      const tmp3 = `file://${tmp2}`;
+      return tmp3;
+    }
+    return localPath;
+  }
+  static getLocalPath(localPath: string): string {
+    if (localPath.startsWith('file://')) {
+      // 1. Remove file:// prefix 2. Remove possible query parameters 3. Decode
+      const tmp = localPath.replace('file://', '');
+      const tmp2 = tmp.split('?')[0] as string;
+      const tmp3 = decodeURI(tmp2);
+      const tmp4 = tmp3.replace(/%23/g, '#');
+      return tmp4;
+    }
+    return localPath;
+  }
 }
