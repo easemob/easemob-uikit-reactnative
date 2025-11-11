@@ -1,6 +1,6 @@
 {
   "name": "react-native-chat-uikit",
-  "version": "2.4.8",
+  "version": "2.5.0",
   "description": "react native chat uikit.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",

@@ -1,6 +1,6 @@
 # Release Note
 
-# 2.4.9
+# 2.5.0
 
 - Fixed the issue with abnormal status display on the login page.
 - Optimized the issue where the welcome page loading animation doesn't close when switching pages.

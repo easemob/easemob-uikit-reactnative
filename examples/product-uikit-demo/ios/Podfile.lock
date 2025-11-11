@@ -58,7 +58,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - ChatUikit (2.4.8):
+  - ChatUikit (2.5.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -3032,7 +3032,7 @@ SPEC CHECKSUMS:
   AgoraRtcEngine_iOS: eaa97751fcfe1b50d9b067e0df92752a6a5f899f
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
   ChatCallkit: a11d9bba81fe04c2c8d62154910d0a5c2adb5308
-  ChatUikit: a36690d41950fecca958ab57208e8dd973645642
+  ChatUikit: e6111704149b11863c0aed760566718a8dec3b03
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
   EASClient: 88b5fd19d0787186a0c7e6ba76deb2d4f96395ce
   EXConstants: fcfc75800824ac2d5c592b5bc74130bad17b146b

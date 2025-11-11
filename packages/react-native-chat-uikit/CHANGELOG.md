@@ -1,11 +1,26 @@
 # Change Log
 
+## [2.5.0](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.8...uikit@2.5.0)(2025-11-11)
+
+- 12fb9cfa chore: uikit restore package for video
+- ca204f43 feat: add voice animation component
+- b8424e47 chore: uikit: remove  react native video library
+- 97194bb2 docs: uikit: update release note
+- b06688c4 feat: uikit: update video preview component
+- ea3b387b feat: example: add image preview component
+- 67bdef04 feat: uikit: add custom chat sdk and update uikit demo
+- 7f94a120 perf: update loading component
+- f65524d4 perf: loading component animated
+- aab1a276 chore: update example
+- 4a1beaf9 fix: example: login screen status bar bug
+- 8e4fe249 chore: update uikit changelog
+
 ## [2.4.8](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.7...uikit@2.4.8)(2025-07-28)
 
-c8977774 fix: uikit: bug
-16ec6892 chore: update example and update uikit for add roam message
-bd67d48f fix: uikit: bottom sheet menu bug
-c332d615 fix: example: route bug
+- c8977774 fix: uikit: bug
+- 16ec6892 chore: update example and update uikit for add roam message
+- bd67d48f fix: uikit: bottom sheet menu bug
+- c332d615 fix: example: route bug
 
 ## [2.4.7](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.6...uikit@2.4.7)(2025-07-28)
 
