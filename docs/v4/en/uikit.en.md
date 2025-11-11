@@ -17,6 +17,8 @@
       - [Enable message url preview function](#enable-message-url-preview-function)
       - [Enable group message pinning function](#enable-group-message-pinning-function)
       - [Customize Message List](#customize-message-list)
+      - [Custom Image Message Preview Component](#custom-image-message-preview-component)
+      - [Custom Short Video Message Preview Component](#custom-short-video-message-preview-component)
     - [Contact List](#contact-list)
       - [Customize Navigation Bar](#customize-navigation-bar-2)
       - [Customize Contact List Items](#customize-contact-list-items)
@@ -44,6 +46,7 @@
   - [Customize Avatar and Nickname](#customize-avatar-and-nickname)
     - [Passive Registration](#passive-registration)
     - [Active Invocation](#active-invocation)
+  - [Custom Data Model](#custom-data-model)
 
 # UIKit Introduction
 
@@ -511,6 +514,30 @@ export function ConversationDetailScreen(props: Props) {
       }}
     />
   );
+}
+```
+
+#### Custom Image Message Preview Component
+
+If the built-in image preview component styles don't meet your requirements, UIKit also supports customizing this component.
+
+```tsx
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function ImageMessagePreviewScreen(props: Props) {
+  // ImagePreview is a custom image preview component
+  return <ImageMessagePreview imagePreviewComponent={ImagePreview} />;
+}
+```
+
+#### Custom Short Video Message Preview Component
+
+If the built-in video preview component styles don't meet your requirements, UIKit also supports customizing this component.
+
+```tsx
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function VideoMessagePreviewScreen(props: Props) {
+  // VideoPreview is a custom short video preview component
+  return <VideoMessagePreview videoPreviewComponent={VideoPreview} />;
 }
 ```
 
@@ -1089,3 +1116,47 @@ During the initialization phase, register callbacks through `onUsersHandler` and
 ### Active Invocation
 
 When necessary, update custom data via `ChatService.updateDataList` and notify the data changes to the relevant components.
+
+## Custom Data Model
+
+By customizing the model, you can modify or add your own data behaviors. For example: the UIKit sample app supports searching by phone number by modifying the data model.
+
+```tsx
+class ChatServiceDemo extends ChatServiceImpl {
+  constructor() {
+    super();
+  }
+
+  override addNewContact(params: {
+    userId: string;
+    reason?: string;
+    onResult?: ResultCallback<void>;
+  }): void {
+    const processAsync = async () => {
+      const chatUserName = await this.client.getCurrentUsername();
+      const userToken = await this.client.getAccessToken();
+
+      // First request the app server API to get the user ID by phone number
+      RestApi.requestGetUserByPhone({
+        phone: params.userId,
+        chatUserName: chatUserName ?? '',
+        userToken: userToken ?? '',
+      })
+        .then((result) => {
+          if (result.isOk || result.value?.code === 200) {
+            // Add a friend by calling the ChatSDK API
+            super.addNewContact(
+              params && ({ userId: result.value?.chatUserName } as any)
+            );
+          } else {
+            params.onResult?.({ isOk: false, error: result.error });
+          }
+        })
+        .catch((error) => {
+          params.onResult?.({ isOk: false, error });
+        });
+    };
+    processAsync();
+  }
+}
+```

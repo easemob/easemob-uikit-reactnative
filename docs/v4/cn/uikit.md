@@ -21,6 +21,8 @@
       - [启用消息 url 预览功能](#启用消息-url-预览功能)
       - [启用群消息置顶功能](#启用群消息置顶功能)
       - [自定义消息列表](#自定义消息列表)
+      - [自定义图片消息预览组件](#自定义图片消息预览组件)
+      - [自定义短视频消息预览组件](#自定义短视频消息预览组件)
     - [联系人（ContactList）](#联系人contactlist)
       - [自定义导航栏](#自定义导航栏-2)
       - [自定义联系人列表项](#自定义联系人列表项)
@@ -48,6 +50,7 @@
   - [自定义头像和昵称](#自定义头像和昵称)
     - [被动注册](#被动注册)
     - [主动调用](#主动调用)
+  - [自定义数据模型](#自定义数据模型)
 
 # UIKit 介绍
 
@@ -99,7 +102,6 @@ export function App() {
 ```
 
 详见 `example/src/demo/App.tsx` 示例[源码](../../../example/src/demo/App.tsx)。
-
 
 ### 自定义chatsdk
 
@@ -667,6 +669,30 @@ export function MyConversationDetailScreen(props: Props) {
       }}
     />
   );
+}
+```
+
+#### 自定义图片消息预览组件
+
+如果内部提供的图片预览组件样式不能满足需求，uikit还支持自定义该组件
+
+```tsx
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function ImageMessagePreviewScreen(props: Props) {
+  // ImagePreview 为自定义的图片预览组件
+  return <ImageMessagePreview imagePreviewComponent={ImagePreview} />;
+}
+```
+
+#### 自定义短视频消息预览组件
+
+如果内部提供的图片预览组件样式不能满足需求，uikit还支持自定义该组件
+
+```tsx
+type Props = NativeStackScreenProps<RootScreenParamsList>;
+export function VideoMessagePreviewScreen(props: Props) {
+  // VideoPreview 为自定义的短视频预览组件
+  return <VideoMessagePreview videoPreviewComponent={VideoPreview} />;
 }
 ```
 
@@ -1337,3 +1363,47 @@ UIKit 组件提供了修改昵称和头像的机会。主要通过被动注册�
 ### 主动调用
 
 在需要的地方，通过 `ChatService.updateDataList` 更新自定义数据，并且通知关注的组件。
+
+## 自定义数据模型
+
+通过自定义模型，可以修改或者新增自己的数据行为。例如：uikit示例应用通过修改 数据模型 支持搜索手机号。
+
+```tsx
+class ChatServiceDemo extends ChatServiceImpl {
+  constructor() {
+    super();
+  }
+
+  override addNewContact(params: {
+    userId: string;
+    reason?: string;
+    onResult?: ResultCallback<void>;
+  }): void {
+    const processAsync = async () => {
+      const chatUserName = await this.client.getCurrentUsername();
+      const userToken = await this.client.getAccessToken();
+
+      // 先请求 app server api，通过手机号获取用户ID
+      RestApi.requestGetUserByPhone({
+        phone: params.userId,
+        chatUserName: chatUserName ?? '',
+        userToken: userToken ?? '',
+      })
+        .then((result) => {
+          if (result.isOk || result.value?.code === 200) {
+            // 通过调用 chatsdk api 添加好友
+            super.addNewContact(
+              params && ({ userId: result.value?.chatUserName } as any)
+            );
+          } else {
+            params.onResult?.({ isOk: false, error: result.error });
+          }
+        })
+        .catch((error) => {
+          params.onResult?.({ isOk: false, error });
+        });
+    };
+    processAsync();
+  }
+}
+```
