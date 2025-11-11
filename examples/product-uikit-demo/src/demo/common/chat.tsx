@@ -24,7 +24,6 @@ class ChatServiceDemo extends ChatServiceImpl {
         userToken: userToken ?? '',
       })
         .then((result) => {
-          console.log('ChatServiceDemo:addNewContact:result:', result);
           if (result.isOk || result.value?.code === 200) {
             super.addNewContact(
               params && ({ userId: result.value?.chatUserName } as any)
