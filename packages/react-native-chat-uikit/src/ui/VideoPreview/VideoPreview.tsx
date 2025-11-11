@@ -1,5 +1,6 @@
-import { forwardRef, useImperativeHandle } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { Image, ImageStyle, Pressable, ViewStyle } from 'react-native';
+import Video, { VideoRef } from 'react-native-video';
 
 export interface VideoPreviewProps {
   source: { uri: string } | number;
@@ -20,19 +21,43 @@ export interface VideoPreviewRef {
 
 export const VideoPreview = forwardRef<VideoPreviewRef, VideoPreviewProps>(
   (props, ref) => {
-    const { thumbnailStyle, thumbnailUrl, onClicked, onLongPress } = props;
+    const {
+      source,
+      videoStyle,
+      thumbnailStyle,
+      thumbnailUrl,
+      onClicked,
+      onLongPress,
+      onError,
+    } = props;
+    const videoRef = useRef<VideoRef>(null);
     useImperativeHandle(
       ref,
       () => ({
-        seek: (_time: number, _tolerance?: number) => {},
-        resume: () => {},
-        pause: () => {},
-        presentFullscreenPlayer: () => {},
+        seek: (time: number, tolerance?: number) => {
+          videoRef.current?.seek(time, tolerance);
+        },
+        resume: () => {
+          videoRef.current?.resume();
+        },
+        pause: () => {
+          videoRef.current?.pause();
+        },
+        presentFullscreenPlayer: () => {
+          videoRef.current?.presentFullscreenPlayer?.();
+        },
       }),
       []
     );
     return (
       <Pressable onPress={onClicked} onLongPress={onLongPress}>
+        <Video
+          ref={videoRef}
+          source={source as any}
+          resizeMode={'contain'}
+          style={videoStyle}
+          onError={onError}
+        />
         {thumbnailUrl ? (
           <Image
             source={{ uri: thumbnailUrl }}
