@@ -3,7 +3,7 @@
     "name": "ChatUikitFullExample",
     "slug": "ChatUikitFullExample",
     "scheme": "expodemowithdevclient",
-    "version": "2.0.0",
+    "version": "2.5.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -47,7 +47,7 @@
         "projectId": "56c9c5f8-c2e2-4002-989b-3beb9f0c2e52"
       }
     },
-    "runtimeVersion": "2.0.0",
+    "runtimeVersion": "2.5.0",
     "plugins": [
       [
         "expo-dev-client",
