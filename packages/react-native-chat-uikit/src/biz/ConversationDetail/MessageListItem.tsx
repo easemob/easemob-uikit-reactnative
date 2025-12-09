@@ -2207,7 +2207,8 @@ export function MessageQuoteBubble(props: MessageQuoteBubbleProps) {
         {
           flexDirection: layoutType === 'left' ? 'row' : 'row-reverse',
           maxWidth: maxWidth ?? '70%',
-          marginLeft: layoutType === 'left' ? marginWidth : marginWidth,
+          marginLeft: layoutType === 'left' ? marginWidth : undefined,
+          marginRight: layoutType === 'left' ? undefined : marginWidth,
           marginBottom: 2,
         },
         containerStyle,
