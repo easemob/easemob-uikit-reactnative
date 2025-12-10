@@ -1,5 +1,11 @@
 # Release Note
 
+# 2.5.1
+
+- Fixed the issue where clicking the expand button in the input bar component fails to switch between keyboard and extension bar.
+- Fixed layout issues in the quoted message component.
+- Fixed compilation and runtime issues with aosl dynamic library.
+
 # 2.5.0
 
 - Fixed the issue with abnormal status display on the login page.

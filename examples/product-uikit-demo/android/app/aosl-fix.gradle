@@ -1,5 +1,98 @@
 // Add libaosl.so configurations
-android.packagingOptions.pickFirst 'lib/x86/libaosl.so'
-android.packagingOptions.pickFirst 'lib/x86_64/libaosl.so'
-android.packagingOptions.pickFirst 'lib/armeabi-v7a/libaosl.so'
-android.packagingOptions.pickFirst 'lib/arm64-v8a/libaosl.so'
+// This method cannot remove specific version of libaosl.so, so use afterEvaluate method instead
+// android.packagingOptions.pickFirst 'lib/x86/libaosl.so'
+// android.packagingOptions.pickFirst 'lib/x86_64/libaosl.so'
+// android.packagingOptions.pickFirst 'lib/armeabi-v7a/libaosl.so'
+// android.packagingOptions.pickFirst 'lib/arm64-v8a/libaosl.so'
+
+// Process MergeJniLibFolders task in afterEvaluate to exclude libaosl.so from agora
+afterEvaluate {
+    // Method 1: Try to use class name (if available)
+    try {
+        def mergeJniLibFoldersClass = Class.forName('com.android.build.gradle.tasks.MergeJniLibFolders')
+        tasks.withType(mergeJniLibFoldersClass).configureEach { task ->
+            // Exclude libaosl.so from agora before task execution
+            task.doFirst {
+                println "Processing MergeJniLibFolders task: ${task.name}"
+                
+                // Try multiple ways to access input files
+                def inputFiles = null
+                if (task.hasProperty('inputFiles')) {
+                    inputFiles = task.inputFiles
+                } else if (task.hasProperty('inputs')) {
+                    def inputs = task.inputs
+                    if (inputs.hasProperty('files')) {
+                        inputFiles = inputs.files
+                    }
+                }
+                
+                if (inputFiles != null) {
+                    inputFiles.files.each { file ->
+                        if (file.exists() && file.isDirectory()) {
+                            // Find and remove libaosl.so from agora
+                            fileTree(file).matching {
+                                include '**/libaosl.so'
+                            }.each { soFile ->
+                                def filePath = soFile.absolutePath
+                                if (filePath.contains('agora') || 
+                                    filePath.contains('full-sdk') ||
+                                    filePath.contains('io.agora.rtc')) {
+                                    println "Removing conflicting libaosl.so from: ${filePath}"
+                                    soFile.delete()
+                                } else {
+                                    println "Keeping libaosl.so from: ${filePath}"
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    println "Warning: Could not access input files for task ${task.name}"
+                }
+            }
+        }
+    } catch (ClassNotFoundException e) {
+        println "Warning: Could not find MergeJniLibFolders class, trying alternative approach"
+    }
+    
+    // Method 2: Match by task name (fallback approach)
+    tasks.matching { 
+        it.name.contains("merge") && 
+        (it.name.contains("JniLib") || it.name.contains("NativeLib"))
+    }.configureEach { task ->
+        task.doFirst {
+            println "Processing native lib merge task: ${task.name}"
+            try {
+                // Try to access input files
+                def inputFiles = null
+                if (task.hasProperty('inputFiles')) {
+                    inputFiles = task.inputFiles
+                } else if (task.hasProperty('inputs')) {
+                    def inputs = task.inputs
+                    if (inputs.hasProperty('files')) {
+                        inputFiles = inputs.files
+                    }
+                }
+                
+                if (inputFiles != null) {
+                    inputFiles.files.each { file ->
+                        if (file.exists() && file.isDirectory()) {
+                            fileTree(file).matching {
+                                include '**/libaosl.so'
+                            }.each { soFile ->
+                                def filePath = soFile.absolutePath
+                                if (filePath.contains('agora') || 
+                                    filePath.contains('full-sdk') ||
+                                    filePath.contains('io.agora.rtc')) {
+                                    println "Removing conflicting libaosl.so from: ${filePath}"
+                                    soFile.delete()
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                println "Could not process input files for ${task.name}: ${ex.message}"
+            }
+        }
+    }
+}

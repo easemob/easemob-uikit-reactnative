@@ -81,98 +81,6 @@ def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInRelea
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
-// 在 afterEvaluate 中处理 MergeJniLibFolders 任务，排除来自 agora 的 libaosl.so
-afterEvaluate {
-    // 方法1: 尝试使用类名（如果可用）
-    try {
-        def mergeJniLibFoldersClass = Class.forName('com.android.build.gradle.tasks.MergeJniLibFolders')
-        tasks.withType(mergeJniLibFoldersClass).configureEach { task ->
-            // 在任务执行前，从输入中排除来自 agora 的 libaosl.so
-            task.doFirst {
-                println "Processing MergeJniLibFolders task: ${task.name}"
-                
-                // 尝试多种方式访问输入文件
-                def inputFiles = null
-                if (task.hasProperty('inputFiles')) {
-                    inputFiles = task.inputFiles
-                } else if (task.hasProperty('inputs')) {
-                    def inputs = task.inputs
-                    if (inputs.hasProperty('files')) {
-                        inputFiles = inputs.files
-                    }
-                }
-                
-                if (inputFiles != null) {
-                    inputFiles.files.each { file ->
-                        if (file.exists() && file.isDirectory()) {
-                            // 查找并删除来自 agora 的 libaosl.so
-                            fileTree(file).matching {
-                                include '**/libaosl.so'
-                            }.each { soFile ->
-                                def filePath = soFile.absolutePath
-                                if (filePath.contains('agora') || 
-                                    filePath.contains('full-sdk') ||
-                                    filePath.contains('io.agora.rtc')) {
-                                    println "Removing conflicting libaosl.so from: ${filePath}"
-                                    soFile.delete()
-                                } else {
-                                    println "Keeping libaosl.so from: ${filePath}"
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    println "Warning: Could not access input files for task ${task.name}"
-                }
-            }
-        }
-    } catch (ClassNotFoundException e) {
-        println "Warning: Could not find MergeJniLibFolders class, trying alternative approach"
-    }
-    
-    // 方法2: 通过任务名称匹配（备用方案）
-    tasks.matching { 
-        it.name.contains("merge") && 
-        (it.name.contains("JniLib") || it.name.contains("NativeLib"))
-    }.configureEach { task ->
-        task.doFirst {
-            println "Processing native lib merge task: ${task.name}"
-            try {
-                // 尝试访问输入文件
-                def inputFiles = null
-                if (task.hasProperty('inputFiles')) {
-                    inputFiles = task.inputFiles
-                } else if (task.hasProperty('inputs')) {
-                    def inputs = task.inputs
-                    if (inputs.hasProperty('files')) {
-                        inputFiles = inputs.files
-                    }
-                }
-                
-                if (inputFiles != null) {
-                    inputFiles.files.each { file ->
-                        if (file.exists() && file.isDirectory()) {
-                            fileTree(file).matching {
-                                include '**/libaosl.so'
-                            }.each { soFile ->
-                                def filePath = soFile.absolutePath
-                                if (filePath.contains('agora') || 
-                                    filePath.contains('full-sdk') ||
-                                    filePath.contains('io.agora.rtc')) {
-                                    println "Removing conflicting libaosl.so from: ${filePath}"
-                                    soFile.delete()
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-                println "Could not process input files for ${task.name}: ${ex.message}"
-            }
-        }
-    }
-}
-
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -230,7 +138,7 @@ android {
     }
 }
 
-//apply from: file('aosl-fix.gradle')
+apply from: file('aosl-fix.gradle')
 
 // Apply static values from `gradle.properties` to the `android.packagingOptions`
 // Accepts values in comma delimited lists, example:
