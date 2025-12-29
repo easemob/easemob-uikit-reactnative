@@ -2,6 +2,7 @@ import React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -72,17 +73,23 @@ export const ImagePreview: React.FC<ImagePreviewProps> = ({
         scale.value = withSpring(2);
         savedScale.value = 2;
       }
-      onDupClicked?.();
+      if (onDupClicked) {
+        runOnJS(onDupClicked)();
+      }
     });
 
   const tapGesture = Gesture.Tap().onEnd(() => {
-    onClicked?.();
+    if (onClicked) {
+      runOnJS(onClicked)();
+    }
   });
 
   const longPressGesture = Gesture.LongPress()
     .minDuration(500)
     .onStart(() => {
-      onLongPress?.();
+      if (onLongPress) {
+        runOnJS(onLongPress)();
+      }
     });
 
   const exclusiveGestures = Gesture.Exclusive(doubleTapGesture, tapGesture);
