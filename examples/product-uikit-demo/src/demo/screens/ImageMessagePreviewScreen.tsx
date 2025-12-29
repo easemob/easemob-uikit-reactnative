@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+import { Platform } from 'react-native';
 
 import {
   ChatImageMessageBody,
@@ -57,7 +58,7 @@ export function ImageMessagePreviewScreen(props: Props) {
         msgId={msgId}
         msg={msg}
         localMsgId={localMsgId}
-        imagePreviewComponent={ImagePreview}
+        imagePreviewComponent={Platform.OS === 'ios' ? ImagePreview : undefined}
         onBack={() => {
           navi.goBack();
         }}

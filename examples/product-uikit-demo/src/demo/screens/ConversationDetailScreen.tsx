@@ -58,6 +58,7 @@ import { gCustomMessageSafeTip, useAppServerDomain } from '../common/const';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useOnce, useStackScreenRoute } from '../hooks';
 import type { RootParamsName, RootScreenParamsList } from '../routes';
+import { DemoMessageContent } from '../ui/MessageListItem';
 
 // export function MyMessageContent(props: MessageContentProps) {
 //   const { msg } = props;
@@ -527,7 +528,7 @@ export function ConversationDetailScreen(props: Props) {
             },
             // reportMessageCustomList: [{ key: '1', value: 'test' }],
             listItemRenderProps: {
-              // MessageContent: MyMessageContent,
+              MessageContent: DemoMessageContent,
               // MessageView: MyMessageView,
             },
             // messageLayoutType: 'left',

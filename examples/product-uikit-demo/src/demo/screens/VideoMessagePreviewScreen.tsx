@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
+import { Platform } from 'react-native';
 
 import {
   ChatMessage,
@@ -56,7 +57,7 @@ export function VideoMessagePreviewScreen(props: Props) {
       <VideoMessagePreview
         msgId={msgId}
         localMsgId={localMsgId}
-        videoPreviewComponent={VideoPreview}
+        videoPreviewComponent={Platform.OS === 'ios' ? VideoPreview : undefined}
         onBack={() => {
           navi.goBack();
         }}

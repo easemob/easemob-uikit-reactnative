@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Image as RNImage, ImageSourcePropType } from 'react-native';
 
-import type { ImageProps } from './Image';
+import type { ImageProps } from './types';
 
 type ClassImageState = {
   _source: ImageSourcePropType;

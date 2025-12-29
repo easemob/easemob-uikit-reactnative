@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import type { IconNameType } from '../../assets';
-import { Image, type ImageProps } from './Image';
+import { Image } from './Image';
 import { getIconSource } from './Image.hooks';
-import type { IconResolutionType } from './types';
+import type { IconResolutionType, ImageProps } from './types';
 
 export const gFrameInterval = 330; // ms
 

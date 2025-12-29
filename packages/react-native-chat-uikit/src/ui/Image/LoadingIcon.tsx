@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Animated, Easing } from 'react-native';
 
 import type { IconNameType } from '../../assets';
-import type { ImageProps } from './Image';
 import { ClassImage } from './Image.class';
 import { getIconSource } from './Image.hooks';
+import type { ImageProps } from './types';
 
 export type LoadingIconResolutionType = '' | '2x' | '3x';
 export type LoadingIconProps = Omit<ImageProps, 'source' | 'failedSource'> & {
