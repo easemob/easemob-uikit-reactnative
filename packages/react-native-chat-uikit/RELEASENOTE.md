@@ -1,5 +1,10 @@
 # Release Note
 
+# 2.5.2
+
+- Fixed the callback issue in the image preview component
+- Optimized GIF image display and loading in the example project
+
 # 2.5.1
 
 - Fixed the issue where clicking the expand button in the input bar component fails to switch between keyboard and extension bar.

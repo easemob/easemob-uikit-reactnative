@@ -29,4 +29,5 @@ git tag -a callkit@1.0.0 -m"callkit@1.0.0"
 git tag -a room@1.0.0 -m"room@1.0.0"
 git push --tags
 git log --oneline uikit@2.4.1..uikit@2.4.2
+git log --abbrev=8 --pretty=format:"- %h %s" uikit@2.5.0..uikit@2.5.1
 ```

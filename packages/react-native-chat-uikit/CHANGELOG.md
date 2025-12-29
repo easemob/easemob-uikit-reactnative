@@ -1,5 +1,16 @@
 # Change Log
 
+## [2.5.2](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.5.1...uikit@2.5.2)(2025-12-29)
+
+## [2.5.1](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.5.0...uikit@2.5.1)(2025-12-10)
+
+- 92f1ae9c tag: uikit: 2.5.1
+- ed62f63b fix: aosl compilation and runtime issues
+- 62de1b5f fix: example: aosl
+- befcb85e chore: upgrade chatsdk to 1.12.0
+- e2ba5799 fix: uikit: input component and message list item component
+- 8266ebf5 chore: example: update version
+
 ## [2.5.0](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.4.8...uikit@2.5.0)(2025-11-11)
 
 - 12fb9cfa chore: uikit restore package for video
