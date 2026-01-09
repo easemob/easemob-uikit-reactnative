@@ -2,6 +2,10 @@
 
 ## [2.5.2](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.5.1...uikit@2.5.2)(2025-12-29)
 
+- e851f7f1 tag: uikit: 2.5.2
+- 0f77f2fe chore: update uikit and example for gif image
+- bab1b9f5 fix: example: fix image preview component callback crash
+
 ## [2.5.1](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.5.0...uikit@2.5.1)(2025-12-10)
 
 - 92f1ae9c tag: uikit: 2.5.1
