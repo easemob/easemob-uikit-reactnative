@@ -48,103 +48,48 @@ export function SlideModal(props: SlideModalProps) {
 
   if (propsRef.current) {
     propsRef.current.startShow = (onf?: () => void, timeout?: number) => {
+      const _onf = typeof onf === 'function' ? onf : undefined;
       setVisible(true);
       setTimeout(() => {
         if (timeout !== undefined) {
           startShow(() => {
             timeoutTask(timeout, () => {
-              onf?.();
+              _onf?.();
             });
           });
         } else {
           startShow(() => {
-            onf?.();
+            _onf?.();
           });
         }
       }, 16); // one frame's delay
-      // InteractionManager.runAfterInteractions(() => {
-      //   if (timeout !== undefined) {
-      //     startShow(() => {
-      //       timeoutTask(timeout, () => {
-      //         onf?.();
-      //       });
-      //     });
-      //   } else {
-      //     startShow(() => {
-      //       onf?.();
-      //     });
-      //   }
-      // });
+
       if (timeout !== undefined) {
         startShow(() => {
           timeoutTask(timeout, () => {
-            onf?.();
+            _onf?.();
           });
         });
       } else {
         startShow(() => {
-          onf?.();
+          _onf?.();
         });
       }
     };
     propsRef.current.startHide = (onf?: () => void, timeout?: number) => {
-      // 使用 InteractionManager 确保动画在主线程执行
-      // InteractionManager.runAfterInteractions(() => {
-      //   if (timeout !== undefined) {
-      //     startHide(() => {
-      //       // 确保在下一个渲染周期隐藏 Modal
-      //       setImmediate(() => {
-      //         setVisible(false);
-      //         timeoutTask(timeout, () => {
-      //           onf?.();
-      //           onFinished?.();
-      //         });
-      //       });
-      //     });
-      //   } else {
-      //     startHide(() => {
-      //       setImmediate(() => {
-      //         setVisible(false);
-      //         onf?.();
-      //         onFinished?.();
-      //       });
-      //     });
-      //   }
-      // });
-      // 先执行动画，不立即隐藏 Modal
-      // if (timeout !== undefined) {
-      //   startHide(() => {
-      //     // 动画完成后再隐藏 Modal
-      //     setTimeout(() => {
-      //       setVisible(false);
-      //       timeoutTask(timeout, () => {
-      //         onf?.();
-      //         onFinished?.();
-      //       });
-      //     }, 50); // 给一点缓冲时间
-      //   });
-      // } else {
-      //   startHide(() => {
-      //     // 动画完成后再隐藏 Modal
-      //     setTimeout(() => {
-      //       setVisible(false);
-      //       onf?.();
-      //       onFinished?.();
-      //     }, 50);
-      //   });
-      // }
+      const _onf = typeof onf === 'function' ? onf : undefined;
       if (timeout !== undefined) {
         startHide(() => {
           setVisible(false);
           timeoutTask(timeout, () => {
-            onf?.();
+            _onf?.();
             onFinished?.();
           });
         });
       } else {
         startHide(() => {
           setVisible(false);
-          onf?.();
+          _onf?.();
           onFinished?.();
         });
       }

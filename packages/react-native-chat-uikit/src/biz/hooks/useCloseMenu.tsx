@@ -13,8 +13,9 @@ export function useCloseMenu(props: UseCloseMenuProps) {
   const { menuRef } = props;
   const closeMenu = React.useCallback(
     (onFinished?: () => void) => {
+      const _onFinished = typeof onFinished === 'function' ? onFinished : undefined;
       menuRef.current?.startHide?.(() => {
-        onFinished?.();
+        _onFinished?.();
       });
     },
     [menuRef]
