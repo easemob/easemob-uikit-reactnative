@@ -2,14 +2,14 @@
 
 ## 2.0.0
 
-- 升级 react-native 版本 为 0.76
-- 全新构建 monorepo 项目
+- Upgrade react-native version to 0.76
+- Rebuild the monorepo project from scratch
 
 ## 1.0.0
 
-- 升级 react-native 版本 为 0.71
-- 全新构建 monorepo 项目
+- Upgrade react-native version to 0.71
+- Rebuild the monorepo project from scratch
 
 ## 0.0.1
 
-- 创建 monorepo 项目
+- Create the monorepo project
