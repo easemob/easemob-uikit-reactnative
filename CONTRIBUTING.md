@@ -4,6 +4,47 @@ Contributions are always welcome, no matter how large or small!
 
 We want this community to be friendly and respectful to each other. Please follow it in all your interactions with the project. Before contributing, please read the [code of conduct](./CODE_OF_CONDUCT.md).
 
+## Development environment
+
+### Core toolchain
+
+| Tool | Minimum | Recommended | Notes |
+| --- | --- | --- | --- |
+| **Node.js** | 20.19 | 22.x | `package.json` requires `>=20.19`; `.nvmrc` pins `v22` |
+| **Yarn** | 4.11.0 | 4.11.0 | Locked via `packageManager` field; uses `node-modules` linker |
+| **TypeScript** | ~5.9.2 | ~5.9.2 | Type checking & codegen |
+| **React** | 19.2.0 | 19.2.0 | Pinned for development |
+| **React Native** | 0.83.2 | 0.83.2 | Pinned for development |
+| **Expo SDK** | 55 | 55 | All example apps use Expo SDK 55 |
+
+### iOS build environment
+
+| Requirement | Value | Notes |
+| --- | --- | --- |
+| **macOS** | Sequoia 15.6+ | Minimum for Xcode 26 |
+| **Xcode** | 26+ (Swift 6.2) | `expo-modules-core@55` requires Swift 6.2 Isolated Conformances |
+| **CocoaPods** | latest | Managed by `expo prebuild` |
+| **iOS deployment target** | 16.0 | RN 0.83 `min_ios_version_supported` |
+
+> **Important**: Xcode 16.x **cannot** compile Expo SDK 55 iOS code.
+
+### Android build environment
+
+| Requirement | Value | Notes |
+| --- | --- | --- |
+| **JDK** | 17 | Required by AGP 8.12.0 + Gradle 9.0.0 |
+| **Gradle** | 9.0.0 | Locked in `gradle-wrapper.properties` |
+| **AGP** | 8.12.0 | Injected by React Native version catalog |
+| **Kotlin** | 2.1.20 | Injected by Expo/RN version catalog |
+| **compileSdk / targetSdk** | API 36 (Android 16) | |
+| **Build-Tools** | 36.0.0 | |
+| **NDK** | 27.1.12297006 | For Hermes / Fabric JNI compilation |
+| **CMake** | 3.22.1 | |
+| **C++ standard** | C++20 | Required by RN 0.83 |
+| **minSdkVersion** | 24 (Android 7.0) | |
+
+> **Note**: Expo SDK 55 **forces New Architecture** (`newArchEnabled=true`); the old architecture is no longer supported.
+
 ## Development workflow
 
 To get started with the project, run `yarn` in the root directory to install the required dependencies for each package:
