@@ -1,9 +1,9 @@
 import * as React from 'react';
-import type { TextInputKeyPressEventData } from 'react-native';
+import type { TextInputKeyPressEvent } from 'react-native';
 import {
   Keyboard,
   LayoutAnimation,
-  NativeSyntheticEvent,
+  // NativeSyntheticEvent,
   Platform,
   TextInput as RNTextInput,
 } from 'react-native';
@@ -20,7 +20,7 @@ import {
 import type { ChatTextMessageBody } from '../../rename.chat';
 import type { AlertRef } from '../../ui/Alert';
 import { timeoutTask } from '../../utils';
-import { BottomSheetNameMenu } from '../BottomSheetMenu';
+import { BottomSheetNameMenu } from '../BottomSheetMenu/BottomSheetNameMenu';
 import { FACE_ASSETS_UTF16 } from '../EmojiList';
 import { useMessageInputExtendActions } from '../hooks/useMessageInputExtendActions';
 import {
@@ -71,7 +71,9 @@ export function useMessageInput(
     onChangeValue: propsOnChangeValue,
   } = props;
   const { keyboardHeight, keyboardCurrentHeight } = useKeyboardHeight();
-  const inputRef = React.useRef<RNTextInput>({} as any);
+  const inputRef = React.useRef<React.ComponentRef<typeof RNTextInput>>(
+    {} as any
+  );
   const [_value, _setValue] = React.useState('');
   const [emojiHeight, _setEmojiHeight] = React.useState(0);
   const isClosedEmoji = React.useRef(true);
@@ -101,16 +103,16 @@ export function useMessageInput(
   const hasLayoutAnimation = React.useRef(false);
   const voiceBarRef = React.useRef<BottomVoiceBarRef>({} as any);
   const voiceBarStateRef = React.useRef<VoiceBarState>('idle');
-  const menuRef = React.useRef<ContextNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const extensionHeightRef = React.useRef<number>(
     MESSAGE_INPUT_BAR_EXTENSION_NAME_MENU_HEIGHT
   );
   const quoteMessageRef = React.useRef<MessageModel | undefined>(undefined);
   const [showQuote, setShowQuote] = React.useState(false);
   const editRef = React.useRef<MessageInputEditMessageRef>({} as any);
-  const msgModelRef = React.useRef<MessageModel>();
+  const msgModelRef = React.useRef<MessageModel>({} as any);
   const mentionListRef = React.useRef<{ id: string; name: string }[]>([]);
-  const alertRef = React.useRef<AlertRef>(null);
+  const alertRef = React.useRef<AlertRef>({} as any);
   const emojiListRef = React.useRef<EmojiIconItem[] | undefined>(
     emojiList?.map((v) => {
       return { name: v, state: 'common' } as EmojiIconItem;
@@ -580,8 +582,8 @@ export function useMessageInput(
     [propsOnEditMessageFinished]
   );
 
-  const onKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
-    if (e.nativeEvent.key === 'Enter') {
+  const onKeyPress = (e: TextInputKeyPressEvent) => {
+    if ((e.nativeEvent as any)?.key === 'Enter') {
       // timeoutTask(100, onClickedSend);
     }
   };

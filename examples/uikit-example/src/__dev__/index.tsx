@@ -11,7 +11,7 @@ import { default as Test } from './test_animated5_in_modal';
 //   UIManager.setLayoutAnimationEnabledExperimental(true);
 // }
 
-export function AppDev(): JSX.Element {
+export function AppDev(): React.ReactElement {
   const permissionsRef = React.useRef(false);
   const { getPermission } = usePermissions();
   React.useEffect(() => {

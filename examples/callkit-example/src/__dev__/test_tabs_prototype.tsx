@@ -7,7 +7,7 @@ type TabViewProps = {
   onLongPress?: (data?: any) => void;
   onPress?: (data?: any) => void;
 };
-export function TabView(props: TabViewProps): JSX.Element {
+export function TabView(props: TabViewProps): React.ReactElement {
   const { height, width } = useWindowDimensions();
   // console.log('test:', width, height);
   const horizontal = true;

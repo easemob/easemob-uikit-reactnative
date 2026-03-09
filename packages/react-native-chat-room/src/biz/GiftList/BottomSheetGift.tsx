@@ -29,7 +29,7 @@ export {
  *
  * @param props {@link BottomSheetGiftModalProps}
  * @param ref {@link BottomSheetGiftModalRef}
- * @returns JSX.Element
+ * @returns React.ReactElement
  *
  */
 export const BottomSheetGift = React.forwardRef<
@@ -49,7 +49,7 @@ export const BottomSheetGift = React.forwardRef<
  *
  * @param props {@link BottomSheetGiftSimuProps}
  * @param ref {@link BottomSheetGiftSimuRef}
- * @returns JSX.Element
+ * @returns React.ReactElement
  *
  * @test {@link example/src/__dev__/test_gift_list.tsx}
  *

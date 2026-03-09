@@ -22,7 +22,7 @@ try {
 
 export function SplashScreen({
   navigation,
-}: NativeStackScreenProps<RootParamsList, 'Splash'>): JSX.Element {
+}: NativeStackScreenProps<RootParamsList, 'Splash'>): React.ReactElement {
   console.log('test:SplashScreen:');
 
   const onDisconnected = React.useCallback(() => {

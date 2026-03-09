@@ -1,4 +1,3 @@
-/* eslint-disable simple-import-sort/imports */
 import React, { useRef, useCallback } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
 // (crypto-js will be required dynamically to avoid type issues)
@@ -139,7 +138,7 @@ export function Captcha(props: CaptchaProps) {
   );
 
   const bridgeInjection = `
-  
+
     // -------- android webview --------
     if (!window.android) window.android = {};
     window.android.encryptData = function (param) {
@@ -156,11 +155,11 @@ export function Captcha(props: CaptchaProps) {
           JSON.stringify({ type: 'verifyResult', verifyResult })
         );
     };
-  
+
     // -------- iOS webkit --------
     if (!window.webkit) window.webkit = {};
     if (!window.webkit.messageHandlers) window.webkit.messageHandlers = {};
-  
+
     ['encryptData', 'getVerifyResult'].forEach(function (name) {
       if (!window.webkit.messageHandlers[name]) {
         window.webkit.messageHandlers[name] = {

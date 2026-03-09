@@ -22,8 +22,8 @@ import { Services } from '../../services';
 import { ImagePreview2, ImagePreviewProps } from '../../ui/ImagePreview';
 import { LocalPath } from '../../utils';
 import { BackButton } from '../Back';
-import { BottomSheetNameMenu } from '../BottomSheetMenu';
-import { useCloseMenu } from '../hooks';
+import { BottomSheetNameMenu } from '../BottomSheetMenu/BottomSheetNameMenu';
+import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useImageSize } from '../hooks/useImageSize';
 import type {
   ContextNameMenuRef,
@@ -171,7 +171,7 @@ export function useImageMessagePreview(props: ImageMessagePreviewProps) {
   });
   const { width: winWidth, height: winHeight } = useWindowDimensions();
   const { getImageSize } = useImageSize({});
-  const menuRef = React.useRef<ContextNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const { closeMenu } = useCloseMenu({ menuRef });
 
   const showImage = React.useCallback(

@@ -8,13 +8,13 @@ import {
 
 import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
-import { useColors } from '../../hook';
+import { useColors } from '../../hook/useColors';
 import { ChatMessage, ChatMessageType } from '../../rename.chat';
 import { usePaletteContext } from '../../theme';
 import { HighText, SingleLineText } from '../../ui/Text';
 import { formatTsForConvList } from '../../utils';
 import { Avatar } from '../Avatar';
-import { useMessageSnapshot } from '../hooks';
+import { useMessageSnapshot } from '../hooks/useMessageSnapshot';
 import type { MessageSearchItemProps } from './types';
 
 export function MessageSearchItem(props: MessageSearchItemProps) {

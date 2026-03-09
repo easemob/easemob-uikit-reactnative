@@ -1,3 +1,5 @@
+import 'expo-dev-client';
+
 // import { AppRegistry } from 'react-native';
 import { registerRootComponent } from 'expo';
 

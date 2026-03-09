@@ -82,7 +82,9 @@ export function ContactInfoScreen(props: Props) {
         if (contact.value) {
           r.remark = contact.value?.remark;
         }
-      } catch (error) {}
+      } catch (event: any) {
+        console.warn('onRequestData:error:', event);
+      }
       return r;
     },
     [im, userId]
@@ -155,7 +157,6 @@ export function ContactInfoScreen(props: Props) {
   );
 
   React.useEffect(() => {
-    hash;
     if (from === 'EditInfo') {
       stop(() => {
         if (editType === 'contactRemark') {

@@ -53,7 +53,7 @@ export function LocalIcon({
   size = 24,
   style,
   containerStyle,
-}: LocalIconProps): JSX.Element {
+}: LocalIconProps): React.ReactElement {
   const sizeStyle = sizeStyles[size as SizeList] ?? {
     width: size,
     height: size,

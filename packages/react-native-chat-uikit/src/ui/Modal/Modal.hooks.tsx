@@ -42,14 +42,14 @@ export const useModalAnimation = (type: ModalAnimationType) => {
   );
 
   const startShow = React.useCallback(
-    (callback?: Animated.EndCallback) => {
+    (callback?: any) => {
       createAnimated(1).start(callback);
     },
     [createAnimated]
   );
 
   const startHide = React.useCallback(
-    (callback?: Animated.EndCallback) => {
+    (callback?: any) => {
       createAnimated(0).start(callback);
     },
     [createAnimated]
@@ -66,7 +66,7 @@ export const useModalAnimation = (type: ModalAnimationType) => {
 export const useModalPanResponder = (params: {
   type: ModalAnimationType;
   translateY: Animated.Value;
-  startShow: (callback?: Animated.EndCallback | undefined) => void;
+  startShow: (callback?: any | undefined) => void;
   onRequestModalClose: () => void;
   onMoveShouldSetPanResponder?:
     | ((
@@ -116,5 +116,5 @@ export const useModalPanResponder = (params: {
     })
   ).current;
   if (type === 'slide') return r;
-  else return { panHandlers: {} };
+  else return { panHandlers: {} as any } as PanResponderInstance;
 };

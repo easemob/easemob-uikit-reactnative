@@ -22,13 +22,11 @@ import { agoraAppId } from './const';
 
 export type AVViewProps = {};
 export function AVView(props: AVViewProps) {
-  const {} = props;
   useCallApiListener();
   return <></>;
 }
 
 export function useCallApi(props: AVViewProps) {
-  const {} = props;
   const im = useChatContext();
   const { getAbsoluteViewRef } = useAbsoluteViewContext();
   const { getSimpleToastRef } = useSimpleToastContext();

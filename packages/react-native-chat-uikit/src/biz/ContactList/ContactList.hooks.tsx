@@ -22,9 +22,9 @@ import { SingleLineText } from '../../ui/Text';
 import { getPinyin, SingletonObjects } from '../../utils';
 import { Badges } from '../Badges';
 import { g_index_alphabet_range, g_index_alphabet_range_array } from '../const';
-import { useMineInfoActions } from '../hooks';
 import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useContactListMoreActions } from '../hooks/useContactListMoreActions';
+import { useMineInfoActions } from '../hooks/useMineInfoActions';
 import { useSectionList } from '../List';
 import type { IndexModel, ListIndexProps } from '../ListIndex';
 import type { ContextNameMenuRef } from '../types';
@@ -99,8 +99,8 @@ export function useContactList(props: ContactListProps) {
   const { tr } = useI18nContext();
   const im = useChatContext();
   const { getColor } = useColors();
-  const menuRef = React.useRef<ContextNameMenuRef>(null);
-  const alertRef = React.useRef<AlertRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
+  const alertRef = React.useRef<AlertRef>({} as any);
   const { onShowMineInfoActions } = useMineInfoActions({ menuRef, alertRef });
   const { closeMenu } = useCloseMenu({ menuRef });
   const ListItemRenderRef = React.useRef<ContactListItemComponentType>(
@@ -174,7 +174,7 @@ export function useContactList(props: ContactListProps) {
     }
     let count = 0;
     sectionsRef.current.forEach((section) => {
-      section.data.forEach((item) => {
+      (section as any).data.forEach((item: ContactListItemProps) => {
         if (item.section.checked === true) {
           count++;
         }
@@ -189,7 +189,7 @@ export function useContactList(props: ContactListProps) {
     }
     let count = 0;
     sectionsRef.current.forEach((section) => {
-      section.data.forEach((item) => {
+      (section as any).data.forEach((item: ContactListItemProps) => {
         if (item.section.checked === true) {
           if (groupId) {
             const isExisted = im.getGroupMember({
@@ -328,7 +328,7 @@ export function useContactList(props: ContactListProps) {
     (sectionList: SectionListData<ContactListItemProps, IndexModel>[]) => {
       return sectionList
         .map((section) => {
-          return section.data.map((item) => {
+          return (section as any).data.map((item: ContactListItemProps) => {
             return item;
           });
         })
@@ -352,10 +352,12 @@ export function useContactList(props: ContactListProps) {
   const removeContactToUI = React.useCallback(
     (userId: string) => {
       sectionsRef.current = sectionsRef.current.filter((section) => {
-        section.data = section.data.filter((item) => {
-          return item.section.userId !== userId;
-        });
-        return section.data.length > 0;
+        (section as any).data = (section as any).data.filter(
+          (item: ContactListItemProps) => {
+            return item.section.userId !== userId;
+          }
+        );
+        return (section as any).data.length > 0;
       });
       refreshToUI(flatList(sectionsRef.current));
     },

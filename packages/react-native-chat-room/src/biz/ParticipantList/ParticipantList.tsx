@@ -94,7 +94,7 @@ export type ParticipantListProps = {
  * Member List Component.
  *
  * @param props {@link ParticipantListProps}
- * @returns JSX.Element
+ * @returns React.ReactElement
  */
 export function ParticipantList(props: ParticipantListProps) {
   const {
@@ -149,7 +149,8 @@ export function ParticipantList(props: ParticipantListProps) {
     requestUseScrollGesture,
   });
 
-  const _MemberItemComponent = MemberItemComponent ?? ParticipantListItemMemo;
+  const MemberItemComponentWrapper =
+    MemberItemComponent ?? ParticipantListItemMemo;
 
   if (propsRef?.current) {
     propsRef.current.initMenu = (memberMenuItems?: InitMenuItemsType[]) => {
@@ -197,7 +198,7 @@ export function ParticipantList(props: ParticipantListProps) {
           onRefresh={onRefresh}
           renderItem={(info: ListRenderItemInfo<ParticipantListItemProps>) => {
             const { item } = info;
-            return <_MemberItemComponent {...item} />;
+            return <MemberItemComponentWrapper {...item} />;
           }}
           keyExtractor={(item: ParticipantListItemProps) => {
             return item.id;

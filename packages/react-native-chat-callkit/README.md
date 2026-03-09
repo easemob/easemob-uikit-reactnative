@@ -1,45 +1,33 @@
-_English | [中文](./README.zh.md)_
+# react-native-chat-callkit
 
-# Introduction
-
-AgoraChatCallKit is an open-source audio and video UI library developed based on Agora's real-time communications and signaling services. With this library, you can implement audio and video calling functionalities with enhanced synchronization between multiple devices. In scenarios where a user ID is logged in to multiple devices, once the user deals with an incoming call that is ringing on one device, all the other devices stop ringing simultaneously.
-
-## Development environment requirements
-
-- MacOS 12 or higher
-- React-Native 0.71 or higher
-- NodeJs 20.18 or higher
-
-For iOS app:
-
-- Xcode 15 or higher and its related dependency tool.
-
-For the Android app:
-
-- Android Studio 2022 or higher and its related dependency tool.
+callkit
 
 ## Installation
 
 ```sh
 npm install react-native-chat-callkit
-# or
-yarn add react-native-chat-callkit
 ```
 
-## Dependencies
+## Usage
 
-```sh
-yarn add @react-native-community/blur \
-react-native-agora \
-react-native-chat-sdk \
-react-native-safe-area-context \
-react-native-screens 
+```js
+import { ChatCallkitView } from 'react-native-chat-callkit';
+
+// ...
+
+<ChatCallkitView color="tomato" />;
 ```
 
 ## Contributing
 
-See the [contributing guide](../../CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+- [Development workflow](CONTRIBUTING.md#development-workflow)
+- [Sending a pull request](CONTRIBUTING.md#sending-a-pull-request)
+- [Code of conduct](CODE_OF_CONDUCT.md)
 
 ## License
 
 MIT
+
+---
+
+Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)

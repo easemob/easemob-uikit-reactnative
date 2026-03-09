@@ -42,9 +42,14 @@ import { HighUrl, SingleLineText, Text } from '../../ui/Text';
 import { formatTsForConvDetail } from '../../utils';
 import { Avatar } from '../Avatar';
 import { gMaxVoiceDuration } from '../const';
-import { useMessageSnapshot, useUrlPreview } from '../hooks';
+import { useMessageSnapshot } from '../hooks/useMessageSnapshot';
+import { useUrlPreview } from '../hooks/useUrlPreview';
 import { gMessageAvatarSize, gTriangleWidth } from './const';
-import { MessageHistoryListItemMemo } from './MessageHistoryListItem';
+// NOTE: Do NOT use static import here to avoid circular dependency:
+// MessageListItem.tsx -> MessageHistoryListItem.tsx -> MessageListItem.tsx
+// This circular dependency can cause Hermes engine scope resolution issues,
+// leading to 'ReferenceError: Property MessageViewWrapper doesn\'t exist'.
+// Use lazy require() instead to break the cycle.
 import {
   getFileSize,
   getImageShowSize,
@@ -1053,7 +1058,7 @@ export function MessageBubble(props: MessageBubbleProps) {
     onClickedChecked,
   } = props;
   const checked = (model as MessageModel)?.checked;
-  const _MessageContent = propsMessageContent ?? MessageContent;
+  const _MessageContent = propsMessageContent ?? (MessageContent as any);
   const {
     layoutType,
     msg,
@@ -1061,7 +1066,7 @@ export function MessageBubble(props: MessageBubbleProps) {
     quoteMsg,
     thread: threadMsg,
   } = model;
-  const touchRef = React.useRef<View>(null);
+  const touchRef = React.useRef<React.ComponentRef<typeof View>>({} as any);
   const { releaseArea } = useConfigContext();
   const { paddingHorizontal, paddingVertical, hasBorderRadius } = React.useMemo(
     () => getMessageBubblePadding(msg),
@@ -2261,10 +2266,12 @@ export function MessageView(props: MessageViewProps) {
     ...others
   } = props;
   const checked = (model as MessageModel)?.checked;
-  const _MessageQuoteBubble = propsMessageQuoteBubble ?? MessageQuoteBubble;
-  const _MessageBubble = propsMessageBubble ?? MessageBubble;
-  const _MessageThreadBubble = propsMessageThreadBubble ?? MessageThreadBubble;
-  const _MessageReaction = propsMessageReaction ?? MessageReaction;
+  const MessageQuoteBubbleWrapper =
+    propsMessageQuoteBubble ?? MessageQuoteBubble;
+  const MessageBubbleWrapper = propsMessageBubble ?? MessageBubble;
+  const MessageThreadBubbleWrapper =
+    propsMessageThreadBubble ?? MessageThreadBubble;
+  const MessageReactionWrapper = propsMessageReaction ?? MessageReaction;
   const { layoutType, reactions, thread, isHighBackground } = model;
   const { enableThread, enableReaction, releaseArea } = useConfigContext();
   const state = getMessageState(model.msg);
@@ -2378,7 +2385,7 @@ export function MessageView(props: MessageViewProps) {
           />
         ) : null}
         {isQuote ? (
-          <_MessageQuoteBubble
+          <MessageQuoteBubbleWrapper
             hasAvatar={avatarIsVisible}
             hasTriangle={hasTriangle}
             onQuoteClicked={onQuoteClicked}
@@ -2400,7 +2407,7 @@ export function MessageView(props: MessageViewProps) {
               onAvatarClicked={onClickedAvatar}
             />
           ) : null}
-          <_MessageBubble
+          <MessageBubbleWrapper
             model={model}
             maxWidth={maxWidth}
             hasTriangle={hasTriangle}
@@ -2416,7 +2423,7 @@ export function MessageView(props: MessageViewProps) {
           ) : null}
         </View>
         {thread && enableThread === true ? (
-          <_MessageThreadBubble
+          <MessageThreadBubbleWrapper
             layoutType={layoutType}
             hasAvatar={avatarIsVisible}
             hasTriangle={hasTriangle}
@@ -2426,7 +2433,7 @@ export function MessageView(props: MessageViewProps) {
           />
         ) : null}
         {reactions && reactions?.length > 0 && enableReaction === true ? (
-          <_MessageReaction
+          <MessageReactionWrapper
             layoutType={layoutType}
             hasAvatar={avatarIsVisible}
             hasTriangle={hasTriangle}
@@ -2525,9 +2532,9 @@ export function MessageListItem(props: MessageListItemProps) {
     ...others
   } = props;
   const { modelType } = model;
-  const _MessageView = propsMessageView ?? MessageView;
-  const _SystemTipView = propsSystemTipView ?? SystemTipView;
-  const _TimeTipView = propsTimeTipView ?? TimeTipView;
+  const MessageViewWrapper = propsMessageView ?? MessageView;
+  const SystemTipViewWrapper = propsSystemTipView ?? SystemTipView;
+  const TimeTipViewWrapper = propsTimeTipView ?? TimeTipView;
   const checked = (model as MessageModel)?.checked;
 
   const _onChecked = React.useCallback(() => {
@@ -2550,7 +2557,7 @@ export function MessageListItem(props: MessageListItemProps) {
             checked={checked}
             onClicked={_onChecked}
           >
-            <_MessageView
+            <MessageViewWrapper
               isVisible={modelType === 'message' ? true : false}
               model={model as MessageModel}
               onClickedChecked={_onChecked}
@@ -2558,7 +2565,7 @@ export function MessageListItem(props: MessageListItemProps) {
             />
           </CheckView>
         ) : (
-          <_MessageView
+          <MessageViewWrapper
             isVisible={modelType === 'message' ? true : false}
             model={model as MessageModel}
             {...others}
@@ -2566,26 +2573,33 @@ export function MessageListItem(props: MessageListItemProps) {
         )
       ) : null}
       {modelType === 'system' ? (
-        <_SystemTipView
+        <SystemTipViewWrapper
           isVisible={modelType === 'system' ? true : false}
           model={model as SystemMessageModel}
         />
       ) : null}
       {modelType === 'time' ? (
-        <_TimeTipView
+        <TimeTipViewWrapper
           isVisible={modelType === 'time' ? true : false}
           model={model as TimeMessageModel}
         />
       ) : null}
-      {modelType === 'history' ? (
-        <MessageHistoryListItemMemo
-          model={model as MessageHistoryModel}
-          // containerStyle={{
-          //   borderTopWidth: 0.5,
-          //   borderTopColor: getColor('divider'),
-          // }}
-        />
-      ) : null}
+      {modelType === 'history'
+        ? (() => {
+            const {
+              MessageHistoryListItemMemo,
+            } = require('./MessageHistoryListItem');
+            return (
+              <MessageHistoryListItemMemo
+                model={model as MessageHistoryModel}
+                // containerStyle={{
+                //   borderTopWidth: 0.5,
+                //   borderTopColor: getColor('divider'),
+                // }}
+              />
+            );
+          })()
+        : null}
     </View>
   );
 }

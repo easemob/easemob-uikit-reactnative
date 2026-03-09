@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ListRenderItemInfo, Pressable, View } from 'react-native';
 
 import { MessageServiceListener, useChatContext } from '../../chat';
-import { useColors } from '../../hook';
+import { useColors } from '../../hook/useColors';
 import { useI18nContext } from '../../i18n';
 import type {
   ChatMessageThread,
@@ -13,7 +13,7 @@ import { FlatListFactory } from '../../ui/FlatList';
 import { Icon } from '../../ui/Image';
 import { SingleLineText } from '../../ui/Text';
 import { BackButton } from '../Back';
-import { useMessageSnapshot } from '../hooks';
+import { useMessageSnapshot } from '../hooks/useMessageSnapshot';
 import { useFlatList } from '../List';
 import {
   EmptyPlaceholder,

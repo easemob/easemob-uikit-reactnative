@@ -81,7 +81,7 @@ export function NewRequests(props: NewRequestsProps) {
               },
               iconName: 'person_add',
             }}
-            Title={TopNavigationBarTitle({ text: '' })}
+            Title={<TopNavigationBarTitle text={''} />}
           />
         )
       ) : null}

@@ -2,9 +2,10 @@ import * as React from 'react';
 import {
   GestureResponderEvent,
   LayoutChangeEvent,
-  NativeSyntheticEvent,
+  // NativeSyntheticEvent,
   StyleProp,
-  TextLayoutEventData,
+  TextLayoutEvent,
+  // TextLayoutEventData,
   TextStyle,
   ViewStyle,
 } from 'react-native';
@@ -46,9 +47,7 @@ export type IndentedTextBodyProps = {
   /**
    * Invoked on Text layout
    */
-  onTextLayout?:
-    | ((event: NativeSyntheticEvent<TextLayoutEventData>) => void)
-    | undefined;
+  onTextLayout?: ((event: TextLayoutEvent) => void) | undefined;
   /**
    * @see https://reactnative.dev/docs/text#style
    */

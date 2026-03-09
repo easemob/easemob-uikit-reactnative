@@ -11,7 +11,7 @@ import type { ImageProps } from './types';
 export function Image(props: ImageProps) {
   const { style, source, failedSource, onError, ...others } = props;
   const [_source, setSource] = React.useState(source);
-  const ref = React.useRef<RNImage>(undefined as any);
+  const ref = React.useRef<React.ComponentRef<typeof RNImage>>(null);
   if (source !== _source) {
     setSource(source);
   }

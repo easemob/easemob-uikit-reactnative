@@ -75,7 +75,7 @@ export type MessageInputProps = Omit<
  *
  * @param props {@link MessageInputProps}
  * @param ref {@link MessageInputRef}
- * @returns JSX.Element
+ * @returns React.ReactElement
  *
  * @example
  * ```tsx
@@ -139,7 +139,9 @@ export const MessageInput = React.forwardRef<
   const keyboardHeight = useKeyboardHeight();
 
   const [isStyle, _setIsStyle] = React.useState(true);
-  const inputRef = React.useRef<RNTextInput>({} as any);
+  const inputRef = React.useRef<React.ComponentRef<typeof RNTextInput>>(
+    {} as any
+  );
 
   const isClosedEmoji = React.useRef(true);
   const isClosedKeyboard = React.useRef(true);

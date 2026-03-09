@@ -216,7 +216,7 @@ export type ContainerProps = React.PropsWithChildren<{
         (props: {
           status: StatusType;
           style?: StyleProp<ViewStyle>;
-        }) => JSX.Element
+        }) => React.ReactElement
       >;
 
   /**

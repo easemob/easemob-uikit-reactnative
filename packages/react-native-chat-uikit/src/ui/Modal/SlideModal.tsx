@@ -44,7 +44,7 @@ export function SlideModal(props: SlideModalProps) {
     useModalAnimation(modalAnimationType);
   const [visible, setVisible] = React.useState(false);
 
-  const _Slide = Slide ?? DefaultSlide;
+  const SlideWrapper = Slide ?? DefaultSlide;
 
   if (propsRef.current) {
     propsRef.current.startShow = (onf?: () => void, timeout?: number) => {
@@ -257,7 +257,7 @@ export function SlideModal(props: SlideModalProps) {
           pointerEvents={'box-none'}
         >
           <SlideComponent
-            Slide={_Slide}
+            Slide={SlideWrapper}
             modalAnimationType={modalAnimationType}
             translateY={translateY}
             startShow={startShow}
@@ -346,12 +346,18 @@ export function SlideModal(props: SlideModalProps) {
 }
 
 const SlideComponent = (props: {
-  Slide: React.ComponentType<SlideProps> | ((props: SlideProps) => JSX.Element);
+  Slide:
+    | React.ComponentType<SlideProps>
+    | ((props: SlideProps) => React.ReactElement);
   enableSlideComponent: boolean;
   modalAnimationType: ModalAnimationType;
   translateY: Animated.Value;
-  startShow: (callback?: Animated.EndCallback | undefined) => void;
-  startHide: (callback?: Animated.EndCallback | undefined) => void;
+  startShow: (
+    callback?: Parameters<Animated.CompositeAnimation['start']>[0]
+  ) => void;
+  startHide: (
+    callback?: Parameters<Animated.CompositeAnimation['start']>[0]
+  ) => void;
   onRequestModalClose: () => void;
   onMoveShouldSetPanResponder:
     | ((

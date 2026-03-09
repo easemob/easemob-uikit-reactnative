@@ -121,7 +121,7 @@ export function Button(props: ButtonProps) {
   );
 }
 
-const ButtonContent = (props: ButtonProps): JSX.Element => {
+const ButtonContent = (props: ButtonProps): React.ReactElement => {
   const { contentType, text, icon, textStyle, iconStyle } = props;
   const buttonSize = useGetButtonSizeStyle(props);
   const buttonState = useGetButtonStateStyle(props);

@@ -34,7 +34,7 @@ export function useContactListMoreActions(
         {
           text: tr('add'),
           isPreferred: true,
-          onPress: (value) => {
+          onPress: (value?: string) => {
             alertRef.current?.close?.(() => {
               if (value) onAddContact(value);
             });

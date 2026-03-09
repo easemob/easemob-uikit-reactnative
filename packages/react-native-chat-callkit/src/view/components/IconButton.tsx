@@ -21,7 +21,7 @@ type IconButtonProps = {
   isLoading?: boolean;
 };
 
-export function IconButton(props: IconButtonProps): JSX.Element {
+export function IconButton(props: IconButtonProps): React.ReactNode {
   const {
     disabled,
     onPress,
@@ -85,7 +85,7 @@ const useLoopAnimated = (duration: number, useNativeDriver = true) => {
         useNativeDriver,
         easing: Easing.inOut(Easing.linear),
       }),
-      { resetBeforeIteration: true }
+      { resetBeforeIteration: true, iterations: Number.POSITIVE_INFINITY }
     ).start();
 
     return () => {

@@ -9,7 +9,7 @@ export type GiftIconProps = Omit<DefaultIconImageProps, 'localIcon'>;
  * Gift icon component. If the url is incorrect, does not exist, or a network error occurs
  *
  * @param props {@link DefaultIconImageProps}
- * @returns JSX.Element
+ * @returns React.ReactElement
  */
 export function GiftIcon(props: GiftIconProps) {
   return (

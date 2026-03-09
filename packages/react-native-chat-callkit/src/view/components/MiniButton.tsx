@@ -12,7 +12,7 @@ type MiniButtonProps = {
   size?: number;
 };
 
-export function MiniButton(props: MiniButtonProps): JSX.Element {
+export function MiniButton(props: MiniButtonProps): React.ReactNode {
   const { disabled, onPress, color, backgroundColor, iconName, size } = props;
   const clickTimeoutRef = React.useRef(true);
   const onPressInternal = (event: GestureResponderEvent) => {

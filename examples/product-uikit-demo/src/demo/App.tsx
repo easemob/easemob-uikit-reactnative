@@ -150,7 +150,7 @@ export function App() {
   } = useServerConfig();
 
   const { initParams } = useGeneralSetting();
-  const imRef = React.useRef<ChatService>();
+  const imRef = React.useRef<ChatService>(undefined);
   const { autoLoginAction } = useAutoLogin();
 
   const initParamsCallback = React.useCallback(async () => {

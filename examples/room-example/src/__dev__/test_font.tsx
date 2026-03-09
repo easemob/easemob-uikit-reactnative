@@ -10,7 +10,7 @@ import {
   useConfigContext,
 } from '../rename.room';
 
-export function MyFont(): JSX.Element {
+export function MyFont(): React.ReactElement {
   const { fontFamily } = useConfigContext();
   console.log('test:zuoyu:use:fontFamily:', fontFamily);
   return (

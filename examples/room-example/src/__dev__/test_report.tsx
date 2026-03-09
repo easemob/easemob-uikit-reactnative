@@ -89,7 +89,7 @@ export function TestReport() {
 /**
  * Verify absolute layout.
  */
-export function TestReport2(): JSX.Element {
+export function TestReport2(): React.ReactElement {
   const ref = React.useRef<BottomSheetParticipantListRef>({} as any);
   return (
     <View style={{ flex: 1, top: 100 }}>

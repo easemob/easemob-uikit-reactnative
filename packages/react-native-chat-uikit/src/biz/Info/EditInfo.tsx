@@ -31,7 +31,9 @@ export function EditInfo(props: EditInfoProps) {
     customNavigationBar,
   } = props;
   const {} = useI18nContext();
-  const inputRef = React.useRef<RNTextInput>(null);
+  const inputRef = React.useRef<React.ComponentRef<typeof RNTextInput>>(
+    {} as any
+  );
   const [value, setValue] = React.useState<string>(initialData);
   const [count, setCount] = React.useState<number>(initialData?.length ?? 0);
   const [disable, setDisable] = React.useState<boolean>(false);

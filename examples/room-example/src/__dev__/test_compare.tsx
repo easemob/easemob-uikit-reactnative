@@ -47,7 +47,7 @@ export function TestUseCompare() {
   );
 }
 
-export function TestUseCompare2(): JSX.Element {
+export function TestUseCompare2(): React.ReactElement {
   const [, setCount] = React.useState(0);
   const cb = React.useCallback(() => {
     setCount((pre) => pre + 1);
@@ -73,7 +73,7 @@ export function TestUseCompare2(): JSX.Element {
   );
 }
 
-export function TestUseCompare3(): JSX.Element {
+export function TestUseCompare3(): React.ReactElement {
   const [, setCount] = React.useState(0);
   const cb = () => {
     console.log('test:onPress');

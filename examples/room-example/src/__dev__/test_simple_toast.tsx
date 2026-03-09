@@ -12,7 +12,7 @@ import {
 
 let count = 1;
 
-export function TestSimpleComponent(): JSX.Element {
+export function TestSimpleComponent(): React.ReactElement {
   const propsRef = React.useRef<SimpleToastRef>({} as any);
   return (
     <View style={{ flex: 1, backgroundColor: 'green' }}>

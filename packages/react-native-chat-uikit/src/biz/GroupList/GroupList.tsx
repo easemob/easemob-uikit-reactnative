@@ -1,9 +1,9 @@
 import { ListRenderItemInfo, View } from 'react-native';
 
-import { useColors } from '../../hook';
+import { useColors } from '../../hook/useColors';
 import { Alert } from '../../ui/Alert';
 import { FlatListFactory } from '../../ui/FlatList';
-import { BottomSheetNameMenu } from '../BottomSheetMenu';
+import { BottomSheetNameMenu } from '../BottomSheetMenu/BottomSheetNameMenu';
 import {
   EmptyPlaceholder,
   ErrorPlaceholder,

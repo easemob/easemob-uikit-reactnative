@@ -13,7 +13,7 @@ import { PressableHighlight } from '../../ui/Pressable';
 import { ModelShadowView } from '../../ui/ShadowView';
 import { SingleLineText } from '../../ui/Text';
 import { TriangleView } from '../../ui/TriangleView';
-import { useMessageNameMenu } from '../hooks';
+import { useMessageNameMenu } from '../hooks/useMessageMenu';
 import { InitMenuItemsType, MessageLayoutType } from '../types';
 import { ContextNameMenuProps, ContextNameMenuRef } from '../types';
 import { MESSAGE_CONTEXT_NAME_MENU_MAX_WIDTH } from './MessageContextNameMenu.const';
@@ -143,7 +143,7 @@ export const MessageContextNameMenu = React.forwardRef<
         [noCoverageArea, onLayout]
       )}
     >
-      <ModelShadowView viewRef={viewRef}>
+      <ModelShadowView viewRef={viewRef as any}>
         {trianglePosition.spatialOrientation === 'down' ||
         trianglePosition.spatialOrientation === 'center-down' ? (
           <View
@@ -330,15 +330,14 @@ const ItemsRender = (props: ContextNameMenuProps) => {
                 </PressableHighlight>
               );
             })
-          : ([] as JSX.Element[])}
+          : ([] as React.ReactElement[])}
       </View>
     </View>
   );
 };
 
 function useMessageContextNameMenu(props: ContextNameMenuProps) {
-  const {} = props;
-  const viewRef = React.useRef<View>(null);
+  const viewRef = React.useRef<React.ComponentRef<typeof View>>(null);
   const screenWidth = React.useRef(Dimensions.get('window').width).current;
   const screenHeight = React.useRef(Dimensions.get('window').height).current;
   const [componentHeight, setComponentHeight] = React.useState<

@@ -6,7 +6,7 @@ export type ImageProps = Omit<RNImageProps, 'onLoad' | 'onError'> & {
   tintColor?: string;
 };
 
-export type ImageComponent = (props: ImageProps) => JSX.Element;
+export type ImageComponent = (props: ImageProps) => React.ReactElement;
 
 function getImageComponent(): ImageComponent {
   return require('./Image').default;

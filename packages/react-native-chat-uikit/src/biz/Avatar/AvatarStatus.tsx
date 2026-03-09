@@ -47,7 +47,7 @@ export type AvatarStatusProps = {
         (props: {
           status: StatusType;
           style?: StyleProp<ViewStyle>;
-        }) => JSX.Element
+        }) => React.ReactElement
       >;
 };
 export function AvatarStatus(props: AvatarStatusProps) {

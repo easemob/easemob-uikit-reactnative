@@ -17,7 +17,7 @@ export const useAddData = (params: {
 }) => {
   const { dataRef, setData, ref } = params;
   const preTaskTs = React.useRef(0);
-  const delayedScrolling = React.useRef<NodeJS.Timeout>();
+  const delayedScrolling = React.useRef<NodeJS.Timeout>(undefined);
   const width = gGiftEffectListWidth;
   const height = gItemHeight;
 

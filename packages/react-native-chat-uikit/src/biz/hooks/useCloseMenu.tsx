@@ -1,9 +1,11 @@
 import * as React from 'react';
 
-import type { ContextNameMenuRef } from '../types';
+import { MessageContextNameMenu } from '../MessageContextMenu/MessageContextNameMenu';
 
 export type UseCloseMenuProps = {
-  menuRef: React.RefObject<ContextNameMenuRef>;
+  menuRef: React.RefObject<React.ComponentRef<
+    typeof MessageContextNameMenu
+  > | null>;
 };
 
 /**

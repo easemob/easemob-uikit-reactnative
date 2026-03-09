@@ -81,7 +81,7 @@ export function useMineInfoActions(props: UseMineInfoActionsProps) {
                   },
                   {
                     text: tr('confirm'),
-                    onPress: (value) => {
+                    onPress: (value?: string) => {
                       if (value) {
                         alertRef.current?.close();
                         im.publishPresence({

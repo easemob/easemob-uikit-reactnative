@@ -53,15 +53,12 @@ yarn config set nodeLinker node-modules
 ## FAQ
 
 1. How to create a project with a specific version?
-
    1. `npx react-native@latest init --version 0.73.2 AwesomeProject`
 
 2. How to create an expo project with a specific `react-native` version?
-
    1. You cannot specify the version directly.
 
 3. How to create a library project with a specific version?
-
    1. You cannot specify the `react-native` version directly.
 
 4. How to Use UIKit in the Expo Framework

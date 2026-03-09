@@ -5,7 +5,7 @@ import {
   BottomSheetReactionDetailRef,
   MessageReactionModel,
 } from '../BottomSheetReactionDetail';
-import { MessageModel } from '../ConversationDetail';
+import type { MessageModel } from '../ConversationDetail';
 import { useDataPriority } from './useDataPriority';
 
 export type useMessageReactionListDetailProps = {

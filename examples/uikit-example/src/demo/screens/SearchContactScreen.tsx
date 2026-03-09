@@ -2,8 +2,8 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { DeviceEventEmitter } from 'react-native';
 
-import { ChatConversationType } from '../../rename.uikit';
 import {
+  ChatConversationType,
   ContactSearchModel,
   SearchContact,
   SearchType,

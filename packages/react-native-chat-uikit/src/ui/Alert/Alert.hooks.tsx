@@ -46,7 +46,9 @@ export function useAlert(props: AlertProps) {
           sizesType={'large'}
           radiusType={input}
           contentType={'only-text'}
-          onPress={() => v.onPress?.(value)}
+          onPress={() =>
+            (v.onPress as ((value?: string) => void) | undefined)?.(value)
+          }
           text={v.text}
           style={{
             height: 48,
@@ -66,7 +68,7 @@ export function useAlert(props: AlertProps) {
         const Button = v.isPreferred !== true ? BorderButton : CmnButton;
         return _getButton(Button, v, i);
       });
-      const ret = [] as JSX.Element[];
+      const ret = [] as React.ReactElement[];
       if (count < 3) {
         for (let index = 0; index < list.length; index++) {
           const element = list[index];

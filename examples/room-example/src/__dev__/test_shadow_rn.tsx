@@ -10,7 +10,7 @@ import {
   ThemeContextProvider,
 } from '../rename.room';
 
-export function TestShadow(): JSX.Element {
+export function TestShadow(): React.ReactElement {
   const getShadow = (): StyleProp<ViewStyle> => {
     return {
       shadowColor: 'red',

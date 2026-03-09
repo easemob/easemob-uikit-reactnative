@@ -173,8 +173,6 @@ export const useGetTheme = (params: {
 };
 
 export const useInitServices = (props: ContainerProps) => {
-  const {} = props;
-
   if (Services.cbs === undefined) {
     Services.createClipboardService({
       clipboard: Clipboard,

@@ -57,25 +57,25 @@ Initialize CallKit using the `GlobalContainer` component, which must wrap your a
 
 ### GlobalContainer Properties
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `option` | `CallOption` | Yes | Call configuration options |
-| `requestRTCToken` | `Function` | Yes | Callback to get RTC token |
-| `requestUserMap` | `Function` | Yes | Callback to get user ID mapping |
-| `requestCurrentUser` | `Function` | Yes | Callback to get current user info |
-| `requestUserInfo` | `Function` | No | Callback to get user info (optional) |
-| `requestInviteContent` | `Function` | No | Callback for custom invite content |
-| `enableLog` | `boolean` | No | Whether to enable logging |
-| `type` | `'easemob' \| 'agora'` | No | RTC token type, defaults to `agora` |
-| `logHandler` | `Function` | No | Log handler callback |
+| Property               | Type                   | Required | Description                          |
+| ---------------------- | ---------------------- | -------- | ------------------------------------ |
+| `option`               | `CallOption`           | Yes      | Call configuration options           |
+| `requestRTCToken`      | `Function`             | Yes      | Callback to get RTC token            |
+| `requestUserMap`       | `Function`             | Yes      | Callback to get user ID mapping      |
+| `requestCurrentUser`   | `Function`             | Yes      | Callback to get current user info    |
+| `requestUserInfo`      | `Function`             | No       | Callback to get user info (optional) |
+| `requestInviteContent` | `Function`             | No       | Callback for custom invite content   |
+| `enableLog`            | `boolean`              | No       | Whether to enable logging            |
+| `type`                 | `'easemob' \| 'agora'` | No       | RTC token type, defaults to `agora`  |
+| `logHandler`           | `Function`             | No       | Log handler callback                 |
 
 **CallOption Configuration:**
 
 ```typescript
 interface CallOption {
-  appKey: string;        // Easemob AppKey (required)
-  agoraAppId: string;    // Agora AppId (required)
-  callTimeout?: number;  // Call timeout in seconds, default 30
+  appKey: string; // Easemob AppKey (required)
+  agoraAppId: string; // Agora AppId (required)
+  callTimeout?: number; // Call timeout in seconds, default 30
   ringFilePath?: string; // Local ringtone file path
 }
 ```
@@ -93,15 +93,21 @@ function App() {
         agoraAppId: 'your-agora-app-id',
         callTimeout: 30,
       }}
-      requestRTCToken={({ channelId, userId, userChannelId, type, onResult }) => {
+      requestRTCToken={({
+        channelId,
+        userId,
+        userChannelId,
+        type,
+        onResult,
+      }) => {
         // Get RTC token from server
         fetch('your-server/rtc-token', {
           method: 'POST',
           body: JSON.stringify({ channelId, userId, userChannelId }),
         })
-          .then(res => res.json())
-          .then(data => onResult({ data: data.token }))
-          .catch(error => onResult({ error }));
+          .then((res) => res.json())
+          .then((data) => onResult({ data: data.token }))
+          .catch((error) => onResult({ error }));
       }}
       requestUserMap={({ channelId, userId, onResult }) => {
         // Get user mapping
@@ -109,9 +115,9 @@ function App() {
           method: 'POST',
           body: JSON.stringify({ channelId, userId }),
         })
-          .then(res => res.json())
-          .then(data => onResult({ data }))
-          .catch(error => onResult({ error }));
+          .then((res) => res.json())
+          .then((data) => onResult({ data }))
+          .catch((error) => onResult({ error }));
       }}
       requestCurrentUser={({ onResult }) => {
         // Return current user info
@@ -149,23 +155,23 @@ UI component for 1v1 audio/video calls.
 
 **Properties:**
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `inviteeId` | `string` | Yes | Invitee's user ID |
-| `inviteeName` | `string` | No | Invitee's display name |
-| `inviteeAvatar` | `string` | No | Invitee's avatar URL |
-| `callType` | `'audio' \| 'video'` | Yes | Call type |
-| `callState` | `CallState` | No | Call state |
-| `isInviter` | `boolean` | Yes | Whether current user is the inviter |
-| `currentId` | `string` | Yes | Current user ID |
-| `currentName` | `string` | No | Current user display name |
-| `currentAvatar` | `string` | No | Current user avatar URL |
-| `isMinimize` | `boolean` | No | Whether to display in minimized mode |
-| `onHangUp` | `Function` | No | Hang up callback |
-| `onCancel` | `Function` | No | Cancel callback |
-| `onRefuse` | `Function` | No | Refuse callback |
-| `onError` | `Function` | No | Error callback |
-| `onPeerJoined` | `Function` | No | Callback when peer joins the call |
+| Property        | Type                 | Required | Description                          |
+| --------------- | -------------------- | -------- | ------------------------------------ |
+| `inviteeId`     | `string`             | Yes      | Invitee's user ID                    |
+| `inviteeName`   | `string`             | No       | Invitee's display name               |
+| `inviteeAvatar` | `string`             | No       | Invitee's avatar URL                 |
+| `callType`      | `'audio' \| 'video'` | Yes      | Call type                            |
+| `callState`     | `CallState`          | No       | Call state                           |
+| `isInviter`     | `boolean`            | Yes      | Whether current user is the inviter  |
+| `currentId`     | `string`             | Yes      | Current user ID                      |
+| `currentName`   | `string`             | No       | Current user display name            |
+| `currentAvatar` | `string`             | No       | Current user avatar URL              |
+| `isMinimize`    | `boolean`            | No       | Whether to display in minimized mode |
+| `onHangUp`      | `Function`           | No       | Hang up callback                     |
+| `onCancel`      | `Function`           | No       | Cancel callback                      |
+| `onRefuse`      | `Function`           | No       | Refuse callback                      |
+| `onError`       | `Function`           | No       | Error callback                       |
+| `onPeerJoined`  | `Function`           | No       | Callback when peer joins the call    |
 
 **Example:**
 
@@ -199,26 +205,26 @@ UI component for multi-party audio/video calls.
 
 **Properties:**
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `inviteeIds` | `string[]` | Yes | List of invitee user IDs |
-| `invitees` | `CallUser[]` | No | List of invitee information |
-| `groupId` | `string` | No | Group ID |
-| `groupName` | `string` | No | Group name |
-| `groupAvatar` | `string` | No | Group avatar URL |
-| `callType` | `'audio' \| 'video'` | Yes | Call type |
-| `isInviter` | `boolean` | Yes | Whether current user is the inviter |
-| `currentId` | `string` | Yes | Current user ID |
-| `inviteeList` | `Object` | No | Custom invitee list component |
+| Property      | Type                 | Required | Description                         |
+| ------------- | -------------------- | -------- | ----------------------------------- |
+| `inviteeIds`  | `string[]`           | Yes      | List of invitee user IDs            |
+| `invitees`    | `CallUser[]`         | No       | List of invitee information         |
+| `groupId`     | `string`             | No       | Group ID                            |
+| `groupName`   | `string`             | No       | Group name                          |
+| `groupAvatar` | `string`             | No       | Group avatar URL                    |
+| `callType`    | `'audio' \| 'video'` | Yes      | Call type                           |
+| `isInviter`   | `boolean`            | Yes      | Whether current user is the inviter |
+| `currentId`   | `string`             | Yes      | Current user ID                     |
+| `inviteeList` | `Object`             | No       | Custom invitee list component       |
 
 **Invitee List Component Properties:**
 
 ```typescript
 interface InviteeListProps {
-  selectedIds: string[];     // Selected user IDs
-  maxCount: number;          // Max invite count (18 for video, 128 for audio)
-  onClose: (addedIds: string[], addeds?: CallUser[]) => void;  // Close callback
-  onCancel: () => void;      // Cancel callback
+  selectedIds: string[]; // Selected user IDs
+  maxCount: number; // Max invite count (18 for video, 128 for audio)
+  onClose: (addedIds: string[], addeds?: CallUser[]) => void; // Close callback
+  onCancel: () => void; // Cancel callback
 }
 ```
 
@@ -280,12 +286,12 @@ const listener: CallListener = {
     console.log('Call received from:', inviterId);
     // Show call interface
   },
-  
+
   // Call error
   onCallOccurError: ({ channelId, error }) => {
     console.error('Call error:', error);
   },
-  
+
   // Signaling message
   onSignallingMessage: (msg) => {
     console.log('Signaling message:', msg);
@@ -302,28 +308,28 @@ callManager.addListener(listener);
 ```typescript
 // Call Type
 enum CallType {
-  Audio1v1 = 0,      // One-on-one audio
-  Video1v1 = 1,      // One-on-one video
-  VideoMulti = 2,    // Multi-party video
-  AudioMulti = 3,    // Multi-party audio
+  Audio1v1 = 0, // One-on-one audio
+  Video1v1 = 1, // One-on-one video
+  VideoMulti = 2, // Multi-party video
+  AudioMulti = 3, // Multi-party audio
 }
 
 // Call State
 enum CallState {
-  Idle = 0,          // Idle
-  Connecting = 1,    // Connecting
-  Calling = 2,       // In call
+  Idle = 0, // Idle
+  Connecting = 1, // Connecting
+  Calling = 2, // In call
 }
 
 // End Reason
 enum CallEndReason {
-  HungUp = 0,            // Hung up
-  Cancel = 1,            // Cancelled
-  RemoteCancel = 2,      // Remote cancelled
-  RemoteRefuse = 3,      // Remote refused
-  RemoteBusy = 4,        // Remote busy
-  NoResponse = 5,        // No response
-  RemoteNoResponse = 6,  // Remote no response
+  HungUp = 0, // Hung up
+  Cancel = 1, // Cancelled
+  RemoteCancel = 2, // Remote cancelled
+  RemoteRefuse = 3, // Remote refused
+  RemoteBusy = 4, // Remote busy
+  NoResponse = 5, // No response
+  RemoteNoResponse = 6, // Remote no response
   HandleOnOtherDevice = 7, // Handled on other device
 }
 ```
@@ -331,7 +337,11 @@ enum CallEndReason {
 **Utility Functions:**
 
 ```typescript
-import { formatElapsed, timestamp, CALLKIT_VERSION } from 'react-native-chat-callkit';
+import {
+  formatElapsed,
+  timestamp,
+  CALLKIT_VERSION,
+} from 'react-native-chat-callkit';
 
 // Format call duration (seconds -> HH:MM:SS)
 const timeStr = formatElapsed(3661); // "01:01:01"

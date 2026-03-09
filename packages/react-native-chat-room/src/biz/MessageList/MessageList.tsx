@@ -201,7 +201,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
       };
     }, [reportMessage, reportProps, reportRef]);
 
-    const _MessageListItemComponent =
+    const MessageListItemComponentWrapper =
       MessageListItemComponent ?? MessageListItemMemo;
 
     if (visible === false) {
@@ -227,7 +227,7 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
             ref={listRef}
             data={data}
             renderItem={(info: ListRenderItemInfo<MessageListItemProps>) => {
-              return <_MessageListItemComponent {...info.item} />;
+              return <MessageListItemComponentWrapper {...info.item} />;
             }}
             // renderItem={RenderItemMemo}
             keyExtractor={(item: MessageListItemProps) => {

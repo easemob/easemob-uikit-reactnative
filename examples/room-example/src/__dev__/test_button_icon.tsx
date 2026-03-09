@@ -11,7 +11,7 @@ import {
   ThemeContextProvider,
 } from '../rename.room';
 
-export function IconButtonComponent(): JSX.Element {
+export function IconButtonComponent(): React.ReactElement {
   const [iconName, setIconName] = React.useState<IconNameType>('link');
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

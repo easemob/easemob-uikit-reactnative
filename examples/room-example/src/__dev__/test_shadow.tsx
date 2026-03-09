@@ -12,7 +12,7 @@ import {
 
 const gWidth = 70;
 
-export function TestShadow(): JSX.Element {
+export function TestShadow(): React.ReactElement {
   const { shadow } = useThemeContext();
   return (
     <View

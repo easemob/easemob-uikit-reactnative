@@ -2,8 +2,6 @@ import * as React from 'react';
 
 export type UseImageSizeProps = {};
 export function useImageSize(props: UseImageSizeProps) {
-  const {} = props;
-
   /**
    * Calculate the size of an image to fit within a container while maintaining aspect ratio (contain mode)
    * Similar to CSS object-fit: contain - image is scaled to fit within container, may have empty space

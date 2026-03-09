@@ -251,7 +251,7 @@ export class RestApi {
           (fileType ?? Platform.OS === 'android')
             ? `image/${getFileExtension(localAvatarFile)}`
             : `image/${getFileExtension(localAvatarFile)}`,
-      });
+      } as any);
       const response = await fetch(url, {
         method: 'POST',
         headers: {

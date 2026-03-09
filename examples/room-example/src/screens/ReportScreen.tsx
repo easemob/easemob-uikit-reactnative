@@ -12,7 +12,6 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ReportScreen(props: Props) {
-  const {} = props;
   const ref = React.useRef<SimulativeModalRef>({} as any);
   const testRef = React.useRef<View>({} as any);
   const [pageY, setPageY] = React.useState(Platform.OS === 'ios' ? 94 : 56);

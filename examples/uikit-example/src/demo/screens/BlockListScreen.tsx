@@ -8,7 +8,6 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function BlockListScreen(props: Props) {
-  const {} = props;
   const navi = useStackScreenRoute(props);
   return (
     <SafeAreaViewFragment>

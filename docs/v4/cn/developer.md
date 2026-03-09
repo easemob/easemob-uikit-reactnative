@@ -2,7 +2,7 @@
 
 # 项目贡献者
 
-[下载地址](https://github.com/AsteriskZuo/react-native-chat-library)
+[下载地址](https://github.com/easemob/easemob-reactnative)
 
 ## 分支介绍
 

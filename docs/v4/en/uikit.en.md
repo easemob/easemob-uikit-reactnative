@@ -195,7 +195,6 @@ The navigation bar component is a universal component with a layout that contain
 ```tsx
 type MyConversationListScreenProps = {};
 function MyConversationListScreen(props: MyConversationListScreenProps) {
-  const {} = props;
   const convRef = React.useRef<ConversationListRef>({} as any);
   const { tr } = useI18nContext();
 
@@ -240,7 +239,6 @@ The `ListItemRender` attribute is provided to modify the style and layout of lis
 ```tsx
 type MyConversationListScreenProps = {};
 function MyConversationListScreen(props: MyConversationListScreenProps) {
-  const {} = props;
   const convRef = React.useRef<ConversationListRef>({} as any);
 
   return (
@@ -275,7 +273,6 @@ Make the list items support swipe gestures. The `SlideListItem` component is pro
 ```tsx
 type MyConversationListScreenProps = {};
 function MyConversationListScreen(props: MyConversationListScreenProps) {
-  const {} = props;
   const convRef = React.useRef<ConversationListRef>({} as any);
 
   return (
@@ -339,7 +336,6 @@ For example: Add a custom menu item.
 ```tsx
 type MyConversationListScreenProps = {};
 function MyConversationListScreen(props: MyConversationListScreenProps) {
-  const {} = props;
   const convRef = React.useRef<ConversationListRef>({} as any);
 
   return (
@@ -673,7 +669,6 @@ export const MyMessageContextNameMenu = React.forwardRef<
   props: ContextNameMenuProps,
   ref?: React.ForwardedRef<ContextNameMenuRef>
 ) {
-  const {} = props;
   React.useImperativeHandle(ref, () => {
     return {
       startShow: () => {},
@@ -732,8 +727,6 @@ The navigation bar component is a universal component. On the contact list page,
 ```tsx
 export type MyContactListScreenProps = {};
 function MyContactListScreen(props: MyContactListScreenProps) {
-  const {} = props;
-
   return (
     <ContactList
       contactType={'contact-list'}
@@ -751,8 +744,6 @@ You can modify properties such as the style, layout, and color.
 ```tsx
 export type MyContactListScreenProps = {};
 function MyContactListScreen(props: MyContactListScreenProps) {
-  const {} = props;
-
   return (
     <ContactList
       contactType={'contact-list'}

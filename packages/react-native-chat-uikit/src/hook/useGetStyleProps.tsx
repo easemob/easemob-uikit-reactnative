@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type {
   ImageStyle,
-  RecursiveArray,
+  // RecursiveArray,
   StyleProp,
   ViewStyle,
 } from 'react-native';
@@ -174,7 +174,7 @@ export function useGetStyleProps() {
 }
 
 function _getPropValueFromStyleT<Style = ViewStyle>(
-  style: RecursiveArray<Style>,
+  style: Array<Style>,
   propKey: string
 ): any | undefined {
   let ret;
@@ -199,10 +199,7 @@ export function getPropValueFromStyleT<Style = ViewStyle>(
   let ret;
 
   if (Array.isArray(style)) {
-    ret = _getPropValueFromStyleT<Style>(
-      style as RecursiveArray<Style>,
-      propKey
-    );
+    ret = _getPropValueFromStyleT<Style>(style as Array<Style>, propKey);
   } else if (style && (style as any)[propKey] !== undefined) {
     ret = (style as any)[propKey];
   }

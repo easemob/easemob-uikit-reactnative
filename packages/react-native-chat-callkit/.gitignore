@@ -84,11 +84,5 @@ android/generated
 
 # React Native Nitro Modules
 nitrogen/
-
-# by AsteriskZuo@hotmaile.com
-*.tgz
-*.log
-
-# By AsteriskZuo
 rename.*.ts
 version.ts

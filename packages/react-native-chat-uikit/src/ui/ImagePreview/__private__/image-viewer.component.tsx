@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 
+import { uilog } from '../../../const';
 import styles from './image-viewer.style';
 import {
   IImageInfo,
@@ -230,7 +231,8 @@ export class ImageViewer extends React.Component<
           imageStatus.height = data.height;
           imageStatus.status = 'success';
           saveImageSize();
-        } catch (newError) {
+        } catch (e) {
+          uilog.warn('loadImage:error:', e);
           // Give up..
           imageStatus.status = 'fail';
           saveImageSize();
@@ -589,7 +591,7 @@ export class ImageViewer extends React.Component<
           return (
             <ImageZoom
               key={index}
-              ref={(el) => (this.imageRefs[index] = el)}
+              ref={(el: any) => (this.imageRefs[index] = el)}
               cropWidth={this.width}
               cropHeight={this.height}
               maxOverflow={this.props.maxOverflow}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { useColors } from '../../hook';
+import { useColors } from '../../hook/useColors';
 import { useI18nContext } from '../../i18n';
 import { usePaletteContext } from '../../theme';
 import { BottomSheetMenu, BottomSheetMenuRef } from './BottomSheetMenu';
@@ -169,7 +169,7 @@ function useGetListItems(onGetData?: () => any) {
             );
           }
         })
-        .filter((v) => v !== null) as JSX.Element[];
+        .filter((v) => v !== null) as React.ReactElement[];
 
       const data = [
         ...d,

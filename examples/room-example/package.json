@@ -1,107 +1,65 @@
 {
-  "name": "ChatRoomExample",
-  "version": "0.0.1",
-  "private": true,
+  "name": "room-example",
+  "main": "./index.js",
+  "version": "1.0.0",
   "scripts": {
     "android": "expo run:android",
     "ios": "expo run:ios",
     "start": "expo start --dev-client",
     "startr": "expo start --dev-client --clear",
-    "prepare": "yarn update:arch && yarn gen",
+    "prepare": "yarn expo:prebuild && yarn gen",
+    "expo:prebuild": "expo prebuild --clean --no-install",
     "update:arch": "node scripts/update-arch-config.js",
     "clean": "yarn clean:build",
     "clean:build": "del-cli ios/build ios/Pods android/build android/app/build android/app/.cxx",
-    "clean:node_modules": "del-cli node_modules",
     "gen": "yarn gen:env && yarn gen:rename",
     "gen:env": "node scripts/generate-env.js",
     "gen:rename": "node scripts/generate-rename.js",
-    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
-    "typecheck": "tsc --noEmit",
+    "lintcheck": "echo lint start && eslint \"src/**/*.{js,jsx,ts,tsx}\" && echo lint end",
+    "circular-dep-check": "madge --circular --extensions ts,tsx src",
+    "typecheck": "echo typecheck start && tsc --noEmit && echo typecheck end",
     "eas-build-pre-install": "sh ./scripts/eas-build-pre-install.sh",
-    "eas-build-post-install": "sh ./scripts/eas-build-post-install.sh",
-    "build:android": "react-native build-android --extra-params \"--no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a\"",
-    "build:ios": "react-native build-ios --scheme ChatRoomExample --mode Debug --extra-params \"-sdk iphonesimulator CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ GCC_OPTIMIZATION_LEVEL=0 GCC_PRECOMPILE_PREFIX_HEADER=YES ASSETCATALOG_COMPILER_OPTIMIZATION=time DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO\""
+    "eas-build-post-install": "sh ./scripts/eas-build-post-install.sh"
   },
   "dependencies": {
-    "@react-navigation/native": "^7.0.19",
+    "@expo/log-box": "~55.0.7",
+    "@expo/vector-icons": "^15.0.3",
+    "@react-navigation/bottom-tabs": "^7.4.0",
+    "@react-navigation/elements": "^2.6.3",
+    "@react-navigation/native": "^7.1.28",
     "@react-navigation/native-stack": "^7.3.3",
-    "expo": "~52.0.46",
-    "expo-dev-client": "~5.0.20",
-    "expo-doctor": "^1.12.8",
-    "expo-splash-screen": "~0.29.24",
-    "expo-status-bar": "~2.0.1",
-    "expo-updates": "~0.27.4",
-    "react": "18.3.1",
-    "react-native": "0.76.9",
+    "expo": "^55.0.0",
+    "expo-constants": "~55.0.7",
+    "expo-dev-client": "~55.0.10",
+    "expo-font": "~55.0.4",
+    "expo-haptics": "~55.0.8",
+    "expo-image": "~55.0.5",
+    "expo-linking": "~55.0.7",
+    "expo-router": "~55.0.0",
+    "expo-splash-screen": "~55.0.9",
+    "expo-status-bar": "~55.0.4",
+    "expo-symbols": "~55.0.4",
+    "expo-system-ui": "~55.0.9",
+    "expo-web-browser": "~55.0.9",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-native": "0.83.2",
+    "react-native-chat-room": "workspace:*",
     "react-native-chat-sdk": "^1.12.0",
-    "react-native-gesture-handler": "~2.20.2",
+    "react-native-gesture-handler": "^2.30.0",
     "react-native-linear-gradient": "^2.8.3",
-    "react-native-safe-area-context": "4.12.0",
-    "react-native-screens": "~4.4.0"
+    "react-native-reanimated": "4.2.1",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.23.0",
+    "react-native-web": "~0.21.0",
+    "react-native-worklets": "0.7.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.3",
-    "@babel/runtime": "^7.25.0",
-    "@react-native-community/cli": "15.0.1",
-    "@react-native-community/cli-platform-android": "15.0.1",
-    "@react-native-community/cli-platform-ios": "15.0.1",
-    "@react-native-community/eslint-config": "^3.2.0",
-    "@react-native/babel-preset": "0.76.9",
-    "@react-native/eslint-config": "0.76.9",
-    "@react-native/metro-config": "0.76.9",
-    "@react-native/typescript-config": "0.76.9",
-    "@types/react": "^18.2.44",
-    "del-cli": "^5.1.0",
-    "eas-cli": "^15.0.15",
-    "eslint": "^8.1.0",
-    "eslint-plugin-prettier": "^5.2.5",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "expo-doctor": "^1.12.8",
-    "prettier": "^3.5.3",
-    "react-native-builder-bob": "^0.36.0",
-    "typescript": "^5.2.2"
+    "@babel/core": "^7.27.4",
+    "@types/react": "~19.2.10",
+    "eslint": "^9.25.0",
+    "react-native-monorepo-config": "^0.3.3",
+    "typescript": "~5.9.2"
   },
-  "engines": {
-    "node": ">=18"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@react-native-community",
-      "prettier"
-    ],
-    "plugins": [
-      "simple-import-sort"
-    ],
-    "parserOptions": {
-      "requireConfigFile": false
-    },
-    "rules": {
-      "jest/*": 0,
-      "simple-import-sort/imports": "error",
-      "simple-import-sort/exports": "error",
-      "react-native/no-inline-styles": 0,
-      "@typescript-eslint/no-shadow": "off",
-      "prettier/prettier": [
-        "error",
-        {
-          "quoteProps": "consistent",
-          "singleQuote": true,
-          "tabWidth": 2,
-          "trailingComma": "es5",
-          "useTabs": false
-        }
-      ]
-    }
-  },
-  "eslintIgnore": [
-    "node_modules/",
-    "babel.config.js",
-    "index.js",
-    "jest.config.js",
-    "metro.config.js",
-    "react-native.config.js",
-    "scripts/"
-  ]
+  "private": true
 }

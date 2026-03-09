@@ -295,6 +295,7 @@ export function ChatroomScreen(props: Props) {
             keyboardVerticalOffset: Platform.OS === 'ios' ? pageY : 0,
             after: [
               <TouchableOpacity
+                key="ellipsis_vertical"
                 style={{
                   borderRadius: 38,
                   backgroundColor: getColor('bg2'),
@@ -315,6 +316,7 @@ export function ChatroomScreen(props: Props) {
                 />
               </TouchableOpacity>,
               <TouchableOpacity
+                key="gift_color"
                 style={{
                   borderRadius: 38,
                   backgroundColor: getColor('bg2'),

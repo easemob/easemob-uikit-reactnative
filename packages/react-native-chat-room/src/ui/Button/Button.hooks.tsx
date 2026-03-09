@@ -23,10 +23,10 @@ export const useGetButtonSizeStyle = (
   type RetType = ReturnType<typeof useGetButtonSizeStyle>;
 
   const trimming = (params: RetType) => {
-    const ret = params;
+    const ret = { ...params };
     switch (contentType) {
       case 'only-icon':
-        ret.button.paddingHorizontal = ret.button.paddingVertical;
+        (ret.button as any).paddingHorizontal = ret.button.paddingVertical;
         break;
       case 'icon-text':
       case 'only-text':

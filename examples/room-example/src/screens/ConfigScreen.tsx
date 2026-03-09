@@ -6,7 +6,6 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function ConfigScreen(props: Props) {
-  const {} = props;
   const [value, onValueChange] = React.useState(false);
   return (
     <View style={{ flex: 1 }}>

@@ -84,8 +84,7 @@ export type MessageManagerListener = {
 /**
  * Global message manager. Used when the component is not loaded and new messages are received and need to be processed.
  */
-export interface MessageCacheManager
-  extends CommonManager<MessageManagerListener> {
+export interface MessageCacheManager extends CommonManager<MessageManagerListener> {
   /**
    * Set current conversation.
    */

@@ -10,7 +10,7 @@ import { default as Test } from './test_app_server';
 //   UIManager.setLayoutAnimationEnabledExperimental(true);
 // }
 
-export function AppDev(): JSX.Element {
+export function AppDev(): React.ReactElement {
   return (
     <View style={{ flex: 1 }}>
       <Test />

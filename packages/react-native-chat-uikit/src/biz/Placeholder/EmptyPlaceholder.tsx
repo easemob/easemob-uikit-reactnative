@@ -5,7 +5,7 @@ import { Image } from '../../ui/Image';
 
 /**
  * Blank placeholder component.
- * @returns JSX.Element
+ * @returns React.ReactElement
  */
 export function EmptyPlaceholder() {
   const { getColor } = useColors();

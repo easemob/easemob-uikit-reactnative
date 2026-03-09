@@ -1,21 +1,13 @@
-const { room_package, room_dir } = require('./scripts/utils');
+const path = require('path');
 
 module.exports = {
   project: {
-    ios: {
-      automaticPodsInstallation: true,
-    },
+    ios: { automaticPodsInstallation: true },
   },
   dependencies: {
-    [room_package.name]: {
-      root: room_dir,
-      platforms: {
-        // Codegen script incorrectly fails without this
-        // So we explicitly specify the platforms with empty object
-        ios: {},
-        android: {},
-      },
+    'react-native-chat-room': {
+      root: path.join(__dirname, '../../packages/react-native-chat-room'),
+      platforms: { ios: {}, android: {} },
     },
-    ...require('expo-dev-client/dependencies'),
   },
 };

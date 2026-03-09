@@ -48,7 +48,7 @@ type DataType = {
   isSelected?: boolean;
   onChecked?: ((checked: boolean) => boolean) | undefined;
 };
-const FlatListRenderItem = (
+const renderItem = (
   info: ListRenderItemInfo<DataType>
 ): React.ReactElement | null => {
   const { item } = info;
@@ -134,12 +134,8 @@ const ContactListMemo = React.memo((props: ContactListProps) => {
   }, [init]);
   return (
     <>
-      <FlatList
-        data={_data}
-        extraData={_data}
-        renderItem={FlatListRenderItem}
-      />
-      {/* <_Call
+      <FlatList data={_data} extraData={_data} renderItem={renderItem} />
+      {/* <CallWrapper
         callType={callType}
         currentId={currentId}
         inviterId={inviterId}
@@ -149,6 +145,7 @@ const ContactListMemo = React.memo((props: ContactListProps) => {
     </>
   );
 });
+ContactListMemo.displayName = 'ContactListMemo';
 
 type LogType = {
   index: number;
@@ -188,7 +185,7 @@ type LogListRef = {
 type LogListProps = {
   propsRef?: React.RefObject<LogListRef>;
 };
-function LogList(props: LogListProps): JSX.Element {
+function LogList(props: LogListProps): React.ReactElement {
   console.log('test:LogList:p', props);
   const { propsRef } = props;
   const { call } = useCallkitSdkContext();
@@ -252,7 +249,7 @@ function LogList(props: LogListProps): JSX.Element {
 
 export default function HomeScreen({
   navigation,
-}: NativeStackScreenProps<RootParamsList, 'Home'>): JSX.Element {
+}: NativeStackScreenProps<RootParamsList, 'Home'>): React.ReactElement {
   console.log('test:HomeScreen:');
   const contactListRef = React.useRef<ContactListRef>({} as any);
   const { call } = useCallkitSdkContext();
@@ -268,14 +265,14 @@ export default function HomeScreen({
     setVisible(false);
   }, []);
 
-  const _Call = (props: {
+  const CallWrapper = (props: {
     callType: CallType;
     currentId: string;
     inviterId: string;
     visible: boolean;
     onRequestClose: () => void;
   }) => {
-    console.log('test:_Call:', props);
+    console.log('test:CallWrapper:', props);
     const { callType, currentId, inviterId, visible, onRequestClose } = props;
     const inviteeIds = [] as string[];
     const invitees = [] as CallUser[];
@@ -512,7 +509,7 @@ export default function HomeScreen({
         {list()}
         {log()}
       </View>
-      <_Call
+      <CallWrapper
         callType={callType}
         currentId={currentId}
         inviterId={inviterId}

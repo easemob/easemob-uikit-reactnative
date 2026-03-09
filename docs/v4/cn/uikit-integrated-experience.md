@@ -4,17 +4,7 @@
 
 ## 开发环境需求
 
-- MacOS 12 或以上版本
-- React-Native 0.71 或以上版本
-- NodeJs 20.18 或以上版本
-
-对于 iOS 平台
-
-- xcode 15 或以上版本
-
-对于 Android 平台
-
-- Android Studio 2022.3 或以上版本
+[参考env文档](./env.md)
 
 ## 创建项目
 
@@ -103,20 +93,20 @@ android:
  * @format
  */
 
-import * as React from "react";
-import { Pressable, SafeAreaView, Text, View } from "react-native";
+import * as React from 'react';
+import { Pressable, SafeAreaView, Text, View } from 'react-native';
 import {
   Container,
   ConversationDetail,
   TextInput,
   useChatContext,
-} from "react-native-chat-uikit";
+} from 'react-native-chat-uikit';
 
-const appKey = "<your app key>";
-const userId = "<current login id>";
-const userPassword = "<current login password or token>";
+const appKey = '<your app key>';
+const userId = '<current login id>';
+const userPassword = '<current login password or token>';
 const usePassword = true; // or false;
-const peerId = "<chat peer id>";
+const peerId = '<chat peer id>';
 
 function SendMessage() {
   const [page, setPage] = React.useState(0);
@@ -157,7 +147,7 @@ function SendMessage() {
               userToken: ps,
               usePassword: usePassword,
               result: (res) => {
-                console.log("login result", res);
+                console.log('login result', res);
                 if (res.isOk === true) {
                   setPage(1);
                 }
@@ -165,7 +155,7 @@ function SendMessage() {
             });
           }}
         >
-          <Text>{"Login"}</Text>
+          <Text>{'Login'}</Text>
         </Pressable>
         <Pressable
           onPress={() => {
@@ -174,7 +164,7 @@ function SendMessage() {
             });
           }}
         >
-          <Text>{"Logout"}</Text>
+          <Text>{'Logout'}</Text>
         </Pressable>
       </SafeAreaView>
     );
@@ -191,7 +181,7 @@ function SendMessage() {
               result: () => {},
             });
           }}
-          type={"chat"}
+          type={'chat'}
         />
       </SafeAreaView>
     );
@@ -200,7 +190,7 @@ function SendMessage() {
   }
 }
 
-export default function App(): React.JSX.Element {
+export default function App(): React.React.ReactElement {
   // 初始化 UIKit
   return (
     <Container options={{ appKey: appKey, autoLogin: false }}>
@@ -215,11 +205,11 @@ export default function App(): React.JSX.Element {
 通过 easemob [控制台](https://console.easemob.com/) 获取 appKey。在用户管理里面新建测试用户，获取用户 ID 和 token。
 
 ```tsx
-const appKey = "<your app key>";
-const userId = "<current login id>";
-const userPassword = "<current login password or token>";
+const appKey = '<your app key>';
+const userId = '<current login id>';
+const userPassword = '<current login password or token>';
 const usePassword = false; // or false;
-const peerId = "<chat peer id>";
+const peerId = '<chat peer id>';
 ```
 
 ## 编译运行

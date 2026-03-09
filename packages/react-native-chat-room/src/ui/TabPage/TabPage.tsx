@@ -6,10 +6,10 @@ import { gHeaderHeight, gIndicatorHeight } from './TabPage.const';
 import { useHeaderStartScrolling } from './TabPage.hooks';
 import {
   TabPageBody,
-  TabPageBodyProps,
+  type TabPageBodyProps,
   type TabPageBodyRef,
 } from './TabPageBody';
-import { TabPageBodyT, TabPageBodyTProps } from './TabPageBody.T';
+import { TabPageBodyT, type TabPageBodyTProps } from './TabPageBody.T';
 import {
   TabPageHeader,
   type TabPageHeaderProps,
@@ -57,7 +57,7 @@ export type TabPageProps = {
   onCurrentIndex?: (currentIndex: number) => void;
 };
 
-const _TabPage = (props: TabPageProps) => {
+export function TabPage(props: TabPageProps) {
   const {
     header,
     body,
@@ -87,9 +87,10 @@ const _TabPage = (props: TabPageProps) => {
   const headerRef = React.useRef<TabPageHeaderRef>({} as any);
   const bodyRef = React.useRef<TabPageBodyRef>({} as any);
   const count = headerTitles.length;
-  const _TabPageHeader = Header ?? TabPageHeader;
-  const _TabPageBody = (Body as typeof TabPageBody) ?? TabPageBody;
-  const _TabPageBodyT = (Body as typeof TabPageBodyT) ?? TabPageBodyT;
+  const TabPageHeaderWrapper = Header ?? TabPageHeader;
+  const TabPageBodyWrapper = (Body as typeof TabPageBody) ?? TabPageBody;
+  const TabPageBodyTWrapper = (Body as typeof TabPageBodyT) ?? TabPageBodyT;
+
   const width = initWidth ?? winWidth;
   const { headerStartScrolling } = useHeaderStartScrolling(
     count,
@@ -106,7 +107,7 @@ const _TabPage = (props: TabPageProps) => {
 
   const getHeader = () => {
     return (
-      <_TabPageHeader
+      <TabPageHeaderWrapper
         propRef={headerRef}
         onClicked={(index: number) => {
           bodyRef.current?.scrollTo(index);
@@ -132,7 +133,7 @@ const _TabPage = (props: TabPageProps) => {
       {headerPosition === 'up' ? getHeader() : null}
 
       {bodyType === 'TabPageBody' ? (
-        <_TabPageBody
+        <TabPageBodyWrapper
           propsRef={bodyRef}
           onMomentumScrollEnd={(e) => {
             // !!! On the android platform, when using `scrollTo`, this callback is not triggered. shit.
@@ -150,7 +151,7 @@ const _TabPage = (props: TabPageProps) => {
           {...BodyOtherProps}
         />
       ) : (
-        <_TabPageBodyT
+        <TabPageBodyTWrapper
           propsRef={bodyRef}
           onMomentumScrollEnd={(e) => {
             // !!! On the android platform, when using `scrollTo`, this callback is not triggered. shit.
@@ -174,9 +175,7 @@ const _TabPage = (props: TabPageProps) => {
       {headerPosition !== 'up' ? getHeader() : null}
     </View>
   );
-};
+}
 
-_TabPage.DefaultHeader = TabPageHeader;
-_TabPage.DefaultBody = TabPageBody;
-
-export const TabPage = _TabPage;
+TabPage.DefaultHeader = TabPageHeader;
+TabPage.DefaultBody = TabPageBody;

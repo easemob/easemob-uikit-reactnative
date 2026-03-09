@@ -61,8 +61,8 @@ export function useBlockList(props: BlockListProps) {
   const [blockCount, setBlockCount] = React.useState(0);
   const { tr } = useI18nContext();
   const im = useChatContext();
-  const menuRef = React.useRef<ContextNameMenuRef>(null);
-  const alertRef = React.useRef<AlertRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
+  const alertRef = React.useRef<AlertRef>({} as any);
   const { closeMenu } = useCloseMenu({ menuRef });
   const ListItemRenderRef = React.useRef<BlockListItemComponentType>(
     propsListItemRender ?? BlockListItemMemo
@@ -222,7 +222,7 @@ export function useBlockList(props: BlockListProps) {
     (sectionList: SectionListData<BlockListItemProps, IndexModel>[]) => {
       return sectionList
         .map((section) => {
-          return section.data.map((item) => {
+          return (section as any).data.map((item: BlockListItemProps) => {
             return item;
           });
         })
@@ -246,10 +246,12 @@ export function useBlockList(props: BlockListProps) {
   const removeBlockToUI = React.useCallback(
     (userId: string) => {
       sectionsRef.current = sectionsRef.current.filter((section) => {
-        section.data = section.data.filter((item) => {
-          return item.section.userId !== userId;
-        });
-        return section.data.length > 0;
+        (section as any).data = (section as any).data.filter(
+          (item: BlockListItemProps) => {
+            return item.section.userId !== userId;
+          }
+        );
+        return (section as any).data.length > 0;
       });
       refreshToUI(flatList(sectionsRef.current));
     },

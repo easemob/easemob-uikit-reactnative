@@ -45,7 +45,7 @@ type _ConversationDetailNavigationBarProps<LeftProps, RightProps> = {
 };
 export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
   props: _ConversationDetailNavigationBarProps<LeftProps, RightProps>
-): JSX.Element => {
+): React.ReactElement => {
   const {
     onBack,
     onClickedAvatar,
@@ -202,13 +202,13 @@ export const ConversationDetailNavigationBar = <LeftProps, RightProps>(
             alignItems: 'center',
             maxWidth: Platform.select({ ios: '70%', android: '80%' }),
           }}
-          onPress={selectMode === 'multi' ? null : onBack}
+          onPress={selectMode === 'multi' ? undefined : onBack}
         >
           {selectMode !== 'multi' ? <BackButton /> : null}
 
           {comType === 'chat' || comType === 'search' ? (
             <Pressable
-              onPress={selectMode === 'multi' ? null : onClickedAvatar}
+              onPress={selectMode === 'multi' ? undefined : onClickedAvatar}
             >
               {enablePresence === true && convType === 0 ? (
                 <StatusAvatar

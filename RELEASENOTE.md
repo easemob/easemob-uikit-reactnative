@@ -1,5 +1,10 @@
 # Release Note
 
+## 3.0.0
+
+- Upgrade react-native version to 0.83
+- Rebuild the monorepo project from scratch
+
 ## 2.0.0
 
 - Upgrade react-native version to 0.76

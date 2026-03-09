@@ -5,7 +5,6 @@ import type { ChatMessage } from '../../rename.chat';
 
 export type useDataPriorityProps = {};
 export function useDataPriority(props: useDataPriorityProps) {
-  const {} = props;
   const im = useChatContext();
   const getContactInfo = React.useCallback(
     (id: string): DataModel => {

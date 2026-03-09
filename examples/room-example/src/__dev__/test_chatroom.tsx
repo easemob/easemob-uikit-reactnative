@@ -27,6 +27,7 @@ export function ChatroomFC() {
         props: {
           after: [
             <View
+              key="ellipsis_vertical"
               style={{
                 borderRadius: 38,
                 backgroundColor:
@@ -56,6 +57,7 @@ export function ChatroomFC() {
               />
             </View>,
             <View
+              key="gift_color"
               style={{
                 borderRadius: 38,
                 backgroundColor:

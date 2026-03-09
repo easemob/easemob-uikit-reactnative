@@ -20,76 +20,74 @@ export type TextInputProps = RNTextInputProps & {
 /**
  * Mainly solves the multi-line problem of the native `RNTextInput` android platform.
  */
-export const TextInput = React.forwardRef<RNTextInput, TextInputProps>(
-  function (
-    props: React.PropsWithChildren<TextInputProps>,
-    ref?: React.ForwardedRef<RNTextInput>
-  ) {
-    const {
-      unitHeight,
-      multiline,
-      numberOfLines,
-      style,
-      onContentSizeChange,
-      containerStyle,
-      ...others
-    } = props;
+export const TextInput = React.forwardRef<
+  React.ComponentRef<typeof RNTextInput>,
+  TextInputProps
+>(function (
+  props: React.PropsWithChildren<TextInputProps>,
+  ref?: React.ForwardedRef<React.ComponentRef<typeof RNTextInput>>
+) {
+  const {
+    unitHeight,
+    multiline,
+    numberOfLines,
+    style,
+    onContentSizeChange,
+    containerStyle,
+    ...others
+  } = props;
 
-    const getMaxHeight = () => {
-      if (multiline === true && numberOfLines && unitHeight) {
-        return numberOfLines * unitHeight;
+  const getMaxHeight = () => {
+    if (multiline === true && numberOfLines && unitHeight) {
+      return numberOfLines * unitHeight;
+    }
+    return undefined;
+  };
+  const maxHeightRef = React.useRef<number | undefined>(getMaxHeight());
+  let [maxHeight, setMaxHeight] = React.useState<number | undefined>(
+    maxHeightRef.current
+  );
+
+  const getStyle = (): StyleProp<ViewStyle> => {
+    const s = containerStyle as any;
+    const max = s?.maxHeight ?? maxHeight;
+    const min = s?.minHeight ?? unitHeight;
+    if (max || min) {
+      if (Platform.OS === 'ios') {
+        return {
+          maxHeight: max,
+          minHeight: min,
+        };
+      } else {
+        return {
+          maxHeight: max,
+          minHeight: min,
+          flex: 1,
+        };
       }
-      return undefined;
-    };
-    const maxHeightRef = React.useRef<number | undefined>(getMaxHeight());
-    let [maxHeight, setMaxHeight] = React.useState<number | undefined>(
-      maxHeightRef.current
-    );
+    }
+    return undefined;
+  };
 
-    const getStyle = (): StyleProp<TextStyle> => {
-      const s = containerStyle as any;
-      const max = s?.maxHeight ?? maxHeight;
-      const min = s?.minHeight ?? unitHeight;
-      if (max || min) {
-        if (Platform.OS === 'ios') {
-          return {
-            maxHeight: max,
-            minHeight: min,
-          };
-        } else {
-          return {
-            maxHeight: max,
-            minHeight: min,
-            flex: 1,
-          };
-        }
-      }
-      return undefined;
-    };
-
-    return (
-      <View style={[containerStyle, getStyle()]}>
-        <RNTextInput
-          ref={ref}
-          multiline={multiline}
-          numberOfLines={numberOfLines}
-          style={style}
-          onContentSizeChange={(e) => {
-            onContentSizeChange?.(e);
-            if (Platform.OS !== 'ios') {
-              if (maxHeightRef.current) {
-                setMaxHeight(
-                  Math.min(
-                    e.nativeEvent.contentSize.height,
-                    maxHeightRef.current
-                  )
-                );
-              }
+  return (
+    <View style={[containerStyle, getStyle()]}>
+      <RNTextInput
+        ref={ref}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
+        style={style}
+        onContentSizeChange={(e) => {
+          onContentSizeChange?.(e);
+          if (Platform.OS !== 'ios') {
+            if (maxHeightRef.current) {
+              setMaxHeight(
+                Math.min(e.nativeEvent.contentSize.height, maxHeightRef.current)
+              );
             }
-          }}
-          {...others}
-        />
-      </View>
-    );
-  }
-);
+          }
+        }}
+        {...others}
+      />
+    </View>
+  );
+});

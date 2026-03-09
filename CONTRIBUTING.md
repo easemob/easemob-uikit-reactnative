@@ -12,7 +12,7 @@ To get started with the project, run `yarn` in the root directory to install the
 yarn
 ```
 
-Initialization repo:
+Then initialize all packages (build outputs, codegen, etc.):
 
 ```sh
 yarn prepare
@@ -51,15 +51,27 @@ yarn release
 
 ### Scripts
 
-The `package.json` file contains various scripts for common tasks:
+The root `package.json` file contains various scripts for common tasks:
 
-- `yarn bootstrap`: setup project by installing all dependencies and pods.
-- `yarn typescript`: type-check files with TypeScript.
-- `yarn lint`: lint files with ESLint.
-- `yarn test`: run unit tests with Jest.
-- `yarn example start`: start the Metro server for the example app.
-- `yarn example android`: run the example app on Android.
-- `yarn example ios`: run the example app on iOS.
+- `yarn prepare`: build all packages and run codegen across the monorepo.
+- `yarn typecheck`: type-check all packages and examples with TypeScript.
+- `yarn lintcheck`: lint all packages and examples with ESLint.
+- `yarn format`: format all files with Prettier.
+- `yarn formatcheck`: check formatting without writing changes.
+- `yarn circular-dep-check`: detect circular dependencies across all packages.
+- `yarn clean`: remove build artifacts from all packages and examples.
+
+Workspace shortcuts let you run scripts in a specific package or example directly, e.g.:
+
+- `yarn uikit <script>`: run a script in `react-native-chat-uikit`.
+- `yarn callkit <script>`: run a script in `react-native-chat-callkit`.
+- `yarn room <script>`: run a script in `react-native-chat-room`.
+- `yarn uikit-example start`: start the Metro / Expo dev server for `uikit-example`.
+- `yarn uikit-example android`: run `uikit-example` on Android.
+- `yarn uikit-example ios`: run `uikit-example` on iOS.
+- `yarn product-uikit-demo start`: start the dev server for `product-uikit-demo`.
+- `yarn room-example start`: start the dev server for `room-example`.
+- `yarn callkit-example start`: start the dev server for `callkit-example`.
 
 ### Sending a pull request
 

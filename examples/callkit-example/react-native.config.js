@@ -1,21 +1,13 @@
-const { callkit_dir, callkit_package } = require('./scripts/utils');
+const path = require('path');
 
 module.exports = {
   project: {
-    ios: {
-      automaticPodsInstallation: true,
-    },
+    ios: { automaticPodsInstallation: true },
   },
   dependencies: {
-    [callkit_package.name]: {
-      root: callkit_dir,
-      platforms: {
-        // Codegen script incorrectly fails without this
-        // So we explicitly specify the platforms with empty object
-        ios: {},
-        android: {},
-      },
+    'react-native-chat-callkit': {
+      root: path.join(__dirname, '../../packages/react-native-chat-callkit'),
+      platforms: { ios: {}, android: {} },
     },
-    ...require('expo-dev-client/dependencies'),
   },
 };

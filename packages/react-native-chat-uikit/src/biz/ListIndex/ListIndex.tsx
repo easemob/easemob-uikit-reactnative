@@ -23,7 +23,7 @@ export const ListIndex = (props: ListIndexProps) => {
     fontContainerStyle,
     isVisibleLetter = false,
   } = props;
-  const ref = React.useRef<View>(null);
+  const ref = React.useRef<React.ComponentRef<typeof View>>(null);
   const offsetRef = React.useRef(0);
   const maxIndex = indexTitles.length - 1;
   const [currentIndex, setCurrentIndex] = React.useState<number | undefined>();

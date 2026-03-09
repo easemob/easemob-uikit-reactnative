@@ -14,7 +14,7 @@ import { useChatContext } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { uilog } from '../../const';
 import { ErrorCode, UIKitError } from '../../error';
-import { useColors } from '../../hook';
+import { useColors } from '../../hook/useColors';
 import {
   ChatDownloadStatus,
   ChatImageMessageBody,
@@ -36,8 +36,8 @@ import {
   uuid,
 } from '../../utils';
 import { BackButton } from '../Back';
-import { BottomSheetNameMenu } from '../BottomSheetMenu';
-import { useCloseMenu } from '../hooks';
+import { BottomSheetNameMenu } from '../BottomSheetMenu/BottomSheetNameMenu';
+import { useCloseMenu } from '../hooks/useCloseMenu';
 import { useImageSize } from '../hooks/useImageSize';
 import type { ContextNameMenuRef, PropsWithBack } from '../types';
 import { getImageSizeFromUrl } from './MessageListItem.hooks';
@@ -136,7 +136,7 @@ export function VideoMessagePreview<
     showBottomSheet,
   } = useVideoMessagePreview<TVideoProps, TVideoRef>(props);
 
-  const _VideoPreview = videoPreviewComponent || VideoPreview;
+  const VideoPreviewWrapper = videoPreviewComponent || VideoPreview;
   // const u =
   //   '/var/mobile/Containers/Data/Application/F4EF9F0C-7EAB-44BE-8109-B98E5C8FFD9A/Library/Application Support/HyphenateSDK/appdata/zuoyu/zd2/4c847d40-b526-11ee-94cd-1b34468849ce?em-redirect=true&share-secret=TITLYLUmEe6-5M0HikC84neFGaGOFglbHbtYyO6mFDW8pnhN.mov'; // error
   // const u2 =
@@ -183,7 +183,7 @@ export function VideoMessagePreview<
           alignItems: 'center',
         }}
       >
-        <_VideoPreview ref={videoRef} {...finalVideoProps} />
+        <VideoPreviewWrapper ref={videoRef} {...finalVideoProps} />
         {showLoading ? (
           <View
             style={[
@@ -255,7 +255,7 @@ export function useVideoMessagePreview<
   );
   const [pause, setPause] = React.useState(false);
   const { getImageSizeCover } = useImageSize({});
-  const menuRef = React.useRef<ContextNameMenuRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const { closeMenu } = useCloseMenu({ menuRef });
 
   const genThumb = React.useCallback(

@@ -10,7 +10,7 @@ import {
   ThemeContextProvider,
 } from '../rename.room';
 
-export function TextComponent(): JSX.Element {
+export function TextComponent(): React.ReactElement {
   return (
     <View
       style={{
@@ -36,7 +36,7 @@ export function TextComponent(): JSX.Element {
   );
 }
 
-export function TextComponent2(): JSX.Element {
+export function TextComponent2(): React.ReactElement {
   return (
     <View
       style={{

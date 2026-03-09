@@ -83,7 +83,7 @@ const Root = createNativeStackNavigator<RootParamsList>();
 
 // SplashScreen?.preventAutoHideAsync?.();
 
-export function _App() {
+export function AppInternal() {
   const {
     initialRouteNameRef,
     paletteRef,
@@ -144,7 +144,7 @@ export function _App() {
   } = useServerConfig();
 
   const { initParams } = useGeneralSetting();
-  const imRef = React.useRef<ChatService>();
+  const imRef = React.useRef<ChatService>(undefined);
   const { autoLoginAction } = useAutoLogin();
 
   const initParamsCallback = React.useCallback(async () => {
@@ -839,7 +839,7 @@ export function TestListener() {
 export function App() {
   const [isReady, setReady] = React.useState(false);
   if (isReady) {
-    return <_App />;
+    return <AppInternal />;
   } else {
     return (
       <InitScreen

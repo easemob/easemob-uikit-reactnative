@@ -10,7 +10,12 @@ import { SingleLineText } from '../../ui/Text';
 import { gTabBarHeaderHeight } from './TabPage.const';
 
 export type TabPageTabBarHeaderProps = TabPageHeaderProps & {
-  StateViews?: (React.FC | React.ReactElement | null | undefined)[];
+  StateViews?: (
+    | React.ComponentType<any>
+    | React.ReactElement<any>
+    | null
+    | undefined
+  )[];
 };
 
 /**

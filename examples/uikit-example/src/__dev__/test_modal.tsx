@@ -53,7 +53,7 @@ export const MySlideModal = (props: MySlideModalProps) => {
   );
 };
 
-export function SlideModalComponent(): JSX.Element {
+export function SlideModalComponent(): React.ReactElement {
   const { width } = useWindowDimensions();
   const modalRef = React.useRef<MySlideModalRef>({} as any);
   return (
@@ -70,7 +70,7 @@ export function SlideModalComponent(): JSX.Element {
   );
 }
 
-export function AlertComponent(): JSX.Element {
+export function AlertComponent(): React.ReactElement {
   const { width } = useWindowDimensions();
   const modalRef = React.useRef<SlideModalRef>({} as any);
   return (

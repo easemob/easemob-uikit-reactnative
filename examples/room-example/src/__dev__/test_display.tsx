@@ -43,7 +43,7 @@ export function DisplayComponent2({ style }: { style?: StyleProp<ViewStyle> }) {
   );
 }
 
-export function TestDisplay(): JSX.Element {
+export function TestDisplay(): React.ReactElement {
   const [display, setDisplay] = React.useState(true);
   return (
     <View>

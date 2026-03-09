@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  DefaultSectionT,
+  // DefaultSectionT,
   SectionList as RNSectionList,
   SectionListProps as RNSectionListProps,
   View,
@@ -57,7 +57,7 @@ export const _SectionList = <ItemT, SectionT>(
  */
 export function SectionListFactory<
   ItemT = any,
-  SectionT extends DefaultSectionT = DefaultSectionT,
+  SectionT extends Record<string, any> = Record<string, any>,
 >() {
   return React.forwardRef<
     SectionListRef<ItemT, SectionT>,
@@ -67,5 +67,5 @@ export function SectionListFactory<
 
 export type SectionListFactoryReturn<
   ItemT,
-  SectionT extends DefaultSectionT = DefaultSectionT,
+  SectionT extends Record<string, any> = Record<string, any>,
 > = ReturnType<typeof SectionListFactory<ItemT, SectionT>>;

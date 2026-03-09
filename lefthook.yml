@@ -46,19 +46,25 @@ pre-commit:
     lint:
       files: git diff --name-only --staged
       glob: '*.{js,ts,jsx,tsx}'
-      run: yarn eslint {files}
+      run: yarn lintcheck
     types:
       files: git diff --name-only --staged
       glob: '*.{js,ts,jsx,tsx}'
-      run: yarn tsc --noEmit
+      run: yarn typecheck
+    gitleaks:
+      run: gitleaks detect -c '.gitleaksconfig.toml' -s . -r gitleaks.log
+    circular-dep-check:
+      files: git diff --name-only --staged
+      glob: '*.{js,ts,jsx,tsx}'
+      run: yarn circular-dep-check
 
 commit-msg:
   parallel: true
   commands:
     commitlint:
       run: yarn commitlint --edit
-post-commit:
-  parallel: true
-  commands:
-    gitleaks:
-      run: gitleaks detect -c '.gitleaksconfig.toml' -s . -r gitleaks.log
+# post-commit:
+#   parallel: true
+#   commands:
+#     gitleaks:
+#       run: gitleaks detect -c '.gitleaksconfig.toml' -s . -r gitleaks.log

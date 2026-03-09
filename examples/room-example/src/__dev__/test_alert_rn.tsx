@@ -8,7 +8,7 @@ import {
   createPresetPalette,
 } from '../rename.room';
 
-export function TestAlertComponent(): JSX.Element {
+export function TestAlertComponent(): React.ReactElement {
   return (
     <View style={{ flex: 1, backgroundColor: 'green' }}>
       <View

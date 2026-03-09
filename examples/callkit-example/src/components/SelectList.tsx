@@ -49,7 +49,7 @@ type SelectListProps = {
   onChangeCount?: (count: number) => void;
   onAddedIds?: (ids: string[]) => void;
 };
-export function SelectList(props: SelectListProps): JSX.Element {
+export function SelectList(props: SelectListProps): React.ReactElement {
   const { selectedIds, maxCount, onChangeCount, onAddedIds } = props;
   const data = React.useMemo(() => [] as DataType[], []);
   const [_data, setData] = React.useState(data);
@@ -159,7 +159,7 @@ export function SelectList(props: SelectListProps): JSX.Element {
 
 export const SelectListMemo = React.memo(SelectList);
 
-export const ContactList = (props: InviteeListProps): JSX.Element => {
+export const ContactList = (props: InviteeListProps): React.ReactElement => {
   const { onClose, onCancel, selectedIds, maxCount } = props;
   const [count, setCount] = React.useState<number>(selectedIds.length);
   const addedIdsRef = React.useRef<string[]>([]);

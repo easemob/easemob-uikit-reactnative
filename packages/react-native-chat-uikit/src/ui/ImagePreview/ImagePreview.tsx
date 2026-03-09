@@ -40,19 +40,37 @@ export function ImagePreview(props: ImagePreviewProps) {
     imageStyle,
     onChange,
   } = props;
-  const ref = React.useRef<View>(null);
+  const ref = React.useRef<React.ComponentRef<typeof View> | null>(null);
   const scaleRef = React.useRef<number>(1);
   const onChangeMoved = React.useCallback(() => {
-    ref.current?.measure((_x, _y, _width, _height, pageX, pageY) => {
-      onChange?.({ x: pageX, y: pageY, scale: scaleRef.current });
-    });
+    ref.current?.measure(
+      (
+        _x: number,
+        _y: number,
+        _width: number,
+        _height: number,
+        pageX: number,
+        pageY: number
+      ) => {
+        onChange?.({ x: pageX, y: pageY, scale: scaleRef.current });
+      }
+    );
   }, [onChange]);
   const onChangeSized = React.useCallback(
     (scale: number) => {
       scaleRef.current = scale;
-      ref.current?.measure((_x, _y, _width, _height, pageX, pageY) => {
-        onChange?.({ x: pageX, y: pageY, scale: scaleRef.current });
-      });
+      ref.current?.measure(
+        (
+          _x: number,
+          _y: number,
+          _width: number,
+          _height: number,
+          pageX: number,
+          pageY: number
+        ) => {
+          onChange?.({ x: pageX, y: pageY, scale: scaleRef.current });
+        }
+      );
     },
     [onChange]
   );

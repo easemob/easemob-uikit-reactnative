@@ -52,7 +52,7 @@ export function PressableHighlight(props: PressableHighlightProps) {
   );
   return (
     <Pressable
-      {...others}
+      {...(others as any)}
       style={
         [
           style,

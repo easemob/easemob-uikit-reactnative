@@ -31,14 +31,16 @@ In this file, set `useAppServerDomain` to `false` to disable the `app server` re
 
 # Configure Push Notification Environment
 
-Since the example project uses the FCM push notification plugin, it is necessary to add the required FCM configuration files.
+The example project uses `@react-native-firebase/messaging` for FCM push notifications. Firebase config files are automatically integrated via `googleServicesFile` and Expo config plugins in `app.json`, and will be copied to the native projects during `expo prebuild`.
 
-If you don't have them, you can use the preset template placeholders:
+If you don't have real Firebase config files, you can use the preset template placeholders by copying them to the project root:
 
 ```sh
-cp templates/google-services.json.template examples/product-uikit-demo/android/app/google-services.json
-cp templates/GoogleService-Info.plist.template examples/product-uikit-demo/ios/ChatUikitFullExample/GoogleService-Info.plist
+cp templates/google-services.json.template examples/product-uikit-demo/google-services.json
+cp templates/GoogleService-Info.plist.template examples/product-uikit-demo/GoogleService-Info.plist
 ```
+
+To use real FCM push notifications, download the config files from [Firebase Console](https://console.firebase.google.com/) and replace the placeholder files above.
 
 # Running the Project
 

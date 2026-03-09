@@ -23,7 +23,10 @@ import { sf } from '../utils/utils';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 
-export default function LoginScreen({ route, navigation }: Props): JSX.Element {
+export default function LoginScreen({
+  route,
+  navigation,
+}: Props): React.ReactElement {
   console.log('test:LoginScreen:route:', route);
   const rp = route.params as any;
   const params = rp?.params as any;

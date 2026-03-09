@@ -15,9 +15,7 @@ import { MineInfo } from '../ui/MineInfo';
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 
 export function ConfigScreen(props: Props) {
-  const {} = props;
   const navi = useNativeStackRoute();
-  const {} = navi;
   const im = useChatContext();
   const { tr } = useI18nContext();
   const [userId, setUserId] = React.useState<string>('test');

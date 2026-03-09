@@ -1,8 +1,11 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 
-import { ChatConversationType } from '../../rename.uikit';
-import { MessageThreadList, MessageThreadModel } from '../../rename.uikit';
+import {
+  ChatConversationType,
+  MessageThreadList,
+  MessageThreadModel,
+} from '../../rename.uikit';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import { useStackScreenRoute } from '../hooks';
 import type { RootScreenParamsList } from '../routes';

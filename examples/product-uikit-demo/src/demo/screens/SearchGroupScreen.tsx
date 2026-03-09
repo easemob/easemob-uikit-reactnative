@@ -8,7 +8,6 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function SearchGroupScreen(props: Props) {
-  const {} = props;
   const navi = useStackScreenRoute(props);
   return (
     <SafeAreaViewFragment>

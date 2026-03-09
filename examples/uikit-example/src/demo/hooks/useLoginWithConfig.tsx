@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { ChatService } from '../../rename.uikit';
 import {
+  ChatService,
   AsyncStorageBasic,
   SingletonObjects,
   UIKitError,
@@ -22,7 +22,8 @@ export function useAutoLogin() {
     if (res.value) {
       try {
         return JSON.parse(res.value);
-      } catch (error) {
+      } catch (event: any) {
+        console.warn('getSelfInfo:error:', event);
         return undefined;
       }
     }

@@ -2,7 +2,7 @@
 
 # Project Contributors
 
-[Download Link](https://github.com/AsteriskZuo/react-native-chat-library)
+[Download Link](https://github.com/easemob/easemob-uikit-reactnative)
 
 ## Branch Introduction
 

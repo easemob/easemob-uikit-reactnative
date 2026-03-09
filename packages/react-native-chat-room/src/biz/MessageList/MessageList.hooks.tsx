@@ -11,7 +11,7 @@ import {
 import { useConfigContext } from '../../config';
 import { useDispatchContext } from '../../dispatch';
 import { ErrorCode, UIKitError } from '../../error';
-import { useDelayExecTask } from '../../hook';
+import { useDelayExecTask } from '../../hook/useDelayExecTask';
 import { useI18nContext } from '../../i18n';
 import {
   ChatCustomMessageBody,
@@ -29,7 +29,10 @@ import {
   useRoomListener,
 } from '../../room';
 import { seqId, timeoutTask } from '../../utils';
-import { BottomSheetNameMenuRef, InitMenuItemsType } from '../BottomSheetMenu';
+import {
+  BottomSheetNameMenuRef,
+  InitMenuItemsType,
+} from '../BottomSheetMenu/BottomSheetNameMenu';
 import { emoji as convert } from '../EmojiList';
 import type {
   BottomSheetMessageReportRef,
@@ -134,7 +137,9 @@ export function useMessageListApi(params: {
   const { tr } = useI18nContext();
   const { roomOption, languageCode } = useConfigContext();
 
-  const langPressItemRef = React.useRef<MessageListItemModel | undefined>();
+  const langPressItemRef = React.useRef<MessageListItemModel | undefined>(
+    {} as any
+  );
 
   const _onLongPress = (item: MessageListItemModel) => {
     langPressItemRef.current = item;

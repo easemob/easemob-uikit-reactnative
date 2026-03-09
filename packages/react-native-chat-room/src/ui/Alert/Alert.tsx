@@ -50,7 +50,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
                 sizesType={'large'}
                 radiusType={'large'}
                 contentType={'only-text'}
-                onPress={() => v.onPress?.(v.text)}
+                onPress={() => v.onPress?.(v.text as any)}
                 text={v.text}
                 style={{
                   height: 48,
@@ -66,7 +66,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
               sizesType={'large'}
               radiusType={'large'}
               contentType={'only-text'}
-              onPress={() => v.onPress?.(v.text)}
+              onPress={() => v.onPress?.(v.text as any)}
               text={v.text}
               style={{
                 height: 48,
@@ -75,7 +75,7 @@ export const Alert = React.forwardRef<AlertRef, AlertProps>(
             />
           );
         });
-        const ret = [] as JSX.Element[];
+        const ret = [] as React.ReactElement[];
         if (count < 3) {
           for (let index = 0; index < list.length; index++) {
             const element = list[index];

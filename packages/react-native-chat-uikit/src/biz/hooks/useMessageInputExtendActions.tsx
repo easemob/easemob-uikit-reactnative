@@ -92,7 +92,8 @@ export function useMessageInputExtendActions(
     onBeforeCall,
   } = props;
   const { closeMenu } = useCloseMenu({ menuRef });
-  const extensionHeightCallbackRef = React.useRef<(height: number) => void>();
+  const extensionHeightCallbackRef =
+    React.useRef<(height: number) => void>(undefined);
   const initItems = React.useMemo(() => {
     return [
       {

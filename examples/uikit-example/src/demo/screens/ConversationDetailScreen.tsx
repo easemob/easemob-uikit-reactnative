@@ -13,8 +13,6 @@ import {
   InitMenuItemsType,
   MessageView,
   MessageViewProps,
-} from '../../rename.uikit';
-import {
   ConversationDetail,
   ConversationDetailModelType,
   ConversationDetailRef,
@@ -68,7 +66,6 @@ export const MyMessageContextNameMenu = React.forwardRef<
   props: ContextNameMenuProps,
   ref?: React.ForwardedRef<ContextNameMenuRef>
 ) {
-  const {} = props;
   React.useImperativeHandle(ref, () => {
     return {
       startShow: () => {},
@@ -162,7 +159,6 @@ export function ConversationDetailScreen(props: Props) {
   }, [comType, convId, convType, navi, start]);
 
   React.useEffect(() => {
-    hash;
     if (from === 'MessageForwardSelector') {
       stop(() => {
         convRef.current?.changeSelectType(selectType);
@@ -526,3 +522,5 @@ export function ConversationDetailScreen(props: Props) {
     </SafeAreaViewFragment>
   );
 }
+
+MyMessageContextNameMenu.displayName = 'MyMessageContextNameMenu';

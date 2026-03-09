@@ -1,3 +1,1 @@
-module.exports = {
-  presets: ['module:react-native-builder-bob/babel-preset'],
-};
+module.exports = require('../../babel.config.packages.js');

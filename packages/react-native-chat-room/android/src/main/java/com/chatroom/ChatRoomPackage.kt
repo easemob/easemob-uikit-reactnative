@@ -1,38 +1,17 @@
 package com.chatroom
 
-import android.util.Log
+import com.facebook.react.BaseReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
-import com.facebook.react.TurboReactPackage;
-import java.util.HashMap
+import com.facebook.react.uimanager.ViewManager
 
-class ChatRoomPackage : TurboReactPackage() {
-  override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
-    return if (name == ChatRoomModule.NAME) {
-      ChatRoomModule(reactContext)
-    } else {
-      null
-    }
+class ChatRoomViewPackage : BaseReactPackage() {
+  override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
+    return listOf(ChatRoomViewManager())
   }
 
-  override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
-    return ReactModuleInfoProvider {
-      val moduleInfos: MutableMap<String, ReactModuleInfo> = HashMap()
-      val isTurboModule = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
-      Log.d("ChatRoomPackage", "isTurboModule: $isTurboModule")
+  override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? = null
 
-      // 使用辅助类创建ReactModuleInfo
-      moduleInfos[ChatRoomModule.NAME] = ReactModuleInfoHelper.createModuleInfo(
-        ChatRoomModule.NAME,
-        false,  // canOverrideExistingModule
-        false,  // needsEagerInit
-        false,  // isCxxModule
-        isTurboModule // isTurboModule
-      )
-
-      moduleInfos
-    }
-  }
+  override fun getReactModuleInfoProvider() = ReactModuleInfoProvider { emptyMap() }
 }

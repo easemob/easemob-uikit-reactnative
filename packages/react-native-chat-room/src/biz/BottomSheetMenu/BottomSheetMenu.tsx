@@ -6,7 +6,7 @@ import {
 } from 'react-native-safe-area-context';
 
 import { ErrorCode, UIKitError } from '../../error';
-import { useColors } from '../../hook';
+import { useColors } from '../../hook/useColors';
 import { usePaletteContext } from '../../theme';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { Text } from '../../ui/Text';
@@ -79,7 +79,7 @@ export const BottomSheetMenu = React.forwardRef<
   const { colors } = usePaletteContext();
   const { bottom } = useSafeAreaInsets();
   const modalRef = React.useRef<SlideModalRef>({} as any);
-  const othersRef = React.useRef();
+  const othersRef = React.useRef(null);
   const { items, updateItems } = useGetItems(initItems);
   const { getColor } = useColors({
     bg1: {

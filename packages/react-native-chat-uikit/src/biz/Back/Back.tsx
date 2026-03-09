@@ -3,7 +3,7 @@ import { Icon } from '../../ui/Image';
 
 /**
  * Navigation bar back button style.
- * @returns JSX.Element
+ * @returns React.ReactElement
  */
 export function BackButton() {
   const { getColor } = useColors();

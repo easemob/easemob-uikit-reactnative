@@ -41,7 +41,7 @@ export type BottomToolbarProps = {
 /**
  * Input style components. Custom buttons can be added to implement custom events. For example: add a gift button and display the gift list when the gift button is clicked.
  * @param props {@link BottomToolbarProps}
- * @returns JSX.Element
+ * @returns React.ReactElement
  */
 export function BottomToolbar(props: BottomToolbarProps) {
   const { onClickInput, first, after, onLayout, isShow } = props;

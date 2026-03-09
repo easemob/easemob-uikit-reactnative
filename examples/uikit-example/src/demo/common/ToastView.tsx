@@ -11,7 +11,6 @@ import { useOnErrorParser, useOnFinishedParser } from '../hooks/useToastParser';
 
 export type ToastViewProps = {};
 export function ToastView(props: ToastViewProps) {
-  const {} = props;
   useSimpleToast();
   return <></>;
   // const toastRef = React.useRef<SimpleToastRef>({} as any);

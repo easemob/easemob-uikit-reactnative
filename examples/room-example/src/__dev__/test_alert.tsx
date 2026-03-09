@@ -10,7 +10,7 @@ import {
   createPresetPalette,
 } from '../rename.room';
 
-export function TestAlertComponent(): JSX.Element {
+export function TestAlertComponent(): React.ReactElement {
   const ref = React.useRef<AlertRef>({} as any);
   const ref2 = React.useRef<AlertRef>({} as any);
   return (
@@ -34,14 +34,14 @@ export function TestAlertComponent(): JSX.Element {
         buttons={[
           {
             text: 'Cancel',
-            onPress: (v) => {
+            onPress: (v: any) => {
               console.log('test:v:', v);
               ref2.current?.close?.();
             },
           },
           {
             text: 'Confirm',
-            onPress: (v) => {
+            onPress: (v: any) => {
               console.log('test:v:', v);
               ref2.current?.close?.();
             },

@@ -16,40 +16,34 @@ import {
   GiftMessageList,
   GiftMessageListComponent,
   GiftMessageListProps,
-  GiftMessageListRef,
 } from '../GiftMessageList';
 import { gGiftEffectListHeight } from '../GiftMessageList/GiftMessageList.const'; // for test
 import {
   GlobalBroadcast,
   GlobalBroadcastComponent,
   GlobalBroadcastProps,
-  GlobalBroadcastRef,
 } from '../GlobalBroadcast';
 import {
   MessageInput,
   MessageInputComponent,
   MessageInputProps,
-  MessageInputRef,
 } from '../MessageInput';
 import { gInputBarStyleHeight } from '../MessageInput/MessageInput.const';
 import {
   MessageList,
   MessageListComponent,
   MessageListProps,
-  MessageListRef,
 } from '../MessageList';
 import { gMessageListHeight } from '../MessageList/MessageList.const'; // for test
 import {
   MessagePin,
   MessagePinComponent,
   MessagePinProps,
-  MessagePinRef,
 } from '../MessagePin';
 import {
   BottomSheetParticipantList,
   BottomSheetParticipantListComponent,
   BottomSheetParticipantListProps,
-  BottomSheetParticipantListRef,
 } from '../ParticipantList';
 import type { PropsWithError, PropsWithTest } from '../types';
 
@@ -194,31 +188,35 @@ export abstract class ChatroomBase extends React.PureComponent<
   /**
    * Reference to the MessageInput component.
    */
-  inputBarRef?: React.RefObject<MessageInputRef>;
+  inputBarRef?: React.RefObject<React.ComponentRef<typeof MessageInput> | null>;
   /**
    * Reference to the MessageList component.
    */
-  messageRef?: React.RefObject<MessageListRef>;
+  messageRef?: React.RefObject<React.ComponentRef<typeof MessageList> | null>;
   /**
    * Reference to the MessagePin component.
    */
-  messagePinRef?: React.RefObject<MessagePinRef>;
+  messagePinRef?: React.RefObject<React.ComponentRef<typeof MessagePin> | null>;
   /**
    * Reference to the GlobalBroadcast component.
    */
-  globalBroadcastRef?: React.RefObject<GlobalBroadcastRef>;
+  globalBroadcastRef?: React.RefObject<React.ComponentRef<
+    typeof GlobalBroadcast
+  > | null>;
   /**
    * Reference to the GiftMessageList component.
    */
-  giftRef?: React.RefObject<GiftMessageListRef>;
+  giftRef?: React.RefObject<React.ComponentRef<typeof GiftMessageList> | null>;
   /**
    * Reference to the ParticipantList component.
    */
-  memberRef?: React.RefObject<BottomSheetParticipantListRef>;
+  memberRef?: React.RefObject<React.ComponentRef<
+    typeof BottomSheetParticipantList
+  > | null>;
   /**
    * Reference to the container.
    */
-  containerRef?: React.RefObject<View>;
+  containerRef?: React.RefObject<React.ComponentRef<typeof View> | null>;
   /**
    * IM service.
    */
@@ -238,13 +236,18 @@ export abstract class ChatroomBase extends React.PureComponent<
   constructor(props: ChatroomProps) {
     super(props);
 
-    this.inputBarRef = React.createRef();
-    this.messageRef = React.createRef();
-    this.messagePinRef = React.createRef();
-    this.globalBroadcastRef = React.createRef();
-    this.giftRef = React.createRef();
-    this.memberRef = React.createRef();
-    this.containerRef = React.createRef();
+    this.inputBarRef =
+      React.createRef<React.ComponentRef<typeof MessageInput>>();
+    this.messageRef = React.createRef<React.ComponentRef<typeof MessageList>>();
+    this.messagePinRef =
+      React.createRef<React.ComponentRef<typeof MessagePin>>();
+    this.globalBroadcastRef =
+      React.createRef<React.ComponentRef<typeof GlobalBroadcast>>();
+    this.giftRef =
+      React.createRef<React.ComponentRef<typeof GiftMessageList>>();
+    this.memberRef =
+      React.createRef<React.ComponentRef<typeof BottomSheetParticipantList>>();
+    this.containerRef = React.createRef<React.ComponentRef<typeof View>>();
 
     GGiftEffect = props.GiftMessageList ?? GiftMessageList;
     GGlobalBroadcast = props.GlobalBroadcast ?? GlobalBroadcast;

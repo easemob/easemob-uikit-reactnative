@@ -1,40 +1,40 @@
 {
   "project_info": {
-    "project_number": "0000000000000",
+    "project_number": "1068131238942",
     "project_id": "test-push-6b4b6",
     "storage_bucket": "test-push-6b4b6.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:0000000000000:android:0bfc5c8b5be0b7a9191a0f",
+        "mobilesdk_app_id": "1:1068131238942:android:0bfc5c8b5be0b7a9191a0f",
         "android_client_info": {
           "package_name": "com.hyphenate.rn.ChatUikitFullExample"
         }
       },
       "oauth_client": [
         {
-          "client_id": "0000000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+          "client_id": "1068131238942-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD000000000000000000000000000000-k"
+          "current_key": "your-google-api-key"
         },
         {
-          "current_key": "AIzaSyD000000000000000000000000000001-k"
+          "current_key": "your-google-api-key"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "0000000000000-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
+              "client_id": "1068131238942-ps4ppu4kvguouqe4014q29vblkps4etc.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "0000000000000-27ftkqed8983263rd082antfp75ptfl9.apps.googleusercontent.com",
+              "client_id": "1068131238942-27ftkqed8983263rd082antfp75ptfl9.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.hyphenate.rn.ChatUikitFullExample"

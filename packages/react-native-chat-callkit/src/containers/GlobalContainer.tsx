@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { calllog } from '../call/CallConst';
-import { createManagerImpl } from '../call/CallManagerImpl';
+import { createManagerImpl } from '../call/CallManagerFactory';
 import { CallkitSdkContextProvider } from '../contexts/CallkitSdkContext';
 import type { CallkitSdkContextType } from '../types';
 import { onceEx } from '../utils/utils';
@@ -17,7 +17,9 @@ export type GlobalContainerProps =
  *
  * @returns
  */
-export function GlobalContainer(props: GlobalContainerProps): JSX.Element {
+export function GlobalContainer(
+  props: GlobalContainerProps
+): React.ReactElement {
   calllog.log('callkit:GlobalContainer:');
   const { children, logHandler, ...others } = props;
   const call = createManagerImpl();

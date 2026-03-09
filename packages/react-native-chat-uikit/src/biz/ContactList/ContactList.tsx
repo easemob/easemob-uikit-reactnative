@@ -1,5 +1,5 @@
 import {
-  DefaultSectionT,
+  // DefaultSectionT,
   //   SectionList as RNSectionList,
   SectionListData,
   SectionListRenderItemInfo,
@@ -10,7 +10,7 @@ import {
 import { useColors } from '../../hook';
 import { Alert } from '../../ui/Alert';
 import { SectionListFactory } from '../../ui/SectionList';
-import { BottomSheetNameMenu } from '../BottomSheetMenu';
+import { BottomSheetNameMenu } from '../BottomSheetMenu/BottomSheetNameMenu';
 import type { IndexModel } from '../ListIndex';
 import { EmptyPlaceholder, ErrorPlaceholder } from '../Placeholder';
 import { SearchStyle } from '../SearchStyle';
@@ -141,7 +141,7 @@ export function ContactList(props: ContactListProps) {
           renderItem={(
             info: SectionListRenderItemInfo<
               ContactListItemProps,
-              DefaultSectionT
+              Record<string, any>
             >
           ) => {
             const { item } = info;

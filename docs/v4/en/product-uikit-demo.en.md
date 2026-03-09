@@ -242,7 +242,6 @@ Among them, the contact list component is a reusable component that can be used 
 // Contact list page
 export type ContactListScreenProps = {};
 function ContactListScreen(props: ContactListScreenProps) {
-  const {} = props;
   const navi = useNativeStackRoute();
 
   return (

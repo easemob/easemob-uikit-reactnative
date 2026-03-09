@@ -17,13 +17,14 @@ type AvatarProps = {
   containerStyle?: StyleProp<ViewStyle> | undefined;
 };
 
-export const Avatar: ((props: AvatarProps) => JSX.Element) & SubComponents = ({
+export const Avatar: ((props: AvatarProps) => React.ReactElement) &
+  SubComponents = ({
   uri,
   uriOnError,
   size = AVATAR_SIZE,
   radius = AVATAR_SIZE / 2,
   containerStyle,
-}): JSX.Element => {
+}): React.ReactElement => {
   const [loadDefault, setLoadDefault] = React.useState(false);
   const uriS = typeof uri === 'number' ? uri : { uri: uri };
 
@@ -87,7 +88,7 @@ export function DefaultAvatar(
     userId: string;
     userAvatar?: string;
   }
-): JSX.Element {
+): React.ReactElement {
   const { userId, userAvatar, ...others } = props;
   const i = hashCode(userId);
   const index = Math.abs(i) % avatarNamesCount;

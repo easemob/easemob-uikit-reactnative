@@ -1,5 +1,5 @@
 import {
-  DefaultSectionT,
+  // DefaultSectionT,
   //   SectionList as RNSectionList,
   SectionListData,
   SectionListRenderItemInfo,
@@ -117,7 +117,10 @@ export function BlockList(props: BlockListProps) {
           refreshing={propsRefreshing ?? refreshing}
           onRefresh={propsOnRefresh ?? onRefresh}
           renderItem={(
-            info: SectionListRenderItemInfo<BlockListItemProps, DefaultSectionT>
+            info: SectionListRenderItemInfo<
+              BlockListItemProps,
+              Record<string, any>
+            >
           ) => {
             const { item } = info;
             return (

@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { ChatPushConfig, ChatService } from '../../rename.uikit';
 import {
+  ChatPushConfig,
+  ChatService,
   AsyncStorageBasic,
   SingletonObjects,
   UIKitError,

@@ -10,7 +10,7 @@ import { SingleLineText } from '../../ui/Text';
 /**
  * Placeholder component after error. You can click the retry button
  * @param param0 The callback function when the button is clicked.
- * @returns JSX.Element
+ * @returns React.ReactElement
  */
 export function ErrorPlaceholder({ onClicked }: { onClicked: () => void }) {
   const { tr } = useI18nContext();

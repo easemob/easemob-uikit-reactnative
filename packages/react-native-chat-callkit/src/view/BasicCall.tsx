@@ -182,9 +182,9 @@ export type BasicLocalData = {
  * Basic object for calling UI components.
  */
 export abstract class BasicCall<
-    Props extends BasicCallProps,
-    State extends BasicCallState,
-  >
+  Props extends BasicCallProps,
+  State extends BasicCallState,
+>
   extends React.Component<Props, State>
   implements CallViewListener
 {
@@ -553,7 +553,7 @@ type RenderBottomMenuProps = {
   onClickClose: () => void;
   onClickMicrophone: () => void;
 };
-function RenderBottomMenu(props: RenderBottomMenuProps): JSX.Element {
+function RenderBottomMenu(props: RenderBottomMenuProps): React.ReactElement {
   const {
     bottomButtonType,
     isInSpeaker,

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { useGetObjectName } from './useGetObjectName';
 
-const ExpectedType = typeof {};
+type ExpectedType = {};
 
 /**
  * Check whether the object type is as expected.
@@ -38,7 +38,7 @@ export function useCheckType(params?: { enabled?: boolean }) {
     return {
       checkType: (
         object: any,
-        expectedType: typeof ExpectedType,
+        expectedType: ExpectedType,
         others?: { callerName?: string; objectName?: string }
       ) => {
         if (params?.enabled !== true) {

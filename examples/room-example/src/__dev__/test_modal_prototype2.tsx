@@ -140,7 +140,7 @@ export function Modal({
   backdropColor,
   transparent,
   ...props
-}: ModalProps): JSX.Element {
+}: ModalProps): React.ReactElement {
   const colors = {
     backdrop: 'rgba(1, 1, 1, 0.5)',
   };
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   background: { flex: 1 },
 });
 
-export function TestModalPrototype(): JSX.Element {
+export function TestModalPrototype(): React.ReactElement {
   console.log('test:TestModal');
   const [visible, setVisible] = React.useState(false);
   return (

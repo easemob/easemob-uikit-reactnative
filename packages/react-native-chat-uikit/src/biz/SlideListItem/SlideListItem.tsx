@@ -63,7 +63,8 @@ export function SlideListItem<DataT = any>(props: SlideListItemProps<DataT>) {
   const showsHorizontalScrollIndicator = false;
   const { width: winWidth } = useWindowDimensions();
   const width = propsWidth ?? winWidth;
-  const scrollViewRef = React.useRef<ScrollView>(null);
+  const scrollViewRef =
+    React.useRef<React.ComponentRef<typeof ScrollView>>(null);
   const isEditableRef = React.useRef(false);
   const currentX = React.useRef(0);
   const currentY = React.useRef(0);

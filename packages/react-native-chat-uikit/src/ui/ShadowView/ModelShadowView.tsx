@@ -4,7 +4,7 @@ import { Platform, View } from 'react-native';
 import { useThemeContext } from '../../theme';
 
 export type ModelShadowViewProps = React.PropsWithChildren<{
-  viewRef: React.RefObject<View>;
+  viewRef: React.RefObject<React.ComponentRef<typeof View>>;
 }>;
 
 export function ModelShadowView(props: ModelShadowViewProps) {

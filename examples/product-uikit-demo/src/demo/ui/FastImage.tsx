@@ -1,4 +1,4 @@
-import { default as _FastImage } from '@d11/react-native-fast-image';
+import { default as FastImageWrapper } from '@d11/react-native-fast-image';
 import * as React from 'react';
 
 import type { ImageProps } from '../../rename.uikit';
@@ -15,7 +15,7 @@ export function FastImage(props: ImageProps) {
     setSource(source);
   }
   return (
-    <_FastImage
+    <FastImageWrapper
       style={style}
       source={_source as any}
       onError={(event) => {

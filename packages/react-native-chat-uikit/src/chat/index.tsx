@@ -2,6 +2,7 @@ export * from './chat';
 export * from './chat.hooks';
 export * from './chat.impl';
 export * from './chat.listener';
+export * from './chatFactory';
 export * from './commonManager.types';
 export * from './const';
 export * from './DataProfileProvider';

@@ -27,7 +27,6 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function MessageContextMenuSettingScreen(props: Props) {
-  const {} = props;
   const navi = useStackScreenRoute(props);
   const { style: themeStyle } = useThemeContext();
   const { tr } = useI18nContext();

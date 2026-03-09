@@ -2373,11 +2373,3 @@ export class CallManagerImpl
     );
   }
 }
-
-let gCallManager: CallManagerImpl;
-export function createManagerImpl(): CallManagerImpl {
-  if (gCallManager === undefined) {
-    gCallManager = new CallManagerImpl();
-  }
-  return gCallManager;
-}

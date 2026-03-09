@@ -52,7 +52,7 @@ export const BottomSheetMenu = React.forwardRef<
   const { bottom } = useSafeAreaInsets();
   const modalRef = React.useRef<SlideModalRef>({} as any);
   const { height: winHeight } = useWindowDimensions();
-  const othersRef = React.useRef();
+  const othersRef = React.useRef<any>(null);
   const { items, updateItems, header, headerProps, updateProps } =
     useMessageMenu(props);
   const count = header ? 5 : 6;

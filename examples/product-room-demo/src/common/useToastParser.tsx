@@ -45,7 +45,7 @@ export function useOnErrorParser() {
         return tr('joinFailed');
       case ErrorCode.room_mute_member_error:
         return tr('muteFailed');
-      case ErrorCode.room_mute_member_error:
+      case ErrorCode.room_unmute_member_error:
         return tr('unmuteFailed');
       case ErrorCode.room_kick_member_error:
         return tr('kickFailed');

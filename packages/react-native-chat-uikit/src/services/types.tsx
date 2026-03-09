@@ -115,7 +115,7 @@ export interface MediaService {
    * Please use the new method to get the video component.
    * @param props
    */
-  getVideoComponent<Props = {}>(props: VideoProps & Props): JSX.Element;
+  getVideoComponent<Props = {}>(props: VideoProps & Props): React.ReactElement;
   getVideoThumbnail(
     options: VideoThumbnailOptions
   ): Promise<string | undefined>;

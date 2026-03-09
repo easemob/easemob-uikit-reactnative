@@ -57,25 +57,25 @@ yarn add @react-native-community/blur \
 
 ### GlobalContainer 属性
 
-| 属性 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `option` | `CallOption` | 是 | 通话配置选项 |
-| `requestRTCToken` | `Function` | 是 | 获取 RTC token 的回调 |
-| `requestUserMap` | `Function` | 是 | 获取用户 ID 映射关系的回调 |
-| `requestCurrentUser` | `Function` | 是 | 获取当前用户信息的回调 |
-| `requestUserInfo` | `Function` | 否 | 获取用户信息的回调（可选） |
-| `requestInviteContent` | `Function` | 否 | 自定义邀请内容的回调 |
-| `enableLog` | `boolean` | 否 | 是否启用日志 |
-| `type` | `'easemob' \| 'agora'` | 否 | RTC token 类型，默认为 `agora` |
-| `logHandler` | `Function` | 否 | 日志处理回调 |
+| 属性                   | 类型                   | 必填 | 说明                           |
+| ---------------------- | ---------------------- | ---- | ------------------------------ |
+| `option`               | `CallOption`           | 是   | 通话配置选项                   |
+| `requestRTCToken`      | `Function`             | 是   | 获取 RTC token 的回调          |
+| `requestUserMap`       | `Function`             | 是   | 获取用户 ID 映射关系的回调     |
+| `requestCurrentUser`   | `Function`             | 是   | 获取当前用户信息的回调         |
+| `requestUserInfo`      | `Function`             | 否   | 获取用户信息的回调（可选）     |
+| `requestInviteContent` | `Function`             | 否   | 自定义邀请内容的回调           |
+| `enableLog`            | `boolean`              | 否   | 是否启用日志                   |
+| `type`                 | `'easemob' \| 'agora'` | 否   | RTC token 类型，默认为 `agora` |
+| `logHandler`           | `Function`             | 否   | 日志处理回调                   |
 
 **CallOption 配置：**
 
 ```typescript
 interface CallOption {
-  appKey: string;        // 环信 AppKey（必填）
-  agoraAppId: string;    // 声网 AppId（必填）
-  callTimeout?: number;  // 通话超时时间（秒），默认 30 秒
+  appKey: string; // 环信 AppKey（必填）
+  agoraAppId: string; // 声网 AppId（必填）
+  callTimeout?: number; // 通话超时时间（秒），默认 30 秒
   ringFilePath?: string; // 本地铃声文件路径
 }
 ```
@@ -93,15 +93,21 @@ function App() {
         agoraAppId: 'your-agora-app-id',
         callTimeout: 30,
       }}
-      requestRTCToken={({ channelId, userId, userChannelId, type, onResult }) => {
+      requestRTCToken={({
+        channelId,
+        userId,
+        userChannelId,
+        type,
+        onResult,
+      }) => {
         // 从服务器获取 RTC token
         fetch('your-server/rtc-token', {
           method: 'POST',
           body: JSON.stringify({ channelId, userId, userChannelId }),
         })
-          .then(res => res.json())
-          .then(data => onResult({ data: data.token }))
-          .catch(error => onResult({ error }));
+          .then((res) => res.json())
+          .then((data) => onResult({ data: data.token }))
+          .catch((error) => onResult({ error }));
       }}
       requestUserMap={({ channelId, userId, onResult }) => {
         // 获取用户映射关系
@@ -109,9 +115,9 @@ function App() {
           method: 'POST',
           body: JSON.stringify({ channelId, userId }),
         })
-          .then(res => res.json())
-          .then(data => onResult({ data }))
-          .catch(error => onResult({ error }));
+          .then((res) => res.json())
+          .then((data) => onResult({ data }))
+          .catch((error) => onResult({ error }));
       }}
       requestCurrentUser={({ onResult }) => {
         // 返回当前用户信息
@@ -149,23 +155,23 @@ function App() {
 
 **属性：**
 
-| 属性 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `inviteeId` | `string` | 是 | 被邀请人的用户 ID |
-| `inviteeName` | `string` | 否 | 被邀请人的昵称 |
-| `inviteeAvatar` | `string` | 否 | 被邀请人的头像 URL |
-| `callType` | `'audio' \| 'video'` | 是 | 通话类型 |
-| `callState` | `CallState` | 否 | 通话状态 |
-| `isInviter` | `boolean` | 是 | 是否为发起者 |
-| `currentId` | `string` | 是 | 当前用户 ID |
-| `currentName` | `string` | 否 | 当前用户昵称 |
-| `currentAvatar` | `string` | 否 | 当前用户头像 URL |
-| `isMinimize` | `boolean` | 否 | 是否最小化显示 |
-| `onHangUp` | `Function` | 否 | 挂断回调 |
-| `onCancel` | `Function` | 否 | 取消回调 |
-| `onRefuse` | `Function` | 否 | 拒绝回调 |
-| `onError` | `Function` | 否 | 错误回调 |
-| `onPeerJoined` | `Function` | 否 | 对方加入通话的回调 |
+| 属性            | 类型                 | 必填 | 说明               |
+| --------------- | -------------------- | ---- | ------------------ |
+| `inviteeId`     | `string`             | 是   | 被邀请人的用户 ID  |
+| `inviteeName`   | `string`             | 否   | 被邀请人的昵称     |
+| `inviteeAvatar` | `string`             | 否   | 被邀请人的头像 URL |
+| `callType`      | `'audio' \| 'video'` | 是   | 通话类型           |
+| `callState`     | `CallState`          | 否   | 通话状态           |
+| `isInviter`     | `boolean`            | 是   | 是否为发起者       |
+| `currentId`     | `string`             | 是   | 当前用户 ID        |
+| `currentName`   | `string`             | 否   | 当前用户昵称       |
+| `currentAvatar` | `string`             | 否   | 当前用户头像 URL   |
+| `isMinimize`    | `boolean`            | 否   | 是否最小化显示     |
+| `onHangUp`      | `Function`           | 否   | 挂断回调           |
+| `onCancel`      | `Function`           | 否   | 取消回调           |
+| `onRefuse`      | `Function`           | 否   | 拒绝回调           |
+| `onError`       | `Function`           | 否   | 错误回调           |
+| `onPeerJoined`  | `Function`           | 否   | 对方加入通话的回调 |
 
 **示例：**
 
@@ -199,26 +205,26 @@ function MyCallScreen() {
 
 **属性：**
 
-| 属性 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `inviteeIds` | `string[]` | 是 | 被邀请人的用户 ID 列表 |
-| `invitees` | `CallUser[]` | 否 | 被邀请人信息列表 |
-| `groupId` | `string` | 否 | 群组 ID |
-| `groupName` | `string` | 否 | 群组名称 |
-| `groupAvatar` | `string` | 否 | 群组头像 URL |
-| `callType` | `'audio' \| 'video'` | 是 | 通话类型 |
-| `isInviter` | `boolean` | 是 | 是否为发起者 |
-| `currentId` | `string` | 是 | 当前用户 ID |
-| `inviteeList` | `Object` | 否 | 自定义邀请列表组件 |
+| 属性          | 类型                 | 必填 | 说明                   |
+| ------------- | -------------------- | ---- | ---------------------- |
+| `inviteeIds`  | `string[]`           | 是   | 被邀请人的用户 ID 列表 |
+| `invitees`    | `CallUser[]`         | 否   | 被邀请人信息列表       |
+| `groupId`     | `string`             | 否   | 群组 ID                |
+| `groupName`   | `string`             | 否   | 群组名称               |
+| `groupAvatar` | `string`             | 否   | 群组头像 URL           |
+| `callType`    | `'audio' \| 'video'` | 是   | 通话类型               |
+| `isInviter`   | `boolean`            | 是   | 是否为发起者           |
+| `currentId`   | `string`             | 是   | 当前用户 ID            |
+| `inviteeList` | `Object`             | 否   | 自定义邀请列表组件     |
 
 **邀请列表组件属性：**
 
 ```typescript
 interface InviteeListProps {
-  selectedIds: string[];     // 已选中的用户 ID
-  maxCount: number;          // 最大邀请数量（视频 18，音频 128）
-  onClose: (addedIds: string[], addeds?: CallUser[]) => void;  // 关闭回调
-  onCancel: () => void;      // 取消回调
+  selectedIds: string[]; // 已选中的用户 ID
+  maxCount: number; // 最大邀请数量（视频 18，音频 128）
+  onClose: (addedIds: string[], addeds?: CallUser[]) => void; // 关闭回调
+  onCancel: () => void; // 取消回调
 }
 ```
 
@@ -280,12 +286,12 @@ const listener: CallListener = {
     console.log('收到通话邀请：', inviterId);
     // 显示通话界面
   },
-  
+
   // 通话错误
   onCallOccurError: ({ channelId, error }) => {
     console.error('通话错误：', error);
   },
-  
+
   // 信令消息
   onSignallingMessage: (msg) => {
     console.log('信令消息：', msg);
@@ -302,28 +308,28 @@ callManager.addListener(listener);
 ```typescript
 // 通话类型
 enum CallType {
-  Audio1v1 = 0,      // 单人音频
-  Video1v1 = 1,      // 单人视频
-  VideoMulti = 2,    // 多人视频
-  AudioMulti = 3,    // 多人音频
+  Audio1v1 = 0, // 单人音频
+  Video1v1 = 1, // 单人视频
+  VideoMulti = 2, // 多人视频
+  AudioMulti = 3, // 多人音频
 }
 
 // 通话状态
 enum CallState {
-  Idle = 0,          // 空闲
-  Connecting = 1,    // 连接中
-  Calling = 2,       // 通话中
+  Idle = 0, // 空闲
+  Connecting = 1, // 连接中
+  Calling = 2, // 通话中
 }
 
 // 结束原因
 enum CallEndReason {
-  HungUp = 0,            // 挂断
-  Cancel = 1,            // 取消
-  RemoteCancel = 2,      // 对方取消
-  RemoteRefuse = 3,      // 对方拒绝
-  RemoteBusy = 4,        // 对方忙
-  NoResponse = 5,        // 无响应
-  RemoteNoResponse = 6,  // 对方无响应
+  HungUp = 0, // 挂断
+  Cancel = 1, // 取消
+  RemoteCancel = 2, // 对方取消
+  RemoteRefuse = 3, // 对方拒绝
+  RemoteBusy = 4, // 对方忙
+  NoResponse = 5, // 无响应
+  RemoteNoResponse = 6, // 对方无响应
   HandleOnOtherDevice = 7, // 其他设备处理
 }
 ```
@@ -331,7 +337,11 @@ enum CallEndReason {
 **工具函数：**
 
 ```typescript
-import { formatElapsed, timestamp, CALLKIT_VERSION } from 'react-native-chat-callkit';
+import {
+  formatElapsed,
+  timestamp,
+  CALLKIT_VERSION,
+} from 'react-native-chat-callkit';
 
 // 格式化通话时长（秒 -> HH:MM:SS）
 const timeStr = formatElapsed(3661); // "01:01:01"

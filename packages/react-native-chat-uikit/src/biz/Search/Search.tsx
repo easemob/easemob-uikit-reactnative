@@ -36,7 +36,7 @@ export type SearchProps = {
  */
 export function Search(props: SearchProps) {
   const { onCancel, onChangeText, value, onBack } = props;
-  const inputRef = React.useRef<RNTextInput>(null);
+  const inputRef = React.useRef<React.ComponentRef<typeof RNTextInput>>(null);
   const { tr } = useI18nContext();
   const { style, cornerRadius } = useThemeContext();
   const { input } = cornerRadius;

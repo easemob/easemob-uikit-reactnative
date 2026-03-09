@@ -197,7 +197,7 @@ export function useGroupInfo(
         {
           text: tr('confirm'),
           isPreferred: true,
-          onPress: (text) => {
+          onPress: (text?: string) => {
             alertRef.current.close(() => {
               if (text) {
                 im.setGroupName({
@@ -237,7 +237,7 @@ export function useGroupInfo(
         {
           text: tr('confirm'),
           isPreferred: true,
-          onPress: (text) => {
+          onPress: (text?: string) => {
             alertRef.current.close(() => {
               if (text) {
                 im.setGroupDescription({
@@ -272,7 +272,7 @@ export function useGroupInfo(
         {
           text: tr('confirm'),
           isPreferred: true,
-          onPress: (text) => {
+          onPress: (text?: string) => {
             alertRef.current.close(() => {
               if (text) {
                 if (text.trim().length === 0) {

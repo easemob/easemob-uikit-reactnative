@@ -12,7 +12,7 @@ import {
   Text,
 } from '../rename.room';
 
-export function ParticipantListItem(): JSX.Element {
+export function ParticipantListItem(): React.ReactElement {
   return (
     <View
       style={{ backgroundColor: 'white', paddingHorizontal: 10, width: '100%' }}

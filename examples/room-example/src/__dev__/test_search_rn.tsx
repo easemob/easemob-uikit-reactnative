@@ -14,7 +14,7 @@ import {
   useThemeContext,
 } from '../rename.room';
 
-export function TestSearchComponent(): JSX.Element {
+export function TestSearchComponent(): React.ReactElement {
   const { style } = useThemeContext();
   const { colors } = usePaletteContext();
   return (

@@ -8,7 +8,7 @@ import {
 } from 'react-native-agora';
 
 import { calllog, KeyTimeout } from '../call/CallConst';
-import { createManagerImpl } from '../call/CallManagerImpl';
+import { createManagerImpl } from '../call/CallManagerFactory';
 import type { CallUser } from '../call/CallUser';
 import { CallEndReason, CallState } from '../enums';
 import {

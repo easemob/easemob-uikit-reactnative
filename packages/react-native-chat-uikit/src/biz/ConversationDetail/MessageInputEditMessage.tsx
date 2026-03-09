@@ -287,7 +287,7 @@ export function useMessageInputEditMessage({
   const [value, _setValue] = React.useState(
     (msg.body as ChatTextMessageBody).content
   );
-  const inputRef = React.useRef<RNTextInput>(null);
+  const inputRef = React.useRef<React.ComponentRef<typeof RNTextInput>>(null);
   const [disable, setDisable] = React.useState(true);
   const _updateMsg = (msg: ChatMessage) => {
     if (msg.body.type !== ChatMessageType.TXT) {

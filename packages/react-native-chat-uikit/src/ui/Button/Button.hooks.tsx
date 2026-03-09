@@ -25,7 +25,9 @@ export const useGetButtonSizeStyle = (
     const ret = params;
     switch (contentType) {
       case 'only-icon':
-        ret.button.paddingHorizontal = ret.button.paddingVertical;
+        (ret.button as any).paddingHorizontal = (
+          ret.button as any
+        ).paddingVertical;
         break;
       case 'icon-text':
       case 'only-text':

@@ -7,7 +7,7 @@ import { Text1Button } from '../ui/Button';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 
-export function TestScreen({ navigation }: Props): JSX.Element {
+export function TestScreen({ navigation }: Props): React.ReactElement {
   return (
     <View style={{ flex: 1 }}>
       <Text>Test the effect of the navigator on the floating window.</Text>

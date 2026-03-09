@@ -20,6 +20,7 @@ export function useGetObjectName() {
         const r = JSON.stringify(object);
         return r;
       } catch (error) {
+        error;
         return object;
       }
     } else if (objectType === 'symbol') {

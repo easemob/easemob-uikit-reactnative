@@ -15,7 +15,7 @@ import { FlatListFactory } from '../../ui/FlatList';
 import { PressableHighlight } from '../../ui/Pressable';
 import { SingleLineText } from '../../ui/Text';
 import { formatTsForConvDetail } from '../../utils';
-import { useDataPriority } from '../hooks';
+import { useDataPriority } from '../hooks/useDataPriority';
 import { useFlatList } from '../List';
 
 type DeleteButtonStatus = 'request' | 'confirm';
@@ -35,7 +35,6 @@ export type MessagePinListProps = {
   onRequestClose?: () => void;
 };
 export function MessagePinList(props: MessagePinListProps) {
-  const {} = props;
   const FlatList = React.useMemo(
     () => FlatListFactory<MessagePinListItemProps>(),
     []
@@ -229,7 +228,7 @@ export function useMessagePinList(props: MessagePinListProps) {
   });
   const { setData, dataRef } = flatListProps;
   const im = useChatContext();
-  const onClickedItemRef = React.useRef<(msg: ChatMessage) => void>();
+  const onClickedItemRef = React.useRef<(msg: ChatMessage) => void>(undefined);
 
   const removeDuplicateData = React.useCallback(
     (list: MessagePinListItemProps[]) => {

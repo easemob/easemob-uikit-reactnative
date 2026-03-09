@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 
 import { LoadingIcon } from '../rename.uikit';
 
-export default function Test(): JSX.Element {
+export default function Test(): React.ReactElement {
   const [tick, setTick] = React.useState(false);
   const onPress = React.useCallback(() => {
     setTick((v) => !v);

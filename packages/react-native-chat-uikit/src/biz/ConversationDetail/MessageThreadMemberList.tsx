@@ -8,8 +8,9 @@ import { usePaletteContext } from '../../theme';
 import { FlatListFactory } from '../../ui/FlatList';
 import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
-import { BottomSheetNameMenu } from '../BottomSheetMenu';
-import { useCloseMenu, useDataPriority } from '../hooks';
+import { BottomSheetNameMenu } from '../BottomSheetMenu/BottomSheetNameMenu';
+import { useCloseMenu } from '../hooks/useCloseMenu';
+import { useDataPriority } from '../hooks/useDataPriority';
 import { useMessageThreadMemberListMoreActions } from '../hooks/useMessageThreadMemberListMoreActions';
 import { useFlatList } from '../List';
 import {

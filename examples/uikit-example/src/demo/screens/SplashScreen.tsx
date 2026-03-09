@@ -1,4 +1,4 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ImageBackground, View } from 'react-native';
 
@@ -17,7 +17,6 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function SplashScreen(props: Props) {
-  const {} = props;
   const { tr } = useI18nContext();
   const { style } = useThemeContext();
   const { colors } = usePaletteContext();

@@ -239,7 +239,6 @@ export function AVSelectGroupParticipantScreen(props: Props) {
 // 联系人列表页面
 export type ContactListScreenProps = {};
 function ContactListScreen(props: ContactListScreenProps) {
-  const {} = props;
   const navi = useNativeStackRoute();
 
   return (

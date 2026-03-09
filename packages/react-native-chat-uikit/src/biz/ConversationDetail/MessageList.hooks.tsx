@@ -27,7 +27,7 @@ import {
 } from '../../chat';
 import type { MessageManagerListener } from '../../chat/messageManager.types';
 import { useConfigContext } from '../../config';
-// import { uilog } from '../../const';
+import { uilog } from '../../const';
 import { useDispatchContext } from '../../dispatch';
 import { useDelayExecTask } from '../../hook';
 import { useI18nContext } from '../../i18n';
@@ -53,27 +53,25 @@ import { Services } from '../../services';
 import type { AlertRef } from '../../ui/Alert';
 import { LocalPath, seqId, timeoutTask } from '../../utils';
 import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList/BottomSheetEmojiList';
-import { BottomSheetNameMenu } from '../BottomSheetMenu';
+import { BottomSheetNameMenu } from '../BottomSheetMenu/BottomSheetNameMenu';
 import type { BottomSheetReactionDetailRef } from '../BottomSheetReactionDetail';
 import { gReportMessageList } from '../const';
 import { useMessageContext } from '../Context';
-import {
-  useDataPriority,
-  useMessageReactionListDetail,
-  useMessageThreadListMoreActions,
-} from '../hooks';
 import { useCloseMenu } from '../hooks/useCloseMenu';
+import { useDataPriority } from '../hooks/useDataPriority';
 import {
   useEmojiLongPressActionsProps,
   useMessageLongPressActions,
 } from '../hooks/useMessageLongPressActions';
+import { useMessageReactionListDetail } from '../hooks/useMessageReactionListDetail';
+import { useMessageThreadListMoreActions } from '../hooks/useMessageThreadListMoreActions';
 import { useFlatList } from '../List';
-import { MessageContextNameMenu } from '../MessageContextMenu';
+import { MessageContextNameMenu } from '../MessageContextMenu/MessageContextNameMenu';
 import type {
   BottomSheetMessageReportRef,
   ReportItemModel,
 } from '../MessageReport';
-import type { ContextNameMenuRef, PressedComponentEvent } from '../types';
+import type { PressedComponentEvent } from '../types';
 import type { EmojiIconItem } from '../types';
 import { gRequestMaxMessageCount, gRequestMaxThreadCount } from './const';
 import { MessageListItemMemo } from './MessageListItem';
@@ -183,7 +181,7 @@ export function useMessageList(
     enableRoamMessage,
   } = useConfigContext();
   // const [refreshing, setRefreshing] = React.useState(false);
-  const preBottomDataRef = React.useRef<MessageListItemProps>();
+  const preBottomDataRef = React.useRef<MessageListItemProps | null>(null);
   const scrollEventThrottle = React.useRef(16).current;
   const userScrollGestureRef = React.useRef(false);
   const isBottomRef = React.useRef(false);
@@ -192,7 +190,9 @@ export function useMessageList(
   const containerHeightRef = React.useRef(0);
   const maxListHeightRef = React.useRef(0);
   const bounces = React.useRef(true).current;
-  const currentVoicePlayingRef = React.useRef<MessageModel | undefined>();
+  const currentVoicePlayingRef = React.useRef<MessageModel | undefined>(
+    undefined
+  );
   const { tr } = useI18nContext();
   const im = useChatContext();
   const startMsgIdRef = React.useRef('');
@@ -219,10 +219,14 @@ export function useMessageList(
   const hasNoMoreRef = React.useRef(false); // !!! deprecated, use hasNoOldMsgRef and hasNoNewMsgRef
   const hasNoOldMsgRef = React.useRef(false);
   const hasNoNewMsgRef = React.useRef(false);
-  const menuRef = React.useRef<ContextNameMenuRef>(null);
+  const menuRef = React.useRef<
+    React.ComponentRef<typeof MessageContextNameMenu>
+  >({} as any);
   const reportRef = React.useRef<BottomSheetMessageReportRef>(null);
-  const alertRef = React.useRef<AlertRef>(null);
-  const currentReportMessageRef = React.useRef<MessageModel>();
+  const alertRef = React.useRef<AlertRef>({} as any);
+  const currentReportMessageRef = React.useRef<MessageModel | undefined>(
+    undefined
+  );
   const { closeMenu } = useCloseMenu({ menuRef });
   const MessageListItemRef = React.useRef<MessageListItemComponentType>(
     propsListItemRenderProps?.ListItemRender ?? MessageListItemMemo
@@ -236,7 +240,7 @@ export function useMessageList(
     userScrollGestureRef.current = isUserScroll;
   }, []);
   const { addListener, removeListener } = useDispatchContext();
-  const emojiRef = React.useRef<BottomSheetEmojiListRef>(null);
+  const emojiRef = React.useRef<BottomSheetEmojiListRef>({} as any);
   const onRequestCloseEmoji = React.useCallback(() => {
     emojiRef.current?.startHide?.();
   }, []);
@@ -245,11 +249,13 @@ export function useMessageList(
       return { name: v, state: 'common' } as EmojiIconItem;
     })
   );
-  const reactionRef = React.useRef<BottomSheetReactionDetailRef>(null);
+  const reactionRef = React.useRef<BottomSheetReactionDetailRef>({} as any);
   const onRequestCloseReaction = React.useCallback(() => {
     reactionRef.current?.startHide?.();
   }, []);
-  const pinMsgListRef = React.useRef<MessagePin>();
+  const pinMsgListRef = React.useRef<React.ComponentRef<
+    typeof MessagePin
+  > | null>(null);
 
   const setIsTop = React.useCallback((isTop: boolean) => {
     isTopRef.current = isTop;
@@ -443,10 +449,10 @@ export function useMessageList(
       dataRef.current = removeDuplicateData(items);
       if (dataRef.current.length > 0) {
         if (inverted === true) {
-          preBottomDataRef.current = dataRef.current[0];
+          preBottomDataRef.current = dataRef.current[0] ?? null;
         } else {
           preBottomDataRef.current =
-            dataRef.current[dataRef.current.length - 1];
+            dataRef.current[dataRef.current.length - 1] ?? null;
         }
       }
       _refreshToUI(dataRef.current);
@@ -517,7 +523,8 @@ export function useMessageList(
           tmp.isVoicePlaying = true;
           currentVoicePlayingRef.current = undefined;
           updateMessageVoiceUIState(tmp);
-        } catch (error) {
+        } catch (event: any) {
+          uilog.warn('startVoicePlay:error:', event);
           tmp.isVoicePlaying = true;
           currentVoicePlayingRef.current = undefined;
           updateMessageVoiceUIState(tmp);
@@ -570,7 +577,8 @@ export function useMessageList(
             }
           },
         });
-      } catch (error) {
+      } catch (event: any) {
+        uilog.warn('startVoicePlay:error:', event);
         currentVoicePlayingRef.current = undefined;
         updateMessageVoiceUIState(msgModel);
       }
@@ -659,7 +667,7 @@ export function useMessageList(
         });
         dataRef.current.splice(index, 1);
         if (index === preIndex) {
-          preBottomDataRef.current = dataRef.current[index];
+          preBottomDataRef.current = dataRef.current[index] ?? null;
         }
         refreshToUI(dataRef.current);
       }
@@ -1905,8 +1913,8 @@ export function useMessageList(
           }
           setIsGetting(false);
         } while (false);
-      } catch (error) {
-        // uilog.warn('dev:requestBeforeMessages:', error);
+      } catch (event: any) {
+        uilog.warn('requestBeforeMessages:error:', event);
         setIsGetting(false);
       }
     },
@@ -1985,8 +1993,8 @@ export function useMessageList(
           }
         } while (false);
         setIsGetting(false);
-      } catch (error) {
-        // uilog.warn('dev:requestAfterMessages:', error);
+      } catch (event) {
+        uilog.warn('requestAfterMessages:error:', event);
         setIsGetting(false);
       }
     },
@@ -2408,8 +2416,8 @@ export function useMessageList(
         } while (false);
         setIsGetting(false);
         return msgCount;
-      } catch (error) {
-        // uilog.warn('dev:requestAfterMessages:', error);
+      } catch (event: any) {
+        uilog.warn('onRequestAfterMessages:error:', event);
         setIsGetting(false);
         return msgCount;
       }

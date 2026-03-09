@@ -80,8 +80,8 @@ pod install
  */
 
 import * as React from 'react';
-import {Pressable, SafeAreaView, Text, TextInput} from 'react-native';
-import {Alert, Button, Platform, ToastAndroid, View} from 'react-native';
+import { Pressable, SafeAreaView, Text, TextInput } from 'react-native';
+import { Alert, Button, Platform, ToastAndroid, View } from 'react-native';
 import {
   GlobalContainer as Container,
   CallError,
@@ -112,7 +112,7 @@ function LoginScreen() {
   if (page === 0) {
     // login screen
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <TextInput
           placeholder="Please App Key."
           value={_appKey}
@@ -141,7 +141,8 @@ function LoginScreen() {
                 setPage(1);
               })
               .catch();
-          }}>
+          }}
+        >
           <Text>{'Login'}</Text>
         </Pressable>
         <Pressable
@@ -152,7 +153,8 @@ function LoginScreen() {
                 setPage(0);
               })
               .catch();
-          }}>
+          }}
+        >
           <Text>{'Logout'}</Text>
         </Pressable>
       </SafeAreaView>
@@ -160,7 +162,7 @@ function LoginScreen() {
   } else if (page === 1) {
     // audio and video handler screen.
     return (
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <AVScreen
           inviterId={userId}
           currentId={userId}
@@ -185,9 +187,9 @@ function AVScreen({
   inviteeId: string;
   agoraAppId: string;
 }) {
-  const {call} = useCallkitSdkContext();
+  const { call } = useCallkitSdkContext();
 
-  const {showSingleCall} = useCallApi();
+  const { showSingleCall } = useCallApi();
   const [visible, setVisible] = React.useState(false);
   const [callType, setCallType] = React.useState<CallType>(CallType.Audio1v1);
 
@@ -202,7 +204,7 @@ function AVScreen({
     visible: boolean;
     onRequestClose: () => void;
   }) => {
-    const {callType, currentId, inviterId, visible, onRequestClose} = props;
+    const { callType, currentId, inviterId, visible, onRequestClose } = props;
     const inviteeIds = [inviteeId] as string[];
     if (visible !== true) {
       return null;
@@ -226,12 +228,12 @@ function AVScreen({
   };
 
   const showCall = React.useCallback(
-    (params: {callType: CallType; currentId: string; inviterId: string}) => {
-      const {callType} = params;
+    (params: { callType: CallType; currentId: string; inviterId: string }) => {
+      const { callType } = params;
       setCallType(callType);
       setVisible(true);
     },
-    [],
+    []
   );
 
   const addListener = React.useCallback(() => {
@@ -248,7 +250,7 @@ function AVScreen({
           inviterId: params.inviterId,
         });
       },
-      onCallOccurError: (params: {channelId: string; error: CallError}) => {
+      onCallOccurError: (params: { channelId: string; error: CallError }) => {
         console.warn('onCallOccurError:', params);
       },
     } as CallListener;
@@ -273,7 +275,8 @@ function AVScreen({
           justifyContent: 'flex-start',
           marginVertical: 20,
           flexWrap: 'wrap',
-        }}>
+        }}
+      >
         <Button
           onPress={() => {
             showCall({
@@ -299,7 +302,7 @@ function AVScreen({
   };
   return (
     <>
-      <View style={{top: 44, flex: 1}}>{tools()}</View>
+      <View style={{ top: 44, flex: 1 }}>{tools()}</View>
       <_Call
         callType={callType}
         currentId={currentId}
@@ -351,12 +354,12 @@ function useCallApi() {
               if (reason) {
                 ToastAndroid.show(
                   `tip: reason: ${JSON.stringify(reason)}`,
-                  ToastAndroid.SHORT,
+                  ToastAndroid.SHORT
                 );
               } else {
                 ToastAndroid.show(
                   `tip: Call End: ${formatElapsed(elapsed)}`,
-                  ToastAndroid.SHORT,
+                  ToastAndroid.SHORT
                 );
               }
             } else {
@@ -376,7 +379,7 @@ function useCallApi() {
           onRefuse={() => {
             onRequestClose();
           }}
-          onError={error => {
+          onError={(error) => {
             onRequestClose();
             if (Platform.OS === 'android') {
               ToastAndroid.show(`error: ${JSON.stringify(error)}`, 3);
@@ -387,7 +390,7 @@ function useCallApi() {
         />
       );
     },
-    [],
+    []
   );
 
   return {
@@ -410,7 +413,7 @@ const App = () => {
         userId: string;
         userChannelId?: number | undefined;
         type?: 'easemob' | 'agora' | undefined;
-        onResult: (params: {data?: any; error?: any}) => void;
+        onResult: (params: { data?: any; error?: any }) => void;
       }) => {
         // todo: config app server implement get user rtc token.
         // call params.onResult to return user rtc token.
@@ -425,7 +428,7 @@ const App = () => {
         appKey: string;
         channelId: string;
         userId: string;
-        onResult: (params: {data?: any; error?: any}) => void;
+        onResult: (params: { data?: any; error?: any }) => void;
       }) => {
         // todo: config app server implement get user map.
         // call params.onResult to return user map.
@@ -437,12 +440,12 @@ const App = () => {
         });
       }}
       requestCurrentUser={(params: {
-        onResult: (params: {user: CallUser; error?: any}) => void;
+        onResult: (params: { user: CallUser; error?: any }) => void;
       }) => {
         // call params.onResult to return current user.
         ChatClient.getInstance()
           .getCurrentUsername()
-          .then(result => {
+          .then((result) => {
             params.onResult({
               user: {
                 userId: result,
@@ -450,14 +453,15 @@ const App = () => {
               },
             });
           })
-          .catch(error => {
+          .catch((error) => {
             console.warn('test:getCurrentUsername:error:', error);
           });
-      }}>
+      }}
+    >
       <LoginScreen />
     </Container>
   );
-}
+};
 
 export default App;
 ```

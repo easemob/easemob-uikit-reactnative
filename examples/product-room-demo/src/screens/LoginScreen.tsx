@@ -17,7 +17,7 @@ export function LoginScreen(props: Props) {
   const isAutoCreateUser = React.useRef(
     Platform.select({ ios: false, default: true })
   );
-  const timerRef = React.useRef<NodeJS.Timeout>();
+  const timerRef = React.useRef<NodeJS.Timeout>(undefined);
   const countRef = React.useRef(0);
 
   const firstLoginAction = async () => {

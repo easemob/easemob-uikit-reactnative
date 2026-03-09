@@ -36,9 +36,9 @@ export function TopNavigationBar<LeftProps = any, RightProps = any>(
         containerStyle,
       ]}
     >
-      {getElement(Left, LeftProps)}
+      {getElement(Left as any, LeftProps)}
       {Title}
-      {getElement(Right, RightProps)}
+      {getElement(Right as any, RightProps)}
     </View>
   );
 }

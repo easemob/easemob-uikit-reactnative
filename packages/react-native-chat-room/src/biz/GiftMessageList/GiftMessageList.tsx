@@ -53,7 +53,7 @@ export type GiftMessageListProps = {
  *
  * @param props {@link GiftMessageListProps}
  * @param ref {@link GiftMessageListRef}
- * @returns JSX.Element
+ * @returns React.ReactElement
  * @example
  *
  * ```tsx
@@ -101,7 +101,7 @@ export const GiftMessageList = React.forwardRef<
   ).current;
   const preTask = React.useRef<GiftMessageListTask | undefined>(undefined);
   const curTask = React.useRef<GiftMessageListTask | undefined>(undefined);
-  const delayClear = React.useRef<NodeJS.Timeout>();
+  const delayClear = React.useRef<NodeJS.Timeout>(undefined);
 
   const { addData, clearData, scrollToEnd } = useAddData({
     dataRef: dataRef,
@@ -109,7 +109,7 @@ export const GiftMessageList = React.forwardRef<
     ref: listRef,
   });
 
-  const _GiftEffectItemComponent =
+  const GiftEffectItemComponentWrapper =
     GiftEffectItemComponent ?? GiftMessageListItem;
 
   const execTask = () => {
@@ -182,7 +182,7 @@ export const GiftMessageList = React.forwardRef<
         ref={listRef}
         data={data}
         renderItem={(info: ListRenderItemInfo<GiftMessageListItemModel>) => {
-          return <_GiftEffectItemComponent item={info.item} />;
+          return <GiftEffectItemComponentWrapper item={info.item} />;
         }}
         keyExtractor={(item: GiftMessageListItemModel) => {
           return item.id;

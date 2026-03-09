@@ -4,17 +4,7 @@
 
 ## 开发环境需求
 
-- MacOS 12 或以上版本
-- React-Native 0.71 或以上版本
-- NodeJs 20.18 或以上版本
-
-对于 iOS 平台
-
-- xcode 15 或以上版本
-
-对于 Android 平台
-
-- Android Studio 2022.3 或以上版本
+[参考env文档](./env.md)
 
 ## 创建项目
 
@@ -215,7 +205,7 @@ function SendMessage() {
   }
 }
 
-function App(): React.JSX.Element {
+function App(): React.React.ReactElement {
   // initialize the chat room
   return (
     <Container
@@ -251,12 +241,12 @@ export default App;
 通过 easemob [控制台](https://console.easemob.com/) 获取 appKey。在用户管理里面新建测试用户，获取用户 ID 和 token。
 
 ```tsx
-const appKey = "<your app key>";
-const userId = "<current login id>";
-const userName = "<current login name>";
-const userToken = "<current login token or password>";
-const userAvatar = "<current login avatar url>";
-const roomId = "<chat room ID>";
+const appKey = '<your app key>';
+const userId = '<current login id>';
+const userName = '<current login name>';
+const userToken = '<current login token or password>';
+const userAvatar = '<current login avatar url>';
+const roomId = '<chat room ID>';
 ```
 
 ## 编译运行

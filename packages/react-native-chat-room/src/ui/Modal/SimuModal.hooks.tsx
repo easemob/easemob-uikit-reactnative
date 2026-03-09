@@ -39,8 +39,12 @@ export const useSimulativeModalAnimation = (type: ModalAnimationType) => {
 export const useSimulativeModalPanResponder = (params: {
   type: ModalAnimationType;
   translateY: Animated.Value;
-  startShow: (callback?: Animated.EndCallback | undefined) => void;
-  startHide: (callback?: Animated.EndCallback | undefined) => void;
+  startShow: (
+    callback?: Parameters<Animated.CompositeAnimation['start']>[0]
+  ) => void;
+  startHide: (
+    callback?: Parameters<Animated.CompositeAnimation['start']>[0]
+  ) => void;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   onStartShouldSetPanResponder?:
     | ((
@@ -94,5 +98,5 @@ export const useSimulativeModalPanResponder = (params: {
     })
   ).current;
   if (type === 'slide') return r;
-  else return { panHandlers: {} };
+  else return { panHandlers: {} as any } as PanResponderInstance;
 };

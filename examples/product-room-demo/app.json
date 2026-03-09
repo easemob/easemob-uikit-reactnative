@@ -1,69 +1,75 @@
 {
   "expo": {
-    "name": "ChatRoomFullExample",
-    "slug": "ChatRoomFullExample",
-    "scheme": "expodemowithdevclient",
+    "name": "product-room-demo",
+    "slug": "product-room-demo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0,
-      "url": "https://u.expo.dev/94befb2c-e471-4262-94a7-1e39480a676c"
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "icon": "./assets/images/easemob.png",
+    "scheme": "productroomdemo",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.hyphenate.rn.ChatRoomFullExample",
+      "entitlements": {
+        "aps-environment": "production"
+      },
       "infoPlist": {
-        "NSCameraUsageDescription": "Use camera for taking photos and videos in chat.",
-        "NSMicrophoneUsageDescription": "Use microphone for recording voice messages in chat.",
-        "NSPhotoLibraryUsageDescription": "Use picture gallery for sharing images in chat.",
-        "NSAppleMusicUsageDescription": "Use the media library for sharing media files in chat.",
-        "UIBackgroundModes": [
-          "remote-notification",
-          "remote-notification"
-        ]
+        "UIBackgroundModes": ["remote-notification"],
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to take photos and videos.",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone to record audio messages.",
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photo library to send images and videos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos and videos to your photo library."
+      },
+      "icon": {
+        "dark": "./assets/images/easemob.png",
+        "light": "./assets/images/easemob.png",
+        "tinted": "./assets/images/easemob.png"
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/images/easemob.png",
+        "backgroundImage": "./assets/images/easemob.png",
+        "monochromeImage": "./assets/images/easemob.png"
       },
-      "package": "com.hyphenate.rn.ChatRoomFullExample",
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.RECORD_AUDIO",
-        "android.permission.CAMERA",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.RECORD_AUDIO"
-      ]
+      "predictiveBackGestureEnabled": false,
+      "package": "com.hyphenate.rn.ChatRoomFullExample"
     },
-    "extra": {
-      "eas": {
-        "projectId": "94befb2c-e471-4262-94a7-1e39480a676c"
-      }
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
     },
-    "runtimeVersion": "1.0.0",
     "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
+      ],
+      "expo-font",
+      "expo-image",
+      "expo-web-browser",
+      "expo-video",
       [
         "expo-dev-client",
         {
           "launchMode": "most-recent"
         }
-      ]
+      ],
+      "./plugins/withAndroidPermissions"
     ],
-    "newArchEnabled": true,
-    "jsEngine": "hermes"
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
   }
 }

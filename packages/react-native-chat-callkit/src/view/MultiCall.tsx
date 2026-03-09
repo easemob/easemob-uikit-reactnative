@@ -4,7 +4,7 @@ import { RtcSurfaceView, VideoViewSetupMode } from 'react-native-agora';
 
 import { CallError, CallUser } from '../call';
 import { calllog, KeyTimeout } from '../call/CallConst';
-import { createManagerImpl } from '../call/CallManagerImpl';
+import { createManagerImpl } from '../call/CallManagerFactory';
 import { CallEndReason, CallErrorCode, CallState } from '../enums';
 import type { User } from '../types';
 import {
@@ -72,7 +72,7 @@ export type MultiCallProps = BasicCallProps & {
    * Typical application: During a call, use this component to invite people to join the call again.
    */
   inviteeList?: {
-    InviteeList: (props: InviteeListProps) => JSX.Element;
+    InviteeList: (props: InviteeListProps) => React.ReactNode;
     props?: InviteeListProps;
   };
   /**
@@ -136,12 +136,14 @@ export type MultiCallLocalData = BasicLocalData & {
  * Multi call UI component. The common part is detailed here. {@link BasicCall}
  */
 export class MultiCall extends BasicCall<MultiCallProps, MultiCallState> {
-  private _videoTabRef?: React.RefObject<VideoTabs>;
+  private _videoTabRef?: React.RefObject<React.ComponentRef<
+    typeof VideoTabs
+  > | null>;
   private _cache: Map<number, User>;
   private localData: MultiCallLocalData;
   constructor(props: MultiCallProps) {
     super(props);
-    this._videoTabRef = React.createRef<VideoTabs>();
+    this._videoTabRef = React.createRef<React.ComponentRef<typeof VideoTabs>>();
     this._cache = new Map();
     this.localData = {
       users: new Map(),

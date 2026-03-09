@@ -57,10 +57,12 @@ export function TabPageBody(props: TabPageBodyProps) {
     onMomentumScrollEnd: propsOnMomentumScrollEnd,
     ...others
   } = props;
-  const ref = React.useRef<ScrollView>({} as any);
+  const ref = React.useRef<React.ComponentRef<typeof ScrollView> | null>(
+    {} as any
+  );
   const { width: winWidth } = useWindowDimensions();
   const w = initWidth ?? winWidth;
-  let viewRef = React.useRef<View | undefined>();
+  let viewRef = React.useRef<React.ComponentRef<typeof View> | null>(null);
   if (propsRef.current) {
     propsRef.current.scrollTo = (index: number, animated?: boolean) => {
       ref.current?.scrollTo({ x: index * w, animated: animated });

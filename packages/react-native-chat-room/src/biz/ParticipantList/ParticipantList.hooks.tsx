@@ -3,7 +3,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   PanResponder,
-  ViewToken,
+  // ViewToken,
 } from 'react-native';
 
 import { useDispatchContext, useDispatchListener } from '../../dispatch';
@@ -153,10 +153,7 @@ export function useParticipantListAPI(
   const { delayExecTask } = useDelayExecTask(
     500,
     React.useCallback(
-      (info: {
-        viewableItems: Array<ViewToken>;
-        changed: Array<ViewToken>;
-      }) => {
+      (info: { viewableItems: Array<any>; changed: Array<any> }) => {
         const ids = info.viewableItems.map((v) => {
           return (v.item as ParticipantListItemProps).userInfo.userId;
         });

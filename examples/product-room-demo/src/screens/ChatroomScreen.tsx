@@ -240,6 +240,7 @@ export function ChatroomScreen(props: Props) {
             keyboardVerticalOffset: Platform.OS === 'ios' ? pageY : 0,
             after: [
               <TouchableOpacity
+                key="gift"
                 style={{
                   borderRadius: 38,
                   backgroundColor: getColor('bg2'),

@@ -39,7 +39,9 @@ export const useModalAnimation = (type: ModalAnimationType) => {
 export const useModalPanResponder = (params: {
   type: ModalAnimationType;
   translateY: Animated.Value;
-  startShow: (callback?: Animated.EndCallback | undefined) => void;
+  startShow: (
+    callback?: Parameters<Animated.CompositeAnimation['start']>[0]
+  ) => void;
   onRequestModalClose: () => void;
   onMoveShouldSetPanResponder?:
     | ((
@@ -89,5 +91,5 @@ export const useModalPanResponder = (params: {
     })
   ).current;
   if (type === 'slide') return r;
-  else return { panHandlers: {} };
+  else return { panHandlers: {} as any } as PanResponderInstance;
 };

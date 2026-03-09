@@ -7,7 +7,6 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LoginListScreen(props: Props) {
-  const {} = props;
   const account = require('../env').account as { id: string; token: string }[];
   const im = useRoomContext();
   const [s, setS] = React.useState<'' | 'success' | 'failed' | 'logouted'>('');

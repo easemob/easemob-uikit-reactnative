@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import type { ChatPresence } from '../../rename.uikit';
 import {
+  type ChatPresence,
   type AlertRef,
   type ChatServiceListener,
   type ContextNameMenuRef,
@@ -224,7 +224,6 @@ export function useMineInfo(props: MineInfoProps) {
 }
 
 export function useCommonInfo(props: CommonInfoProps) {
-  const {} = props;
   const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const alertRef = React.useRef<AlertRef>({} as any);
   const toastRef = React.useRef<SimpleToastRef>({} as any);

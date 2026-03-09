@@ -59,7 +59,7 @@ export function ParticipantList() {
   );
 }
 
-export function ParticipantListItem(): JSX.Element {
+export function ParticipantListItem(): React.ReactElement {
   return (
     <View
       style={{

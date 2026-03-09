@@ -121,3 +121,5 @@ export const ChatroomTestMenu = React.forwardRef<
     />
   );
 });
+
+ChatroomTestMenu.displayName = 'ChatroomTestMenu';

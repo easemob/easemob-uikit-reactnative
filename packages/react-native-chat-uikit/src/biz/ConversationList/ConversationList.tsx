@@ -94,9 +94,9 @@ export function ConversationList(props: ConversationListProps) {
               onClicked: onShowConversationListMoreActions,
               iconName: 'plus_in_circle',
             }}
-            Title={TopNavigationBarTitle({
-              text: tr('_uikit_navi_title_chat'),
-            })}
+            Title={
+              <TopNavigationBarTitle text={tr('_uikit_navi_title_chat')} />
+            }
           />
         )
       ) : null}

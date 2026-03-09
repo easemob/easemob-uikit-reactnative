@@ -295,7 +295,6 @@ customTheme.shadow.style.small = [
 ```tsx
 type MyConversationListScreenProps = {};
 function MyConversationListScreen(props: MyConversationListScreenProps) {
-  const {} = props;
   const convRef = React.useRef<ConversationListRef>({} as any);
   const { tr } = useI18nContext();
 
@@ -331,7 +330,6 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 ```tsx
 type MyConversationListScreenProps = {};
 function MyConversationListScreen(props: MyConversationListScreenProps) {
-  const {} = props;
   const convRef = React.useRef<ConversationListRef>({} as any);
 
   return (
@@ -366,7 +364,6 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 ```tsx
 type MyConversationListScreenProps = {};
 function MyConversationListScreen(props: MyConversationListScreenProps) {
-  const {} = props;
   const convRef = React.useRef<ConversationListRef>({} as any);
 
   return (
@@ -428,8 +425,6 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 ```tsx
 type MyConversationListScreenProps = {};
 function MyConversationListScreen(props: MyConversationListScreenProps) {
-  const {} = props;
-
   return (
     <ConversationList
       onInitMenu={(initItems: InitMenuItemsType[]) => {
@@ -451,8 +446,6 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 ```tsx
 type MyConversationListScreenProps = {};
 function MyConversationListScreen(props: MyConversationListScreenProps) {
-  const {} = props;
-
   return (
     <ConversationList
       onClickedItem={(data: ConversationModel) => {
@@ -473,8 +466,6 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 ```tsx
 type MyConversationListScreenProps = {};
 function MyConversationListScreen(props: MyConversationListScreenProps) {
-  const {} = props;
-
   return (
     <ConversationList
       searchStyleVisible={true}
@@ -494,7 +485,6 @@ function MyConversationListScreen(props: MyConversationListScreenProps) {
 ```tsx
 type MyConversationListScreenProps = {};
 function MyConversationListScreen(props: MyConversationListScreenProps) {
-  const {} = props;
   const convRef = React.useRef<ConversationListRef>({} as any);
 
   return (
@@ -827,7 +817,6 @@ export const MyMessageContextNameMenu = React.forwardRef<
   props: ContextNameMenuProps,
   ref?: React.ForwardedRef<ContextNameMenuRef>
 ) {
-  const {} = props;
   React.useImperativeHandle(ref, () => {
     return {
       startShow: () => {},
@@ -882,8 +871,6 @@ export function App() {
 ```tsx
 export type MyContactListScreenProps = {};
 function MyContactListScreen(props: MyContactListScreenProps) {
-  const {} = props;
-
   return (
     <ContactList
       contactType={'contact-list'}
@@ -916,8 +903,6 @@ function MyContactListScreen(props: MyContactListScreenProps) {
 ```tsx
 export type MyContactListScreenProps = {};
 function MyContactListScreen(props: MyContactListScreenProps) {
-  const {} = props;
-
   return (
     <ContactList
       contactType={'contact-list'}
@@ -935,8 +920,6 @@ function MyContactListScreen(props: MyContactListScreenProps) {
 ```tsx
 export type MyContactListScreenProps = {};
 function MyContactListScreen(props: MyContactListScreenProps) {
-  const {} = props;
-
   return (
     <ContactList
       contactType={'contact-list'}
@@ -952,14 +935,11 @@ function MyContactListScreen(props: MyContactListScreenProps) {
 
 ```tsx
 export const MyCustomItemView = (props: ContactItemProps) => {
-  const {} = props;
   return <View style={{ width: 100, height: 44, backgroundColor: 'red' }} />;
 };
 
 export type MyContactListScreenProps = {};
 function MyContactListScreen(props: MyContactListScreenProps) {
-  const {} = props;
-
   return (
     <ContactList
       contactType={'contact-list'}
@@ -981,8 +961,6 @@ function MyContactListScreen(props: MyContactListScreenProps) {
 ```tsx
 export type MyContactListScreenProps = {};
 function MyContactListScreen(props: MyContactListScreenProps) {
-  const {} = props;
-
   return (
     <ContactList
       contactType={'contact-list'}

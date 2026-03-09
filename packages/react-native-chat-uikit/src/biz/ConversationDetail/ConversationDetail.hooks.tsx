@@ -23,7 +23,7 @@ import {
 } from '../../rename.chat';
 import { AlertRef } from '../../ui/Alert';
 import { timeoutTask } from '../../utils';
-import { useConversationDetailActions } from '../hooks';
+import { useConversationDetailActions } from '../hooks/useConversationDetailActions';
 import { useCreateConversationDirectory } from '../hooks/useCreateConversationDirectory';
 import { ContextNameMenuRef } from '../types';
 import { gMsgPinHeight } from './const';
@@ -33,6 +33,7 @@ import type {
   ConversationDetailProps,
   ConversationSelectModeType,
   MessageInputRef,
+  MessageListProps,
   MessageListRef,
   MessageModel,
   SendCardProps,
@@ -69,15 +70,15 @@ export function useConversationDetail(props: ConversationDetailProps) {
   const [selectMode, setSelectMode] = React.useState(selectType);
   const [multiSelectCount, setMultiSelectCount] = React.useState(0);
   const _messageInputRef = input?.ref ?? messageInputRef;
-  const _MessageInput = input?.render ?? MessageInput;
+  const MessageInputWrapper = input?.render ?? MessageInput;
   const { onChangeValue: propsOnChangeValue } = input?.props ?? {};
   let messageInputProps = input?.props
     ? { ...input.props, convId, convType, type: comType, thread, testMode }
     : { convId, convType, type: comType, thread, testMode };
   const _messageListRef = list?.ref ?? messageListRef;
-  const _MessageList = list?.render ?? MessageList;
+  const MessageListWrapper = list?.render ?? MessageList;
   const messageListProps = list?.props
-    ? {
+    ? ({
         ...list.props,
         convId,
         convType,
@@ -90,8 +91,8 @@ export function useConversationDetail(props: ConversationDetailProps) {
         firstMessage,
         onCreateThreadResult,
         MessageCustomLongPressMenu,
-      }
-    : {
+      } as MessageListProps)
+    : ({
         convId,
         convType,
         type: comType,
@@ -102,7 +103,7 @@ export function useConversationDetail(props: ConversationDetailProps) {
         testMode,
         firstMessage,
         onCreateThreadResult,
-      };
+      } as MessageListProps);
   const [convName, setConvName] = React.useState<string | undefined>();
   const [convRemark, setConvRemark] = React.useState<string | undefined>();
   const [threadName, setThreadName] = React.useState<string | undefined>(
@@ -110,15 +111,15 @@ export function useConversationDetail(props: ConversationDetailProps) {
   );
   const [parentName, setParentName] = React.useState<string | undefined>();
   const [convAvatar, setConvAvatar] = React.useState<string>();
-  const ownerIdRef = React.useRef<string>();
+  const ownerIdRef = React.useRef<string>('');
   const [doNotDisturb, setDoNotDisturb] = React.useState<boolean | undefined>(
     false
   );
   const [unreadCount, setUnreadCount] = React.useState<number>(0);
   const [messageTyping, setMessageTyping] = React.useState<boolean>(false);
 
-  const menuRef = React.useRef<ContextNameMenuRef>(null);
-  const alertRef = React.useRef<AlertRef>(null);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
+  const alertRef = React.useRef<AlertRef>({} as any);
   const { onShowAVMenu } = useConversationDetailActions({
     menuRef: menuRef,
     alertRef: alertRef,
@@ -601,10 +602,10 @@ export function useConversationDetail(props: ConversationDetailProps) {
   return {
     onClickedSend,
     _messageInputRef,
-    _MessageInput,
+    MessageInputWrapper,
     messageInputProps,
     _messageListRef,
-    _MessageList,
+    MessageListWrapper,
     messageListProps,
     onQuoteMessageForInput,
     onEditMessageForInput,

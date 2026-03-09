@@ -50,7 +50,7 @@ Initialization
 
 ```typescript
 import { Container } from 'react-native-chat-uikit';
-function App(): React.JSX.Element {
+function App(): React.React.ReactElement {
   return (
     <Container options={{ appKey: '<your app key>' }}>
       {/** sub component */}

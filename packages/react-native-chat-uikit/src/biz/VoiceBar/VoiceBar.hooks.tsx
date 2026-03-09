@@ -28,7 +28,7 @@ export function useVoiceBar(props: VoiceBarProps) {
   const voiceFileNameRef = React.useRef<string>('');
   const voiceDurationRef = React.useRef<number>(0);
   const isPlayingRef = React.useRef<boolean>(false);
-  const recordTimeoutRef = React.useRef<NodeJS.Timeout>();
+  const recordTimeoutRef = React.useRef<NodeJS.Timeout>(undefined);
   const im = useChatContext();
   const contentTimerRef = React.useRef<TimerTextRef>({} as any);
   const [playRipple, setPlayRipple] = React.useState<boolean>(false);

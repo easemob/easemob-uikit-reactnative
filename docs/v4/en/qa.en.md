@@ -2,23 +2,23 @@
 
 - [Question List](#question-list)
   - [FAQs](#faqs)
-      - [Lack Dynamic Updates of Code Modifications](#lack-dynamic-updates-of-code-modifications)
-      - [Compilation Error When Using xcode 15.3](#compilation-error-when-using-xcode-153)
-      - [xcode 15 Compilation Error](#xcode-15-compilation-error)
-      - [React-Native Occupies a Significant Amount of Space](#react-native-occupies-a-significant-amount-of-space)
-      - [Not Support for Remote references from GitHub](#not-support-for-remote-references-from-github)
+    - [Lack Dynamic Updates of Code Modifications](#lack-dynamic-updates-of-code-modifications)
+    - [Compilation Error When Using xcode 15.3](#compilation-error-when-using-xcode-153)
+    - [xcode 15 Compilation Error](#xcode-15-compilation-error)
+    - [React-Native Occupies a Significant Amount of Space](#react-native-occupies-a-significant-amount-of-space)
+    - [Not Support for Remote references from GitHub](#not-support-for-remote-references-from-github)
   - [Specialized Issues](#specialized-issues)
-      - [MIUI 12 Strings Fail to Be Displayed Fully](#miui-12-strings-fail-to-be-displayed-fully)
+    - [MIUI 12 Strings Fail to Be Displayed Fully](#miui-12-strings-fail-to-be-displayed-fully)
   - [Issues with Third-Party Libraries](#issues-with-third-party-libraries)
-      - [@react-native-clipboard/clipboard Dependency Issue](#react-native-clipboardclipboard-dependency-issue)
-      - [react-native-gesture-handler Dependency Issue](#react-native-gesture-handler-dependency-issue)
-      - [react-native-safe-area-context Dependency Issue](#react-native-safe-area-context-dependency-issue)
-      - [Issues with `expo-updates`](#issues-with-expo-updates)
-      - [Create expo project and integrate uikit problem](#create-expo-project-and-integrate-uikit-problem)
-      - [flipper compile question](#flipper-compile-question)
-      - [ScrollView from react-native-gesture-handler](#scrollview-from-react-native-gesture-handler)
-      - [yarn vs npm in react-native ?](#yarn-vs-npm-in-react-native-)
-      - [React Native Modal Animation Issue](#react-native-modal-animation-issue)
+    - [@react-native-clipboard/clipboard Dependency Issue](#react-native-clipboardclipboard-dependency-issue)
+    - [react-native-gesture-handler Dependency Issue](#react-native-gesture-handler-dependency-issue)
+    - [react-native-safe-area-context Dependency Issue](#react-native-safe-area-context-dependency-issue)
+    - [Issues with `expo-updates`](#issues-with-expo-updates)
+    - [Create expo project and integrate uikit problem](#create-expo-project-and-integrate-uikit-problem)
+    - [flipper compile question](#flipper-compile-question)
+    - [ScrollView from react-native-gesture-handler](#scrollview-from-react-native-gesture-handler)
+    - [yarn vs npm in react-native ?](#yarn-vs-npm-in-react-native-)
+    - [React Native Modal Animation Issue](#react-native-modal-animation-issue)
 
 # Question List
 
@@ -95,7 +95,7 @@ Message description: kotlin syntax issue.
 
 In release mode, using `expo-updates` may result in images not being found.
 
-Reference: 1. https://github.com/expo/expo/issues/22656  
+Reference: 1. https://github.com/expo/expo/issues/22656
 Main solutions include:
 
 1. Remove the `expo-updates` dependency from the `package.json` configuration file.
@@ -134,5 +134,4 @@ For `react-native` developers, `yarn` tool is usually used for management. The m
 
 When using custom animations in the `Modal` component under the new architecture mode and running in `StrictMode` mode, animations may not function properly.
 
-https://github.com/AsteriskZuo/test_rn076_new_arch_issues/blob/test2/QA.md
 https://github.com/facebook/react-native/issues/50451

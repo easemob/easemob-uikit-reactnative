@@ -11,7 +11,7 @@ export type ThumbImageProps = DefaultIconImageProps;
  * If the url fails to load, the default avatar is displayed.
  *
  * @param props {@link DefaultIconImageProps}
- * @returns JSX.Element
+ * @returns React.ReactElement
  */
 export function ThumbImage(props: ThumbImageProps) {
   const { size, style, localIcon, ...others } = props;

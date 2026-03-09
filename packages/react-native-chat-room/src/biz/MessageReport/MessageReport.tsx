@@ -53,7 +53,7 @@ export type MessageReportProps = {
  * This component is mainly used for reporting illegal messages.
  *
  * @param props {@link MessageReportProps}
- * @returns JSX.Element
+ * @returns React.ReactElement
  *
  */
 export function MessageReport(props: MessageReportProps) {

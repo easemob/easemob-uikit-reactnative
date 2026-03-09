@@ -26,7 +26,6 @@ type Component1Ref = {
 };
 export const Component1 = React.forwardRef<Component1Ref, {}>(
   (props: {}, ref?: React.ForwardedRef<Component1Ref>) => {
-    const {} = props;
     const { r, selfIncreasing } = useMyData();
     React.useImperativeHandle(ref, () => {
       return {
@@ -43,8 +42,9 @@ export const Component1 = React.forwardRef<Component1Ref, {}>(
     );
   }
 );
+Component1.displayName = 'Component1';
 
-export function Component2(): JSX.Element {
+export function Component2(): React.ReactElement {
   const { selfIncreasing } = useMyData();
   useLifecycle(() => {}, 'Component2', true);
   return (
@@ -57,7 +57,7 @@ export function Component2(): JSX.Element {
   );
 }
 
-export function Component3(): JSX.Element {
+export function Component3(): React.ReactElement {
   const [isShow, setIsShow] = React.useState(false);
   const ref1 = React.useRef<Component1Ref>({} as any);
   const ref2 = React.useRef<Component1Ref>({} as any);

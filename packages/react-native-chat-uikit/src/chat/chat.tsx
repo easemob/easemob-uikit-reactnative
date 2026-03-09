@@ -1,7 +1,6 @@
 import React from 'react';
 
 // import { once2 } from '../utils';
-import { getChatServiceImpl as _getChatService } from './chat.impl';
 import type { ChatService, ChatServiceInit } from './types';
 
 /**
@@ -36,6 +35,8 @@ export function ChatContextProvider({ value, children }: ChatContextProps) {
     onGroupsHandler,
     onGetChatService,
   } = value;
+  const _getChatService = require('./chatFactory')
+    .getChatService as () => ChatService;
   const _im = onGetChatService ? onGetChatService() : _getChatService();
   React.useEffect(() => {
     _im.init({
@@ -64,12 +65,4 @@ export function useChatContext(): ChatService {
   const im = React.useContext(ChatContext);
   if (!im) throw Error(`${ChatContext.displayName} is not provided`);
   return im;
-}
-
-/**
- * Get the built-in single instance IM object.
- * @returns The IM service.
- */
-export function getChatService(): ChatService {
-  return _getChatService();
 }

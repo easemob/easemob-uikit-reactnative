@@ -10,7 +10,7 @@ import {
   ThemeContextProvider,
 } from '../rename.room';
 
-function TextComponent(): JSX.Element {
+function TextComponent(): React.ReactElement {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text textType={'large'} paletteType={'headline'}>

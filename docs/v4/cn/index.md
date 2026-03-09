@@ -73,7 +73,7 @@
 
 在 `packages` 文件夹下，主要包括 `react-native-chat-callkit` 和 `react-native-chat-uikit` 包。后续可能根据需要会有更多的包。
 
-- `react-native-chat-room`: 主要方便用户集成 `room` SDK 的功能。 
+- `react-native-chat-room`: 主要方便用户集成 `room` SDK 的功能。
 - `react-native-chat-callkit`: 主要方便用户集成音视频通话功能。
 - `react-native-chat-uikit`: 主要方便用户集成 `react-native-chat-sdk` 功能。 如果感兴趣可以在参考引用部分点击对应链接查看。
 

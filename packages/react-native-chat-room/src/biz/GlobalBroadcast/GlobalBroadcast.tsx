@@ -72,7 +72,7 @@ export type GlobalBroadcastProps = {
  *
  * @param props {@link GlobalBroadcastProps}
  * @param ref {@link GlobalBroadcastRef}
- * @returns JSX.Element
+ * @returns React.ReactElement
  *
  * @test {@link example/src/__dev__/test_globalBroadcast.tsx}
  *

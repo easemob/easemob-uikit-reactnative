@@ -19,7 +19,7 @@
 
 - 12fb9cfa chore: uikit restore package for video
 - ca204f43 feat: add voice animation component
-- b8424e47 chore: uikit: remove  react native video library
+- b8424e47 chore: uikit: remove react native video library
 - 97194bb2 docs: uikit: update release note
 - b06688c4 feat: uikit: update video preview component
 - ea3b387b feat: example: add image preview component

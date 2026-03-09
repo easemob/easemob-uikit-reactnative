@@ -1,9 +1,9 @@
 import type * as React from 'react';
 import type {
-  DefaultSectionT,
+  // DefaultSectionT,
   SectionListData,
-  ViewabilityConfig,
-  ViewToken,
+  // ViewabilityConfig,
+  // ViewToken,
 } from 'react-native';
 
 import type { IconNameType } from '../assets';
@@ -11,9 +11,9 @@ import type { DataModelType } from '../chat';
 import type { UIKitError } from '../error';
 import type { MessageContextMenuStyle } from '../types';
 import type { AlertRef } from '../ui/Alert';
-import { ComponentArea } from '../ui/ContextMenu';
+import type { ComponentArea } from '../ui/ContextMenu';
 import type { FlatListProps, FlatListRef } from '../ui/FlatList';
-import { SlideModalRef } from '../ui/Modal';
+import type { SlideModalRef } from '../ui/Modal';
 import type { SectionListProps, SectionListRef } from '../ui/SectionList';
 
 export type MessageLayoutType = 'left' | 'right' | 'middle';
@@ -101,7 +101,7 @@ export type PropsWithFlatList<ListItemProps> = {
  */
 export type PropsWithSectionList<
   ListItemProps,
-  SectionT extends DefaultSectionT = DefaultSectionT,
+  SectionT extends Record<string, any> = Record<string, any>,
 > = {
   /**
    * Properties of the list component. Currently, direct setting of ref, data, renderItem is not supported.
@@ -315,13 +315,13 @@ export type UseListBasicReturn<ItemT> = {
   /**
    * Visibility configuration.
    */
-  viewabilityConfig?: ViewabilityConfig;
+  viewabilityConfig?: any;
   /**
    * Visible item callback notification.
    */
   onViewableItemsChanged?: (info: {
-    viewableItems: Array<ViewToken>;
-    changed: Array<ViewToken>;
+    viewableItems: Array<any>;
+    changed: Array<any>;
   }) => void;
   /**
    * Delayed search callback notification.
@@ -352,8 +352,8 @@ export type UseFlatListReturn<ItemT> = UseListBasicReturn<ItemT> & {
  */
 export type UseSectionListReturn<
   ItemT,
-  SectionT extends DefaultSectionT,
-  ListIndexPropsT extends DefaultListIndexPropsT,
+  SectionT extends Record<string, any> = Record<string, any>,
+  ListIndexPropsT extends Record<string, any> = Record<string, any>,
 > = UseListBasicReturn<ItemT> & {
   /**
    * @description The data source of the list.
@@ -533,7 +533,7 @@ export type FlatListRefType<DataModel, ListItemProps> =
 export type SectionListRefType<
   DataModel,
   ListItemProps,
-  SectionT extends DefaultSectionT = DefaultSectionT,
+  SectionT extends Record<string, any> = Record<string, any>,
 > = BasicListRefType<DataModel> & {
   /**
    * Get the section list component reference.

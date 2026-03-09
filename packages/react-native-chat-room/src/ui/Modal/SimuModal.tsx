@@ -74,7 +74,7 @@ export function SimulativeModal(props: SimulativeModalProps) {
     useSimulativeModalAnimation(modalAnimationType);
   const { width, height } = useWindowDimensions();
   const [modalVisible, setModalVisible] = React.useState(false);
-  const _Slide = Slide ?? DefaultSlide;
+  const SlideWrapper = Slide ?? DefaultSlide;
 
   if (propsRef) {
     if (propsRef.current) {
@@ -147,7 +147,7 @@ export function SimulativeModal(props: SimulativeModalProps) {
         // }).panHandlers}
         {...others}
       >
-        <_Slide
+        <SlideWrapper
           modalType={'simu-modal'}
           {...useSimulativeModalPanResponder({
             type: modalAnimationType,

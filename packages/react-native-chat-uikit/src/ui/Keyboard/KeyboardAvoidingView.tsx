@@ -36,13 +36,13 @@ export class KeyboardAvoidingView extends React.Component<
   _frame: ViewLayout | null = null;
   _keyboardEvent: KeyboardEvent | null = null;
   _subscriptions: Array<EventSubscription> = [];
-  viewRef: React.RefObject<View>;
+  viewRef: React.RefObject<React.ComponentRef<typeof View> | null>;
   _initialFrameHeight: number = 0;
 
   constructor(props: KeyboardAvoidingViewProps) {
     super(props);
     this.state = { bottom: 0 };
-    this.viewRef = React.createRef();
+    this.viewRef = React.createRef<React.ComponentRef<typeof View>>();
   }
 
   async _relativeKeyboardHeight(

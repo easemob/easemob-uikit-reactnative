@@ -281,6 +281,7 @@ export class MediaServiceImplement implements MediaService {
       const { uri, size, name, type } = result[0];
       return this.resultReduction({ uri, size, name, type });
     } catch (e) {
+      uilog.warn('openDocument:error:', e);
       options?.onFailed?.(new Error('Failed to obtain permission.'));
       return null;
     }
@@ -367,7 +368,7 @@ export class MediaServiceImplement implements MediaService {
     resizeMode,
     onLoad,
     ...props
-  }: VideoProps & Props): JSX.Element {
+  }: VideoProps & Props): React.ReactElement {
     source;
     resizeMode;
     onLoad;

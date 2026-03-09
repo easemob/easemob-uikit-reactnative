@@ -1,9 +1,9 @@
 import * as React from 'react';
 import type {
-  DefaultSectionT,
+  // DefaultSectionT,
   SectionListData,
-  ViewabilityConfig,
-  ViewToken,
+  // ViewabilityConfig,
+  // ViewToken,
 } from 'react-native';
 
 import { useDelayExecTask, useLifecycle } from '../../hook';
@@ -36,7 +36,7 @@ export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
   const [refreshing, setRefreshing] = React.useState(props.refreshing ?? false);
   const onSearchRef = React.useRef<(keyword: string) => void>({} as any);
 
-  const viewabilityConfigRef = React.useRef<ViewabilityConfig>({
+  const viewabilityConfigRef = React.useRef<any>({
     // minimumViewTime: 1000,
     viewAreaCoveragePercentThreshold: 50,
     itemVisiblePercentThreshold: 50,
@@ -45,10 +45,7 @@ export function useListBasic<ItemT>(props: UseListBasicProps<ItemT>) {
   const { delayExecTask: onViewableItemsChanged } = useDelayExecTask(
     500,
     React.useCallback(
-      (info: {
-        viewableItems: Array<ViewToken>;
-        changed: Array<ViewToken>;
-      }) => {
+      (info: { viewableItems: Array<any>; changed: Array<any> }) => {
         const list = info.viewableItems.map((v) => {
           return v.item as ItemT;
         });
@@ -136,7 +133,7 @@ export function useFlatList<ItemT>(
 }
 export function useSectionList<
   ItemT,
-  SectionT extends DefaultSectionT,
+  SectionT extends any,
   ListIndexPropsT extends DefaultListIndexPropsT,
 >(props: Omit<UseListBasicProps<ItemT>, 'listType'>) {
   const basics = useListBasic({ ...props, listType: 'FlatList' });

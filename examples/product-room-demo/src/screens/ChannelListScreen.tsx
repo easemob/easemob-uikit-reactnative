@@ -1,7 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { DeviceEventEmitter, FlatList } from 'react-native';
-import { Text, View } from 'react-native';
+import { DeviceEventEmitter, FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {

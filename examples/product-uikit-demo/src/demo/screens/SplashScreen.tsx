@@ -18,7 +18,6 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function SplashScreen(props: Props) {
-  const {} = props;
   const [isStop, setIsStop] = React.useState(true);
   const [isFocused, setIsFocused] = React.useState(false);
   const { tr } = useI18nContext();

@@ -16,7 +16,7 @@ const getSystemLanguage = () => {
   }
 };
 
-export function Component(): JSX.Element {
+export function Component(): React.ReactElement {
   return (
     <View
       style={{

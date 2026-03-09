@@ -11,7 +11,7 @@ import {
   useThemeContext,
 } from '../rename.room';
 
-function UseThemeComponent(): JSX.Element {
+function UseThemeComponent(): React.ReactElement {
   const theme = useThemeContext();
   const palette = usePaletteContext();
   const printTheme = () => {

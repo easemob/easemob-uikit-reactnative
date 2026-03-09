@@ -11,10 +11,10 @@ export class ClassImage extends React.PureComponent<
   ImageProps,
   ClassImageState
 > {
-  ref: React.RefObject<RNImage>;
+  ref: React.RefObject<React.ComponentRef<typeof RNImage> | null>;
   constructor(props: ImageProps) {
     super(props);
-    this.ref = React.createRef();
+    this.ref = React.createRef<React.ComponentRef<typeof RNImage>>();
     this.state = {
       _source: props.source,
     };

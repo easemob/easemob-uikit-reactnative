@@ -2,24 +2,24 @@
 
 - [问题列表](#问题列表)
   - [常见问题](#常见问题)
-      - [修改代码，没有动态更新](#修改代码没有动态更新)
-      - [使用 xcode 15.3，编译报错](#使用-xcode-153编译报错)
-      - [xcode 15 编译报错](#xcode-15-编译报错)
-      - [React-Native 占用空间非常大](#react-native-占用空间非常大)
-      - [不支持 github 远程引用](#不支持-github-远程引用)
+    - [修改代码，没有动态更新](#修改代码没有动态更新)
+    - [使用 xcode 15.3，编译报错](#使用-xcode-153编译报错)
+    - [xcode 15 编译报错](#xcode-15-编译报错)
+    - [React-Native 占用空间非常大](#react-native-占用空间非常大)
+    - [不支持 github 远程引用](#不支持-github-远程引用)
   - [专业问题](#专业问题)
-      - [MIUI 12 字符串显示不全问题。](#miui-12-字符串显示不全问题)
+    - [MIUI 12 字符串显示不全问题。](#miui-12-字符串显示不全问题)
   - [三方库问题](#三方库问题)
-      - [@react-native-clipboard/clipboard 依赖问题](#react-native-clipboardclipboard-依赖问题)
-      - [react-native-gesture-handler 依赖问题](#react-native-gesture-handler-依赖问题)
-      - [react-native-safe-area-context 依赖问题](#react-native-safe-area-context-依赖问题)
-      - [node 版本问题](#node-版本问题)
-      - [expo-updates 的问题](#expo-updates-的问题)
-      - [创建 expo 项目 集成 uikit 问题](#创建-expo-项目-集成-uikit-问题)
-      - [flipper compilation problem](#flipper-compilation-problem)
-      - [ScrollView from react-native-gesture-handler](#scrollview-from-react-native-gesture-handler)
-      - [在 react-native 中 `yarn` 和 `npm` 的选择](#在-react-native-中-yarn-和-npm-的选择)
-      - [React Native Modal Animation Issue](#react-native-modal-animation-issue)
+    - [@react-native-clipboard/clipboard 依赖问题](#react-native-clipboardclipboard-依赖问题)
+    - [react-native-gesture-handler 依赖问题](#react-native-gesture-handler-依赖问题)
+    - [react-native-safe-area-context 依赖问题](#react-native-safe-area-context-依赖问题)
+    - [node 版本问题](#node-版本问题)
+    - [expo-updates 的问题](#expo-updates-的问题)
+    - [创建 expo 项目 集成 uikit 问题](#创建-expo-项目-集成-uikit-问题)
+    - [flipper compilation problem](#flipper-compilation-problem)
+    - [ScrollView from react-native-gesture-handler](#scrollview-from-react-native-gesture-handler)
+    - [在 react-native 中 `yarn` 和 `npm` 的选择](#在-react-native-中-yarn-和-npm-的选择)
+    - [React Native Modal Animation Issue](#react-native-modal-animation-issue)
 
 # 问题列表
 
@@ -98,8 +98,8 @@ decorateRuntime(jsContext!!.get())
 
 在 release 模式下，使用 `expo-updates` 可能导致图片无法被找到。
 
-参考：1. https://github.com/expo/expo/issues/22656  
- 解决方法主要以下几种： 1. 删除依赖项 `expo-updates`, 该依赖项在 `package.json` 配置文件中。 2. 禁用 `expo-updates`, 修改设置在 `Expo.plist` 文件中的属性 `EXUpdatesEnabled` 3. 使用命令 `eas build` 构建
+参考：1. https://github.com/expo/expo/issues/22656
+解决方法主要以下几种： 1. 删除依赖项 `expo-updates`, 该依赖项在 `package.json` 配置文件中。 2. 禁用 `expo-updates`, 修改设置在 `Expo.plist` 文件中的属性 `EXUpdatesEnabled` 3. 使用命令 `eas build` 构建
 
 #### 创建 expo 项目 集成 uikit 问题
 
@@ -137,5 +137,4 @@ ERROR Error: NativeViewGestureHandler must be used as a descendant of GestureHan
 
 在 新架构模式下，在 `Modal` 组件中使用自定义动画，并且运行在 `StrictMode` 模式下，可能导致动画无法正常运行。
 
-https://github.com/AsteriskZuo/test_rn076_new_arch_issues/blob/test2/QA.md
 https://github.com/facebook/react-native/issues/50451

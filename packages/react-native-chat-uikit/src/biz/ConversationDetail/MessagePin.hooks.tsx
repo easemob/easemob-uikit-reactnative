@@ -1,13 +1,12 @@
 import * as React from 'react';
 
-// import { uilog } from '../../const';
-import { useVerticalMoveGesture } from '../hooks';
 import { useHeightAnimation } from '../hooks/useHeightAnimation';
+// import { uilog } from '../../const';
+import { useVerticalMoveGesture } from '../hooks/useVerticalMoveGesture';
 import { gMsgPinHeight } from './const';
 
 export type useMessagePinProps = {};
 export function useMessagePin(props: useMessagePinProps) {
-  const {} = props;
   const [maxListHeight, setMaxListHeight] = React.useState<number>(0);
 
   const msgPinBackgroundOpacityRef = React.useRef(0);

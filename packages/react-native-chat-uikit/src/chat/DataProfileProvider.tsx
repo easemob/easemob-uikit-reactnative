@@ -31,7 +31,7 @@ export class DataProfileProvider {
    * @param data
    * @returns
    */
-  static toMap(data: DataModel[]): Map<string, DataModel> {
+  toMap(data: DataModel[]): Map<string, DataModel> {
     const map = new Map<string, DataModel>();
     data.forEach((d) => {
       map.set(d.id, d);
@@ -42,7 +42,7 @@ export class DataProfileProvider {
   /**
    * Convert map to array.
    */
-  static toArray(data: Map<string, DataModel>): DataModel[] {
+  toArray(data: Map<string, DataModel>): DataModel[] {
     const arr = [] as DataModel[];
     data.forEach((v) => {
       arr.push(v);

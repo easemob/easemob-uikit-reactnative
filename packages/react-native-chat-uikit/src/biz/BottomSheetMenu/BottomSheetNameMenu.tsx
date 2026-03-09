@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { useColors } from '../../hook';
+import { useColors } from '../../hook/useColors';
 import { useI18nContext } from '../../i18n';
-import { InitMenuItemsType } from '../types';
-import {
+import type { InitMenuItemsType } from '../types';
+import type {
   BizContextMenuRef,
   ContextNameMenuProps,
   ContextNameMenuRef,
@@ -157,7 +157,7 @@ function useGetListItems(onGetData?: () => any) {
             );
           }
         })
-        .filter((v) => v !== null) as JSX.Element[];
+        .filter((v) => v !== null) as React.ReactElement[];
 
       if (hasCancel === false) {
         const data = [...d];

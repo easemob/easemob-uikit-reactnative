@@ -1078,7 +1078,8 @@ export interface PresenceServices {
  * Interfaces are mainly divided into two categories: synchronous method and asynchronous method. Synchronous method may throw exceptions, but asynchronous method do not. The main difference between them is whether `ResultCallback` is included in the parameters.
  */
 export interface ChatService
-  extends ConversationServices,
+  extends
+    ConversationServices,
     ContactServices,
     GroupServices,
     UserServices,
@@ -1156,6 +1157,11 @@ export interface ChatService
    * Get the current services ID.
    */
   id(): string;
+
+  /**
+   * Get the data file provider.
+   */
+  get dataFileProvider(): DataProfileProvider;
 
   /**
    * Initialize the IM service.
@@ -1355,14 +1361,14 @@ export interface ChatService
   getDataFileProvider(): DataProfileProvider;
 }
 
-type _ChatOptionsType = PartialUndefinable<ChatOptions>;
-export type ChatAppKeyOptionsType = Omit<_ChatOptionsType, 'appId'> & {
+type ChatOptionsTypeWrapper = PartialUndefinable<ChatOptions>;
+export type ChatAppKeyOptionsType = Omit<ChatOptionsTypeWrapper, 'appId'> & {
   /**
    * App key. (required)
    */
   appKey: string;
 };
-export type ChatAppIdOptionsType = Omit<_ChatOptionsType, 'appKey'> & {
+export type ChatAppIdOptionsType = Omit<ChatOptionsTypeWrapper, 'appKey'> & {
   /**
    * App ID. (required)
    */

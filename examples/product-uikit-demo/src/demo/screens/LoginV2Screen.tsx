@@ -85,7 +85,7 @@ function EasemobLoginV2Screen(props: Props) {
   const [second, setSecond] = React.useState(60);
   const [check, setCheck] = React.useState(false);
   const { width: winWidth } = useWindowDimensions();
-  const intervalRef = React.useRef<NodeJS.Timeout>();
+  const intervalRef = React.useRef<NodeJS.Timeout>(undefined);
 
   const getCaptchaText = (second: number, captchaState: CaptchaState) => {
     if (captchaState === 'init') {

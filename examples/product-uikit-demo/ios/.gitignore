@@ -28,6 +28,3 @@ project.xcworkspace
 
 # CocoaPods
 /Pods/
-
-# By AsteriskZuo
-GoogleService-Info.plist

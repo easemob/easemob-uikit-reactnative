@@ -15,7 +15,6 @@ Take the following steps to implement message sending:
    [Refer to relevant section](./create-app.en.md)
 
 2. Added permission.
-
    - For iOS, update the `ProjectName/Info.plist` file to add the following permissions:
 
      ```xml
@@ -183,7 +182,7 @@ Take the following steps to implement message sending:
      }
    }
 
-   function App(): React.JSX.Element {
+   function App(): React.React.ReactElement {
      // initialize the chat room
      return (
        <Container
@@ -214,7 +213,6 @@ Take the following steps to implement message sending:
    ```
 
 5. Compile and run the project.
-
    - For iOS: Run `yarn run ios`.
    - For Android: Run `yarn run android`.
 

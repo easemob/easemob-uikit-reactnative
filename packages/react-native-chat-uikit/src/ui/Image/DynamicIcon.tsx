@@ -47,7 +47,7 @@ export function DynamicIcon(props: DynamicIconProps) {
   const [source, setSource] = React.useState<number | undefined>(
     getIconSource(names[initialIndex], resolution)
   );
-  const timerRef = React.useRef<NodeJS.Timeout>();
+  const timerRef = React.useRef<NodeJS.Timeout>(undefined);
   if (propsRef?.current) {
     propsRef.current.startPlay = () => {
       onPlayStart?.();

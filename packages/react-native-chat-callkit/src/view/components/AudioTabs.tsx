@@ -13,7 +13,7 @@ type AudioTabProps = {
   index: number;
 };
 
-export function AudioTab(props: AudioTabProps): JSX.Element {
+export function AudioTab(props: AudioTabProps): React.ReactElement {
   const { subUsers, index } = props;
   const { width: screenWidth } = useWindowDimensions();
   return (
@@ -115,7 +115,7 @@ export function AudioTab(props: AudioTabProps): JSX.Element {
 
 // type AudioTabBarProps = {};
 
-// export function AudioTabBar(props: AudioTabBarProps): JSX.Element {
+// export function AudioTabBar(props: AudioTabBarProps): React.ReactElement {
 //   calllog.log('AudioTabBar:', props);
 //   return (
 //     <Tab.Item
@@ -134,7 +134,7 @@ type AudioTabsProps = {
   users: User[];
 };
 
-export function AudioTabs(props: AudioTabsProps): JSX.Element {
+export function AudioTabs(props: AudioTabsProps): React.ReactElement {
   const { users } = props;
   const [index, setIndex] = React.useState(0);
   const initUsers = () => {

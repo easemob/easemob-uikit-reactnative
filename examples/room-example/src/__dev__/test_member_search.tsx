@@ -9,7 +9,7 @@ import {
   SearchParticipant,
 } from '../rename.room';
 
-export function SearchParticipantComponent(): JSX.Element {
+export function SearchParticipantComponent(): React.ReactElement {
   return (
     <View style={{ flex: 1 }}>
       <SearchParticipant

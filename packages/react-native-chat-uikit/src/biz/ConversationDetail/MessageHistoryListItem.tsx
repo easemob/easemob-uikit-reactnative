@@ -9,14 +9,14 @@ import {
 
 import { userInfoFromMessage } from '../../chat/utils';
 import { useConfigContext } from '../../config';
-import { useColors } from '../../hook';
+import { useColors } from '../../hook/useColors';
 import { ChatMessage, ChatMessageType } from '../../rename.chat';
 import { usePaletteContext } from '../../theme';
 import { Icon } from '../../ui/Image';
 import { SingleLineText, Text } from '../../ui/Text';
 import { formatTsForConvList } from '../../utils';
 import { Avatar } from '../Avatar';
-import { useMessageSnapshot } from '../hooks';
+import { useMessageSnapshot } from '../hooks/useMessageSnapshot';
 import { MessageDefaultImage } from './MessageListItem';
 import {
   getImageShowSize,

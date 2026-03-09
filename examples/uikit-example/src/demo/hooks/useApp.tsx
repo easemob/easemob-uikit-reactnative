@@ -2,8 +2,6 @@ import {
   NavigationAction,
   NavigationState,
   useNavigationContainerRef,
-} from '@react-navigation/native';
-import {
   DefaultTheme as NaviDefaultTheme,
   Theme as NaviTheme,
 } from '@react-navigation/native';
@@ -204,7 +202,7 @@ export function useApp() {
                   remark: remarkMap.get(user.userId) ?? user.remark,
                 } as DataModel);
               }
-              resolve(DataProfileProvider.toMap(finalUsers));
+              resolve(im.dataFileProvider.toMap(finalUsers));
             } else {
               reject(data);
             }
@@ -235,7 +233,7 @@ export function useApp() {
                   type: 'group',
                 } as DataModel;
               });
-              resolve(DataProfileProvider.toMap(finalGroups));
+              resolve(im.dataFileProvider.toMap(finalGroups));
             } else {
               reject(data);
             }
@@ -307,7 +305,8 @@ export function useApp() {
             '_uikit_msg_tip_added_contact',
             ret?.userName ?? msg.conversationId
           );
-        } catch (error) {
+        } catch (event: any) {
+          console.warn('onSystemTip:error:', event);
           return tr('_uikit_msg_tip_added_contact');
         }
       }
@@ -381,7 +380,7 @@ export function useApp() {
     onGroupEvent: (
       _event?: ChatMultiDeviceEvent,
       _target?: string,
-      _usernames?: Array<string>
+      _usernames?: string[]
     ): void => {},
     onConnected: () => {
       console.log('dev:onConnected:');

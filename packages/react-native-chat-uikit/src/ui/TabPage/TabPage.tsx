@@ -77,17 +77,16 @@ export type TabPageProps = {
   enableScrollAnimation?: boolean;
 };
 
-interface TabPageComponent
-  extends React.ForwardRefExoticComponent<
-    TabPageProps & React.RefAttributes<TabPageRef>
-  > {
+interface TabPageComponent extends React.ForwardRefExoticComponent<
+  TabPageProps & React.RefAttributes<TabPageRef>
+> {
   DefaultHeader: typeof TabPageHeader;
   DotHeader: typeof TabPageDotHeader;
   TabBarHeader: typeof TabPageTabBarHeader;
   DefaultBody: typeof TabPageBody;
 }
 
-const _TabPage = React.forwardRef<TabPageRef, TabPageProps>(
+const TabPageInternal = React.forwardRef<TabPageRef, TabPageProps>(
   (props: TabPageProps, ref?: React.ForwardedRef<TabPageRef>) => {
     const {
       header,
@@ -128,10 +127,10 @@ const _TabPage = React.forwardRef<TabPageRef, TabPageProps>(
       ref
     );
     const count = headerTitles.length;
-    const _TabPageHeader = Header ?? TabPageHeader;
-    const _TabPageBody = (Body as typeof TabPageBody) ?? TabPageBody;
-    const _TabPageBodyT = (Body as typeof TabPageBodyT) ?? TabPageBodyT;
-    const _TabPageBodyLIST =
+    const TabPageHeaderWrapper = Header ?? TabPageHeader;
+    const TabPageBodyWrapper = (Body as typeof TabPageBody) ?? TabPageBody;
+    const TabPageBodyTWrapper = (Body as typeof TabPageBodyT) ?? TabPageBodyT;
+    const TabPageBodyLISTWrapper =
       (Body as typeof TabPageBodyLIST) ?? TabPageBodyLIST;
     const width = initWidth ?? winWidth;
 
@@ -145,7 +144,7 @@ const _TabPage = React.forwardRef<TabPageRef, TabPageProps>(
 
     const getHeader = () => {
       return (
-        <_TabPageHeader
+        <TabPageHeaderWrapper
           {...HeaderProps}
           propRef={headerRef}
           onClicked={(index: number) => {
@@ -175,7 +174,7 @@ const _TabPage = React.forwardRef<TabPageRef, TabPageProps>(
         {headerPosition === 'up' ? getHeader() : null}
 
         {bodyType === 'TabPageBody' ? (
-          <_TabPageBody
+          <TabPageBodyWrapper
             propsRef={bodyRef}
             onMomentumScrollEnd={(e) => {
               // !!! On the android platform, when using `scrollTo`, this callback is not triggered. shit.
@@ -193,7 +192,7 @@ const _TabPage = React.forwardRef<TabPageRef, TabPageProps>(
             {...BodyOtherProps}
           />
         ) : bodyType === 'TabPageBodyT' ? (
-          <_TabPageBodyT
+          <TabPageBodyTWrapper
             propsRef={bodyRef}
             onMomentumScrollEnd={(e) => {
               // !!! On the android platform, when using `scrollTo`, this callback is not triggered. shit.
@@ -213,7 +212,7 @@ const _TabPage = React.forwardRef<TabPageRef, TabPageProps>(
             {...BodyOtherPropsT}
           />
         ) : (
-          <_TabPageBodyLIST
+          <TabPageBodyLISTWrapper
             propsRef={bodyRef}
             onMomentumScrollEnd={(e) => {
               // !!! On the android platform, when using `scrollTo`, this callback is not triggered. shit.
@@ -240,9 +239,9 @@ const _TabPage = React.forwardRef<TabPageRef, TabPageProps>(
   }
 ) as TabPageComponent;
 
-_TabPage.DefaultHeader = TabPageHeader;
-_TabPage.DotHeader = TabPageDotHeader;
-_TabPage.TabBarHeader = TabPageTabBarHeader;
-_TabPage.DefaultBody = TabPageBody;
+TabPageInternal.DefaultHeader = TabPageHeader;
+TabPageInternal.DotHeader = TabPageDotHeader;
+TabPageInternal.TabBarHeader = TabPageTabBarHeader;
+TabPageInternal.DefaultBody = TabPageBody;
 
-export const TabPage = _TabPage;
+export const TabPage = TabPageInternal;

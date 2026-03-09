@@ -25,7 +25,7 @@ export type ParticipantContextMenuProps = PropsWithTest &
 /**
  * Member list menu. Currently, it includes functions such as banning, unbanning, translation, and message reporting.
  * @param props {@link ParticipantContextMenuProps}
- * @returns JSX.Element
+ * @returns React.ReactElement
  */
 export const ParticipantContextMenu = (props: ParticipantContextMenuProps) => {
   const { muteMember, removeMember, memberType, onGetMenuItems, onGetMenuRef } =

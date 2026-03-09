@@ -19,7 +19,6 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function PrivacySettingScreen(props: Props) {
-  const {} = props;
   const navi = useStackScreenRoute(props);
   const { enableBlock } = useConfigContext();
   const { tr } = useI18nContext();

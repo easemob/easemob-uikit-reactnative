@@ -1,6 +1,17 @@
 buildscript {
-  ext.getExtOrDefault = {name ->
-    return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['ChatRoom_' + name]
+  ext.ChatRoom = [
+    kotlinVersion: "2.0.21",
+    minSdkVersion: 24,
+    compileSdkVersion: 36,
+    targetSdkVersion: 36
+  ]
+
+  ext.getExtOrDefault = { prop ->
+    if (rootProject.ext.has(prop)) {
+      return rootProject.ext.get(prop)
+    }
+
+    return ChatRoom[prop]
   }
 
   repositories {
@@ -16,80 +27,19 @@ buildscript {
 }
 
 
-def isNewArchitectureEnabled() {
-  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
-}
-
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
-if (isNewArchitectureEnabled()) {
-  apply plugin: "com.facebook.react"
-}
-
-def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["ChatRoom_" + name]).toInteger()
-}
-
-def supportsNamespace() {
-  def parsed = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')
-  def major = parsed[0].toInteger()
-  def minor = parsed[1].toInteger()
-
-  // Namespace support was added in 7.3.0
-  return (major == 7 && minor >= 3) || major >= 8
-}
-
-def getRNVersion() {
-    def rnPackageJsonPath = null
-    try {
-        rnPackageJsonPath = ["node", "--print", "require.resolve('react-native/package.json')"]
-            .execute(null, rootDir)
-            .text
-            .trim()
-
-        def packageJson = new groovy.json.JsonSlurper().parseText(new File(rnPackageJsonPath).text)
-        def version = packageJson.version
-
-        println("React Native version found: ${version}")
-        return version
-    } catch (Exception e) {
-        println("Error determining React Native version: ${e.message}")
-        return null
-    }
-}
-
-def isReactNative076OrHigher() {
-    def rnVersion = getRNVersion()
-    if (rnVersion != null) {
-        def versionParts = rnVersion.split("\\.")
-        if (versionParts.size() >= 2) {
-            def major = versionParts[0].toInteger()
-            def minor = versionParts[1].toInteger()
-            return (major > 0 || (major == 0 && minor >= 76))
-        }
-    }
-    return false
-}
+apply plugin: "com.facebook.react"
 
 android {
-  if (supportsNamespace()) {
-    namespace "com.chatroom"
+  namespace "com.chatroom"
 
-    sourceSets {
-      main {
-        manifest.srcFile "src/main/AndroidManifestNew.xml"
-      }
-    }
-  }
-
-  compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
+  compileSdkVersion getExtOrDefault("compileSdkVersion")
 
   defaultConfig {
-    minSdkVersion getExtOrIntegerDefault("minSdkVersion")
-    targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
-    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
-    buildConfigField "boolean", "IS_REACT_NATIVE_076_OR_HIGHER", "${isReactNative076OrHigher()}"
+    minSdkVersion getExtOrDefault("minSdkVersion")
+    targetSdkVersion getExtOrDefault("targetSdkVersion")
   }
 
   buildFeatures {
@@ -102,7 +52,7 @@ android {
     }
   }
 
-  lintOptions {
+  lint {
     disable "GradleCompatible"
   }
 
@@ -110,45 +60,8 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
-
-  sourceSets {
-    main {
-      if (isNewArchitectureEnabled()) {
-          java.srcDirs += [
-            "src/newarch",
-            "${project.buildDir}/generated/source/codegen/java"
-          ]
-      } else {
-          java.srcDirs += [
-            "src/oldarch"
-          ]
-      }
-
-      if (isReactNative076OrHigher()) {
-          java.srcDirs += ["src/rn076"]
-      } else {
-          java.srcDirs += ["src/rn072"]
-      }
-    }
-  }
 }
-
-repositories {
-  mavenCentral()
-  google()
-}
-
-def kotlin_version = getExtOrDefault("kotlinVersion")
 
 dependencies {
   implementation "com.facebook.react:react-android"
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-}
-
-if (isNewArchitectureEnabled()) {
-  react {
-    jsRootDir = file("../src/")
-    libraryName = "ChatRoom"
-    codegenJavaPackageName = "com.chatroom"
-  }
 }

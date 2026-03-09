@@ -5,7 +5,7 @@ import { SelectListMemo } from '../components/SelectList';
 import { CallState, InviteeListProps, MultiCall } from '../rename.callkit';
 import { Text1Button } from '../ui/Button';
 
-const ContactList = (props: InviteeListProps): JSX.Element => {
+const ContactList = (props: InviteeListProps): React.ReactElement => {
   console.log('test:contactList:');
   const { onClose, selectedIds, maxCount } = props;
   const [count, setCount] = React.useState<number>(selectedIds.length);

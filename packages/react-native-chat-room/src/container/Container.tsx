@@ -93,7 +93,7 @@ export type ContainerProps = React.PropsWithChildren<{
  * **Note** IM will be initialized here. If other UIKit is integrated at the same time, the parameters initialized first shall prevail.
 For example: if `chat uikit sdk` and `chat room uikit sdk` are integrated at the same time, then the parameter initialized first will prevail.
  * @param props {@link ContainerProps}
- * @returns JSX.Element
+ * @returns React.ReactElement
  */
 export function Container(props: ContainerProps) {
   const {

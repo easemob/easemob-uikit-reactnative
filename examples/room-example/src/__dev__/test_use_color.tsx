@@ -11,7 +11,7 @@ import {
   usePaletteContext,
 } from '../rename.room';
 
-export function UseColorComponent(): JSX.Element {
+export function UseColorComponent(): React.ReactElement {
   const { colors } = usePaletteContext();
   const { initColor, getColor } = useColors({
     '1': {
@@ -39,7 +39,7 @@ export function UseColorComponent(): JSX.Element {
   );
 }
 
-export function UseColorComponent2(): JSX.Element {
+export function UseColorComponent2(): React.ReactElement {
   const { colors } = usePaletteContext();
   const { getColor } = useColors({
     '2': {

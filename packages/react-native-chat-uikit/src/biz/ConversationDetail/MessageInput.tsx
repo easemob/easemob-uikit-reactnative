@@ -38,7 +38,7 @@ export const MessageInput = React.forwardRef<
     type: comType,
   } = props;
 
-  const testRef = React.useRef<View>(null);
+  const testRef = React.useRef<React.ComponentRef<typeof View> | null>(null);
   const { fontFamily } = useConfigContext();
   const { tr } = useI18nContext();
   const { style } = useThemeContext();

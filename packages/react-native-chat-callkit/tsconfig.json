@@ -1,9 +1,7 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.packages.json",
   "compilerOptions": {
     "rootDir": ".",
-    "composite": true,
-    "noEmit": false,
     "paths": {
       "react-native-chat-callkit": ["./src/index"]
     }

@@ -27,8 +27,6 @@ import {
   useColors,
   usePaletteContext,
   useThemeContext,
-} from '../../rename.uikit';
-import {
   ConversationDetail,
   ConversationDetailModelType,
   ConversationDetailRef,
@@ -91,7 +89,6 @@ export const MyMessageContextNameMenu = React.forwardRef<
   props: ContextNameMenuProps,
   ref?: React.ForwardedRef<ContextNameMenuRef>
 ) {
-  const {} = props;
   React.useImperativeHandle(ref, () => {
     return {
       startShow: () => {},
@@ -771,3 +768,5 @@ function TipView(props: { onClose: () => void }) {
     </View>
   );
 }
+
+MyMessageContextNameMenu.displayName = 'MyMessageContextNameMenu';

@@ -350,7 +350,8 @@ export function getSystemTip(
         content.self === content.from,
         content.fromName ?? content.from
       );
-    } catch (error) {
+    } catch (event: any) {
+      uilog.warn('getSystemTip:error:', event);
       return tr('_uikit_msg_tip_recall');
     }
   } else if (body.event === gCustomMessageCreateGroupEventType) {
@@ -360,7 +361,8 @@ export function getSystemTip(
         name: string;
       };
       return tr(content.text, content.name);
-    } catch (error) {
+    } catch (event: any) {
+      uilog.warn('getSystemTip:error:', event);
       return tr('_uikit_msg_tip_create_group_success_with_params');
     }
   } else if (body.event === gCustomMessageCreateThreadTip) {
@@ -370,7 +372,8 @@ export function getSystemTip(
         '_uikit_msg_tip_create_thread_finish',
         ret?.userName ?? ret?.userId
       );
-    } catch (error) {
+    } catch (event: any) {
+      uilog.warn('getSystemTip:error:', event);
       return tr('_uikit_msg_tip_create_thread_finish');
     }
   }

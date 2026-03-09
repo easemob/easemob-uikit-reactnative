@@ -2,7 +2,7 @@ import { BlurView } from '@react-native-community/blur';
 import * as React from 'react';
 import { Image, useWindowDimensions, View } from 'react-native';
 
-export default function TestBlur(): JSX.Element {
+export default function TestBlur(): React.ReactElement {
   const { width, height } = useWindowDimensions();
   return (
     <View

@@ -1,21 +1,13 @@
-const { uikit_dir, uikit_package } = require('./scripts/utils');
+const path = require('path');
 
 module.exports = {
   project: {
-    ios: {
-      automaticPodsInstallation: true,
-    },
+    ios: { automaticPodsInstallation: true },
   },
   dependencies: {
-    [uikit_package.name]: {
-      root: uikit_dir,
-      platforms: {
-        // Codegen script incorrectly fails without this
-        // So we explicitly specify the platforms with empty object
-        ios: {},
-        android: {},
-      },
+    'react-native-chat-uikit': {
+      root: path.join(__dirname, '../../packages/react-native-chat-uikit'),
+      platforms: { ios: {}, android: {} },
     },
-    ...require('expo-dev-client/dependencies'),
   },
 };

@@ -69,7 +69,7 @@ export const ContactListNavigationBar = (
           onClicked: onClickedNewContact,
           iconName: 'person_add',
         }}
-        Title={TopNavigationBarTitle({ text: tr('_uikit_navi_title_contact') })}
+        Title={<TopNavigationBarTitle text={tr('_uikit_navi_title_contact')} />}
       />
     );
   } else if (contactType === 'new-conversation') {
@@ -87,7 +87,7 @@ export const ContactListNavigationBar = (
           </Pressable>
         }
         Right={<View style={{ width: 32, height: 32 }} />}
-        Title={TopNavigationBarTitle({ text: tr('_uikit_new_conv_title') })}
+        Title={<TopNavigationBarTitle text={tr('_uikit_new_conv_title')} />}
       />
     );
   } else if (contactType === 'create-group') {
@@ -117,7 +117,7 @@ export const ContactListNavigationBar = (
             </SingleLineText>
           </Pressable>
         }
-        Title={TopNavigationBarTitle({ text: '' })}
+        Title={<TopNavigationBarTitle text={''} />}
       />
     );
   } else if (contactType === 'add-group-member') {
@@ -149,7 +149,7 @@ export const ContactListNavigationBar = (
             </SingleLineText>
           </Pressable>
         }
-        Title={TopNavigationBarTitle({ text: '' })}
+        Title={<TopNavigationBarTitle text={''} />}
       />
     );
   } else if (contactType === 'share-contact') {
@@ -167,7 +167,7 @@ export const ContactListNavigationBar = (
           </Pressable>
         }
         Right={<View style={{ width: 32, height: 32 }} />}
-        Title={TopNavigationBarTitle({ text: tr('_uikit_share_card_title') })}
+        Title={<TopNavigationBarTitle text={tr('_uikit_share_card_title')} />}
       />
     );
   } else {

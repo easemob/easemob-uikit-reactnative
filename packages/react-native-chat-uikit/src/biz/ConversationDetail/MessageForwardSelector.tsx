@@ -12,7 +12,7 @@ import type { ChatMessage } from '../../rename.chat';
 import { TabPage, TabPageHeader } from '../../ui/TabPage';
 import { ContactList, ContactListProps } from '../ContactList';
 import { GroupList, GroupListProps } from '../GroupList';
-import { useMessageSnapshot } from '../hooks';
+import { useMessageSnapshot } from '../hooks/useMessageSnapshot';
 import { TopNavigationBar, TopNavigationBarLeft } from '../TopNavigationBar';
 import type {
   PropsWithBack,

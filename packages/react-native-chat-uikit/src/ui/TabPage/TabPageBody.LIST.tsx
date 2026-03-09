@@ -32,10 +32,12 @@ export function TabPageBodyLIST<Props extends {} = {}>(
     scrollEnabled,
     ...others
   } = props;
-  const ref = React.useRef<ScrollView>({} as any);
+  const ref = React.useRef<React.ComponentRef<typeof ScrollView>>({} as any);
   const { width: winWidth } = useWindowDimensions();
   const w = initWidth ?? winWidth;
-  let viewRef = React.useRef<View | undefined>();
+  let viewRef = React.useRef<React.ComponentRef<typeof View> | undefined>(
+    {} as any
+  );
   const [currentIndex, setCurrentIndex] = React.useState(initIndex);
   if (propsRef.current) {
     propsRef.current.scrollTo = (index: number, animated?: boolean) => {
@@ -124,7 +126,7 @@ export function TabPageBodyLIST<Props extends {} = {}>(
 
 export function TabPageBodyContent<Props extends {} = {}>(
   props: TabPageBodyLISTContentProps<Props>
-): JSX.Element[] {
+): React.ReactElement[] {
   const { RenderChildren, RenderChildrenProps, width, currentIndex } = props;
   // return <View></View>;
   return RenderChildren.map((RenderChild, i) => {

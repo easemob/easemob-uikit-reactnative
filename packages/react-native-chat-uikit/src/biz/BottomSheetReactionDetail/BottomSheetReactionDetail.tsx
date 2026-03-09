@@ -18,7 +18,7 @@ import { Icon } from '../../ui/Image';
 import { SlideModal, SlideModalRef } from '../../ui/Modal';
 import { SingleLineText } from '../../ui/Text';
 import { Avatar } from '../Avatar';
-import { useDataPriority } from '../hooks';
+import { useDataPriority } from '../hooks/useDataPriority';
 
 export type MessageReactionModel = Omit<ChatMessageReaction, 'userList'> & {
   userList: DataModel[];

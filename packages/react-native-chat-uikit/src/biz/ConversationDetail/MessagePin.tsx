@@ -49,21 +49,21 @@ export type MessagePinProps = {
   msgPinHeightRef: React.MutableRefObject<number>;
   msgPinHeightAnimate: (
     toValue: number,
-    onFinished?: ((result: Animated.EndResult) => void) | undefined,
+    onFinished?: ((result: any) => void) | undefined,
     offsetToZero?: boolean
   ) => void;
   msgPinLabelTranslateYRef: React.MutableRefObject<number>;
   msgPinLabelTranslateYAnimate: (
     toValue: number,
-    onFinished?: ((result: Animated.EndResult) => void) | undefined
+    onFinished?: ((result: any) => void) | undefined
   ) => void;
   msgPinBackgroundOpacityAnimate: (
     toValue: number,
-    onFinished?: ((result: Animated.EndResult) => void) | undefined
+    onFinished?: ((result: any) => void) | undefined
   ) => void;
   msgPinPlaceHolderHeightAnimate: (
     toValue: number,
-    onFinished?: ((result: Animated.EndResult) => void) | undefined
+    onFinished?: ((result: any) => void) | undefined
   ) => void;
   msgPinLabelCurrentTranslateY: Animated.Value;
   msgPinBackgroundCurrentOpacity: Animated.Value;
@@ -82,7 +82,7 @@ export class MessagePin extends React.PureComponent<
   MessagePinState
 > {
   private listRef: React.RefObject<MessagePinListRef>;
-  private getListRef: React.MutableRefObject<
+  private getListRef: React.RefObject<
     (ref: React.RefObject<MessagePinListRef>) => void
   >;
   private uc: UseColors;
@@ -96,7 +96,7 @@ export class MessagePin extends React.PureComponent<
     super(props);
     this.uc = new UseColors();
     this._maxListHeight = 0;
-    this.listRef = React.createRef();
+    this.listRef = React.createRef<MessagePinListRef>() as any;
     this.getListRef = React.createRef() as any;
     this.getListRef.current = (ref: React.RefObject<MessagePinListRef>) =>
       (this.listRef = ref);

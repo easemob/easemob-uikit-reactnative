@@ -36,7 +36,7 @@ export function TestComponent2() {
   );
 }
 
-export function TestUseLifecycle(): JSX.Element {
+export function TestUseLifecycle(): React.ReactElement {
   const [isShow, setIsShow] = React.useState(false);
   return (
     <View

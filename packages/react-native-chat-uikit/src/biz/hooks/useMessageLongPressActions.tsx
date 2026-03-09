@@ -17,7 +17,7 @@ import {
 } from '../../rename.chat';
 import { Services } from '../../services';
 import type { BottomSheetEmojiListRef } from '../BottomSheetEmojiList';
-import { BottomSheetMenuHeader } from '../BottomSheetMenu';
+import { BottomSheetMenuHeader } from '../BottomSheetMenu/BottomSheetMenuHeader';
 import type {
   ConversationDetailModelType,
   MessageModel,

@@ -47,7 +47,7 @@ export function SlideModal(props: SlideModalProps) {
     useModalAnimation(modalAnimationType);
   const [visible, setVisible] = React.useState(false);
 
-  const _Slide = Slide ?? DefaultSlide;
+  const SlideWrapper = Slide ?? DefaultSlide;
 
   if (propsRef.current) {
     propsRef.current.startShow = () => {
@@ -110,7 +110,7 @@ export function SlideModal(props: SlideModalProps) {
         ]}
         pointerEvents={'box-none'}
       >
-        <_Slide
+        <SlideWrapper
           modalType={'modal'}
           {...useModalPanResponder({
             type: modalAnimationType,

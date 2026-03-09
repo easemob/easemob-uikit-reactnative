@@ -140,7 +140,6 @@ function ContactBadge() {
 }
 
 export function HomeScreen(props: Props) {
-  const {} = props;
   const tabRef = React.useRef<TabPageRef>(null);
   const currentIndexRef = React.useRef<number>(0);
   const { tr } = useI18nContext();
@@ -265,7 +264,6 @@ type HomeTabConversationListScreenProps = {};
 function HomeTabConversationListScreen(
   props: HomeTabConversationListScreenProps
 ) {
-  const {} = props;
   const navi = useNativeStackRoute();
   const convRef = React.useRef<ConversationListRef>({} as any);
   const { emit } = useDispatchContext();
@@ -314,7 +312,6 @@ function HomeTabConversationListScreen(
 }
 export type HomeTabContactListScreenProps = {};
 function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
-  const {} = props;
   const navi = useNativeStackRoute();
   const { emit } = useDispatchContext();
   const { contactItems } = useContactListItemActions();
@@ -369,7 +366,6 @@ function HomeTabContactListScreen(props: HomeTabContactListScreenProps) {
 
 export type HomeTabMineScreenProps = {};
 function HomeTabMineScreen(props: HomeTabMineScreenProps) {
-  const {} = props;
   const navi = useNativeStackRoute();
   const {} = navi;
   const im = useChatContext();

@@ -48,7 +48,7 @@ export function CreateGroupScreen(props: Props) {
               .then(async (res) => {
                 if (res.isOk && res.value) {
                   im.updateDataList({
-                    dataList: DataProfileProvider.toMap([
+                    dataList: im.dataFileProvider.toMap([
                       {
                         id: groupId,
                         avatar: res.value.avatarUrl,

@@ -7,7 +7,7 @@ type ElapsedProps = {
   timer: number; // second unit
   color?: string;
 };
-export const ElapsedInternal = (props: ElapsedProps): JSX.Element => {
+export const ElapsedInternal = (props: ElapsedProps): React.ReactNode => {
   const { timer, color } = props;
   const [elapsed, setElapsed] = React.useState(timer);
   const elapsedRef = React.useRef(elapsed);

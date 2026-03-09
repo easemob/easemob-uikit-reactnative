@@ -1,4 +1,4 @@
-// export { multiply } from './__native__/index';
+export * from './__samples__/index';
 export * from './assets';
 export * from './biz/Avatar';
 export * from './biz/Back';

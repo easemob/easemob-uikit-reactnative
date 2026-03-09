@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Dimensions, View } from 'react-native';
 
-import { useColors } from '../../hook';
+import { useColors } from '../../hook/useColors';
 import { useI18nContext } from '../../i18n';
 import { Icon } from '../../ui/Image';
 import { PressableHighlight } from '../../ui/Pressable';
 import { TabPage } from '../../ui/TabPage';
 import { SingleLineText } from '../../ui/Text';
-import { useMessageInputBarNameMenu } from '../hooks';
+import { useMessageInputBarNameMenu } from '../hooks/useMessageMenu';
 import { InitMenuItemsType } from '../types';
 import { ContextNameMenuProps, ContextNameMenuRef } from '../types';
 import {
@@ -206,7 +206,7 @@ const ItemsRender = (
               </PressableHighlight>
             );
           })
-        : ([] as JSX.Element[])}
+        : ([] as React.ReactElement[])}
     </View>
   );
 };

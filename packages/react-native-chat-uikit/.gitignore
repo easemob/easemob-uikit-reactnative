@@ -84,10 +84,7 @@ android/generated
 
 # React Native Nitro Modules
 nitrogen/
-
-# by AsteriskZuo@hotmaile.com
-*.tgz
-*.log
 config.local.ts
 rename.chat.ts
 version.ts
+*.tgz

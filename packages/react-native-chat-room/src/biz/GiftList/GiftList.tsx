@@ -44,7 +44,7 @@ export type GiftListProps = {
  * @test {@link example/src/__dev__/test_gift_list.tsx}
  *
  * @param props {@link GiftListProps}
- * @returns JSX.Element
+ * @returns React.ReactElement
  */
 export function GiftList(props: GiftListProps) {
   const { gifts, onSend, requestUseScrollGesture, GiftListItemComponent } =
@@ -61,7 +61,7 @@ export function GiftList(props: GiftListProps) {
   const [selected, setSelected] = React.useState<string | undefined>(undefined);
   const isScrollingRef = React.useRef(false);
 
-  const _GiftListItem = GiftListItemComponent ?? GiftListItemMemo;
+  const GiftListItemWrapper = GiftListItemComponent ?? GiftListItemMemo;
 
   const onSelected = React.useCallback((giftId: string) => {
     setSelected(giftId);
@@ -123,7 +123,7 @@ export function GiftList(props: GiftListProps) {
         >
           {gifts.map((gift, i) => {
             return (
-              <_GiftListItem
+              <GiftListItemWrapper
                 key={i}
                 gift={gift}
                 selected={selected === gift.giftId ? true : false}

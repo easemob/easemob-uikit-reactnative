@@ -7,9 +7,14 @@ import type { RootScreenParamsList } from '../routes';
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LoginScreen(props: Props) {
-  const {} = props;
   const account = require('../env').account as { id: string; token: string }[];
   const im = useRoomContext();
+  const [s, setS] = React.useState<'' | 'success' | 'failed' | 'logouted'>('');
+  const [s2, setS2] = React.useState<string>('');
+  const [reason, setReason] = React.useState<string>('');
+  const [id, setId] = React.useState(account[0]?.id);
+  const [isPass, setIsPass] = React.useState(false);
+  const [token, setToken] = React.useState(account[0]?.token);
   useRoomListener(
     React.useMemo(() => {
       return {
@@ -22,12 +27,6 @@ export function LoginScreen(props: Props) {
       };
     }, [])
   );
-  const [s, setS] = React.useState<'' | 'success' | 'failed' | 'logouted'>('');
-  const [s2, setS2] = React.useState<string>('');
-  const [reason, setReason] = React.useState<string>('');
-  const [id, setId] = React.useState(account[0]?.id);
-  const [isPass, setIsPass] = React.useState(false);
-  const [token, setToken] = React.useState(account[0]?.token);
   return (
     <View style={{ flex: 1 }}>
       <View>

@@ -161,7 +161,7 @@ export type Config = {
         (props: {
           status: StatusType;
           style?: StyleProp<ViewStyle>;
-        }) => JSX.Element
+        }) => React.ReactElement
       >;
 
   /**

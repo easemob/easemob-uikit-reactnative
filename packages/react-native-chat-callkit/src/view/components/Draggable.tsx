@@ -227,10 +227,10 @@ export default function Draggable(props: IProps) {
       zIndex: z,
     };
     if (renderColor) {
-      style.backgroundColor = renderColor;
+      (style as any).backgroundColor = renderColor;
     }
     if (isCircle) {
-      style.borderRadius = renderSize;
+      (style as any).borderRadius = renderSize;
     }
 
     if (children) {

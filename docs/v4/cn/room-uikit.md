@@ -791,7 +791,7 @@ export const MyGiftMessageList: GiftMessageListComponent = React.forwardRef<
   ref?: React.ForwardedRef<GiftMessageListRef>
 ) {
   // todo: Implement your own business logic, or modify existing business logic.
-  const {} = props;
+
   React.useImperativeHandle(ref, () => {
     return {
       pushTask: (task: GiftMessageListTask) => {

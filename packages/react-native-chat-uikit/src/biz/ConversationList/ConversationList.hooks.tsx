@@ -73,8 +73,8 @@ export function useConversationList(props: ConversationListProps) {
   } = flatListProps;
   const [avatarUrl, setAvatarUrl] = React.useState<string>();
   const { tr } = useI18nContext();
-  const alertRef = React.useRef<AlertRef>(null);
-  const menuRef = React.useRef<ContextNameMenuRef>(null);
+  const alertRef = React.useRef<AlertRef>({} as any);
+  const menuRef = React.useRef<ContextNameMenuRef>({} as any);
   const { closeMenu } = useCloseMenu({ menuRef });
   const ListItemRenderRef = React.useRef<ConversationListItemComponentType>(
     propsListItemRender ?? ConversationListItemMemo

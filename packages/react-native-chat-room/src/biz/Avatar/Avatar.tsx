@@ -12,7 +12,7 @@ export type AvatarProps = Omit<DefaultIconImageProps, 'localIcon'>;
  * Avatar component. If the url is incorrect, does not exist, or a network error occurs
  *
  * @param props {@link DefaultIconImageProps}
- * @returns JSX.Element
+ * @returns React.ReactElement
  */
 export function Avatar(props: AvatarProps) {
   const { size, style, borderRadius, ...others } = props;

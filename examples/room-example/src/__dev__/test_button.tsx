@@ -12,7 +12,7 @@ import {
   ThemeContextProvider,
 } from '../rename.room';
 
-export function ButtonComponent(): JSX.Element {
+export function ButtonComponent(): React.ReactElement {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Button
@@ -30,7 +30,7 @@ export function ButtonComponent(): JSX.Element {
   );
 }
 
-export function IconButtonComponent(): JSX.Element {
+export function IconButtonComponent(): React.ReactElement {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text1IconButton
@@ -45,7 +45,7 @@ export function IconButtonComponent(): JSX.Element {
   );
 }
 
-export function IconButtonComponent2(): JSX.Element {
+export function IconButtonComponent2(): React.ReactElement {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <BorderIconButton

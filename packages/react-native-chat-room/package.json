@@ -1,12 +1,17 @@
 {
   "name": "react-native-chat-room",
   "version": "1.0.3",
-  "description": "react native chat room.",
-  "main": "lib/commonjs/index",
-  "module": "lib/module/index",
-  "types": "lib/typescript/src/index.d.ts",
-  "react-native": "src/index",
-  "source": "src/index",
+  "description": "react native chat room",
+  "main": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.tsx",
+      "types": "./lib/typescript/src/index.d.ts",
+      "default": "./lib/module/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "src",
     "lib",
@@ -27,14 +32,13 @@
     "!**/.*"
   ],
   "scripts": {
-    "test": "jest",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
+    "typecheck": "echo typecheck start && tsc && echo typecheck end",
+    "lintcheck": "echo lint start && eslint \"src/**/*.{js,ts,tsx}\" && echo lint end",
+    "circular-dep-check": "madge --circular --extensions ts,tsx src",
     "clean": "yarn clean:generated && yarn clean:build && yarn clean:lib",
     "clean:generated": "del-cli ios/generated android/generated",
     "clean:build": "del-cli android/build",
     "clean:lib": "del-cli lib",
-    "clean:node_modules": "del-cli node_modules",
     "prepare": "yarn gen && yarn lib",
     "lib": "bob build",
     "gen": "yarn gen:config && yarn gen:rename && yarn gen:version",
@@ -44,73 +48,91 @@
     "generate-bundle": "node scripts/bundle-icons.js",
     "change-icon-name": "node scripts/change-icons-name.js",
     "generate-face-name": "node scripts/generate-faces-name.js",
-    "release": "release-it"
+    "release": "release-it --only-version"
   },
   "keywords": [
     "react-native",
     "ios",
     "android"
   ],
-  "repository": "https://github.com/easemob/easemob-uikit-reactnative",
-  "author": "Asterisk <zuoyu@easemob.com> (https://github.com/asteriskzuo)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/easemob/easemob-room-reactnative.git"
+  },
+  "author": "asteriskzuo <zuoyuhsywn@hotmail.com> (https://github.com/easemob)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/easemob/easemob-uikit-reactnative/issues"
+    "url": "https://github.com/easemob/easemob-room-reactnative/issues"
   },
-  "homepage": "https://github.com/easemob/easemob-uikit-reactnative#readme",
+  "homepage": "https://github.com/easemob/easemob-room-reactnative#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^17.0.2",
-    "@evilmartians/lefthook": "^1.5.0",
-    "@react-native-async-storage/async-storage": "^1.23.1",
-    "@react-native-camera-roll/camera-roll": "^7.10.0",
-    "@react-native-clipboard/clipboard": "^1.16.2",
-    "@react-native-community/cli": "15.0.1",
-    "@react-native/eslint-config": "^0.73.1",
-    "@release-it/conventional-changelog": "^9.0.2",
-    "@types/jest": "^29.5.5",
-    "@types/react": "^18.2.44",
-    "commitlint": "^17.0.2",
-    "del-cli": "^5.1.0",
-    "eslint": "^8.1.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.1",
+    "@babel/core": "^7.27.4",
+    "@eslint/compat": "^2.0.2",
+    "@eslint/eslintrc": "^3.3.4",
+    "@eslint/js": "^10.0.1",
+    "@react-native/babel-preset": "0.83.2",
+    "@react-native/eslint-config": "0.83.2",
+    "@release-it/conventional-changelog": "^10.0.1",
+    "@types/react": "^19.2.0",
+    "del-cli": "^6.0.0",
+    "eslint": "^9.25.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.2.5",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "jest": "^29.7.0",
-    "prettier": "^3.0.3",
-    "react": "18.3.1",
-    "react-native": "0.76.9",
-    "react-native-builder-bob": "^0.36.0",
+    "prettier": "^3.5.3",
+    "react": "19.2.0",
+    "react-native": "0.83.2",
+    "react-native-builder-bob": "^0.40.18",
     "react-native-chat-sdk": "^1.12.0",
+    "react-native-gesture-handler": "^2.30.0",
     "react-native-linear-gradient": "^2.8.3",
-    "react-native-safe-area-context": "~4.12.0",
-    "release-it": "^17.10.0",
-    "typescript": "^5.2.2"
-  },
-  "resolutions": {
-    "@types/react": "^18.2.44"
+    "react-native-safe-area-context": "~5.6.0",
+    "release-it": "^19.0.4",
+    "typescript": "~5.9.2"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": ">=0.71.0",
-    "react-native-chat-sdk": "^1.8.0",
-    "react-native-linear-gradient": "*",
-    "react-native-safe-area-context": "*"
+    "react": ">=18.2.0",
+    "react-native": ">=0.76.0",
+    "react-native-chat-sdk": "^1.12.0",
+    "react-native-gesture-handler": ">=2.0.0",
+    "react-native-linear-gradient": ">=3.0.0",
+    "react-native-safe-area-context": ">=5.0.0"
   },
-  "packageManager": "yarn@4.9.1",
-  "jest": {
-    "preset": "react-native",
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
     ]
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+  "codegenConfig": {
+    "name": "ChatRoomViewSpec",
+    "type": "all",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.chatroom"
+    },
+    "ios": {
+      "components": {
+        "ChatRoomView": {
+          "className": "ChatRoomView"
+        }
+      }
+    }
   },
   "release-it": {
     "git": {
@@ -125,80 +147,22 @@
     },
     "plugins": {
       "@release-it/conventional-changelog": {
-        "preset": "angular"
+        "preset": {
+          "name": "angular"
+        }
       }
     }
   },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@react-native",
-      "prettier"
-    ],
-    "plugins": [
-      "simple-import-sort"
-    ],
-    "parserOptions": {
-      "requireConfigFile": false
-    },
-    "rules": {
-      "react/react-in-jsx-scope": "off",
-      "simple-import-sort/imports": "error",
-      "simple-import-sort/exports": "error",
-      "react-native/no-inline-styles": "off",
-      "@typescript-eslint/no-shadow": "off",
-      "prettier/prettier": [
-        "error",
-        {
-          "quoteProps": "consistent",
-          "singleQuote": true,
-          "tabWidth": 2,
-          "trailingComma": "es5",
-          "useTabs": false
-        }
-      ]
-    }
-  },
-  "eslintIgnore": [
-    "node_modules/",
-    "lib/",
-    "scripts/",
-    "babel.config.js",
-    "react-native.config.js"
-  ],
-  "prettier": {
-    "quoteProps": "consistent",
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "es5",
-    "useTabs": false
-  },
-  "react-native-builder-bob": {
-    "source": "src",
-    "output": "lib",
-    "targets": [
-      "commonjs",
-      "module",
-      [
-        "typescript",
-        {
-          "project": "tsconfig.build.json"
-        }
-      ]
-    ]
-  },
-  "codegenConfig": {
-    "name": "RNChatRoomSpec",
-    "type": "modules",
-    "jsSrcsDir": "src/__native__",
-    "android": {
-      "javaPackageName": "com.chatroom"
-    }
-  },
   "create-react-native-library": {
-    "type": "turbo-module",
+    "type": "fabric-view",
     "languages": "kotlin-objc",
-    "version": "0.48.3"
+    "tools": [
+      "eslint",
+      "jest",
+      "lefthook",
+      "release-it"
+    ],
+    "version": "0.57.2"
   },
   "dependencies": {
     "twemoji": "^14.0.2"

@@ -81,7 +81,9 @@ function buttonNameConvertToIconName(name: BottomMenuButtonType): IconName {
   return 'default_avatar';
 }
 
-export function BottomMenuButton(props: BottomMenuButtonProps): JSX.Element {
+export function BottomMenuButton(
+  props: BottomMenuButtonProps
+): React.ReactElement {
   const { name, onPress, backgroundColor, disabled } = props;
   const isLoading = name === 'accepting' ? true : false;
   return (

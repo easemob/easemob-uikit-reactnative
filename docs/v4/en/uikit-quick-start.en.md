@@ -184,7 +184,7 @@ function SendMessage() {
   }
 }
 
-export default function App(): React.JSX.Element {
+export default function App(): React.React.ReactElement {
   // 初始化 UIKit
   return (
     <Container options={{ appKey: appKey, autoLogin: false }}>

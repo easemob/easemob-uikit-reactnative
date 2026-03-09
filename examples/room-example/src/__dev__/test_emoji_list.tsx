@@ -119,6 +119,7 @@ export const ViewMemo = React.memo(({ count }: { count: number }) => {
   console.log('test:ViewMemo', count);
   return <View style={{ width: 100, height: 100, backgroundColor: 'red' }} />;
 });
+ViewMemo.displayName = 'ViewMemo';
 
 export function TestViewMemo() {
   console.log('test:TestViewMemo:');
@@ -168,6 +169,7 @@ export const ViewMemo2 = React.memo(
     );
   }
 );
+ViewMemo2.displayName = 'ViewMemo2';
 
 export function TestViewMemo2() {
   console.log('test:TestViewMemo2:');

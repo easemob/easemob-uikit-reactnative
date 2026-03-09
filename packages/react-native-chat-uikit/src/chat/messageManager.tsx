@@ -1,4 +1,4 @@
-import { UseUrlPreview } from '../biz/hooks';
+import { UseUrlPreview } from '../biz/hooks/useUrlPreview';
 import { uilog } from '../const';
 import { ErrorCode, UIKitError } from '../error';
 import {
@@ -16,7 +16,7 @@ import {
   ChatSearchDirection,
   ChatTextMessageBody,
 } from '../rename.chat';
-import { asyncTask, getCurTs } from '../utils';
+import { asyncTask, getCurTs } from '../utils/function';
 import {
   gCustomMessageRecallEventType,
   gMessageAttributeFileProgress,

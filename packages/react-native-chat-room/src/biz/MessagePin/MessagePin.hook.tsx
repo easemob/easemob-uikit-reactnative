@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   Dimensions,
   NativeSyntheticEvent,
-  TextLayoutEventData,
+  // TextLayoutEventData,
 } from 'react-native';
 
 import { useConfigContext } from '../../config';
@@ -18,8 +18,6 @@ import { MessagePinProps, MessagePinTask } from './types';
 import { MessagePinItemProps } from './types';
 
 export function useMessagePin(props: MessagePinProps) {
-  const {} = props;
-
   const tasks: Stack<MessagePinTask> = React.useRef(
     new Stack<MessagePinTask>()
   ).current;
@@ -27,11 +25,11 @@ export function useMessagePin(props: MessagePinProps) {
 
   const [isShow, setIsShow] = React.useState(false);
   const [id, setId] = React.useState<string | undefined>(undefined);
-  const avatarRef = React.useRef<string>();
-  const msgRef = React.useRef<ChatMessage>();
+  const avatarRef = React.useRef<string>(undefined);
+  const msgRef = React.useRef<ChatMessage | undefined>(undefined);
   const idRef = React.useRef<string>('');
   const tagRef = React.useRef<string>('');
-  const nicknameRef = React.useRef<string>();
+  const nicknameRef = React.useRef<string>(undefined);
   const im = useRoomContext();
 
   const execTask = React.useCallback(() => {
@@ -111,7 +109,6 @@ export function useMessagePin(props: MessagePinProps) {
 }
 
 export function useMessagePinItem(props: MessagePinItemProps) {
-  const {} = props;
   const {
     maxWidth = Dimensions.get('window').width * 0.75,
     containerStyle,
@@ -203,14 +200,20 @@ export function useMessagePinItem(props: MessagePinItemProps) {
   );
 
   const onIndentedText = React.useCallback(
-    (event: NativeSyntheticEvent<TextLayoutEventData>) => {
+    (
+      event: NativeSyntheticEvent<{
+        lines: { width: number; height: number }[];
+      }>
+    ) => {
       const length = event.nativeEvent.lines.length;
       if (length > 0) {
         setUnitTextHeight(event.nativeEvent.lines[0]?.height ?? 10);
         displayContentWidthRef.current = 0;
-        event.nativeEvent.lines.forEach((line) => {
-          displayContentWidthRef.current += line.width;
-        });
+        event.nativeEvent.lines.forEach(
+          (line: { width: number; height: number }) => {
+            displayContentWidthRef.current += line.width;
+          }
+        );
         compareWidth(
           realContentWidthRef.current,
           displayContentWidthRef.current

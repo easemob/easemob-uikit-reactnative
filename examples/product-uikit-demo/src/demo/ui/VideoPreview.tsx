@@ -68,3 +68,5 @@ export const VideoPreview = forwardRef<VideoPreviewRef, VideoPreviewProps>(
     );
   }
 );
+
+VideoPreview.displayName = 'VideoPreview';

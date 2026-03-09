@@ -64,7 +64,6 @@ export function GroupInfoScreen(props: Props) {
   );
 
   React.useEffect(() => {
-    hash;
     if (from === 'AVSelectGroupParticipant') {
       stop(() => {});
     } else if (from === 'EditInfo') {

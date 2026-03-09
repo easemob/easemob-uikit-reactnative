@@ -133,7 +133,7 @@ export function useContactInfo(
                       } as ContactModel;
 
                       im.updateDataList({
-                        dataList: DataProfileProvider.toMap([
+                        dataList: im.dataFileProvider.toMap([
                           {
                             id: userId,
                             name:

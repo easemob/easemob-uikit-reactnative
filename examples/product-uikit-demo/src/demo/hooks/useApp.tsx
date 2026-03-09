@@ -2,8 +2,6 @@ import {
   NavigationAction,
   NavigationState,
   useNavigationContainerRef,
-} from '@react-navigation/native';
-import {
   DefaultTheme as NaviDefaultTheme,
   Theme as NaviTheme,
 } from '@react-navigation/native';
@@ -17,8 +15,6 @@ import {
   ChatCustomMessageBody,
   ChatMessage,
   ChatMessageType,
-} from '../../rename.callkit';
-import {
   ChatGroup,
   ChatMultiDeviceEvent,
   ChatPushConfig,
@@ -68,8 +64,8 @@ import {
   isDevMode,
   restServerDomain,
   twemoji_ttf_name,
+  gCustomMessageSafeTip,
 } from '../common/const';
-import { gCustomMessageSafeTip } from '../common/const';
 import {
   checkFCMPermission,
   requestFCMPermission,
@@ -228,7 +224,7 @@ export function useApp() {
                   remark: remarkMap.get(user.userId) ?? user.remark,
                 } as DataModel);
               }
-              resolve(DataProfileProvider.toMap(finalUsers));
+              resolve(im.dataFileProvider.toMap(finalUsers));
             } else {
               reject(data);
             }
@@ -259,7 +255,7 @@ export function useApp() {
                   type: 'group',
                 } as DataModel;
               });
-              resolve(DataProfileProvider.toMap(finalGroups));
+              resolve(im.dataFileProvider.toMap(finalGroups));
             } else {
               reject(data);
             }
@@ -622,7 +618,7 @@ export function useApp() {
     onGroupEvent: (
       _event?: ChatMultiDeviceEvent,
       _target?: string,
-      _usernames?: Array<string>
+      _usernames?: string[]
     ): void => {},
     onConnected: () => {
       console.log('dev:onConnected:');

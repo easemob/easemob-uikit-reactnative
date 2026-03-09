@@ -30,14 +30,16 @@ yarn && yarn prepare
 
 # 配置推送环境
 
-由于 示例项目使用 fcm 推送 插件，所以，需要添加 fcm 必要的 配置文件。
+示例项目使用 `@react-native-firebase/messaging` 实现 FCM 推送。Firebase 配置文件已通过 `app.json` 中的 `googleServicesFile` 和 Expo config plugin 自动集成，`expo prebuild` 时会自动复制到原生项目中。
 
-如果没有，可以将预置模板占位。
+如果没有真实的 Firebase 配置文件，可以将预置模板作为占位文件复制到项目根目录：
 
 ```sh
-cp templates/google-services.json.template examples/product-uikit-demo/android/app/google-services.json
-cp templates/GoogleService-Info.plist.template examples/product-uikit-demo/ios/ChatUikitFullExample/GoogleService-Info.plist
+cp templates/google-services.json.template examples/product-uikit-demo/google-services.json
+cp templates/GoogleService-Info.plist.template examples/product-uikit-demo/GoogleService-Info.plist
 ```
+
+如需使用真实的 FCM 推送功能，请从 [Firebase Console](https://console.firebase.google.com/) 下载对应的配置文件并替换上述占位文件。
 
 # 运行
 

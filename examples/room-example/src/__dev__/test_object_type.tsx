@@ -38,7 +38,7 @@ export function TestComponent({
   );
 }
 
-export function TestUseCheckType(): JSX.Element {
+export function TestUseCheckType(): React.ReactElement {
   const [isShow, setIsShow] = React.useState(false);
 
   return (

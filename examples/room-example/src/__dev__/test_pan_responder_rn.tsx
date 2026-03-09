@@ -11,7 +11,7 @@ import {
   ThemeContextProvider,
 } from '../rename.room';
 
-export function PanResponderComponent(): JSX.Element {
+export function PanResponderComponent(): React.ReactElement {
   const p = React.useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -55,7 +55,7 @@ export function PanResponderComponent(): JSX.Element {
 /**
  * Test the scrolling of FlatList.
  */
-export function PanResponderComponent3(): JSX.Element {
+export function PanResponderComponent3(): React.ReactElement {
   const ref = React.useRef<FlatList>({} as any);
 
   const p = React.useRef(
@@ -131,7 +131,7 @@ export function PanResponderComponent3(): JSX.Element {
  *
  * The nested scrolling problem of ScrollView has been solved. But not perfect.
  */
-export function PanResponderComponent5(): JSX.Element {
+export function PanResponderComponent5(): React.ReactElement {
   console.log('test:PanResponderComponent5:');
   const ref = React.useRef<FlatList>({} as any);
   const isRef = React.useRef(false);
@@ -223,7 +223,7 @@ export function PanResponderComponent5(): JSX.Element {
  *
  * The nested scrolling problem of ScrollView has been solved. But not perfect.
  */
-export function PanResponderComponent6(): JSX.Element {
+export function PanResponderComponent6(): React.ReactElement {
   const ref = React.useRef<FlatList>({} as any);
   // const [isF, setIsF] = React.useState(false);
   const isRef = React.useRef(false);
@@ -310,7 +310,7 @@ export function PanResponderComponent6(): JSX.Element {
  *
  * The nested scrolling problem of ScrollView has been solved. But not perfect.
  */
-export function PanResponderComponent4(): JSX.Element {
+export function PanResponderComponent4(): React.ReactElement {
   const ref = React.useRef<ScrollView>({} as any);
 
   const p = React.useRef(
@@ -380,7 +380,7 @@ export function PanResponderComponent4(): JSX.Element {
 /**
  * Test tap gestures.
  */
-export function PanResponderComponent2(): JSX.Element {
+export function PanResponderComponent2(): React.ReactElement {
   const p = React.useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,

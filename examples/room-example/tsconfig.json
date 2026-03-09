@@ -1,6 +1,12 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.examples.json",
   "compilerOptions": {
-    "noUnusedLocals": false
-  }
+    "paths": {
+      "@/*": ["./*"],
+      "react-native-chat-room": [
+        "../../packages/react-native-chat-room/src/index.tsx"
+      ]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

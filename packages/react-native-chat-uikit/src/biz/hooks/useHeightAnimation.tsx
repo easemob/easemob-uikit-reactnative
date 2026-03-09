@@ -11,7 +11,7 @@ export function useHeightAnimation(params: {
   const heightAnimate = React.useCallback(
     (
       toValue: number,
-      onFinished?: (result: Animated.EndResult) => void,
+      onFinished?: (result: any) => void,
       offsetToZero?: boolean
     ) => {
       if (offsetToZero === true) {

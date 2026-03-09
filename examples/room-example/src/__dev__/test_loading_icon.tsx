@@ -3,7 +3,7 @@ import { View } from 'react-native';
 
 import { LoadingIcon } from '../rename.room';
 
-export default function Test(): JSX.Element {
+export default function Test(): React.ReactElement {
   return (
     <View
       style={{
