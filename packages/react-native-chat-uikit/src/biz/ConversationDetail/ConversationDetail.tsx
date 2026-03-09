@@ -65,9 +65,6 @@ export function ConversationDetail(props: ConversationDetailProps) {
     onRequestClosePinMessage,
   } = useConversationDetail(props);
 
-  console.log('test:zuoyu:MessageListWrapper', MessageListWrapper);
-  console.log('test:zuoyu:messageListProps', messageListProps);
-
   const getContent = () => (
     <ImageBackground
       style={[{ flexGrow: 1 }, containerStyle]}

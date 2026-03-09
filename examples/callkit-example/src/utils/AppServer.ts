@@ -6,118 +6,80 @@ const accountType = require('../env').accountType;
 export class AppServerClient {
   private static _rtcTokenUrl: string =
     accountType === 'easemob'
-      ? `https://${appServerDomain}/token/rtcToken/v1`
-      : `https://${appServerDomain}/token/rtc/channel`;
+      ? `${appServerDomain}/inside/token/rtc/channel`
+      : `${appServerDomain}/token/rtc/channel`;
   private static _mapUrl: string =
     accountType === 'easemob'
-      ? `https://${appServerDomain}/channel/mapper`
-      : `https://${appServerDomain}/agora/channel/mapper`;
-  private static _regUrl: string = `https://${appServerDomain}/app/chat/user/register`;
-  private static _tokenUrl: string = `https://${appServerDomain}/app/chat/user/login`;
+      ? `${appServerDomain}/inside/agora/channel/mapper`
+      : `${appServerDomain}/agora/channel/mapper`;
+  private static _regUrl: string = `${appServerDomain}/app/chat/user/register`;
+  private static _tokenUrl: string = `${appServerDomain}/app/chat/user/login`;
 
   protected _(): void {}
-  private static async req(params: {
-    method: 'GET' | 'POST';
-    url: string;
-    kvs: any;
-    from: 'requestToken' | 'requestUserMap';
-    onResult: (p: { data?: any; error?: any }) => void;
-  }): Promise<void> {
-    console.log('AppServerClient:req:', params);
+
+  /**
+   * Request rtc token.
+   */
+  public static async requestRtcToken(params: {
+    userId: string;
+    channelId: string;
+    onResult: (params: { data?: any; error?: any }) => void;
+  }): Promise<any> {
+    const { userId, channelId } = params;
+    const url =
+      accountType === 'agora'
+        ? AppServerClient._rtcTokenUrl + `/${channelId}?userAccount=${userId}`
+        : AppServerClient._rtcTokenUrl + `/${channelId}/user/${userId}`;
     try {
-      const accessToken = await ChatClient.getInstance().getAccessToken();
-      console.log('AppServerClient:req:', accessToken);
-      const json = params.kvs as {
-        userAccount: string;
-        channelName: string;
-        appkey: string;
-        userChannelId?: number;
-      };
-      const url = `${params.url}?appkey=${encodeURIComponent(
-        json.appkey
-      )}&channelName=${encodeURIComponent(
-        json.channelName
-      )}&userAccount=${encodeURIComponent(json.userAccount)}`;
-      console.log('AppServerClient:req:', url);
       const response = await fetch(url, {
-        method: params.method,
+        method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
         },
       });
       const value = await response.json();
-      console.log('AppServerClient:req:', value, value.code);
-      if (value.code === 'RES_0K' || value.code === 'RES_OK') {
-        if (params.from === 'requestToken') {
-          params.onResult({
-            data: {
-              token: value.accessToken,
-              uid: value.agoraUserId ?? json.userChannelId,
-            },
-          });
-        } else if (params.from === 'requestUserMap') {
-          params.onResult({
-            data: {
-              result: value.result,
-            },
-          });
-        }
-      } else {
-        params.onResult({ error: { code: value.code } });
-      }
+      console.log('RestApi:requestRtcToken:', value, url);
+      params.onResult({
+        data: {
+          token: value.accessToken,
+          uid: value.agoraUid,
+        },
+      });
     } catch (error) {
-      params.onResult({ error });
+      console.warn('RestApi:requestRtcToken:error:', error);
+      params.onResult({ error: error });
     }
   }
-  public static getRtcToken(params: {
-    userAccount: string;
-    channelId: string;
-    appKey: string;
-    userChannelId?: number | undefined;
-    type?: 'easemob' | 'agora' | undefined;
-    onResult: (params: { data?: any; error?: any }) => void;
-  }): void {
-    const tokenUrl = (url: string) => {
-      console.log('test:tokenUrl', params.type, url);
-      let ret = url;
-      if (params.type !== 'easemob') {
-        ret += `/${params.channelId}/agorauid/${params.userChannelId!}`;
-      }
-      return ret;
-    };
 
-    AppServerClient.req({
-      method: 'GET',
-      url: tokenUrl(AppServerClient._rtcTokenUrl),
-      kvs: {
-        userAccount: params.userAccount,
-        channelName: params.channelId,
-        appkey: params.appKey,
-        userChannelId: params.userChannelId,
-      },
-      from: 'requestToken',
-      onResult: params.onResult,
-    });
-  }
-  public static getRtcMap(params: {
-    userAccount: string;
+  /**
+   * Request rtc map.
+   */
+  public static async requestRtcMap(params: {
     channelId: string;
-    appKey: string;
     onResult: (params: { data?: any; error?: any }) => void;
-  }): void {
-    AppServerClient.req({
-      method: 'GET',
-      url: AppServerClient._mapUrl,
-      kvs: {
-        userAccount: params.userAccount,
-        channelName: params.channelId,
-        appkey: params.appKey,
-      },
-      from: 'requestUserMap',
-      onResult: params.onResult,
-    });
+  }): Promise<any> {
+    const { channelId } = params;
+    const url = AppServerClient._mapUrl + `?channelName=${channelId}`;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      const value = await response.json();
+      console.log('RestApi:requestRtcMap:', value, url);
+      params.onResult({
+        data: {
+          result: value.result,
+        },
+      });
+    } catch (error) {
+      console.warn('RestApi:requestRtcMap:error:', error);
+      params.onResult({ error: error });
+    }
   }
 
   private static async req2(params: {
@@ -166,33 +128,6 @@ export class AppServerClient {
     onResult: (params: { data?: any; error?: any }) => void;
   }): void {
     this.req2({ ...params, from: 'registerAccount' });
-    // fetch(AppServerClient._regUrl, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     userAccount: params.userId,
-    //     userPassword: params.userPassword,
-    //   }),
-    // })
-    //   .then(async response => {
-    //     try {
-    //       const value = await response.json();
-    //       console.log('test:value:', value, value.code);
-    //       if (value.code === 'RES_0K' || value.code === 'RES_OK') {
-    //         params.onResult({data: {}});
-    //       } else {
-    //         params.onResult({error: {code: value.code}});
-    //       }
-    //     } catch (e) {
-    //       params.onResult({error: e});
-    //     }
-    //   })
-    //   .catch(e => {
-    //     console.log('getAccountToken:error:', AppServerClient._regUrl, e);
-    //     params.onResult({error: e});
-    //   });
   }
 
   public static getAccountToken(params: {
@@ -201,33 +136,6 @@ export class AppServerClient {
     onResult: (params: { data?: any; error?: any }) => void;
   }): void {
     this.req2({ ...params, from: 'getAccountToken' });
-    // fetch(AppServerClient._tokenUrl, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     userAccount: params.userId,
-    //     userPassword: params.userPassword,
-    //   }),
-    // })
-    //   .then(async response => {
-    //     try {
-    //       const value = await response.json();
-    //       console.log('test:value:', value, value.code);
-    //       if (value.code === 'RES_0K' || value.code === 'RES_OK') {
-    //         params.onResult({data: {token: value.accessToken}});
-    //       } else {
-    //         params.onResult({error: {code: value.code}});
-    //       }
-    //     } catch (e) {
-    //       params.onResult({error: e});
-    //     }
-    //   })
-    //   .catch(e => {
-    //     console.log('getAccountToken:error:', AppServerClient._tokenUrl, e);
-    //     params.onResult({error: e});
-    //   });
   }
 
   public static set rtcTokenUrl(url: string) {

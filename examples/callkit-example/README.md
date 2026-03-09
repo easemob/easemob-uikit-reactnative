@@ -36,3 +36,5 @@ yarn run android
 # or
 yarn run ios
 ```
+
+# Note: Please use the real device for demonstration

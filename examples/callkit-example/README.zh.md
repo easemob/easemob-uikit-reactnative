@@ -36,3 +36,5 @@ yarn run android
 # 或者
 yarn run ios
 ```
+
+# 注意: 请使用真机演示

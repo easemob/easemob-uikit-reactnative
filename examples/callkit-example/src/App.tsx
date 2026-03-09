@@ -176,14 +176,14 @@ export function App() {
         onResult: (params: { data?: any; error?: any }) => void;
       }) => {
         console.log('requestRTCToken:', params);
-        AppServerClient.getRtcToken({
-          userAccount: params.userId,
+        AppServerClient.requestRtcToken({
+          userId: params.userId,
           channelId: params.channelId,
-          appKey: gAppKey,
-          userChannelId: params.userChannelId,
-          type: params.type,
           onResult: (pp: { data?: any; error?: any }) => {
-            console.log('test:', pp);
+            console.log('test:requestRTCToken:onResult:', pp);
+            if (pp.data?.uid && typeof pp.data.uid === 'string') {
+              pp.data.uid = +pp.data.uid; // ensure uid is number
+            }
             params.onResult(pp);
           },
         });
@@ -195,12 +195,10 @@ export function App() {
         onResult: (params: { data?: any; error?: any }) => void;
       }) => {
         console.log('requestUserMap:', params);
-        AppServerClient.getRtcMap({
-          userAccount: params.userId,
+        AppServerClient.requestRtcMap({
           channelId: params.channelId,
-          appKey: gAppKey,
           onResult: (pp: { data?: any; error?: any }) => {
-            console.log('requestUserMap:getRtcMap:', pp);
+            console.log('requestUserMap:requestUserMap:onResult:', pp);
             params.onResult(pp);
           },
         });
