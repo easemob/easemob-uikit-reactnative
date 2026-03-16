@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat packages/react-native-chat-uikit/package.json | python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('scripts',{}\\), indent=2\\)\\)\")",
+      "Bash(cat packages/react-native-chat-uikit/package.json | python3 -c \"\nimport json,sys\nd=json.load\\(sys.stdin\\)\nprint\\('devDeps:', json.dumps\\(d.get\\('devDependencies',{}\\), indent=2\\)\\)\n\" | grep -E \"builder-bob|bob|release-it|typescript\" | head -10)",
+      "Bash(cat packages/react-native-chat-uikit/package.json | python3 -c \"\nimport json,sys\nd=json.load\\(sys.stdin\\)\nprint\\(json.dumps\\(d.get\\('react-native-builder-bob',{}\\), indent=2\\)\\)\n\")"
+    ]
+  }
+}
