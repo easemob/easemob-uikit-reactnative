@@ -87,3 +87,4 @@ nitrogen/
 rename.*.ts
 version.ts
 config.*.ts
+*.tgz

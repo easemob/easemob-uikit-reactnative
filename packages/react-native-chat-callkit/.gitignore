@@ -86,3 +86,4 @@ android/generated
 nitrogen/
 rename.*.ts
 version.ts
+*.tgz
