@@ -25,13 +25,25 @@ color_log.info(`[switch-icon]Switching icons to brand: ${brand}`);
 const content = fs.readFileSync(appJsonPath, 'utf-8');
 const updated = content.replace(iconPattern, replacement);
 
-if (content === updated) {
+// for android adaptive icon
+const androidIconPattern =
+  /\.\/assets\/images\/(easemob|agora|shengwang)-adaptive\.png/g;
+const androidReplacement = `./assets/images/${brand}-adaptive.png`;
+const updatedAndroid = updated.replace(androidIconPattern, androidReplacement);
+
+color_log.info(
+  `[switch-icon]Switching android adaptive icon to brand: ${brand}`
+);
+
+const finalUpdated = updatedAndroid;
+
+if (content === finalUpdated) {
   color_log.warning(
     '⚠️  No icon references were changed (already using this brand?).'
   );
 } else {
-  fs.writeFileSync(appJsonPath, updated, 'utf-8');
+  fs.writeFileSync(appJsonPath, finalUpdated, 'utf-8');
   color_log.success(
-    `✅ Replaced icon references with ${replacement} in app.json`
+    `✅ Replaced icon references with ${replacement} and android adaptive icon with ${androidReplacement} in app.json`
   );
 }

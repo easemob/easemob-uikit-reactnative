@@ -30,9 +30,7 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/easemob.png",
-        "backgroundImage": "./assets/images/easemob.png",
-        "monochromeImage": "./assets/images/easemob.png"
+        "foregroundImage": "./assets/images/easemob-adaptive.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.hyphenate.rn.ChatRoomFullExample"
