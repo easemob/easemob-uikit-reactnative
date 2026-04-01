@@ -63,7 +63,8 @@
           "launchMode": "most-recent"
         }
       ],
-      "./plugins/withAndroidPermissions"
+      "./plugins/withAndroidPermissions",
+      "./plugins/withReleaseAbiFilter"
     ],
     "experiments": {
       "typedRoutes": true,

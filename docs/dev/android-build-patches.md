@@ -8,12 +8,14 @@
 
 ## 补丁一览
 
-| 补丁                       | 类型        | 影响的库                                 | 管理方式                                     |
-| -------------------------- | ----------- | ---------------------------------------- | -------------------------------------------- |
-| `currentActivity` API 变更 | Kotlin 源码 | react-native-audio-recorder-player@3.6.x | `yarn patch`（`.yarn/patches/`）             |
-| androidsvg 重复类          | Gradle 配置 | @d11/react-native-fast-image (Glide)     | `patch-android-build.js`                     |
-| libaosl.so 智能去重        | Gradle 配置 | react-native-agora + hyphenate-chat      | `patch-android-build.js` → `aosl-fix.gradle` |
-| libaosl.so pickFirst 兜底  | Gradle 配置 | react-native-agora + hyphenate-chat      | `patch-android-build.js`                     |
+| 补丁                              | 类型        | 影响的库                                 | 管理方式                                     |
+| --------------------------------- | ----------- | ---------------------------------------- | -------------------------------------------- |
+| `currentActivity` API 变更        | Kotlin 源码 | react-native-audio-recorder-player@3.6.x | `yarn patch`（`.yarn/patches/`）             |
+| androidsvg 重复类                 | Gradle 配置 | @d11/react-native-fast-image (Glide)     | `patch-android-build.js`                     |
+| libaosl.so 智能去重               | Gradle 配置 | react-native-agora + hyphenate-chat      | `patch-android-build.js` → `aosl-fix.gradle` |
+| libaosl.so pickFirst 兜底         | Gradle 配置 | react-native-agora + hyphenate-chat      | `patch-android-build.js`                     |
+| GeneratedAppGlideModuleImpl 重复  | Gradle 配置 | @d11/react-native-fast-image (Glide)     | `patch-android-build.js`                     |
+| Release APK ABI 过滤              | Gradle 配置 | React Native Gradle Plugin               | Expo config plugin `withReleaseAbiFilter`    |
 
 ## 补丁详细说明
 
@@ -163,6 +165,91 @@ packagingOptions {
 > iOS 端通过 `fix_aosl_conflicting.rb` 在 `pre_install` 阶段扫描所有 Pod 的 `aosl.xcframework`，比较版本（从 `Info.plist` 读取 `CFBundleShortVersionString`），保留最高版本，删除其余。
 > Android 端通过 `aosl-fix.gradle` 检测远程 Maven 依赖和内嵌 AAR，使用 `exclude` 和物理删除的双层机制。`pickFirst` 保留为兜底安全网。
 
+### 4. GeneratedAppGlideModuleImpl 重复类冲突（仅 release 构建）
+
+**问题：**
+
+```
+Type com.bumptech.glide.GeneratedAppGlideModuleImpl is defined multiple times:
+  - .../bundleLibRuntimeToDirRelease_dex/com/bumptech/glide/GeneratedAppGlideModuleImpl.dex
+  - .../intermediates/external_libs_dex/release/mergeExtDexRelease/classes2.dex
+```
+
+**根因分析：**
+
+`@d11/react-native-fast-image` 中的 `FastImageGlideModule.java` 使用 `@GlideModule` 注解继承 `AppGlideModule`。Glide 的 annotation processor（`com.github.bumptech.glide:compiler`）在编译时扫描到该注解后，会自动生成 `com.bumptech.glide.GeneratedAppGlideModuleImpl` 类。
+
+Debug 构建不受影响，因为 AGP（Android Gradle Plugin）的 debug dex 合并流水线是单阶段合并，可以处理重复类。
+
+Release 构建使用多阶段 dex 合并：
+1. 外部库的 dex 先合并到 `mergeExtDexRelease`（产出 `classes2.dex`）
+2. 各库模块的 runtime 类（`bundleLibRuntimeToDirRelease_dex`）再与之合并
+3. `GeneratedAppGlideModuleImpl` 同时出现在两个来源中，触发 Duplicate class 错误
+
+与 androidsvg 和 aosl 冲突不同，这里不涉及版本选择——整个项目只有一个 Glide 版本（`4.16.0`），`GeneratedAppGlideModuleImpl` 是编译产物而非带版本的库，两份内容完全一样，只需去重。
+
+**修复内容（`patch-android-build.js`）：**
+
+`@d11/react-native-fast-image` 的 `build.gradle` 已内置开关：
+
+```groovy
+if (safeExtGet('excludeAppGlideModule', false)) {
+    exclude "**/FastImageGlideModule.java"
+}
+```
+
+`safeExtGet` 从 `rootProject.ext` 读取属性。在 `android/build.gradle`（root project）中设置：
+
+```groovy
+ext {
+    excludeAppGlideModule = true
+}
+```
+
+这样 fast-image 库跳过编译 `FastImageGlideModule.java`，annotation processor 不会在库模块中生成 `GeneratedAppGlideModuleImpl`，冲突消失。
+
+### 5. Release APK ABI 过滤 — 减小 APK 体积
+
+**问题：**
+
+Release APK 包含所有 4 个架构（armeabi-v7a、arm64-v8a、x86、x86_64），导致体积过大。仅在 `buildTypes.release` 中设置 `ndk { abiFilters 'arm64-v8a' }` 无效。
+
+**根因分析：**
+
+React Native Gradle Plugin (RNGP) 在 `NdkConfiguratorUtils.configureNdkBuildForApp` 中读取 `gradle.properties` 的 `reactNativeArchitectures` 属性（默认 4 个架构），并通过 `addAll` 写入 `defaultConfig.ndk.abiFilters`：
+
+```kotlin
+val architectures = project.getReactNativeArchitectures()
+if (architectures.isNotEmpty() && !ext.splits.abi.isEnable) {
+    ext.defaultConfig.ndk.abiFilters.addAll(architectures)
+}
+```
+
+AGP 合并 `defaultConfig` 和 `buildTypes` 的 `ndk.abiFilters` 时采用 **并集（union）** 策略，而非替换。因此 release buildType 单独设置 `abiFilters 'arm64-v8a'` 后，最终结果仍是全部 4 个架构的并集。此外 AGP 8.x+ 在 configuration 阶段即锁定 variant 配置，`afterEvaluate` 中修改 `defaultConfig.ndk.abiFilters` 也无法影响最终打包。
+
+**修复内容（Expo config plugin `withReleaseAbiFilter`）：**
+
+使用 AGP `androidComponents` Variant API，在 release variant 的 packaging 阶段排除不需要的 ABI 目录：
+
+```groovy
+androidComponents {
+    onVariants(selector().withBuildType("release")) { variant ->
+        variant.packaging.jniLibs.excludes.addAll(
+            "lib/armeabi-v7a/**", "lib/x86/**", "lib/x86_64/**"
+        )
+    }
+}
+```
+
+Variant API 在 variant 配置阶段（早于 `afterEvaluate`）注册，且直接控制 APK 打包内容，绕过了 `ndk.abiFilters` 的 union 问题。
+
+效果：
+
+| 构建类型 | jniLibs.excludes            | 最终结果                  |
+| -------- | --------------------------- | ------------------------- |
+| debug    | _(none)_                    | 全部架构（模拟器兼容）   |
+| release  | armeabi-v7a, x86, x86_64   | 仅 arm64-v8a（体积最优） |
+
 ## 构建流程
 
 `prepare` 脚本的执行顺序：
@@ -176,7 +263,7 @@ yarn gen                   # 生成 env 和 rename 配置
   ↓
 yarn patch:ios             # iOS 端补丁（Agora podspec + aosl 冲突 + Firebase modular_headers）
   ↓
-yarn patch:android         # Android 端补丁（androidsvg 排除 + aosl-fix.gradle 生成 + pickFirst 兜底）
+yarn patch:android         # Android 端补丁（androidsvg 排除 + aosl-fix.gradle 生成 + pickFirst 兜底 + excludeAppGlideModule）
 ```
 
 ## 相关文件
@@ -185,6 +272,7 @@ yarn patch:android         # Android 端补丁（androidsvg 排除 + aosl-fix.gr
 | ---------------------------------------------------------- | ----------------------------------------------------- |
 | `.yarn/patches/react-native-audio-recorder-player-*.patch` | audio-recorder-player 的 yarn patch 补丁              |
 | `scripts/patch-android-build.js`                           | Android build.gradle 补丁脚本（生成 aosl-fix.gradle） |
+| `plugins/withReleaseAbiFilter.js`                          | Expo config plugin — release ABI 过滤                 |
 | `android/app/aosl-fix.gradle`                              | aosl 智能去重脚本（由 patch-android-build.js 生成）   |
 | `scripts/patch-ios-build.js`                               | iOS 端 Agora podspec + Podfile 补丁脚本               |
 | `ios/fix_aosl_conflicting.rb`                              | iOS 端 aosl 去重模块（由 patch-ios-build.js 生成）    |

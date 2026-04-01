@@ -41,10 +41,25 @@ const sandboxConfig = useSandbox
 
 const Root = createNativeStackNavigator<RootParamsList>();
 
-const opt =
-  env.accountType === 'easemob' || env.accountType === 'agora'
-    ? ChatOptions.withAppKey({ appKey: env.appKey, ...sandboxConfig })
-    : ChatOptions.withAppId({ appId: env.appKey, ...sandboxConfig });
+const createChatOptions = () => {
+  const appKey = env.appKey;
+  if (!appKey && !env.agoraAppId) {
+    console.error(
+      'appKey is empty. Please fill in the appKey in src/env.ts. ' +
+        'Run "yarn gen:env" to generate the template if the file is missing.'
+    );
+  }
+  return env.accountType === 'easemob' || env.accountType === 'agora'
+    ? ChatOptions.withAppKey({
+        appKey: appKey || 'placeholder',
+        ...sandboxConfig,
+      })
+    : ChatOptions.withAppId({
+        appId: appKey || 'placeholder',
+        ...sandboxConfig,
+      });
+};
+const opt = createChatOptions();
 
 export function App() {
   const [initialRouteName] = React.useState('Login' as RootParamsName);

@@ -5,7 +5,7 @@ const fs = require('node:fs');
 
 const { current_dir, color_log } = require('./utils');
 
-// --- Patch android/app/build.gradle ---
+// --- Patch android build files ---
 //
 // This script fixes Android build issues caused by dependency conflicts:
 //
@@ -24,6 +24,14 @@ const { current_dir, color_log } = require('./utils');
 //    compares versions when possible, and removes the unwanted copy.
 //    This is the Android equivalent of the iOS aosl.xcframework dedup
 //    handled by patch-ios-build.js / fix_aosl_conflicting.rb.
+//
+// 4. Duplicate GeneratedAppGlideModuleImpl in release builds:
+//    @d11/react-native-fast-image's FastImageGlideModule.java triggers Glide's
+//    annotation processor to generate GeneratedAppGlideModuleImpl. In release
+//    builds, this generated class ends up in both the library's pre-dexed output
+//    and the app's merged external dex, causing a duplicate class error.
+//    Fix: set ext.excludeAppGlideModule = true in root build.gradle so that
+//    fast-image skips compiling FastImageGlideModule.java entirely.
 
 const androidAppDir = path.join(current_dir, 'android', 'app');
 const buildGradlePath = path.join(androidAppDir, 'build.gradle');
@@ -305,7 +313,58 @@ apply from: file('aosl-fix.gradle')
 
 if (changed) {
   fs.writeFileSync(buildGradlePath, content, 'utf-8');
-  color_log.success('  build.gradle saved.');
+  color_log.success('  android/app/build.gradle saved.');
 } else {
-  color_log.info('  build.gradle already up to date.');
+  color_log.info('  android/app/build.gradle already up to date.');
+}
+
+// --- Fix 4: Exclude FastImageGlideModule to prevent duplicate GeneratedAppGlideModuleImpl ---
+//
+// @d11/react-native-fast-image's build.gradle checks:
+//   if (safeExtGet('excludeAppGlideModule', false)) { exclude "**/FastImageGlideModule.java" }
+// safeExtGet reads from rootProject.ext, so we set the flag in android/build.gradle (root project).
+
+const rootBuildGradlePath = path.join(current_dir, 'android', 'build.gradle');
+
+color_log.info(
+  '[patch-android-build] Patching android/build.gradle (excludeAppGlideModule)...'
+);
+
+if (!fs.existsSync(rootBuildGradlePath)) {
+  color_log.warning(
+    `  Root build.gradle not found: ${rootBuildGradlePath}, skipping.`
+  );
+  process.exit(0);
+}
+
+let rootContent = fs.readFileSync(rootBuildGradlePath, 'utf-8');
+
+if (rootContent.includes('excludeAppGlideModule')) {
+  color_log.warning(
+    '  excludeAppGlideModule already present in root build.gradle.'
+  );
+} else {
+  const extMarker = rootContent.match(/ext\s*\{/);
+  if (extMarker) {
+    const insertIdx = extMarker.index + extMarker[0].length;
+    const property = `\n        // Prevent @d11/react-native-fast-image from compiling FastImageGlideModule.java,\n        // which causes duplicate GeneratedAppGlideModuleImpl in release builds.\n        // See: docs/dev/android-build-patches.md\n        excludeAppGlideModule = true`;
+    rootContent =
+      rootContent.slice(0, insertIdx) + property + rootContent.slice(insertIdx);
+  } else {
+    const allprojectsMatch = rootContent.match(/allprojects\s*\{/);
+    if (allprojectsMatch) {
+      const property = `ext {\n    // Prevent @d11/react-native-fast-image from compiling FastImageGlideModule.java,\n    // which causes duplicate GeneratedAppGlideModuleImpl in release builds.\n    // See: docs/dev/android-build-patches.md\n    excludeAppGlideModule = true\n}\n\n`;
+      rootContent =
+        rootContent.slice(0, allprojectsMatch.index) +
+        property +
+        rootContent.slice(allprojectsMatch.index);
+    } else {
+      rootContent += `\next {\n    // Prevent @d11/react-native-fast-image from compiling FastImageGlideModule.java,\n    // which causes duplicate GeneratedAppGlideModuleImpl in release builds.\n    // See: docs/dev/android-build-patches.md\n    excludeAppGlideModule = true\n}\n`;
+    }
+  }
+
+  fs.writeFileSync(rootBuildGradlePath, rootContent, 'utf-8');
+  color_log.success(
+    '  Added excludeAppGlideModule = true to android/build.gradle.'
+  );
 }
