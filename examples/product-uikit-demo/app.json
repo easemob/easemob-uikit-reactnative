@@ -2,7 +2,7 @@
   "expo": {
     "name": "product-uikit-demo",
     "slug": "product-uikit-demo",
-    "version": "2.0.0",
+    "version": "2.5.4",
     "orientation": "portrait",
     "icon": "./assets/images/easemob.png",
     "scheme": "productuikitdemo",
