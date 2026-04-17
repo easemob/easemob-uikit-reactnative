@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Keyboard, NativeModules, Platform } from 'react-native';
 
-import { uilog } from '../const';
+// import { uilog } from '../const';
 
 type ChatUikitEnvironmentModuleType = {
   sdkInt?: number;
@@ -48,30 +48,30 @@ export function useKeyboardHeight() {
     });
     const showSubscription = Keyboard.addListener('keyboardDidShow', (e) => {
       if (Platform.OS === 'android') {
-        uilog.log(
-          '[KBAvoid] keyboardDidShow:',
-          'height:',
-          e.endCoordinates.height,
-          'screenY:',
-          e.endCoordinates.screenY,
-          'screenX:',
-          e.endCoordinates.screenX,
-          'width:',
-          e.endCoordinates.width,
-          'sdkInt:',
-          androidSdkInt,
-          'edgeToEdgeEnabled:',
-          androidEdgeToEdgeEnabled,
-          'shouldCompensate:',
-          shouldCompensateAndroidKeyboard
-        );
+        // uilog.log(
+        //   '[KBAvoid] keyboardDidShow:',
+        //   'height:',
+        //   e.endCoordinates.height,
+        //   'screenY:',
+        //   e.endCoordinates.screenY,
+        //   'screenX:',
+        //   e.endCoordinates.screenX,
+        //   'width:',
+        //   e.endCoordinates.width,
+        //   'sdkInt:',
+        //   androidSdkInt,
+        //   'edgeToEdgeEnabled:',
+        //   androidEdgeToEdgeEnabled,
+        //   'shouldCompensate:',
+        //   shouldCompensateAndroidKeyboard
+        // );
         setKeyboardHeight(e.endCoordinates.height);
       }
       setKeyboardCurrentHeight(e.endCoordinates.height);
     });
     const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
       if (Platform.OS === 'android') {
-        uilog.log('[KBAvoid] keyboardDidHide');
+        // uilog.log('[KBAvoid] keyboardDidHide');
       }
       setKeyboardCurrentHeight(0);
     });

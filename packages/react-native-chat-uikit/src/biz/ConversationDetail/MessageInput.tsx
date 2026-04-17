@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Animated, Platform, StyleSheet, View } from 'react-native';
 
 import { useConfigContext } from '../../config';
-import { uilog } from '../../const';
+// import { uilog } from '../../const';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { ChatConversationType } from '../../rename.chat';
@@ -150,15 +150,15 @@ export const MessageInput = React.forwardRef<
           Platform.OS === 'android'
             ? (event) => {
                 const { width, height } = event.nativeEvent.layout;
-                uilog.log(
-                  '[KBAvoid] InputBar onLayout (android branch):',
-                  'w:',
-                  width,
-                  'h:',
-                  height,
-                  'paddingBottom:',
-                  androidKeyboardAvoidOffset
-                );
+                // uilog.log(
+                //   '[KBAvoid] InputBar onLayout (android branch):',
+                //   'w:',
+                //   width,
+                //   'h:',
+                //   height,
+                //   'paddingBottom:',
+                //   androidKeyboardAvoidOffset
+                // );
               }
             : undefined
         }
