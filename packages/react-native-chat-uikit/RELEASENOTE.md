@@ -1,6 +1,10 @@
 # Release Note
 
-# 2.5.4
+## 2.5.5
+
+- Fixed Android conversation input keyboard avoidance across API levels and `edgeToEdgeEnabled` modes.
+
+## 2.5.4
 
 - Upgraded React Native to 0.83.2 (from 0.76.x) and React to 19.2.0 (from 18.3.1).
 - Fixed TypeScript type compatibility issues caused by React Native API changes: replaced `DefaultSectionT` with `Record<string, any>`, and replaced `ViewabilityConfig` / `ViewToken` with `any`.
@@ -9,18 +13,18 @@
 - Exported sample code from the package entry point (`index.tsx`).
 - Updated minimum peer dependency requirements: React ≥ 18.2.0, React Native ≥ 0.76.0.
 
-# 2.5.2
+## 2.5.2
 
 - Fixed the callback issue in the image preview component
 - Optimized GIF image display and loading in the example project
 
-# 2.5.1
+## 2.5.1
 
 - Fixed the issue where clicking the expand button in the input bar component fails to switch between keyboard and extension bar.
 - Fixed layout issues in the quoted message component.
 - Fixed compilation and runtime issues with aosl dynamic library.
 
-# 2.5.0
+## 2.5.0
 
 - Fixed the issue with abnormal status display on the login page.
 - Optimized the issue where the welcome page loading animation doesn't close when switching pages.
@@ -30,12 +34,12 @@
 - Optimized video message preview in the app: Added support for custom video preview components.
 - Optimized Animation: Add voice image animation component.
 
-# 2.4.8
+## 2.4.8
 
 - Fixed the issue where modal windows fail to display properly, including problems with modal pop-up menus and bottom pop-up menus.
 - Added support for message roaming, along with a global switch to enable or disable the message roaming feature.
 
-# 2.4.7
+## 2.4.7
 
 - Move the conversation detail background image from the message list to the message list parent component.
 - Fix the UI for saving and loading local tip messages.
@@ -46,15 +50,15 @@
 - Updated the login method for the UIKit product project to use Alibaba Cloud verification code login
 - Fixed integration issues with React Native versions 0.77, 0.78, 0.79, and 0.80
 
-# 2.4.5
+## 2.4.5
 
 - Fixed an issue where the example project incorrectly configured the specified server settings during login in development mode.
 
-# 2.4.4
+## 2.4.4
 
 - Upgraded react-native version to 0.76
 
-# 2.4.1
+## 2.4.1
 
 Bug Fixes:
 
