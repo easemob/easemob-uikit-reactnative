@@ -3,6 +3,7 @@
 ## 2.5.5
 
 - Fixed Android conversation input keyboard avoidance across API levels and `edgeToEdgeEnabled` modes.
+- Fixed Add pin message function for person chat.
 
 ## 2.5.4
 
