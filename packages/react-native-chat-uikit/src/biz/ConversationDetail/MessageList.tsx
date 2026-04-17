@@ -136,7 +136,9 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
           />
         ) : null} */}
 
-        {convType === ChatConversationType.GroupChat && comType === 'chat' ? (
+        {(convType === ChatConversationType.GroupChat ||
+          convType === ChatConversationType.PeerChat) &&
+        comType === 'chat' ? (
           <AnimatedMessagePinPlaceholder
             style={{
               height: msgPinPlaceHolderCurrentHeight,
@@ -254,7 +256,8 @@ export const MessageList = React.forwardRef<MessageListRef, MessageListProps>(
         </Animated.View>
 
         {enableMessagePin === true &&
-        convType === ChatConversationType.GroupChat &&
+        (convType === ChatConversationType.GroupChat ||
+          convType === ChatConversationType.PeerChat) &&
         comType === 'chat' ? (
           <AnimatedMessagePin
             ref={pinMsgListRef as any} // TODO: fix type !!!

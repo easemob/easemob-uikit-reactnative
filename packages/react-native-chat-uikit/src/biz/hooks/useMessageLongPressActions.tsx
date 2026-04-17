@@ -312,7 +312,8 @@ export function useMessageLongPressActions(
       ) {
         if (
           msgModel.msg.body.type === ChatMessageType.TXT &&
-          msgModel.msg.chatType === ChatMessageChatType.GroupChat
+          (msgModel.msg.chatType === ChatMessageChatType.GroupChat ||
+            msgModel.msg.chatType === ChatMessageChatType.PeerChat)
         ) {
           const textBody = msgModel.msg.body as ChatTextMessageBody;
           if (textBody.modifyCount === undefined || textBody.modifyCount <= 5) {

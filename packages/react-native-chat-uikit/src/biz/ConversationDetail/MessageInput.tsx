@@ -264,7 +264,9 @@ export const MessageInput = React.forwardRef<
         </View>
       </View>
 
-      {convType === ChatConversationType.GroupChat && comType === 'chat' ? (
+      {(convType === ChatConversationType.GroupChat ||
+        convType === ChatConversationType.PeerChat) &&
+      comType === 'chat' ? (
         <Animated.View
           style={[
             StyleSheet.absoluteFill,
