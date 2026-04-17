@@ -136,7 +136,7 @@ export const MessageInput = React.forwardRef<
     },
   });
 
-  const keyboardHeight = useKeyboardHeight();
+  const { keyboardHeight, keyboardCompensationHeight } = useKeyboardHeight();
 
   const [isStyle, _setIsStyle] = React.useState(true);
   const inputRef = React.useRef<React.ComponentRef<typeof RNTextInput>>(
@@ -176,20 +176,26 @@ export const MessageInput = React.forwardRef<
   };
 
   const setEmojiHeight = (h: number) => {
-    // if (h === 0) {
-    //   LayoutAnimation.configureNext({
-    //     duration: 250, // from keyboard event
-    //     update: {
-    //       duration: 10,
-    //       type: Platform.OS === 'ios' ? 'keyboard' : 'easeIn',
-    //     },
-    //   });
-    // }
     _setEmojiHeight(h);
   };
 
+  const androidKeyboardAvoidOffset = React.useMemo(() => {
+    if (Platform.OS !== 'android') {
+      return 0;
+    }
+    return keyboardCompensationHeight;
+  }, [keyboardCompensationHeight]);
+
+  const androidKeyboardAvoidingStyle = React.useMemo(() => {
+    if (Platform.OS !== 'android') {
+      return undefined;
+    }
+    return {
+      paddingBottom: androidKeyboardAvoidOffset,
+    };
+  }, [androidKeyboardAvoidOffset]);
+
   const _onSend = () => {
-    // const content = getRawValue();
     const content = valueRef.current;
     if (content.length > 0) {
       sendText(content);
@@ -217,154 +223,172 @@ export const MessageInput = React.forwardRef<
     };
   });
 
-  return (
+  const inputContent = (
     <>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={keyboardVerticalOffset}
+      <BottomToolbar
+        onClickInput={() => {
+          isClosedEmoji.current = false;
+          isClosedKeyboard.current = false;
+          setIsStyle(false);
+          setIconName('face');
+          onInputBarWillShow?.();
+          timeoutTask(0, () => {
+            if (inputRef.current?.focus) {
+              inputRef.current?.focus();
+            }
+          });
+        }}
+        onLayout={onLayout}
+        isShow={isStyle}
+        {...others}
+      />
+      <View
+        style={{
+          backgroundColor: getColor('backgroundColor'),
+          display: isStyle === false ? 'flex' : 'none',
+        }}
       >
-        <BottomToolbar
-          onClickInput={() => {
-            isClosedEmoji.current = false;
-            isClosedKeyboard.current = false;
-            setIsStyle(false);
-            setIconName('face');
-            onInputBarWillShow?.();
-            timeoutTask(0, () => {
-              if (inputRef.current?.focus) {
-                inputRef.current?.focus();
-              }
-            });
-          }}
-          onLayout={onLayout}
-          isShow={isStyle}
-          {...others}
-        />
         <View
           style={{
-            backgroundColor: getColor('backgroundColor'),
-            display: isStyle === false ? 'flex' : 'none',
+            flexDirection: 'row',
+            margin: 8,
           }}
         >
           <View
             style={{
-              flexDirection: 'row',
-              margin: 8,
+              flexDirection: 'column',
+              flexGrow: 1,
+              justifyContent: 'center',
+              flexShrink: 1,
+              marginHorizontal: 6,
             }}
           >
             <View
               style={{
-                flexDirection: 'column',
-                flexGrow: 1,
-                justifyContent: 'center',
-                flexShrink: 1,
-                marginHorizontal: 6,
+                flexDirection: 'row',
+                paddingHorizontal: 16,
+                paddingVertical: 7,
+                backgroundColor: getColor('backgroundColor2'),
+                borderRadius: 18,
               }}
             >
-              <View
+              <TextInput
+                ref={inputRef}
+                numberOfLines={numberOfLines}
+                multiline={true}
+                unitHeight={Platform.OS === 'ios' ? 22 : 22}
                 style={{
-                  flexDirection: 'row',
-                  paddingHorizontal: 16,
-                  paddingVertical: 7,
-                  backgroundColor: getColor('backgroundColor2'),
-                  borderRadius: 18,
+                  fontSize: 16,
+                  fontStyle: 'normal',
+                  fontWeight: '400',
+                  lineHeight: 22,
+                  fontFamily: fontFamily,
+                  color: getColor('input_text'),
                 }}
-              >
-                <TextInput
-                  ref={inputRef}
-                  numberOfLines={numberOfLines}
-                  multiline={true}
-                  unitHeight={Platform.OS === 'ios' ? 22 : 22}
-                  style={{
-                    fontSize: 16,
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    lineHeight: 22,
-                    fontFamily: fontFamily,
-                    color: getColor('input_text'),
-                  }}
-                  containerStyle={{
-                    width: '100%',
-                    minHeight: 22,
-                  }}
-                  onFocus={() => {
-                    setIconName('face');
-                    if (Platform.OS !== 'ios') {
-                      setEmojiHeight(0);
-                    }
-                  }}
-                  onBlur={() => {
-                    setIconName('keyboard2');
-                    if (isStyle === false) {
-                      LayoutAnimation.configureNext({
-                        duration: 250, // from keyboard event
-                        update: {
-                          duration: 250,
-                          type: Platform.OS === 'ios' ? 'keyboard' : 'linear',
-                        },
-                      });
-                    }
+                containerStyle={{
+                  width: '100%',
+                  minHeight: 22,
+                }}
+                onFocus={() => {
+                  setIconName('face');
+                  if (Platform.OS !== 'ios') {
+                    setEmojiHeight(0);
+                  }
+                }}
+                onBlur={() => {
+                  setIconName('keyboard2');
+                  if (isStyle === false) {
+                    LayoutAnimation.configureNext({
+                      duration: 250, // from keyboard event
+                      update: {
+                        duration: 250,
+                        type: Platform.OS === 'ios' ? 'keyboard' : 'linear',
+                      },
+                    });
+                  }
 
-                    if (isClosedEmoji.current === true) {
-                      setEmojiHeight(0);
-                    } else {
-                      setEmojiHeight(keyboardHeight);
-                    }
-                  }}
-                  onChangeText={setValue}
-                  value={value}
-                  keyboardAppearance={style === 'light' ? 'light' : 'dark'}
-                />
-              </View>
+                  if (isClosedEmoji.current === true) {
+                    setEmojiHeight(0);
+                  } else {
+                    const keyboardPanelHeight =
+                      Platform.OS === 'android'
+                        ? keyboardCompensationHeight > 0
+                          ? keyboardCompensationHeight
+                          : keyboardHeight === 0
+                            ? 300
+                            : keyboardHeight
+                        : keyboardHeight === 0
+                          ? 300
+                          : keyboardHeight;
+                    setEmojiHeight(keyboardPanelHeight - (bottom ?? 0));
+                  }
+                }}
+                onChangeText={setValue}
+                value={value}
+                keyboardAppearance={style === 'light' ? 'light' : 'dark'}
+              />
             </View>
-            <IconButtonMemo
-              style={{
-                width: 30,
-                height: 30,
-                tintColor: getColor('tintColor'),
-              }}
-              containerStyle={{
-                alignSelf: 'flex-end',
-                margin: 6,
-              }}
-              onPress={() => {
-                if (iconName === 'face') {
-                  isClosedEmoji.current = false;
-                  isClosedKeyboard.current = true;
-                  closeKeyboard();
-                } else {
-                  isClosedKeyboard.current = false;
-                  inputRef.current?.focus();
-                }
-              }}
-              iconName={iconName}
-            />
-            <IconButtonMemo
-              style={{
-                width: 30,
-                height: 30,
-                tintColor: getColor('tintColor2'),
-                backgroundColor: undefined,
-                borderRadius: 30,
-              }}
-              containerStyle={{
-                alignSelf: 'flex-end',
-                margin: 6,
-              }}
-              onPress={_onSend}
-              iconName={'airplane'}
-            />
           </View>
+          <IconButtonMemo
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: getColor('tintColor'),
+            }}
+            containerStyle={{
+              alignSelf: 'flex-end',
+              margin: 6,
+            }}
+            onPress={() => {
+              if (iconName === 'face') {
+                isClosedEmoji.current = false;
+                isClosedKeyboard.current = true;
+                closeKeyboard();
+              } else {
+                isClosedKeyboard.current = false;
+                inputRef.current?.focus();
+              }
+            }}
+            iconName={iconName}
+          />
+          <IconButtonMemo
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: getColor('tintColor2'),
+              backgroundColor: undefined,
+              borderRadius: 30,
+            }}
+            containerStyle={{
+              alignSelf: 'flex-end',
+              margin: 6,
+            }}
+            onPress={_onSend}
+            iconName={'airplane'}
+          />
         </View>
-      </KeyboardAvoidingView>
+      </View>
+    </>
+  );
+
+  return (
+    <>
+      {Platform.OS === 'ios' ? (
+        <KeyboardAvoidingView
+          behavior={'padding'}
+          keyboardVerticalOffset={keyboardVerticalOffset}
+        >
+          {inputContent}
+        </KeyboardAvoidingView>
+      ) : (
+        <View style={androidKeyboardAvoidingStyle}>{inputContent}</View>
+      )}
       <View
         style={{
           backgroundColor:
             emojiHeight === 0 ? undefined : getColor('backgroundColor'),
           height: emojiHeight,
-          // overflow: 'hidden',
           paddingBottom: bottom,
-          // display: isStyle === false ? 'flex' : 'none',
         }}
       >
         <EmojiListMemo
