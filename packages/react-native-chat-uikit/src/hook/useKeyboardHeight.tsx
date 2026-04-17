@@ -1,5 +1,33 @@
 import * as React from 'react';
-import { Keyboard, Platform } from 'react-native';
+import { Keyboard, NativeModules, Platform } from 'react-native';
+
+import { uilog } from '../const';
+
+type ChatUikitEnvironmentModuleType = {
+  sdkInt?: number;
+  edgeToEdgeEnabled?: boolean | null;
+};
+
+const androidEnvironment: ChatUikitEnvironmentModuleType | undefined =
+  Platform.OS === 'android'
+    ? (NativeModules.ChatUikitEnvironment as
+        | ChatUikitEnvironmentModuleType
+        | undefined)
+    : undefined;
+
+const androidSdkInt =
+  typeof androidEnvironment?.sdkInt === 'number'
+    ? androidEnvironment.sdkInt
+    : undefined;
+const androidEdgeToEdgeEnabled =
+  typeof androidEnvironment?.edgeToEdgeEnabled === 'boolean'
+    ? androidEnvironment.edgeToEdgeEnabled
+    : undefined;
+
+const shouldCompensateAndroidKeyboard =
+  androidSdkInt === undefined ||
+  androidSdkInt >= 35 ||
+  androidEdgeToEdgeEnabled !== false;
 
 /**
  * Get the keyboard height. Need to be obtained dynamically.
@@ -20,11 +48,31 @@ export function useKeyboardHeight() {
     });
     const showSubscription = Keyboard.addListener('keyboardDidShow', (e) => {
       if (Platform.OS === 'android') {
+        uilog.log(
+          '[KBAvoid] keyboardDidShow:',
+          'height:',
+          e.endCoordinates.height,
+          'screenY:',
+          e.endCoordinates.screenY,
+          'screenX:',
+          e.endCoordinates.screenX,
+          'width:',
+          e.endCoordinates.width,
+          'sdkInt:',
+          androidSdkInt,
+          'edgeToEdgeEnabled:',
+          androidEdgeToEdgeEnabled,
+          'shouldCompensate:',
+          shouldCompensateAndroidKeyboard
+        );
         setKeyboardHeight(e.endCoordinates.height);
       }
       setKeyboardCurrentHeight(e.endCoordinates.height);
     });
     const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      if (Platform.OS === 'android') {
+        uilog.log('[KBAvoid] keyboardDidHide');
+      }
       setKeyboardCurrentHeight(0);
     });
 
@@ -36,5 +84,21 @@ export function useKeyboardHeight() {
     };
   }, []);
 
-  return { keyboardHeight, keyboardCurrentHeight };
+  const keyboardCompensationHeight = React.useMemo(() => {
+    if (Platform.OS === 'android') {
+      if (shouldCompensateAndroidKeyboard === false) {
+        return 0;
+      }
+      return Math.max(keyboardCurrentHeight, 0);
+    }
+    return Math.max(keyboardCurrentHeight, 0);
+  }, [keyboardCurrentHeight]);
+
+  return {
+    keyboardHeight,
+    keyboardCurrentHeight,
+    keyboardCompensationHeight,
+    shouldCompensateKeyboard:
+      Platform.OS === 'android' ? shouldCompensateAndroidKeyboard : true,
+  };
 }

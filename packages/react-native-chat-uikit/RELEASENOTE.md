@@ -1,5 +1,14 @@
 # Release Note
 
+# 2.5.4
+
+- Upgraded React Native to 0.83.2 (from 0.76.x) and React to 19.2.0 (from 18.3.1).
+- Fixed TypeScript type compatibility issues caused by React Native API changes: replaced `DefaultSectionT` with `Record<string, any>`, and replaced `ViewabilityConfig` / `ViewToken` with `any`.
+- iOS: Simplified podspec to support New Architecture only via `install_modules_dependencies`.
+- Switched `getChatService` to lazy-loading via the `chatFactory` module to avoid circular dependency issues.
+- Exported sample code from the package entry point (`index.tsx`).
+- Updated minimum peer dependency requirements: React ≥ 18.2.0, React Native ≥ 0.76.0.
+
 # 2.5.2
 
 - Fixed the callback issue in the image preview component

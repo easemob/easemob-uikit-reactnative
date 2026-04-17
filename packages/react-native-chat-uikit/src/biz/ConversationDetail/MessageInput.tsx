@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Animated, Platform, StyleSheet, View } from 'react-native';
 
 import { useConfigContext } from '../../config';
+import { uilog } from '../../const';
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';
 import { ChatConversationType } from '../../rename.chat';
@@ -91,7 +92,192 @@ export const MessageInput = React.forwardRef<
     msgPinHeightRef,
     MessageInputBarMenu,
     messageInputBarStyle,
+    androidKeyboardAvoidOffset,
   } = useMessageInput(props, ref);
+
+  const androidKeyboardAvoidingStyle = React.useMemo(() => {
+    if (Platform.OS !== 'android') {
+      return undefined;
+    }
+    return {
+      paddingBottom: androidKeyboardAvoidOffset,
+    };
+  }, [androidKeyboardAvoidOffset]);
+
+  const inputContent = (
+    <>
+      {unreadCount && unreadCount > 0 ? (
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            top: -40,
+            alignItems: 'center',
+            left: 0,
+            right: 0,
+          }}
+        >
+          <CmnButton
+            sizesType={'middle'}
+            radiusType={'extraSmall'}
+            contentType={'icon-text'}
+            icon={'arrow_down_thick'}
+            text={tr(
+              '_uikit_unread_count',
+              unreadCount > 99 ? '99+' : unreadCount
+            )}
+            style={{ backgroundColor: getColor('bg') }}
+            textStyle={{ color: getColor('enable') }}
+            onPress={onClickedUnreadCount}
+          />
+        </View>
+      ) : null}
+      {showQuote === true ? (
+        <MessageInputQuoteView
+          showQuote={showQuote}
+          onDel={onHideQuoteMessage}
+          msg={quoteMsg}
+        />
+      ) : null}
+
+      <View
+        ref={testRef}
+        style={{
+          backgroundColor: getColor('bg'),
+          display: 'flex',
+        }}
+        onLayout={
+          Platform.OS === 'android'
+            ? (event) => {
+                const { width, height } = event.nativeEvent.layout;
+                uilog.log(
+                  '[KBAvoid] InputBar onLayout (android branch):',
+                  'w:',
+                  width,
+                  'h:',
+                  height,
+                  'paddingBottom:',
+                  androidKeyboardAvoidOffset
+                );
+              }
+            : undefined
+        }
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+            margin: 8,
+          }}
+        >
+          <IconButtonMemo
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: getColor('tintColor'),
+            }}
+            containerStyle={{
+              alignSelf: 'flex-end',
+              margin: 6,
+            }}
+            onPress={onClickedVoiceButton}
+            iconName={'wave_in_circle'}
+          />
+          <View
+            style={{
+              flexDirection: 'column',
+              flexGrow: 1,
+              justifyContent: 'center',
+              flexShrink: 1,
+              marginHorizontal: 6,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <TextInput
+                ref={inputRef}
+                numberOfLines={numberOfLines}
+                multiline={true}
+                unitHeight={Platform.OS === 'ios' ? 24 : 20}
+                style={{
+                  fontSize: 16,
+                  fontStyle: 'normal',
+                  fontWeight: '400',
+                  // lineHeight: 22,
+                  fontFamily: fontFamily,
+                  flex: Platform.select({ ios: undefined, android: 1 }),
+                  paddingHorizontal: 8,
+                }}
+                containerStyle={{
+                  width: '100%',
+                  minHeight: 36,
+                  maxHeight: 96,
+                  justifyContent: 'center',
+                }}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChangeText={setValue}
+                value={value}
+                keyboardAppearance={style === 'light' ? 'light' : 'dark'}
+                placeholder={'Aa'}
+                // returnKeyType={'next'}
+                onKeyPress={onKeyPress}
+              />
+            </View>
+          </View>
+          <IconButtonMemo
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: getColor('icon'),
+            }}
+            containerStyle={{
+              alignSelf: 'flex-end',
+              margin: 6,
+            }}
+            onPress={onClickedEmojiButton}
+            iconName={emojiIconName}
+          />
+          <IconButtonMemo
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: getColor(
+                sendIconName === 'plus_in_circle' ||
+                  sendIconName === 'xmark_in_circle'
+                  ? 'icon'
+                  : 'enable'
+              ),
+              backgroundColor: undefined,
+              borderRadius: 30,
+            }}
+            containerStyle={{
+              alignSelf: 'flex-end',
+              margin: 6,
+            }}
+            onPress={onClickedSend}
+            iconName={sendIconName}
+          />
+        </View>
+      </View>
+
+      {convType === ChatConversationType.GroupChat && comType === 'chat' ? (
+        <Animated.View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: 'rgba(0, 0, 0, 0.25)',
+              opacity: msgPinBackgroundCurrentOpacity,
+            },
+          ]}
+          pointerEvents={msgPinHeightRef.current <= 0 ? 'none' : 'auto'}
+        />
+      ) : null}
+    </>
+  );
 
   return (
     <>
@@ -142,194 +328,16 @@ export const MessageInput = React.forwardRef<
         </View>
       ) : (
         <>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={top}
-          >
-            {unreadCount && unreadCount > 0 ? (
-              <View
-                style={{
-                  flex: 1,
-                  position: 'absolute',
-                  top: -40,
-                  alignItems: 'center',
-                  left: 0,
-                  right: 0,
-                }}
-              >
-                <CmnButton
-                  sizesType={'middle'}
-                  radiusType={'extraSmall'}
-                  contentType={'icon-text'}
-                  icon={'arrow_down_thick'}
-                  text={tr(
-                    '_uikit_unread_count',
-                    unreadCount > 99 ? '99+' : unreadCount
-                  )}
-                  style={{ backgroundColor: getColor('bg') }}
-                  textStyle={{ color: getColor('enable') }}
-                  onPress={onClickedUnreadCount}
-                />
-              </View>
-            ) : null}
-            {showQuote === true ? (
-              <MessageInputQuoteView
-                showQuote={showQuote}
-                onDel={onHideQuoteMessage}
-                msg={quoteMsg}
-              />
-            ) : null}
-
-            <View
-              ref={testRef}
-              style={{
-                backgroundColor: getColor('bg'),
-                display: 'flex',
-              }}
-              onLayout={() => {
-                // testRef.current?.measure(
-                //   (
-                //     _x: number,
-                //     _y: number,
-                //     _width: number,
-                //     _height: number,
-                //     _pageX: number,
-                //     pageY: number
-                //   ) => {
-                //     uilog.log(
-                //       'Sub:Sub:measure:',
-                //       _x,
-                //       _y,
-                //       _width,
-                //       _height,
-                //       _pageX,
-                //       pageY
-                //     );
-                //     // setPageY(pageY);
-                //   }
-                // );
-                // testRef.current?.measureInWindow(
-                //   (_x: number, _y: number, _width: number, _height: number) => {
-                //     // uilog.log('Sub:Sub:measureInWindow:', _x, _y, _width, _height);
-                //   }
-                // );
-              }}
+          {Platform.OS === 'ios' ? (
+            <KeyboardAvoidingView
+              behavior={'padding'}
+              keyboardVerticalOffset={top}
             >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  margin: 8,
-                }}
-              >
-                <IconButtonMemo
-                  style={{
-                    width: 30,
-                    height: 30,
-                    tintColor: getColor('tintColor'),
-                  }}
-                  containerStyle={{
-                    alignSelf: 'flex-end',
-                    margin: 6,
-                  }}
-                  onPress={onClickedVoiceButton}
-                  iconName={'wave_in_circle'}
-                />
-                <View
-                  style={{
-                    flexDirection: 'column',
-                    flexGrow: 1,
-                    justifyContent: 'center',
-                    flexShrink: 1,
-                    marginHorizontal: 6,
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <TextInput
-                      ref={inputRef}
-                      numberOfLines={numberOfLines}
-                      multiline={true}
-                      unitHeight={Platform.OS === 'ios' ? 24 : 20}
-                      style={{
-                        fontSize: 16,
-                        fontStyle: 'normal',
-                        fontWeight: '400',
-                        // lineHeight: 22,
-                        fontFamily: fontFamily,
-                        flex: Platform.select({ ios: undefined, android: 1 }),
-                        paddingHorizontal: 8,
-                      }}
-                      containerStyle={{
-                        width: '100%',
-                        minHeight: 36,
-                        maxHeight: Platform.OS === 'ios' ? 96 : 96,
-                        justifyContent: 'center',
-                      }}
-                      onFocus={onFocus}
-                      onBlur={onBlur}
-                      onChangeText={setValue}
-                      value={value}
-                      keyboardAppearance={style === 'light' ? 'light' : 'dark'}
-                      placeholder={'Aa'}
-                      // returnKeyType={'next'}
-                      onKeyPress={onKeyPress}
-                    />
-                  </View>
-                </View>
-                <IconButtonMemo
-                  style={{
-                    width: 30,
-                    height: 30,
-                    tintColor: getColor('icon'),
-                  }}
-                  containerStyle={{
-                    alignSelf: 'flex-end',
-                    margin: 6,
-                  }}
-                  onPress={onClickedEmojiButton}
-                  iconName={emojiIconName}
-                />
-                <IconButtonMemo
-                  style={{
-                    width: 30,
-                    height: 30,
-                    tintColor: getColor(
-                      sendIconName === 'plus_in_circle' ||
-                        sendIconName === 'xmark_in_circle'
-                        ? 'icon'
-                        : 'enable'
-                    ),
-                    backgroundColor: undefined,
-                    borderRadius: 30,
-                  }}
-                  containerStyle={{
-                    alignSelf: 'flex-end',
-                    margin: 6,
-                  }}
-                  onPress={onClickedSend}
-                  iconName={sendIconName}
-                />
-              </View>
-            </View>
-
-            {convType === ChatConversationType.GroupChat &&
-            comType === 'chat' ? (
-              <Animated.View
-                style={[
-                  StyleSheet.absoluteFill,
-                  {
-                    backgroundColor: 'rgba(0, 0, 0, 0.25)',
-                    opacity: msgPinBackgroundCurrentOpacity,
-                  },
-                ]}
-                pointerEvents={msgPinHeightRef.current <= 0 ? 'none' : 'auto'}
-              />
-            ) : null}
-          </KeyboardAvoidingView>
+              {inputContent}
+            </KeyboardAvoidingView>
+          ) : (
+            <View style={androidKeyboardAvoidingStyle}>{inputContent}</View>
+          )}
           <View
             style={{
               backgroundColor:
