@@ -45,10 +45,10 @@
 - Move the conversation detail background image from the message list to the message list parent component.
 - Fix the UI for saving and loading local tip messages.
 
-# 2.4.6
+## 2.4.6
 
 - Optimized variable naming in the example project for better readability
-- Updated the login method for the UIKit product project to use Alibaba Cloud verification code login
+- Updated the login method for the UIKit product project todd use Alibaba Cloud verification code login
 - Fixed integration issues with React Native versions 0.77, 0.78, 0.79, and 0.80
 
 ## 2.4.5
