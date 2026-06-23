@@ -63,7 +63,7 @@
     "react-native-agora": "~4.5.0",
     "react-native-audio-recorder-player": "patch:react-native-audio-recorder-player@npm%3A3.6.14#~/.yarn/patches/react-native-audio-recorder-player-npm-3.6.14-3e27200e10.patch",
     "react-native-chat-callkit": "workspace:*",
-    "react-native-chat-sdk": "^1.12.0",
+    "react-native-chat-sdk": "^1.15.0",
     "react-native-chat-uikit": "workspace:*",
     "react-native-create-thumbnail": "^2.1.1",
     "react-native-device-info": "^14.0.4",
