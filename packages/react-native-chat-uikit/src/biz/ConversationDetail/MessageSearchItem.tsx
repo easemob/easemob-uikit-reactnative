@@ -38,7 +38,7 @@ export function MessageSearchItem(props: MessageSearchItemProps) {
       if (msg === undefined && timestamp) {
         return cb ? cb(timestamp) : formatTsForConvList(timestamp);
       } else if (msg) {
-        return cb ? cb(msg.localTime) : formatTsForConvList(msg.localTime);
+        return cb ? cb(msg.serverTime) : formatTsForConvList(msg.serverTime);
       } else {
         return '';
       }

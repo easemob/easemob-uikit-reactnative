@@ -2276,7 +2276,7 @@ export function MessageView(props: MessageViewProps) {
   const { enableThread, enableReaction, releaseArea } = useConfigContext();
   const state = getMessageState(model.msg);
   const maxWidth = Dimensions.get('window').width * 0.6;
-  const time = model.msg.localTime ?? model.msg.serverTime;
+  const time = model.msg.serverTime;
   const bubblePadding = 12;
   const hasTriangle = releaseArea === 'china' ? true : false;
   const isQuote = isQuoteMessage(model.msg, model.quoteMsg);

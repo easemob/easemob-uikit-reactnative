@@ -778,27 +778,27 @@ export const sortConversations = (
   }
 
   if (
-    prevProps.data.lastMessage?.localTime &&
-    nextProps.data.lastMessage?.localTime
+    prevProps.data.lastMessage?.serverTime &&
+    nextProps.data.lastMessage?.serverTime
   ) {
     if (
-      prevProps.data.lastMessage.localTime ===
-      nextProps.data.lastMessage.localTime
+      prevProps.data.lastMessage.serverTime ===
+      nextProps.data.lastMessage.serverTime
     ) {
       return 0;
     } else if (
-      prevProps.data.lastMessage.localTime >
-      nextProps.data.lastMessage.localTime
+      prevProps.data.lastMessage.serverTime >
+      nextProps.data.lastMessage.serverTime
     ) {
       return -1;
     } else {
       return 1;
     }
   } else if (
-    prevProps.data.lastMessage?.localTime ||
-    nextProps.data.lastMessage?.localTime
+    prevProps.data.lastMessage?.serverTime ||
+    nextProps.data.lastMessage?.serverTime
   ) {
-    return prevProps.data.lastMessage?.localTime ? 1 : -1;
+    return prevProps.data.lastMessage?.serverTime ? 1 : -1;
   }
 
   return 0;

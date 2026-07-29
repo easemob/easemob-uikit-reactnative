@@ -139,8 +139,8 @@ export function useNewRequests(props: NewRequestsProps) {
     prevProps: NewRequestsItemProps,
     nextProps: NewRequestsItemProps
   ): number => {
-    const prevTimestamp = prevProps.data.msg?.localTime;
-    const nextTimestamp = nextProps.data.msg?.localTime;
+    const prevTimestamp = prevProps.data.msg?.serverTime;
+    const nextTimestamp = nextProps.data.msg?.serverTime;
     if (prevTimestamp !== undefined && nextTimestamp !== undefined) {
       return prevTimestamp === nextTimestamp
         ? 0
