@@ -48,20 +48,7 @@ export function SlideModal(props: SlideModalProps) {
 
   if (propsRef.current) {
     propsRef.current.startShow = (onf?: () => void, timeout?: number) => {
-      setVisible(true);
-      setTimeout(() => {
-        if (timeout !== undefined) {
-          startShow(() => {
-            timeoutTask(timeout, () => {
-              onf?.();
-            });
-          });
-        } else {
-          startShow(() => {
-            onf?.();
-          });
-        }
-      }, 16); // one frame's delay
+      // 使用 InteractionManager 确保动画在主线程执行
       // InteractionManager.runAfterInteractions(() => {
       //   if (timeout !== undefined) {
       //     startShow(() => {
@@ -75,15 +62,31 @@ export function SlideModal(props: SlideModalProps) {
       //     });
       //   }
       // });
+      const _onf = typeof onf === 'function' ? onf : undefined;
+      setVisible(true);
+      setTimeout(() => {
+        if (timeout !== undefined) {
+          startShow(() => {
+            timeoutTask(timeout, () => {
+              _onf?.();
+            });
+          });
+        } else {
+          startShow(() => {
+            _onf?.();
+          });
+        }
+      }, 16); // one frame's delay
+      
       if (timeout !== undefined) {
         startShow(() => {
           timeoutTask(timeout, () => {
-            onf?.();
+            _onf?.();
           });
         });
       } else {
         startShow(() => {
-          onf?.();
+          _onf?.();
         });
       }
     };
@@ -133,18 +136,19 @@ export function SlideModal(props: SlideModalProps) {
       //     }, 50);
       //   });
       // }
+      const _onf = typeof onf === 'function' ? onf : undefined;
       if (timeout !== undefined) {
         startHide(() => {
           setVisible(false);
           timeoutTask(timeout, () => {
-            onf?.();
+            _onf?.();
             onFinished?.();
           });
         });
       } else {
         startHide(() => {
           setVisible(false);
-          onf?.();
+          _onf?.();
           onFinished?.();
         });
       }
