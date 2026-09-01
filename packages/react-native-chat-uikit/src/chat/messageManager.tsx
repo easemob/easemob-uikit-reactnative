@@ -367,7 +367,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
   async recallMessage(msg: ChatMessage): Promise<void> {
     this.emitRecallMessageBefore(msg);
     const currentTimestamp = getCurTs();
-    if (msg.localTime + this._recallTimeout < currentTimestamp) {
+    if (msg.serverTime + this._recallTimeout < currentTimestamp) {
       this.emitRecallMessageChanged({ isOk: false });
       this._client.sendError({
         error: new UIKitError({
