@@ -2997,8 +2997,8 @@ export class ChatServiceImpl
               new ChatPresence({
                 publisher: userId,
                 statusDescription: status,
-                lastTime: getCurTs('s').toString(),
-                expiryTime: (60 * 60 * 24 * 3).toString(),
+                lastTime: getCurTs('s'),
+                expiryTime: 60 * 60 * 24 * 3,
                 statusDetails: new Map(),
               }),
             ]);

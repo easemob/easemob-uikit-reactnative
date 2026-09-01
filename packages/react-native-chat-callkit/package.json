@@ -86,7 +86,7 @@
     "react-native": "0.83.2",
     "react-native-agora": "~4.5.0",
     "react-native-builder-bob": "^0.40.18",
-    "react-native-chat-sdk": "^1.15.0",
+    "react-native-chat-sdk": "^1.18.0",
     "react-native-gesture-handler": "^2.30.0",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.23.0",
