@@ -1,5 +1,50 @@
 # Change Log
 
+## [2.5.6](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.5.5...uikit@2.5.6)(2026-09-01)
+
+- 8ac9f756 tag: uikit@2.5.6
+- 3641874f chore: upgrade chatsdk to 1.18.0
+- d3d59e07 chore: update yarn version
+- c9f596ef fix: uikit: message timestamp bug
+- e37243f2 docs: update
+- 5c846acb build: remove files
+- f13ba77f build: remove no use files
+- 1ea2c4a1 build: remove no use files
+- 1df91c66 chore: update icon
+- 380f39fc chore: upgrade react-native-chat-sdk to  1.15.2
+- 0b16a366 build: remove .nvmrc
+- 2cfe42ca chore: example: update
+- 84684497 tag: room: 1.0.6
+
+## [2.5.5](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.5.4...uikit@2.5.5)(2026-04-17)
+
+- 4490d60a tag: uikit: 2.5.5
+- 8030c7f3 docs: uikit: update releasenote
+- 0cc494f1 fix: uikit: add pin message for person chat
+- 6504769d fix: room: resolve Android keyboard overlap in roomkit message input
+- 52526cca chore: uikit: remove log
+- 9b7544cb docs: uikit: update releasenote
+- e6975c8a fix: resolve Android keyboard overlap in uikit message input
+- c62be5a3 build: add yarn cli offline npm pack
+- c4e3f314 chore: example: update version
+- 9f90eb72 fix: example: release apk
+- 1f9c75ca fix: example: android icon
+- cfde244e docs: update
+
+## [2.5.4](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.5.2...uikit@2.5.4)(2026-03-16)
+
+- 1afb9e25 tag: uikit@2.5.4, callkit@1.0.10, room@1.0.5
+- 1ac4062a ai: update
+- caab199b ai: add ai agent and skill
+- c9567c89 fix: example: callkit rest api
+- 3ec5fc33 chore: remove ios and android files
+- 0232f9c9 docs: update
+- 5b86dc6b tag: update uikit callkit roomkit
+- 037eb379 refactor: upgrade react native to 0.83
+- cb782985 docs: update
+- 3562e2d1 docs: update
+- 3a7a2116 chore: update
+
 ## [2.5.2](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.5.1...uikit@2.5.2)(2025-12-29)
 
 - e851f7f1 tag: uikit: 2.5.2
