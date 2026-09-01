@@ -20,10 +20,10 @@
       ],
       "api_key": [
         {
-          "current_key": "your-google-api-key"
+          "current_key": "your-api-key"
         },
         {
-          "current_key": "your-google-api-key"
+          "current_key": "your-api-key"
         }
       ],
       "services": {
