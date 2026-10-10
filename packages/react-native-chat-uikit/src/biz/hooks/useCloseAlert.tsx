@@ -12,8 +12,9 @@ export function useCloseAlert(props: UseCloseAlertProps) {
   const { alertRef } = props;
   const closeAlert = React.useCallback(
     (onFinished?: () => void) => {
+      const _onFinished = typeof onFinished === 'function' ? onFinished : undefined;
       alertRef.current?.close?.(() => {
-        onFinished?.();
+        _onFinished?.();
       });
     },
     [alertRef]
