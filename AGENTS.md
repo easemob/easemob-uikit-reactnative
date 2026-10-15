@@ -39,3 +39,10 @@ For behavior changes, add or update a focused example screen under `examples/*/s
 - PRs should include a linked issue or task.
 - PRs should include validation evidence (commands run and/or screenshots for UI changes).
 - PRs should call out breaking changes or migration steps.
+
+## Work Log
+
+- After completing a task, making an important decision, or receiving a correction from the user, append an entry to `dailylog/YYYY-MM-DD.md` using the local date. Create the file if it does not exist.
+- Append only; do not modify existing content. Format each entry as: `- HH:MM <what was done or decided>, reason: <...>`.
+- The log may record progress and process.
+- Work logs under `dailylog/` are tracked by Git and must not be added to `.gitignore`. When performing a user-authorized Git commit, include the current task's log changes in the same commit. Writing a log entry does not by itself authorize or trigger a commit or push.
