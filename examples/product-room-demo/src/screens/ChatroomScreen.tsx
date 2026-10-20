@@ -112,15 +112,15 @@ export function ChatroomScreen(props: Props) {
   };
 
   const onNavigationGoBack = React.useCallback(() => {
-    navigation.navigate({
-      name: 'ChannelList',
-      params: {
+    navigation.popTo(
+      'ChannelList',
+      {
         params: {
           pageCount,
         },
       },
-      merge: true,
-    });
+      { merge: true }
+    );
   }, [navigation, pageCount]);
 
   useRoomListener(
