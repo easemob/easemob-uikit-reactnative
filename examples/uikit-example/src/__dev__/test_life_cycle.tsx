@@ -106,7 +106,6 @@ export default function TestLifeCycle() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <CL />

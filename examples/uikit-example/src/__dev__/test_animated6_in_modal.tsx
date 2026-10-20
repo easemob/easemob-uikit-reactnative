@@ -6,7 +6,7 @@ import { Container, ConversationList } from '../rename.uikit';
 
 const App = () => {
   return (
-    <Container options={{ appKey: 'sdf', autoLogin: false, debugModel: true }}>
+    <Container options={{ appKey: 'sdf', debugModel: true }}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ConversationList />
       </GestureHandlerRootView>

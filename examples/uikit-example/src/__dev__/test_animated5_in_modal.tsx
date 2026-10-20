@@ -65,7 +65,7 @@ function BottomSheetMenuTest(props: any) {
 const App = () => {
   const propsRef = React.useRef<BizContextMenuRef>({} as any);
   return (
-    <Container options={{ appKey: 'sdf', autoLogin: false, debugModel: true }}>
+    <Container options={{ appKey: 'sdf', debugModel: true }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <BottomSheetMenuTest
           propsRef={propsRef}

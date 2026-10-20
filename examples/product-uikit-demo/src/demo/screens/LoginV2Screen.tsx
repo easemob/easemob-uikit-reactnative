@@ -183,7 +183,6 @@ function EasemobLoginV2Screen(props: Props) {
       devLoginAction({
         id: id,
         passOrToken: password,
-        usePassword: true,
         onResult: (res) => {
           if (res.isOk) {
             navi.replace({ to: 'Home' });
@@ -675,7 +674,6 @@ function AgoraLoginV2Screen(props: Props) {
       devLoginAction({
         id: id,
         passOrToken: password,
-        usePassword: false,
         onResult: (res) => {
           if (res.isOk) {
             navi.replace({ to: 'Home' });

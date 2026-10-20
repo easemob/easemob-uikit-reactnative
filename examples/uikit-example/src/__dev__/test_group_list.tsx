@@ -174,7 +174,6 @@ export default function TestGroupList() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <CL />

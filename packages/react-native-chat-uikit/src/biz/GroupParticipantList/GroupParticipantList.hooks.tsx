@@ -349,15 +349,14 @@ export function useGroupParticipantList(props: GroupParticipantListProps) {
     onMemberRemoved: (_params: { groupId: string; groupName?: string }) => {
       propsOnKicked?.(groupId);
     },
-    onMemberJoined: (params: { groupId: string; member: string }) => {
-      addDataToUI(params.groupId, params.member);
+    onMembersJoined: (params: { groupId: string; members: string[] }) => {
+      params.members.forEach((member) => addDataToUI(params.groupId, member));
     },
-    onMemberExited: (params: { groupId: string; member: string }) => {
-      removeDataToUI(params.groupId, params.member);
-      if (params.member === im.userId) {
-        return;
-      }
-      setParticipantCount((prev) => prev - 1);
+    onMembersExited: (params: { groupId: string; members: string[] }) => {
+      params.members.forEach((member) => {
+        removeDataToUI(params.groupId, member);
+        if (member !== im.userId) setParticipantCount((prev) => prev - 1);
+      });
     },
   });
   useChatListener(chatListenerRef.current);

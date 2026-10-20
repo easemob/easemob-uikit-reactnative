@@ -168,7 +168,6 @@ export default function TestRippleButton() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
       palette={p}
       theme={t}

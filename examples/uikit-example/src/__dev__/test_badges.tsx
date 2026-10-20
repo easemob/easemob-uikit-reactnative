@@ -18,7 +18,6 @@ export default function TestBadge() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <TB />

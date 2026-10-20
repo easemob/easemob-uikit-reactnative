@@ -15,6 +15,8 @@ import { ToastView } from './common/ToastView';
 import {
   ChatOptions,
   Container,
+  DisconnectReasonType,
+  getRoomService,
   useDarkTheme,
   useLightTheme,
   usePresetPalette,
@@ -73,6 +75,27 @@ export function App() {
   // const [isReady, setIsReady] = React.useState(false);
   const navigationRef = useNavigationContainerRef<RootParamsList>();
   const isReadyRef = React.useRef(false);
+  React.useEffect(() => {
+    const im = getRoomService();
+    const listener = {
+      onDisconnected: (reason: DisconnectReasonType) => {
+        if (
+          reason !== DisconnectReasonType.others &&
+          reason !== DisconnectReasonType.token_will_expire &&
+          navigationRef.isReady()
+        ) {
+          navigationRef.resetRoot({
+            index: 0,
+            routes: [
+              { name: 'Login', params: { params: { sessionEnded: true } } },
+            ],
+          });
+        }
+      },
+    };
+    im.addListener(listener);
+    return () => im.removeListener(listener);
+  }, [navigationRef]);
   // const fontFamily = 'Twemoji-Mozilla';
   // const [fontsLoaded] = useFonts({
   //   [fontFamily]: require('../assets/twemoji.ttf'),

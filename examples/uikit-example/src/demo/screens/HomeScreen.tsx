@@ -152,7 +152,7 @@ export function HomeScreen(props: Props) {
   React.useEffect(() => {
     if (accountType === 'agora') {
     } else {
-      im.client.contactManager.fetchAllContacts();
+      im.client.contactManager.getAllContacts();
     }
   }, [im.client.contactManager]);
 
@@ -371,7 +371,6 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
   const im = useChatContext();
   const { tr } = useI18nContext();
   const [userId, setUserId] = React.useState<string>();
-  const { getFcmToken } = useLogin();
   const { getAlertRef } = useAlertContext();
   const { getEnableDevMode } = useServerConfig();
 
@@ -403,7 +402,6 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
                 onPress: () => {
                   getAlertRef()?.close(() => {
                     im.logout({
-                      unbindDeviceToken: getFcmToken() !== undefined,
                       result: async () => {
                         if (demoType === 1) {
                           navi.replace({ to: 'TopMenu' });

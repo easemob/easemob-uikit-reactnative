@@ -95,7 +95,6 @@ export default function TestClosure() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <Test1 />

@@ -67,7 +67,6 @@ export default function TestDraggable() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
       palette={p}
       theme={t}

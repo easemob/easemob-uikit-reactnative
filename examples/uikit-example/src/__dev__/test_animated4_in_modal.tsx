@@ -14,7 +14,7 @@ import { Container, SlideModal, SlideModalRef } from '../rename.uikit';
 const App = () => {
   const propsRef = React.useRef<SlideModalRef>({} as any);
   return (
-    <Container options={{ appKey: 'sdf', autoLogin: false, debugModel: true }}>
+    <Container options={{ appKey: 'sdf', debugModel: true }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <SlideModal
           propsRef={propsRef}

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
-import { ChatClient, useCallkitSdkContext } from '../rename.callkit';
+import { ChatClient, ChatError, useCallkitSdkContext } from '../rename.callkit';
 import { Text1Button } from '../ui/Button';
 
 let gid: string = '';
@@ -19,91 +19,43 @@ try {
 
 const channelId = 'magic';
 
-function rr(call: any): void {
-  ChatClient.getInstance()
-    .isLoginBefore()
-    .then((result) => {
-      if (result === true) {
-        ChatClient.getInstance()
-          .getCurrentUsername()
-          .then((value) => {
-            call.requestRTCToken?.({
-              channelId,
-              appKey,
-              userId: value,
-              onResult: (params: { data?: any; error?: any }) => {
-                console.log(params);
-              },
-            });
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      } else {
-        ChatClient.getInstance()
-          .login(gid, gps)
-          .then(() => {
-            const userId = ChatClient.getInstance().currentUserName;
-            call.requestRTCToken?.({
-              channelId,
-              appKey,
-              userId,
-              onResult: (params: { data?: any; error?: any }) => {
-                console.log(params);
-              },
-            });
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      }
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+// The test buttons explicitly log in with the configured IM token.
+async function loginForRequest(): Promise<string> {
+  const client = ChatClient.getInstance();
+  try {
+    await client.loginWithToken(gid, gps);
+  } catch (error) {
+    if ((error as ChatError).code !== 200) throw error;
+  }
+  return client.getCurrentUsername();
 }
-function rm(call: any): void {
-  ChatClient.getInstance()
-    .isLoginBefore()
-    .then((result) => {
-      if (result === true) {
-        ChatClient.getInstance()
-          .getCurrentUsername()
-          .then((value) => {
-            call.requestUserMap?.({
-              channelId,
-              appKey,
-              userId: value,
-              onResult: (params: { data?: any; error?: any }) => {
-                console.log(params);
-              },
-            });
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      } else {
-        ChatClient.getInstance()
-          .login(gid, gps)
-          .then(() => {
-            const userId = ChatClient.getInstance().currentUserName;
-            call.requestUserMap?.({
-              channelId,
-              appKey,
-              userId,
-              onResult: (params: { data?: any; error?: any }) => {
-                console.log(params);
-              },
-            });
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      }
-    })
-    .catch((e) => {
-      console.log(e);
+
+async function rr(call: any): Promise<void> {
+  try {
+    const userId = await loginForRequest();
+    call.requestRTCToken?.({
+      channelId,
+      appKey,
+      userId,
+      onResult: (params: { data?: any; error?: any }) => console.log(params),
     });
+  } catch (error) {
+    console.warn(error);
+  }
+}
+
+async function rm(call: any): Promise<void> {
+  try {
+    const userId = await loginForRequest();
+    call.requestUserMap?.({
+      channelId,
+      appKey,
+      userId,
+      onResult: (params: { data?: any; error?: any }) => console.log(params),
+    });
+  } catch (error) {
+    console.warn(error);
+  }
 }
 
 export default function TestAppServer() {

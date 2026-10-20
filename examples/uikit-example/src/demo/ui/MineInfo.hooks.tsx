@@ -17,7 +17,7 @@ import {
   useThemeContext,
 } from '../../rename.uikit';
 import { RestApi } from '../common/rest.api';
-import { useAutoLogin } from '../hooks';
+import { useSavedLoginInfo } from '../hooks';
 import type { CommonInfoProps, MineInfoProps, UserState } from './types';
 
 export function useMineInfo(props: MineInfoProps) {
@@ -56,7 +56,7 @@ export function useMineInfo(props: MineInfoProps) {
   );
   const im = useChatContext();
   const { tr } = useI18nContext();
-  const { getSelfInfo } = useAutoLogin();
+  const { getSelfInfo } = useSavedLoginInfo();
 
   useLifecycle(
     React.useCallback(

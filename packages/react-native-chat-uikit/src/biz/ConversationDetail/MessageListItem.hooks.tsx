@@ -77,7 +77,7 @@ export function getMessageState(msg: ChatMessage): MessageStateType {
     }
     if (
       msg.chatType === ChatMessageChatType.PeerChat &&
-      msg.hasReadAck === true
+      msg.isPeerRead === true
     ) {
       ret = 'peer-read';
     }

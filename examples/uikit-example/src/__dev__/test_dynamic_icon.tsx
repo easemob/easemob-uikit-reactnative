@@ -93,7 +93,6 @@ export default function TestDynamicIcon() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
       palette={p}
       theme={t}

@@ -30,7 +30,6 @@ export default function TestClass() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <Test1 />

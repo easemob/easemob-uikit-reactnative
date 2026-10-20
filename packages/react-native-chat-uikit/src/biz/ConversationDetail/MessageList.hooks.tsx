@@ -1097,7 +1097,8 @@ export function useMessageList(
     alertRef,
     onQuoteMessageForInput: propsOnQuoteMessageForInput,
     onEditMessageForInput: propsOnEditMessageForInput,
-    showReportMessage: showReportMessageMenu,
+    // SDK 5.x removed message reporting; retain the UI for later integration.
+    // showReportMessage: showReportMessageMenu,
     onDeleteMessage: deleteMessage,
     onRecallMessage: recallMessage,
     onInit: onInitMenu,
@@ -1741,7 +1742,7 @@ export function useMessageList(
       if (
         msg.chatType === ChatMessageChatType.PeerChat &&
         msg.direction === ChatMessageDirection.RECEIVE &&
-        msg.hasReadAck === false
+        msg.isNeedReadReceipt === true
       ) {
         im.messageManager.sendMessageReadAck({
           message: msg,

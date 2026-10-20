@@ -2,16 +2,15 @@ import { uilog } from '../const';
 import { ConversationStorage } from '../db/storage';
 import { ErrorCode, UIKitError } from '../error';
 import {
-  CHAT_VERSION,
   ChatClient,
   ChatContact,
   ChatConversation,
   ChatConversationType,
   ChatCursorResult,
+  ChatDataSyncType,
   ChatError,
   ChatGroup,
-  ChatGroupOptions,
-  ChatGroupStyle,
+  ChatGroupConfigs,
   chatlog,
   ChatMessage,
   ChatMessageReaction,
@@ -109,6 +108,11 @@ export class ChatServiceImpl
   // destructor() {
   // }
 
+  protected onSessionExpired(): void {
+    this._user = undefined;
+    this.reset();
+  }
+
   reset(): void {
     uilog.log('chat:reset:');
     // this.clearListener(); // !!! warn: no clear.
@@ -138,7 +142,14 @@ export class ChatServiceImpl
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     uilog.log('chat:init:', params.options);
-    const { options } = params;
+    const options = {
+      ...params.options,
+      dataSyncType:
+        params.options.dataSyncType ??
+        ChatDataSyncType.Conversations |
+          ChatDataSyncType.Contacts |
+          ChatDataSyncType.JoinedGroups,
+    };
 
     try {
       const isExistedAppKey = options.hasOwnProperty('appKey');
@@ -264,27 +275,13 @@ export class ChatServiceImpl
     userToken: string;
     userName: string;
     userAvatarURL?: string | undefined;
-    usePassword?: boolean;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
-    const { userId, userToken, userName, userAvatarURL, result, usePassword } =
-      params;
+    const { userId, userToken, userName, userAvatarURL, result } = params;
     try {
-      uilog.log('chat:login:', params);
+      uilog.log('chat:login:', userId);
       this.reset();
-      const version = CHAT_VERSION;
-      const list = version.split('.');
-      const major = parseInt(list[0]!, 10);
-      const minor = parseInt(list[1]!, 10);
-      if (major <= 1 && minor < 3) {
-        if (userToken.startsWith('00')) {
-          await this.client.loginWithAgoraToken(userId, userToken);
-        } else {
-          await this.client.login(userId, userToken, usePassword ?? false);
-        }
-      } else {
-        await this.client.login(userId, userToken, usePassword ?? false);
-      }
+      await this.client.loginWithToken(userId, userToken);
 
       this._convStorage?.setCurrentId(userId);
 
@@ -303,7 +300,7 @@ export class ChatServiceImpl
       this.client.getCurrentUsername();
       // this.updateSelfInfo({ self: this._user, onResult: () => {} });
 
-      uilog.log('login:finish:1', params);
+      uilog.log('login:finish:1', userId);
 
       result?.({ isOk: true });
 
@@ -326,7 +323,7 @@ export class ChatServiceImpl
         this.client.getCurrentUsername();
         // this.updateSelfInfo({ self: this._user, onResult: () => {} });
       }
-      uilog.log('login:finish:2', params, error);
+      uilog.log('login:finish:2', userId, error);
       result?.({
         isOk: false,
         error: new UIKitError({
@@ -360,61 +357,15 @@ export class ChatServiceImpl
       this.sendFinished({ event: 'logout', extra: { isOk: false } });
     }
   }
-  async autoLogin(params: {
-    userName?: string;
-    userAvatarURL?: string;
-    result: (params: { isOk: boolean; error?: UIKitError }) => void;
-  }): Promise<void> {
-    if (this.client.options?.autoLogin !== true) {
-      params.result?.({ isOk: false });
-      this.sendFinished({ event: 'autoLogin', extra: { isOk: false } });
-      return;
-    }
-    this.tryCatch({
-      promise: this.client.isLoginBefore(),
-      event: 'autoLogin',
-      onFinished: async (value) => {
-        if (value === true) {
-          const userId = await this.client.getCurrentUsername();
-          this._convStorage?.setCurrentId(userId);
-
-          this._user = {
-            userName: params.userName,
-            remark: params.userName,
-            avatarURL: params.userAvatarURL,
-            userId: userId,
-          } as UserData;
-
-          Services.dcs.init(`${this.id().replace('#', '-')}/${userId}`);
-
-          await this._createUserDir();
-          this.client.getCurrentUsername();
-
-          params.result?.({ isOk: true });
-          this.sendFinished({ event: 'autoLogin', extra: { isOk: true } });
-        } else {
-          params.result?.({ isOk: false });
-          this.sendFinished({ event: 'autoLogin', extra: { isOk: false } });
-        }
-      },
-      onError: (e) => {
-        params.result?.({
-          isOk: false,
-          error: e,
-        });
-      },
-    });
-  }
   async loginState(): Promise<'logged' | 'noLogged'> {
-    const r = await this.client.isLoginBefore();
-    return r === true ? 'logged' : 'noLogged';
+    return this._user ? 'logged' : 'noLogged';
   }
   refreshToken(params: {
     token: string;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): void {
     this.tryCatch({
-      promise: this.client.renewAgoraToken(params.token),
+      promise: this.client.renewToken(params.token),
       event: 'refreshToken',
       onFinished: () => {
         params?.result?.({ isOk: true });
@@ -773,50 +724,12 @@ export class ChatServiceImpl
         });
         await Promise.all(ret);
       } else {
-        let cursor = '';
-        const pageSize = 50;
         const pageSize2 = 20;
-        const pinList =
-          await this.client.chatManager.fetchPinnedConversationsFromServerWithCursor(
-            cursor,
-            pageSize
-          );
-        pinList.list?.forEach((v) => {
-          map.set(v.convId, {
-            ...v,
-          } as ChatConversation);
+        const conversations =
+          await this.client.chatManager.getAllConversations();
+        conversations.forEach((conversation) => {
+          map.set(conversation.convId, conversation);
         });
-        cursor = '';
-        for (;;) {
-          const list =
-            await this.client.chatManager.fetchConversationsFromServerWithCursor(
-              cursor,
-              pageSize2
-            );
-          list.list?.forEach((v) => {
-            const item = map.get(v.convId);
-            if (item) {
-              map.set(v.convId, {
-                ...item,
-                ...v,
-              } as ChatConversation);
-            } else {
-              map.set(v.convId, {
-                ...v,
-              } as ChatConversation);
-            }
-          });
-
-          if (
-            list.cursor.length === 0 ||
-            (list.list && list.list?.length < pageSize) ||
-            list.list === undefined
-          ) {
-            break;
-          }
-
-          cursor = list.cursor;
-        }
 
         if (map.size > 0) {
           const reqList = Array.from(map.values()).map((v) => {
@@ -1110,9 +1023,8 @@ export class ChatServiceImpl
     convType: ChatConversationType;
   }): Promise<void> {
     const ret = await this.tryCatchSync({
-      promise: this.client.chatManager.markAllMessagesAsRead(
-        params.convId,
-        params.convType
+      promise: this.client.chatManager.clearConversationUnreadMessageCount(
+        params.convId
       ),
       event: 'setConversationRead',
     });
@@ -1263,7 +1175,7 @@ export class ChatServiceImpl
       return;
     }
     this.tryCatch({
-      promise: this.client.contactManager.fetchAllContacts(),
+      promise: this.client.contactManager.getAllContacts(),
       event: 'fetchAllContacts',
       onFinished: async (value) => {
         const list = new Map() as Map<string, ContactModel>;
@@ -1410,7 +1322,7 @@ export class ChatServiceImpl
       return;
     }
     this.tryCatch({
-      promise: this.client.contactManager.getAllContactsFromServer(),
+      promise: this.client.contactManager.getAllContactsFromDB(),
       event: 'getAllContactsFromServer',
       onFinished: async (value) => {
         const list = new Map() as Map<string, ContactModel>;
@@ -1622,10 +1534,14 @@ export class ChatServiceImpl
     onResult: ResultCallback<GroupModel[]>;
   }): void {
     this.tryCatch({
-      promise: this.client.groupManager.fetchJoinedGroupsFromServer(
-        params.pageSize,
-        params.pageNum
-      ),
+      promise: this.client.groupManager
+        .getJoinedGroups()
+        .then((groups) =>
+          groups.slice(
+            params.pageNum * params.pageSize,
+            (params.pageNum + 1) * params.pageSize
+          )
+        ),
       event: 'getPageGroups',
       onFinished: async (value) => {
         const list = new Map<string, DataModel>();
@@ -1847,7 +1763,7 @@ export class ChatServiceImpl
     onResult: ResultCallback<GroupModel>;
   }): void {
     this.tryCatch({
-      promise: this.client.groupManager.fetchGroupInfoFromServer(
+      promise: this.client.groupManager.fetchGroupInfoWithoutMembersFromServer(
         params.groupId
       ),
       event: 'getGroupInfoFromServer',
@@ -1917,9 +1833,10 @@ export class ChatServiceImpl
       };
     } else {
       const ret2 = await this.tryCatchSync({
-        promise: this.client.groupManager.fetchGroupInfoFromServer(
-          params.groupId
-        ),
+        promise:
+          this.client.groupManager.fetchGroupInfoWithoutMembersFromServer(
+            params.groupId
+          ),
         event: 'getGroupInfoSync',
       });
       if (ret2) {
@@ -1988,16 +1905,18 @@ export class ChatServiceImpl
     onResult?: ResultCallback<GroupModel>;
   }): void {
     this.tryCatch({
-      promise: this.client.groupManager.createGroup(
-        new ChatGroupOptions({
-          style: ChatGroupStyle.PrivateMemberCanInvite,
+      promise: this.client.groupManager.createGroupEx({
+        configs: new ChatGroupConfigs({
+          isPublic: false,
+          allowInvites: true,
+          joinApprovalRequired: false,
           maxCount: 1000,
           inviteNeedConfirm: false,
         }),
-        params.groupName,
-        params.groupDescription,
-        params.inviteMembers
-      ),
+        groupName: params.groupName,
+        desc: params.groupDescription,
+        inviteMembers: params.inviteMembers,
+      }),
       event: 'createGroup',
       onFinished: async (value) => {
         this._updateDataList({
@@ -2515,10 +2434,10 @@ export class ChatServiceImpl
     onResult: ResultCallback<ChatMessage>;
   }): void {
     this.tryCatch({
-      promise: this.client.chatManager.modifyMessageBody(
-        params.message.msgId,
-        params.message.body
-      ),
+      promise: this.client.chatManager.modifyMsgBody({
+        msgId: params.message.msgId,
+        body: params.message.body,
+      }),
       event: 'editMessage',
       onFinished: async (msg) => {
         params.onResult({
@@ -2591,6 +2510,7 @@ export class ChatServiceImpl
     callback?: ChatMessageStatusCallback;
   }): void {
     const { message, callback } = params;
+    message.isNeedReadReceipt = true;
     this.setUserInfoToMessage({ msg: message, user: this._user });
     this.tryCatch({
       promise: this.client.chatManager.sendMessage(message, callback),
@@ -2686,10 +2606,8 @@ export class ChatServiceImpl
     onResult: ResultCallback<void>;
   }): void {
     this.tryCatch({
-      promise: this.client.chatManager.markMessageAsRead(
-        params.convId,
-        params.convType,
-        params.msgId
+      promise: this.client.chatManager.clearConversationUnreadMessageCount(
+        params.convId
       ),
       event: 'setMessageRead',
       onFinished: () => {
@@ -2707,7 +2625,9 @@ export class ChatServiceImpl
     onResult: ResultCallback<void>;
   }): void {
     this.tryCatch({
-      promise: this.client.chatManager.sendMessageReadAck(params.message),
+      promise: this.client.chatManager.sendMessageReadReceipts([
+        params.message.msgId,
+      ]),
       event: 'sendMessageReadAck',
       onFinished: async () => {
         params.onResult({
@@ -2727,6 +2647,8 @@ export class ChatServiceImpl
     reason: string;
     onResult: ResultCallback<void>;
   }): void {
+    // SDK 5.x removed message reporting. Keep the implementation for later integration.
+    /*
     const { messageId, tag, reason } = params;
     this.tryCatch({
       promise: this.client.chatManager.reportMessage(messageId, tag, reason),
@@ -2738,6 +2660,8 @@ export class ChatServiceImpl
         params.onResult?.({ isOk: false, error: e });
       },
     });
+    */
+    params.onResult?.({ isOk: false });
   }
 
   fetchCombineMessageDetail(params: {

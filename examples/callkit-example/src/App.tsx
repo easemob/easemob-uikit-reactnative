@@ -16,6 +16,9 @@ import { AppDev } from './__dev__';
 import {
   CallUser,
   ChatClient,
+  ChatConnectEventListener,
+  ChatDataSyncType,
+  ChatDisconnectErrorCode,
   ChatOptions,
   GlobalContainer as CallkitContainer,
 } from './rename.callkit';
@@ -81,8 +84,54 @@ export function App() {
   const [isReady, setIsReady] = React.useState(false);
   const [initialRouteName] = React.useState('Splash' as RootParamsName);
 
-  const autoLogin = React.useRef(true);
   const RootRef = useNavigationContainerRef<RootParamsList>();
+  React.useEffect(() => {
+    const client = ChatClient.getInstance();
+    const returnToLogin = () => {
+      if (!RootRef.isReady()) return;
+      RootRef.resetRoot({
+        index: 0,
+        routes: [
+          {
+            name: 'Login',
+            params: {
+              params: {
+                id: client.currentUserName ?? '',
+                pass: '',
+                accountType: accountType === 'agora' ? 'agora' : 'easemob',
+              },
+            },
+          },
+        ],
+      });
+    };
+    const logoutReasons = [
+      ChatDisconnectErrorCode.APP_ACTIVE_NUMBER_REACH_LIMIT,
+      ChatDisconnectErrorCode.INVALID_TOKEN,
+      ChatDisconnectErrorCode.INVALID_PARAM,
+      ChatDisconnectErrorCode.USER_AUTHENTICATION_FAILED,
+      ChatDisconnectErrorCode.USER_NOT_FOUND,
+      ChatDisconnectErrorCode.USER_LOGIN_FROM_OTHER_DEVICE,
+      ChatDisconnectErrorCode.USER_REMOVED_FROM_SERVER,
+      ChatDisconnectErrorCode.USER_BIND_ANOTHER_DEVICE,
+      ChatDisconnectErrorCode.USER_LOGIN_TOO_MANY_DEVICES,
+      ChatDisconnectErrorCode.USER_KICKED_BY_CHANGE_PASSWORD,
+      ChatDisconnectErrorCode.USER_KICKED_BY_OTHER_DEVICE,
+      ChatDisconnectErrorCode.USER_DEVICE_CHANGED,
+      ChatDisconnectErrorCode.SERVER_GET_DNSLIST_FAILED,
+      ChatDisconnectErrorCode.SERVER_SERVICE_RESTRICTED,
+    ];
+    const listener: ChatConnectEventListener = {
+      onTokenDidExpire: returnToLogin,
+      onDisconnected: (errorCode) => {
+        if (errorCode !== undefined && logoutReasons.includes(errorCode)) {
+          returnToLogin();
+        }
+      },
+    };
+    client.addConnectionListener(listener);
+    return () => client.removeConnectionListener(listener);
+  }, [RootRef]);
   const isOnInitialized = React.useRef(false);
   const isOnReady = React.useRef(false);
   const enableLog = true;
@@ -104,7 +153,6 @@ export function App() {
       }
 
       DeviceEventEmitter.emit('on_initialized', {
-        autoLogin: autoLogin.current,
         navigation: RootRef,
       });
 
@@ -120,7 +168,7 @@ export function App() {
         ChatOptions.withAppKey({
           appKey: appKey,
           debugModel: true,
-          autoLogin: false,
+          dataSyncType: ChatDataSyncType.Contacts,
           ...sandBoxConfig,
         })
       )

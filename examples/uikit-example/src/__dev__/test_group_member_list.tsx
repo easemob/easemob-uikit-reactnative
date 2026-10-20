@@ -153,7 +153,6 @@ export default function TestGroupParticipantList() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <CL2 />

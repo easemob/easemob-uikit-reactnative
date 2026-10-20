@@ -24,7 +24,7 @@ import {
 import { accountType } from '../common/const';
 import { SafeAreaViewFragment } from '../common/SafeAreaViewFragment';
 import {
-  useLogin,
+  clearSavedLogin,
   useNativeStackRoute,
   useNavigationState,
   useServerConfig,
@@ -154,7 +154,7 @@ export function HomeScreen(props: Props) {
   React.useEffect(() => {
     if (accountType === 'agora') {
     } else {
-      im.client.contactManager.fetchAllContacts();
+      im.client.contactManager.getAllContacts();
     }
   }, [im.client.contactManager]);
 
@@ -169,6 +169,7 @@ export function HomeScreen(props: Props) {
     im.checkTokenIsExpired({
       onResult: async (isExpired) => {
         if (isExpired) {
+          await clearSavedLogin();
           const ret = await getEnableDevMode();
           replace({ to: 'LoginV2', props: { serverConfigVisible: ret } });
         }
@@ -402,7 +403,6 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
   const im = useChatContext();
   const { tr } = useI18nContext();
   const [userId, setUserId] = React.useState<string>();
-  const { getFcmToken } = useLogin();
   const { getAlertRef } = useAlertContext();
   const { getEnableDevMode } = useServerConfig();
 
@@ -433,8 +433,9 @@ function HomeTabMineScreen(props: HomeTabMineScreenProps) {
                 onPress: () => {
                   getAlertRef()?.close(() => {
                     im.logout({
-                      unbindDeviceToken: getFcmToken() !== undefined,
-                      result: async () => {
+                      result: async (result) => {
+                        if (!result.isOk) return;
+                        await clearSavedLogin();
                         const ret = await getEnableDevMode();
                         navi.replace({
                           to: 'LoginV2',

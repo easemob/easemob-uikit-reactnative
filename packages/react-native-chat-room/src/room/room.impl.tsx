@@ -1,10 +1,10 @@
 import { ErrorCode, UIKitError } from '../error';
 import {
-  CHAT_VERSION,
   ChatClient,
   ChatConnectEventListener,
   ChatConversationType,
   ChatCursorResult,
+  ChatDisconnectErrorCode,
   ChatMessage,
   ChatMessageChatType,
   ChatMessageEventListener,
@@ -70,14 +70,12 @@ export abstract class RoomServiceImpl implements RoomService {
   async init(params: {
     appKey: string;
     debugMode?: boolean;
-    autoLogin?: boolean;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
-    const { appKey, debugMode, autoLogin } = params;
+    const { appKey, debugMode } = params;
     const options = ChatOptions.withAppKey({
       appKey,
       debugModel: debugMode,
-      autoLogin,
     });
     try {
       await this.client.init(options);
@@ -171,19 +169,7 @@ export abstract class RoomServiceImpl implements RoomService {
       result,
     } = params;
     try {
-      const version = CHAT_VERSION;
-      const list = version.split('.');
-      const major = parseInt(list[0]!, 10);
-      const minor = parseInt(list[1]!, 10);
-      if (major <= 1 && minor < 3) {
-        if (userToken.startsWith('00')) {
-          await this.client.loginWithAgoraToken(userId, userToken);
-        } else {
-          await this.client.login(userId, userToken, false);
-        }
-      } else {
-        await this.client.login(userId, userToken, false);
-      }
+      await this.client.loginWithToken(userId, userToken);
 
       // !!! hot-reload no pass, into catch codes
       this._user = {
@@ -236,15 +222,14 @@ export abstract class RoomServiceImpl implements RoomService {
     }
   }
   async loginState(): Promise<'logged' | 'noLogged'> {
-    const r = await this.client.isLoginBefore();
-    return r === true ? 'logged' : 'noLogged';
+    return this._user ? 'logged' : 'noLogged';
   }
   async refreshToken(params: {
     token: string;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void> {
     try {
-      await this.client.renewAgoraToken(params.token);
+      await this.client.renewToken(params.token);
       params?.result?.({ isOk: true });
     } catch (error) {
       console.warn('refreshToken:error:', error);
@@ -388,7 +373,7 @@ export abstract class RoomServiceImpl implements RoomService {
   async joinRoom(roomId: string, room: { ownerId: string }): Promise<void> {
     this._join(roomId, room.ownerId);
     try {
-      await this.client.roomManager.joinChatRoom(roomId);
+      await this.client.roomManager.joinChatRoomEx({ roomId });
     } catch (error) {
       throw new UIKitError({
         code: ErrorCode.room_join_error,
@@ -474,9 +459,9 @@ export abstract class RoomServiceImpl implements RoomService {
       try {
         await this.client.roomManager.muteChatRoomMembers(roomId, [userId]);
         this.updateMuter([userId]);
-        this._roomListener?.onMuteListAdded?.({
+        this._roomListener?.onMuteListAddedV2?.({
           roomId: roomId,
-          mutes: [userId],
+          mutes: { [userId]: -1 },
         });
       } catch (error) {
         throw new UIKitError({
@@ -688,6 +673,8 @@ export abstract class RoomServiceImpl implements RoomService {
     tag: string;
     reason: string;
   }): Promise<void> {
+    // SDK 5.x removed message reporting. Keep the implementation for later integration.
+    /*
     const { messageId, tag, reason } = params;
     try {
       return await this.client.chatManager.reportMessage(
@@ -703,6 +690,11 @@ export abstract class RoomServiceImpl implements RoomService {
         )}, messageId: ${messageId}, tag: ${tag}, reason: ${reason}}`,
       });
     }
+    */
+    throw new UIKitError({
+      code: ErrorCode.msg_report_error,
+      extra: 'Message reporting is unavailable in Chat SDK 5.x.',
+    });
   }
   async translateMessage(
     message: ChatMessage,
@@ -879,10 +871,46 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
           v.onConnected?.();
         });
       },
-      onDisconnected: () => {
-        listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.others);
-        });
+      onDisconnected: (errorCode?: number) => {
+        const reasons: Partial<
+          Record<ChatDisconnectErrorCode, DisconnectReasonType>
+        > = {
+          [ChatDisconnectErrorCode.APP_ACTIVE_NUMBER_REACH_LIMIT]:
+            DisconnectReasonType.app_active_number_reach_limit,
+          [ChatDisconnectErrorCode.INVALID_TOKEN]:
+            DisconnectReasonType.user_authentication_failed,
+          [ChatDisconnectErrorCode.INVALID_PARAM]:
+            DisconnectReasonType.user_authentication_failed,
+          [ChatDisconnectErrorCode.USER_AUTHENTICATION_FAILED]:
+            DisconnectReasonType.user_authentication_failed,
+          [ChatDisconnectErrorCode.USER_NOT_FOUND]:
+            DisconnectReasonType.user_did_remove_from_server,
+          [ChatDisconnectErrorCode.USER_LOGIN_FROM_OTHER_DEVICE]:
+            DisconnectReasonType.user_did_login_from_other_device,
+          [ChatDisconnectErrorCode.USER_REMOVED_FROM_SERVER]:
+            DisconnectReasonType.user_did_remove_from_server,
+          [ChatDisconnectErrorCode.USER_BIND_ANOTHER_DEVICE]:
+            DisconnectReasonType.user_kicked_by_other_device,
+          [ChatDisconnectErrorCode.USER_LOGIN_TOO_MANY_DEVICES]:
+            DisconnectReasonType.user_did_login_too_many_device,
+          [ChatDisconnectErrorCode.USER_KICKED_BY_CHANGE_PASSWORD]:
+            DisconnectReasonType.user_did_change_password,
+          [ChatDisconnectErrorCode.USER_KICKED_BY_OTHER_DEVICE]:
+            DisconnectReasonType.user_kicked_by_other_device,
+          [ChatDisconnectErrorCode.USER_DEVICE_CHANGED]:
+            DisconnectReasonType.user_authentication_failed,
+          [ChatDisconnectErrorCode.SERVER_GET_DNSLIST_FAILED]:
+            DisconnectReasonType.user_authentication_failed,
+          [ChatDisconnectErrorCode.SERVER_SERVICE_RESTRICTED]:
+            DisconnectReasonType.user_did_forbid_by_server,
+        };
+        const reason =
+          (errorCode === undefined
+            ? undefined
+            : reasons[errorCode as ChatDisconnectErrorCode]) ??
+          DisconnectReasonType.others;
+        if (reason !== DisconnectReasonType.others) this._user = undefined;
+        listeners.forEach((v) => v.onDisconnected?.(reason));
       },
       onTokenWillExpire: () => {
         listeners.forEach((v) => {
@@ -890,54 +918,9 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
         });
       },
       onTokenDidExpire: () => {
+        this._user = undefined;
         listeners.forEach((v) => {
           v.onDisconnected?.(DisconnectReasonType.token_did_expire);
-        });
-      },
-      onAppActiveNumberReachLimit: () => {
-        listeners.forEach((v) => {
-          v.onDisconnected?.(
-            DisconnectReasonType.app_active_number_reach_limit
-          );
-        });
-      },
-      onUserDidLoginFromOtherDevice: () => {
-        listeners.forEach((v) => {
-          v.onDisconnected?.(
-            DisconnectReasonType.user_did_login_from_other_device
-          );
-        });
-      },
-      onUserDidRemoveFromServer: () => {
-        listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.user_did_remove_from_server);
-        });
-      },
-      onUserDidForbidByServer: () => {
-        listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.user_did_forbid_by_server);
-        });
-      },
-      onUserDidChangePassword: () => {
-        listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.user_did_change_password);
-        });
-      },
-      onUserDidLoginTooManyDevice: () => {
-        listeners.forEach((v) => {
-          v.onDisconnected?.(
-            DisconnectReasonType.user_did_login_too_many_device
-          );
-        });
-      },
-      onUserKickedByOtherDevice: () => {
-        listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.user_kicked_by_other_device);
-        });
-      },
-      onUserAuthenticationFailed: () => {
-        listeners.forEach((v) => {
-          v.onDisconnected?.(DisconnectReasonType.user_authentication_failed);
         });
       },
     };
@@ -1025,13 +1008,12 @@ export class RoomServicePrivateImpl extends RoomServiceImpl {
           v.onUserBeKicked?.(params.roomId, 2);
         });
       },
-      onMuteListAdded: (params: {
+      onMuteListAddedV2: (params: {
         roomId: string;
-        mutes: Array<string>;
-        expireTime?: string;
+        mutes: Record<string, number>;
       }) => {
         listeners.forEach((v) => {
-          v.onUserMuted?.(params.roomId, params.mutes, '');
+          v.onUserMuted?.(params.roomId, Object.keys(params.mutes), '');
         });
       },
       onMuteListRemoved: (params: { roomId: string; mutes: Array<string> }) => {

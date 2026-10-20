@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import {
-  ChatPushConfig,
   ChatService,
   AsyncStorageBasic,
   SingletonObjects,
@@ -21,6 +20,62 @@ import {
 } from '../common/rest.api';
 import { AppKey } from './useServerConfig';
 
+type SavedLogin = {
+  accountType: string;
+  phone?: string;
+  id: string;
+  token: string;
+  avatar?: string;
+  context: string;
+  devMode: boolean;
+};
+
+function loginStorage() {
+  return SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
+    appKey: `${AppKey.gAppKey()}/uikit/demo`,
+  });
+}
+
+function loginContext(im: ChatService): string {
+  const options = im.client.options;
+  return JSON.stringify([
+    options?.appKey,
+    options?.appId,
+    options?.enableDNSConfig,
+    options?.imServer,
+    options?.imPort,
+    options?.restServer,
+  ]);
+}
+
+export async function clearSavedLogin(): Promise<void> {
+  const result = await loginStorage().setData({ key: 'self', value: '' });
+  if (!result.isOk) console.warn('Failed to clear saved login.');
+}
+
+async function saveLogin(
+  im: ChatService,
+  data: Omit<SavedLogin, 'context'>
+): Promise<void> {
+  const result = await loginStorage().setData({
+    key: 'self',
+    value: JSON.stringify({ ...data, context: loginContext(im) }),
+  });
+  if (!result.isOk) console.warn('Failed to save login for the next launch.');
+}
+
+async function bindPushToken(im: ChatService): Promise<void> {
+  try {
+    const token = await requestFcmToken();
+    await im.client.bindDeviceToken({
+      deviceToken: token,
+      notifierName: fcmSenderId,
+    });
+  } catch (error) {
+    console.warn('dev:bindDeviceToken:error:', error);
+  }
+}
+
 export function useAutoLogin() {
   const getSelfInfo = React.useCallback(async () => {
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
@@ -29,7 +84,7 @@ export function useAutoLogin() {
     const res = await s.getData({ key: 'self' });
     if (res.value) {
       try {
-        return JSON.parse(res.value);
+        return JSON.parse(res.value) as SavedLogin;
       } catch (error) {
         return undefined;
       }
@@ -37,63 +92,51 @@ export function useAutoLogin() {
     return undefined;
   }, []);
 
-  const requestUpdatePushToken = React.useCallback((im: ChatService) => {
-    requestFcmToken()
-      .then((fcmToken) => {
-        im.client
-          .updatePushConfig(
-            new ChatPushConfig({
-              deviceId: fcmSenderId,
-              deviceToken: fcmToken,
-            })
-          )
-          .then()
-          .catch((e) => {
-            console.warn('dev:updatePushConfig:error:', e);
-          });
-      })
-      .catch((e) => {
-        console.warn('dev:requestFcmToken:error:', e);
-      });
-  }, []);
-
   const autoLoginAction = React.useCallback(
     async (params: {
       im: ChatService;
+      devMode: boolean;
       onResult: (params: { isOk: boolean }) => void;
     }) => {
-      const { im, onResult } = params;
+      const { im, devMode, onResult } = params;
       try {
-        do {
-          const p = new Promise<{ isOk: boolean; error?: UIKitError }>(
-            async (resolve, reject) => {
-              const ret = await getSelfInfo();
-              im.autoLogin({
-                userAvatarURL: ret?.avatar,
-                result: (res) => {
-                  if (res.isOk) {
-                    resolve(res);
-                  } else {
-                    reject(res);
-                  }
-                },
-              });
+        const saved = await getSelfInfo();
+        if (
+          !saved ||
+          typeof saved.id !== 'string' ||
+          !saved.id ||
+          typeof saved.token !== 'string' ||
+          !saved.token ||
+          saved.context !== loginContext(im) ||
+          saved.devMode !== devMode
+        ) {
+          onResult({ isOk: false });
+          return;
+        }
+        await im.login({
+          userId: saved.id,
+          userToken: saved.token,
+          userAvatarURL: saved.avatar,
+          result: async (result) => {
+            if (result.isOk) {
+              void bindPushToken(im);
+            } else {
+              try {
+                const code = JSON.parse(result.error?.desc ?? '{}').code;
+                if ([104, 108, 202].includes(code)) await clearSavedLogin();
+              } catch {
+                // Keep credentials on transient failures or an unstructured error.
+              }
             }
-          );
-          const ret = await p;
-          if (ret.isOk) {
-            requestUpdatePushToken(im);
-            onResult?.({ isOk: true });
-            break;
-          }
-          onResult?.({ isOk: false });
-        } while (false);
+            onResult({ isOk: result.isOk });
+          },
+        });
       } catch (error) {
         console.warn('dev:autoLoginAction:error:', error);
-        onResult?.({ isOk: false });
+        onResult({ isOk: false });
       }
     },
-    [getSelfInfo, requestUpdatePushToken]
+    [getSelfInfo]
   );
   return {
     autoLoginAction,
@@ -107,76 +150,47 @@ export function useLogin() {
   const { getAlertRef } = useAlertContext();
   const im = useChatContext();
 
-  const getFcmToken = React.useCallback(() => {
-    return im.client.options?.pushConfig?.deviceToken;
-  }, [im.client.options?.pushConfig?.deviceToken]);
+  const requestUpdatePushToken = React.useCallback(
+    () => bindPushToken(im),
+    [im]
+  );
 
-  const requestUpdatePushToken = React.useCallback(() => {
-    requestFcmToken()
-      .then((fcmToken) => {
-        im.client
-          .updatePushConfig(
-            new ChatPushConfig({
-              deviceId: fcmSenderId,
-              deviceToken: fcmToken,
-            })
-          )
-          .then()
-          .catch((e) => {
-            console.warn('dev:updatePushConfig:error:', e);
-          });
-      })
-      .catch((e) => {
-        console.warn('dev:requestFcmToken:error:', e);
+  const saveSelfInfo = React.useCallback(
+    async (data: RequestLoginResult) => {
+      const agora = data as AgoraRequestLoginResult;
+      const easemob = data as EasemobRequestLoginResult;
+      await saveLogin(im, {
+        accountType: data.accountType,
+        phone: accountType === 'agora' ? agora.agoraUid : easemob.phoneNumber,
+        id: data.chatUserName,
+        token: accountType === 'agora' ? agora.accessToken : easemob.token,
+        avatar: data.avatarUrl,
+        devMode: false,
       });
-  }, [im.client]);
-
-  const saveSelfInfo = React.useCallback((data: RequestLoginResult) => {
-    const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
-      appKey: `${AppKey.gAppKey()}/uikit/demo`,
-    });
-    if (accountType === 'agora') {
-      const d = data as AgoraRequestLoginResult;
-      s.setData({
-        key: 'self',
-        value: JSON.stringify({
-          accountType: data.accountType,
-          phone: d.agoraUid,
-          id: d.chatUserName,
-          token: d.accessToken,
-          avatar: d.avatarUrl,
-        }),
-      });
-    } else {
-      const d = data as EasemobRequestLoginResult;
-      s.setData({
-        key: 'self',
-        value: JSON.stringify({
-          accountType: data.accountType,
-          phone: d.phoneNumber,
-          id: d.chatUserName,
-          token: d.token,
-          avatar: d.avatarUrl,
-        }),
-      });
-    }
-  }, []);
+    },
+    [im]
+  );
 
   const devLoginAction = React.useCallback(
     async (params: {
       id: string;
       passOrToken: string;
-      usePassword: boolean;
       onResult: (params: { isOk: boolean; reason?: string }) => void;
     }) => {
-      const { id, passOrToken, usePassword, onResult } = params;
+      const { id, passOrToken, onResult } = params;
       im.login({
         userId: id,
         userToken: passOrToken,
-        usePassword: usePassword,
         userAvatarURL: undefined,
-        result: (r) => {
+        result: async (r) => {
           if (r.isOk) {
+            await saveLogin(im, {
+              accountType,
+              id,
+              token: passOrToken,
+              devMode: true,
+            });
+            void bindPushToken(im);
             onResult({ isOk: true });
           } else {
             onResult({ isOk: false, reason: r.error?.desc });
@@ -187,7 +201,7 @@ export function useLogin() {
     [im]
   );
 
-  const loginWithPassword = React.useCallback(
+  const loginWithToken = React.useCallback(
     async (params: {
       id: string;
       pass: string;
@@ -197,9 +211,16 @@ export function useLogin() {
       im.login({
         userId: id,
         userToken: pass,
-        usePassword: true,
         userAvatarURL: '',
-        result: (r) => {
+        result: async (r) => {
+          if (r.isOk)
+            await saveLogin(im, {
+              accountType,
+              id,
+              token: pass,
+              devMode: false,
+            });
+          if (r.isOk) void bindPushToken(im);
           onResult({
             isOk: r.isOk,
             reason: r.error?.desc,
@@ -215,20 +236,18 @@ export function useLogin() {
       pass: string;
       onResult: (params: { isOk: boolean; reason?: string }) => void;
     }) => {
-      console.log('dev:loginAction', params);
+      console.log('dev:loginAction', params.id);
       const { id, pass, onResult } = params;
       try {
         do {
           const res = await RestApi.requestLogin({ phone: id, code: pass });
           if (res.isOk && res.value && res.value.code === 200) {
-            saveSelfInfo(res.value);
             const p = new Promise<{ isOk: boolean; error?: UIKitError }>(
               (resolve, reject) => {
                 const v = res.value as EasemobRequestLoginResult;
                 im.login({
                   userId: v.chatUserName,
                   userToken: v.token,
-                  usePassword: false,
                   userAvatarURL: res.value?.avatarUrl,
                   result: (r) => {
                     if (r.isOk) {
@@ -242,6 +261,7 @@ export function useLogin() {
             );
             const s = await p;
             if (s.isOk) {
+              await saveSelfInfo(res.value);
               requestUpdatePushToken();
               onResult?.({ isOk: true });
               break;
@@ -263,7 +283,7 @@ export function useLogin() {
       pass: string;
       onResult: (params: { isOk: boolean; reason?: string }) => void;
     }) => {
-      console.log('dev:agoraLoginAction', params);
+      console.log('dev:agoraLoginAction', params.id);
       const { id, pass, onResult } = params;
       try {
         do {
@@ -272,14 +292,12 @@ export function useLogin() {
             password: pass,
           });
           if (res.isOk && res.value && res.value.code === 200) {
-            saveSelfInfo(res.value);
             const p = new Promise<{ isOk: boolean; error?: UIKitError }>(
               (resolve, reject) => {
                 const v = res.value as AgoraRequestLoginResult;
                 im.login({
                   userId: v.chatUserName,
                   userToken: v.accessToken,
-                  usePassword: false,
                   userAvatarURL: res.value?.avatarUrl,
                   result: (r) => {
                     if (r.isOk) {
@@ -293,6 +311,7 @@ export function useLogin() {
             );
             const s = await p;
             if (s.isOk) {
+              await saveSelfInfo(res.value);
               requestUpdatePushToken();
               onResult?.({ isOk: true });
               break;
@@ -317,9 +336,8 @@ export function useLogin() {
       ? accountType === 'agora'
         ? agoraLoginAction
         : loginAction
-      : loginWithPassword,
+      : loginWithToken,
     devLoginAction,
     saveSelfInfo,
-    getFcmToken,
   };
 }

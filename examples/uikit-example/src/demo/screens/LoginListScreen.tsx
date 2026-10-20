@@ -80,7 +80,6 @@ export function LoginListScreen(props: Props) {
                 devLoginAction({
                   id: v.id,
                   passOrToken: v.token,
-                  usePassword: false,
                   onResult: ({ isOk, reason }) => {
                     setS(isOk === true ? 'success' : 'failed');
                     if (reason) {

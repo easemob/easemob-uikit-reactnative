@@ -2,6 +2,7 @@ import {
   NavigationAction,
   NavigationContainer,
   NavigationState,
+  useNavigationContainerRef,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
@@ -13,6 +14,8 @@ import { AppDev } from './__dev__/AppDev';
 import {
   ChatOptions,
   Container,
+  DisconnectReasonType,
+  getRoomService,
   useDarkTheme,
   useLightTheme,
   usePresetPalette,
@@ -60,6 +63,26 @@ export function App() {
   const isContainerReadyRef = React.useRef(false);
   const isFontReadyRef = React.useRef(false);
   const isReadyRef = React.useRef(false);
+  const navigationRef = useNavigationContainerRef<RootParamsList>();
+  React.useEffect(() => {
+    const im = getRoomService();
+    const listener = {
+      onDisconnected: (reason: DisconnectReasonType) => {
+        if (
+          reason !== DisconnectReasonType.others &&
+          reason !== DisconnectReasonType.token_will_expire &&
+          navigationRef.isReady()
+        ) {
+          navigationRef.resetRoot({
+            index: 1,
+            routes: [{ name: 'TopMenu' }, { name: 'Login' }],
+          });
+        }
+      },
+    };
+    im.addListener(listener);
+    return () => im.removeListener(listener);
+  }, [navigationRef]);
   const fontFamily = 'Twemoji-Mozilla';
   const [fontsLoaded] = useFonts({
     // [fontFamily]: require('../assets/twemoji.ttf'),
@@ -147,6 +170,7 @@ export function App() {
       }}
     >
       <NavigationContainer
+        ref={navigationRef}
         onStateChange={(state: NavigationState | undefined) => {
           const rr: string[] & string[][] = [];
           formatNavigationState(state, rr);

@@ -1,12 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import {
-  SafeAreaView,
-  Switch,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 
 import { TextInput, useChatContext, useChatListener } from '../../rename.uikit';
 import { useLoginWithConfig } from '../hooks/useLoginWithConfig';
@@ -18,7 +12,6 @@ const account = require('../../env').account as {
 }[];
 let gId = account[0]?.id;
 let gToken = account[0]?.token;
-let gIsPass = false;
 
 type Props = NativeStackScreenProps<RootScreenParamsList>;
 export function LoginScreen(props: Props) {
@@ -42,7 +35,6 @@ export function LoginScreen(props: Props) {
   const [s2, setS2] = React.useState<string>('');
   const [reason, setReason] = React.useState<string>('');
   const [id, setId] = React.useState(gId);
-  const [isPass, setIsPass] = React.useState(gIsPass);
   const [token, setToken] = React.useState(gToken);
   const { devLoginAction } = useLoginWithConfig();
 
@@ -53,10 +45,6 @@ export function LoginScreen(props: Props) {
   const onId = (t: string) => {
     gId = t;
     setId(t);
-  };
-  const onIsPass = (t: boolean) => {
-    gIsPass = t;
-    setIsPass(t);
   };
 
   return (
@@ -86,18 +74,13 @@ export function LoginScreen(props: Props) {
       />
       <View style={{ height: 10 }} />
       <TextInput
-        placeholder={'Please enter Token or password.'}
+        placeholder={'Please enter Token.'}
         style={{ backgroundColor: '#fff8dc', color: 'black', borderRadius: 4 }}
         containerStyle={{ marginHorizontal: 10 }}
         multiline={true}
         value={token}
         onChangeText={onToken}
       />
-      <View style={{ height: 10 }} />
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text>{isPass ? 'password to log in.' : 'token to log in.'}</Text>
-        <Switch value={isPass} onValueChange={onIsPass} />
-      </View>
       <View style={{ height: 10 }} />
       <TouchableOpacity
         style={{
@@ -115,7 +98,6 @@ export function LoginScreen(props: Props) {
             devLoginAction({
               id: id,
               passOrToken: token,
-              usePassword: isPass,
               onResult: ({ isOk, reason }) => {
                 setS(isOk === true ? 'success' : 'failed');
                 if (reason) {

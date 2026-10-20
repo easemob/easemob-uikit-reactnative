@@ -85,7 +85,6 @@ export default function TestText() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <Test2 />

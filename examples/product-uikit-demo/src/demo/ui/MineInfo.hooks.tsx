@@ -149,7 +149,7 @@ export function useMineInfo(props: MineInfoProps) {
 
   const onClickedDestroyAccount = React.useCallback(() => {
     getSelfInfo().then(async (res) => {
-      if (res?.id && res.token) {
+      if (res?.id && res.token && res.phone) {
         const ret = await RestApi.requestDestroyAccount({
           phone: res.phone,
           userToken: res.token,

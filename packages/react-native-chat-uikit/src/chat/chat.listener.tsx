@@ -5,15 +5,17 @@ import {
   ChatContactEventListener,
   ChatConversationType,
   ChatCustomEventListener,
+  ChatDataSyncType,
+  ChatDisconnectErrorCode,
   ChatException,
   ChatExceptionEventListener,
   ChatGroup,
   ChatGroupEventListener,
-  ChatGroupMessageAck,
   ChatMessage,
   ChatMessageEventListener,
   ChatMessagePinInfo,
   ChatMessageReactionEvent,
+  ChatMessageReadReceipt,
   ChatMessageThreadEvent,
   ChatMultiDeviceEvent,
   ChatMultiDeviceEventListener,
@@ -136,10 +138,61 @@ export class ChatServiceListenerImpl {
       v.onConnected?.();
     });
   }
-  onDisconnected(): void {
-    this._listeners.forEach((v) => {
-      v.onDisconnected?.(DisconnectReasonType.others);
-    });
+  protected onSessionExpired(): void {}
+
+  onDisconnected(errorCode?: number): void {
+    const reasons: Partial<
+      Record<ChatDisconnectErrorCode, DisconnectReasonType>
+    > = {
+      [ChatDisconnectErrorCode.APP_ACTIVE_NUMBER_REACH_LIMIT]:
+        DisconnectReasonType.app_active_number_reach_limit,
+      [ChatDisconnectErrorCode.INVALID_TOKEN]:
+        DisconnectReasonType.user_authentication_failed,
+      [ChatDisconnectErrorCode.INVALID_PARAM]:
+        DisconnectReasonType.user_authentication_failed,
+      [ChatDisconnectErrorCode.USER_AUTHENTICATION_FAILED]:
+        DisconnectReasonType.user_authentication_failed,
+      [ChatDisconnectErrorCode.USER_NOT_FOUND]:
+        DisconnectReasonType.user_did_remove_from_server,
+      [ChatDisconnectErrorCode.USER_LOGIN_FROM_OTHER_DEVICE]:
+        DisconnectReasonType.user_did_login_from_other_device,
+      [ChatDisconnectErrorCode.USER_REMOVED_FROM_SERVER]:
+        DisconnectReasonType.user_did_remove_from_server,
+      [ChatDisconnectErrorCode.USER_BIND_ANOTHER_DEVICE]:
+        DisconnectReasonType.user_kicked_by_other_device,
+      [ChatDisconnectErrorCode.USER_LOGIN_TOO_MANY_DEVICES]:
+        DisconnectReasonType.user_did_login_too_many_device,
+      [ChatDisconnectErrorCode.USER_KICKED_BY_CHANGE_PASSWORD]:
+        DisconnectReasonType.user_did_change_password,
+      [ChatDisconnectErrorCode.USER_KICKED_BY_OTHER_DEVICE]:
+        DisconnectReasonType.user_kicked_by_other_device,
+      [ChatDisconnectErrorCode.USER_DEVICE_CHANGED]:
+        DisconnectReasonType.user_authentication_failed,
+      [ChatDisconnectErrorCode.SERVER_GET_DNSLIST_FAILED]:
+        DisconnectReasonType.user_authentication_failed,
+      [ChatDisconnectErrorCode.SERVER_SERVICE_RESTRICTED]:
+        DisconnectReasonType.user_did_forbid_by_server,
+    };
+    const reason =
+      (errorCode === undefined
+        ? undefined
+        : reasons[errorCode as ChatDisconnectErrorCode]) ??
+      DisconnectReasonType.others;
+    if (reason !== DisconnectReasonType.others) this.onSessionExpired();
+    this._listeners.forEach((v) => v.onDisconnected?.(reason));
+  }
+
+  onDataSyncFinish(type: ChatDataSyncType, errorCode: number): void {
+    if (errorCode !== 0) return;
+    if (type & ChatDataSyncType.Conversations) {
+      this.sendUIEvent(UIListenerType.Conversation, 'onRequestReloadEvent');
+    }
+    if (type & ChatDataSyncType.Contacts) {
+      this.sendUIEvent(UIListenerType.Contact, 'onRequestReloadEvent');
+    }
+    if (type & ChatDataSyncType.JoinedGroups) {
+      this.sendUIEvent(UIListenerType.Group, 'onRequestReloadEvent');
+    }
   }
   onTokenWillExpire(): void {
     this._listeners.forEach((v) => {
@@ -147,6 +200,7 @@ export class ChatServiceListenerImpl {
     });
   }
   onTokenDidExpire(): void {
+    this.onSessionExpired();
     this._listeners.forEach((v) => {
       v.onDisconnected?.(DisconnectReasonType.token_did_expire);
     });
@@ -198,15 +252,7 @@ export class ChatServiceListenerImpl {
       onDisconnected: this.onDisconnected.bind(this),
       onTokenWillExpire: this.onTokenWillExpire.bind(this),
       onTokenDidExpire: this.onTokenDidExpire.bind(this),
-      onAppActiveNumberReachLimit: this.onAppActiveNumberReachLimit.bind(this),
-      onUserDidLoginFromOtherDevice:
-        this.onUserDidLoginFromOtherDevice.bind(this),
-      onUserDidRemoveFromServer: this.onUserDidRemoveFromServer.bind(this),
-      onUserDidForbidByServer: this.onUserDidForbidByServer.bind(this),
-      onUserDidChangePassword: this.onUserDidChangePassword.bind(this),
-      onUserDidLoginTooManyDevice: this.onUserDidLoginTooManyDevice.bind(this),
-      onUserKickedByOtherDevice: this.onUserKickedByOtherDevice.bind(this),
-      onUserAuthenticationFailed: this.onUserAuthenticationFailed.bind(this),
+      onDataSyncFinish: this.onDataSyncFinish.bind(this),
     };
     this.client.addConnectionListener(gConnectListener);
   }
@@ -226,14 +272,9 @@ export class ChatServiceListenerImpl {
       v.onCmdMessagesReceived?.(messages);
     });
   }
-  onMessagesRead(messages: Array<ChatMessage>) {
+  onMessageReadReceipts(receipts: Array<ChatMessageReadReceipt>) {
     this._listeners.forEach((v) => {
-      v.onMessagesRead?.(messages);
-    });
-  }
-  onGroupMessageRead(groupMessageAcks: Array<ChatGroupMessageAck>) {
-    this._listeners.forEach((v) => {
-      v.onGroupMessageRead?.(groupMessageAcks);
+      v.onMessageReadReceipts?.(receipts);
     });
   }
   onMessagesDelivered(messages: Array<ChatMessage>) {
@@ -254,11 +295,6 @@ export class ChatServiceListenerImpl {
   onConversationsUpdate() {
     this._listeners.forEach((v) => {
       v.onConversationsUpdate?.();
-    });
-  }
-  onConversationRead(from: string, to?: string) {
-    this._listeners.forEach((v) => {
-      v.onConversationRead?.(from, to);
     });
   }
   onMessageReactionDidChange(list: Array<ChatMessageReactionEvent>) {
@@ -315,13 +351,11 @@ export class ChatServiceListenerImpl {
     gMessageListener = {
       onMessagesReceived: this.onMessagesReceived.bind(this),
       onCmdMessagesReceived: this.onCmdMessagesReceived.bind(this),
-      onMessagesRead: this.onMessagesRead.bind(this),
-      onGroupMessageRead: this.onGroupMessageRead.bind(this),
+      onMessageReadReceipts: this.onMessageReadReceipts.bind(this),
       onMessagesDelivered: this.onMessagesDelivered.bind(this),
       // onMessagesRecalled: this.onMessagesRecalled.bind(this),
       onMessagesRecalledInfo: this.onMessagesRecalledInfo.bind(this),
       onConversationsUpdate: this.onConversationsUpdate.bind(this),
-      onConversationRead: this.onConversationRead.bind(this),
       onMessageReactionDidChange: this.onMessageReactionDidChange.bind(this),
       onChatMessageThreadCreated: this.onChatMessageThreadCreated.bind(this),
       onChatMessageThreadUpdated: this.onChatMessageThreadUpdated.bind(this),
@@ -445,14 +479,14 @@ export class ChatServiceListenerImpl {
       v.onOwnerChanged?.(params);
     });
   }
-  onMemberJoined(params: { groupId: string; member: string }): void {
+  onMembersJoined(params: { groupId: string; members: string[] }): void {
     this._listeners.forEach((v) => {
-      v.onMemberJoined?.(params);
+      v.onMembersJoined?.(params);
     });
   }
-  onMemberExited(params: { groupId: string; member: string }): void {
+  onMembersExited(params: { groupId: string; members: string[] }): void {
     this._listeners.forEach((v) => {
-      v.onMemberExited?.(params);
+      v.onMembersExited?.(params);
     });
   }
   onAnnouncementChanged(params: {
@@ -531,8 +565,8 @@ export class ChatServiceListenerImpl {
       onAdminAdded: this.onAdminAdded.bind(this),
       onAdminRemoved: this.onAdminRemoved.bind(this),
       onOwnerChanged: this.onOwnerChanged.bind(this),
-      onMemberJoined: this.onMemberJoined.bind(this),
-      onMemberExited: this.onMemberExited.bind(this),
+      onMembersJoined: this.onMembersJoined.bind(this),
+      onMembersExited: this.onMembersExited.bind(this),
       onAnnouncementChanged: this.onAnnouncementChanged.bind(this),
       onSharedFileAdded: this.onSharedFileAdded.bind(this),
       onSharedFileDeleted: this.onSharedFileDeleted.bind(this),
@@ -584,6 +618,14 @@ export class ChatServiceListenerImpl {
     convId?: string,
     convType?: ChatConversationType
   ): void {
+    if (
+      event ===
+        ChatMultiDeviceEvent.CONVERSATION_UNREAD_MESSAGE_COUNT_CLEARED ||
+      event ===
+        ChatMultiDeviceEvent.ALL_CONVERSATION_UNREAD_MESSAGE_COUNT_CLEARED
+    ) {
+      this.sendUIEvent(UIListenerType.Conversation, 'onRequestReloadEvent');
+    }
     this._listeners.forEach((v) => {
       v.onConversationEvent?.(event, convId, convType);
     });

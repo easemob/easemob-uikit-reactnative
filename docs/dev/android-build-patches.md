@@ -117,21 +117,23 @@ configurations.all {
 
 **修复方案：双层机制**
 
-#### 3a. 智能去重（`aosl-fix.gradle`，由 `patch-android-build.js` 生成）
+#### 3a. 智能去重（`aosl-fix.gradle`，由 `patch-android-build.js` 复制）
 
-`aosl-fix.gradle` 在 `afterEvaluate` 阶段检测依赖并智能处理，设计理念与 iOS 端 `fix_aosl_conflicting.rb` 一致：
+两个 Agora demo 的 `scripts/aosl-fix.gradle` 原样复制自工作区 `.agents/skills/fixing-im-flutter-sdk-callkit-aosl/assets/android/aosl-fix.gradle`，生成原生工程时仅复制，不改写脚本内容。
+
+`aosl-fix.gradle` 在任务图就绪后检测依赖并比较版本，在 `afterEvaluate` 中注册 JNI 合并任务钩子。选择规则与 iOS 端 `fix_aosl_conflicting.rb` 一致：
 
 | 场景   | `cn.shengwang.infra:aosl` | `io.agora.infra:aosl` | 动作                             |
 | ------ | ------------------------- | --------------------- | -------------------------------- |
-| **1**  | ✅ 远程依赖               | ✅ 远程依赖           | 自动比较版本，`exclude` 低版本的 |
+| **1**  | ✅ 远程依赖               | ✅ 远程依赖           | 自动比较版本，移除低版本的 `.so` |
 | **2a** | ❌ 内嵌在 AAR             | ✅ 远程依赖           | 根据 `aosl_prefer` 参数决定      |
 | **2b** | ✅ 远程依赖               | ❌ 内嵌在 AAR         | 根据 `aosl_prefer` 参数决定      |
 | **3**  | ❌ 内嵌在 AAR             | ❌ 内嵌在 AAR         | 根据 `aosl_prefer` 参数决定      |
 
 处理方式：
 
-- **远程依赖** → 用 `configurations.all { exclude group: '...', module: 'aosl' }` 排除
-- **内嵌在 AAR** → 在 merge JNI 任务的 `doFirst` 阶段物理删除 `.so` 文件
+- 两种来源均在 merge JNI 任务的 `doFirst` 阶段，根据检测所得路径特征移除较低版本或未选中的 `.so`，保留所选版本。
+- 该原样脚本会修改任务输入目录。本次 Gradle 9 构建曾因已有 transform 缓存被修改而失败，备份并重建报错的单个缓存后通过；不要将固定排除某一家依赖作为替代实现。
 
 参数：
 
@@ -144,9 +146,9 @@ ext.aosl_prefer = "easemob"  // 默认保留 hyphenate-chat 的 aosl
 
 | hyphenate-chat                            | Agora SDK                                         | 实际场景 | 默认行为 (prefer=easemob)                    |
 | ----------------------------------------- | ------------------------------------------------- | -------- | -------------------------------------------- |
-| 4.18.x（内嵌）                            | `full-sdk:4.5.2` → `io.agora.infra:aosl:1.2.13.1` | 场景 2a  | `exclude io.agora.infra:aosl`                |
+| 4.18.x（内嵌）                            | `full-sdk:4.5.2` → `io.agora.infra:aosl:1.2.13.1` | 场景 2a  | 移除 Agora AOSL 的 `.so`                |
 | 4.18.x（内嵌）                            | `agora-special-full`（内嵌）                      | 场景 3   | 物理删除 agora 路径的 .so                    |
-| 4.19.0+ → `cn.shengwang.infra:aosl:1.3.0` | `full-sdk:4.5.2` → `io.agora.infra:aosl:1.2.13.1` | 场景 1   | 自动比版本：1.3.0 > 1.2.13.1 → exclude agora |
+| 4.19.0+ → `cn.shengwang.infra:aosl:1.3.0` | `full-sdk:4.5.2` → `io.agora.infra:aosl:1.2.13.1` | 场景 1   | 自动比版本：1.3.0 > 1.2.13.1 → 移除 Agora `.so` |
 | 4.19.0+ → `cn.shengwang.infra:aosl:1.3.0` | `agora-special-full`（内嵌）                      | 场景 2b  | 物理删除 agora 路径的 .so                    |
 
 #### 3b. pickFirst 兜底（安全网）
@@ -163,7 +165,7 @@ packagingOptions {
 
 > [!NOTE]
 > iOS 端通过 `fix_aosl_conflicting.rb` 在 `pre_install` 阶段扫描所有 Pod 的 `aosl.xcframework`，比较版本（从 `Info.plist` 读取 `CFBundleShortVersionString`），保留最高版本，删除其余。
-> Android 端通过 `aosl-fix.gradle` 检测远程 Maven 依赖和内嵌 AAR，使用 `exclude` 和物理删除的双层机制。`pickFirst` 保留为兜底安全网。
+> Android 端通过 `aosl-fix.gradle` 检测来源，比较可检测的版本，按选择结果移除重复 `.so`。`pickFirst` 保留为既有兜底配置。
 
 ### 4. GeneratedAppGlideModuleImpl 重复类冲突（仅 release 构建）
 

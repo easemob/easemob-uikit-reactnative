@@ -562,15 +562,16 @@ export function useMessageListApi(params: {
           menuRef?.current?.startHide?.();
         },
       });
-      items.push({
-        name: 'Report',
-        isHigh: true,
-        onClicked: () => {
-          menuRef?.current?.startHide?.(() => {
-            reportRef?.current?.startShow?.();
-          });
-        },
-      });
+      // SDK 5.x removed message reporting.
+      // items.push({
+      //   name: 'Report',
+      //   isHigh: true,
+      //   onClicked: () => {
+      //     menuRef?.current?.startHide?.(() => {
+      //       reportRef?.current?.startShow?.();
+      //     });
+      //   },
+      // });
     } else {
       items.push({
         name: 'Translate',
@@ -580,15 +581,16 @@ export function useMessageListApi(params: {
           menuRef?.current?.startHide?.();
         },
       });
-      items.push({
-        name: 'Report',
-        isHigh: true,
-        onClicked: () => {
-          menuRef?.current?.startHide?.(() => {
-            reportRef?.current?.startShow?.();
-          });
-        },
-      });
+      // SDK 5.x removed message reporting.
+      // items.push({
+      //   name: 'Report',
+      //   isHigh: true,
+      //   onClicked: () => {
+      //     menuRef?.current?.startHide?.(() => {
+      //       reportRef?.current?.startShow?.();
+      //     });
+      //   },
+      // });
     }
 
     if (messageMenuItems && messageMenuItems.length > 0) {

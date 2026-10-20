@@ -205,7 +205,6 @@ export default function TestUtils() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <View style={{ height: 100 }} />

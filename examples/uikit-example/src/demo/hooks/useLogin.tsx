@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import {
-  ChatService,
   AsyncStorageBasic,
   SingletonObjects,
   UIKitError,
@@ -19,7 +18,7 @@ import {
 } from '../common/rest.api';
 import { AppKey } from './useServerConfig';
 
-export function useAutoLogin() {
+export function useSavedLoginInfo() {
   const getSelfInfo = React.useCallback(async () => {
     const s = SingletonObjects.getInstanceWithParams(AsyncStorageBasic, {
       appKey: `${AppKey.gAppKey()}/uikit/demo`,
@@ -36,52 +35,7 @@ export function useAutoLogin() {
     return undefined;
   }, []);
 
-  const requestUpdatePushToken = React.useCallback((_im: ChatService) => {
-    // todo:
-  }, []);
-
-  const autoLoginAction = React.useCallback(
-    async (params: {
-      im: ChatService;
-      onResult: (params: { isOk: boolean }) => void;
-    }) => {
-      const { im, onResult } = params;
-      try {
-        do {
-          const p = new Promise<{ isOk: boolean; error?: UIKitError }>(
-            async (resolve, reject) => {
-              const ret = await getSelfInfo();
-              im.autoLogin({
-                userAvatarURL: ret?.avatar,
-                result: (res) => {
-                  if (res.isOk) {
-                    resolve(res);
-                  } else {
-                    reject(res);
-                  }
-                },
-              });
-            }
-          );
-          const ret = await p;
-          if (ret.isOk) {
-            requestUpdatePushToken(im);
-            onResult?.({ isOk: true });
-            break;
-          }
-          onResult?.({ isOk: false });
-        } while (false);
-      } catch (error) {
-        console.warn('dev:autoLoginAction:error:', error);
-        onResult?.({ isOk: false });
-      }
-    },
-    [getSelfInfo, requestUpdatePushToken]
-  );
-  return {
-    autoLoginAction,
-    getSelfInfo,
-  };
+  return { getSelfInfo };
 }
 
 export function useLogin() {
@@ -89,10 +43,6 @@ export function useLogin() {
   const { getToastViewRef } = useToastViewContext();
   const { getAlertRef } = useAlertContext();
   const im = useChatContext();
-
-  const getFcmToken = React.useCallback(() => {
-    return im.client.options?.pushConfig?.deviceToken;
-  }, [im.client.options?.pushConfig?.deviceToken]);
 
   const requestUpdatePushToken = React.useCallback(() => {
     // todo:
@@ -133,14 +83,12 @@ export function useLogin() {
     async (params: {
       id: string;
       passOrToken: string;
-      usePassword: boolean;
       onResult: (params: { isOk: boolean; reason?: string }) => void;
     }) => {
-      const { id, passOrToken, usePassword, onResult } = params;
+      const { id, passOrToken, onResult } = params;
       im.login({
         userId: id,
         userToken: passOrToken,
-        usePassword: usePassword,
         userAvatarURL: undefined,
         result: (r) => {
           if (r.isOk) {
@@ -154,7 +102,7 @@ export function useLogin() {
     [im]
   );
 
-  const loginWithPassword = React.useCallback(
+  const loginWithToken = React.useCallback(
     async (params: {
       id: string;
       pass: string;
@@ -164,7 +112,6 @@ export function useLogin() {
       im.login({
         userId: id,
         userToken: pass,
-        usePassword: true,
         userAvatarURL: '',
         result: (r) => {
           onResult({
@@ -182,7 +129,7 @@ export function useLogin() {
       pass: string;
       onResult: (params: { isOk: boolean; reason?: string }) => void;
     }) => {
-      console.log('dev:loginAction', params);
+      console.log('dev:loginAction', params.id);
       const { id, pass, onResult } = params;
       try {
         do {
@@ -195,7 +142,6 @@ export function useLogin() {
                 im.login({
                   userId: v.chatUserName,
                   userToken: v.token,
-                  usePassword: false,
                   userAvatarURL: res.value?.avatarUrl,
                   result: (r) => {
                     if (r.isOk) {
@@ -230,7 +176,7 @@ export function useLogin() {
       pass: string;
       onResult: (params: { isOk: boolean; reason?: string }) => void;
     }) => {
-      console.log('dev:agoraLoginAction', params);
+      console.log('dev:agoraLoginAction', params.id);
       const { id, pass, onResult } = params;
       try {
         do {
@@ -246,7 +192,6 @@ export function useLogin() {
                 im.login({
                   userId: v.chatUserName,
                   userToken: v.accessToken,
-                  usePassword: false,
                   userAvatarURL: res.value?.avatarUrl,
                   result: (r) => {
                     if (r.isOk) {
@@ -284,9 +229,8 @@ export function useLogin() {
       ? accountType === 'agora'
         ? agoraLoginAction
         : loginAction
-      : loginWithPassword,
+      : loginWithToken,
     devLoginAction,
     saveSelfInfo,
-    getFcmToken,
   };
 }

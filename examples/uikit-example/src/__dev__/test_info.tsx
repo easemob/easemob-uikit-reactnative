@@ -54,7 +54,6 @@ export default function TestInfo() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <TestGroupParticipantInfo />

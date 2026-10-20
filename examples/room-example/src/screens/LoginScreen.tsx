@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 import { TextInput, useRoomContext, useRoomListener } from '../rename.room';
 import type { RootScreenParamsList } from '../routes';
@@ -13,7 +13,6 @@ export function LoginScreen(props: Props) {
   const [s2, setS2] = React.useState<string>('');
   const [reason, setReason] = React.useState<string>('');
   const [id, setId] = React.useState(account[0]?.id);
-  const [isPass, setIsPass] = React.useState(false);
   const [token, setToken] = React.useState(account[0]?.token);
   useRoomListener(
     React.useMemo(() => {
@@ -48,16 +47,11 @@ export function LoginScreen(props: Props) {
       />
       <View style={{ height: 10 }} />
       <TextInput
-        placeholder={'Please enter Token or password.'}
+        placeholder={'Please enter Token.'}
         style={{ height: 40, backgroundColor: '#fff8dc' }}
         value={token}
         onChangeText={setToken}
       />
-      <View style={{ height: 10 }} />
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text>{'Whether to use a password to log in.'}</Text>
-        <Switch value={isPass} onValueChange={setIsPass} />
-      </View>
       <View style={{ height: 10 }} />
       <TouchableOpacity
         style={{

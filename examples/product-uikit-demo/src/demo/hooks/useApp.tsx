@@ -17,7 +17,6 @@ import {
   ChatMessageType,
   ChatGroup,
   ChatMultiDeviceEvent,
-  ChatPushConfig,
   ChatPushRemindType,
   ChatSilentModeParamType,
 } from '../../rename.callkit';
@@ -69,18 +68,17 @@ import {
 import {
   checkFCMPermission,
   requestFCMPermission,
-  requestFcmToken,
   setBackgroundMessageHandler,
 } from '../common/fcm';
 import { RestApi } from '../common/rest.api';
 import type { RootParamsList, RootParamsName } from '../routes';
 import { formatNavigationState } from '../utils/utils';
+import { clearSavedLogin } from './useLogin';
 import { useUserInfo } from './useUserInfo';
 
 export function useAppConfig() {
   const appKeyRef = React.useRef(appKey);
   const appIdRef = React.useRef(appId);
-  const autoLoginRef = React.useRef(false);
   const restServerDomainRef = React.useRef<string | undefined>(
     restServerDomain
   );
@@ -93,21 +91,13 @@ export function useAppConfig() {
       appKey: appKeyRef.current,
       appId: appIdRef.current,
       debugModel: isDevMode,
-      autoLogin: autoLoginRef.current,
       autoAcceptGroupInvitation: true,
-      requireAck: true,
       requireDeliveryAck: true,
       restServer: restServerDomainRef.current,
       imServer: imServerRef.current,
       imPort: imPortRef.current,
       enableDNSConfig: enableDNSConfigRef.current,
-      pushConfig:
-        fcmSenderId && fcmSenderId.length > 0
-          ? new ChatPushConfig({
-              deviceId: fcmSenderId,
-              deviceToken: '',
-            })
-          : undefined,
+      apnsCertName: Platform.OS === 'ios' ? fcmSenderId : undefined,
     } as ChatOptionsType;
   }, []);
 
@@ -118,7 +108,6 @@ export function useAppConfig() {
     imPortRef,
     restServerDomainRef,
     enableDNSConfigRef,
-    autoLoginRef,
     getOptions,
   };
 }
@@ -179,7 +168,6 @@ export function useApp() {
     restServerDomainRef,
     enableDNSConfigRef,
     getOptions,
-    autoLoginRef,
   } = useAppConfig();
 
   const { updater } = useForceUpdate();
@@ -245,8 +233,8 @@ export function useApp() {
               const finalGroups = res.value.map<DataModel>((v) => {
                 // !!! Not recommended: only for demo
                 const g = v as ChatGroup;
-                const avatar = g.options?.ext?.includes('http')
-                  ? g.options.ext
+                const avatar = g.configs?.ext?.includes('http')
+                  ? g.configs.ext
                   : undefined;
                 return {
                   id: v.groupId,
@@ -278,30 +266,12 @@ export function useApp() {
           }
         }
 
-        requestFcmToken()
-          .then((fcmToken) => {
-            im.client
-              .updatePushConfig(
-                new ChatPushConfig({
-                  deviceId: fcmSenderId,
-                  deviceToken: fcmToken,
-                })
-              )
-              .then()
-              .catch((e) => {
-                console.warn('dev:updatePushConfig:error:', e);
-              });
-          })
-          .catch((e) => {
-            console.warn('dev:requestFcmToken:error:', e);
-          });
-
         setBackgroundMessageHandler();
       } while (false);
     } catch (error) {
       console.warn('dev:app:onReady:error:', error);
     }
-  }, [im.client]);
+  }, []);
 
   const updatePush = React.useCallback(async () => {
     try {
@@ -623,22 +593,27 @@ export function useApp() {
     onConnected: () => {
       console.log('dev:onConnected:');
     },
-    onDisconnected: (reason) => {
+    onDisconnected: async (reason) => {
       if (
         reason !== DisconnectReasonType.others &&
         reason !== DisconnectReasonType.token_will_expire
       ) {
-        rootRef.navigate('LoginV2', {
-          params: {
-            serverConfigVisible: serverConfigVisibleRef.current,
-          },
+        await clearSavedLogin();
+        rootRef.resetRoot({
+          index: 0,
+          routes: [
+            {
+              name: 'LoginV2',
+              params: {
+                params: { serverConfigVisible: serverConfigVisibleRef.current },
+              },
+            },
+          ],
         });
       }
     },
     onFinished: (params) => {
       if (params.event === 'login') {
-        if (im.userId) getDataFromStorage(im.userId);
-      } else if (params.event === 'autoLogin') {
         if (im.userId) getDataFromStorage(im.userId);
       }
     },
@@ -951,6 +926,5 @@ export function useApp() {
     getNaviTheme,
     messageMenuStyleRef,
     messageInputBarExtensionStyleRef,
-    autoLoginRef,
   };
 }

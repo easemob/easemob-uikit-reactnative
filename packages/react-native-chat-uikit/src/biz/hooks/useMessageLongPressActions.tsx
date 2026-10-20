@@ -359,7 +359,8 @@ export function useMessageLongPressActions(
 
       if (
         msgModel.msg.status === ChatMessageStatus.SUCCESS &&
-        comType !== 'thread'
+        comType !== 'thread' &&
+        showReportMessage !== undefined
       ) {
         initItems.push({
           name: tr('_uikit_chat_list_long_press_menu_report'),

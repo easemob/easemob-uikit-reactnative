@@ -132,11 +132,7 @@ export function ChannelListScreen(props: Props) {
           }
         },
       });
-      im.client.roomManager
-        .destroyChatRoom(roomRef.current?.roomId ?? '')
-        .catch((e) => {
-          console.warn('dev:destroyChatRoom:', e);
-        });
+      // SDK 5.x removed destroyChatRoom; room deletion uses AppServer above.
     }
   }, [im.client, im.userId]);
 

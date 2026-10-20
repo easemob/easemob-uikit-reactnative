@@ -1171,7 +1171,6 @@ export interface ChatService
    * @params
    * - appKey: Agora appKey.
    * - debugModel: Whether to enable debug mode.
-   * - autoLogin: Whether to automatically log in after initialization.
    * - result: The result after performing the operation. If failed, an error object is returned.
    *
    * @noThrows {@link UIKitError}
@@ -1197,7 +1196,6 @@ export interface ChatService
    * - userToken: User token.
    * - userName: User nickname. It is very important to set.
    * - userAvatarURL: User avatar URL.
-   * - usePassword: Whether to use password login. If you use password login, you need to set the password. If you use token login, you do not need to set the password.
    * - result: The result after performing the operation. If failed, an error object is returned.
    *
    * @noThrows {@link UIKitError}
@@ -1207,7 +1205,6 @@ export interface ChatService
     userToken: string;
     userName?: string;
     userAvatarURL?: string;
-    usePassword?: boolean;
     result: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
   /**
@@ -1225,21 +1222,11 @@ export interface ChatService
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
   /**
-   * Automatically log in to the IM server.
-   * @params params
-   * - result: The result after performing the operation. If failed, an error object is returned.
-   */
-  autoLogin(params: {
-    userName?: string;
-    userAvatarURL?: string;
-    result: (params: { isOk: boolean; error?: UIKitError }) => void;
-  }): Promise<void>;
-  /**
    * Get the login status.
    */
   loginState(): Promise<'logged' | 'noLogged'>;
   /**
-   * Only agora token refresh is supported.
+   * Updates the current token with a token supplied by the application.
    *
    * When receiving notification {@link DisconnectReasonType.token_will_expire} that the token is about to expire, you can refresh the token.
    *
@@ -1377,7 +1364,7 @@ export type ChatAppIdOptionsType = Omit<ChatOptionsTypeWrapper, 'appKey'> & {
 /**
  * ChatOptionsType is the initialization parameters of ChatService.
  *
- * appKey, autoLogin and debugModel is required.
+ * An appKey or appId is required.
  *
  * This parameter option is consistent with `Agora Chat SDK`.
  *

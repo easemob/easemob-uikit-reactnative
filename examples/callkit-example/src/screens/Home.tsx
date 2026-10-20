@@ -19,6 +19,7 @@ import {
   CallType,
   CallUser,
   ChatClient,
+  ChatDataSyncType,
   formatElapsed,
   MultiCall,
   SingleCall,
@@ -106,7 +107,12 @@ const ContactListMemo = React.memo((props: ContactListProps) => {
     console.log('test:ContactList:init:');
     try {
       const ret =
-        await ChatClient.getInstance().contactManager.fetchAllContacts();
+        await ChatClient.getInstance().contactManager.getAllContacts();
+      if (ret.length === 0) {
+        data.length = 0;
+        setData([]);
+        return;
+      }
       if (ret.length > 0) {
         console.log('test:ContactList:init:result:', ret);
         data.length = 0;
@@ -129,8 +135,15 @@ const ContactListMemo = React.memo((props: ContactListProps) => {
     }
   }, [data]);
   React.useEffect(() => {
-    init();
-    // initApi();
+    const client = ChatClient.getInstance();
+    const listener = {
+      onDataSyncFinish: (type: ChatDataSyncType, errorCode: number) => {
+        if (errorCode === 0 && type === ChatDataSyncType.Contacts) void init();
+      },
+    };
+    client.addConnectionListener(listener);
+    void init();
+    return () => client.removeConnectionListener(listener);
   }, [init]);
   return (
     <>

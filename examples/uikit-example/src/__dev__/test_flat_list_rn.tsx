@@ -139,7 +139,6 @@ export default function TestFlatListRn() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <CL2 />

@@ -45,7 +45,6 @@ export default function TestEditMessage() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
       palette={p}
       theme={t}

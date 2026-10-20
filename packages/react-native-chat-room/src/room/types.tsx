@@ -271,7 +271,6 @@ export interface RoomService {
    * @params
    * - appKey: Agora appKey.
    * - debugMode: Whether to enable debug mode.
-   * - autoLogin: Whether to automatically log in after initialization.
    * - result: The result after performing the operation. If failed, an error object is returned.
    *
    * @noThrows {@link UIKitError}
@@ -281,7 +280,6 @@ export interface RoomService {
   init(params: {
     appKey: string;
     debugMode?: boolean;
-    autoLogin?: boolean;
     result?: (params: { isOk: boolean; error?: UIKitError }) => void;
   }): Promise<void>;
 

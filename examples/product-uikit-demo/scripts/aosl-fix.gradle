@@ -1,0 +1,187 @@
+// aosl-fix.gradle
+//
+// Resolves duplicate libaosl.so from hyphenate-chat and Agora RTC SDK.
+// Design mirrors iOS fix_aosl_conflicting.rb: detect -> decide -> remove.
+//
+// Three scenarios:
+//   1. Both cn.shengwang.infra:aosl AND io.agora.infra:aosl exist as remote
+//      Maven dependencies -> compare versions automatically, exclude the lower one.
+//   2. Only one remote aosl dependency exists -> use aosl_prefer parameter.
+//   3. Neither exists (both embedded in AARs) -> use aosl_prefer parameter.
+//
+// Parameter:
+//   ext.aosl_prefer = "easemob"  (default) -> keep hyphenate-chat's aosl
+//   ext.aosl_prefer = "agora"              -> keep agora's aosl
+//
+// See: docs/dev/android-build-patches.md
+
+def prefer = project.hasProperty('aosl_prefer') ? project.aosl_prefer : "easemob"
+println "[aosl-fix] Preference: ${prefer}"
+
+// Detection and action performed at task graph ready.
+// This runs after all configurations are finalized and resolvable.
+
+gradle.taskGraph.whenReady { taskGraph ->
+    def hasShengwangAosl = false   // cn.shengwang.infra:aosl (from hyphenate-chat >= 4.19)
+    def hasAgoraInfraAosl = false  // io.agora.infra:aosl (from Agora full-sdk)
+    def shengwangAoslVersion = null
+    def agoraInfraAoslVersion = null
+
+    // Try to resolve from runtime classpath configurations
+    def targetConfigs = ['releaseRuntimeClasspath', 'debugRuntimeClasspath']
+
+    targetConfigs.each { configName ->
+        def config = configurations.findByName(configName)
+        if (config != null && config.canBeResolved) {
+            try {
+                config.incoming.resolutionResult.allComponents.each { component ->
+                    def id = component.moduleVersion
+                    if (id != null) {
+                        if (id.group == 'cn.shengwang.infra' && id.name == 'aosl') {
+                            hasShengwangAosl = true
+                            shengwangAoslVersion = id.version
+                        }
+                        if (id.group == 'io.agora.infra' && id.name == 'aosl') {
+                            hasAgoraInfraAosl = true
+                            agoraInfraAoslVersion = id.version
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                println "[aosl-fix] DEBUG: Config '${configName}' resolution failed: ${e.class.simpleName}: ${e.message}"
+            }
+        }
+    }
+
+    println "[aosl-fix] Detected remote aosl dependencies:"
+    println "[aosl-fix]   cn.shengwang.infra:aosl = ${hasShengwangAosl ? shengwangAoslVersion : 'not found (embedded or absent)'}"
+    println "[aosl-fix]   io.agora.infra:aosl     = ${hasAgoraInfraAosl ? agoraInfraAoslVersion : 'not found (embedded or absent)'}"
+
+    // Decide which to delete.
+
+    def deletePattern = null  // Path keyword for physical .so deletion
+
+    if (hasShengwangAosl && hasAgoraInfraAosl) {
+        // Scenario 1: Both remote -> compare versions, delete the lower one's .so
+        def va = shengwangAoslVersion.tokenize('.').collect { it as int }
+        def vb = agoraInfraAoslVersion.tokenize('.').collect { it as int }
+        def len = Math.max(va.size(), vb.size())
+        def cmp = 0
+        for (int i = 0; i < len && cmp == 0; i++) {
+            cmp = (i < va.size() ? va[i] : 0) <=> (i < vb.size() ? vb[i] : 0)
+        }
+
+        if (cmp >= 0) {
+            // shengwang >= agora -> delete agora's .so (path contains "aosl-{version}" not "hyphenate")
+            deletePattern = "aosl-${agoraInfraAoslVersion}"
+            println "[aosl-fix] Scenario 1: cn.shengwang.infra:aosl:${shengwangAoslVersion} >= io.agora.infra:aosl:${agoraInfraAoslVersion}"
+            println "[aosl-fix]   -> Will delete aosl-${agoraInfraAoslVersion} .so files"
+        } else {
+            // agora > shengwang -> delete shengwang's .so (path contains "aosl-{version}" not "hyphenate")
+            deletePattern = "aosl-${shengwangAoslVersion}"
+            println "[aosl-fix] Scenario 1: io.agora.infra:aosl:${agoraInfraAoslVersion} > cn.shengwang.infra:aosl:${shengwangAoslVersion}"
+            println "[aosl-fix]   -> Will delete aosl-${shengwangAoslVersion} .so files"
+        }
+    } else if (hasAgoraInfraAosl && !hasShengwangAosl) {
+        // Scenario 2a: Only io.agora.infra:aosl is remote, hyphenate aosl is embedded.
+        // Remote aosl path: transforms/aosl-{version}/jni/...
+        // Embedded hyphenate path: transforms/hyphenate-chat-{version}/jni/...
+        if (prefer == "easemob") {
+            deletePattern = "aosl-${agoraInfraAoslVersion}"
+            println "[aosl-fix] Scenario 2a: Prefer easemob -> will delete aosl-${agoraInfraAoslVersion}"
+        } else {
+            deletePattern = 'hyphenate'
+            println "[aosl-fix] Scenario 2a: Prefer agora -> will delete hyphenate-chat embedded aosl"
+        }
+    } else if (hasShengwangAosl && !hasAgoraInfraAosl) {
+        // Scenario 2b: Only cn.shengwang.infra:aosl is remote, agora aosl is embedded.
+        // Remote aosl path: transforms/aosl-{version}/jni/...
+        // Embedded agora path: transforms/agora-*-{version}/jni/... or full-sdk paths
+        if (prefer == "easemob") {
+            deletePattern = 'agora'
+            println "[aosl-fix] Scenario 2b: Prefer easemob -> will delete agora embedded aosl"
+        } else {
+            deletePattern = "aosl-${shengwangAoslVersion}"
+            println "[aosl-fix] Scenario 2b: Prefer agora -> will delete aosl-${shengwangAoslVersion}"
+        }
+    } else {
+        // Scenario 3: Neither remote, both embedded in AARs.
+        if (prefer == "easemob") {
+            deletePattern = 'agora'
+            println "[aosl-fix] Scenario 3: Prefer easemob -> will delete agora embedded aosl"
+        } else {
+            deletePattern = 'hyphenate'
+            println "[aosl-fix] Scenario 3: Prefer agora -> will delete hyphenate embedded aosl"
+        }
+    }
+
+    // Store for use in task doFirst
+    project.ext.aosl_deletePattern = deletePattern
+
+    println "[aosl-fix] Detection complete. Delete pattern: ${deletePattern}"
+}
+
+// Set up merge task hooks in afterEvaluate.
+
+afterEvaluate {
+    println "[aosl-fix] afterEvaluate: Setting up merge task hooks..."
+
+    // Physical .so deletion (handles all scenarios).
+
+    tasks.matching {
+        it.name.contains("merge") &&
+        (it.name.contains("JniLib") || it.name.contains("NativeLib"))
+    }.configureEach { task ->
+        task.doFirst {
+            def deletePattern = project.hasProperty('aosl_deletePattern') ? project.ext.aosl_deletePattern : null
+
+            if (deletePattern == null) {
+                println "[aosl-fix] WARNING: No delete pattern set for ${task.name}"
+                return
+            }
+
+            println "[aosl-fix] Processing task: ${task.name}, deletePattern: ${deletePattern}"
+
+            // Try multiple ways to access input files
+            def inputFiles = null
+            if (task.hasProperty('inputFiles')) {
+                inputFiles = task.inputFiles
+            } else if (task.hasProperty('inputs')) {
+                def inputs = task.inputs
+                if (inputs.hasProperty('files')) {
+                    inputFiles = inputs.files
+                }
+            }
+
+            if (inputFiles == null) {
+                println "[aosl-fix] WARNING: Cannot access input files for ${task.name}"
+                return
+            }
+
+            def deletedCount = 0
+            def keptCount = 0
+
+            inputFiles.files.each { file ->
+                if (!file.exists() || !file.isDirectory()) return
+
+                fileTree(file).matching {
+                    include '**/libaosl.so'
+                }.each { soFile ->
+                    def filePath = soFile.absolutePath
+                    if (filePath.contains(deletePattern)) {
+                        println "[aosl-fix] Deleting: ${filePath}"
+                        soFile.delete()
+                        deletedCount++
+                    } else {
+                        println "[aosl-fix] Keeping:  ${filePath}"
+                        keptCount++
+                    }
+                }
+            }
+
+            println "[aosl-fix] Task ${task.name}: deleted ${deletedCount}, kept ${keptCount} libaosl.so files"
+        }
+    }
+
+    println "[aosl-fix] Configuration complete."
+}

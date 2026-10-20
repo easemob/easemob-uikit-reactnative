@@ -103,7 +103,6 @@ export default function TestImagePreview() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
       palette={p}
       theme={t}

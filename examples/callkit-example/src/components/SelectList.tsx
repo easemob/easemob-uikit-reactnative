@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { FlatList, type ListRenderItemInfo, Text, View } from 'react-native';
 
-import { ChatClient, type InviteeListProps } from '../rename.callkit';
+import {
+  ChatClient,
+  ChatDataSyncType,
+  type InviteeListProps,
+} from '../rename.callkit';
 import { CheckButton, Text1Button } from '../ui/Button';
 
 type DataType = {
@@ -80,7 +84,12 @@ export function SelectList(props: SelectListProps): React.ReactElement {
   const init = React.useCallback(async () => {
     try {
       const ret =
-        await ChatClient.getInstance().contactManager.fetchAllContacts();
+        await ChatClient.getInstance().contactManager.getAllContacts();
+      if (ret.length === 0) {
+        data.length = 0;
+        setData([]);
+        return;
+      }
       if (ret.length > 0) {
         data.length = 0;
         for (const i of ret) {
@@ -142,8 +151,15 @@ export function SelectList(props: SelectListProps): React.ReactElement {
   }, [data, maxCount, onChangeCount, onChangeSelected, selectedIds]);
 
   React.useEffect(() => {
-    init();
-    return () => {};
+    const client = ChatClient.getInstance();
+    const listener = {
+      onDataSyncFinish: (type: ChatDataSyncType, errorCode: number) => {
+        if (errorCode === 0 && type === ChatDataSyncType.Contacts) void init();
+      },
+    };
+    client.addConnectionListener(listener);
+    void init();
+    return () => client.removeConnectionListener(listener);
   }, [init]);
 
   return (

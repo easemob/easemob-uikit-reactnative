@@ -135,7 +135,6 @@ export function App() {
     // getNaviTheme,
     messageMenuStyleRef,
     messageInputBarExtensionStyleRef,
-    autoLoginRef,
   } = useApp();
 
   const {
@@ -161,7 +160,6 @@ export function App() {
       serverConfigVisibleRef.current = await getEnableDevMode();
       if (serverConfigVisibleRef.current === true) {
         const enablePrivateServer = await getEnablePrivateServer();
-        autoLoginRef.current = true;
         const isAppKey = await getIsAppKey();
         if (isAppKey) {
           AppKey.setAppId('');
@@ -184,7 +182,6 @@ export function App() {
           enableDNSConfigRef.current = true;
         }
       } else {
-        autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
         restServerDomainRef.current = restServerDomain;
@@ -236,7 +233,6 @@ export function App() {
         imServerRef: imServerRef.current,
         appKeyRef: appKeyRef.current,
         appIdRef: appIdRef.current,
-        autoLoginRef: autoLoginRef.current,
       });
       setInitParams(true);
     } catch (error) {
@@ -246,7 +242,6 @@ export function App() {
     _initParams,
     appIdRef,
     appKeyRef,
-    autoLoginRef,
     enableAVMeetingRef,
     enableBlockRef,
     enableDNSConfigRef,
@@ -301,30 +296,19 @@ export function App() {
 
       // await SplashScreen?.hideAsync?.();
       setTimeout(async () => {
-        const ret = await imRef.current?.loginState();
-        console.log('dev:loginState:', ret);
-        if (ret === 'logged') {
-          autoLoginAction({
-            im: imRef.current!,
-            onResult: (res) => {
-              if (res.isOk) {
-                rootRef.navigate('Home', {});
-              } else {
-                rootRef.navigate('LoginV2', {
-                  params: {
-                    serverConfigVisible: serverConfigVisibleRef.current,
-                  },
-                });
-              }
-            },
-          });
-        } else {
-          rootRef.navigate('LoginV2', {
-            params: {
-              serverConfigVisible: serverConfigVisibleRef.current,
-            },
-          });
-        }
+        autoLoginAction({
+          im: imRef.current!,
+          devMode: serverConfigVisibleRef.current === true,
+          onResult: (res) => {
+            if (res.isOk) {
+              rootRef.navigate('Home', {});
+            } else {
+              rootRef.navigate('LoginV2', {
+                params: { serverConfigVisible: serverConfigVisibleRef.current },
+              });
+            }
+          },
+        });
       }, 1000);
     },
     [autoLoginAction, initPush, isReadyRef, rootRef, serverConfigVisibleRef]

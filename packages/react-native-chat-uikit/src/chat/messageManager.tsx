@@ -5,10 +5,10 @@ import {
   ChatConversationType,
   ChatDownloadStatus,
   ChatFileMessageBody,
-  ChatGroupMessageAck,
   ChatMessage,
   ChatMessageChatType,
   ChatMessagePinInfo,
+  ChatMessageReadReceipt,
   ChatMessageStatus,
   ChatMessageStatusCallback,
   ChatMessageType,
@@ -58,8 +58,7 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
     uilog.log('MessageCacheManager:init');
     gListener = {
       onMessagesReceived: this.bindOnMessagesReceived.bind(this),
-      onMessagesRead: this.bindOnMessagesRead.bind(this),
-      onGroupMessageRead: this.bindOnGroupMessageRead.bind(this),
+      onMessageReadReceipts: this.bindOnMessageReadReceipts.bind(this),
       onMessagesDelivered: this.bindOnMessagesDelivered.bind(this),
       // onMessagesRecalled: this.bindOnMessagesRecalled.bind(this),
       onMessagesRecalledInfo: this.onMessagesRecalledInfo.bind(this),
@@ -160,20 +159,19 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       });
     });
   }
-  bindOnMessagesRead(messages: Array<ChatMessage>) {
-    messages.forEach((msg) => {
-      this._userListener.forEach((v) => {
-        v.onRecvMessageStatusChanged?.(msg);
-      });
+  bindOnMessageReadReceipts(receipts: Array<ChatMessageReadReceipt>): void {
+    receipts.forEach((receipt) => {
+      this._client
+        .getMessage({ messageId: receipt.msgId })
+        .then((message) => {
+          if (message) {
+            this._userListener.forEach((listener) => {
+              listener.onRecvMessageStatusChanged?.(message);
+            });
+          }
+        })
+        .catch((error) => uilog.warn('bindOnMessageReadReceipts', error));
     });
-  }
-  bindOnGroupMessageRead(_groupMessageAcks: Array<ChatGroupMessageAck>): void {
-    // todo: get message for group
-    // groupMessageAcks.forEach((ack) => {
-    //   this._userListener.forEach((v) => {
-    //     v.onRecvMessageStatusChanged?.(ack.message);
-    //   });
-    // });
   }
   bindOnMessagesDelivered(messages: Array<ChatMessage>): void {
     messages.forEach((msg) => {
@@ -250,11 +248,12 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       message: params.message,
       onResult: (result) => {
         if (result.isOk === true) {
-          const hasReadAck = params.message.hasReadAck;
-          if (hasReadAck !== true) {
-            const tmp = { ...params.message, hasReadAck: true } as ChatMessage;
-            this.emitRecvMessageStateChanged(tmp);
-          }
+          this._client
+            .getMessage({ messageId: params.message.msgId })
+            .then((message) => {
+              if (message) this.emitRecvMessageStateChanged(message);
+            })
+            .catch((error) => uilog.warn('sendMessageReadAck', error));
         }
       },
     });
@@ -270,11 +269,12 @@ export class MessageCacheManagerImpl implements MessageCacheManager {
       msgId: params.message.msgId,
       onResult: (result) => {
         if (result.isOk === true) {
-          const hasRead = params.message.hasRead;
-          if (hasRead !== true) {
-            const tmp = { ...params.message, hasRead: true } as ChatMessage;
-            this.emitRecvMessageStateChanged(tmp);
-          }
+          this._client
+            .getMessage({ messageId: params.message.msgId })
+            .then((message) => {
+              if (message) this.emitRecvMessageStateChanged(message);
+            })
+            .catch((error) => uilog.warn('setMessageRead', error));
         }
       },
     });

@@ -357,11 +357,11 @@ export function useGroupInfo(
       }) => {
         onGroupDestroy?.(params.groupId);
       },
-      onMemberExited: (params: { groupId: string; member: string }) => {
-        if (params.member === im.userId) {
+      onMembersExited: (params: { groupId: string; members: string[] }) => {
+        if (params.members.includes(im.userId ?? '')) {
           onGroupQuit?.(params.groupId);
         } else {
-          setGroupMemberCount((prev) => prev - 1);
+          setGroupMemberCount((prev) => prev - params.members.length);
         }
       },
       onMemberRemoved: (params: {

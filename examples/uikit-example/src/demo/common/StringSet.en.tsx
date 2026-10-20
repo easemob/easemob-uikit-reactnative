@@ -41,9 +41,7 @@ export function createStringSetEn(): StringSet {
           : 'Phone number',
     '_demo_login_input_phone_number_captcha_tip': (accountType, devMode) =>
       devMode === true
-        ? accountType === 'agora'
-          ? 'token'
-          : 'password'
+        ? 'Token'
         : accountType === 'agora'
           ? 'Password'
           : 'Verification code',

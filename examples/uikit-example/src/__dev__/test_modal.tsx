@@ -144,7 +144,6 @@ export default function test_modal() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
       palette={palette}
       theme={theme}

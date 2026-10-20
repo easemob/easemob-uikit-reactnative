@@ -237,7 +237,6 @@ export default function TestSectionListRn() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <SL />

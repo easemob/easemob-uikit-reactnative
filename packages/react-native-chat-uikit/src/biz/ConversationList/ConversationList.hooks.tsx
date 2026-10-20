@@ -497,9 +497,6 @@ export function useConversationList(props: ConversationListProps) {
       onConversationsUpdate: () => {
         // !!!: see `UIConversationListListener`
       },
-      onConversationRead: () => {
-        // !!!: see `UIConversationListListener`
-      },
       onMessageContentChanged: (msg) => {
         onMessage([msg]);
       },

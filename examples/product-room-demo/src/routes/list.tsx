@@ -5,7 +5,7 @@ export type RootParamsList = {
   };
   Login: {
     option?: {} | undefined;
-    params?: {} | undefined;
+    params?: { sessionEnded?: boolean } | undefined;
   };
   ChannelList: {
     option?: {} | undefined;

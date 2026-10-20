@@ -64,7 +64,6 @@ import { useUserInfo } from './useUserInfo';
 export function useAppConfig() {
   const appKeyRef = React.useRef(appKey);
   const appIdRef = React.useRef(appId);
-  const autoLoginRef = React.useRef(false);
   const restServerDomainRef = React.useRef<string | undefined>(
     restServerDomain
   );
@@ -77,15 +76,12 @@ export function useAppConfig() {
       appKey: appKeyRef.current,
       appId: appIdRef.current,
       debugModel: isDevMode,
-      autoLogin: autoLoginRef.current,
       autoAcceptGroupInvitation: true,
-      requireAck: true,
       requireDeliveryAck: true,
       restServer: restServerDomainRef.current,
       imServer: imServerRef.current,
       imPort: imPortRef.current,
       enableDNSConfig: enableDNSConfigRef.current,
-      pushConfig: undefined,
     } as ChatOptionsType;
   }, []);
 
@@ -96,7 +92,6 @@ export function useAppConfig() {
     imPortRef,
     restServerDomainRef,
     enableDNSConfigRef,
-    autoLoginRef,
     getOptions,
   };
 }
@@ -157,7 +152,6 @@ export function useApp() {
     restServerDomainRef,
     enableDNSConfigRef,
     getOptions,
-    autoLoginRef,
   } = useAppConfig();
 
   const { updater } = useForceUpdate();
@@ -223,8 +217,8 @@ export function useApp() {
               const finalGroups = res.value.map<DataModel>((v) => {
                 // !!! Not recommended: only for demo
                 const g = v as ChatGroup;
-                const avatar = g.options?.ext?.includes('http')
-                  ? g.options.ext
+                const avatar = g.configs?.ext?.includes('http')
+                  ? g.configs.ext
                   : undefined;
                 return {
                   id: v.groupId,
@@ -391,22 +385,31 @@ export function useApp() {
         reason !== DisconnectReasonType.token_will_expire
       ) {
         if (demoType === 1) {
-          rootRef.navigate('TopMenu', {});
+          rootRef.resetRoot({
+            index: 1,
+            routes: [{ name: 'TopMenu' }, { name: 'Login' }],
+          });
         } else if (demoType === 2) {
-          rootRef.navigate('LoginList', {});
+          rootRef.resetRoot({ index: 0, routes: [{ name: 'LoginList' }] });
         } else {
-          rootRef.navigate('Login', {
-            params: {
-              serverConfigVisible: serverConfigVisibleRef.current,
-            },
+          rootRef.resetRoot({
+            index: 0,
+            routes: [
+              {
+                name: 'Login',
+                params: {
+                  params: {
+                    serverConfigVisible: serverConfigVisibleRef.current,
+                  },
+                },
+              },
+            ],
           });
         }
       }
     },
     onFinished: (params) => {
       if (params.event === 'login') {
-        if (im.userId) getDataFromStorage(im.userId);
-      } else if (params.event === 'autoLogin') {
         if (im.userId) getDataFromStorage(im.userId);
       }
     },
@@ -714,6 +717,5 @@ export function useApp() {
     getNaviTheme,
     messageMenuStyleRef,
     messageInputBarExtensionStyleRef,
-    autoLoginRef,
   };
 }

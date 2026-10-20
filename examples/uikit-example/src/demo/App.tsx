@@ -22,7 +22,6 @@ import {
   restServerDomain,
 } from './common/const';
 import { RestApi } from './common/rest.api';
-import { useAutoLogin } from './hooks';
 import { useApp } from './hooks/useApp';
 import { useGeneralSetting } from './hooks/useGeneralSetting';
 import { AppKey, useServerConfig } from './hooks/useServerConfig';
@@ -129,7 +128,6 @@ export function AppInternal() {
     // getNaviTheme,
     messageMenuStyleRef,
     messageInputBarExtensionStyleRef,
-    autoLoginRef,
   } = useApp();
 
   const {
@@ -145,7 +143,6 @@ export function AppInternal() {
 
   const { initParams } = useGeneralSetting();
   const imRef = React.useRef<ChatService>(undefined);
-  const { autoLoginAction } = useAutoLogin();
 
   const initParamsCallback = React.useCallback(async () => {
     if (_initParams === true) {
@@ -164,7 +161,6 @@ export function AppInternal() {
       serverConfigVisibleRef.current = await getEnableDevMode();
       if (serverConfigVisibleRef.current === true) {
         const enablePrivateServer = await getEnablePrivateServer();
-        autoLoginRef.current = true;
         const isAppKey = await getIsAppKey();
         if (isAppKey) {
           AppKey.setAppId('');
@@ -187,7 +183,6 @@ export function AppInternal() {
           enableDNSConfigRef.current = true;
         }
       } else {
-        autoLoginRef.current = true;
         imPortRef.current = undefined;
         imServerRef.current = undefined;
         restServerDomainRef.current = restServerDomain;
@@ -239,7 +234,6 @@ export function AppInternal() {
         imServerRef: imServerRef.current,
         appKeyRef: appKeyRef.current,
         appIdRef: appIdRef.current,
-        autoLoginRef: autoLoginRef.current,
       });
       setInitParams(true);
     } catch (error) {
@@ -249,7 +243,6 @@ export function AppInternal() {
     _initParams,
     appIdRef,
     appKeyRef,
-    autoLoginRef,
     enableAVMeetingRef,
     enableBlockRef,
     enableDNSConfigRef,
@@ -306,35 +299,16 @@ export function AppInternal() {
         if (demoType === 1) {
         } else if (demoType === 2) {
         } else if (demoType === 3) {
-          const ret = await imRef.current?.loginState();
-          console.log('dev:loginState:', ret);
-          if (ret === 'logged') {
-            autoLoginAction({
-              im: imRef.current!,
-              onResult: (res) => {
-                if (res.isOk) {
-                  rootRef.navigate('Home', {});
-                } else {
-                  rootRef.navigate('Login', {
-                    params: {
-                      serverConfigVisible: serverConfigVisibleRef.current,
-                    },
-                  });
-                }
-              },
-            });
-          } else {
-            rootRef.navigate('Login', {
-              params: {
-                serverConfigVisible: serverConfigVisibleRef.current,
-              },
-            });
-          }
+          rootRef.navigate('Login', {
+            params: {
+              serverConfigVisible: serverConfigVisibleRef.current,
+            },
+          });
         } else if (demoType === 4) {
         }
       }, 1000);
     },
-    [autoLoginAction, initPush, isReadyRef, rootRef, serverConfigVisibleRef]
+    [initPush, isReadyRef, rootRef, serverConfigVisibleRef]
   );
 
   const onContainerInitialized = React.useCallback(

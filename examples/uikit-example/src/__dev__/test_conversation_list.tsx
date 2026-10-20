@@ -167,7 +167,6 @@ export default function TestConversationList() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <CL2 />

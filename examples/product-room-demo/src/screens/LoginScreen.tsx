@@ -7,9 +7,9 @@ import { Alert, AlertRef, LoadingIcon, useRoomContext } from '../rename.room';
 import type { RootScreenParamsList } from '../routes';
 import { randomId } from '../utils/utils';
 
-type Props = NativeStackScreenProps<RootScreenParamsList>;
+type Props = NativeStackScreenProps<RootScreenParamsList, 'Login'>;
 export function LoginScreen(props: Props) {
-  const { navigation } = props;
+  const { navigation, route } = props;
   const appType = require('../env').accountType;
   const im = useRoomContext();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -19,6 +19,11 @@ export function LoginScreen(props: Props) {
   );
   const timerRef = React.useRef<NodeJS.Timeout>(undefined);
   const countRef = React.useRef(0);
+  const sessionEnded = route.params?.params?.sessionEnded === true;
+
+  React.useEffect(() => {
+    if (sessionEnded) alertRef.current?.alert?.();
+  }, [sessionEnded]);
 
   const firstLoginAction = async () => {
     console.log('dev:LoginScreen:firstLoginAction');
@@ -152,6 +157,7 @@ export function LoginScreen(props: Props) {
     });
     return () => {
       sub.remove();
+      clearTimeout(timerRef.current);
     };
   }, [loginAction]);
 
@@ -175,7 +181,9 @@ export function LoginScreen(props: Props) {
       ) : null}
       <Alert
         ref={alertRef}
-        title={'Login failed'}
+        title={
+          sessionEnded ? 'Session ended. Please log in again.' : 'Login failed'
+        }
         buttons={[
           {
             text: '                 Re-login                 ',

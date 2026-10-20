@@ -27,31 +27,28 @@ export default function LoginScreen({
   route,
   navigation,
 }: Props): React.ReactElement {
-  console.log('test:LoginScreen:route:', route);
   const rp = route.params as any;
-  const params = rp?.params as any;
-  const accountType = params.accountType as 'agora' | 'easemob';
-  const gid = params.id;
-  const gps = params.pass;
+  const params = rp?.params ?? {};
+  const gid = params.id ?? '';
+  const gps = params.pass ?? '';
   const enableKeyboardAvoid = true;
   const [id, setId] = React.useState(gid);
-  const [tip] = React.useState('');
-  const [password, setPassword] = React.useState(gps);
+  const [tip, setTip] = React.useState('');
+  const [token, setToken] = React.useState(gps);
   const [, setDisabled] = React.useState(
-    id.length > 0 && password.length > 0 ? false : true
+    id.length > 0 && token.length > 0 ? false : true
   );
   const [buttonState, setButtonState] = React.useState<'loading' | 'stop'>(
     'stop'
   );
-  console.log('test:LoginScreen:', params);
 
   React.useEffect(() => {
-    if (id.length > 0 && password.length > 0) {
+    if (id.length > 0 && token.length > 0) {
       setDisabled(false);
     } else {
       setDisabled(true);
     }
-  }, [id, password]);
+  }, [id, token]);
 
   const execLogin = (state: 'loading' | 'stop') => {
     if (state === 'loading') {
@@ -59,7 +56,7 @@ export default function LoginScreen({
     }
     setButtonState('loading');
     ChatClient.getInstance()
-      .login(id, password, accountType === 'agora' ? false : true)
+      .loginWithToken(id, token)
       .then(() => {
         console.log('test:login:success');
         setButtonState('stop');
@@ -68,7 +65,7 @@ export default function LoginScreen({
       .catch((e) => {
         console.warn('test:login:fail:', e);
         setButtonState('stop');
-        navigation.dispatch(StackActions.push('Home', { params: {} }));
+        setTip(e.description ?? e.message ?? String(e));
       });
   };
 
@@ -143,13 +140,11 @@ export default function LoginScreen({
             <View style={{ height: sf(18) }} />
             <TextInput
               multiline={false}
-              placeholder={'pass'}
-              textContentType="password"
-              visible-password={false}
+              placeholder={'Token'}
               secureTextEntry
-              onChangeText={(text) => setPassword(text)}
+              onChangeText={(text) => setToken(text)}
               style={styles.item}
-              value={password}
+              value={token}
             />
             <View style={{ height: sf(18) }} />
             <Text1Button

@@ -28,7 +28,6 @@ export default function TestUpdater() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <Test1 />

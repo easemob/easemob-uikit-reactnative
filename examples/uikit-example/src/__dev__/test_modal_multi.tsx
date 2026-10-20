@@ -66,7 +66,6 @@ export default function TestModal() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
     >
       <Test1 />

@@ -121,7 +121,6 @@ export default function TestEmitter() {
       options={{
         appKey: 'sdf',
         debugModel: true,
-        autoLogin: false,
       }}
       palette={p}
       theme={t}

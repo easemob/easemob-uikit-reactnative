@@ -19,7 +19,6 @@ export function ConfigScreen(props: Props) {
   const im = useChatContext();
   const { tr } = useI18nContext();
   const [userId, setUserId] = React.useState<string>('test');
-  const { getFcmToken } = useLogin();
   const { getAlertRef } = useAlertContext();
   const { getEnableDevMode } = useServerConfig();
 
@@ -52,7 +51,6 @@ export function ConfigScreen(props: Props) {
                   onPress: () => {
                     getAlertRef()?.close(() => {
                       im.logout({
-                        unbindDeviceToken: getFcmToken() !== undefined,
                         result: async () => {
                           if (demoType === 1) {
                             navi.replace({ to: 'TopMenu' });
