@@ -1,5 +1,28 @@
 # Change Log
 
+## 3.0.0 (2026-10-20)
+
+### Breaking Changes
+
+- Require `react-native-chat-sdk@^5.0.0`; Chat SDK 1.x is no longer supported. SDK types re-exported by UIKit follow the SDK 5.x API.
+- Remove `ChatService.autoLogin()`, the `autoLogin` initialization option, and the `usePassword` login parameter. Applications must supply a token and manage credential persistence and login restoration themselves.
+- Make `loginState()` reflect the current UIKit session instead of historical SDK login state. Token expiration and terminal account disconnections clear the session; ordinary network disconnections preserve it.
+- Replace `onMessagesRead` and `onGroupMessageRead` with `onMessageReadReceipts`, using `ChatMessageReadReceipt[]`. Remove `onConversationRead` forwarding.
+- Replace `onMemberJoined` / `onMemberExited` with `onMembersJoined` / `onMembersExited`; callbacks now receive a `members` array instead of a single `member`.
+- Read conversations, contacts, and joined groups from local SDK data and refresh built-in lists after successful data synchronization. `getAllContacts2({ requestServer: true, ... })` also reads local data instead of forcing a server fetch.
+- Change `setMessageRead()` to clear the unread count of the entire conversation; its retained `msgId` parameter no longer selects an individual message.
+- Disable the default message-reporting entry. Keep the reporting UI and method, but `reportMessage()` invokes its result callback with `{ isOk: false }` because SDK 5.x removed the reporting API.
+
+### SDK Adaptation
+
+- Adapt message read receipts and read-only message state, group creation and member events, message editing, and token updates to SDK 5.x.
+
+### Examples
+
+- Preserve phone/SMS login through the existing AppServer token exchange. Development login now requires a user-supplied token.
+- Restore login in `product-uikit-demo` using credentials saved by the demo for the selected environment and login mode. Keep `uikit-example` login manual.
+- Return to the login screen on token expiration without automatic renewal. Update push-token binding and reuse the unchanged AOSL version-selection script for Android builds.
+
 ## [2.5.6](https://github.com/easemob/easemob-uikit-reactnative/compare/uikit@2.5.5...uikit@2.5.6)(2026-09-01)
 
 - 8ac9f756 tag: uikit@2.5.6
