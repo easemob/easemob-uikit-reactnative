@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { LinearGradient } from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 
 import { useColors } from '../../hook';
 import { useI18nContext } from '../../i18n';

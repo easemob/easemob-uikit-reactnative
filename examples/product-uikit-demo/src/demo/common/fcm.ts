@@ -1,14 +1,21 @@
-import messaging, {
-  FirebaseMessagingTypes,
+import {
+  AuthorizationStatus,
+  getMessaging,
+  getToken,
+  onMessage,
+  registerDeviceForRemoteMessages,
+  requestPermission,
+  setBackgroundMessageHandler as setRNFBBackgroundMessageHandler,
+  type RemoteMessage,
 } from '@react-native-firebase/messaging';
 
 export async function requestFCMPermission() {
-  const authStatus = await messaging().requestPermission({
+  const authStatus = await requestPermission(getMessaging(), {
     announcement: true,
   });
   const enabled =
-    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    authStatus === AuthorizationStatus.AUTHORIZED ||
+    authStatus === AuthorizationStatus.PROVISIONAL;
 
   if (enabled) {
     console.log('Authorization status:', authStatus);
@@ -17,13 +24,11 @@ export async function requestFCMPermission() {
 }
 
 export async function checkFCMPermission() {
-  const authorizationStatus = await messaging().requestPermission();
+  const authorizationStatus = await requestPermission(getMessaging());
 
-  if (authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED) {
+  if (authorizationStatus === AuthorizationStatus.AUTHORIZED) {
     console.log('User has notification permissions enabled.');
-  } else if (
-    authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-  ) {
+  } else if (authorizationStatus === AuthorizationStatus.PROVISIONAL) {
     console.log('User has provisional notification permissions.');
   } else {
     console.log('User has notification permissions disabled');
@@ -34,8 +39,8 @@ export async function checkFCMPermission() {
 
 export async function requestFcmToken() {
   // https://rnfirebase.io/reference/messaging#getToken
-  await messaging().registerDeviceForRemoteMessages();
-  const fcmToken = await messaging().getToken();
+  await registerDeviceForRemoteMessages(getMessaging());
+  const fcmToken = await getToken(getMessaging());
   console.log('fcm token: ', fcmToken);
   return fcmToken;
 }
@@ -43,17 +48,15 @@ export async function requestFcmToken() {
 export function setBackgroundMessageHandler(params?: {
   onMessage: (msg: any) => void;
 }): void {
-  messaging().onMessage((message: FirebaseMessagingTypes.RemoteMessage) => {
+  onMessage(getMessaging(), (message: RemoteMessage) => {
     console.log('Foreground state messages:', message);
     params?.onMessage(message);
   });
-  messaging().setBackgroundMessageHandler(
-    async (msg: FirebaseMessagingTypes.RemoteMessage): Promise<any> => {
+  setRNFBBackgroundMessageHandler(
+    getMessaging(),
+    async (msg: RemoteMessage): Promise<any> => {
       console.log('Background & Quit state messages:', msg);
       params?.onMessage(msg);
     }
   );
 }
-
-// globalThis.RNFB_SILENCE_MODULAR_DEPRECATION_WARNINGS = true;
-// globalThis.RNFB_MODULAR_DEPRECATION_STRICT_MODE === true;

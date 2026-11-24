@@ -1,5 +1,20 @@
 # Change Log
 
+## 3.1.0 (2026-11-24)
+
+### iOS SPM Support
+
+- Document integration under `use_frameworks! :linkage => :dynamic` (SPM mode) in the README: the required app-target SPM embedding step (`embed_spm_frameworks.rb`) and the third-party libraries that still need patches in SPM mode. Static CocoaPods integration is unchanged and requires no action.
+
+### Dependencies
+
+- Upgrade patched development dependencies: `@react-native-camera-roll/camera-roll` 7.10.2, `react-native-create-thumbnail` 2.2.0, `react-native-device-info` 14.1.1. Peer dependency ranges are unchanged.
+
+### Examples
+
+- Upgrade example dependencies: `react-native-image-crop-picker` 0.52.0, `react-native-quick-base64` 3.0.2, `react-native-linear-gradient` 3.0.0-beta.2, and `@react-native-firebase/*` 27.1.1 (migrating `fcm.ts` to the modular API).
+- Support SPM mode in all five example apps via `scripts/patch-ios-build.js`, which wires SPM product embedding and AOSL deduplication into the generated Podfile. `product-uikit-demo` is verified to build and launch in SPM mode.
+
 ## 3.0.0 (2026-10-20)
 
 ### Breaking Changes

@@ -2,7 +2,7 @@
   "expo": {
     "name": "product-uikit-demo",
     "slug": "product-uikit-demo",
-    "version": "2.5.5",
+    "version": "2.6.0",
     "orientation": "portrait",
     "icon": "./assets/images/easemob.png",
     "scheme": "productuikitdemo",
@@ -16,7 +16,9 @@
         "aps-environment": "production"
       },
       "infoPlist": {
-        "UIBackgroundModes": ["remote-notification"],
+        "UIBackgroundModes": [
+          "remote-notification"
+        ],
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to take photos and videos.",
         "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone to record audio messages.",
         "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photo library to send images and videos.",

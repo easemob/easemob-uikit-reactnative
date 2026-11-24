@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.2.0 (2026-11-24)
+
+### iOS SPM Support
+
+- Document integration under `use_frameworks! :linkage => :dynamic` (SPM mode) in the README, including the required app-target SPM embedding step and the AOSL deduplication needed when `AgoraRtcEngine_Special_iOS` is used alongside the SPM-delivered `aosl`. Static CocoaPods integration is unchanged and requires no action.
+
+### Examples
+
+- Support SPM mode in `callkit-example` via `scripts/patch-ios-build.js`; verified to build in SPM mode.
+
 ## 1.1.0 (2026-10-20)
 
 ### SDK Compatibility

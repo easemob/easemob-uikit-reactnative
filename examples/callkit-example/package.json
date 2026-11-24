@@ -1,7 +1,7 @@
 {
   "name": "callkit-example",
   "main": "./index.js",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scripts": {
     "android": "expo run:android",
     "ios": "expo run:ios",

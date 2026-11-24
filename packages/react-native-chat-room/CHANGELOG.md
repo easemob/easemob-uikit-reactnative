@@ -1,5 +1,20 @@
 # Change Log
 
+## 2.1.0 (2026-11-24)
+
+### Dependencies
+
+- Widen the `react-native-linear-gradient` peer range to `>=3.0.0-beta.0` so 3.x pre-releases satisfy the constraint, and align the development dependency to `^3.0.0-beta.2`.
+- Migrate the internal `LinearGradient` import in `GiftList.item` to the default export; 3.x removed the named export, so the named import was `undefined` at runtime.
+
+### iOS SPM Support
+
+- Document integration under `use_frameworks! :linkage => :dynamic` (SPM mode) in the README, including the required app-target SPM embedding step. Static CocoaPods integration is unchanged and requires no action.
+
+### Examples
+
+- Support SPM mode in `room-example` and `product-room-demo` via `scripts/patch-ios-build.js`; both verified to build in SPM mode.
+
 ## 2.0.0 (2026-10-20)
 
 ### Breaking Changes

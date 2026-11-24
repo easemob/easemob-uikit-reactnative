@@ -1,0 +1,31 @@
+diff --git a/android/src/reactnative/java/io/invertase/firebase/common/ReactNativeFirebaseModule.kt b/android/src/reactnative/java/io/invertase/firebase/common/ReactNativeFirebaseModule.kt
+index 213429025be97efad5a88d69334d80a42fbb1233..1ea213e1363916075ca9bdbc9841e95abd275f14 100644
+--- a/android/src/reactnative/java/io/invertase/firebase/common/ReactNativeFirebaseModule.kt
++++ b/android/src/reactnative/java/io/invertase/firebase/common/ReactNativeFirebaseModule.kt
+@@ -108,7 +108,7 @@ open class ReactNativeFirebaseModule(
+       if (resolver != null) {
+         userInfoMap.putMap("resolver", resolver)
+       }
+-      promise!!.reject(code, message, userInfoMap)
++      promise!!.reject(code ?: "unknown", message, userInfoMap)
+     }
+ 
+     @JvmStatic
+@@ -120,7 +120,7 @@ open class ReactNativeFirebaseModule(
+       val userInfoMap = Arguments.createMap()
+       userInfoMap.putString("code", code)
+       userInfoMap.putString("message", message)
+-      promise!!.reject(code, message, userInfoMap)
++      promise!!.reject(code ?: "unknown", message, userInfoMap)
+     }
+ 
+     @JvmStatic
+@@ -134,7 +134,7 @@ open class ReactNativeFirebaseModule(
+       userInfoMap.putString("code", code)
+       userInfoMap.putString("message", message)
+       userInfoMap.putString("nativeErrorMessage", nativeErrorMessage)
+-      promise!!.reject(code, message, userInfoMap)
++      promise!!.reject(code ?: "unknown", message, userInfoMap)
+     }
+   }
+ }

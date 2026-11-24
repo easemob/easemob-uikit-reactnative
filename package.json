@@ -82,5 +82,8 @@
         ]
       ]
     }
+  },
+  "resolutions": {
+    "react-native-quick-base64@npm:^2.2.2": "npm:3.0.2"
   }
 }

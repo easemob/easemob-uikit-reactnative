@@ -1,0 +1,20 @@
+diff --git a/ios/RNCCameraroll.podspec b/ios/RNCCameraroll.podspec
+index f0880536978ea9aab0015fa90d7148f733e14d6a..2be70432aa6cb67df898c5cc38a9b5a95688b160 100644
+--- a/ios/RNCCameraroll.podspec
++++ b/ios/RNCCameraroll.podspec
+@@ -16,7 +16,14 @@ Pod::Spec.new do |s|
+   s.requires_arc = true
+ 
+ 
+-  s.dependency "React-Core"
++  # Use install_modules_dependencies when available (RN >= 0.71) so the pod
++  # links React correctly under use_frameworks! :dynamic; fall back to the
++  # legacy React-Core dependency otherwise.
++  if respond_to?(:install_modules_dependencies, true)
++    install_modules_dependencies(s)
++  else
++    s.dependency "React-Core"
++  end
+   #s.dependency "others"
+ 
+ end
