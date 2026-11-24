@@ -361,4 +361,33 @@ end
       color_log.success('  Podfile saved.');
     }
   }
+
+  // --- Step 5: Default iOS integration to SPM mode ---
+  // CocoaPods trunk is winding down and key dependencies already require
+  // dynamic frameworks (e.g. @react-native-firebase 27), so this example
+  // defaults to `use_frameworks! :linkage => :dynamic`. The Podfile reads
+  // ios/Podfile.properties.json first, so every `pod install` — including
+  // the implicit one from `expo run:ios` — produces a dynamic-framework
+  // integration. To fall back to classic static CocoaPods, remove the
+  // `ios.useFrameworks` key, delete `Pods` + `Podfile.lock`, and re-run
+  // `pod install`.
+  const podfilePropertiesPath = path.join(iosDir, 'Podfile.properties.json');
+  if (fs.existsSync(podfilePropertiesPath)) {
+    const podfileProperties = JSON.parse(
+      fs.readFileSync(podfilePropertiesPath, 'utf-8')
+    );
+    if (podfileProperties['ios.useFrameworks'] !== 'dynamic') {
+      podfileProperties['ios.useFrameworks'] = 'dynamic';
+      fs.writeFileSync(
+        podfilePropertiesPath,
+        JSON.stringify(podfileProperties, null, 2) + '\n',
+        'utf-8'
+      );
+      color_log.success(
+        '  Set ios.useFrameworks=dynamic in Podfile.properties.json.'
+      );
+    } else {
+      color_log.warning('  ios.useFrameworks already set to dynamic.');
+    }
+  }
 }
