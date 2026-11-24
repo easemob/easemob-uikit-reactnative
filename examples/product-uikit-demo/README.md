@@ -44,13 +44,23 @@ To use real FCM push notifications, download the config files from [Firebase Con
 
 # Running the Project
 
+## Android
+
 Go to the `examples/product-uikit-demo` directory and execute:
 
 ```sh
 yarn run android
-# or
+```
+
+## iOS
+
+Go to the `examples/product-uikit-demo` directory and execute:
+
+```sh
 yarn run ios
 ```
+
+This project runs in SPM mode (`use_frameworks! :linkage => :dynamic`), the repository default applied by the root `yarn prepare` (via `yarn patch:ios`, which sets `ios.useFrameworks` in `ios/Podfile.properties.json`). Classic static CocoaPods mode is **not** available for this project, because `@react-native-firebase/*` 27.x requires dynamic frameworks. See `../../docs/troubleshooting/ios-spm-support.md` for the technical background.
 
 By default, iOS can automatically run the debug service. If the debug service is not running, you can run it manually:
 

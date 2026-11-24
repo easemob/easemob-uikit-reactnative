@@ -37,4 +37,28 @@ yarn run android
 yarn run ios
 ```
 
+## iOS 集成模式
+
+**SPM 模式（默认）**：本项目默认使用 `use_frameworks! :linkage => :dynamic` —— 根目录 `yarn prepare`（经由 `yarn patch:ios`）已在 `ios/Podfile.properties.json` 中设置 `ios.useFrameworks`，因此任何 `pod install` 都会得到动态集成。直接运行：
+
+```sh
+yarn run ios
+```
+
+**经典静态模式（手动切换）**：
+
+1. 从 `ios/Podfile.properties.json` 中删除 `"ios.useFrameworks": "dynamic"` 条目。
+2. 清理并重新安装 pods：
+
+   ```sh
+   cd ios
+   rm -rf Pods Podfile.lock
+   pod install
+   cd ..
+   ```
+
+3. 运行 `yarn run ios`。
+
+如需切回 SPM 模式，重新执行 `yarn patch:ios` 恢复该条目，然后重复第 2 步。SPM 模式下 Agora SDK 与 SPM 分发的 aosl 去重由 `yarn patch:ios` 自动处理（根目录 `yarn prepare` 已执行）。
+
 # 注意: 请使用真机演示

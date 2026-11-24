@@ -85,3 +85,4 @@ Step 1/2/3 互相独立，可任意顺序；Step 4 独立（仅 demo）；Step 5
 - product-room-demo SPM 接入补验 ✅：首轮失败为 DerivedData 陈旧（RNScreens 缺 x86_64 切片，与 demo/callkit-example 同一坑），清理后全量重建 BUILD SUCCEEDED，HyphenateChat/aosl 均嵌入。五个 App 全部 SPM 验证通过。
 - 版本升级：uikit 3.0.0→3.1.0、callkit 1.1.0→1.2.0、room 2.0.0→2.1.0（minor：SPM 支持文档 + room peer 放宽）；五个 example 同步升版（package.json 1.1.0；app.json：三个 example 1.1.0、product-uikit-demo 2.6.0、product-room-demo 1.1.0）；三个包 CHANGELOG 已补 2026-11-24 条目。
 - Step 7 收尾（dailylog、提交）✅。
+- 追加决策（2026-11-24，用户拍板）：五个 example **默认动态模式**（CocoaPods 停更，动态为默认、静态为手动备选）。实现：五个 `patch-ios-build.js` 增加 step 5，把 `"ios.useFrameworks": "dynamic"` 幂等写入 `ios/Podfile.properties.json`（Podfile 优先读该文件，任何途径的 `pod install` 均为动态集成）。静态回退：删该键 + 删 `Pods`/`Podfile.lock` 重装（demo 因 RNFB 27 无静态回退）。README（10 个）与 troubleshooting 文档已同步。

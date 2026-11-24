@@ -8,6 +8,8 @@
 
 SPM 集成由 App 侧获得：宿主 App 以 `USE_FRAMEWORKS=dynamic pod install` 集成时，`react-native-chat-sdk` 的 `ChatSdk.podspec` 内置的 `spm_dependency` 会把 HyphenateChat 换成 SPM 包（`https://github.com/easemob/HyphenateChat_iOS.git`）；不加 `USE_FRAMEWORKS=dynamic` 则保持 pod 引用，两种模式向后兼容。
 
+**本仓库五个 example 自 2026-11-24 起默认 SPM 模式**（用户决策：CocoaPods 停更，动态为默认、静态为手动备选）：各 App 的 `scripts/patch-ios-build.js`（step 5，随根目录 `yarn prepare` 执行）把 `"ios.useFrameworks": "dynamic"` 写入 `ios/Podfile.properties.json`，Podfile 优先读该文件，因此任何 `pod install`（包括 `expo run:ios` 隐式触发的）都得到动态集成。回退经典静态模式：从 `Podfile.properties.json` 删除该键，删除 `Pods` 与 `Podfile.lock` 后重新 `pod install`（product-uikit-demo 除外——RNFB 27 要求动态框架，无静态回退）。注意 `USE_FRAMEWORKS=static` 并非经典静态回退，而是"静态链接的 frameworks"第三种模式，文档与脚本均不推荐使用。
+
 ## SPM 模式运行时崩溃：Library not loaded（必做修复）
 
 **仅完成上面的集成，App 能编译通过，但启动即崩溃：**
@@ -42,7 +44,7 @@ end
 
 ## 验证矩阵
 
-统一命令（各 example 的 `ios/` 目录内）：
+五个 example 已默认动态模式（见结论节），下列命令中的 `USE_FRAMEWORKS=dynamic` 对本仓库 example 可省略，保留写法对显式验证仍有效。统一命令（各 example 的 `ios/` 目录内）：
 
 ```bash
 USE_FRAMEWORKS=dynamic pod install

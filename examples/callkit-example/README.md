@@ -37,4 +37,28 @@ yarn run android
 yarn run ios
 ```
 
+## iOS Integration Modes
+
+**SPM mode (default)**: this project defaults to `use_frameworks! :linkage => :dynamic` — the root `yarn prepare` (via `yarn patch:ios`) sets `ios.useFrameworks` in `ios/Podfile.properties.json`, so every `pod install` produces a dynamic integration. Just run:
+
+```sh
+yarn run ios
+```
+
+**Classic static mode (manual opt-in)**:
+
+1. Remove the `"ios.useFrameworks": "dynamic"` entry from `ios/Podfile.properties.json`.
+2. Clean and re-install pods:
+
+   ```sh
+   cd ios
+   rm -rf Pods Podfile.lock
+   pod install
+   cd ..
+   ```
+
+3. Run `yarn run ios`.
+
+To switch back to SPM mode, re-run `yarn patch:ios` to restore the entry, then repeat step 2. The aosl deduplication required in SPM mode (Agora SDK vs. SPM-delivered aosl) is applied automatically by `yarn patch:ios`, which the root `yarn prepare` already runs.
+
 # Note: Please use the real device for demonstration

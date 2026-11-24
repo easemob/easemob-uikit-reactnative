@@ -43,13 +43,23 @@ cp templates/GoogleService-Info.plist.template examples/product-uikit-demo/Googl
 
 # 运行
 
+## Android
+
 进入 项目 `examples/product-uikit-demo` 目录，执行
 
 ```sh
 yarn run android
-# 或者
+```
+
+## iOS
+
+进入 项目 `examples/product-uikit-demo` 目录，执行
+
+```sh
 yarn run ios
 ```
+
+本项目 iOS 以 SPM 模式运行（`use_frameworks! :linkage => :dynamic`），这是仓库默认模式，由根目录 `yarn prepare`（经由 `yarn patch:ios`，在 `ios/Podfile.properties.json` 中设置 `ios.useFrameworks`）应用。经典静态 CocoaPods 模式对本项目**不可用**，因为 `@react-native-firebase/*` 27.x 要求动态框架。技术背景见 `../../docs/troubleshooting/ios-spm-support.md`。
 
 默认 ios 可以自动运行 调试服务。如果没有运行调试服务，可以手动运行。
 
