@@ -73,7 +73,9 @@ demo 使用 `@react-native-firebase/app` + `@react-native-firebase/messaging`（
 
 ## 三方库补丁说明
 
-**静态 CocoaPods 模式完全不需要这些补丁，现有用户不受影响。** 补丁只作用于 SPM 必须的动态框架模式：一批老式三方库的 podspec 仍使用 `s.dependency "React-Core"`，在动态框架 + 预编译 RNCore 下链接不到 React 符号，统一改为 `install_modules_dependencies`（RN 官方写法，对静态模式无害）。这是上游库自身未适配，任何 App 在 SPM 模式下使用它们都会遇到。
+**静态 CocoaPods 模式下，除 react-native-audio-recorder-player 的 Android 修复外，其余补丁完全不需要，现有用户不受影响。** audio-recorder-player 的 Android 修复（`currentActivity` → `getCurrentActivity()`）是因为 RN 0.80 把 `ReactContextBaseJavaModule` 转成 Kotlin 导致合成属性失效，RN ≥ 0.80 的任何项目编译其 Android 代码都会失败（`Unresolved reference 'currentActivity'`），与是否使用 SPM 无关；4.x 为 Nitro 重写、引入额外依赖，暂不升级。
+
+其余补丁只作用于 SPM 必须的动态框架模式：一批老式三方库的 podspec 仍使用 `s.dependency "React-Core"`，在动态框架 + 预编译 RNCore 下链接不到 React 符号，统一改为 `install_modules_dependencies`（RN 官方写法，对静态模式无害）。这是上游库自身未适配，任何 App 在 SPM 模式下使用它们都会遇到。
 
 补丁位于 `.yarn/patches/`，并复制一份到 `docs/troubleshooting/patches/` 供用户直接使用。
 
@@ -86,7 +88,7 @@ demo 使用 `@react-native-firebase/app` + `@react-native-firebase/messaging`（
 | react-native-fs | 2.20.0 | 同上 |
 | react-native-device-info | 14.1.1 | 同上（上游 15.0.2 仍未修） |
 | @react-native-camera-roll/camera-roll | 7.10.2 | 同上 |
-| react-native-audio-recorder-player | 3.6.14 | podspec 修改合并进已有 Android patch（该 patch 同时含 Android 修复） |
+| react-native-audio-recorder-player | 3.6.14 | iOS：podspec 改用 `install_modules_dependencies`；Android：修复 RN ≥ 0.80 Kotlin 编译错误（`ReactContextBaseJavaModule` 转 Kotlin 后 `currentActivity` 合成属性失效，3 处改为 `getCurrentActivity()`）。**Android 修复与 SPM 无关，RN ≥ 0.80 的任何项目（含静态 CocoaPods 模式）都需要** |
 
 另有 1 个 Android 平台补丁（与 SPM 无关，仅 RN < 0.84 时需要；仅 demo 使用 RNFB 的项目涉及）：
 
