@@ -88,25 +88,24 @@ pod install
  */
 
 import * as React from 'react';
-import { Pressable, SafeAreaView, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import {
   Container,
   ConversationDetail,
   TextInput,
   useChatContext,
 } from 'react-native-chat-uikit';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const appKey = '<your app key>';
 const userId = '<current login id>';
-const userPassword = '<current login password or token>';
-const usePassword = true; // or false;
+const userToken = '<current login token>';
 const peerId = '<chat peer id>';
 
 function SendMessage() {
   const [page, setPage] = React.useState(0);
-  const [_appKey, setAppKey] = React.useState(appKey);
   const [id, setId] = React.useState(userId);
-  const [ps, setPs] = React.useState(userPassword);
+  const [ps, setPs] = React.useState(userToken);
   const [peer, setPeer] = React.useState(peerId);
   const im = useChatContext();
 
@@ -115,17 +114,12 @@ function SendMessage() {
       // 登录页面
       <SafeAreaView style={{ flex: 1 }}>
         <TextInput
-          placeholder="Please App Key."
-          value={_appKey}
-          onChangeText={setAppKey}
-        />
-        <TextInput
           placeholder="Please Login ID."
           value={id}
           onChangeText={setId}
         />
         <TextInput
-          placeholder="Please Login token or password."
+          placeholder="Please Login token."
           value={ps}
           onChangeText={setPs}
         />
@@ -139,7 +133,6 @@ function SendMessage() {
             im.login({
               userId: id,
               userToken: ps,
-              usePassword: usePassword,
               result: (res) => {
                 console.log('login result', res);
                 if (res.isOk === true) {
@@ -184,10 +177,10 @@ function SendMessage() {
   }
 }
 
-export default function App(): React.React.ReactElement {
+export default function App(): React.JSX.Element {
   // 初始化 UIKit
   return (
-    <Container options={{ appKey: appKey, autoLogin: false }}>
+    <Container options={{ appKey: appKey }}>
       <SendMessage />
     </Container>
   );
@@ -221,12 +214,11 @@ export default function App(): React.React.ReactElement {
 ```tsx
 const appKey = '<your app key>';
 const userId = '<current login id>';
-const userPassword = '<current login password or token>';
-const usePassword = true; // or false;
+const userToken = '<current login token>';
 const peerId = '<chat peer id>';
 ```
 
-**如果修改了 appKey，则需要重启应用才会生效。**
+**登录仅支持 token 方式。如果修改了 appKey，则需要重启应用才会生效。**
 
 运行之后，点击`登录`按钮进入聊天页面，输入文本内容，点击`发送`按钮，发送消息给对方。
 

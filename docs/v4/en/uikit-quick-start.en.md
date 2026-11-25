@@ -88,44 +88,38 @@ Install the dependencies required by Android Studio. Open the Android project in
  */
 
 import * as React from 'react';
-import { Pressable, SafeAreaView, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import {
   Container,
   ConversationDetail,
   TextInput,
   useChatContext,
 } from 'react-native-chat-uikit';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const appKey = '<your app key>';
 const userId = '<current login id>';
-const userPassword = '<current login password or token>';
-const usePassword = true; // or false;
+const userToken = '<current login token>';
 const peerId = '<chat peer id>';
 
 function SendMessage() {
   const [page, setPage] = React.useState(0);
-  const [_appKey, setAppKey] = React.useState(appKey);
   const [id, setId] = React.useState(userId);
-  const [ps, setPs] = React.useState(userPassword);
+  const [ps, setPs] = React.useState(userToken);
   const [peer, setPeer] = React.useState(peerId);
   const im = useChatContext();
 
   if (page === 0) {
     return (
-      // 登录页面
+      // Login page
       <SafeAreaView style={{ flex: 1 }}>
-        <TextInput
-          placeholder="Please App Key."
-          value={_appKey}
-          onChangeText={setAppKey}
-        />
         <TextInput
           placeholder="Please Login ID."
           value={id}
           onChangeText={setId}
         />
         <TextInput
-          placeholder="Please Login token or password."
+          placeholder="Please Login token."
           value={ps}
           onChangeText={setPs}
         />
@@ -139,7 +133,6 @@ function SendMessage() {
             im.login({
               userId: id,
               userToken: ps,
-              usePassword: usePassword,
               result: (res) => {
                 console.log('login result', res);
                 if (res.isOk === true) {
@@ -163,7 +156,7 @@ function SendMessage() {
       </SafeAreaView>
     );
   } else if (page === 1) {
-    // 聊天页面
+    // Chat page
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <ConversationDetail
@@ -184,10 +177,10 @@ function SendMessage() {
   }
 }
 
-export default function App(): React.React.ReactElement {
-  // 初始化 UIKit
+export default function App(): React.JSX.Element {
+  // Initialize UIKit
   return (
-    <Container options={{ appKey: appKey, autoLogin: false }}>
+    <Container options={{ appKey: appKey }}>
       <SendMessage />
     </Container>
   );
@@ -221,12 +214,11 @@ Before running, write the necessary preset parameters:
 ```tsx
 const appKey = '<your app key>';
 const userId = '<current login id>';
-const userPassword = '<current login password or token>';
-const usePassword = true; // or false;
+const userToken = '<current login token>';
 const peerId = '<chat peer id>';
 ```
 
-**If you modify the appKey, you need to restart the application for the changes to take effect.**
+**Login only supports token-based authentication. If you modify the appKey, you need to restart the application for the changes to take effect.**
 
 After running, click **Login** to open the chat page, enter the text content, and click **Send** to send a message to the recipient.
 
